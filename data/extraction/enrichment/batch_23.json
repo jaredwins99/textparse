@@ -1,0 +1,1065 @@
+{
+  "batch_number": 23,
+  "concepts": [
+    {
+      "id": 471,
+      "name": "online algorithm",
+      "description": "An algorithm where observations are processed one at a time, as in LVQ.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "LVQ is an online algorithm\u2014observations are processed one at a time.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 472,
+      "name": "stochastic approximation learning rates",
+      "description": "Guidelines for decreasing the learning rate to zero with each iteration in online learning algorithms like LVQ.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "The learning rate \u03f5 is decreased to zero with each iteration, following the guidelines for stochastic approximation learning rates (Section 11.4).",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 476,
+      "name": "k-nearest-neighbor classifier",
+      "description": "A memory-based classifier that finds k training points closest to a query point and classifies using majority vote among the k neighbors.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "These classifiers are memory-based, and require no model to be fit. Given a query point x0, we find the k training points x(r), r = 1, . . . , k closest in distance to x0, and then classify using majority vote among the k neighbors.",
+      "existing_formula": "\\hat{G}(x) = \\arg\\max_j \\sum_{i \\in N_k(x)} I(y_i = j)",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 477,
+      "name": "memory-based classifier",
+      "description": "A classifier that requires no model to be fit and uses the training data directly for prediction.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "These classifiers are memory-based, and require no model to be fit.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 478,
+      "name": "majority vote",
+      "description": "A classification decision rule where the class is chosen based on the most common class among k nearest neighbors.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "Given a query point x0, we find the k training points x(r), r = 1, . . . , k closest in distance to x0, and then classify using majority vote among the k neighbors.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 480,
+      "name": "asymptotic nearest-neighbor error bound",
+      "description": "The property that 1-nearest-neighbor error rate is bounded by twice the Bayes error rate asymptotically.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "For K = 2 the 1-nearest-neighbor error rate is 2pk\u2217(x)(1 \u2212pk\u2217(x)) \u22642(1 \u2212pk\u2217(x)) (twice the Bayes error rate).",
+      "existing_formula": "E[\\text{Error}_{1-NN}] \\leq 2E[\\text{Error}_{Bayes}]",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 483,
+      "name": "discriminant adaptive nearest-neighbor",
+      "description": "An adaptive nearest-neighbor method that uses a local linear discriminant analysis to estimate the local between-class covariance matrix and adaptively shape the neighborhood.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "Here we develop a locally adaptive form of nearest-neighbor classification that tries to use class information to adaptively shape the metric in each neighborhood. This is done by shaping the neighborhood locally to concentrate on the dimensions in which the information about the class probabilities is most likely to be",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 484,
+      "name": "chi-square distance",
+      "description": "A distance measure for discrete distributions used in analyzing market basket data and contingency tables.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "The chi-square distance is a natural choice for discrete distributions. If p = (p1, p2, . . . , pm) and q = (q1, q2, . . . , qm) are two discrete distributions, the chi-square distance is",
+      "existing_formula": "d_{\\chi^2}(p, q) = \\sum_{j=1}^{m} \\frac{(p_j - q_j)^2}{p_j + q_j}",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 485,
+      "name": "market basket analysis",
+      "description": "Analysis of large databases of customer transactions to discover association rules showing which items are purchased together.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "Market basket analysis is the prototypical example of unsupervised learning. It is a method for finding relationships between items in large databases of customer transactions. The idea is to discover what items or products are purchased together.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 486,
+      "name": "association rules",
+      "description": "Rules of the form X => Y indicating that when itemset X appears in a transaction, itemset Y is also likely to appear, measured by support and confidence.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "An association rule is an implication expression of the form X \u21d2 Y, where X and Y are disjoint itemsets. The rule X \u21d2 Y has support s in the transaction set if s% of transactions contain X \u222a Y. The rule has confidence c if c% of transactions that contain X also contain Y.",
+      "existing_formula": "X \\Rightarrow Y",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 487,
+      "name": "support",
+      "description": "In association rules, the percentage of transactions containing both itemsets X and Y in the rule X => Y.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "The rule X \u21d2 Y has support s in the transaction set if s% of transactions contain X \u222a Y.",
+      "existing_formula": "\\text{supp}(X \\Rightarrow Y) = P(X \\cup Y)",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 488,
+      "name": "confidence",
+      "description": "In association rules, the percentage of transactions containing X that also contain Y in the rule X => Y.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "The rule has confidence c if c% of transactions that contain X also contain Y.",
+      "existing_formula": "\\text{conf}(X \\Rightarrow Y) = P(Y|X)",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 489,
+      "name": "apriori algorithm",
+      "description": "An efficient algorithm for finding frequent itemsets in market basket analysis by exploiting the downward closure property.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "The Apriori algorithm is an efficient bottom-up algorithm for mining all itemsets that satisfy a minimum support threshold. It exploits the downward closure property: if an itemset is frequent, then all of its subsets must also be frequent.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 490,
+      "name": "downward closure property",
+      "description": "The property that if an itemset is frequent, then all of its subsets must also be frequent, exploited by the Apriori algorithm.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "It exploits the downward closure property: if an itemset is frequent, then all of its subsets must also be frequent.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 491,
+      "name": "frequent itemset",
+      "description": "An itemset that appears in at least a minimum support threshold of transactions in market basket analysis.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "The Apriori algorithm is an efficient bottom-up algorithm for mining all itemsets that satisfy a minimum support threshold.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 492,
+      "name": "lift",
+      "description": "A measure for association rules that compares the confidence to the baseline frequency of the consequent, indicating whether the rule provides improvement over random chance.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "The lift of a rule is defined as the confidence divided by the support of Y (the baseline frequency): lift(X \u21d2 Y) = conf(X \u21d2 Y)/supp(Y).",
+      "existing_formula": "\\text{lift}(X \\Rightarrow Y) = \\frac{\\text{conf}(X \\Rightarrow Y)}{\\text{supp}(Y)}",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 493,
+      "name": "generalized association rules",
+      "description": "Extension of association rules to include quantitative and categorical features beyond binary transactions, often by discretization.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "Generalized association rules allow for quantitative and categorical variables. The basic strategy is to discretize these variables and then apply a standard association rule mining algorithm.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 494,
+      "name": "unsupervised as supervised learning",
+      "description": "A framework for unsupervised learning problems like clustering and association rules where a supervised learning model is used to predict the presence or absence of features.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "Unsupervised learning problems can be recast as supervised learning problems. The idea is to create a two-class response: for each itemset, code each transaction as 1 if it contains the itemset, and 0 otherwise. Then use a supervised learning method to predict the response from the other features.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 498,
+      "name": "dissimilarity",
+      "description": "A measure of how different two observations are, typically satisfying d(xi, xi) = 0 and d(xi, xi\u2032) \u2265 0.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "Most algorithms use dissimilarities d(xi, xi\u2032) or similarities s(xi, xi\u2032) between pairs of observations.",
+      "existing_formula": "d(x_i, x_i) = 0, \\quad d(x_i, x_{i'}) \\geq 0",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 499,
+      "name": "attribute dissimilarity",
+      "description": "Dissimilarity measures based on the attributes or features of observations, such as Euclidean distance for quantitative variables.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "For data with p quantitative features, Euclidean distance is the most common choice. Other choices include L1 (Manhattan) distance and Lq distance for general q.",
+      "existing_formula": "d(x_i, x_{i'}) = ||x_i - x_{i'}||_q",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    }
+  ]
+}

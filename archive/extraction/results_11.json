@@ -1,0 +1,938 @@
+{
+  "concepts": [
+    {
+      "name": "vector quantization",
+      "type": "technique",
+      "description": "Image and signal compression technique using K-means clustering to approximate blocks of pixels by cluster centroids (codewords), with applications in lossy compression.",
+      "quote": "The K-means clustering algorithm represents a key tool in the apparently unrelated area of image and signal compression, particularly in vector quantization or VQ",
+      "paragraph_ids": [39278]
+    },
+    {
+      "name": "codeword",
+      "type": "technique",
+      "description": "The cluster centroid used to approximate a block of pixels in vector quantization; the collection of codewords forms the codebook.",
+      "quote": "Each of the 512 × 512 pixel blocks (or points) is approximated by its closest cluster centroid, known as a codeword.",
+      "paragraph_ids": [39281]
+    },
+    {
+      "name": "encoding step in vector quantization",
+      "type": "technique",
+      "description": "The clustering process in vector quantization where pixel blocks are assigned to their nearest codeword.",
+      "quote": "The clustering process is called the encoding step, and the collection of centroids is called the codebook.",
+      "paragraph_ids": [39281]
+    },
+    {
+      "name": "rate in bits per pixel",
+      "type": "metric",
+      "description": "Measure of compression efficiency expressed as log2(K)/4 bits per pixel, where K is the number of codewords.",
+      "quote": "This is typically expressed as a rate in bits per pixel: log2(K)/4, which are 1.91 and 0.50, respectively.",
+      "paragraph_ids": [39281]
+    },
+    {
+      "name": "fixed-length code",
+      "type": "technique",
+      "description": "Coding scheme using the same number of bits for each codeword, requiring log2(K) bits to identify K codewords.",
+      "quote": "This uses a fixed-length code, and is inefficient if some codewords occur many more times than others in the image.",
+      "paragraph_ids": [39281]
+    },
+    {
+      "name": "variable length code",
+      "type": "technique",
+      "description": "Coding scheme using different numbers of bits for different codewords based on frequency, achieving better compression via Shannon coding theory.",
+      "quote": "Using Shannon coding theory, we know that in general a variable length code will do better, and the rate then becomes −∑K ℓ=1 pℓlog2(pℓ)/4.",
+      "paragraph_ids": [39281]
+    },
+    {
+      "name": "entropy of codeword distribution",
+      "type": "metric",
+      "description": "The quantity −∑K ℓ=1 pℓlog2(pℓ) measuring information content in the distribution of codewords in an image.",
+      "quote": "The term in the numerator is the entropy of the distribution pℓ of the codewords in the image.",
+      "paragraph_ids": [39281]
+    },
+    {
+      "name": "tree-structured vector quantization",
+      "type": "technique",
+      "description": "Variant of VQ finding centroids with a top-down 2-means algorithm, allowing successive refinement of compression.",
+      "quote": "tree-structured VQ finds the centroids with a top-down, 2-means style algorithm, as alluded to in Section 14.3.12. This allows successive refinement of the compression.",
+      "paragraph_ids": [39281]
+    },
+    {
+      "name": "k-medoids clustering",
+      "type": "method",
+      "description": "Clustering method restricting cluster centers to actual observations, minimizing total dissimilarity to cluster members using arbitrary dissimilarity measures.",
+      "quote": "In the most common form, centers for each cluster are restricted to be one of the observations assigned to the cluster",
+      "paragraph_ids": [39293]
+    },
+    {
+      "name": "gap statistic",
+      "type": "method",
+      "description": "Method for estimating optimal number of clusters by comparing log WK curve to that from uniformly distributed data, finding where gap is largest.",
+      "quote": "The recently proposed Gap statistic (Tibshirani et al., 2001b) compares the curve log WK to the curve obtained from data uniformly distributed over a rectangle containing the data.",
+      "paragraph_ids": [39347]
+    },
+    {
+      "name": "agglomerative clustering",
+      "type": "method",
+      "description": "Bottom-up hierarchical clustering starting with singleton clusters, recursively merging the two closest clusters at each level.",
+      "quote": "Agglomerative strategies start at the bottom and at each level recursively merge a selected pair of clusters into a single cluster.",
+      "paragraph_ids": [39371]
+    },
+    {
+      "name": "divisive clustering",
+      "type": "method",
+      "description": "Top-down hierarchical clustering starting with all data in one cluster, recursively splitting clusters to maximize between-group dissimilarity.",
+      "quote": "Divisive methods start at the top and at each level recursively split one of the existing clusters at that level into two new clusters.",
+      "paragraph_ids": [39371]
+    },
+    {
+      "name": "dendrogram",
+      "type": "technique",
+      "description": "Graphical tree display of hierarchical clustering where node height represents intergroup dissimilarity between merged clusters.",
+      "quote": "This type of graphical display is called a dendrogram.",
+      "paragraph_ids": [39373]
+    },
+    {
+      "name": "cophenetic correlation coefficient",
+      "type": "metric",
+      "description": "Correlation between pairwise observation dissimilarities and their cophenetic dissimilarities from the dendrogram, measuring how well hierarchy represents data.",
+      "quote": "The extent to which the hierarchical structure produced by a dendrogram actually represents the data itself can be judged by the cophenetic correlation coefficient.",
+      "paragraph_ids": [39414]
+    },
+    {
+      "name": "cophenetic dissimilarity",
+      "type": "metric",
+      "description": "Intergroup dissimilarity at which two observations are first joined together in the same cluster in hierarchical clustering.",
+      "quote": "The cophenetic dissimilarity Cii′ between two observations (i, i′) is the intergroup dissimilarity at which observations i and i′ are first joined together in the same cluster.",
+      "paragraph_ids": [39414]
+    },
+    {
+      "name": "ultrametric inequality",
+      "type": "property",
+      "description": "Constraint on cophenetic dissimilarities requiring Cik ≤ max(Cii′, Ci′k) for any three observations, implying isosceles triangles.",
+      "quote": "Also these dissimilarities obey the ultrametric inequality",
+      "paragraph_ids": [39414]
+    },
+    {
+      "name": "single linkage agglomerative clustering",
+      "type": "method",
+      "description": "Hierarchical clustering taking intergroup dissimilarity as minimum dissimilarity between groups; tends to chain clusters via intermediate observations.",
+      "quote": "Single linkage (SL) agglomerative clustering takes the intergroup dissimilarity to be that of the closest (least dissimilar) pair",
+      "paragraph_ids": [39419]
+    },
+    {
+      "name": "complete linkage agglomerative clustering",
+      "type": "method",
+      "description": "Hierarchical clustering taking intergroup dissimilarity as maximum dissimilarity between groups; produces compact clusters with small diameters.",
+      "quote": "Complete linkage (CL) agglomerative clustering (furthest-neighbor technique) takes the intergroup dissimilarity to be that of the furthest (most dissimilar) pair",
+      "paragraph_ids": [39421]
+    },
+    {
+      "name": "group average clustering",
+      "type": "method",
+      "description": "Hierarchical clustering using average dissimilarity between groups; compromise between single and complete linkage, attempts compact and well-separated clusters.",
+      "quote": "Group average (GA) clustering uses the average dissimilarity between the groups",
+      "paragraph_ids": [39423]
+    },
+    {
+      "name": "cluster diameter",
+      "type": "metric",
+      "description": "Largest dissimilarity among members of a cluster, measuring cluster compactness.",
+      "quote": "If we define the diameter DG of a group of observations as the largest dissimilarity among its members",
+      "paragraph_ids": [39433]
+    },
+    {
+      "name": "self-organizing map",
+      "type": "method",
+      "description": "Constrained K-means clustering where prototypes lie in a low-dimensional manifold, creating a constrained topological map for dimension reduction.",
+      "quote": "This method can be viewed as a constrained version of K-means clustering, in which the prototypes are encouraged to lie in a one- or two-dimensional manifold in the feature space.",
+      "paragraph_ids": [39455]
+    },
+    {
+      "name": "batch som",
+      "type": "method",
+      "description": "Batch version of self-organizing maps processing all observations together rather than one at a time.",
+      "quote": "The original SOM algorithm was online—observations are processed one at a time—and later a batch version was proposed.",
+      "paragraph_ids": [39455]
+    },
+    {
+      "name": "neighborhood function in som",
+      "type": "technique",
+      "description": "Function h giving more weight to prototypes closer in topological coordinate space, used in sophisticated SOM updates.",
+      "quote": "where the neighborhood function h gives more weight to prototypes mk with indices ℓk closer to ℓj than to those further away.",
+      "paragraph_ids": [39459]
+    },
+    {
+      "name": "reconstruction error in clustering",
+      "type": "metric",
+      "description": "Sum of squared distances ||x − mj||² between observations and their assigned prototypes, measuring clustering quality.",
+      "quote": "One can do this by computing the reconstruction error ||x − mj||², summed over observations, for both methods.",
+      "paragraph_ids": [39461]
+    },
+    {
+      "name": "term-document matrix",
+      "type": "technique",
+      "description": "Matrix representation where each row is a document and entries are relative frequencies of predefined terms, used for document retrieval.",
+      "quote": "A term-document matrix is created, where each row represents a single document. The entries in each row are the relative frequency of each of a predefined set of terms.",
+      "paragraph_ids": [39626]
+    },
+    {
+      "name": "principal component analysis",
+      "type": "method",
+      "description": "Sequence of best linear approximations to data of all ranks q ≤ p, providing uncorrelated projections ordered by variance.",
+      "quote": "The principal components of a set of data in IRp provide a sequence of best linear approximations to that data, of all ranks q ≤ p.",
+      "paragraph_ids": [39666]
+    },
+    {
+      "name": "rank-q linear model",
+      "type": "technique",
+      "description": "Parametric representation of affine hyperplane f(λ) = μ + Vqλ approximating data points by least squares.",
+      "quote": "consider the rank-q linear model for representing them",
+      "paragraph_ids": [39669]
+    },
+    {
+      "name": "singular value decomposition",
+      "type": "method",
+      "description": "Matrix decomposition X = UDV^T where U and V are orthogonal matrices and D is diagonal with singular values, fundamental for PCA.",
+      "quote": "We construct the singular value decomposition of X:",
+      "paragraph_ids": [39679]
+    },
+    {
+      "name": "right singular vectors",
+      "type": "technique",
+      "description": "Columns vj of matrix V in SVD, defining principal component directions; first q columns solve rank-q approximation problem.",
+      "quote": "V is a p×p orthogonal matrix (VT V = Ip) with columns vj called the right singular vectors",
+      "paragraph_ids": [39681]
+    },
+    {
+      "name": "singular values",
+      "type": "metric",
+      "description": "Diagonal elements d1 ≥ d2 ≥ ⋅⋅⋅ ≥ dp ≥ 0 of diagonal matrix D in SVD, measuring variance along principal component directions.",
+      "quote": "D is a p×p diagonal matrix, with diagonal elements d1 ≥ d2 ≥ ⋅⋅⋅ ≥ dp ≥ 0 known as the singular values.",
+      "paragraph_ids": [39681]
+    },
+    {
+      "name": "procrustes transformation",
+      "type": "method",
+      "description": "Finding optimal rotation R and location μ to match two sets of corresponding points by minimizing ||X2 − X1R − 1μ^T||F.",
+      "quote": "with X1 and X2 both N × p matrices of corresponding points, R an orthonormal p × p matrix, and μ a p-vector of location coordinates.",
+      "paragraph_ids": [40287]
+    },
+    {
+      "name": "procrustes average",
+      "type": "method",
+      "description": "Shape M minimizing average squared Procrustes distance to collection of L shapes, found by alternating algorithm.",
+      "quote": "Related to Procrustes distance is the Procrustes average of a collection of L shapes",
+      "paragraph_ids": [40290]
+    },
+    {
+      "name": "principal curve",
+      "type": "method",
+      "description": "Smooth one-dimensional curved approximation to data satisfying self-consistency: f(λ) = E(X|λf(X) = λ), generalizing principal component line.",
+      "quote": "Principal curves generalize the principal component line, providing a smooth one-dimensional curved approximation to a set of data points in IRp.",
+      "paragraph_ids": [40311]
+    },
+    {
+      "name": "self-consistency property",
+      "type": "property",
+      "description": "Property of principal curves where f(λ) equals the average of all data points projecting to it.",
+      "quote": "This says f(λ) is the average of all data points that project to it, that is, the points for which it is 'responsible.' This is also known as a self-consistency property.",
+      "paragraph_ids": [40313]
+    },
+    {
+      "name": "principal surface",
+      "type": "method",
+      "description": "Higher-dimensional generalization of principal curves providing curved manifold approximation, commonly used in two dimensions.",
+      "quote": "Principal surfaces have exactly the same form as principal curves, but are of higher dimension.",
+      "paragraph_ids": [40428]
+    },
+    {
+      "name": "spectral clustering",
+      "type": "method",
+      "description": "Clustering method using eigenvectors of graph Laplacian to handle non-convex clusters, transforming data before applying standard clustering.",
+      "quote": "Spectral clustering is a generalization of standard clustering methods, and is designed for these situations.",
+      "paragraph_ids": [40434]
+    },
+    {
+      "name": "similarity graph",
+      "type": "technique",
+      "description": "Undirected graph G = ⟨V, E⟩ where vertices represent observations and edge weights represent pairwise similarities.",
+      "quote": "We represent the observations in an undirected similarity graph G = ⟨V, E⟩. The N vertices vi represent the observations",
+      "paragraph_ids": [40434]
+    },
+    {
+      "name": "mutual k-nearest-neighbor graph",
+      "type": "technique",
+      "description": "Similarity graph connecting pairs where one point is among K-nearest neighbors of the other, with nonzero edge weights only for neighbors.",
+      "quote": "The most popular is the mutual K-nearest-neighbor graph.",
+      "paragraph_ids": [40434]
+    },
+    {
+      "name": "graph laplacian",
+      "type": "technique",
+      "description": "Matrix L = G − W where G is diagonal degree matrix and W is adjacency matrix, fundamental for spectral clustering.",
+      "quote": "Finally, the graph Laplacian is defined by",
+      "paragraph_ids": [40436]
+    },
+    {
+      "name": "normalized graph laplacian",
+      "type": "technique",
+      "description": "Standardized version of Laplacian with respect to node degrees, e.g., L̃ = I − G^(-1)W.",
+      "quote": "This is called the unnormalized graph Laplacian; a number of normalized versions have been proposed—these standardize the Laplacian with respect to the node degrees gi",
+      "paragraph_ids": [40438]
+    },
+    {
+      "name": "kernel principal components",
+      "type": "method",
+      "description": "Nonlinear PCA obtained by applying PCA in implicit feature space defined by kernel, expanding scope to non-linear transformations.",
+      "quote": "Kernel PCA (Schölkopf et al., 1999) expand the scope of PCA, mimicking what we would obtain if we were to expand the features by non-linear transformations, and then apply PCA in this transformed feature space.",
+      "paragraph_ids": [40476]
+    },
+    {
+      "name": "reproducing kernel hilbert space",
+      "type": "technique",
+      "description": "Function space HK generated by kernel K where principal component functions gm reside, with norm controlling size and roughness.",
+      "quote": "We can gain more insight into kernel PCA by viewing the zm as sample evaluations of principal component functions gm ∈ HK, with HK the reproducing kernel Hilbert space generated by K",
+      "paragraph_ids": [40479]
+    },
+    {
+      "name": "sparse principal components",
+      "type": "method",
+      "description": "PCA variant using L1 penalties to encourage sparse loadings, making principal components easier to interpret.",
+      "quote": "In this section we briefly discuss some methods for deriving principal components with sparse loadings. They are all based on lasso (L1) penalties.",
+      "paragraph_ids": [40513]
+    },
+    {
+      "name": "scotlass",
+      "type": "method",
+      "description": "Sparse PCA method maximizing variance subject to L1 constraint on loadings: max v^T(X^TX)v subject to ∑|vj| ≤ t, v^Tv = 1.",
+      "quote": "The SCoTLASS procedure of Jolliffe et al. (2003) takes the first approach",
+      "paragraph_ids": [40514]
+    },
+    {
+      "name": "elastic net for sparse pca",
+      "type": "method",
+      "description": "Sparse PCA using regression/reconstruction property with ridge and lasso penalties, allowing efficient computation via alternating optimization.",
+      "quote": "Zou et al. (2006) start instead with the regression/reconstruction property of PCA, similar to the approach in Section 14.5.1.",
+      "paragraph_ids": [40515]
+    },
+    {
+      "name": "non-negative matrix factorization",
+      "type": "method",
+      "description": "Alternative to PCA approximating X ≈ WH where all elements are non-negative, useful for modeling non-negative data like images.",
+      "quote": "Non-negative matrix factorization (Lee and Seung, 1999) is a recent alternative approach to principal components analysis, in which the data and components are assumed to be non-negative.",
+      "paragraph_ids": [40543]
+    },
+    {
+      "name": "archetypal analysis",
+      "type": "method",
+      "description": "Method approximating data points by convex combinations of prototypes (archetypes) that themselves are convex combinations of data, forcing prototypes onto convex hull.",
+      "quote": "This method, due to Cutler and Breiman (1994), approximates data points by prototypes that are themselves linear combinations of data points.",
+      "paragraph_ids": [40562]
+    },
+    {
+      "name": "factor analysis",
+      "type": "method",
+      "description": "Classical latent variable model X = AS + ε where S are uncorrelated factors, modeling correlation structure with separate disturbances ε.",
+      "quote": "The classical factor analysis model, developed primarily by researchers in psychometrics, alleviates these problems to some extent",
+      "paragraph_ids": [40606]
+    },
+    {
+      "name": "independent component analysis",
+      "type": "method",
+      "description": "Latent variable model X = AS where components S are statistically independent (not just uncorrelated), exploiting non-Gaussianity for identifiability.",
+      "quote": "The independent component analysis (ICA) model has exactly the same form as (14.78), except the Si are assumed to be statistically independent rather than uncorrelated.",
+      "paragraph_ids": [40616]
+    },
+    {
+      "name": "blind source separation",
+      "type": "technique",
+      "description": "Recovery of independent source signals from mixed observations, classical application of ICA in cocktail party problem.",
+      "quote": "ICA is able to perform blind source separation, by exploiting the independence and non-Gaussianity of the original sources.",
+      "paragraph_ids": [40616]
+    },
+    {
+      "name": "differential entropy",
+      "type": "metric",
+      "description": "Entropy H(Y) = −∫g(y)log g(y)dy measuring randomness of continuous variable; Gaussian has maximum entropy for fixed variance.",
+      "quote": "The differential entropy H of a random variable Y with density g(y) is given by",
+      "paragraph_ids": [40621]
+    },
+    {
+      "name": "mutual information",
+      "type": "metric",
+      "description": "Kullback-Leibler distance between joint density and product of marginals, measuring dependence between components of random vector.",
+      "quote": "Finally, the mutual information I(Y) between the components of the random vector Y is a natural measure of dependence",
+      "paragraph_ids": [40623]
+    },
+    {
+      "name": "negentropy",
+      "type": "metric",
+      "description": "Non-negative measure J(Yj) = H(Zj) − H(Yj) quantifying departure from Gaussianity, where Zj is Gaussian with same variance as Yj.",
+      "quote": "For convenience, rather than using the entropy H(Yj), Hyvärinen and Oja (2000) use the negentropy measure J(Yj) defined by",
+      "paragraph_ids": [42201]
+    },
+    {
+      "name": "exploratory projection pursuit",
+      "type": "method",
+      "description": "Graphical exploration technique for visualizing high-dimensional data by finding non-Gaussian projections revealing interesting structure like clusters or tails.",
+      "quote": "Friedman and Tukey (1974) proposed exploratory projection pursuit, a graphical exploration technique for visualizing high-dimensional data.",
+      "paragraph_ids": [46891]
+    },
+    {
+      "name": "projection indices",
+      "type": "metric",
+      "description": "Measures focusing on different departures from Gaussianity for optimization in projection pursuit, similar to negentropy.",
+      "quote": "They proposed a number of projection indices for optimization, each focusing on a different departure from Gaussianity.",
+      "paragraph_ids": [46891]
+    },
+    {
+      "name": "tilted gaussian density",
+      "type": "technique",
+      "description": "Representation fj(sj) = φ(sj)e^(gj(sj)) for departures from Gaussianity, used in product density ICA approach.",
+      "quote": "In the spirit of representing departures from Gaussianity, we represent each fj as fj(sj) = φ(sj)e^(gj(sj)), a tilted Gaussian density.",
+      "paragraph_ids": [46901]
+    },
+    {
+      "name": "prodeniica",
+      "type": "method",
+      "description": "ICA algorithm estimating product density directly using generalized additive models with penalized Poisson log-likelihood and smoothing splines.",
+      "quote": "Full details can be found in Hastie and Tibshirani (2003), and the method is implemented in the R package ProDenICA",
+      "paragraph_ids": [46897]
+    },
+    {
+      "name": "amari metric",
+      "type": "metric",
+      "description": "Measure of closeness between two frames (orthogonal mixing matrices), used to compare estimated and true mixing matrices in ICA.",
+      "quote": "We used the Amari metric (Bach and Jordan, 2002) as a measure of the closeness of the two frames",
+      "paragraph_ids": [46972]
+    },
+    {
+      "name": "multidimensional scaling",
+      "type": "method",
+      "description": "Finding low-dimensional representation zi ∈ R^k preserving pairwise dissimilarities dij, requiring only dissimilarities not data points.",
+      "quote": "Multidimensional scaling seeks values z1, z2, . . . , zN ∈ R^k to minimize the so-called stress function",
+      "paragraph_ids": [46987]
+    },
+    {
+      "name": "kruskal-shephard scaling",
+      "type": "method",
+      "description": "Least squares MDS minimizing stress function SM = ∑i≠i′(dii′ − ||zi − zi′||)².",
+      "quote": "This is known as least squares or Kruskal–Shephard scaling.",
+      "paragraph_ids": [46990]
+    },
+    {
+      "name": "sammon mapping",
+      "type": "method",
+      "description": "MDS variation minimizing weighted stress putting more emphasis on preserving smaller pairwise distances.",
+      "quote": "A variation on least squares scaling is the so-called Sammon mapping which minimizes",
+      "paragraph_ids": [46993]
+    },
+    {
+      "name": "classical scaling",
+      "type": "method",
+      "description": "MDS minimizing ∑i,i′(sii′ − ⟨zi, zi′⟩)² for similarities sii′, with explicit eigenvector solution; equivalent to PCA for centered inner products.",
+      "quote": "In classical scaling, we instead start with similarities sii′",
+      "paragraph_ids": [46998]
+    },
+    {
+      "name": "metric scaling",
+      "type": "method",
+      "description": "MDS methods (least squares and classical scaling) approximating actual dissimilarities or similarities rather than just ranks.",
+      "quote": "Least squares and classical scaling are referred to as metric scaling methods, in the sense that the actual dissimilarities or similarities are approximated.",
+      "paragraph_ids": [47001]
+    },
+    {
+      "name": "shephard-kruskal nonmetric scaling",
+      "type": "method",
+      "description": "MDS using only ranks, minimizing stress over zi and arbitrary increasing function θ via isotonic regression.",
+      "quote": "Shephard–Kruskal nonmetric scaling effectively uses only ranks. Nonmetric scaling seeks to minimize the stress function",
+      "paragraph_ids": [47001]
+    },
+    {
+      "name": "isotonic regression",
+      "type": "method",
+      "description": "Method finding best monotonic approximation θ(dii′) to ||zi − zi′|| with zi fixed in nonmetric scaling.",
+      "quote": "With the zi fixed, the method of isotonic regression is used to find the best monotonic approximation θ(dii′) to ||zi − zi′||.",
+      "paragraph_ids": [47004]
+    },
+    {
+      "name": "isometric feature mapping",
+      "type": "method",
+      "description": "Nonlinear dimension reduction constructing graph to approximate geodesic distance along manifold via shortest path, then applying classical scaling.",
+      "quote": "Isometric feature mapping (ISOMAP) (Tenenbaum et al., 2000) constructs a graph to approximate the geodesic distance between points along the manifold.",
+      "paragraph_ids": [47073]
+    },
+    {
+      "name": "local linear embedding",
+      "type": "method",
+      "description": "Nonlinear dimension reduction preserving local affine structure by approximating points as linear combinations of neighbors in both high and low dimensions.",
+      "quote": "Local linear embedding (Roweis and Saul, 2000) takes a very different approach, trying to preserve the local affine structure of the high-dimensional data.",
+      "paragraph_ids": [47074]
+    },
+    {
+      "name": "geodesic distance on manifold",
+      "type": "metric",
+      "description": "Distance along manifold surface approximated by shortest path through neighbor graph in ISOMAP.",
+      "quote": "The geodesic distance between any two points is then approximated by the shortest path between points on the graph.",
+      "paragraph_ids": [47073]
+    }
+  ],
+  "relationships": [
+    {
+      "source": "vector quantization",
+      "target": "k-means clustering",
+      "type": "uses",
+      "quote": "A K-means clustering algorithm (also known as Lloyd's algorithm in this context) is run in this space."
+    },
+    {
+      "source": "vector quantization",
+      "target": "lossy compression",
+      "type": "example_of",
+      "quote": "What we have described is known as lossy compression, since our images are degraded versions of the original."
+    },
+    {
+      "source": "codeword",
+      "target": "codebook",
+      "type": "prerequisite",
+      "quote": "the collection of centroids is called the codebook"
+    },
+    {
+      "source": "encoding step in vector quantization",
+      "target": "codeword",
+      "type": "uses",
+      "quote": "The clustering process is called the encoding step, and the collection of centroids is called the codebook."
+    },
+    {
+      "source": "variable length code",
+      "target": "fixed-length code",
+      "type": "contrasts_with",
+      "quote": "This uses a fixed-length code, and is inefficient if some codewords occur many more times than others in the image. Using Shannon coding theory, we know that in general a variable length code will do better"
+    },
+    {
+      "source": "variable length code",
+      "target": "entropy of codeword distribution",
+      "type": "uses",
+      "quote": "The term in the numerator is the entropy of the distribution pℓ of the codewords in the image."
+    },
+    {
+      "source": "tree-structured vector quantization",
+      "target": "vector quantization",
+      "type": "special_case_of",
+      "quote": "tree-structured VQ finds the centroids with a top-down, 2-means style algorithm"
+    },
+    {
+      "source": "k-medoids clustering",
+      "target": "k-means clustering",
+      "type": "generalizes",
+      "quote": "The algorithm can be generalized for use with arbitrarily defined dissimilarities D(xi, xi′) by replacing this step by an explicit optimization"
+    },
+    {
+      "source": "gap statistic",
+      "target": "k-means clustering",
+      "type": "uses",
+      "quote": "The recently proposed Gap statistic (Tibshirani et al., 2001b) compares the curve log WK to the curve obtained from data uniformly distributed over a rectangle containing the data."
+    },
+    {
+      "source": "agglomerative clustering",
+      "target": "divisive clustering",
+      "type": "contrasts_with",
+      "quote": "Agglomerative strategies start at the bottom and at each level recursively merge a selected pair of clusters into a single cluster... Divisive methods start at the top"
+    },
+    {
+      "source": "dendrogram",
+      "target": "hierarchical clustering",
+      "type": "uses",
+      "quote": "A dendrogram provides a highly interpretable complete description of the hierarchical clustering in a graphical format."
+    },
+    {
+      "source": "cophenetic correlation coefficient",
+      "target": "cophenetic dissimilarity",
+      "type": "uses",
+      "quote": "This is the correlation between the N(N − 1)/2 pairwise observation dissimilarities dii′ input to the algorithm and their corresponding cophenetic dissimilarities Cii′"
+    },
+    {
+      "source": "cophenetic dissimilarity",
+      "target": "ultrametric inequality",
+      "type": "prerequisite",
+      "quote": "Also these dissimilarities obey the ultrametric inequality"
+    },
+    {
+      "source": "single linkage agglomerative clustering",
+      "target": "chaining",
+      "type": "uses",
+      "quote": "It will therefore have a tendency to combine, at relatively low thresholds, observations linked by a series of close intermediate observations. This phenomenon, referred to as chaining"
+    },
+    {
+      "source": "complete linkage agglomerative clustering",
+      "target": "cluster diameter",
+      "type": "uses",
+      "quote": "It will tend to produce compact clusters with small diameters (14.44)."
+    },
+    {
+      "source": "group average clustering",
+      "target": "single linkage agglomerative clustering",
+      "type": "contrasts_with",
+      "quote": "Group average clustering (14.43) represents a compromise between the two extremes of single and complete linkage."
+    },
+    {
+      "source": "group average clustering",
+      "target": "complete linkage agglomerative clustering",
+      "type": "contrasts_with",
+      "quote": "Group average clustering (14.43) represents a compromise between the two extremes of single and complete linkage."
+    },
+    {
+      "source": "self-organizing map",
+      "target": "k-means clustering",
+      "type": "special_case_of",
+      "quote": "This method can be viewed as a constrained version of K-means clustering, in which the prototypes are encouraged to lie in a one- or two-dimensional manifold in the feature space."
+    },
+    {
+      "source": "batch som",
+      "target": "self-organizing map",
+      "type": "special_case_of",
+      "quote": "The original SOM algorithm was online—observations are processed one at a time—and later a batch version was proposed."
+    },
+    {
+      "source": "self-organizing map",
+      "target": "principal curves and surfaces",
+      "type": "uses",
+      "quote": "The technique also bears a close relationship to principal curves and surfaces"
+    },
+    {
+      "source": "reconstruction error in clustering",
+      "target": "k-means clustering",
+      "type": "uses",
+      "quote": "One can do this by computing the reconstruction error ||x − mj||², summed over observations, for both methods."
+    },
+    {
+      "source": "term-document matrix",
+      "target": "self-organizing map",
+      "type": "uses",
+      "quote": "A term-document matrix is created, where each row represents a single document... These reduced vectors are then the input to the SOM."
+    },
+    {
+      "source": "principal component analysis",
+      "target": "singular value decomposition",
+      "type": "uses",
+      "quote": "We construct the singular value decomposition of X:"
+    },
+    {
+      "source": "rank-q linear model",
+      "target": "principal component analysis",
+      "type": "prerequisite",
+      "quote": "consider the rank-q linear model for representing them"
+    },
+    {
+      "source": "right singular vectors",
+      "target": "singular value decomposition",
+      "type": "prerequisite",
+      "quote": "V is a p×p orthogonal matrix (VT V = Ip) with columns vj called the right singular vectors"
+    },
+    {
+      "source": "left singular vectors",
+      "target": "singular value decomposition",
+      "type": "prerequisite",
+      "quote": "U is an N × p orthogonal matrix (UT U = Ip) whose columns uj are called the left singular vectors"
+    },
+    {
+      "source": "singular values",
+      "target": "singular value decomposition",
+      "type": "prerequisite",
+      "quote": "D is a p×p diagonal matrix, with diagonal elements d1 ≥ d2 ≥ ⋅⋅⋅ ≥ dp ≥ 0 known as the singular values."
+    },
+    {
+      "source": "principal components",
+      "target": "left singular vectors",
+      "type": "uses",
+      "quote": "The columns of UD are called the principal components of X"
+    },
+    {
+      "source": "procrustes transformation",
+      "target": "procrustes distance",
+      "type": "uses",
+      "quote": "and the minimal distances is referred to as the Procrustes distance."
+    },
+    {
+      "source": "procrustes average",
+      "target": "procrustes transformation",
+      "type": "uses",
+      "quote": "Related to Procrustes distance is the Procrustes average of a collection of L shapes"
+    },
+    {
+      "source": "principal curve",
+      "target": "principal components",
+      "type": "generalizes",
+      "quote": "Principal curves generalize the principal component line, providing a smooth one-dimensional curved approximation"
+    },
+    {
+      "source": "principal curve",
+      "target": "self-consistency property",
+      "type": "uses",
+      "quote": "This says f(λ) is the average of all data points that project to it, that is, the points for which it is 'responsible.' This is also known as a self-consistency property."
+    },
+    {
+      "source": "principal surface",
+      "target": "principal curve",
+      "type": "generalizes",
+      "quote": "Principal surfaces have exactly the same form as principal curves, but are of higher dimension."
+    },
+    {
+      "source": "principal surface",
+      "target": "self-organizing map",
+      "type": "contrasts_with",
+      "quote": "Principal surfaces are very similar to self-organizing maps... There is a difference, however"
+    },
+    {
+      "source": "spectral clustering",
+      "target": "k-means clustering",
+      "type": "uses",
+      "quote": "Using a standard method like K-means, we then cluster the rows of Z to yield a clustering of the original data points."
+    },
+    {
+      "source": "spectral clustering",
+      "target": "similarity graph",
+      "type": "uses",
+      "quote": "We represent the observations in an undirected similarity graph G = ⟨V, E⟩."
+    },
+    {
+      "source": "mutual k-nearest-neighbor graph",
+      "target": "similarity graph",
+      "type": "special_case_of",
+      "quote": "The most popular is the mutual K-nearest-neighbor graph."
+    },
+    {
+      "source": "graph laplacian",
+      "target": "adjacency matrix",
+      "type": "uses",
+      "quote": "Finally, the graph Laplacian is defined by"
+    },
+    {
+      "source": "normalized graph laplacian",
+      "target": "graph laplacian",
+      "type": "special_case_of",
+      "quote": "This is called the unnormalized graph Laplacian; a number of normalized versions have been proposed"
+    },
+    {
+      "source": "spectral clustering",
+      "target": "graph laplacian",
+      "type": "uses",
+      "quote": "Spectral clustering finds the m eigenvectors ZN×m corresponding to the m smallest eigenvalues of L"
+    },
+    {
+      "source": "kernel principal components",
+      "target": "principal component analysis",
+      "type": "generalizes",
+      "quote": "Kernel PCA (Schölkopf et al., 1999) expand the scope of PCA, mimicking what we would obtain if we were to expand the features by non-linear transformations"
+    },
+    {
+      "source": "kernel principal components",
+      "target": "reproducing kernel hilbert space",
+      "type": "uses",
+      "quote": "We can gain more insight into kernel PCA by viewing the zm as sample evaluations of principal component functions gm ∈ HK, with HK the reproducing kernel Hilbert space generated by K"
+    },
+    {
+      "source": "kernel principal components",
+      "target": "spectral clustering",
+      "type": "uses",
+      "quote": "Kernel PCA finds the eigenvectors corresponding to the largest eigenvalues of ;K; this is equivalent to finding the eigenvectors corresponding to the smallest eigenvalues of"
+    },
+    {
+      "source": "sparse principal components",
+      "target": "principal component analysis",
+      "type": "special_case_of",
+      "quote": "In this section we briefly discuss some methods for deriving principal components with sparse loadings."
+    },
+    {
+      "source": "scotlass",
+      "target": "sparse principal components",
+      "type": "example_of",
+      "quote": "The SCoTLASS procedure of Jolliffe et al. (2003) takes the first approach"
+    },
+    {
+      "source": "elastic net for sparse pca",
+      "target": "sparse principal components",
+      "type": "example_of",
+      "quote": "Zou et al. (2006) start instead with the regression/reconstruction property of PCA"
+    },
+    {
+      "source": "elastic net for sparse pca",
+      "target": "procrustes transformation",
+      "type": "uses",
+      "quote": "minimization over Θ with V fixed is a version of the Procrustes problem (14.56), and is solved by a simple SVD calculation"
+    },
+    {
+      "source": "non-negative matrix factorization",
+      "target": "principal component analysis",
+      "type": "contrasts_with",
+      "quote": "Non-negative matrix factorization (Lee and Seung, 1999) is a recent alternative approach to principal components analysis, in which the data and components are assumed to be non-negative."
+    },
+    {
+      "source": "archetypal analysis",
+      "target": "k-means clustering",
+      "type": "contrasts_with",
+      "quote": "This method, due to Cutler and Breiman (1994), approximates data points by prototypes that are themselves linear combinations of data points. In this sense it has a similar flavor to K-means clustering."
+    },
+    {
+      "source": "factor analysis",
+      "target": "singular value decomposition",
+      "type": "uses",
+      "quote": "Although we will not go into details here, the SVD plays a key role in the estimation of (14.81)."
+    },
+    {
+      "source": "factor analysis",
+      "target": "principal component analysis",
+      "type": "contrasts_with",
+      "quote": "This is an important distinction between factor analysis and PCA, although not central to the discussion here."
+    },
+    {
+      "source": "independent component analysis",
+      "target": "factor analysis",
+      "type": "contrasts_with",
+      "quote": "The independent component analysis (ICA) model has exactly the same form as (14.78), except the Si are assumed to be statistically independent rather than uncorrelated."
+    },
+    {
+      "source": "independent component analysis",
+      "target": "blind source separation",
+      "type": "uses",
+      "quote": "ICA is able to perform blind source separation, by exploiting the independence and non-Gaussianity of the original sources."
+    },
+    {
+      "source": "independent component analysis",
+      "target": "differential entropy",
+      "type": "uses",
+      "quote": "Many of the popular approaches to ICA are based on entropy."
+    },
+    {
+      "source": "mutual information",
+      "target": "differential entropy",
+      "type": "uses",
+      "quote": "it is easy to show that"
+    },
+    {
+      "source": "negentropy",
+      "target": "differential entropy",
+      "type": "uses",
+      "quote": "For convenience, rather than using the entropy H(Yj), Hyvärinen and Oja (2000) use the negentropy measure J(Yj) defined by"
+    },
+    {
+      "source": "independent component analysis",
+      "target": "negentropy",
+      "type": "uses",
+      "quote": "this is equivalent to minimizing the sum of the entropies of the separate components of Y, which in turn amounts to maximizing their departures from Gaussianity."
+    },
+    {
+      "source": "exploratory projection pursuit",
+      "target": "independent component analysis",
+      "type": "uses",
+      "quote": "Despite their different origins, ICA and exploratory projection pursuit are quite similar, at least in the representation described here."
+    },
+    {
+      "source": "exploratory projection pursuit",
+      "target": "projection indices",
+      "type": "uses",
+      "quote": "They proposed a number of projection indices for optimization, each focusing on a different departure from Gaussianity."
+    },
+    {
+      "source": "prodeniica",
+      "target": "independent component analysis",
+      "type": "example_of",
+      "quote": "so here we present an approach that estimates this density directly using generalized additive models"
+    },
+    {
+      "source": "prodeniica",
+      "target": "tilted gaussian density",
+      "type": "uses",
+      "quote": "In the spirit of representing departures from Gaussianity, we represent each fj as fj(sj) = φ(sj)e^(gj(sj)), a tilted Gaussian density."
+    },
+    {
+      "source": "amari metric",
+      "target": "independent component analysis",
+      "type": "uses",
+      "quote": "We used the Amari metric (Bach and Jordan, 2002) as a measure of the closeness of the two frames"
+    },
+    {
+      "source": "multidimensional scaling",
+      "target": "self-organizing map",
+      "type": "contrasts_with",
+      "quote": "Both self-organizing maps and principal curves and surfaces map data points in IRp to a lower-dimensional manifold. Multidimensional scaling (MDS) has a similar goal, but approaches the problem in a somewhat different way."
+    },
+    {
+      "source": "multidimensional scaling",
+      "target": "principal curves and surfaces",
+      "type": "contrasts_with",
+      "quote": "Both self-organizing maps and principal curves and surfaces map data points in IRp to a lower-dimensional manifold. Multidimensional scaling (MDS) has a similar goal, but approaches the problem in a somewhat different way."
+    },
+    {
+      "source": "kruskal-shephard scaling",
+      "target": "multidimensional scaling",
+      "type": "example_of",
+      "quote": "This is known as least squares or Kruskal–Shephard scaling."
+    },
+    {
+      "source": "sammon mapping",
+      "target": "kruskal-shephard scaling",
+      "type": "contrasts_with",
+      "quote": "A variation on least squares scaling is the so-called Sammon mapping"
+    },
+    {
+      "source": "classical scaling",
+      "target": "principal component analysis",
+      "type": "equivalent_to",
+      "quote": "If the similarities are in fact centered inner-products, classical scaling is exactly equivalent to principal components"
+    },
+    {
+      "source": "classical scaling",
+      "target": "kruskal-shephard scaling",
+      "type": "contrasts_with",
+      "quote": "Classical scaling is not equivalent to least squares scaling; the loss functions are different, and the mapping can be nonlinear."
+    },
+    {
+      "source": "metric scaling",
+      "target": "kruskal-shephard scaling",
+      "type": "prerequisite",
+      "quote": "Least squares and classical scaling are referred to as metric scaling methods"
+    },
+    {
+      "source": "metric scaling",
+      "target": "classical scaling",
+      "type": "prerequisite",
+      "quote": "Least squares and classical scaling are referred to as metric scaling methods"
+    },
+    {
+      "source": "shephard-kruskal nonmetric scaling",
+      "target": "metric scaling",
+      "type": "contrasts_with",
+      "quote": "Shephard–Kruskal nonmetric scaling effectively uses only ranks."
+    },
+    {
+      "source": "shephard-kruskal nonmetric scaling",
+      "target": "isotonic regression",
+      "type": "uses",
+      "quote": "With the zi fixed, the method of isotonic regression is used to find the best monotonic approximation"
+    },
+    {
+      "source": "isometric feature mapping",
+      "target": "geodesic distance on manifold",
+      "type": "uses",
+      "quote": "Isometric feature mapping (ISOMAP) (Tenenbaum et al., 2000) constructs a graph to approximate the geodesic distance between points along the manifold."
+    },
+    {
+      "source": "isometric feature mapping",
+      "target": "classical scaling",
+      "type": "uses",
+      "quote": "Finally, classical scaling is applied to the graph distances, to produce a low-dimensional mapping."
+    },
+    {
+      "source": "local linear embedding",
+      "target": "isometric feature mapping",
+      "type": "contrasts_with",
+      "quote": "Local linear embedding (Roweis and Saul, 2000) takes a very different approach"
+    },
+    {
+      "source": "local linear embedding",
+      "target": "multidimensional scaling",
+      "type": "special_case_of",
+      "quote": "Several methods have been recently proposed for nonlinear dimension reduction, similar in spirit to principal surfaces."
+    }
+  ]
+}

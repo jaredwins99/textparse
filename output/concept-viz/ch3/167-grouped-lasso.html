@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grouped Lasso — ESL Ch3</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0f1117;
+    color: #e2e8f0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    padding: 0 0 40px 0;
+  }
+  header {
+    background: linear-gradient(135deg, #1a1d2e 0%, #16213e 100%);
+    border-bottom: 2px solid #2d3561;
+    padding: 28px 40px;
+  }
+  header .breadcrumb { font-size: 12px; color: #64748b; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+  header h1 { font-size: 2rem; font-weight: 700; color: #f59e0b; letter-spacing: -0.02em; }
+  header .meta { display: flex; gap: 12px; margin-top: 8px; font-size: 13px; color: #64748b; flex-wrap: wrap; }
+  header .meta span { background: #1e2235; padding: 3px 10px; border-radius: 12px; border: 1px solid #2d3561; }
+  .formula-bar {
+    background: #13151f;
+    border-left: 4px solid #f59e0b;
+    padding: 16px 40px;
+    font-size: 0.95rem;
+    color: #fcd34d;
+    border-bottom: 1px solid #1e2235;
+    line-height: 2;
+  }
+  main {
+    max-width: 1100px;
+    margin: 32px auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+  }
+  .card {
+    background: #13151f;
+    border: 1px solid #1e2235;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .card:last-child { margin-bottom: 0; }
+  .card h2 {
+    font-size: 14px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #64748b;
+    margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #1e2235;
+  }
+  .sidebar { display: flex; flex-direction: column; gap: 20px; }
+  #viz-container { width: 100%; height: 420px; }
+  .slider-row {
+    display: flex; align-items: center; gap: 16px; margin: 16px 0 8px 0;
+    padding: 14px 16px; background: #0f1117; border-radius: 8px; border: 1px solid #1e2235;
+  }
+  .slider-row label { font-size: 0.9rem; color: #94a3b8; min-width: 70px; }
+  .slider-row input[type=range] {
+    flex: 1; -webkit-appearance: none; height: 4px; border-radius: 2px; background: #2d3561; outline: none;
+  }
+  .slider-row input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #f59e0b; cursor: pointer;
+  }
+  .slider-row .val-display { font-size: 1rem; font-weight: 700; color: #f59e0b; min-width: 40px; text-align: right; }
+  .quote-block {
+    background: #0f1117; border-left: 3px solid #f59e0b; padding: 14px 16px;
+    border-radius: 0 8px 8px 0; font-style: italic; font-size: 0.92rem; line-height: 1.7; color: #94a3b8; margin-bottom: 14px;
+  }
+  .quote-block cite { display: block; margin-top: 8px; font-style: normal; font-size: 0.8rem; color: #475569; }
+  .guarantee-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .g-item { border-radius: 8px; padding: 10px 12px; font-size: 0.82rem; font-weight: 500; }
+  .g-yes  { background: #0d2b1a; border: 1px solid #166534; color: #4ade80; }
+  .g-no   { background: #2b0d0d; border: 1px solid #991b1b; color: #f87171; }
+  .g-cond { background: #1a1a0d; border: 1px solid #713f12; color: #fbbf24; }
+  .g-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.7; display: block; margin-bottom: 2px; }
+  .related-list { list-style: none; }
+  .related-list li { padding: 8px 0; border-bottom: 1px solid #1e2235; font-size: 0.88rem; color: #94a3b8; }
+  .related-list li:last-child { border-bottom: none; }
+  .related-list a { color: #f59e0b; text-decoration: none; }
+  .related-list a:hover { text-decoration: underline; }
+  .group-legend {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;
+  }
+  .group-badge {
+    padding: 5px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em;
+  }
+  .status-indicator {
+    margin-top: 14px; padding: 12px 16px; background: #0f1117; border-radius: 8px;
+    border: 1px solid #1e2235; font-size: 0.85rem; color: #94a3b8; line-height: 1.5;
+  }
+  .status-indicator strong { color: #e2e8f0; }
+</style>
+</head>
+<body>
+<header>
+  <div class="breadcrumb">ESL &rsaquo; Chapter 3 &rsaquo; Section 3.1 &rsaquo; comparison / selection</div>
+  <h1>Grouped Lasso</h1>
+  <div class="meta">
+    <span>ID 167</span>
+    <span>Section 3.1</span>
+    <span>comparison / selection</span>
+    <span>Group Sparsity</span>
+  </div>
+</header>
+
+<div class="formula-bar">
+  \( \min_\beta \left\{ \tfrac{1}{2}\|\mathbf{y} - \beta_0\mathbf{1} - \sum_\ell X_\ell\beta_\ell\|^2 + \lambda \sum_\ell \sqrt{p_\ell}\,\|\beta_\ell\|_2 \right\} \)
+  &nbsp;&mdash;&nbsp; \(p_\ell\) = size of group \(\ell\), \(\|\beta_\ell\|_2\) = L2 norm within group
+</div>
+
+<main>
+  <div>
+    <div class="card">
+      <h2>Group Selection Visualization</h2>
+      <div class="group-legend" id="group-legend"></div>
+      <div class="slider-row">
+        <label>\(\lambda =\)</label>
+        <input type="range" id="lambda-slider" min="0" max="3" step="0.05" value="0.8">
+        <span class="val-display" id="lambda-val">0.80</span>
+      </div>
+      <div id="viz-container"></div>
+      <div class="status-indicator" id="status-box"></div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="card">
+      <h2>Book Quote</h2>
+      <div class="quote-block">
+        "This procedure encourages sparsity at both the group and individual levels."
+        <cite>— ESL, Section 3.1</cite>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Guarantees</h2>
+      <div class="guarantee-grid">
+        <div class="g-item g-no"><span class="g-label">Unbiased</span>No — L1/L2 regularization induces bias</div>
+        <div class="g-item g-yes"><span class="g-label">Group Sparse</span>Yes — entire groups shrink to zero</div>
+        <div class="g-item g-yes"><span class="g-label">Convex</span>Yes — L2 norm over groups is convex</div>
+        <div class="g-item g-cond"><span class="g-label">Ind. Sparse</span>Cond. — only with L1 within groups</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Key Insight</h2>
+      <div style="background:#0f1117; border-radius:8px; padding:14px; font-size:0.85rem; color:#94a3b8; line-height:1.7; border:1px solid #1e2235;">
+        The \(\sqrt{p_\ell}\) factor corrects for group size: larger groups have proportionally larger penalty, ensuring fair competition between groups of different sizes.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Related Concepts</h2>
+      <ul class="related-list">
+        <li><a href="151-soft-thresholding.html">Soft Thresholding</a> — single-coef Lasso solution</li>
+        <li><a href="168-relaxed-lasso.html">Relaxed Lasso</a> — two-stage variant</li>
+        <li><a href="170-adaptive-lasso.html">Adaptive Lasso</a> — per-coef adaptive weights</li>
+        <li><a href="150-basis-pursuit.html">Basis Pursuit</a> — Lasso equivalence</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<script>
+// Group definitions: [name, size, trueNorm, color]
+const groups = [
+  { name: 'Group A', size: 3, trueNorm: 2.5, color: '#f59e0b', vars: ['A1','A2','A3'] },
+  { name: 'Group B', size: 2, trueNorm: 1.8, color: '#a78bfa', vars: ['B1','B2'] },
+  { name: 'Group C', size: 5, trueNorm: 0.9, color: '#34d399', vars: ['C1','C2','C3','C4','C5'] },
+  { name: 'Group D', size: 4, trueNorm: 3.2, color: '#f87171', vars: ['D1','D2','D3','D4'] },
+  { name: 'Group E', size: 2, trueNorm: 0.5, color: '#60a5fa', vars: ['E1','E2'] },
+];
+
+function effectiveNorm(g, lam) {
+  const penalty = lam * Math.sqrt(g.size);
+  return Math.max(g.trueNorm - penalty, 0);
+}
+
+// Build legend
+const legendEl = document.getElementById('group-legend');
+groups.forEach(g => {
+  const b = document.createElement('div');
+  b.className = 'group-badge';
+  b.style.background = g.color + '22';
+  b.style.border = '1px solid ' + g.color;
+  b.style.color = g.color;
+  b.textContent = `${g.name} (p=${g.size})`;
+  legendEl.appendChild(b);
+});
+
+function buildTraces(lam) {
+  const traces = [];
+  let xPos = 0;
+  const xTicks = [];
+  const xTickLabels = [];
+
+  groups.forEach(g => {
+    const effectNorm = effectiveNorm(g, lam);
+    const active = effectNorm > 0;
+
+    // Individual coefficient bars (simulate uniform split across group)
+    g.vars.forEach((v, i) => {
+      const indivCoef = active ? (g.trueNorm / g.size) * (0.7 + 0.3 * (Math.random() * 0.5 + 0.75)) : 0;
+      // For deterministic display, use fixed pattern
+      const patterns = [1.0, 0.85, 1.15, 0.9, 1.05];
+      const base = active ? (effectNorm / g.size) * patterns[i % patterns.length] : 0;
+      xTicks.push(xPos);
+      xTickLabels.push(v);
+      traces.push({
+        x: [xPos],
+        y: [base],
+        type: 'bar',
+        name: g.name,
+        showlegend: i === 0,
+        marker: {
+          color: active ? g.color : '#2d3561',
+          opacity: active ? 0.85 : 0.35,
+          line: { color: active ? g.color : '#1e2235', width: 1 }
+        },
+        hovertemplate: `<b>${v}</b> (${g.name})<br>Coef: %{y:.3f}<extra></extra>`
+      });
+      xPos += 1;
+    });
+    xPos += 0.7; // gap between groups
+  });
+
+  return { traces, xTicks, xTickLabels };
+}
+
+function buildGroupNormTrace(lam) {
+  return groups.map(g => ({
+    name: g.name,
+    norm: effectiveNorm(g, lam),
+    active: effectiveNorm(g, lam) > 0,
+    color: g.color
+  }));
+}
+
+function updateStatus(lam) {
+  const activeGroups = groups.filter(g => effectiveNorm(g, lam) > 0);
+  const zeroGroups = groups.filter(g => effectiveNorm(g, lam) === 0);
+  const el = document.getElementById('status-box');
+  const activeNames = activeGroups.map(g => `<span style="color:${g.color}">${g.name}</span>`).join(', ') || 'none';
+  const zeroNames = zeroGroups.map(g => `<span style="color:#475569">${g.name}</span>`).join(', ') || 'none';
+  el.innerHTML = `<strong>Active groups (λ=${lam.toFixed(2)}):</strong> ${activeNames}<br><strong>Zeroed groups:</strong> ${zeroNames}`;
+}
+
+// Build initial plot
+let lam = 0.8;
+const { traces, xTicks, xTickLabels } = buildTraces(lam);
+
+const layout = {
+  paper_bgcolor: '#0f1117',
+  plot_bgcolor: '#0f1117',
+  font: { color: '#94a3b8', family: 'Segoe UI, system-ui, sans-serif', size: 11 },
+  margin: { t: 20, b: 70, l: 55, r: 20 },
+  barmode: 'overlay',
+  xaxis: {
+    title: 'Predictors (colored by group)',
+    tickvals: xTicks,
+    ticktext: xTickLabels,
+    tickangle: -45,
+    gridcolor: '#1e2235',
+    zerolinecolor: '#2d3561'
+  },
+  yaxis: { title: '|Coefficient value|', gridcolor: '#1e2235', zerolinecolor: '#2d3561' },
+  legend: { orientation: 'h', y: -0.35, font: { size: 11 } },
+  showlegend: true
+};
+
+Plotly.newPlot('viz-container', traces, layout, { responsive: true, displayModeBar: false });
+updateStatus(lam);
+
+const slider = document.getElementById('lambda-slider');
+const display = document.getElementById('lambda-val');
+
+slider.addEventListener('input', () => {
+  lam = parseFloat(slider.value);
+  display.textContent = lam.toFixed(2);
+  const { traces: newTraces } = buildTraces(lam);
+  Plotly.react('viz-container', newTraces, layout);
+  updateStatus(lam);
+});
+</script>
+</body>
+</html>

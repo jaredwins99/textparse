@@ -1,0 +1,1087 @@
+{
+  "chapter": "9",
+  "sections": [
+    {
+      "number": "9.1",
+      "title": "Generalized Additive Models",
+      "page_start": 313
+    },
+    {
+      "number": "9.1.1",
+      "title": "Fitting Additive Models",
+      "page_start": 315
+    },
+    {
+      "number": "9.1.2",
+      "title": "Example: Additive Logistic Regression",
+      "page_start": 317
+    },
+    {
+      "number": "9.2",
+      "title": "Tree-Based Methods",
+      "page_start": 323
+    },
+    {
+      "number": "9.2.1",
+      "title": "Background",
+      "page_start": 323
+    },
+    {
+      "number": "9.2.2",
+      "title": "Regression Trees",
+      "page_start": 325
+    },
+    {
+      "number": "9.2.3",
+      "title": "Classi\ufb01cation Trees",
+      "page_start": 326
+    },
+    {
+      "number": "9.2.4",
+      "title": "Other Issues",
+      "page_start": 328
+    },
+    {
+      "number": "9.2.5",
+      "title": "Spam Example (Continued)",
+      "page_start": 331
+    },
+    {
+      "number": "9.3",
+      "title": "PRIM: Bump Hunting",
+      "page_start": 335
+    },
+    {
+      "number": "9.3.1",
+      "title": "Spam Example (Continued)",
+      "page_start": 338
+    },
+    {
+      "number": "9.4",
+      "title": "MARS: Multivariate Adaptive Regression Splines",
+      "page_start": 339
+    },
+    {
+      "number": "9.4.1",
+      "title": "Spam Example (Continued)",
+      "page_start": 344
+    },
+    {
+      "number": "9.4.2",
+      "title": "Example (Simulated Data)",
+      "page_start": 345
+    },
+    {
+      "number": "9.4.3",
+      "title": "Other Issues",
+      "page_start": 346
+    },
+    {
+      "number": "9.5",
+      "title": "Hierarchical Mixtures of Experts",
+      "page_start": 347
+    },
+    {
+      "number": "9.6",
+      "title": "Missing Data",
+      "page_start": 350
+    },
+    {
+      "number": "9.7",
+      "title": "Computational Considerations",
+      "page_start": 352
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": 27425,
+      "page": 313,
+      "seq": 0,
+      "text": "This is page 295\nPrinter: Opaque this\n9\nAdditive Models, Trees, and Related\nMethods"
+    },
+    {
+      "id": 27426,
+      "page": 313,
+      "seq": 1,
+      "text": "In this chapter we begin our discussion of some speci\ufb01c methods for super-\nvised learning. These techniques each assume a (di\ufb00erent) structured form\nfor the unknown regression function, and by doing so they \ufb01nesse the curse\nof dimensionality. Of course, they pay the possible price of misspecifying\nthe model, and so in each case there is a tradeo\ufb00that has to be made. They\ntake o\ufb00where Chapters 3\u20136 left o\ufb00. We describe \ufb01ve related techniques:\ngeneralized additive models, trees, multivariate adaptive regression splines,\nthe patient rule induction method, and hierarchical mixtures of experts."
+    },
+    {
+      "id": 27428,
+      "page": 313,
+      "seq": 3,
+      "text": "Regression models play an important role in many data analyses, providing\nprediction and classi\ufb01cation rules, and data analytic tools for understand-\ning the importance of di\ufb00erent inputs.\nAlthough attractively simple, the traditional linear model often fails in\nthese situations: in real life, e\ufb00ects are often not linear. In earlier chapters\nwe described techniques that used prede\ufb01ned basis functions to achieve\nnonlinearities. This section describes more automatic \ufb02exible statistical\nmethods that may be used to identify and characterize nonlinear regression\ne\ufb00ects. These methods are called \u201cgeneralized additive models.\u201d\nIn the regression setting, a generalized additive model has the form"
+    },
+    {
+      "id": 27431,
+      "page": 314,
+      "seq": 1,
+      "text": "As usual X1, X2, . . . , Xp represent predictors and Y is the outcome; the fj\u2019s\nare unspeci\ufb01ed smooth (\u201cnonparametric\u201d) functions. If we were to model\neach function using an expansion of basis functions (as in Chapter 5), the\nresulting model could then be \ufb01t by simple least squares. Our approach\nhere is di\ufb00erent: we \ufb01t each function using a scatterplot smoother (e.g., a\ncubic smoothing spline or kernel smoother), and provide an algorithm for\nsimultaneously estimating all p functions (Section 9.1.1).\nFor two-class classi\ufb01cation, recall the logistic regression model for binary\ndata discussed in Section 4.4. We relate the mean of the binary response\n\u03bc(X) = Pr(Y = 1|X) to the predictors via a linear regression model and\nthe logit link function:"
+    },
+    {
+      "id": 27434,
+      "page": 314,
+      "seq": 4,
+      "text": "The additive logistic regression model replaces each linear term by a more\ngeneral functional form"
+    },
+    {
+      "id": 27437,
+      "page": 314,
+      "seq": 7,
+      "text": "where again each fj is an unspeci\ufb01ed smooth function. While the non-\nparametric form for the functions fj makes the model more \ufb02exible, the\nadditivity is retained and allows us to interpret the model in much the\nsame way as before. The additive logistic regression model is an example\nof a generalized additive model. In general, the conditional mean \u03bc(X) of\na response Y is related to an additive function of the predictors via a link\nfunction g:\ng[\u03bc(X)] = \u03b1 + f1(X1) + \u00b7 \u00b7 \u00b7 + fp(Xp).\n(9.4)"
+    },
+    {
+      "id": 27438,
+      "page": 314,
+      "seq": 8,
+      "text": "Examples of classical link functions are the following:"
+    },
+    {
+      "id": 27439,
+      "page": 314,
+      "seq": 9,
+      "text": "\u2022 g(\u03bc) = \u03bc is the identity link, used for linear and additive models for\nGaussian response data."
+    },
+    {
+      "id": 27440,
+      "page": 314,
+      "seq": 10,
+      "text": "\u2022 g(\u03bc) = logit(\u03bc) as above, or g(\u03bc) = probit(\u03bc), the probit link function,\nfor modeling binomial probabilities. The probit function is the inverse\nGaussian cumulative distribution function: probit(\u03bc) = \u03a6\u22121(\u03bc)."
+    },
+    {
+      "id": 27441,
+      "page": 314,
+      "seq": 11,
+      "text": "\u2022 g(\u03bc) = log(\u03bc) for log-linear or log-additive models for Poisson count\ndata."
+    },
+    {
+      "id": 27442,
+      "page": 314,
+      "seq": 12,
+      "text": "All three of these arise from exponential family sampling models, which\nin addition include the gamma and negative-binomial distributions. These\nfamilies generate the well-known class of generalized linear models, which\nare all extended in the same way to generalized additive models.\nThe functions fj are estimated in a \ufb02exible manner, using an algorithm\nwhose basic building block is a scatterplot smoother. The estimated func-\ntion \u02c6fj can then reveal possible nonlinearities in the e\ufb00ect of Xj. Not all"
+    },
+    {
+      "id": 27444,
+      "page": 315,
+      "seq": 1,
+      "text": "of the functions fj need to be nonlinear. We can easily mix in linear and\nother parametric forms with the nonlinear terms, a necessity when some of\nthe inputs are qualitative variables (factors). The nonlinear terms are not\nrestricted to main e\ufb00ects either; we can have nonlinear components in two\nor more variables, or separate curves in Xj for each level of the factor Xk.\nThus each of the following would qualify:"
+    },
+    {
+      "id": 27445,
+      "page": 315,
+      "seq": 2,
+      "text": "\u2022 g(\u03bc) = XT \u03b2 + \u03b1k + f(Z)\u2014a semiparametric model, where X is a\nvector of predictors to be modeled linearly, \u03b1k the e\ufb00ect for the kth\nlevel of a qualitative input V , and the e\ufb00ect of predictor Z is modeled\nnonparametrically."
+    },
+    {
+      "id": 27446,
+      "page": 315,
+      "seq": 3,
+      "text": "\u2022 g(\u03bc) = f(X) + gk(Z)\u2014again k indexes the levels of a qualitative\ninput V . and thus creates an interaction term g(V, Z) = gk(Z) for\nthe e\ufb00ect of V and Z."
+    },
+    {
+      "id": 27447,
+      "page": 315,
+      "seq": 4,
+      "text": "\u2022 g(\u03bc) = f(X) + g(Z, W) where g is a nonparametric function in two\nfeatures."
+    },
+    {
+      "id": 27448,
+      "page": 315,
+      "seq": 5,
+      "text": "Additive models can replace linear models in a wide variety of settings,\nfor example an additive decomposition of time series,"
+    },
+    {
+      "id": 27450,
+      "page": 315,
+      "seq": 7,
+      "text": "where St is a seasonal component, Tt is a trend and \u03b5 is an error term."
+    },
+    {
+      "id": 27452,
+      "page": 315,
+      "seq": 9,
+      "text": "In this section we describe a modular algorithm for \ufb01tting additive models\nand their generalizations. The building block is the scatterplot smoother\nfor \ufb01tting nonlinear e\ufb00ects in a \ufb02exible way. For concreteness we use as our\nscatterplot smoother the cubic smoothing spline described in Chapter 5.\nThe additive model has the form"
+    },
+    {
+      "id": 27456,
+      "page": 315,
+      "seq": 13,
+      "text": "where the error term \u03b5 has mean zero. Given observations xi, yi, a criterion\nlike the penalized sum of squares (5.9) of Section 5.4 can be speci\ufb01ed for\nthis problem,"
+    },
+    {
+      "id": 27469,
+      "page": 315,
+      "seq": 26,
+      "text": "(9.7)\nwhere the \u03bbj \u22650 are tuning parameters. It can be shown that the minimizer\nof (9.7) is an additive cubic spline model; each of the functions fj is a"
+    },
+    {
+      "id": 27471,
+      "page": 316,
+      "seq": 1,
+      "text": "Algorithm 9.1 The Back\ufb01tting Algorithm for Additive Models."
+    },
+    {
+      "id": 27485,
+      "page": 316,
+      "seq": 15,
+      "text": "until the functions \u02c6fj change less than a prespeci\ufb01ed threshold."
+    },
+    {
+      "id": 27486,
+      "page": 316,
+      "seq": 16,
+      "text": "cubic spline in the component Xj, with knots at each of the unique values\nof xij, i = 1, . . . , N. However, without further restrictions on the model,\nthe solution is not unique. The constant \u03b1 is not identi\ufb01able, since we\ncan add or subtract any constants to each of the functions fj, and adjust\n\u03b1 accordingly. The standard convention is to assume that \tN\n1 fj(xij) =\n0 \u2200j\u2014the functions average zero over the data. It is easily seen that \u02c6\u03b1 =\nave(yi) in this case. If in addition to this restriction, the matrix of input\nvalues (having ijth entry xij) has full column rank, then (9.7) is a strictly\nconvex criterion and the minimizer is unique. If the matrix is singular, then\nthe linear part of the components fj cannot be uniquely determined (while\nthe nonlinear parts can!)(Buja et al., 1989).\nFurthermore, a simple iterative procedure exists for \ufb01nding the solution.\nWe set \u02c6\u03b1 = ave(yi), and it never changes. We apply a cubic smoothing\nspline Sj to the targets {yi \u2212\u02c6\u03b1 \u2212\t\nk\u0338=j \u02c6fk(xik)}N\n1 , as a function of xij,\nto obtain a new estimate \u02c6fj. This is done for each predictor in turn, using\nthe current estimates of the other functions \u02c6fk when computing yi \u2212\u02c6\u03b1 \u2212\n\t\nk\u0338=j \u02c6fk(xik). The process is continued until the estimates \u02c6fj stabilize. This\nprocedure, given in detail in Algorithm 9.1, is known as \u201cback\ufb01tting\u201d and\nthe resulting \ufb01t is analogous to a multiple regression for linear models.\nIn principle, the second step in (2) of Algorithm 9.1 is not needed, since\nthe smoothing spline \ufb01t to a mean-zero response has mean zero (Exer-\ncise 9.1). In practice, machine rounding can cause slippage, and the ad-\njustment is advised.\nThis same algorithm can accommodate other \ufb01tting methods in exactly\nthe same way, by specifying appropriate smoothing operators Sj:"
+    },
+    {
+      "id": 27487,
+      "page": 316,
+      "seq": 17,
+      "text": "\u2022 other univariate regression smoothers such as local polynomial re-\ngression and kernel methods;"
+    },
+    {
+      "id": 27489,
+      "page": 317,
+      "seq": 1,
+      "text": "\u2022 linear regression operators yielding polynomial \ufb01ts, piecewise con-\nstant \ufb01ts, parametric spline \ufb01ts, series and Fourier \ufb01ts;"
+    },
+    {
+      "id": 27490,
+      "page": 317,
+      "seq": 2,
+      "text": "\u2022 more complicated operators such as surface smoothers for second or\nhigher-order interactions or periodic smoothers for seasonal e\ufb00ects."
+    },
+    {
+      "id": 27491,
+      "page": 317,
+      "seq": 3,
+      "text": "If we consider the operation of smoother Sj only at the training points, it\ncan be represented by an N \u00d7 N operator matrix Sj (see Section 5.4.1).\nThen the degrees of freedom for the jth term are (approximately) computed\nas dfj = trace[Sj] \u22121, by analogy with degrees of freedom for smoothers\ndiscussed in Chapters 5 and 6.\nFor a large class of linear smoothers Sj, back\ufb01tting is equivalent to a\nGauss\u2013Seidel algorithm for solving a certain linear system of equations.\nDetails are given in Exercise 9.2.\nFor the logistic regression model and other generalized additive models,\nthe appropriate criterion is a penalized log-likelihood. To maximize it, the\nback\ufb01tting procedure is used in conjunction with a likelihood maximizer.\nThe usual Newton\u2013Raphson routine for maximizing log-likelihoods in gen-\neralized linear models can be recast as an IRLS (iteratively reweighted\nleast squares) algorithm. This involves repeatedly \ufb01tting a weighted linear\nregression of a working response variable on the covariates; each regression\nyields a new value of the parameter estimates, which in turn give new work-\ning responses and weights, and the process is iterated (see Section 4.4.1).\nIn the generalized additive model, the weighted linear regression is simply\nreplaced by a weighted back\ufb01tting algorithm. We describe the algorithm in\nmore detail for logistic regression below, and more generally in Chapter 6\nof Hastie and Tibshirani (1990)."
+    },
+    {
+      "id": 27493,
+      "page": 317,
+      "seq": 5,
+      "text": "Probably the most widely used model in medical research is the logistic\nmodel for binary data. In this model the outcome Y can be coded as 0\nor 1, with 1 indicating an event (like death or relapse of a disease) and\n0 indicating no event. We wish to model Pr(Y = 1|X), the probability of\nan event given values of the prognostic factors XT = (X1, . . . , Xp). The\ngoal is usually to understand the roles of the prognostic factors, rather\nthan to classify new individuals. Logistic models are also used in applica-\ntions where one is interested in estimating the class probabilities, for use\nin risk screening. Apart from medical applications, credit risk screening is\na popular application.\nThe generalized additive logistic model has the form"
+    },
+    {
+      "id": 27496,
+      "page": 317,
+      "seq": 8,
+      "text": "The functions f1, f2, . . . , fp are estimated by a back\ufb01tting algorithm\nwithin a Newton\u2013Raphson procedure, shown in Algorithm 9.2."
+    },
+    {
+      "id": 27498,
+      "page": 318,
+      "seq": 1,
+      "text": "Algorithm 9.2 Local Scoring Algorithm for the Additive Logistic Regres-\nsion Model."
+    },
+    {
+      "id": 27499,
+      "page": 318,
+      "seq": 2,
+      "text": "1. Compute starting values: \u02c6\u03b1 = log[\u00afy/(1 \u2212\u00afy)], where \u00afy = ave(yi), the\nsample proportion of ones, and set \u02c6fj \u22610 \u2200j."
+    },
+    {
+      "id": 27500,
+      "page": 318,
+      "seq": 3,
+      "text": "2. De\ufb01ne \u02c6\u03b7i = \u02c6\u03b1 + \t\nj \u02c6fj(xij) and \u02c6pi = 1/[1 + exp(\u2212\u02c6\u03b7i)]."
+    },
+    {
+      "id": 27506,
+      "page": 318,
+      "seq": 9,
+      "text": "(c) Fit an additive model to the targets zi with weights wi, us-\ning a weighted back\ufb01tting algorithm. This gives new estimates\n\u02c6\u03b1, \u02c6fj, \u2200j"
+    },
+    {
+      "id": 27507,
+      "page": 318,
+      "seq": 10,
+      "text": "3. Continue step 2. until the change in the functions falls below a pre-\nspeci\ufb01ed threshold."
+    },
+    {
+      "id": 27508,
+      "page": 318,
+      "seq": 11,
+      "text": "The additive model \ufb01tting in step (2) of Algorithm 9.2 requires a weighted\nscatterplot smoother. Most smoothing procedures can accept observation\nweights (Exercise 5.12); see Chapter 3 of Hastie and Tibshirani (1990) for\nfurther details.\nThe additive logistic regression model can be generalized further to han-\ndle more than two classes, using the multilogit formulation as outlined in\nSection 4.4. While the formulation is a straightforward extension of (9.8),\nthe algorithms for \ufb01tting such models are more complex. See Yee and Wild\n(1996) for details, and the VGAM software currently available from:"
+    },
+    {
+      "id": 27511,
+      "page": 318,
+      "seq": 14,
+      "text": "We apply a generalized additive model to the spam data introduced in\nChapter 1. The data consists of information from 4601 email messages, in\na study to screen email for \u201cspam\u201d (i.e., junk email). The data is publicly\navailable at ftp.ics.uci.edu, and was donated by George Forman from\nHewlett-Packard laboratories, Palo Alto, California.\nThe response variable is binary, with values email or spam, and there are\n57 predictors as described below:"
+    },
+    {
+      "id": 27512,
+      "page": 318,
+      "seq": 15,
+      "text": "\u2022 48 quantitative predictors\u2014the percentage of words in the email that\nmatch a given word. Examples include business, address, internet,"
+    },
+    {
+      "id": 27515,
+      "page": 319,
+      "seq": 2,
+      "text": "Predicted Class\nTrue Class\nemail (0)\nspam (1)\nemail (0)\n58.3%\n2.5%\nspam (1)\n3.0%\n36.3%"
+    },
+    {
+      "id": 27516,
+      "page": 319,
+      "seq": 3,
+      "text": "free, and george. The idea was that these could be customized for\nindividual users."
+    },
+    {
+      "id": 27517,
+      "page": 319,
+      "seq": 4,
+      "text": "\u2022 6 quantitative predictors\u2014the percentage of characters in the email\nthat match a given character. The characters are ch;, ch(, ch[, ch!,\nch$, and ch#."
+    },
+    {
+      "id": 27518,
+      "page": 319,
+      "seq": 5,
+      "text": "\u2022 The average length of uninterrupted sequences of capital letters:\nCAPAVE."
+    },
+    {
+      "id": 27519,
+      "page": 319,
+      "seq": 6,
+      "text": "\u2022 The length of the longest uninterrupted sequence of capital letters:\nCAPMAX."
+    },
+    {
+      "id": 27520,
+      "page": 319,
+      "seq": 7,
+      "text": "\u2022 The sum of the length of uninterrupted sequences of capital letters:\nCAPTOT."
+    },
+    {
+      "id": 27521,
+      "page": 319,
+      "seq": 8,
+      "text": "We coded spam as 1 and email as zero. A test set of size 1536 was randomly\nchosen, leaving 3065 observations in the training set. A generalized additive\nmodel was \ufb01t, using a cubic smoothing spline with a nominal four degrees of\nfreedom for each predictor. What this means is that for each predictor Xj,\nthe smoothing-spline parameter \u03bbj was chosen so that trace[Sj(\u03bbj)]\u22121 = 4,\nwhere Sj(\u03bb) is the smoothing spline operator matrix constructed using the\nobserved values xij, i = 1, . . . , N. This is a convenient way of specifying\nthe amount of smoothing in such a complex model.\nMost of the spam predictors have a very long-tailed distribution. Before\n\ufb01tting the GAM model, we log-transformed each variable (actually log(x+\n0.1)), but the plots in Figure 9.1 are shown as a function of the original\nvariables.\nThe test error rates are shown in Table 9.1; the overall error rate is 5.3%.\nBy comparison, a linear logistic regression has a test error rate of 7.6%.\nTable 9.2 shows the predictors that are highly signi\ufb01cant in the additive\nmodel.\nFor ease of interpretation, in Table 9.2 the contribution for each variable\nis decomposed into a linear component and the remaining nonlinear com-\nponent. The top block of predictors are positively correlated with spam,\nwhile the bottom block is negatively correlated. The linear component is a\nweighted least squares linear \ufb01t of the \ufb01tted curve on the predictor, while\nthe nonlinear part is the residual. The linear component of an estimated"
+    },
+    {
+      "id": 27524,
+      "page": 320,
+      "seq": 2,
+      "text": "Name\nNum.\ndf\nCoe\ufb03cient\nStd. Error\nZ Score\nNonlinear\nP-value\nPositive e\ufb00ects\nour\n5\n3.9\n0.566\n0.114\n4.970\n0.052\nover\n6\n3.9\n0.244\n0.195\n1.249\n0.004\nremove\n7\n4.0\n0.949\n0.183\n5.201\n0.093\ninternet\n8\n4.0\n0.524\n0.176\n2.974\n0.028\nfree\n16\n3.9\n0.507\n0.127\n4.010\n0.065\nbusiness\n17\n3.8\n0.779\n0.186\n4.179\n0.194\nhpl\n26\n3.8\n0.045\n0.250\n0.181\n0.002\nch!\n52\n4.0\n0.674\n0.128\n5.283\n0.164\nch$\n53\n3.9\n1.419\n0.280\n5.062\n0.354\nCAPMAX\n56\n3.8\n0.247\n0.228\n1.080\n0.000\nCAPTOT\n57\n4.0\n0.755\n0.165\n4.566\n0.063\nNegative e\ufb00ects\nhp\n25\n3.9\n\u22121.404\n0.224\n\u22126.262\n0.140\ngeorge\n27\n3.7\n\u22125.003\n0.744\n\u22126.722\n0.045\n1999\n37\n3.8\n\u22120.672\n0.191\n\u22123.512\n0.011\nre\n45\n3.9\n\u22120.620\n0.133\n\u22124.649\n0.597\nedu\n46\n4.0\n\u22121.183\n0.209\n\u22125.647\n0.000"
+    },
+    {
+      "id": 27525,
+      "page": 320,
+      "seq": 3,
+      "text": "function is summarized by the coe\ufb03cient, standard error and Z-score; the\nlatter is the coe\ufb03cient divided by its standard error, and is considered\nsigni\ufb01cant if it exceeds the appropriate quantile of a standard normal dis-\ntribution. The column labeled nonlinear P-value is a test of nonlinearity\nof the estimated function. Note, however, that the e\ufb00ect of each predictor\nis fully adjusted for the entire e\ufb00ects of the other predictors, not just for\ntheir linear parts. The predictors shown in the table were judged signi\ufb01-\ncant by at least one of the tests (linear or nonlinear) at the p = 0.01 level\n(two-sided).\nFigure 9.1 shows the estimated functions for the signi\ufb01cant predictors\nappearing in Table 9.2. Many of the nonlinear e\ufb00ects appear to account for\na strong discontinuity at zero. For example, the probability of spam drops\nsigni\ufb01cantly as the frequency of george increases from zero, but then does\nnot change much after that. This suggests that one might replace each of\nthe frequency predictors by an indicator variable for a zero count, and resort\nto a linear logistic model. This gave a test error rate of 7.4%; including the\nlinear e\ufb00ects of the frequencies as well dropped the test error to 6.6%. It\nappears that the nonlinearities in the additive model have an additional\npredictive power."
+    },
+    {
+      "id": 27581,
+      "page": 322,
+      "seq": 1,
+      "text": "It is more serious to classify a genuine email message as spam, since then\na good email would be \ufb01ltered out and would not reach the user. We can\nalter the balance between the class error rates by changing the losses (see\nSection 2.4). If we assign a loss L01 for predicting a true class 0 as class 1,\nand L10 for predicting a true class 1 as class 0, then the estimated Bayes\nrule predicts class 1 if its probability is greater than L01/(L01 + L10). For\nexample, if we take L01 = 10, L10 = 1 then the (true) class 0 and class 1\nerror rates change to 0.8% and 8.7%.\nMore ambitiously, we can encourage the model to \ufb01t better data in the\nclass 0 by using weights L01 for the class 0 observations and L10 for the\nclass 1 observations. As above, we then use the estimated Bayes rule to\npredict. This gave error rates of 1.2% and 8.0% in (true) class 0 and class 1,\nrespectively. We discuss below the issue of unequal losses further, in the\ncontext of tree-based models.\nAfter \ufb01tting an additive model, one should check whether the inclusion\nof some interactions can signi\ufb01cantly improve the \ufb01t. This can be done\n\u201cmanually,\u201d by inserting products of some or all of the signi\ufb01cant inputs,\nor automatically via the MARS procedure (Section 9.4).\nThis example uses the additive model in an automatic fashion. As a data\nanalysis tool, additive models are often used in a more interactive fashion,\nadding and dropping terms to determine their e\ufb00ect. By calibrating the\namount of smoothing in terms of dfj, one can move seamlessly between\nlinear models (dfj = 1) and partially linear models, where some terms are\nmodeled more \ufb02exibly. See Hastie and Tibshirani (1990) for more details."
+    },
+    {
+      "id": 27583,
+      "page": 322,
+      "seq": 3,
+      "text": "Additive models provide a useful extension of linear models, making them\nmore \ufb02exible while still retaining much of their interpretability. The familiar\ntools for modeling and inference in linear models are also available for\nadditive models, seen for example in Table 9.2. The back\ufb01tting procedure\nfor \ufb01tting these models is simple and modular, allowing one to choose a\n\ufb01tting method appropriate for each input variable. As a result they have\nbecome widely used in the statistical community.\nHowever additive models can have limitations for large data-mining ap-\nplications. The back\ufb01tting algorithm \ufb01ts all predictors, which is not feasi-\nble or desirable when a large number are available. The BRUTO procedure\n(Hastie and Tibshirani, 1990, Chapter 9) combines back\ufb01tting with selec-\ntion of inputs, but is not designed for large data-mining problems. There\nhas also been recent work using lasso-type penalties to estimate sparse ad-\nditive models, for example the COSSO procedure of Lin and Zhang (2006)\nand the SpAM proposal of Ravikumar et al. (2008). For large problems a\nforward stagewise approach such as boosting (Chapter 10) is more e\ufb00ective,\nand also allows for interactions to be included in the model."
+    },
+    {
+      "id": 27587,
+      "page": 323,
+      "seq": 3,
+      "text": "Tree-based methods partition the feature space into a set of rectangles, and\nthen \ufb01t a simple model (like a constant) in each one. They are conceptually\nsimple yet powerful. We \ufb01rst describe a popular method for tree-based\nregression and classi\ufb01cation called CART, and later contrast it with C4.5,\na major competitor.\nLet\u2019s consider a regression problem with continuous response Y and in-\nputs X1 and X2, each taking values in the unit interval. The top left panel\nof Figure 9.2 shows a partition of the feature space by lines that are parallel\nto the coordinate axes. In each partition element we can model Y with a\ndi\ufb00erent constant. However, there is a problem: although each partitioning\nline has a simple description like X1 = c, some of the resulting regions are\ncomplicated to describe.\nTo simplify matters, we restrict attention to recursive binary partitions\nlike that in the top right panel of Figure 9.2. We \ufb01rst split the space into\ntwo regions, and model the response by the mean of Y in each region.\nWe choose the variable and split-point to achieve the best \ufb01t. Then one\nor both of these regions are split into two more regions, and this process\nis continued, until some stopping rule is applied. For example, in the top\nright panel of Figure 9.2, we \ufb01rst split at X1 = t1. Then the region X1 \u2264t1\nis split at X2 = t2 and the region X1 > t1 is split at X1 = t3. Finally, the\nregion X1 > t3 is split at X2 = t4. The result of this process is a partition\ninto the \ufb01ve regions R1, R2, . . . , R5 shown in the \ufb01gure. The corresponding\nregression model predicts Y with a constant cm in region Rm, that is,"
+    },
+    {
+      "id": 27591,
+      "page": 323,
+      "seq": 7,
+      "text": "This same model can be represented by the binary tree in the bottom left\npanel of Figure 9.2. The full dataset sits at the top of the tree. Observations\nsatisfying the condition at each junction are assigned to the left branch,\nand the others to the right branch. The terminal nodes or leaves of the\ntree correspond to the regions R1, R2, . . . , R5. The bottom right panel of\nFigure 9.2 is a perspective plot of the regression surface from this model.\nFor illustration, we chose the node means c1 = \u22125, c2 = \u22127, c3 = 0, c4 =\n2, c5 = 4 to make this plot.\nA key advantage of the recursive binary tree is its interpretability. The\nfeature space partition is fully described by a single tree. With more than\ntwo inputs, partitions like that in the top right panel of Figure 9.2 are\ndi\ufb03cult to draw, but the binary tree representation works in the same\nway. This representation is also popular among medical scientists, perhaps\nbecause it mimics the way that a doctor thinks. The tree strati\ufb01es the"
+    },
+    {
+      "id": 27618,
+      "page": 325,
+      "seq": 1,
+      "text": "population into strata of high and low outcome, on the basis of patient\ncharacteristics."
+    },
+    {
+      "id": 27620,
+      "page": 325,
+      "seq": 3,
+      "text": "We now turn to the question of how to grow a regression tree. Our data\nconsists of p inputs and a response, for each of N observations: that is,\n(xi, yi) for i = 1, 2, . . . , N, with xi = (xi1, xi2, . . . , xip). The algorithm\nneeds to automatically decide on the splitting variables and split points,\nand also what topology (shape) the tree should have. Suppose \ufb01rst that we\nhave a partition into M regions R1, R2, . . . , RM, and we model the response\nas a constant cm in each region:"
+    },
+    {
+      "id": 27624,
+      "page": 325,
+      "seq": 7,
+      "text": "If we adopt as our criterion minimization of the sum of squares \t(yi \u2212\nf(xi))2, it is easy to see that the best \u02c6cm is just the average of yi in region\nRm:"
+    },
+    {
+      "id": 27626,
+      "page": 325,
+      "seq": 9,
+      "text": "Now \ufb01nding the best binary partition in terms of minimum sum of squares\nis generally computationally infeasible. Hence we proceed with a greedy\nalgorithm. Starting with all of the data, consider a splitting variable j and\nsplit point s, and de\ufb01ne the pair of half-planes"
+    },
+    {
+      "id": 27627,
+      "page": 325,
+      "seq": 10,
+      "text": "R1(j, s) = {X|Xj \u2264s} and R2(j, s) = {X|Xj > s}.\n(9.12)"
+    },
+    {
+      "id": 27628,
+      "page": 325,
+      "seq": 11,
+      "text": "Then we seek the splitting variable j and split point s that solve"
+    },
+    {
+      "id": 27635,
+      "page": 325,
+      "seq": 18,
+      "text": "For any choice j and s, the inner minimization is solved by"
+    },
+    {
+      "id": 27636,
+      "page": 325,
+      "seq": 19,
+      "text": "\u02c6c1 = ave(yi|xi \u2208R1(j, s)) and \u02c6c2 = ave(yi|xi \u2208R2(j, s)).\n(9.14)"
+    },
+    {
+      "id": 27637,
+      "page": 325,
+      "seq": 20,
+      "text": "For each splitting variable, the determination of the split point s can\nbe done very quickly and hence by scanning through all of the inputs,\ndetermination of the best pair (j, s) is feasible.\nHaving found the best split, we partition the data into the two resulting\nregions and repeat the splitting process on each of the two regions. Then\nthis process is repeated on all of the resulting regions.\nHow large should we grow the tree? Clearly a very large tree might over\ufb01t\nthe data, while a small tree might not capture the important structure."
+    },
+    {
+      "id": 27639,
+      "page": 326,
+      "seq": 1,
+      "text": "Tree size is a tuning parameter governing the model\u2019s complexity, and the\noptimal tree size should be adaptively chosen from the data. One approach\nwould be to split tree nodes only if the decrease in sum-of-squares due to the\nsplit exceeds some threshold. This strategy is too short-sighted, however,\nsince a seemingly worthless split might lead to a very good split below it.\nThe preferred strategy is to grow a large tree T0, stopping the splitting\nprocess only when some minimum node size (say 5) is reached. Then this\nlarge tree is pruned using cost-complexity pruning, which we now describe.\nWe de\ufb01ne a subtree T \u2282T0 to be any tree that can be obtained by\npruning T0, that is, collapsing any number of its internal (non-terminal)\nnodes. We index terminal nodes by m, with node m representing region\nRm. Let |T| denote the number of terminal nodes in T. Letting"
+    },
+    {
+      "id": 27652,
+      "page": 326,
+      "seq": 14,
+      "text": "The idea is to \ufb01nd, for each \u03b1, the subtree T\u03b1 \u2286T0 to minimize C\u03b1(T).\nThe tuning parameter \u03b1 \u22650 governs the tradeo\ufb00between tree size and its\ngoodness of \ufb01t to the data. Large values of \u03b1 result in smaller trees T\u03b1, and\nconversely for smaller values of \u03b1. As the notation suggests, with \u03b1 = 0 the\nsolution is the full tree T0. We discuss how to adaptively choose \u03b1 below.\nFor each \u03b1 one can show that there is a unique smallest subtree T\u03b1 that\nminimizes C\u03b1(T). To \ufb01nd T\u03b1 we use weakest link pruning: we successively\ncollapse the internal node that produces the smallest per-node increase in"
+    },
+    {
+      "id": 27653,
+      "page": 326,
+      "seq": 15,
+      "text": "m NmQm(T), and continue until we produce the single-node (root) tree.\nThis gives a (\ufb01nite) sequence of subtrees, and one can show this sequence\nmust contain T\u03b1. See Breiman et al. (1984) or Ripley (1996) for details.\nEstimation of \u03b1 is achieved by \ufb01ve- or tenfold cross-validation: we choose\nthe value \u02c6\u03b1 to minimize the cross-validated sum of squares. Our \ufb01nal tree\nis T\u02c6\u03b1."
+    },
+    {
+      "id": 27655,
+      "page": 326,
+      "seq": 17,
+      "text": "If the target is a classi\ufb01cation outcome taking values 1, 2, . . . , K, the only\nchanges needed in the tree algorithm pertain to the criteria for splitting\nnodes and pruning the tree. For regression we used the squared-error node"
+    },
+    {
+      "id": 27664,
+      "page": 327,
+      "seq": 8,
+      "text": "impurity measure Qm(T) de\ufb01ned in (9.15), but this is not suitable for\nclassi\ufb01cation. In a node m, representing a region Rm with Nm observations,\nlet"
+    },
+    {
+      "id": 27668,
+      "page": 327,
+      "seq": 12,
+      "text": "the proportion of class k observations in node m. We classify the obser-\nvations in node m to class k(m) = arg maxk \u02c6pmk, the majority class in\nnode m. Di\ufb00erent measures Qm(T) of node impurity include the following:"
+    },
+    {
+      "id": 27669,
+      "page": 327,
+      "seq": 13,
+      "text": "Misclassi\ufb01cation error:\n1\nNm\n\t\ni\u2208Rm I(yi \u0338= k(m)) = 1 \u2212\u02c6pmk(m)."
+    },
+    {
+      "id": 27670,
+      "page": 327,
+      "seq": 14,
+      "text": "Gini index:\n\t\nk\u0338=k\u2032 \u02c6pmk \u02c6pmk\u2032 = \tK\nk=1 \u02c6pmk(1 \u2212\u02c6pmk)."
+    },
+    {
+      "id": 27671,
+      "page": 327,
+      "seq": 15,
+      "text": "Cross-entropy or deviance:\n\u2212\tK\nk=1 \u02c6pmk log \u02c6pmk.\n(9.17)\nFor two classes, if p is the proportion in the second class, these three mea-\nsures are 1 \u2212max(p, 1 \u2212p), 2p(1 \u2212p) and \u2212p log p \u2212(1 \u2212p) log (1 \u2212p),\nrespectively. They are shown in Figure 9.3. All three are similar, but cross-\nentropy and the Gini index are di\ufb00erentiable, and hence more amenable to\nnumerical optimization. Comparing (9.13) and (9.15), we see that we need\nto weight the node impurity measures by the number NmL and NmR of\nobservations in the two child nodes created by splitting node m.\nIn addition, cross-entropy and the Gini index are more sensitive to changes\nin the node probabilities than the misclassi\ufb01cation rate. For example, in\na two-class problem with 400 observations in each class (denote this by\n(400, 400)), suppose one split created nodes (300, 100) and (100, 300), while"
+    },
+    {
+      "id": 27673,
+      "page": 328,
+      "seq": 1,
+      "text": "the other created nodes (200, 400) and (200, 0). Both splits produce a mis-\nclassi\ufb01cation rate of 0.25, but the second split produces a pure node and is\nprobably preferable. Both the Gini index and cross-entropy are lower for the\nsecond split. For this reason, either the Gini index or cross-entropy should\nbe used when growing the tree. To guide cost-complexity pruning, any of\nthe three measures can be used, but typically it is the misclassi\ufb01cation rate.\nThe Gini index can be interpreted in two interesting ways. Rather than\nclassify observations to the majority class in the node, we could classify\nthem to class k with probability \u02c6pmk. Then the training error rate of this\nrule in the node is \t\nk\u0338=k\u2032 \u02c6pmk \u02c6pmk\u2032\u2014the Gini index. Similarly, if we code\neach observation as 1 for class k and zero otherwise, the variance over the\nnode of this 0-1 response is \u02c6pmk(1 \u2212\u02c6pmk). Summing over classes k again\ngives the Gini index."
+    },
+    {
+      "id": 27676,
+      "page": 328,
+      "seq": 4,
+      "text": "When splitting a predictor having q possible unordered values, there are\n2q\u22121 \u22121 possible partitions of the q values into two groups, and the com-\nputations become prohibitive for large q. However, with a 0 \u22121 outcome,\nthis computation simpli\ufb01es. We order the predictor classes according to the\nproportion falling in outcome class 1. Then we split this predictor as if it\nwere an ordered predictor. One can show this gives the optimal split, in\nterms of cross-entropy or Gini index, among all possible 2q\u22121\u22121 splits. This\nresult also holds for a quantitative outcome and square error loss\u2014the cat-\negories are ordered by increasing mean of the outcome. Although intuitive,\nthe proofs of these assertions are not trivial. The proof for binary outcomes\nis given in Breiman et al. (1984) and Ripley (1996); the proof for quantita-\ntive outcomes can be found in Fisher (1958). For multicategory outcomes,\nno such simpli\ufb01cations are possible, although various approximations have\nbeen proposed (Loh and Vanichsetakul, 1988).\nThe partitioning algorithm tends to favor categorical predictors with\nmany levels q; the number of partitions grows exponentially in q, and the\nmore choices we have, the more likely we can \ufb01nd a good one for the data\nat hand. This can lead to severe over\ufb01tting if q is large, and such variables\nshould be avoided."
+    },
+    {
+      "id": 27678,
+      "page": 328,
+      "seq": 6,
+      "text": "In classi\ufb01cation problems, the consequences of misclassifying observations\nare more serious in some classes than others. For example, it is probably\nworse to predict that a person will not have a heart attack when he/she\nactually will, than vice versa. To account for this, we de\ufb01ne a K \u00d7 K loss\nmatrix L, with Lkk\u2032 being the loss incurred for classifying a class k obser-\nvation as class k\u2032. Typically no loss is incurred for correct classi\ufb01cations,"
+    },
+    {
+      "id": 27680,
+      "page": 329,
+      "seq": 1,
+      "text": "that is, Lkk = 0 \u2200k. To incorporate the losses into the modeling process,\nwe could modify the Gini index to \t\nk\u0338=k\u2032 Lkk\u2032 \u02c6pmk \u02c6pmk\u2032; this would be the\nexpected loss incurred by the randomized rule. This works for the multi-\nclass case, but in the two-class case has no e\ufb00ect, since the coe\ufb03cient of\n\u02c6pmk \u02c6pmk\u2032 is Lkk\u2032 + Lk\u2032k. For two classes a better approach is to weight the\nobservations in class k by Lkk\u2032. This can be used in the multiclass case only\nif, as a function of k, Lkk\u2032 doesn\u2019t depend on k\u2032. Observation weighting can\nbe used with the deviance as well. The e\ufb00ect of observation weighting is to\nalter the prior probability on the classes. In a terminal node, the empirical\nBayes rule implies that we classify to class k(m) = arg mink\n\t\n\u2113L\u2113k \u02c6pm\u2113."
+    },
+    {
+      "id": 27682,
+      "page": 329,
+      "seq": 3,
+      "text": "Suppose our data has some missing predictor values in some or all of the\nvariables. We might discard any observation with some missing values, but\nthis could lead to serious depletion of the training set. Alternatively we\nmight try to \ufb01ll in (impute) the missing values, with say the mean of that\npredictor over the nonmissing observations. For tree-based models, there\nare two better approaches. The \ufb01rst is applicable to categorical predictors:\nwe simply make a new category for \u201cmissing.\u201d From this we might dis-\ncover that observations with missing values for some measurement behave\ndi\ufb00erently than those with nonmissing values. The second more general\napproach is the construction of surrogate variables. When considering a\npredictor for a split, we use only the observations for which that predictor\nis not missing. Having chosen the best (primary) predictor and split point,\nwe form a list of surrogate predictors and split points. The \ufb01rst surrogate\nis the predictor and corresponding split point that best mimics the split of\nthe training data achieved by the primary split. The second surrogate is\nthe predictor and corresponding split point that does second best, and so\non. When sending observations down the tree either in the training phase\nor during prediction, we use the surrogate splits in order, if the primary\nsplitting predictor is missing. Surrogate splits exploit correlations between\npredictors to try and alleviate the e\ufb00ect of missing data. The higher the cor-\nrelation between the missing predictor and the other predictors, the smaller\nthe loss of information due to the missing value. The general problem of\nmissing data is discussed in Section 9.6."
+    },
+    {
+      "id": 27684,
+      "page": 329,
+      "seq": 5,
+      "text": "Rather than splitting each node into just two groups at each stage (as\nabove), we might consider multiway splits into more than two groups. While\nthis can sometimes be useful, it is not a good general strategy. The problem\nis that multiway splits fragment the data too quickly, leaving insu\ufb03cient\ndata at the next level down. Hence we would want to use such splits only\nwhen needed. Since multiway splits can be achieved by a series of binary\nsplits, the latter are preferred."
+    },
+    {
+      "id": 27687,
+      "page": 330,
+      "seq": 2,
+      "text": "The discussion above focuses on the CART (classi\ufb01cation and regression\ntree) implementation of trees. The other popular methodology is ID3 and\nits later versions, C4.5 and C5.0 (Quinlan, 1993). Early versions of the\nprogram were limited to categorical predictors, and used a top-down rule\nwith no pruning. With more recent developments, C5.0 has become quite\nsimilar to CART. The most signi\ufb01cant feature unique to C5.0 is a scheme\nfor deriving rule sets. After a tree is grown, the splitting rules that de\ufb01ne the\nterminal nodes can sometimes be simpli\ufb01ed: that is, one or more condition\ncan be dropped without changing the subset of observations that fall in\nthe node. We end up with a simpli\ufb01ed set of rules de\ufb01ning each terminal\nnode; these no longer follow a tree structure, but their simplicity might\nmake them more attractive to the user."
+    },
+    {
+      "id": 27689,
+      "page": 330,
+      "seq": 4,
+      "text": "Rather than restricting splits to be of the form Xj \u2264s, one can allow splits\nalong linear combinations of the form \t ajXj \u2264s. The weights aj and\nsplit point s are optimized to minimize the relevant criterion (such as the\nGini index). While this can improve the predictive power of the tree, it can\nhurt interpretability. Computationally, the discreteness of the split point\nsearch precludes the use of a smooth optimization for the weights. A better\nway to incorporate linear combination splits is in the hierarchical mixtures\nof experts (HME) model, the topic of Section 9.5."
+    },
+    {
+      "id": 27691,
+      "page": 330,
+      "seq": 6,
+      "text": "One major problem with trees is their high variance. Often a small change\nin the data can result in a very di\ufb00erent series of splits, making interpre-\ntation somewhat precarious. The major reason for this instability is the\nhierarchical nature of the process: the e\ufb00ect of an error in the top split\nis propagated down to all of the splits below it. One can alleviate this to\nsome degree by trying to use a more stable split criterion, but the inherent\ninstability is not removed. It is the price to be paid for estimating a simple,\ntree-based structure from the data. Bagging (Section 8.7) averages many\ntrees to reduce this variance."
+    },
+    {
+      "id": 27693,
+      "page": 330,
+      "seq": 8,
+      "text": "Another limitation of trees is the lack of smoothness of the prediction sur-\nface, as can be seen in the bottom right panel of Figure 9.2. In classi\ufb01cation\nwith 0/1 loss, this doesn\u2019t hurt much, since bias in estimation of the class\nprobabilities has a limited e\ufb00ect. However, this can degrade performance\nin the regression setting, where we would normally expect the underlying\nfunction to be smooth. The MARS procedure, described in Section 9.4,"
+    },
+    {
+      "id": 27696,
+      "page": 331,
+      "seq": 2,
+      "text": "Predicted\nTrue\nemail\nspam\nemail\n57.3%\n4.0%\nspam\n5.3%\n33.4%"
+    },
+    {
+      "id": 27697,
+      "page": 331,
+      "seq": 3,
+      "text": "can be viewed as a modi\ufb01cation of CART designed to alleviate this lack of\nsmoothness."
+    },
+    {
+      "id": 27699,
+      "page": 331,
+      "seq": 5,
+      "text": "Another problem with trees is their di\ufb03culty in modeling additive struc-\nture. In regression, suppose, for example, that Y = c1I(X1 < t1)+c2I(X2 <\nt2) + \u03b5 where \u03b5 is zero-mean noise. Then a binary tree might make its \ufb01rst\nsplit on X1 near t1. At the next level down it would have to split both nodes\non X2 at t2 in order to capture the additive structure. This might happen\nwith su\ufb03cient data, but the model is given no special encouragement to \ufb01nd\nsuch structure. If there were ten rather than two additive e\ufb00ects, it would\ntake many fortuitous splits to recreate the structure, and the data analyst\nwould be hard pressed to recognize it in the estimated tree. The \u201cblame\u201d\nhere can again be attributed to the binary tree structure, which has both\nadvantages and drawbacks. Again the MARS method (Section 9.4) gives\nup this tree structure in order to capture additive structure."
+    },
+    {
+      "id": 27701,
+      "page": 331,
+      "seq": 7,
+      "text": "We applied the classi\ufb01cation tree methodology to the spam example intro-\nduced earlier. We used the deviance measure to grow the tree and mis-\nclassi\ufb01cation rate to prune it. Figure 9.4 shows the 10-fold cross-validation\nerror rate as a function of the size of the pruned tree, along with \u00b12 stan-\ndard errors of the mean, from the ten replications. The test error curve is\nshown in orange. Note that the cross-validation error rates are indexed by\na sequence of values of \u03b1 and not tree size; for trees grown in di\ufb00erent folds,\na value of \u03b1 might imply di\ufb00erent sizes. The sizes shown at the base of the\nplot refer to |T\u03b1|, the sizes of the pruned original tree.\nThe error \ufb02attens out at around 17 terminal nodes, giving the pruned tree\nin Figure 9.5. Of the 13 distinct features chosen by the tree, 11 overlap with\nthe 16 signi\ufb01cant features in the additive model (Table 9.2). The overall\nerror rate shown in Table 9.3 is about 50% higher than for the additive\nmodel in Table 9.1.\nConsider the rightmost branches of the tree. We branch to the right\nwith a spam warning if more than 5.5% of the characters are the $ sign."
+    },
+    {
+      "id": 27710,
+      "page": 332,
+      "seq": 8,
+      "text": "However, if in addition the phrase hp occurs frequently, then this is likely\nto be company business and we classify as email. All of the 22 cases in\nthe test set satisfying these criteria were correctly classi\ufb01ed. If the second\ncondition is not met, and in addition the average length of repeated capital\nletters CAPAVE is larger than 2.9, then we classify as spam. Of the 227 test\ncases, only seven were misclassi\ufb01ed.\nIn medical classi\ufb01cation problems, the terms sensitivity and speci\ufb01city\nare used to characterize a rule. They are de\ufb01ned as follows:"
+    },
+    {
+      "id": 27711,
+      "page": 332,
+      "seq": 9,
+      "text": "Sensitivity: probability of predicting disease given true state is disease."
+    },
+    {
+      "id": 27712,
+      "page": 332,
+      "seq": 10,
+      "text": "Speci\ufb01city: probability of predicting non-disease given true state is non-\ndisease."
+    },
+    {
+      "id": 27828,
+      "page": 334,
+      "seq": 22,
+      "text": "If we think of spam and email as the presence and absence of disease, re-\nspectively, then from Table 9.3 we have"
+    },
+    {
+      "id": 27831,
+      "page": 334,
+      "seq": 25,
+      "text": "In this analysis we have used equal losses. As before let Lkk\u2032 be the\nloss associated with predicting a class k object as class k\u2032. By varying the\nrelative sizes of the losses L01 and L10, we increase the sensitivity and\ndecrease the speci\ufb01city of the rule, or vice versa. In this example, we want\nto avoid marking good email as spam, and thus we want the speci\ufb01city to\nbe very high. We can achieve this by setting L01 > 1 say, with L10 = 1.\nThe Bayes\u2019 rule in each terminal node classi\ufb01es to class 1 (spam) if the\nproportion of spam is \u2265L01/(L10 + L01), and class zero otherwise. The"
+    },
+    {
+      "id": 27833,
+      "page": 335,
+      "seq": 1,
+      "text": "receiver operating characteristic curve (ROC) is a commonly used summary\nfor assessing the tradeo\ufb00between sensitivity and speci\ufb01city. It is a plot of\nthe sensitivity versus speci\ufb01city as we vary the parameters of a classi\ufb01cation\nrule. Varying the loss L01 between 0.1 and 10, and applying Bayes\u2019 rule to\nthe 17-node tree selected in Figure 9.4, produced the ROC curve shown\nin Figure 9.6. The standard error of each curve near 0.9 is approximately\n\""
+    },
+    {
+      "id": 27834,
+      "page": 335,
+      "seq": 2,
+      "text": "0.9(1 \u22120.9)/1536 = 0.008, and hence the standard error of the di\ufb00erence\nis about 0.01. We see that in order to achieve a speci\ufb01city of close to 100%,\nthe sensitivity has to drop to about 50%. The area under the curve is a\ncommonly used quantitative summary; extending the curve linearly in each\ndirection so that it is de\ufb01ned over [0, 100], the area is approximately 0.95.\nFor comparison, we have included the ROC curve for the GAM model \ufb01t\nto these data in Section 9.2; it gives a better classi\ufb01cation rule for any loss,\nwith an area of 0.98.\nRather than just modifying the Bayes rule in the nodes, it is better to\ntake full account of the unequal losses in growing the tree, as was done\nin Section 9.2. With just two classes 0 and 1, losses may be incorporated\ninto the tree-growing process by using weight Lk,1\u2212k for an observation in\nclass k. Here we chose L01 = 5, L10 = 1 and \ufb01t the same size tree as before\n(|T\u03b1| = 17). This tree has higher sensitivity at high values of the speci\ufb01city\nthan the original tree, but does more poorly at the other extreme. Its top\nfew splits are the same as the original tree, and then it departs from it.\nFor this application the tree grown using L01 = 5 is clearly better than the\noriginal tree.\nThe area under the ROC curve, used above, is sometimes called the c-\nstatistic. Interestingly, it can be shown that the area under the ROC curve\nis equivalent to the Mann-Whitney U statistic (or Wilcoxon rank-sum test),\nfor the median di\ufb00erence between the prediction scores in the two groups\n(Hanley and McNeil, 1982). For evaluating the contribution of an additional\npredictor when added to a standard model, the c-statistic may not be an\ninformative measure. The new predictor can be very signi\ufb01cant in terms\nof the change in model deviance, but show only a small increase in the c-\nstatistic. For example, removal of the highly signi\ufb01cant term george from\nthe model of Table 9.2 results in a decrease in the c-statistic of less than\n0.01. Instead, it is useful to examine how the additional predictor changes\nthe classi\ufb01cation on an individual sample basis. A good discussion of this\npoint appears in Cook (2007)."
+    },
+    {
+      "id": 27836,
+      "page": 335,
+      "seq": 4,
+      "text": "Tree-based methods (for regression) partition the feature space into box-\nshaped regions, to try to make the response averages in each box as di\ufb00er-"
+    },
+    {
+      "id": 27838,
+      "page": 336,
+      "seq": 1,
+      "text": "ent as possible. The splitting rules de\ufb01ning the boxes are related to each\nthrough a binary tree, facilitating their interpretation.\nThe patient rule induction method (PRIM) also \ufb01nds boxes in the feature\nspace, but seeks boxes in which the response average is high. Hence it looks\nfor maxima in the target function, an exercise known as bump hunting. (If\nminima rather than maxima are desired, one simply works with the negative\nresponse values.)\nPRIM also di\ufb00ers from tree-based partitioning methods in that the box\nde\ufb01nitions are not described by a binary tree. This makes interpretation of\nthe collection of rules more di\ufb03cult; however, by removing the binary tree\nconstraint, the individual rules are often simpler.\nThe main box construction method in PRIM works from the top down,\nstarting with a box containing all of the data. The box is compressed along\none face by a small amount, and the observations then falling outside the\nbox are peeled o\ufb00. The face chosen for compression is the one resulting in\nthe largest box mean, after the compression is performed. Then the process\nis repeated, stopping when the current box contains some minimum number\nof data points.\nThis process is illustrated in Figure 9.7. There are 200 data points uni-\nformly distributed over the unit square. The color-coded plot indicates the\nresponse Y taking the value 1 (red) when 0.5 < X1 < 0.8 and 0.4 < X2 <\n0.6. and zero (blue) otherwise. The panels shows the successive boxes found\nby the top-down peeling procedure, peeling o\ufb00a proportion \u03b1 = 0.1 of the\nremaining data points at each stage.\nFigure 9.8 shows the mean of the response values in the box, as the box\nis compressed.\nAfter the top-down sequence is computed, PRIM reverses the process,\nexpanding along any edge, if such an expansion increases the box mean.\nThis is called pasting. Since the top-down procedure is greedy at each step,\nsuch an expansion is often possible.\nThe result of these steps is a sequence of boxes, with di\ufb00erent numbers\nof observation in each box. Cross-validation, combined with the judgment\nof the data analyst, is used to choose the optimal box size.\nDenote by B1 the indices of the observations in the box found in step 1.\nThe PRIM procedure then removes the observations in B1 from the training\nset, and the two-step process\u2014top down peeling, followed by bottom-up\npasting\u2014is repeated on the remaining dataset. This entire process is re-\npeated several times, producing a sequence of boxes B1, B2, . . . , Bk. Each\nbox is de\ufb01ned by a set of rules involving a subset of predictors like"
+    },
+    {
+      "id": 27840,
+      "page": 336,
+      "seq": 3,
+      "text": "A summary of the PRIM procedure is given Algorithm 9.3.\nPRIM can handle a categorical predictor by considering all partitions of\nthe predictor, as in CART. Missing values are also handled in a manner\nsimilar to CART. PRIM is designed for regression (quantitative response"
+    },
+    {
+      "id": 29520,
+      "page": 338,
+      "seq": 2,
+      "text": "1. Start with all of the training data, and a maximal box containing all\nof the data."
+    },
+    {
+      "id": 29521,
+      "page": 338,
+      "seq": 3,
+      "text": "2. Consider shrinking the box by compressing one face, so as to peel o\ufb00\nthe proportion \u03b1 of observations having either the highest values of\na predictor Xj, or the lowest. Choose the peeling that produces the\nhighest response mean in the remaining box. (Typically \u03b1 = 0.05 or\n0.10.)"
+    },
+    {
+      "id": 29522,
+      "page": 338,
+      "seq": 4,
+      "text": "3. Repeat step 2 until some minimal number of observations (say 10)\nremain in the box."
+    },
+    {
+      "id": 29523,
+      "page": 338,
+      "seq": 5,
+      "text": "4. Expand the box along any face, as long as the resulting box mean\nincreases."
+    },
+    {
+      "id": 29524,
+      "page": 338,
+      "seq": 6,
+      "text": "5. Steps 1\u20134 give a sequence of boxes, with di\ufb00erent numbers of obser-\nvations in each box. Use cross-validation to choose a member of the\nsequence. Call the box B1."
+    },
+    {
+      "id": 29525,
+      "page": 338,
+      "seq": 7,
+      "text": "6. Remove the data in box B1 from the dataset and repeat steps 2\u20135 to\nobtain a second box, and continue to get as many boxes as desired."
+    },
+    {
+      "id": 29526,
+      "page": 338,
+      "seq": 8,
+      "text": "variable); a two-class outcome can be handled simply by coding it as 0 and\n1. There is no simple way to deal with k > 2 classes simultaneously: one\napproach is to run PRIM separately for each class versus a baseline class.\nAn advantage of PRIM over CART is its patience. Because of its bi-\nnary splits, CART fragments the data quite quickly. Assuming splits of\nequal size, with N observations it can only make log2(N) \u22121 splits before\nrunning out of data. If PRIM peels o\ufb00a proportion \u03b1 of training points\nat each stage, it can perform approximately \u2212log(N)/ log(1 \u2212\u03b1) peeling\nsteps before running out of data. For example, if N = 128 and \u03b1 = 0.10,\nthen log2(N)\u22121 = 6 while \u2212log(N)/ log(1\u2212\u03b1) \u224846. Taking into account\nthat there must be an integer number of observations at each stage, PRIM\nin fact can peel only 29 times. In any case, the ability of PRIM to be more\npatient should help the top-down greedy algorithm \ufb01nd a better solution."
+    },
+    {
+      "id": 29528,
+      "page": 338,
+      "seq": 10,
+      "text": "We applied PRIM to the spam data, with the response coded as 1 for spam\nand 0 for email.\nThe \ufb01rst two boxes found by PRIM are summarized below:"
+    },
+    {
+      "id": 29530,
+      "page": 339,
+      "seq": 1,
+      "text": "Rule 1\nGlobal Mean\nBox Mean\nBox Support\nTraining\n0.3931\n0.9607\n0.1413\nTest\n0.3958\n1.0000\n0.1536"
+    },
+    {
+      "id": 29534,
+      "page": 339,
+      "seq": 5,
+      "text": "ch!\n>\n0.029\nCAPAVE\n>\n2.331\nyour\n>\n0.705\n1999\n<\n0.040\nCAPTOT\n>\n79.50\nedu\n<\n0.070\nre\n<\n0.535\nch;\n<\n0.030"
+    },
+    {
+      "id": 29535,
+      "page": 339,
+      "seq": 6,
+      "text": "Rule 2\nRemain Mean\nBox Mean\nBox Support\nTraining\n0.2998\n0.9560\n0.1043\nTest\n0.2862\n0.9264\n0.1061"
+    },
+    {
+      "id": 29537,
+      "page": 339,
+      "seq": 8,
+      "text": "The box support is the proportion of observations falling in the box.\nThe \ufb01rst box is purely spam, and contains about 15% of the test data.\nThe second box contains 10.6% of the test observations, 92.6% of which\nare spam. Together the two boxes contain 26% of the data and are about\n97% spam. The next few boxes (not shown) are quite small, containing only\nabout 3% of the data.\nThe predictors are listed in order of importance. Interestingly the top\nsplitting variables in the CART tree (Figure 9.5) do not appear in PRIM\u2019s\n\ufb01rst box."
+    },
+    {
+      "id": 29539,
+      "page": 339,
+      "seq": 10,
+      "text": "MARS is an adaptive procedure for regression, and is well suited for high-\ndimensional problems (i.e., a large number of inputs). It can be viewed as a\ngeneralization of stepwise linear regression or a modi\ufb01cation of the CART\nmethod to improve the latter\u2019s performance in the regression setting. We\nintroduce MARS from the \ufb01rst point of view, and later make the connection\nto CART.\nMARS uses expansions in piecewise linear basis functions of the form\n(x \u2212t)+ and (t \u2212x)+. The \u201c+\u201d means positive part, so"
+    },
+    {
+      "id": 29540,
+      "page": 339,
+      "seq": 11,
+      "text": "(x\u2212t)+ =\n\u000e\nx \u2212t,\nif x > t,\n0,\notherwise,\nand\n(t\u2212x)+ =\n\u000e\nt \u2212x,\n, if x < t,\n0,\notherwise."
+    },
+    {
+      "id": 29548,
+      "page": 340,
+      "seq": 7,
+      "text": "As an example, the functions (x \u22120.5)+ and (0.5 \u2212x)+ are shown in Fig-\nure 9.9.\nEach function is piecewise linear, with a knot at the value t. In the\nterminology of Chapter 5, these are linear splines. We call the two functions\na re\ufb02ected pair in the discussion below. The idea is to form re\ufb02ected pairs\nfor each input Xj with knots at each observed value xij of that input.\nTherefore, the collection of basis functions is"
+    },
+    {
+      "id": 29550,
+      "page": 340,
+      "seq": 9,
+      "text": "If all of the input values are distinct, there are 2Np basis functions alto-\ngether. Note that although each basis function depends only on a single\nXj, for example, h(X) = (Xj \u2212t)+, it is considered as a function over the\nentire input space IRp.\nThe model-building strategy is like a forward stepwise linear regression,\nbut instead of using the original inputs, we are allowed to use functions\nfrom the set C and their products. Thus the model has the form"
+    },
+    {
+      "id": 29554,
+      "page": 340,
+      "seq": 13,
+      "text": "where each hm(X) is a function in C, or a product of two or more such\nfunctions.\nGiven a choice for the hm, the coe\ufb03cients \u03b2m are estimated by minimiz-\ning the residual sum-of-squares, that is, by standard linear regression. The\nreal art, however, is in the construction of the functions hm(x). We start\nwith only the constant function h0(X) = 1 in our model, and all functions\nin the set C are candidate functions. This is depicted in Figure 9.10.\nAt each stage we consider as a new basis function pair all products of a\nfunction hm in the model set M with one of the re\ufb02ected pairs in C. We\nadd to the model M the term of the form\n\u02c6\u03b2M+1h\u2113(X) \u00b7 (Xj \u2212t)+ + \u02c6\u03b2M+2h\u2113(X) \u00b7 (t \u2212Xj)+, h\u2113\u2208M,"
+    },
+    {
+      "id": 29573,
+      "page": 342,
+      "seq": 4,
+      "text": "that produces the largest decrease in training error. Here \u02c6\u03b2M+1 and \u02c6\u03b2M+2\nare coe\ufb03cients estimated by least squares, along with all the other M + 1\ncoe\ufb03cients in the model. Then the winning products are added to the\nmodel and the process is continued until the model set M contains some\npreset maximum number of terms.\nFor example, at the \ufb01rst stage we consider adding to the model a function\nof the form \u03b21(Xj \u2212t)+ + \u03b22(t \u2212Xj)+; t \u2208{xij}, since multiplication by\nthe constant function just produces the function itself. Suppose the best\nchoice is \u02c6\u03b21(X2 \u2212x72)+ + \u02c6\u03b22(x72 \u2212X2)+. Then this pair of basis functions\nis added to the set M, and at the next stage we consider including a pair\nof products the form"
+    },
+    {
+      "id": 29578,
+      "page": 342,
+      "seq": 9,
+      "text": "The third choice produces functions such as (X1 \u2212x51)+ \u00b7 (x72 \u2212X2)+,\ndepicted in Figure 9.11.\nAt the end of this process we have a large model of the form (9.19). This\nmodel typically over\ufb01ts the data, and so a backward deletion procedure\nis applied. The term whose removal causes the smallest increase in resid-\nual squared error is deleted from the model at each stage, producing an\nestimated best model \u02c6f\u03bb of each size (number of terms) \u03bb. One could use\ncross-validation to estimate the optimal value of \u03bb, but for computational"
+    },
+    {
+      "id": 29580,
+      "page": 343,
+      "seq": 1,
+      "text": "savings the MARS procedure instead uses generalized cross-validation. This\ncriterion is de\ufb01ned as"
+    },
+    {
+      "id": 29583,
+      "page": 343,
+      "seq": 4,
+      "text": "The value M(\u03bb) is the e\ufb00ective number of parameters in the model: this\naccounts both for the number of terms in the models, plus the number\nof parameters used in selecting the optimal positions of the knots. Some\nmathematical and simulation results suggest that one should pay a price\nof three parameters for selecting a knot in a piecewise linear regression.\nThus if there are r linearly independent basis functions in the model, and\nK knots were selected in the forward process, the formula is M(\u03bb) = r+cK,\nwhere c = 3. (When the model is restricted to be additive\u2014details below\u2014\na penalty of c = 2 is used). Using this, we choose the model along the\nbackward sequence that minimizes GCV(\u03bb).\nWhy these piecewise linear basis functions, and why this particular model\nstrategy? A key property of the functions of Figure 9.9 is their ability to\noperate locally; they are zero over part of their range. When they are mul-\ntiplied together, as in Figure 9.11, the result is nonzero only over the small\npart of the feature space where both component functions are nonzero. As\na result, the regression surface is built up parsimoniously, using nonzero\ncomponents locally\u2014only where they are needed. This is important, since\none should \u201cspend\u201d parameters carefully in high dimensions, as they can\nrun out quickly. The use of other basis functions such as polynomials, would\nproduce a nonzero product everywhere, and would not work as well.\nThe second important advantage of the piecewise linear basis function\nconcerns computation. Consider the product of a function in M with each\nof the N re\ufb02ected pairs for an input Xj. This appears to require the \ufb01tting\nof N single-input linear regression models, each of which uses O(N) oper-\nations, making a total of O(N 2) operations. However, we can exploit the\nsimple form of the piecewise linear function. We \ufb01rst \ufb01t the re\ufb02ected pair\nwith rightmost knot. As the knot is moved successively one position at a\ntime to the left, the basis functions di\ufb00er by zero over the left part of the\ndomain, and by a constant over the right part. Hence after each such move\nwe can update the \ufb01t in O(1) operations. This allows us to try every knot\nin only O(N) operations.\nThe forward modeling strategy in MARS is hierarchical, in the sense that\nmultiway products are built up from products involving terms already in\nthe model. For example, a four-way product can only be added to the model\nif one of its three-way components is already in the model. The philosophy\nhere is that a high-order interaction will likely only exist if some of its lower-\norder \u201cfootprints\u201d exist as well. This need not be true, but is a reasonable\nworking assumption and avoids the search over an exponentially growing\nspace of alternatives."
+    },
+    {
+      "id": 29589,
+      "page": 344,
+      "seq": 5,
+      "text": "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+    },
+    {
+      "id": 29595,
+      "page": 344,
+      "seq": 11,
+      "text": "There is one restriction put on the formation of model terms: each input\ncan appear at most once in a product. This prevents the formation of\nhigher-order powers of an input, which increase or decrease too sharply\nnear the boundaries of the feature space. Such powers can be approximated\nin a more stable way with piecewise linear functions.\nA useful option in the MARS procedure is to set an upper limit on\nthe order of interaction. For example, one can set a limit of two, allowing\npairwise products of piecewise linear functions, but not three- or higher-\nway products. This can aid in the interpretation of the \ufb01nal model. An\nupper limit of one results in an additive model."
+    },
+    {
+      "id": 29597,
+      "page": 344,
+      "seq": 13,
+      "text": "We applied MARS to the \u201cspam\u201d data analyzed earlier in this chapter. To\nenhance interpretability, we restricted MARS to second-degree interactions.\nAlthough the target is a two-class variable, we used the squared-error loss\nfunction nonetheless (see Section 9.4.3). Figure 9.12 shows the test error\nmisclassi\ufb01cation rate as a function of the rank (number of independent ba-\nsis functions) in the model. The error rate levels o\ufb00at about 5.5%, which is\nslightly higher than that of the generalized additive model (5.3%) discussed\nearlier. GCV chose a model size of 60, which is roughly the smallest model\ngiving optimal performance. The leading interactions found by MARS in-\nvolved inputs (ch$, remove), (ch$, free) and (hp, CAPTOT). However, these\ninteractions give no improvement in performance over the generalized ad-\nditive model."
+    },
+    {
+      "id": 29600,
+      "page": 345,
+      "seq": 2,
+      "text": "Here we examine the performance of MARS in three contrasting scenarios.\nThere are N = 100 observations, and the predictors X1, X2, . . . , Xp and\nerrors \u03b5 have independent standard normal distributions."
+    },
+    {
+      "id": 29603,
+      "page": 345,
+      "seq": 5,
+      "text": "The noise standard deviation 0.12 was chosen so that the signal-to-\nnoise ratio was about 5. We call this the tensor-product scenario; the\nproduct term gives a surface that looks like that of Figure 9.11."
+    },
+    {
+      "id": 29604,
+      "page": 345,
+      "seq": 6,
+      "text": "Scenario 2: This is the same as scenario 1, but with p = 20 total predictors;\nthat is, there are 18 inputs that are independent of the response."
+    },
+    {
+      "id": 29605,
+      "page": 345,
+      "seq": 7,
+      "text": "Scenario 3: This has the structure of a neural network:"
+    },
+    {
+      "id": 29606,
+      "page": 345,
+      "seq": 8,
+      "text": "\u21131\n=\nX1 + X2 + X3 + X4 + X5,\n\u21132\n=\nX6 \u2212X7 + X8 \u2212X9 + X10,\n\u03c3(t)\n=\n1/(1 + e\u2212t),\nY\n=\n\u03c3(\u21131) + \u03c3(\u21132) + 0.12 \u00b7 \u03b5."
+    },
+    {
+      "id": 29608,
+      "page": 345,
+      "seq": 10,
+      "text": "Scenarios 1 and 2 are ideally suited for MARS, while scenario 3 contains\nhigh-order interactions and may be di\ufb03cult for MARS to approximate. We\nran \ufb01ve simulations from each model, and recorded the results.\nIn scenario 1, MARS typically uncovered the correct model almost per-\nfectly. In scenario 2, it found the correct structure but also found a few\nextraneous terms involving other predictors.\nLet \u03bc(x) be the true mean of Y , and let"
+    },
+    {
+      "id": 29609,
+      "page": 345,
+      "seq": 11,
+      "text": "MSE0\n=\navex\u2208Test(\u00afy \u2212\u03bc(x))2,\nMSE\n=\navex\u2208Test( \u02c6f(x) \u2212\u03bc(x))2.\n(9.23)"
+    },
+    {
+      "id": 29610,
+      "page": 345,
+      "seq": 12,
+      "text": "These represent the mean-square error of the constant model and the \ufb01tted\nMARS model, estimated by averaging at the 1000 test values of x. Table 9.4\nshows the proportional decrease in model error or R2 for each scenario:"
+    },
+    {
+      "id": 29613,
+      "page": 345,
+      "seq": 15,
+      "text": "The values shown are means and standard error over the \ufb01ve simulations.\nThe performance of MARS is degraded only slightly by the inclusion of the\nuseless inputs in scenario 2; it performs substantially worse in scenario 3."
+    },
+    {
+      "id": 29616,
+      "page": 346,
+      "seq": 2,
+      "text": "Scenario\nMean (S.E.)\n1: Tensor product p = 2\n0.97 (0.01)\n2: Tensor product p = 20\n0.96 (0.01)\n3: Neural network\n0.79 (0.01)"
+    },
+    {
+      "id": 29619,
+      "page": 346,
+      "seq": 5,
+      "text": "The MARS method and algorithm can be extended to handle classi\ufb01cation\nproblems. Several strategies have been suggested.\nFor two classes, one can code the output as 0/1 and treat the problem as\na regression; we did this for the spam example. For more than two classes,\none can use the indicator response approach described in Section 4.2. One\ncodes the K response classes via 0/1 indicator variables, and then per-\nforms a multi-response MARS regression. For the latter we use a common\nset of basis functions for all response variables. Classi\ufb01cation is made to\nthe class with the largest predicted response value. There are, however, po-\ntential masking problems with this approach, as described in Section 4.2.\nA generally superior approach is the \u201coptimal scoring\u201d method discussed\nin Section 12.5.\nStone et al. (1997) developed a hybrid of MARS called PolyMARS specif-\nically designed to handle classi\ufb01cation problems. It uses the multiple logistic\nframework described in Section 4.4. It grows the model in a forward stage-\nwise fashion like MARS, but at each stage uses a quadratic approximation\nto the multinomial log-likelihood to search for the next basis-function pair.\nOnce found, the enlarged model is \ufb01t by maximum likelihood, and the\nprocess is repeated."
+    },
+    {
+      "id": 29621,
+      "page": 346,
+      "seq": 7,
+      "text": "Although they might seem quite di\ufb00erent, the MARS and CART strategies\nactually have strong similarities. Suppose we take the MARS procedure and\nmake the following changes:"
+    },
+    {
+      "id": 29622,
+      "page": 346,
+      "seq": 8,
+      "text": "\u2022 Replace the piecewise linear basis functions by step functions I(x\u2212t >\n0) and I(x \u2212t \u22640)."
+    },
+    {
+      "id": 29623,
+      "page": 346,
+      "seq": 9,
+      "text": "\u2022 When a model term is involved in a multiplication by a candidate\nterm, it gets replaced by the interaction, and hence is not available\nfor further interactions."
+    },
+    {
+      "id": 29624,
+      "page": 346,
+      "seq": 10,
+      "text": "With these changes, the MARS forward procedure is the same as the CART\ntree-growing algorithm. Multiplying a step function by a pair of re\ufb02ected"
+    },
+    {
+      "id": 29626,
+      "page": 347,
+      "seq": 1,
+      "text": "step functions is equivalent to splitting a node at the step. The second\nrestriction implies that a node may not be split more than once, and leads\nto the attractive binary-tree representation of the CART model. On the\nother hand, it is this restriction that makes it di\ufb03cult for CART to model\nadditive structures. MARS forgoes the tree structure and gains the ability\nto capture additive e\ufb00ects."
+    },
+    {
+      "id": 29628,
+      "page": 347,
+      "seq": 3,
+      "text": "Mars can handle \u201cmixed\u201d predictors\u2014quantitative and qualitative\u2014in a\nnatural way, much like CART does. MARS considers all possible binary\npartitions of the categories for a qualitative predictor into two groups.\nEach such partition generates a pair of piecewise constant basis functions\u2014\nindicator functions for the two sets of categories. This basis pair is now\ntreated as any other, and is used in forming tensor products with other\nbasis functions already in the model."
+    },
+    {
+      "id": 29630,
+      "page": 347,
+      "seq": 5,
+      "text": "The hierarchical mixtures of experts (HME) procedure can be viewed as a\nvariant of tree-based methods. The main di\ufb00erence is that the tree splits\nare not hard decisions but rather soft probabilistic ones. At each node an\nobservation goes left or right with probabilities depending on its input val-\nues. This has some computational advantages since the resulting parameter\noptimization problem is smooth, unlike the discrete split point search in the\ntree-based approach. The soft splits might also help in prediction accuracy\nand provide a useful alternative description of the data.\nThere are other di\ufb00erences between HMEs and the CART implementa-\ntion of trees. In an HME, a linear (or logistic regression) model is \ufb01t in\neach terminal node, instead of a constant as in CART. The splits can be\nmultiway, not just binary, and the splits are probabilistic functions of a\nlinear combination of inputs, rather than a single input as in the standard\nuse of CART. However, the relative merits of these choices are not clear,\nand most were discussed at the end of Section 9.2.\nA simple two-level HME model in shown in Figure 9.13. It can be thought\nof as a tree with soft splits at each non-terminal node. However, the inven-\ntors of this methodology use a di\ufb00erent terminology. The terminal nodes\nare called experts, and the non-terminal nodes are called gating networks.\nThe idea is that each expert provides an opinion (prediction) about the\nresponse, and these are combined together by the gating networks. As we\nwill see, the model is formally a mixture model, and the two-level model\nin the \ufb01gure can be extend to multiple levels, hence the name hierarchical\nmixtures of experts."
+    },
+    {
+      "id": 29649,
+      "page": 348,
+      "seq": 18,
+      "text": "Expert\nExpert\nExpert\nExpert\nExpert\nExpert\nExpert\nExpert\nExpert\nExpert\nExpert"
+    },
+    {
+      "id": 29650,
+      "page": 348,
+      "seq": 19,
+      "text": "Pr(y|x, \u03b811)\nPr(y|x, \u03b821)\nPr(y|x, \u03b812)\nPr(y|x, \u03b822)"
+    },
+    {
+      "id": 29652,
+      "page": 348,
+      "seq": 21,
+      "text": "Consider the regression or classi\ufb01cation problem, as described earlier in\nthe chapter. The data is (xi, yi), i = 1, 2, . . . , N, with yi either a continuous\nor binary-valued response, and xi a vector-valued input. For ease of nota-\ntion we assume that the \ufb01rst element of xi is one, to account for intercepts.\nHere is how an HME is de\ufb01ned. The top gating network has the output"
+    },
+    {
+      "id": 29653,
+      "page": 348,
+      "seq": 22,
+      "text": "gj(x, \u03b3j) =\ne\u03b3T\nj x\n\tK\nk=1 e\u03b3T\nk x , j = 1, 2, . . . , K,\n(9.25)"
+    },
+    {
+      "id": 29654,
+      "page": 348,
+      "seq": 23,
+      "text": "where each \u03b3j is a vector of unknown parameters. This represents a soft\nK-way split (K = 2 in Figure 9.13.) Each gj(x, \u03b3j) is the probability of\nassigning an observation with feature vector x to the jth branch. Notice\nthat with K = 2 groups, if we take the coe\ufb03cient of one of the elements of\nx to be +\u221e, then we get a logistic curve with in\ufb01nite slope. In this case,\nthe gating probabilities are either 0 or 1, corresponding to a hard split on\nthat input.\nAt the second level, the gating networks have a similar form:"
+    },
+    {
+      "id": 29655,
+      "page": 348,
+      "seq": 24,
+      "text": "g\u2113|j(x, \u03b3j\u2113) =\ne\u03b3T\nj\u2113x\n\tK\nk=1 e\u03b3T\njkx , \u2113= 1, 2, . . . , K.\n(9.26)"
+    },
+    {
+      "id": 29657,
+      "page": 349,
+      "seq": 1,
+      "text": "This is the probability of assignment to the \u2113th branch, given assignment\nto the jth branch at the level above.\nAt each expert (terminal node), we have a model for the response variable\nof the form"
+    },
+    {
+      "id": 29660,
+      "page": 349,
+      "seq": 4,
+      "text": "Regression: The Gaussian linear regression model is used, with \u03b8j\u2113=\n(\u03b2j\u2113, \u03c32\nj\u2113):\nY = \u03b2T\nj\u2113x + \u03b5 and \u03b5 \u223cN(0, \u03c32\nj\u2113).\n(9.28)"
+    },
+    {
+      "id": 29661,
+      "page": 349,
+      "seq": 5,
+      "text": "Classi\ufb01cation: The linear logistic regression model is used:"
+    },
+    {
+      "id": 29664,
+      "page": 349,
+      "seq": 8,
+      "text": "Denoting the collection of all parameters by \u03a8 = {\u03b3j, \u03b3j\u2113, \u03b8j\u2113}, the total\nprobability that Y = y is"
+    },
+    {
+      "id": 29670,
+      "page": 349,
+      "seq": 14,
+      "text": "This is a mixture model, with the mixture probabilities determined by the\ngating network models.\nTo estimate the parameters, we maximize the log-likelihood of the data,\n\t\ni log Pr(yi|xi, \u03a8), over the parameters in \u03a8. The most convenient method\nfor doing this is the EM algorithm, which we describe for mixtures in\nSection 8.5. We de\ufb01ne latent variables \u0394j, all of which are zero except for\na single one. We interpret these as the branching decisions made by the top\nlevel gating network. Similarly we de\ufb01ne latent variables \u0394\u2113|j to describe\nthe gating decisions at the second level.\nIn the E-step, the EM algorithm computes the expectations of the \u0394j\nand \u0394\u2113|j given the current values of the parameters. These expectations\nare then used as observation weights in the M-step of the procedure, to\nestimate the parameters in the expert networks. The parameters in the\ninternal nodes are estimated by a version of multiple logistic regression.\nThe expectations of the \u0394j or \u0394\u2113|j are probability pro\ufb01les, and these are\nused as the response vectors for these logistic regressions.\nThe hierarchical mixtures of experts approach is a promising competitor\nto CART trees. By using soft splits rather than hard decision rules it can\ncapture situations where the transition from low to high response is gradual.\nThe log-likelihood is a smooth function of the unknown weights and hence\nis amenable to numerical optimization. The model is similar to CART with\nlinear combination splits, but the latter is more di\ufb03cult to optimize. On"
+    },
+    {
+      "id": 29672,
+      "page": 350,
+      "seq": 1,
+      "text": "the other hand, to our knowledge there are no methods for \ufb01nding a good\ntree topology for the HME model, as there are in CART. Typically one uses\na \ufb01xed tree of some depth, possibly the output of the CART procedure.\nThe emphasis in the research on HMEs has been on prediction rather than\ninterpretation of the \ufb01nal model. A close cousin of the HME is the latent\nclass model (Lin et al., 2000), which typically has only one layer; here\nthe nodes or latent classes are interpreted as groups of subjects that show\nsimilar response behavior."
+    },
+    {
+      "id": 29674,
+      "page": 350,
+      "seq": 3,
+      "text": "It is quite common to have observations with missing values for one or more\ninput features. The usual approach is to impute (\ufb01ll-in) the missing values\nin some way.\nHowever, the \ufb01rst issue in dealing with the problem is determining wheth-\ner the missing data mechanism has distorted the observed data. Roughly\nspeaking, data are missing at random if the mechanism resulting in its\nomission is independent of its (unobserved) value. A more precise de\ufb01nition\nis given in Little and Rubin (2002). Suppose y is the response vector and X\nis the N \u00d7 p matrix of inputs (some of which are missing). Denote by Xobs\nthe observed entries in X and let Z = (y, X), Zobs = (y, Xobs). Finally, if R\nis an indicator matrix with ijth entry 1 if xij is missing and zero otherwise,\nthen the data is said to be missing at random (MAR) if the distribution of\nR depends on the data Z only through Zobs:"
+    },
+    {
+      "id": 29676,
+      "page": 350,
+      "seq": 5,
+      "text": "Here \u03b8 are any parameters in the distribution of R. Data are said to be\nmissing completely at random (MCAR) if the distribution of R doesn\u2019t\ndepend on the observed or missing data:"
+    },
+    {
+      "id": 29678,
+      "page": 350,
+      "seq": 7,
+      "text": "MCAR is a stronger assumption than MAR: most imputation methods rely\non MCAR for their validity.\nFor example, if a patient\u2019s measurement was not taken because the doctor\nfelt he was too sick, that observation would not be MAR or MCAR. In this\ncase the missing data mechanism causes our observed training data to give a\ndistorted picture of the true population, and data imputation is dangerous\nin this instance. Often the determination of whether features are MCAR\nmust be made from information about the data collection process. For\ncategorical features, one way to diagnose this problem is to code \u201cmissing\u201d\nas an additional class. Then we \ufb01t our model to the training data and see\nif class \u201cmissing\u201d is predictive of the response."
+    },
+    {
+      "id": 29680,
+      "page": 351,
+      "seq": 1,
+      "text": "Assuming the features are missing completely at random, there are a\nnumber of ways of proceeding:"
+    },
+    {
+      "id": 29682,
+      "page": 351,
+      "seq": 3,
+      "text": "2. Rely on the learning algorithm to deal with missing values in its\ntraining phase."
+    },
+    {
+      "id": 29684,
+      "page": 351,
+      "seq": 5,
+      "text": "Approach (1) can be used if the relative amount of missing data is small,\nbut otherwise should be avoided. Regarding (2), CART is one learning\nalgorithm that deals e\ufb00ectively with missing values, through surrogate splits\n(Section 9.2.4). MARS and PRIM use similar approaches. In generalized\nadditive modeling, all observations missing for a given input feature are\nomitted when the partial residuals are smoothed against that feature in\nthe back\ufb01tting algorithm, and their \ufb01tted values are set to zero. Since the\n\ufb01tted curves have mean zero (when the model includes an intercept), this\namounts to assigning the average \ufb01tted value to the missing observations.\nFor most learning methods, the imputation approach (3) is necessary.\nThe simplest tactic is to impute the missing value with the mean or median\nof the nonmissing values for that feature. (Note that the above procedure\nfor generalized additive models is analogous to this.)\nIf the features have at least some moderate degree of dependence, one\ncan do better by estimating a predictive model for each feature given the\nother features and then imputing each missing value by its prediction from\nthe model. In choosing the learning method for imputation of the features,\none must remember that this choice is distinct from the method used for\npredicting y from X. Thus a \ufb02exible, adaptive method will often be pre-\nferred, even for the eventual purpose of carrying out a linear regression of y\non X. In addition, if there are many missing feature values in the training\nset, the learning method must itself be able to deal with missing feature\nvalues. CART therefore is an ideal choice for this imputation \u201cengine.\u201d\nAfter imputation, missing values are typically treated as if they were ac-\ntually observed. This ignores the uncertainty due to the imputation, which\nwill itself introduce additional uncertainty into estimates and predictions\nfrom the response model. One can measure this additional uncertainty by\ndoing multiple imputations and hence creating many di\ufb00erent training sets.\nThe predictive model for y can be \ufb01t to each training set, and the variation\nacross training sets can be assessed. If CART was used for the imputation\nengine, the multiple imputations could be done by sampling from the values\nin the corresponding terminal nodes."
+    },
+    {
+      "id": 29687,
+      "page": 352,
+      "seq": 2,
+      "text": "With N observations and p predictors, additive model \ufb01tting requires some\nnumber mp of applications of a one-dimensional smoother or regression\nmethod. The required number of cycles m of the back\ufb01tting algorithm is\nusually less than 20 and often less than 10, and depends on the amount\nof correlation in the inputs. With cubic smoothing splines, for example,\nN log N operations are needed for an initial sort and N operations for the\nspline \ufb01t. Hence the total operations for an additive model \ufb01t is pN log N +\nmpN.\nTrees require pN log N operations for an initial sort for each predictor,\nand typically another pN log N operations for the split computations. If the\nsplits occurred near the edges of the predictor ranges, this number could\nincrease to N 2p.\nMARS requires Nm2 + pmN operations to add a basis function to a\nmodel with m terms already present, from a pool of p predictors. Hence to\nbuild an M-term model requires NM 3 + pM 2N computations, which can\nbe quite prohibitive if M is a reasonable fraction of N.\nEach of the components of an HME are typically inexpensive to \ufb01t at\neach M-step: Np2 for the regressions, and Np2K2 for a K-class logistic\nregression. The EM algorithm, however, can take a long time to converge,\nand so sizable HME models are considered costly to \ufb01t."
+    },
+    {
+      "id": 29689,
+      "page": 352,
+      "seq": 4,
+      "text": "The most comprehensive source for generalized additive models is the text\nof that name by Hastie and Tibshirani (1990). Di\ufb00erent applications of\nthis work in medical problems are discussed in Hastie et al. (1989) and\nHastie and Herman (1990), and the software implementation in Splus is\ndescribed in Chambers and Hastie (1991). Green and Silverman (1994)\ndiscuss penalization and spline models in a variety of settings. Efron and\nTibshirani (1991) give an exposition of modern developments in statistics\n(including generalized additive models), for a nonmathematical audience.\nClassi\ufb01cation and regression trees date back at least as far as Morgan and\nSonquist (1963). We have followed the modern approaches of Breiman et\nal. (1984) and Quinlan (1993). The PRIM method is due to Friedman\nand Fisher (1999), while MARS is introduced in Friedman (1991), with an\nadditive precursor in Friedman and Silverman (1989). Hierarchical mixtures\nof experts were proposed in Jordan and Jacobs (1994); see also Jacobs et\nal. (1991)."
+    },
+    {
+      "id": 29694,
+      "page": 353,
+      "seq": 4,
+      "text": "(a) Consider an additive model with N observations and p terms, with\nthe jth term to be \ufb01t by a linear smoother Sj. Consider the following\nsystem of equations:\n\u239b"
+    },
+    {
+      "id": 29709,
+      "page": 353,
+      "seq": 19,
+      "text": "Here each fj is an N-vector of evaluations of the jth function at\nthe data points, and y is an N-vector of the response values. Show\nthat back\ufb01tting is a blockwise Gauss\u2013Seidel algorithm for solving this\nsystem of equations."
+    },
+    {
+      "id": 29710,
+      "page": 353,
+      "seq": 20,
+      "text": "(b) Let S1 and S2 be symmetric smoothing operators (matrices) with\neigenvalues in [0, 1). Consider a back\ufb01tting algorithm with response\nvector y and smoothers S1, S2. Show that with any starting values,\nthe algorithm converges and give a formula for the \ufb01nal iterates."
+    },
+    {
+      "id": 29726,
+      "page": 353,
+      "seq": 36,
+      "text": "are equivalent to the least squares normal equations DT D\u03b2 = DT y where\n\u03b2 is the vector of coe\ufb03cients."
+    },
+    {
+      "id": 29730,
+      "page": 354,
+      "seq": 3,
+      "text": "(a) In terms of the number of terminal nodes m, give a rough formula for\nthe degrees of freedom of the \ufb01t."
+    },
+    {
+      "id": 29731,
+      "page": 354,
+      "seq": 4,
+      "text": "(b) Generate 100 observations with predictors X1, X2, . . . , X10 as inde-\npendent standard Gaussian variates and \ufb01x these values."
+    },
+    {
+      "id": 29732,
+      "page": 354,
+      "seq": 5,
+      "text": "(c) Generate response values also as standard Gaussian (\u03c32 = 1), indepen-\ndent of the predictors. Fit regression trees to the data of \ufb01xed size 1,5\nand 10 terminal nodes and hence estimate the degrees of freedom of\neach \ufb01t. [Do ten simulations of the response and average the results,\nto get a good estimate of degrees of freedom.]"
+    },
+    {
+      "id": 29733,
+      "page": 354,
+      "seq": 6,
+      "text": "(d) Compare your estimates of degrees of freedom in (a) and (c) and\ndiscuss."
+    },
+    {
+      "id": 29734,
+      "page": 354,
+      "seq": 7,
+      "text": "(e) If the regression tree \ufb01t were a linear operation, we could write \u02c6y = Sy\nfor some matrix S. Then the degrees of freedom would be tr(S).\nSuggest a way to compute an approximate S matrix for a regression\ntree, compute it and compare the resulting degrees of freedom to\nthose in (a) and (c)."
+    },
+    {
+      "id": 29736,
+      "page": 354,
+      "seq": 9,
+      "text": "(a) Fit an additive model to the cube root of ozone concentration. as a\nfunction of temperature, wind speed, and radiation. Compare your\nresults to those obtained via the trellis display in Figure 6.9."
+    },
+    {
+      "id": 29737,
+      "page": 354,
+      "seq": 10,
+      "text": "(b) Fit trees, MARS, and PRIM to the same data, and compare the results\nto those found in (a) and in Figure 6.9."
+    }
+  ]
+}

@@ -1,0 +1,441 @@
+{
+  "chapter": "15",
+  "sections": [
+    {
+      "number": "15.1",
+      "title": "Introduction",
+      "page_start": 605
+    },
+    {
+      "number": "15.2",
+      "title": "De\ufb01nition of Random Forests",
+      "page_start": 605
+    },
+    {
+      "number": "15.3",
+      "title": "Details of Random Forests",
+      "page_start": 610
+    },
+    {
+      "number": "15.3.1",
+      "title": "Out of Bag Samples",
+      "page_start": 610
+    },
+    {
+      "number": "15.3.2",
+      "title": "Variable Importance",
+      "page_start": 611
+    },
+    {
+      "number": "15.3.3",
+      "title": "Proximity Plots",
+      "page_start": 613
+    },
+    {
+      "number": "15.3.4",
+      "title": "Random Forests and Over\ufb01tting",
+      "page_start": 614
+    },
+    {
+      "number": "15.4",
+      "title": "Analysis of Random Forests",
+      "page_start": 615
+    },
+    {
+      "number": "15.4.1",
+      "title": "Variance and the De-Correlation E\ufb00ect",
+      "page_start": 615
+    },
+    {
+      "number": "15.4.3",
+      "title": "Adaptive Nearest Neighbors",
+      "page_start": 619
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": 47300,
+      "page": 605,
+      "seq": 0,
+      "text": "This is page 587\nPrinter: Opaque this\n15\nRandom Forests"
+    },
+    {
+      "id": 47302,
+      "page": 605,
+      "seq": 2,
+      "text": "Bagging or bootstrap aggregation Section 8.7 is a technique for reducing\nthe variance of an estimated prediction function. Bagging seems to work\nespecially well for high-variance, low-bias procedures, such as trees. For\nregression, we simply \ufb01t the same regression tree many times to bootstrap-\nsampled versions of the training data, and average the result. For classi\ufb01-\ncation, a committee of trees each cast a vote for the predicted class.\nBoosting in Chapter 10 was initially proposed as a committee method as\nwell, although unlike bagging, the committee of weak learners evolves over\ntime, and the members cast a weighted vote. Boosting appears to dominate\nbagging on most problems, and became the preferred choice.\nRandom forests (Breiman, 2001) is a substantial modi\ufb01cation of bagging\nthat builds a large collection of de-correlated trees, and then averages them.\nOn many problems the performance of random forests is very similar to\nboosting, and they are simpler to train and tune. As a consequence, random\nforests are popular, and are implemented in a variety of packages."
+    },
+    {
+      "id": 47304,
+      "page": 605,
+      "seq": 4,
+      "text": "The essential idea in bagging (Section 8.7) is to average many noisy but\napproximately unbiased models, and hence reduce the variance. Trees are\nideal candidates for bagging, since they can capture complex interaction"
+    },
+    {
+      "id": 47306,
+      "page": 606,
+      "seq": 1,
+      "text": "Algorithm 15.1 Random Forest for Regression or Classi\ufb01cation."
+    },
+    {
+      "id": 47308,
+      "page": 606,
+      "seq": 3,
+      "text": "(a) Draw a bootstrap sample Z\u2217of size N from the training data."
+    },
+    {
+      "id": 47309,
+      "page": 606,
+      "seq": 4,
+      "text": "(b) Grow a random-forest tree Tb to the bootstrapped data, by re-\ncursively repeating the following steps for each terminal node of\nthe tree, until the minimum node size nmin is reached."
+    },
+    {
+      "id": 47310,
+      "page": 606,
+      "seq": 5,
+      "text": "i. Select m variables at random from the p variables.\nii. Pick the best variable/split-point among the m.\niii. Split the node into two daughter nodes."
+    },
+    {
+      "id": 47315,
+      "page": 606,
+      "seq": 10,
+      "text": "Classi\ufb01cation: Let \u02c6Cb(x) be the class prediction of the bth random-forest\ntree. Then \u02c6CB\nrf (x) = majority vote { \u02c6Cb(x)}B\n1 ."
+    },
+    {
+      "id": 47316,
+      "page": 606,
+      "seq": 11,
+      "text": "structures in the data, and if grown su\ufb03ciently deep, have relatively low\nbias. Since trees are notoriously noisy, they bene\ufb01t greatly from the averag-\ning. Moreover, since each tree generated in bagging is identically distributed\n(i.d.), the expectation of an average of B such trees is the same as the ex-\npectation of any one of them. This means the bias of bagged trees is the\nsame as that of the individual trees, and the only hope of improvement is\nthrough variance reduction. This is in contrast to boosting, where the trees\nare grown in an adaptive way to remove bias, and hence are not i.d.\nAn average of B i.i.d. random variables, each with variance \u03c32, has vari-\nance\n1\nB \u03c32. If the variables are simply i.d. (identically distributed, but not\nnecessarily independent) with positive pairwise correlation \u03c1, the variance\nof the average is (Exercise 15.1)"
+    },
+    {
+      "id": 47319,
+      "page": 606,
+      "seq": 14,
+      "text": "As B increases, the second term disappears, but the \ufb01rst remains, and\nhence the size of the correlation of pairs of bagged trees limits the bene\ufb01ts\nof averaging. The idea in random forests (algorithm\n15.1) is to improve\nthe variance reduction of bagging by reducing the correlation between the\ntrees, without increasing the variance too much. This is achieved in the\ntree-growing process through random selection of the input variables.\nSpeci\ufb01cally, when growing a tree on a bootstrapped dataset:"
+    },
+    {
+      "id": 47320,
+      "page": 606,
+      "seq": 15,
+      "text": "Before each split, select m \u2264p of the input variables at random\nas candidates for splitting."
+    },
+    {
+      "id": 47322,
+      "page": 607,
+      "seq": 1,
+      "text": "Typically values for m are \u221ap or even as low as 1.\nAfter B such trees {T(x; \u0398b)}B\n1 are grown, the random forest (regression)\npredictor is"
+    },
+    {
+      "id": 47327,
+      "page": 607,
+      "seq": 6,
+      "text": "As in Section 10.9 (page 356), \u0398b characterizes the bth random forest tree in\nterms of split variables, cutpoints at each node, and terminal-node values.\nIntuitively, reducing m will reduce the correlation between any pair of trees\nin the ensemble, and hence by (15.1) reduce the variance of the average."
+    },
+    {
+      "id": 47335,
+      "page": 607,
+      "seq": 14,
+      "text": "Not all estimators can be improved by shaking up the data like this.\nIt seems that highly nonlinear estimators, such as trees, bene\ufb01t the most.\nFor bootstrapped trees, \u03c1 is typically small (0.05 or lower is typical; see\nFigure 15.9), while \u03c32 is not much larger than the variance for the original\ntree. On the other hand, bagging does not change linear estimates, such\nas the sample mean (hence its variance either); the pairwise correlation\nbetween bootstrapped means is about 50% (Exercise 15.4)."
+    },
+    {
+      "id": 47337,
+      "page": 608,
+      "seq": 1,
+      "text": "Random forests are popular. Leo Breiman\u2019s1 collaborator Adele Cutler\nmaintains a random forest website2 where the software is freely available,\nwith more than 3000 downloads reported by 2002. There is a randomForest\npackage in R, maintained by Andy Liaw, available from the CRAN website.\nThe authors make grand claims about the success of random forests:\n\u201cmost accurate,\u201d \u201cmost interpretable,\u201d and the like. In our experience ran-\ndom forests do remarkably well, with very little tuning required. A ran-\ndom forest classi\ufb01er achieves 4.88% misclassi\ufb01cation error on the spam test\ndata, which compares well with all other methods, and is not signi\ufb01cantly\nworse than gradient boosting at 4.5%. Bagging achieves 5.4% which is\nsigni\ufb01cantly worse than either (using the McNemar test outlined in Ex-\nercise 10.6), so it appears on this example the additional randomization\nhelps."
+    },
+    {
+      "id": 47345,
+      "page": 608,
+      "seq": 9,
+      "text": "1Sadly, Leo Breiman died in July, 2005.\n2http://www.math.usu.edu/\u223cadele/forests/"
+    },
+    {
+      "id": 47355,
+      "page": 609,
+      "seq": 9,
+      "text": "\u2022 Random forests stabilize at about 200 trees, while at 1000 trees boost-\ning continues to improve. Boosting is slowed down by the shrinkage,\nas well as the fact that the trees are much smaller."
+    },
+    {
+      "id": 47356,
+      "page": 609,
+      "seq": 10,
+      "text": "\u2022 Boosting outperforms random forests here. At 1000 terms, the weaker\nboosting model (GBM depth 4) has a smaller error than the stronger"
+    },
+    {
+      "id": 47357,
+      "page": 609,
+      "seq": 11,
+      "text": "3Details: The random forests were \ufb01t using the R package randomForest 4.5-11,\nwith 500 trees. The gradient boosting models were \ufb01t using R package gbm 1.5, with\nshrinkage parameter set to 0.05, and 2000 trees."
+    },
+    {
+      "id": 47365,
+      "page": 610,
+      "seq": 7,
+      "text": "random forest (RF m = 6); a Wilcoxon test on the mean di\ufb00erences\nin absolute errors has a p-value of 0.007. For larger m the random\nforests performed no better."
+    },
+    {
+      "id": 47367,
+      "page": 610,
+      "seq": 9,
+      "text": "We have glossed over the distinction between random forests for classi\ufb01ca-\ntion versus regression. When used for classi\ufb01cation, a random forest obtains\na class vote from each tree, and then classi\ufb01es using majority vote (see Sec-\ntion 8.7 on bagging for a similar discussion). When used for regression, the\npredictions from each tree at a target point x are simply averaged, as in\n(15.2). In addition, the inventors make the following recommendations:"
+    },
+    {
+      "id": 47368,
+      "page": 610,
+      "seq": 10,
+      "text": "\u2022 For classi\ufb01cation, the default value for m is \u230a\u221ap\u230band the minimum\nnode size is one."
+    },
+    {
+      "id": 47369,
+      "page": 610,
+      "seq": 11,
+      "text": "\u2022 For regression, the default value for m is \u230ap/3\u230band the minimum\nnode size is \ufb01ve."
+    },
+    {
+      "id": 47370,
+      "page": 610,
+      "seq": 12,
+      "text": "In practice the best values for these parameters will depend on the problem,\nand they should be treated as tuning parameters. In Figure 15.3 the m = 6\nperforms much better than the default value \u230a8/3\u230b= 2."
+    },
+    {
+      "id": 47372,
+      "page": 610,
+      "seq": 14,
+      "text": "An important feature of random forests is its use of out-of-bag (oob) sam-\nples:"
+    },
+    {
+      "id": 47374,
+      "page": 611,
+      "seq": 1,
+      "text": "For each observation zi = (xi, yi), construct its random forest\npredictor by averaging only those trees corresponding to boot-\nstrap samples in which zi did not appear."
+    },
+    {
+      "id": 47375,
+      "page": 611,
+      "seq": 2,
+      "text": "An oob error estimate is almost identical to that obtained by N-fold cross-\nvalidation; see Exercise 15.2. Hence unlike many other nonlinear estimators,\nrandom forests can be \ufb01t in one sequence, with cross-validation being per-\nformed along the way. Once the oob error stabilizes, the training can be\nterminated.\nFigure 15.4 shows the oob misclassi\ufb01cation error for the spam data, com-\npared to the test error. Although 2500 trees are averaged here, it appears\nfrom the plot that about 200 would be su\ufb03cient."
+    },
+    {
+      "id": 47377,
+      "page": 611,
+      "seq": 4,
+      "text": "Variable importance plots can be constructed for random forests in exactly\nthe same way as they were for gradient-boosted models (Section 10.13).\nAt each split in each tree, the improvement in the split-criterion is the\nimportance measure attributed to the splitting variable, and is accumulated\nover all the trees in the forest separately for each variable. The left plot\nof Figure 15.5 shows the variable importances computed in this way for\nthe spam data; compare with the corresponding Figure 10.6 on page 354 for\ngradient boosting. Boosting ignores some variables completely, while the\nrandom forest does not. The candidate split-variable selection increases\nthe chance that any single variable gets included in a random forest, while\nno such selection occurs with boosting.\nRandom forests also use the oob samples to construct a di\ufb00erent variable-\nimportance measure, apparently to measure the prediction strength of each\nvariable. When the bth tree is grown, the oob samples are passed down\nthe tree, and the prediction accuracy is recorded. Then the values for the\njth variable are randomly permuted in the oob samples, and the accuracy\nis again computed. The decrease in accuracy as a result of this permuting\nis averaged over all trees, and is used as a measure of the importance of\nvariable j in the random forest. These are expressed as a percent of the\nmaximum in the right plot in Figure 15.5. Although the rankings of the\ntwo methods are similar, the importances in the right plot are more uni-\nform over the variables. The randomization e\ufb00ectively voids the e\ufb00ect of\na variable, much like setting a coe\ufb03cient to zero in a linear model (Exer-\ncise 15.7). This does not measure the e\ufb00ect on prediction were this variable\nnot available, because if the model was re\ufb01tted without the variable, other\nvariables could be used as surrogates."
+    },
+    {
+      "id": 47379,
+      "page": 612,
+      "seq": 1,
+      "text": "!\n$\nremove\nfree\nCAPAVE\nyour\nCAPMAX\nhp\nCAPTOT\nmoney\nour\nyou\ngeorge\n000\nedu\nhpl\nbusiness\n1999\ninternet\n(\nwill\nall\nemail\nre\nreceive\nover\nmail\n;\n650\nmeeting\nlabs\norder\naddress\npm\npeople\nmake\n#\ncredit\nfont\ndata\ntechnology\n85\n[\nlab\ntelnet\nreport\noriginal\nproject\nconference\ndirect\n415\n857\naddresses\n3d\ncs\nparts\ntable"
+    },
+    {
+      "id": 47383,
+      "page": 612,
+      "seq": 5,
+      "text": "!\nremove\n$\nCAPAVE\nhp\nfree\nCAPMAX\nedu\ngeorge\nCAPTOT\nyour\nour\n1999\nre\nyou\nhpl\nbusiness\n000\nmeeting\nmoney\n(\nwill\ninternet\n650\npm\nreceive\nover\nemail\n;\nfont\nmail\ntechnology\norder\nall\nlabs\n[\n85\naddress\noriginal\nlab\ntelnet\npeople\nproject\ndata\ncredit\nconference\n857\n#\n415\nmake\ncs\nreport\ndirect\naddresses\n3d\nparts\ntable"
+    },
+    {
+      "id": 47406,
+      "page": 613,
+      "seq": 18,
+      "text": "One of the advertised outputs of a random forest is a proximity plot. Fig-\nure 15.6 shows a proximity plot for the mixture data de\ufb01ned in Section 2.3.3\nin Chapter 2. In growing a random forest, an N \u00d7 N proximity matrix is\naccumulated for the training data. For every tree, any pair of oob obser-\nvations sharing a terminal node has their proximity increased by one. This\nproximity matrix is then represented in two dimensions using multidimen-\nsional scaling (Section 14.8). The idea is that even though the data may be\nhigh-dimensional, involving mixed variables, etc., the proximity plot gives\nan indication of which observations are e\ufb00ectively close together in the eyes\nof the random forest classi\ufb01er.\nProximity plots for random forests often look very similar, irrespective of\nthe data, which casts doubt on their utility. They tend to have a star shape,\none arm per class, which is more pronounced the better the classi\ufb01cation\nperformance.\nSince the mixture data are two-dimensional, we can map points from the\nproximity plot to the original coordinates, and get a better understanding of\nwhat they represent. It seems that points in pure regions class-wise map to\nthe extremities of the star, while points nearer the decision boundaries map\nnearer the center. This is not surprising when we consider the construction\nof the proximity matrices. Neighboring points in pure regions will often\nend up sharing a bucket, since when a terminal node is pure, it is no longer"
+    },
+    {
+      "id": 47408,
+      "page": 614,
+      "seq": 1,
+      "text": "split by a random forest tree-growing algorithm. On the other hand, pairs\nof points that are close but belong to di\ufb00erent classes will sometimes share\na terminal node, but not always."
+    },
+    {
+      "id": 47410,
+      "page": 614,
+      "seq": 3,
+      "text": "When the number of variables is large, but the fraction of relevant variables\nsmall, random forests are likely to perform poorly with small m. At each\nsplit the chance can be small that the relevant variables will be selected.\nFigure 15.7 shows the results of a simulation that supports this claim. De-\ntails are given in the \ufb01gure caption and Exercise 15.3. At the top of each\npair we see the hyper-geometric probability that a relevant variable will be\nselected at any split by a random forest tree (in this simulation, the relevant\nvariables are all equal in stature). As this probability gets small, the gap\nbetween boosting and random forests increases. When the number of rele-\nvant variables increases, the performance of random forests is surprisingly\nrobust to an increase in the number of noise variables. For example, with 6\nrelevant and 100 noise variables, the probability of a relevant variable being\nselected at any split is 0.46, assuming m =\n\""
+    },
+    {
+      "id": 47411,
+      "page": 614,
+      "seq": 4,
+      "text": "(6 + 100) \u224810. According to\nFigure 15.7, this does not hurt the performance of random forests compared\nwith boosting. This robustness is largely due to the relative insensitivity of\nmisclassi\ufb01cation cost to the bias and variance of the probability estimates\nin each tree. We consider random forests for regression in the next section."
+    },
+    {
+      "id": 47412,
+      "page": 614,
+      "seq": 5,
+      "text": "Another claim is that random forests \u201ccannot over\ufb01t\u201d the data. It is\ncertainly true that increasing B does not cause the random forest sequence\nto over\ufb01t; like bagging, the random forest estimate (15.2) approximates the\nexpectation"
+    },
+    {
+      "id": 47414,
+      "page": 614,
+      "seq": 7,
+      "text": "with an average over B realizations of \u0398. The distribution of \u0398 here is con-\nditional on the training data. However, this limit can over\ufb01t the data; the\naverage of fully grown trees can result in too rich a model, and incur unnec-\nessary variance. Segal (2004) demonstrates small gains in performance by\ncontrolling the depths of the individual trees grown in random forests. Our\nexperience is that using full-grown trees seldom costs much, and results in\none less tuning parameter.\nFigure 15.8 shows the modest e\ufb00ect of depth control in a simple regression\nexample. Classi\ufb01ers are less sensitive to variance, and this e\ufb00ect of over-\n\ufb01tting is seldom seen with random-forest classi\ufb01cation."
+    },
+    {
+      "id": 47425,
+      "page": 615,
+      "seq": 10,
+      "text": "In this section we analyze the mechanisms at play with the additional\nrandomization employed by random forests. For this discussion we focus\non regression and squared error loss, since this gets at the main points,\nand bias and variance are more complex with 0\u20131 loss (see Section 7.3.1).\nFurthermore, even in the case of a classi\ufb01cation problem, we can consider\nthe random-forest average as an estimate of the class posterior probabilities,\nfor which bias and variance are appropriate descriptors."
+    },
+    {
+      "id": 47427,
+      "page": 615,
+      "seq": 12,
+      "text": "The limiting form (B \u2192\u221e) of the random forest regression estimator is"
+    },
+    {
+      "id": 47429,
+      "page": 615,
+      "seq": 14,
+      "text": "where we have made explicit the dependence on the training data Z. Here\nwe consider estimation at a single target point x. From (15.1) we see that"
+    },
+    {
+      "id": 47439,
+      "page": 616,
+      "seq": 9,
+      "text": "\u2022 \u03c1(x) is the sampling correlation between any pair of trees used in the\naveraging:\n\u03c1(x) = corr[T(x; \u03981(Z)), T(x; \u03982(Z))],\n(15.6)"
+    },
+    {
+      "id": 47440,
+      "page": 616,
+      "seq": 10,
+      "text": "where \u03981(Z) and \u03982(Z) are a randomly drawn pair of random forest\ntrees grown to the randomly sampled Z;"
+    },
+    {
+      "id": 47441,
+      "page": 616,
+      "seq": 11,
+      "text": "\u2022 \u03c32(x) is the sampling variance of any single randomly drawn tree,"
+    },
+    {
+      "id": 47443,
+      "page": 616,
+      "seq": 13,
+      "text": "It is easy to confuse \u03c1(x) with the average correlation between \ufb01tted trees\nin a given random-forest ensemble; that is, think of the \ufb01tted trees as N-\nvectors, and compute the average pairwise correlation between these vec-\ntors, conditioned on the data. This is not the case; this conditional corre-\nlation is not directly relevant in the averaging process, and the dependence\non x in \u03c1(x) warns us of the distinction. Rather, \u03c1(x) is the theoretical\ncorrelation between a pair of random-forest trees evaluated at x, induced\nby repeatedly making training sample draws Z from the population, and\nthen drawing a pair of random forest trees. In statistical jargon, this is the\ncorrelation induced by the sampling distribution of Z and \u0398.\nMore precisely, the variability averaged over in the calculations in (15.6)\nand (15.7) is both"
+    },
+    {
+      "id": 47445,
+      "page": 617,
+      "seq": 1,
+      "text": "\u2022 conditional on Z: due to the bootstrap sampling and feature sampling\nat each split, and"
+    },
+    {
+      "id": 47446,
+      "page": 617,
+      "seq": 2,
+      "text": "\u2022 a result of the sampling variability of Z itself."
+    },
+    {
+      "id": 47447,
+      "page": 617,
+      "seq": 3,
+      "text": "In fact, the conditional covariance of a pair of tree \ufb01ts at x is zero, because\nthe bootstrap and feature sampling is i.i.d; see Exercise 15.5."
+    },
+    {
+      "id": 47453,
+      "page": 617,
+      "seq": 9,
+      "text": "The following demonstrations are based on a simulation model"
+    },
+    {
+      "id": 47458,
+      "page": 617,
+      "seq": 14,
+      "text": "with all the Xj and \u03b5 iid Gaussian. We use 500 training sets of size 100, and\na single set of test locations of size 600. Since regression trees are nonlinear\nin Z, the patterns we see below will di\ufb00er somewhat depending on the\nstructure of the model.\nFigure 15.9 shows how the correlation (15.6) between pairs of trees de-\ncreases as m decreases: pairs of tree predictions at x for di\ufb00erent training\nsets Z are likely to be less similar if they do not use the same splitting\nvariables.\nIn the left panel of Figure 15.10 we consider the variances of single tree\npredictors, VarT(x; \u0398(Z)) (averaged over 600 prediction points x drawn\nrandomly from our simulation model). This is the total variance, and can be"
+    },
+    {
+      "id": 47460,
+      "page": 618,
+      "seq": 1,
+      "text": "decomposed into two parts using standard conditional variance arguments\n(see Exercise 15.5):"
+    },
+    {
+      "id": 47461,
+      "page": 618,
+      "seq": 2,
+      "text": "Var\u0398,ZT(x; \u0398(Z))\n=\nVarZE\u0398|ZT(x; \u0398(Z))\n+\nEZVar\u0398|ZT(x; \u0398(Z))"
+    },
+    {
+      "id": 47462,
+      "page": 618,
+      "seq": 3,
+      "text": "Total Variance\n=\nVarZ \u02c6frf(x)\n+\nwithin-Z Variance\n(15.9)\nThe second term is the within-Z variance\u2014a result of the randomization,\nwhich increases as m decreases. The \ufb01rst term is in fact the sampling vari-\nance of the random forest ensemble (shown in the right panel), which de-\ncreases as m decreases. The variance of the individual trees does not change\nappreciably over much of the range of m, hence in light of (15.5), the vari-\nance of the ensemble is dramatically lower than this tree variance."
+    },
+    {
+      "id": 47479,
+      "page": 618,
+      "seq": 20,
+      "text": "As in bagging, the bias of a random forest is the same as the bias of any\nof the individual sampled trees T(x; \u0398(Z)):"
+    },
+    {
+      "id": 47481,
+      "page": 619,
+      "seq": 1,
+      "text": "Bias(x)\n=\n\u03bc(x) \u2212EZ \u02c6frf(x)\n=\n\u03bc(x) \u2212EZE\u0398|ZT(x; \u0398(Z)).\n(15.10)"
+    },
+    {
+      "id": 47482,
+      "page": 619,
+      "seq": 2,
+      "text": "This is also typically greater (in absolute terms) than the bias of an un-\npruned tree grown to Z, since the randomization and reduced sample space\nimpose restrictions. Hence the improvements in prediction obtained by bag-\nging or random forests are solely a result of variance reduction.\nAny discussion of bias depend on the unknown true function. Figure 15.10\n(right panel) shows the squared bias for our additive model simulation (es-\ntimated from the 500 realizations). Although for di\ufb00erent models the shape\nand rate of the bias curves may di\ufb00er, the general trend is that as m de-\ncreases, the bias increases. Shown in the \ufb01gure is the mean-squared error,\nand we see a classical bias-variance trade-o\ufb00in the choice of m. For all m\nthe squared bias of the random forest is greater than that for a single tree\n(horizontal line).\nThese patterns suggest a similarity with ridge regression (Section 3.4.1).\nRidge regression is useful (in linear models) when one has a large number\nof variables with similarly sized coe\ufb03cients; ridge shrinks their coe\ufb03cients\ntoward zero, and those of strongly correlated variables toward each other.\nAlthough the size of the training sample might not permit all the variables\nto be in the model, this regularization via ridge stabilizes the model and al-\nlows all the variables to have their say (albeit diminished). Random forests\nwith small m perform a similar averaging. Each of the relevant variables\nget their turn to be the primary split, and the ensemble averaging reduces\nthe contribution of any individual variable. Since this simulation exam-\nple (15.8) is based on a linear model in all the variables, ridge regression\nachieves a lower mean-squared error (about 0.45 with df(\u03bbopt) \u224829)."
+    },
+    {
+      "id": 47484,
+      "page": 619,
+      "seq": 4,
+      "text": "The random forest classi\ufb01er has much in common with the k-nearest neigh-\nbor classi\ufb01er (Section 13.3); in fact a weighted version thereof. Since each\ntree is grown to maximal size, for a particular \u0398\u2217, T(x; \u0398\u2217(Z)) is the re-\nsponse value for one of the training samples4. The tree-growing algorithm\n\ufb01nds an \u201coptimal\u201d path to that observation, choosing the most informative\npredictors from those at its disposal. The averaging process assigns weights\nto these training responses, which ultimately vote for the prediction. Hence\nvia the random-forest voting mechanism, those observations close to the\ntarget point get assigned weights\u2014an equivalent kernel\u2014which combine to\nform the classi\ufb01cation decision.\nFigure 15.11 demonstrates the similarity between the decision boundary\nof 3-nearest neighbors and random forests on the mixture data."
+    },
+    {
+      "id": 47485,
+      "page": 619,
+      "seq": 5,
+      "text": "4We gloss over the fact that pure nodes are not split further, and hence there can be\nmore than one observation in a terminal node"
+    },
+    {
+      "id": 47637,
+      "page": 620,
+      "seq": 151,
+      "text": "Training Error: 0.000\nTest Error:       0.238\nBayes Error:    0.210"
+    },
+    {
+      "id": 47788,
+      "page": 620,
+      "seq": 302,
+      "text": "Training Error: 0.130\nTest Error:       0.242\nBayes Error:    0.210"
+    },
+    {
+      "id": 47791,
+      "page": 620,
+      "seq": 305,
+      "text": "Random forests as described here were introduced by Breiman (2001), al-\nthough many of the ideas had cropped up earlier in the literature in dif-\nferent forms. Notably Ho (1995) introduced the term \u201crandom forest,\u201d and\nused a consensus of trees grown in random subspaces of the features. The\nidea of using stochastic perturbation and averaging to avoid over\ufb01tting was\nintroduced by Kleinberg (1990), and later in Kleinberg (1996). Amit and\nGeman (1997) used randomized trees grown on image features for image\nclassi\ufb01cation problems. Breiman (1996a) introduced bagging, a precursor\nto his version of random forests. Dietterich (2000b) also proposed an im-\nprovement on bagging using additional randomization. His approach was\nto rank the top 20 candidate splits at each node, and then select from the\nlist at random. He showed through simulations and real examples that this\nadditional randomization improved over the performance of bagging. Fried-\nman and Hall (2007) showed that sub-sampling (without replacement) is\nan e\ufb00ective alternative to bagging. They showed that growing and aver-\naging trees on samples of size N/2 is approximately equivalent (in terms\nbias/variance considerations) to bagging, while using smaller fractions of\nN reduces the variance even further (through decorrelation).\nThere are several free software implementations of random forests. In\nthis chapter we used the randomForest package in R, maintained by Andy\nLiaw, available from the CRAN website. This allows both split-variable se-\nlection, as well as sub-sampling. Adele Cutler maintains a random forest\nwebsite http://www.math.usu.edu/\u223cadele/forests/ where (as of Au-\ngust 2008) the software written by Leo Breiman and Adele Cutler is freely"
+    },
+    {
+      "id": 47793,
+      "page": 621,
+      "seq": 1,
+      "text": "available. Their code, and the name \u201crandom forests\u201d, is exclusively li-\ncensed to Salford Systems for commercial release. The Weka machine learn-\ning archive http://www.cs.waikato.ac.nz/ml/weka/ at Waikato Univer-\nsity, New Zealand, o\ufb00ers a free java implementation of random forests."
+    },
+    {
+      "id": 47804,
+      "page": 621,
+      "seq": 12,
+      "text": "where X \u223cU[0, 1]p, 0 \u2264q \u2264\n1\n2, and J \u2264p is some prede\ufb01ned (even)\nnumber. Describe this probability surface, and give the Bayes error rate."
+    },
+    {
+      "id": 47807,
+      "page": 621,
+      "seq": 15,
+      "text": "\u03c1(x) =\nVarZ[E\u0398|ZT(x; \u0398(Z))]\nVarZ[E\u0398|ZT(x; \u0398(Z))] + EZVar\u0398|Z[T(x, \u0398(Z)].\n(15.12)"
+    },
+    {
+      "id": 47808,
+      "page": 621,
+      "seq": 16,
+      "text": "The term in the numerator is VarZ[ \u02c6frf(x)], and the second term in the\ndenominator is the expected conditional variance due to the randomization\nin random forests."
+    },
+    {
+      "id": 47813,
+      "page": 622,
+      "seq": 3,
+      "text": "where EP denotes expectation with respect to the permutation distribution.\nArgue that this is approximately true when the evaluations are done using\nan independent test set."
+    }
+  ]
+}

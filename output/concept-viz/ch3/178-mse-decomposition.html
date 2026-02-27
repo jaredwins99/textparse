@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MSE Decomposition — ESL §3.1</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f1117; color: #e0e0e0; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  .header { background: #1a1d27; border-bottom: 1px solid #2a2d3e; padding: 24px 32px; }
+  .header-meta { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .header-meta span { color: #818cf8; }
+  h1 { font-size: 22px; font-weight: 600; color: #f0f0f8; margin-bottom: 10px; }
+  .formula-block { background: #12151f; border: 1px solid #2a2d3e; border-left: 3px solid #818cf8; border-radius: 6px; padding: 14px 20px; display: inline-block; margin-top: 6px; }
+  .main { display: grid; grid-template-columns: 1fr 340px; gap: 20px; padding: 24px 32px; max-width: 1400px; }
+  .viz-col { display: flex; flex-direction: column; gap: 16px; }
+  .viz-panel { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 10px; padding: 20px; }
+  .viz-title { font-size: 13px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+  .side-panels { display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 10px; padding: 18px; }
+  .panel-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #2a2d3e; }
+  .facts .panel-title { color: #34d399; }
+  .guarantees .panel-title { color: #f59e0b; }
+  .related .panel-title { color: #818cf8; }
+  blockquote { font-style: italic; color: #9ca3af; font-size: 13px; line-height: 1.6; border-left: 2px solid #34d399; padding-left: 12px; margin: 0; }
+  .cite { font-style: normal; color: #6b7280; font-size: 11px; margin-top: 6px; display: block; }
+  .guarantee-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+  .badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px; }
+  .badge-yes { background: #064e3b; color: #34d399; }
+  .badge-no { background: #450a0a; color: #f87171; }
+  .badge-cond { background: #451a03; color: #fb923c; }
+  .related-list { list-style: none; }
+  .related-list li { font-size: 13px; color: #9ca3af; padding: 4px 0; border-bottom: 1px solid #1f2937; }
+  .related-list li:last-child { border-bottom: none; }
+  .related-list a { color: #818cf8; text-decoration: none; }
+  .related-list a:hover { text-decoration: underline; }
+  .controls { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; }
+  label { font-size: 13px; color: #9ca3af; }
+  input[type=range] { accent-color: #818cf8; width: 120px; }
+  .val-display { font-size: 13px; color: #e0e0e0; font-weight: 600; min-width: 40px; }
+  .estimator-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .est-btn { background: #12151f; border: 1px solid #2a2d3e; border-radius: 6px; padding: 6px 14px; font-size: 12px; color: #6b7280; cursor: pointer; transition: all 0.15s; }
+  .est-btn.active { background: #818cf8; border-color: #818cf8; color: #fff; }
+  .est-btn:hover:not(.active) { border-color: #818cf8; color: #818cf8; }
+  .mse-breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
+  .mse-box { background: #12151f; border: 1px solid #2a2d3e; border-radius: 8px; padding: 12px 14px; text-align: center; }
+  .mse-label { font-size: 11px; color: #6b7280; text-transform: uppercase; margin-bottom: 5px; }
+  .mse-val { font-size: 18px; font-weight: 700; }
+  .note { font-size: 12px; color: #6b7280; margin-top: 8px; line-height: 1.6; }
+  .dart-container { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-meta">ESL <span>§3.1</span> · ID 178 · Category: <span>Principles / Guarantees</span></div>
+  <h1>Mean Squared Error Decomposition</h1>
+  <div class="formula-block">
+    \( \text{MSE}(\tilde{\theta}) = \text{Var}(\tilde{\theta}) + [\mathbb{E}(\tilde{\theta}) - \theta]^2 \)
+  </div>
+</div>
+
+<div class="main">
+  <div class="viz-col">
+    <div class="viz-panel">
+      <div class="viz-title">Dartboard Analogy — Bias = Off-Center, Variance = Spread</div>
+
+      <div class="estimator-row">
+        <div class="est-btn active" id="btn-ols" onclick="setEst('ols')">OLS (unbiased)</div>
+        <div class="est-btn" id="btn-ridge" onclick="setEst('ridge')">Ridge (biased)</div>
+        <div class="est-btn" id="btn-bad" onclick="setEst('bad')">High bias + high var</div>
+        <div class="est-btn" id="btn-ideal" onclick="setEst('ideal')">Low bias + low var</div>
+      </div>
+
+      <div class="controls">
+        <label>Bias (distance from center):
+          <input type="range" id="biasSlider" min="0" max="3" step="0.05" value="0">
+          <span class="val-display" id="biasVal">0.00</span>
+        </label>
+        <label>Variance (spread):
+          <input type="range" id="varSlider" min="0.1" max="3" step="0.05" value="1">
+          <span class="val-display" id="varVal">1.00</span>
+        </label>
+      </div>
+
+      <div class="mse-breakdown">
+        <div class="mse-box">
+          <div class="mse-label">Bias²</div>
+          <div class="mse-val" id="bias2display" style="color:#f87171;">—</div>
+        </div>
+        <div class="mse-box">
+          <div class="mse-label">Variance</div>
+          <div class="mse-val" id="varDisplay" style="color:#60a5fa;">—</div>
+        </div>
+        <div class="mse-box">
+          <div class="mse-label">MSE = Bias² + Var</div>
+          <div class="mse-val" id="mseDisplay" style="color:#f59e0b;">—</div>
+        </div>
+      </div>
+
+      <div class="dart-container">
+        <div id="dartboard" style="width:360px;height:360px;"></div>
+        <div id="mse-bar" style="width:200px;height:360px;"></div>
+      </div>
+
+      <div class="note">
+        Each dot = one estimate from a different sample. <b>Bias</b> = systematic off-center error = [E(θ̃) − θ]².
+        <b>Variance</b> = spread of estimates around their mean. Both contribute to MSE.
+        An unbiased estimator (OLS) has dots centered but possibly spread. A biased estimator (ridge) shifts the center but can cluster tighter.
+      </div>
+    </div>
+
+    <div class="viz-panel">
+      <div class="viz-title">MSE Components as Functions of Bias / Variance Tradeoff</div>
+      <div id="decomp-plot" style="width:100%;height:260px;"></div>
+      <div class="note">
+        Drag the bias and variance sliders above to see how MSE (orange) changes relative to each component.
+        The solid horizontal line at Var(θ̃) shows the irreducible component even with zero bias.
+      </div>
+    </div>
+  </div>
+
+  <div class="side-panels">
+    <div class="panel facts">
+      <div class="panel-title">Book Quotes</div>
+      <blockquote>
+        "MSE(θ̃) = E(θ̃ − θ)² = [E(θ̃) − θ]² + Var(θ̃). The first term is the squared bias, while the second term is the variance."
+        <span class="cite">— ESL §3.1</span>
+      </blockquote>
+      <blockquote style="margin-top:12px;">
+        "It is not hard to show that a more complex model will decrease bias but increase variance. There is often a sweet spot in the middle."
+        <span class="cite">— ESL §3.1 (paraphrase)</span>
+      </blockquote>
+    </div>
+
+    <div class="panel guarantees">
+      <div class="panel-title">Statistical Properties</div>
+      <div class="guarantee-row"><span class="badge badge-yes">FACT</span> MSE always ≥ 0</div>
+      <div class="guarantee-row"><span class="badge badge-yes">FACT</span> Unbiased ⟺ Bias² = 0</div>
+      <div class="guarantee-row"><span class="badge badge-cond">NOTE</span> Unbiased ≠ minimum MSE</div>
+      <div class="guarantee-row"><span class="badge badge-yes">KEY</span> Shrinkage can reduce MSE despite bias</div>
+      <div class="guarantee-row"><span class="badge badge-no">CAUTION</span> Cannot simultaneously minimize both</div>
+      <div style="margin-top:10px;font-size:12px;color:#6b7280;line-height:1.6;">
+        James-Stein estimator: beats OLS in MSE for p ≥ 3 dimensions by introducing bias. This was a surprising result that motivated modern regularization theory.
+      </div>
+    </div>
+
+    <div class="panel related">
+      <div class="panel-title">Related Concepts</div>
+      <ul class="related-list">
+        <li><a href="177-bias-variance-tradeoff.html">Bias-variance tradeoff (ID 177)</a></li>
+        <li><a href="157-degrees-of-freedom-adaptive.html">Effective df (ID 157)</a></li>
+        <li>Ridge regression — §3.4</li>
+        <li>James-Stein estimator</li>
+        <li>Stein's unbiased risk estimate (SURE)</li>
+        <li>Expected prediction error — §7.2</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentEst = 'ols';
+const presets = {
+  ols:   { bias: 0,    variance: 1.2 },
+  ridge: { bias: 0.6,  variance: 0.4 },
+  bad:   { bias: 1.8,  variance: 2.0 },
+  ideal: { bias: 0.1,  variance: 0.15 }
+};
+
+function setEst(e) {
+  currentEst = e;
+  ['ols','ridge','bad','ideal'].forEach(id => {
+    document.getElementById('btn-' + id).classList.toggle('active', id === e);
+  });
+  const p = presets[e];
+  document.getElementById('biasSlider').value = p.bias;
+  document.getElementById('varSlider').value  = p.variance;
+  update();
+}
+
+let rng = 99;
+function randn() {
+  rng = (rng * 1664525 + 1013904223) >>> 0;
+  const u1 = rng / 0xffffffff + 1e-10;
+  rng = (rng * 1664525 + 1013904223) >>> 0;
+  const u2 = rng / 0xffffffff + 1e-10;
+  return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+}
+
+function buildDartboard(bias, variance) {
+  rng = 99;
+  const n = 60;
+  const sigma = Math.sqrt(variance);
+  const angle = 0.7; // bias direction angle
+
+  const xs = [], ys = [];
+  for (let i = 0; i < n; i++) {
+    xs.push(bias * Math.cos(angle) + sigma * randn());
+    ys.push(bias * Math.sin(angle) + sigma * randn());
+  }
+
+  // Ring traces
+  const rings = [];
+  for (const r of [1, 2, 3, 4]) {
+    const t = Array.from({length: 100}, (_, i) => 2 * Math.PI * i / 99);
+    rings.push({
+      x: t.map(a => r * Math.cos(a)),
+      y: t.map(a => r * Math.sin(a)),
+      mode: 'lines', type: 'scatter', showlegend: false,
+      line: { color: `rgba(255,255,255,${0.05 + r * 0.03})`, width: 1 },
+      hoverinfo: 'skip'
+    });
+  }
+
+  // Crosshair
+  const chOpts = { mode: 'lines', type: 'scatter', showlegend: false, line: { color: 'rgba(255,255,255,0.15)', width: 1 }, hoverinfo: 'skip' };
+  rings.push({ x: [-4.5, 4.5], y: [0, 0], ...chOpts });
+  rings.push({ x: [0, 0], y: [-4.5, 4.5], ...chOpts });
+
+  // True center
+  rings.push({
+    x: [0], y: [0], mode: 'markers', type: 'scatter', showlegend: false,
+    marker: { color: '#f59e0b', size: 12, symbol: 'cross-thin', line: { color: '#f59e0b', width: 3 } },
+    hovertemplate: 'True θ<extra></extra>'
+  });
+
+  // Mean estimate
+  const mx = xs.reduce((a, b) => a + b, 0) / n;
+  const my = ys.reduce((a, b) => a + b, 0) / n;
+  rings.push({
+    x: [mx], y: [my], mode: 'markers', type: 'scatter', name: `E[θ̃]`,
+    marker: { color: '#f87171', size: 14, symbol: 'star', line: { color: '#fff', width: 1 } },
+    hovertemplate: `Mean estimate: (${mx.toFixed(2)}, ${my.toFixed(2)})<extra></extra>`
+  });
+
+  // Darts
+  rings.push({
+    x: xs, y: ys, mode: 'markers', type: 'scatter', name: 'Estimates',
+    marker: { color: 'rgba(129,140,248,0.6)', size: 7, line: { color: '#818cf8', width: 0.5 } },
+    hovertemplate: '(%{x:.2f}, %{y:.2f})<extra></extra>'
+  });
+
+  // Bias arrow
+  rings.push({
+    x: [0, bias * Math.cos(angle)], y: [0, bias * Math.sin(angle)],
+    mode: 'lines+markers', type: 'scatter', showlegend: false,
+    line: { color: '#f87171', width: 2.5, dash: 'dot' },
+    marker: { color: '#f87171', size: [0, 10], symbol: ['circle', 'arrow-right'] },
+    hoverinfo: 'skip'
+  });
+
+  const layout = {
+    paper_bgcolor: '#1a1d27', plot_bgcolor: '#0a0e1a',
+    font: { color: '#e0e0e0' },
+    xaxis: { range: [-4.5, 4.5], showgrid: false, zeroline: false, showticklabels: false, color: '#9ca3af' },
+    yaxis: { range: [-4.5, 4.5], showgrid: false, zeroline: false, showticklabels: false, scaleanchor: 'x', scaleratio: 1 },
+    margin: { l: 10, r: 10, t: 10, b: 10 },
+    legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(0,0,0,0)', font: { size: 10 } },
+    shapes: [{
+      type: 'circle', x0: -4.5, x1: 4.5, y0: -4.5, y1: 4.5,
+      fillcolor: '#0a0e1a', line: { color: 'rgba(255,255,255,0.1)', width: 1 }
+    }],
+    hoverlabel: { bgcolor: '#1a1d27', bordercolor: '#2a2d3e', font: { color: '#e0e0e0' } }
+  };
+
+  Plotly.react('dartboard', rings, layout, { responsive: true, displayModeBar: false });
+}
+
+function buildMSEBar(bias, variance) {
+  const bias2 = bias * bias;
+  const mse   = bias2 + variance;
+
+  const traces = [{
+    x: ['MSE'], y: [variance], type: 'bar', name: 'Variance',
+    marker: { color: '#2563eb' }, text: [`Var = ${variance.toFixed(2)}`], textposition: 'inside',
+    hovertemplate: 'Variance = %{y:.3f}<extra></extra>'
+  }, {
+    x: ['MSE'], y: [bias2], type: 'bar', name: 'Bias²',
+    marker: { color: '#dc2626' }, text: [`Bias² = ${bias2.toFixed(2)}`], textposition: 'inside',
+    hovertemplate: 'Bias² = %{y:.3f}<extra></extra>'
+  }];
+
+  const layout = {
+    barmode: 'stack',
+    paper_bgcolor: '#1a1d27', plot_bgcolor: '#12151f',
+    font: { color: '#e0e0e0', size: 12 },
+    xaxis: { color: '#9ca3af' },
+    yaxis: { title: 'Error', gridcolor: '#2a2d3e', color: '#9ca3af', range: [0, Math.max(mse * 1.3, 3)] },
+    margin: { l: 45, r: 10, t: 20, b: 40 },
+    legend: { x: 0, y: 1.1, bgcolor: 'rgba(0,0,0,0)', font: { size: 10 }, orientation: 'h' },
+    annotations: [{
+      x: 'MSE', y: mse + mse * 0.06,
+      text: `MSE = ${mse.toFixed(2)}`, showarrow: false,
+      font: { color: '#f59e0b', size: 13, weight: 700 }
+    }],
+    hoverlabel: { bgcolor: '#1a1d27', bordercolor: '#2a2d3e', font: { color: '#e0e0e0' } }
+  };
+
+  Plotly.react('mse-bar', traces, layout, { responsive: true, displayModeBar: false });
+}
+
+function buildDecompPlot(bias, variance) {
+  const bs = Array.from({length: 101}, (_, i) => i / 100 * 3);
+  const b2s = bs.map(b => b * b);
+  const mses = bs.map(b => b * b + variance);
+
+  const traces = [
+    {
+      x: bs, y: b2s, type: 'scatter', mode: 'lines', name: 'Bias²',
+      line: { color: '#f87171', width: 2 }
+    },
+    {
+      x: bs, y: Array(101).fill(variance), type: 'scatter', mode: 'lines', name: 'Variance (fixed)',
+      line: { color: '#60a5fa', width: 2, dash: 'dot' }
+    },
+    {
+      x: bs, y: mses, type: 'scatter', mode: 'lines', name: 'Total MSE',
+      line: { color: '#f59e0b', width: 2.5 }
+    }
+  ];
+
+  const layout = {
+    paper_bgcolor: '#1a1d27', plot_bgcolor: '#12151f',
+    font: { color: '#e0e0e0', family: 'Segoe UI, system-ui, sans-serif' },
+    xaxis: { title: 'Bias |E[θ̃] − θ|', gridcolor: '#2a2d3e', color: '#9ca3af' },
+    yaxis: { title: 'Error', gridcolor: '#2a2d3e', color: '#9ca3af', rangemode: 'tozero' },
+    margin: { l: 55, r: 20, t: 10, b: 50 },
+    legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(0,0,0,0)', font: { size: 11 } },
+    shapes: [{
+      type: 'line', x0: bias, x1: bias, y0: 0, y1: bias*bias + variance + 0.3,
+      line: { color: '#818cf8', width: 2, dash: 'dash' }
+    }],
+    annotations: [{
+      x: bias, y: bias*bias + variance + 0.2,
+      text: `Current`, showarrow: false,
+      font: { color: '#818cf8', size: 11 }
+    }],
+    hoverlabel: { bgcolor: '#1a1d27', bordercolor: '#2a2d3e', font: { color: '#e0e0e0' } }
+  };
+
+  Plotly.react('decomp-plot', traces, layout, { responsive: true, displayModeBar: false });
+}
+
+const biasSlider = document.getElementById('biasSlider');
+const varSlider  = document.getElementById('varSlider');
+
+function update() {
+  const bias     = parseFloat(biasSlider.value);
+  const variance = parseFloat(varSlider.value);
+  document.getElementById('biasVal').textContent = bias.toFixed(2);
+  document.getElementById('varVal').textContent  = variance.toFixed(2);
+
+  const bias2 = bias * bias;
+  const mse   = bias2 + variance;
+  document.getElementById('bias2display').textContent = bias2.toFixed(3);
+  document.getElementById('varDisplay').textContent   = variance.toFixed(3);
+  document.getElementById('mseDisplay').textContent   = mse.toFixed(3);
+
+  buildDartboard(bias, variance);
+  buildMSEBar(bias, variance);
+  buildDecompPlot(bias, variance);
+}
+
+biasSlider.addEventListener('input', update);
+varSlider.addEventListener('input', update);
+update();
+</script>
+</body>
+</html>

@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Decomposition — ESL Ch. 3.9</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:       #0d1117;
+      --surface:  #161b22;
+      --border:   #30363d;
+      --accent:   #58a6ff;
+      --accent2:  #f78166;
+      --accent3:  #3fb950;
+      --text:     #e6edf3;
+      --muted:    #8b949e;
+      --quote-bg: #1c2128;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+    /* Header */
+    header {
+      padding: 2rem 2.5rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .header-meta { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: .75rem; }
+    .badge {
+      font-size: .7rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      padding: .25rem .6rem; border-radius: 2rem; background: #1f2937; color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .badge.cat  { color: var(--accent3); border-color: var(--accent3); }
+    .badge.sec  { color: var(--muted);   border-color: var(--border); }
+    h1 { font-size: 1.75rem; font-weight: 700; color: var(--text); margin-bottom: .4rem; }
+    .formula-line {
+      font-size: 1.1rem; color: var(--accent); font-family: 'Courier New', monospace;
+      background: var(--quote-bg); display: inline-block; padding: .35rem .8rem; border-radius: .4rem;
+      border-left: 3px solid var(--accent); margin-bottom: .5rem;
+    }
+    .tagline { font-size: .9rem; color: var(--muted); margin-top: .5rem; font-style: italic; }
+
+    /* Layout */
+    .main { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; padding: 1.5rem 2.5rem; }
+    @media (max-width: 960px) { .main { grid-template-columns: 1fr; } }
+
+    /* Cards */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: .6rem; padding: 1.25rem; margin-bottom: 1.25rem;
+    }
+    .card h2 { font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 1rem; }
+
+    /* Benefit bullets */
+    .benefit-list { list-style: none; display: grid; gap: .6rem; }
+    .benefit-list li { display: flex; gap: .75rem; align-items: flex-start; font-size: .85rem; line-height: 1.5; }
+    .benefit-list li .icon { color: var(--accent3); font-weight: 700; flex-shrink: 0; }
+    .benefit-list li code { background: #1f2937; padding: .1rem .35rem; border-radius: .25rem; font-family: monospace; font-size: .82rem; color: var(--accent); }
+
+    /* Viz tabs */
+    .tab-bar { display: flex; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .tab {
+      padding: .35rem .9rem; border-radius: .35rem; border: 1px solid var(--border);
+      background: transparent; color: var(--muted); cursor: pointer; font-size: .85rem; transition: all .15s;
+    }
+    .tab.active, .tab:hover { background: var(--accent); color: #0d1117; border-color: var(--accent); font-weight: 600; }
+
+    /* Plot containers */
+    .plot-area { width: 100%; }
+    .plot-row { display: grid; grid-template-columns: 1fr auto 1fr 1fr; gap: .75rem; align-items: center; }
+    .plot-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .75rem; }
+    .plot-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    .plot-label {
+      text-align: center; font-size: .8rem; font-weight: 600; color: var(--muted);
+      margin-bottom: .4rem; text-transform: uppercase; letter-spacing: .06em;
+    }
+    .eq-sign { text-align: center; font-size: 2rem; color: var(--muted); line-height: 1; }
+
+    /* Step annotations */
+    .step-box { background: var(--quote-bg); border: 1px solid var(--border); border-radius: .5rem; padding: 1rem; margin-top: 1rem; }
+    .step-box h3 { font-size: .8rem; font-weight: 700; color: var(--accent); margin-bottom: .6rem; text-transform: uppercase; letter-spacing: .06em; }
+    .step-box p  { font-size: .82rem; color: var(--text); line-height: 1.6; }
+    .step-box code { background: #1f2937; padding: .1rem .35rem; border-radius: .25rem; font-family: monospace; color: var(--accent3); }
+
+    /* Slider */
+    .ctrl-row { display: flex; align-items: center; gap: 1rem; margin-bottom: .75rem; flex-wrap: wrap; }
+    .ctrl-row label { font-size: .82rem; color: var(--muted); white-space: nowrap; }
+    input[type=range] { flex: 1; accent-color: var(--accent); min-width: 80px; }
+    .ctrl-val { font-size: .82rem; color: var(--accent); font-weight: 600; min-width: 2.5rem; text-align: right; }
+
+    /* Sidebar */
+    blockquote {
+      border-left: 3px solid var(--accent2); background: var(--quote-bg);
+      padding: .75rem 1rem; border-radius: 0 .4rem .4rem 0;
+      font-style: italic; font-size: .88rem; color: var(--text); line-height: 1.6;
+      margin-bottom: .75rem;
+    }
+    blockquote cite { display: block; margin-top: .5rem; font-style: normal; font-size: .75rem; color: var(--muted); }
+    .guarantee-grid { display: grid; gap: .6rem; }
+    .g-item { display: flex; align-items: flex-start; gap: .75rem; padding: .6rem; border-radius: .4rem; background: var(--quote-bg); }
+    .g-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: .05rem; }
+    .g-label { font-size: .8rem; font-weight: 700; color: var(--text); margin-bottom: .2rem; }
+    .g-desc  { font-size: .75rem; color: var(--muted); line-height: 1.5; }
+    .rel-list { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .rel-chip {
+      padding: .3rem .75rem; border-radius: 2rem; border: 1px solid var(--border);
+      font-size: .78rem; color: var(--muted); background: var(--quote-bg); cursor: default;
+      transition: border-color .15s, color .15s;
+    }
+    .rel-chip:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Animation controls */
+    .anim-controls { display: flex; gap: .75rem; align-items: center; margin-top: .75rem; flex-wrap: wrap; }
+    .anim-btn {
+      padding: .35rem .9rem; border-radius: .35rem; border: 1px solid var(--border);
+      background: var(--quote-bg); color: var(--text); cursor: pointer; font-size: .85rem; transition: all .15s;
+    }
+    .anim-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .anim-btn.playing { border-color: var(--accent3); color: var(--accent3); }
+    .anim-step-label { font-size: .82rem; color: var(--muted); }
+
+    /* Metric row */
+    .metric-row { display: flex; gap: 1rem; margin-bottom: .75rem; flex-wrap: wrap; }
+    .metric-box { flex: 1; min-width: 120px; background: var(--quote-bg); border: 1px solid var(--border); border-radius: .4rem; padding: .6rem .8rem; }
+    .metric-label { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .metric-val { font-size: 1.1rem; font-weight: 700; color: var(--accent3); font-family: monospace; }
+    .metric-val.bad { color: var(--accent2); }
+
+    /* Bottom formula bar */
+    .formula-bar {
+      border-top: 1px solid var(--border); background: var(--surface);
+      padding: 1.25rem 2.5rem; text-align: center;
+      font-size: .95rem; color: var(--text); line-height: 2;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-meta">
+    <span class="badge">ID 140</span>
+    <span class="badge sec">Section 3.9</span>
+    <span class="badge cat">Implementation / Computation</span>
+  </div>
+  <h1>QR Decomposition</h1>
+  <div class="formula-line">\(X = QR\)</div>
+  <p class="tagline">Factors X into an orthogonal matrix Q and upper triangular R — the numerically stable way to solve least squares.</p>
+</header>
+
+<div class="main">
+  <!-- Left column -->
+  <div>
+
+    <!-- Benefits card -->
+    <div class="card">
+      <h2>What It Means</h2>
+      <ul class="benefit-list">
+        <li><span class="icon">1.</span><span>QR is <strong>how we actually compute</strong> <code>β̂ = (XᵀX)⁻¹Xᵀy</code> in practice — the normal equations are a mathematical identity, QR is the algorithm.</span></li>
+        <li><span class="icon">2.</span><span>Q has orthonormal columns: <code>QᵀQ = I</code>, meaning Q is a rotation — it preserves lengths and angles.</span></li>
+        <li><span class="icon">3.</span><span>R is upper triangular, so solving <code>Rβ = Qᵀy</code> is cheap back-substitution (O(p²)), not matrix inversion.</span></li>
+        <li><span class="icon">4.</span><span>Forming <code>XᵀX</code> directly <strong>squares the condition number</strong> of X — if X is mildly ill-conditioned, XᵀX is disastrously so. QR avoids this.</span></li>
+      </ul>
+    </div>
+
+    <!-- Visualization card -->
+    <div class="card">
+      <h2>Visualization</h2>
+      <div class="tab-bar">
+        <button class="tab active" onclick="showTab('rotation')">Rotation Intuition</button>
+        <button class="tab" onclick="showTab('heatmap')">Matrix Heatmaps</button>
+        <button class="tab" onclick="showTab('cost')">Cost Comparison</button>
+        <button class="tab" onclick="showTab('orthog')">Orthogonality Check</button>
+      </div>
+
+      <!-- Tab: Rotation Intuition -->
+      <div id="tab-rotation" class="plot-area">
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:.75rem;">
+          QR = rotating the columns of X to be orthogonal. The original columns (red/orange) are tilted and non-orthogonal.
+          Gram-Schmidt progressively "straightens" them into perpendicular Q columns (blue/green). R encodes how to undo that rotation.
+        </p>
+        <div id="rotation-plot" style="height:380px;"></div>
+        <div class="anim-controls">
+          <button class="anim-btn" id="play-btn" onclick="toggleAnimation()">Play</button>
+          <button class="anim-btn" onclick="resetAnimation()">Reset</button>
+          <input type="range" id="anim-slider" min="0" max="100" value="0" step="1" oninput="setAnimFrame(this.value)" style="flex:1;">
+          <span class="anim-step-label" id="anim-label">Step: X (original)</span>
+        </div>
+        <div class="step-box" style="margin-top:.75rem;">
+          <h3>Reading the animation</h3>
+          <p>
+            <strong>Solid arrows:</strong> current state of the two column vectors.<br>
+            <strong>Dashed arrows:</strong> original X columns (fixed reference).<br>
+            At t=0: vectors are oblique (non-orthogonal). At t=1: they are perfectly perpendicular Q columns.
+            The angle between them goes from ~35° to exactly 90°.
+          </p>
+        </div>
+      </div>
+
+      <!-- Tab: Heatmap -->
+      <div id="tab-heatmap" class="plot-area" style="display:none;">
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:.75rem;">
+          X is a polynomial design matrix: columns are <strong>const</strong>, <strong>linear</strong>, <strong>quadratic</strong>
+          evaluated at x = linspace(-1, 1, 8). Blue = negative, white = zero, red = positive.
+        </p>
+        <div class="plot-row">
+          <div>
+            <div class="plot-label" style="color:var(--accent2)">X (8 x 3)</div>
+            <div id="hm-X" style="height:280px;"></div>
+            <div style="display:flex;justify-content:space-around;font-size:.72rem;color:var(--muted);margin-top:.3rem;">
+              <span>const</span><span>linear</span><span>quadratic</span>
+            </div>
+          </div>
+          <div class="eq-sign">=</div>
+          <div>
+            <div class="plot-label" style="color:var(--accent3)">Q (8 x 3)</div>
+            <div id="hm-Q" style="height:280px;"></div>
+            <div style="display:flex;justify-content:space-around;font-size:.72rem;color:var(--muted);margin-top:.3rem;">
+              <span>q1</span><span>q2</span><span>q3</span>
+            </div>
+          </div>
+          <div>
+            <div class="plot-label" style="color:var(--accent)">R (3 x 3) upper triangular</div>
+            <div id="hm-R" style="height:200px;margin-top:40px;"></div>
+          </div>
+        </div>
+        <div class="step-box">
+          <h3>What to notice</h3>
+          <p>
+            <strong>X columns</strong>: const is uniform red, linear slopes from blue to red, quadratic is a U-shape.<br>
+            <strong>Q columns</strong>: same structure but "orthogonalized" — each column has been made perpendicular to all previous ones.<br>
+            <strong>R</strong>: strictly upper triangular — the white (zero) lower triangle is clearly visible. Diagonal entries are norms of the projected columns.
+          </p>
+        </div>
+      </div>
+
+      <!-- Tab: Cost Comparison -->
+      <div id="tab-cost" class="plot-area" style="display:none;">
+        <div class="ctrl-row">
+          <label>N (observations):</label>
+          <input type="range" id="slider-N" min="50" max="5000" value="500" step="50" oninput="renderCost()">
+          <span class="ctrl-val" id="val-N">500</span>
+          <label style="margin-left:.5rem;">p (predictors):</label>
+          <input type="range" id="slider-p" min="2" max="100" value="20" step="1" oninput="renderCost()">
+          <span class="ctrl-val" id="val-p">20</span>
+        </div>
+        <div id="cost-chart" style="height:300px;"></div>
+        <div class="step-box">
+          <h3>Method comparison</h3>
+          <p>
+            <strong style="color:#ef4444">Naive</strong>: Compute (XᵀX)⁻¹Xᵀy directly. Forms XᵀX in O(Np²), inverts in O(p³). Numerically unstable — condition number of XᵀX is cond(X)².<br><br>
+            <strong style="color:#f97316">Cholesky</strong>: Form XᵀX = LLᵀ, solve two triangular systems. Saves a constant vs. naive inversion, same O(Np²+p³) class. Moderately stable.<br><br>
+            <strong style="color:#3fb950">QR (Householder)</strong>: Factor X = QR in O(2Np²), solve Rβ = Qᵀy. No squaring of condition number. The standard choice.<br><br>
+            <strong style="color:#58a6ff">SVD</strong>: X = UDVᵀ. Gold standard stability, handles rank-deficient X, but ~3x more flops than QR.
+          </p>
+        </div>
+      </div>
+
+      <!-- Tab: Orthogonality Check -->
+      <div id="tab-orthog" class="plot-area" style="display:none;">
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:.75rem;">
+          If QR decomposition is correct, <strong>QᵀQ must equal the identity matrix I</strong>.
+          The heatmap of QᵀQ should show 1s on the diagonal and ~0s everywhere else.
+          We also verify that <strong>QR reconstructs X</strong> (reconstruction error near machine epsilon).
+        </p>
+        <div id="orthog-metrics" class="metric-row"></div>
+        <div class="plot-row-2">
+          <div>
+            <div class="plot-label" style="color:var(--accent3)">QᵀQ computed from polynomial X</div>
+            <div id="hm-QtQ" style="height:300px;"></div>
+          </div>
+          <div>
+            <div class="plot-label" style="color:var(--accent)">Expected: Identity matrix I</div>
+            <div id="hm-I" style="height:300px;"></div>
+          </div>
+        </div>
+        <div class="step-box" style="margin-top:.75rem;">
+          <h3>Why this matters</h3>
+          <p>
+            Orthogonality (<code>QᵀQ = I</code>) means Q's columns are perpendicular unit vectors — a pure rotation.
+            This is what makes solving <code>Rβ = Qᵀy</code> equivalent to the full OLS problem.
+            The off-diagonal entries here are on the order of machine epsilon (~10⁻¹⁵), which is expected floating-point rounding — not a real error.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right column -->
+  <div>
+    <div class="card">
+      <h2>Book Quotes</h2>
+      <blockquote>
+        "Q is an N × (p+1) orthogonal matrix, QᵀQ = I, and R is a (p+1) × (p+1) upper triangular matrix."
+        <cite>— ESL, Section 3.2.3</cite>
+      </blockquote>
+      <blockquote>
+        "the QR decomposition requires Np² operations."
+        <cite>— ESL, Chapter 3</cite>
+      </blockquote>
+      <blockquote>
+        "The solution is \(\hat{\beta} = R^{-1}Q^Ty\); computing the criterion requires no matrix inversion."
+        <cite>— ESL, Algorithm 3.1</cite>
+      </blockquote>
+    </div>
+
+    <div class="card">
+      <h2>Key Properties</h2>
+      <div class="guarantee-grid">
+        <div class="g-item">
+          <div class="g-icon">Q</div>
+          <div>
+            <div class="g-label">Q is Orthogonal</div>
+            <div class="g-desc">QᵀQ = I. Columns are orthonormal. Q is a rotation — it maps X columns to perpendicular unit directions.</div>
+          </div>
+        </div>
+        <div class="g-item">
+          <div class="g-icon">R</div>
+          <div>
+            <div class="g-label">R is Upper Triangular</div>
+            <div class="g-desc">Solves Rβ = Qᵀy by back-substitution in O(p²) — far cheaper than inverting an arbitrary matrix.</div>
+          </div>
+        </div>
+        <div class="g-item">
+          <div class="g-icon">+</div>
+          <div>
+            <div class="g-label">Stable by Design</div>
+            <div class="g-desc">Avoids squaring condition number. If cond(X) = 100, XᵀX has cond ≈ 10,000. QR keeps cond(X).</div>
+          </div>
+        </div>
+        <div class="g-item">
+          <div class="g-icon">H</div>
+          <div>
+            <div class="g-label">Hat Matrix is Free</div>
+            <div class="g-desc">H = QQᵀ — the projection matrix follows immediately from Q, no inversion required.</div>
+          </div>
+        </div>
+        <div class="g-item">
+          <div class="g-icon">!</div>
+          <div>
+            <div class="g-label">Requires Full Rank</div>
+            <div class="g-desc">Standard QR assumes X has full column rank. For rank-deficient X, use pivoted QR or SVD.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Related Concepts</h2>
+      <div class="rel-list">
+        <span class="rel-chip">Gram-Schmidt (ID 141)</span>
+        <span class="rel-chip">OLS β̂ = (XᵀX)⁻¹Xᵀy</span>
+        <span class="rel-chip">SVD</span>
+        <span class="rel-chip">Cholesky</span>
+        <span class="rel-chip">Hat matrix H = QQᵀ</span>
+        <span class="rel-chip">Condition number</span>
+        <span class="rel-chip">Householder reflections</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom formula bar -->
+<div class="formula-bar">
+  \(X = QR, \quad Q^TQ = I, \quad \hat{\beta} = R^{-1}Q^Ty\)
+</div>
+
+<script>
+// ================================================================
+// Core math utilities
+// ================================================================
+
+function dot(u, v) {
+  let s = 0; for (let i = 0; i < u.length; i++) s += u[i] * v[i]; return s;
+}
+function norm(v) { return Math.sqrt(dot(v, v)); }
+function scale(a, v) { return v.map(x => a * x); }
+function sub(u, v) { return u.map((x, i) => x - v[i]); }
+function add(u, v) { return u.map((x, i) => x + v[i]); }
+
+// Modified Gram-Schmidt QR decomposition
+// M is array of row-arrays. Returns {Q, R}.
+function qrGS(M) {
+  const rows = M.length, cols = M[0].length;
+  // Work with columns for numerical clarity
+  let cols_arr = [];
+  for (let j = 0; j < cols; j++) {
+    cols_arr.push(M.map(r => r[j]));
+  }
+
+  const Q_cols = [];
+  const R = Array.from({length: cols}, () => Array(cols).fill(0));
+
+  for (let j = 0; j < cols; j++) {
+    let u = [...cols_arr[j]];
+    // Modified GS: subtract projection onto already-computed Q columns
+    for (let k = 0; k < j; k++) {
+      const r = dot(Q_cols[k], u);
+      R[k][j] = r;
+      u = sub(u, scale(r, Q_cols[k]));
+    }
+    const n = norm(u);
+    R[j][j] = n;
+    if (n < 1e-14) {
+      Q_cols.push(Array(rows).fill(0));
+    } else {
+      Q_cols.push(u.map(x => x / n));
+    }
+  }
+
+  // Convert Q_cols back to row-major
+  const Q = Array.from({length: rows}, (_, i) =>
+    Q_cols.map(col => col[i])
+  );
+  return {Q, R};
+}
+
+function matMul(A, B) {
+  const m = A.length, n = B[0].length, k = B.length;
+  const C = Array.from({length: m}, () => Array(n).fill(0));
+  for (let i = 0; i < m; i++)
+    for (let j = 0; j < n; j++)
+      for (let l = 0; l < k; l++) C[i][j] += A[i][l] * B[l][j];
+  return C;
+}
+
+function transpose(M) {
+  return M[0].map((_, j) => M.map(r => r[j]));
+}
+
+function maxAbsOffDiag(M) {
+  let max = 0;
+  for (let i = 0; i < M.length; i++)
+    for (let j = 0; j < M[i].length; j++)
+      if (i !== j) max = Math.max(max, Math.abs(M[i][j]));
+  return max;
+}
+
+function frobeniusNorm(M) {
+  let s = 0;
+  for (let i = 0; i < M.length; i++)
+    for (let j = 0; j < M[i].length; j++) s += M[i][j] ** 2;
+  return Math.sqrt(s);
+}
+
+// ================================================================
+// The polynomial design matrix X = [1, x, x^2] at 8 points
+// x = linspace(-1, 1, 8)
+// ================================================================
+function buildPolyX() {
+  const n = 8;
+  const xs = Array.from({length: n}, (_, i) => -1 + 2 * i / (n - 1));
+  return xs.map(x => [1, x, x * x]);
+}
+
+// Precompute once
+const POLY_X = buildPolyX();
+const POLY_QR = qrGS(POLY_X);
+const POLY_Q = POLY_QR.Q;
+const POLY_R = POLY_QR.R;
+
+// ================================================================
+// Layout defaults
+// ================================================================
+const darkLayout = {
+  paper_bgcolor: '#0d1117',
+  plot_bgcolor: '#161b22',
+  font: {color: '#e6edf3', size: 11},
+  margin: {l: 40, r: 10, t: 10, b: 30}
+};
+const hmCfg = {responsive: true, displayModeBar: false};
+
+// Diverging colorscale: blue (neg) - white (zero) - red (pos)
+const DIVSCALE = [
+  [0,   '#4575b4'],
+  [0.25,'#91bcd3'],
+  [0.5, '#ffffff'],
+  [0.75,'#e3896b'],
+  [1,   '#d73027']
+];
+
+function heatmapTrace(z, zmin, zmax, opts) {
+  opts = opts || {};
+  return [{
+    type: 'heatmap', z,
+    colorscale: DIVSCALE,
+    zmid: 0,
+    zmin: zmin !== undefined ? zmin : undefined,
+    zmax: zmax !== undefined ? zmax : undefined,
+    showscale: true,
+    colorbar: {thickness: 10, len: 0.7, tickfont: {size: 9, color: '#8b949e'}},
+    hovertemplate: 'row %{y}, col %{x}<br>%{z:.4f}<extra></extra>',
+    ...opts
+  }];
+}
+
+// ================================================================
+// VIZ 1: Rotation Intuition
+// Uses 2D: show 2-column version of X -> Q
+// X cols: [1,1,...,1] (const) and [x] (linear) — projected to 2D for display
+// We show the first two Q columns vs the first two X columns as 2D arrows
+// ================================================================
+
+// We'll use 2D representation.
+// X has col0=[1,...,1]/sqrt(8) direction and col1=linear direction.
+// Let's take a simpler, hand-designed 2D example that's visually striking:
+// v1 = [1, 0.6] (not unit), v2 = [0.5, 1.2] (not unit, not orthogonal)
+// This is purely for illustrative purposes of the rotation.
+
+const X2_cols = [[1, 0.6], [0.5, 1.2]];  // two column vectors in 2D
+// Compute QR of 2x2 matrix with these as columns
+const X2 = [[X2_cols[0][0], X2_cols[1][0]], [X2_cols[0][1], X2_cols[1][1]]];
+const QR2 = qrGS(X2);
+const Q2 = QR2.Q;
+// Q columns
+const Q2_cols = [
+  [Q2[0][0], Q2[1][0]],
+  [Q2[0][1], Q2[1][1]]
+];
+
+let animFrame = 0;
+let animTimer = null;
+let animPlaying = false;
+
+function interpVec(a, b, t) {
+  return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+}
+
+// Smooth ease in-out
+function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+function renderRotationFrame(t) {
+  const et = ease(t);
+
+  // Interpolate from X cols to Q cols
+  const v1 = interpVec(X2_cols[0], Q2_cols[0], et);
+  const v2 = interpVec(X2_cols[1], Q2_cols[1], et);
+
+  // Angle between current vectors
+  const cosTheta = dot(v1, v2) / (norm(v1) * norm(v2) + 1e-15);
+  const angleDeg = Math.acos(Math.max(-1, Math.min(1, cosTheta))) * 180 / Math.PI;
+
+  const COLORS_X = ['#f78166', '#ffa94d'];
+  const COLORS_Q = ['#3fb950', '#58a6ff'];
+
+  // Current vector colors interpolate
+  function lerpColor(hex1, hex2, t) {
+    const p = (h) => [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
+    const [r1,g1,b1] = p(hex1), [r2,g2,b2] = p(hex2);
+    const r = Math.round(r1+(r2-r1)*t), g = Math.round(g1+(g2-g1)*t), b = Math.round(b1+(b2-b1)*t);
+    return `rgb(${r},${g},${b})`;
+  }
+
+  const c1 = lerpColor(COLORS_X[0], COLORS_Q[0], et);
+  const c2 = lerpColor(COLORS_X[1], COLORS_Q[1], et);
+
+  const data = [
+    // Original X vectors (dashed, faded reference)
+    {
+      x: [0, X2_cols[0][0]], y: [0, X2_cols[0][1]],
+      mode: 'lines+markers', type: 'scatter',
+      line: {color: COLORS_X[0], width: 1.5, dash: 'dot'},
+      marker: {symbol: 'arrow', size: 10, angleref: 'previous', color: COLORS_X[0]},
+      name: 'x₁ (original)', opacity: 0.35, showlegend: true
+    },
+    {
+      x: [0, X2_cols[1][0]], y: [0, X2_cols[1][1]],
+      mode: 'lines+markers', type: 'scatter',
+      line: {color: COLORS_X[1], width: 1.5, dash: 'dot'},
+      marker: {symbol: 'arrow', size: 10, angleref: 'previous', color: COLORS_X[1]},
+      name: 'x₂ (original)', opacity: 0.35, showlegend: true
+    },
+    // Current (animating) vectors
+    {
+      x: [0, v1[0]], y: [0, v1[1]],
+      mode: 'lines+markers', type: 'scatter',
+      line: {color: c1, width: 3},
+      marker: {symbol: 'arrow', size: 14, angleref: 'previous', color: c1},
+      name: t < 0.5 ? 'x₁ → q₁' : 'q₁',
+      showlegend: true
+    },
+    {
+      x: [0, v2[0]], y: [0, v2[1]],
+      mode: 'lines+markers', type: 'scatter',
+      line: {color: c2, width: 3},
+      marker: {symbol: 'arrow', size: 14, angleref: 'previous', color: c2},
+      name: t < 0.5 ? 'x₂ → q₂' : 'q₂',
+      showlegend: true
+    },
+    // Right-angle marker (shown only when nearly orthogonal)
+    ...(et > 0.85 ? [{
+      x: [0.08, 0.12, 0.08],
+      y: [0.02, 0.06, 0.10],
+      mode: 'lines', type: 'scatter',
+      line: {color: '#3fb950', width: 1.5},
+      showlegend: false, opacity: (et - 0.85) / 0.15
+    }] : [])
+  ];
+
+  // Angle annotation
+  const annotations = [{
+    x: 0.02, y: -0.05,
+    text: `Angle between vectors: <b>${angleDeg.toFixed(1)}°</b>`,
+    showarrow: false, xref: 'paper', yref: 'paper',
+    font: {color: angleDeg > 89 ? '#3fb950' : '#e6edf3', size: 13}
+  }, {
+    x: 0.02, y: -0.12,
+    text: et < 0.05 ? 'X columns (oblique)' : et > 0.95 ? 'Q columns (orthogonal)' : 'Rotating...',
+    showarrow: false, xref: 'paper', yref: 'paper',
+    font: {color: '#8b949e', size: 11}
+  }];
+
+  const layout = {
+    ...darkLayout,
+    xaxis: {range: [-0.1, 1.5], zeroline: true, zerolinecolor: '#30363d', gridcolor: '#21262d', title: ''},
+    yaxis: {range: [-0.3, 1.5], zeroline: true, zerolinecolor: '#30363d', gridcolor: '#21262d', scaleanchor: 'x', scaleratio: 1, title: ''},
+    legend: {x: 0.7, y: 0.95, bgcolor: '#1c2128', bordercolor: '#30363d', borderwidth: 1, font: {size: 11}},
+    annotations,
+    margin: {l: 40, r: 20, t: 20, b: 60},
+    shapes: []
+  };
+
+  Plotly.react('rotation-plot', data, layout, {responsive: true, displayModeBar: false});
+
+  // Update slider and label
+  document.getElementById('anim-slider').value = Math.round(t * 100);
+  const label = t < 0.05 ? 'Step: X (original, oblique)' :
+                t > 0.95 ? 'Step: Q (orthogonal)' :
+                `Progress: ${Math.round(t * 100)}%`;
+  document.getElementById('anim-label').textContent = label;
+}
+
+function setAnimFrame(val) {
+  animFrame = +val;
+  renderRotationFrame(animFrame / 100);
+}
+
+function toggleAnimation() {
+  if (animPlaying) {
+    clearInterval(animTimer);
+    animPlaying = false;
+    document.getElementById('play-btn').textContent = 'Play';
+    document.getElementById('play-btn').classList.remove('playing');
+  } else {
+    if (animFrame >= 100) animFrame = 0;
+    animPlaying = true;
+    document.getElementById('play-btn').textContent = 'Pause';
+    document.getElementById('play-btn').classList.add('playing');
+    animTimer = setInterval(() => {
+      animFrame += 1;
+      renderRotationFrame(animFrame / 100);
+      if (animFrame >= 100) {
+        clearInterval(animTimer);
+        animPlaying = false;
+        document.getElementById('play-btn').textContent = 'Play';
+        document.getElementById('play-btn').classList.remove('playing');
+      }
+    }, 30);
+  }
+}
+
+function resetAnimation() {
+  clearInterval(animTimer);
+  animPlaying = false;
+  animFrame = 0;
+  document.getElementById('play-btn').textContent = 'Play';
+  document.getElementById('play-btn').classList.remove('playing');
+  renderRotationFrame(0);
+}
+
+function initRotation() {
+  renderRotationFrame(0);
+}
+
+// ================================================================
+// VIZ 2: Matrix Heatmaps — polynomial X
+// ================================================================
+function renderHeatmaps() {
+  // Determine value range for X for symmetric colorscale
+  const xFlat = POLY_X.flat();
+  const xMax = Math.max(...xFlat.map(Math.abs));
+
+  const qFlat = POLY_Q.flat();
+  const qMax = Math.max(...qFlat.map(Math.abs));
+
+  // R: only upper triangle matters; lower is 0
+  const rFlat = POLY_R.flat().filter((v, idx) => {
+    const row = Math.floor(idx / POLY_R[0].length);
+    const col = idx % POLY_R[0].length;
+    return col >= row;
+  });
+  const rMax = Math.max(...rFlat.map(Math.abs));
+
+  const lX = {...darkLayout, margin: {l: 20, r: 5, t: 5, b: 20}};
+
+  Plotly.react('hm-X', heatmapTrace(POLY_X, -xMax, xMax), lX, hmCfg);
+  Plotly.react('hm-Q', heatmapTrace(POLY_Q, -qMax, qMax), lX, hmCfg);
+  Plotly.react('hm-R', heatmapTrace(POLY_R, -rMax, rMax), {...lX, margin:{l:20,r:5,t:5,b:20}}, hmCfg);
+}
+
+// ================================================================
+// VIZ 3: Cost Comparison (4 methods including naive)
+// ================================================================
+function renderCost() {
+  const N = +document.getElementById('slider-N').value;
+  const p = +document.getElementById('slider-p').value;
+  document.getElementById('val-N').textContent = N;
+  document.getElementById('val-p').textContent = p;
+
+  const methods = ['Naive\n(XᵀX)⁻¹', 'Cholesky\nnormal eqns', 'QR\n(Householder)', 'SVD'];
+  const costs = [
+    N * p * p + p * p * p,               // Naive: Np² (form XᵀX) + p³ (invert)
+    N * p * p + p * p * p / 3,           // Cholesky: Np² + p³/3
+    2 * N * p * p - (2/3) * p * p * p,  // QR Householder: 2Np² - 2p³/3
+    2 * N * p * p + 11 * p * p * p       // SVD: roughly 2Np² + 11p³
+  ];
+  const stability = ['Unstable', 'Moderate', 'Stable', 'Gold standard'];
+  const colors = ['#ef4444', '#f97316', '#3fb950', '#58a6ff'];
+  const textColors = ['#ef4444', '#f97316', '#3fb950', '#58a6ff'];
+
+  const traces = methods.map((name, i) => ({
+    type: 'bar',
+    x: [name],
+    y: [costs[i]],
+    name: name.split('\n')[0],
+    marker: {color: colors[i], opacity: 0.85},
+    text: [stability[i]],
+    textposition: 'outside',
+    textfont: {color: textColors[i], size: 11},
+    hovertemplate: `<b>${name.split('\n')[0]}</b><br>FLOPS: %{y:,.0f}<br>Stability: ${stability[i]}<extra></extra>`
+  }));
+
+  // Add a line for QR cost as reference
+  const layout = {
+    ...darkLayout,
+    barmode: 'group',
+    xaxis: {color: '#8b949e', tickfont: {size: 10}},
+    yaxis: {title: 'FLOP count', color: '#8b949e', gridcolor: '#21262d', tickformat: '.2s'},
+    showlegend: false,
+    margin: {l: 70, r: 20, t: 30, b: 60},
+    annotations: [{
+      x: 0.5, y: 1.05, xref: 'paper', yref: 'paper',
+      text: `N=${N}, p=${p} — lower is cheaper`,
+      showarrow: false, font: {color: '#8b949e', size: 11}
+    }]
+  };
+
+  Plotly.react('cost-chart', traces, layout, {responsive: true, displayModeBar: false});
+}
+
+// ================================================================
+// VIZ 4: Orthogonality Check — fixed, real computation
+// ================================================================
+function renderOrthog() {
+  // Use the precomputed polynomial QR (Q is 8x3)
+  const Qt = transpose(POLY_Q);
+  const QtQ = matMul(Qt, POLY_Q);  // Should be 3x3 identity
+
+  const p = QtQ.length;
+
+  // Identity matrix
+  const I = Array.from({length: p}, (_, i) =>
+    Array.from({length: p}, (_, j) => i === j ? 1 : 0)
+  );
+
+  // Reconstruction: QR should equal X
+  const QR_reconstructed = matMul(POLY_Q, POLY_R);
+  let reconErr = 0;
+  for (let i = 0; i < POLY_X.length; i++)
+    for (let j = 0; j < POLY_X[0].length; j++)
+      reconErr = Math.max(reconErr, Math.abs(QR_reconstructed[i][j] - POLY_X[i][j]));
+
+  // Max off-diagonal error in QtQ
+  const offDiagErr = maxAbsOffDiag(QtQ);
+  // Max diagonal deviation from 1
+  let diagErr = 0;
+  for (let i = 0; i < p; i++) diagErr = Math.max(diagErr, Math.abs(QtQ[i][i] - 1));
+
+  // Render metrics
+  document.getElementById('orthog-metrics').innerHTML = `
+    <div class="metric-box">
+      <div class="metric-label">max|QᵀQ - I| off-diag</div>
+      <div class="metric-val">${offDiagErr.toExponential(1)}</div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-label">max|diag - 1|</div>
+      <div class="metric-val">${diagErr.toExponential(1)}</div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-label">||QR - X||_max</div>
+      <div class="metric-val">${reconErr.toExponential(1)}</div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-label">Orthogonal?</div>
+      <div class="metric-val ${offDiagErr < 1e-10 ? '' : 'bad'}">${offDiagErr < 1e-10 ? 'YES' : 'NO'}</div>
+    </div>
+  `;
+
+  // For the heatmap, use fixed scale: 0-center with range covering both 0 and 1
+  // Since values are in {~0, ~1}, use zmin=-0.3, zmax=1.3 so:
+  // - zero maps to blue side
+  // - one maps to red side
+  // - The diverging scale centered at 0.5 (zmid) will give clear contrast
+  const lO = {...darkLayout, margin: {l: 20, r: 5, t: 5, b: 20}};
+
+  // For QᵀQ: use a scale where 0 = one color, 1 = another
+  // Blue-white-red centered at 0.5: 0 = blue, 0.5 = white, 1 = red
+  const identityScale = [
+    [0,   '#4575b4'],  // 0 = blue (off-diagonal)
+    [0.5, '#f0f0f0'],  // 0.5 = near-white
+    [1,   '#d73027']   // 1 = red (diagonal)
+  ];
+
+  const traceQtQ = [{
+    type: 'heatmap', z: QtQ,
+    colorscale: identityScale,
+    zmin: -0.1, zmax: 1.1, zmid: 0.5,
+    showscale: true,
+    colorbar: {thickness: 10, len: 0.7, tickfont: {size: 9, color: '#8b949e'},
+               tickvals: [0, 0.5, 1], ticktext: ['0', '0.5', '1']},
+    hovertemplate: 'row %{y}, col %{x}<br>%{z:.6f}<extra></extra>',
+    text: QtQ.map(row => row.map(v => v.toFixed(3))),
+    texttemplate: '%{text}', textfont: {size: 11, color: '#0d1117'}
+  }];
+
+  const traceI = [{
+    type: 'heatmap', z: I,
+    colorscale: identityScale,
+    zmin: -0.1, zmax: 1.1, zmid: 0.5,
+    showscale: false,
+    hovertemplate: 'row %{y}, col %{x}<br>%{z:.0f}<extra></extra>',
+    text: I.map(row => row.map(v => v.toFixed(0))),
+    texttemplate: '%{text}', textfont: {size: 11, color: '#0d1117'}
+  }];
+
+  Plotly.react('hm-QtQ', traceQtQ, lO, hmCfg);
+  Plotly.react('hm-I',   traceI,   lO, hmCfg);
+}
+
+// ================================================================
+// Tab switching
+// ================================================================
+function showTab(name) {
+  const tabs = ['rotation', 'heatmap', 'cost', 'orthog'];
+  tabs.forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === name ? '' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach((btn, i) => {
+    btn.classList.toggle('active', tabs[i] === name);
+  });
+  if (name === 'rotation') initRotation();
+  if (name === 'heatmap') renderHeatmaps();
+  if (name === 'cost') renderCost();
+  if (name === 'orthog') renderOrthog();
+}
+
+// ================================================================
+// Init
+// ================================================================
+initRotation();
+// Pre-render others for instant switching
+renderHeatmaps();
+renderCost();
+renderOrthog();
+</script>
+</body>
+</html>

@@ -1,0 +1,801 @@
+[
+  {
+    "concept_id": 584,
+    "concept_name": "pagerank algorithm",
+    "facts": [
+      {
+        "fact_text": "The PageRank algorithm considers a webpage to be important if many other webpages point to it. However the linking webpages that point to a given page are not treated equally: the algorithm also takes into account both the importance (PageRank) of the linking pages and the number of outgoing links that they have.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47104,
+        "page_number": 594
+      },
+      {
+        "fact_text": "Linking pages with higher PageRank are given more weight, while pages with more outgoing links are given less weight. These ideas lead to a recursive definition for PageRank.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 47104,
+        "page_number": 594
+      },
+      {
+        "fact_text": "Let Lij = 1 if page j points to page i, and zero otherwise. Let cj = \u03a3 Lij equal the number of pages pointed to by page j (number of out-links). Then the Google PageRanks pi are defined by the recursive relationship pi = (1 \u2212d) + d \u03a3 (Lij/cj) pj",
+        "fact_type": "formula",
+        "importance_rank": 3,
+        "paragraph_id": 47107,
+        "page_number": 595
+      },
+      {
+        "fact_text": "where d is a positive constant (apparently set to 0.85). The idea is that the importance of page i is the sum of the importances of pages that point to that page. The sums are weighted by 1/cj, that is, each page distributes a total vote of 1 to other pages. The constant d ensures that each page gets a PageRank of at least 1 \u2212d.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 47114,
+        "page_number": 595
+      },
+      {
+        "fact_text": "In the original paper of Page et al. (1998), the authors considered PageRank as a model of user behavior, where a random web surfer clicks on links at random, without regard to content. The surfer does a random walk on the web, choosing among available outgoing links at random. The factor 1 \u2212d is the probability that he does not click on a link, but jumps instead to a random webpage.",
+        "fact_type": "intuition",
+        "importance_rank": 5,
+        "paragraph_id": 47120,
+        "page_number": 595
+      },
+      {
+        "fact_text": "Exploiting a connection with Markov chains (see below), it can be shown that the matrix A has a real eigenvalue equal to one, and one is its largest eigenvalue. This means that we can find p\u0302 by the power method: starting with some p = p0 we iterate pk \u2190 Apk\u22121; pk \u2190 N pk / eT pk.",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 47118,
+        "page_number": 595
+      },
+      {
+        "fact_text": "Viewing PageRank as a Markov chain makes clear why the matrix A has a maximal real eigenvalue of 1. Since A has positive entries with each column summing to one, Markov chain theory tells us that it has a unique eigenvector with eigenvalue one, corresponding to the stationary distribution of the chain.",
+        "fact_type": "property",
+        "importance_rank": 7,
+        "paragraph_id": 47127,
+        "page_number": 596
+      }
+    ]
+  },
+  {
+    "concept_id": 497,
+    "concept_name": "proximity matrix",
+    "facts": [
+      {
+        "fact_text": "In growing a random forest, an N \u00d7 N proximity matrix is accumulated for the training data. For every tree, any pair of oob observations sharing a terminal node has their proximity increased by one. This proximity matrix is then represented in two dimensions using multidimensional scaling.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "Random forests (Breiman, 2001) is a substantial modification of bagging that builds a large collection of de-correlated trees, and then averages them. On many problems the performance of random forests is very similar to boosting, and they are simpler to train and tune.",
+        "fact_type": "comparison",
+        "importance_rank": 2,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "The idea is that even though the data may be high-dimensional, involving mixed variables, etc., the proximity plot gives an indication of which observations are effectively close together in the eyes of the random forest classifier.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "When the bth tree is grown, the oob samples are passed down the tree, and the prediction accuracy is recorded. Then the values for the jth variable are randomly permuted in the oob samples, and the accuracy is again computed.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "The essential idea in bagging (Section 8.7) is to average many noisy but approximately unbiased models, and hence reduce the variance. Trees are ideal candidates for bagging, since they can capture complex interaction structures in the data, and if grown sufficiently deep, have relatively low bias.",
+        "fact_type": "intuition",
+        "importance_rank": 5,
+        "paragraph_id": 47304,
+        "page_number": 605
+      }
+    ]
+  },
+  {
+    "concept_id": 588,
+    "concept_name": "variable importance via permutation",
+    "facts": [
+      {
+        "fact_text": "When the bth tree is grown, the oob samples are passed down the tree, and the prediction accuracy is recorded. Then the values for the jth variable are randomly permuted in the oob samples, and the accuracy is again computed. The decrease in accuracy as a result of this permuting is averaged over all trees, and is used as a measure of the importance of variable j in the random forest.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "Variable importance plots can be constructed for random forests in exactly the same way as they were for gradient-boosted models (Section 10.13). At each split in each tree, the improvement in the split-criterion is the importance measure attributed to the splitting variable, and is accumulated over all the trees in the forest separately for each variable.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 47377,
+        "page_number": 611
+      },
+      {
+        "fact_text": "For each observation zi = (xi, yi), construct its random forest predictor by averaging only those trees corresponding to bootstrap samples in which zi did not appear.",
+        "fact_type": "definition",
+        "importance_rank": 3,
+        "paragraph_id": 47374,
+        "page_number": 611
+      },
+      {
+        "fact_text": "Random forests (Breiman, 2001) is a substantial modification of bagging that builds a large collection of de-correlated trees, and then averages them. On many problems the performance of random forests is very similar to boosting, and they are simpler to train and tune.",
+        "fact_type": "comparison",
+        "importance_rank": 4,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "An average of B i.i.d. random variables, each with variance \u03c32, has variance 1/B \u03c32. If the variables are simply i.d. (identically distributed, but not necessarily independent) with positive pairwise correlation \u03c1, the variance of the average is \u03c1\u03c32 + (1\u2212\u03c1)/B \u03c32.",
+        "fact_type": "formula",
+        "importance_rank": 5,
+        "paragraph_id": 47316,
+        "page_number": 606
+      }
+    ]
+  },
+  {
+    "concept_id": 589,
+    "concept_name": "proximity plot",
+    "facts": [
+      {
+        "fact_text": "This proximity matrix is then represented in two dimensions using multidimensional scaling (Section 14.8). The idea is that even though the data may be high-dimensional, involving mixed variables, etc., the proximity plot gives an indication of which observations are effectively close together in the eyes of the random forest classifier.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "In growing a random forest, an N \u00d7 N proximity matrix is accumulated for the training data. For every tree, any pair of oob observations sharing a terminal node has their proximity increased by one.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "Random forests (Breiman, 2001) is a substantial modification of bagging that builds a large collection of de-correlated trees, and then averages them. On many problems the performance of random forests is very similar to boosting, and they are simpler to train and tune.",
+        "fact_type": "comparison",
+        "importance_rank": 3,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "The essential idea in bagging (Section 8.7) is to average many noisy but approximately unbiased models, and hence reduce the variance. Trees are ideal candidates for bagging, since they can capture complex interaction structures in the data, and if grown sufficiently deep, have relatively low bias.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 47304,
+        "page_number": 605
+      }
+    ]
+  },
+  {
+    "concept_id": 590,
+    "concept_name": "de-correlation effect in random forests",
+    "facts": [
+      {
+        "fact_text": "The idea in random forests (algorithm 15.1) is to improve the variance reduction of bagging by reducing the correlation between the trees, without increasing the variance too much. This is achieved in the tree-growing process through random selection of the input variables.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47319,
+        "page_number": 606
+      },
+      {
+        "fact_text": "Before each split, select m \u2264 p of the input variables at random as candidates for splitting.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 47320,
+        "page_number": 606
+      },
+      {
+        "fact_text": "An average of B i.i.d. random variables, each with variance \u03c32, has variance 1/B \u03c32. If the variables are simply i.d. (identically distributed, but not necessarily independent) with positive pairwise correlation \u03c1, the variance of the average is \u03c1\u03c32 + (1\u2212\u03c1)/B \u03c32.",
+        "fact_type": "formula",
+        "importance_rank": 3,
+        "paragraph_id": 47316,
+        "page_number": 606
+      },
+      {
+        "fact_text": "As B increases, the second term disappears, but the first remains, and hence the size of the correlation of pairs of bagged trees limits the benefits of averaging.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 47319,
+        "page_number": 606
+      },
+      {
+        "fact_text": "Typically values for m are \u221ap or even as low as 1.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 47322,
+        "page_number": 607
+      },
+      {
+        "fact_text": "Intuitively, reducing m will reduce the correlation between any pair of trees in the ensemble, and hence by (15.1) reduce the variance of the average.",
+        "fact_type": "intuition",
+        "importance_rank": 6,
+        "paragraph_id": 47327,
+        "page_number": 607
+      },
+      {
+        "fact_text": "Random forests (Breiman, 2001) is a substantial modification of bagging that builds a large collection of de-correlated trees, and then averages them.",
+        "fact_type": "definition",
+        "importance_rank": 7,
+        "paragraph_id": 47302,
+        "page_number": 605
+      }
+    ]
+  },
+  {
+    "concept_id": 592,
+    "concept_name": "within-z variance",
+    "facts": [
+      {
+        "fact_text": "The second term is the within-Z variance\u2014 a result of the randomization, which increases as m decreases. The first term is in fact the sampling variance of the random forest ensemble (shown in the right panel), which decreases as m decreases.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47437,
+        "page_number": 616
+      },
+      {
+        "fact_text": "Var \u02c6frf(x) = \u03c1(x)\u03c3\u00b2(x).",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 47437,
+        "page_number": 616
+      },
+      {
+        "fact_text": "\u03c1(x) is the sampling correlation between any pair of trees used in the averaging: \u03c1(x) = corr[T(x; \u03981(Z)), T(x; \u03982(Z))], where \u03981(Z) and \u03982(Z) are a randomly drawn pair of random forest trees grown to the randomly sampled Z.",
+        "fact_type": "definition",
+        "importance_rank": 3,
+        "paragraph_id": 47439,
+        "page_number": 616
+      },
+      {
+        "fact_text": "\u03c3\u00b2(x) is the sampling variance of any single randomly drawn tree, \u03c3\u00b2(x) = Var T(x; \u0398(Z)).",
+        "fact_type": "definition",
+        "importance_rank": 4,
+        "paragraph_id": 47441,
+        "page_number": 616
+      },
+      {
+        "fact_text": "In fact, the conditional covariance of a pair of tree fits at x is zero, because the bootstrap and feature sampling is i.i.d; see Exercise 15.5.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 47447,
+        "page_number": 617
+      },
+      {
+        "fact_text": "An average of B i.i.d. random variables, each with variance \u03c32, has variance 1/B \u03c32. If the variables are simply i.d. (identically distributed, but not necessarily independent) with positive pairwise correlation \u03c1, the variance of the average is \u03c1\u03c32 + (1\u2212\u03c1)/B \u03c32.",
+        "fact_type": "formula",
+        "importance_rank": 6,
+        "paragraph_id": 47316,
+        "page_number": 606
+      }
+    ]
+  },
+  {
+    "concept_id": 596,
+    "concept_name": "forward stagewise linear regression",
+    "facts": [
+      {
+        "fact_text": "At each successive step, the tree Tk\u2217 is selected that best fits the current residuals in line 2(a). Its corresponding coefficient \u03b1\u030ck\u2217 is then incremented or decremented by an infinitesimal amount in 2(b), while all other coefficients \u03b1\u030ck, k \u2260 k\u2217 are left unchanged.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47319,
+        "page_number": 606
+      },
+      {
+        "fact_text": "The idea in random forests (algorithm 15.1) is to improve the variance reduction of bagging by reducing the correlation between the trees, without increasing the variance too much. This is achieved in the tree-growing process through random selection of the input variables.",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 47319,
+        "page_number": 606
+      },
+      {
+        "fact_text": "Before each split, select m \u2264 p of the input variables at random as candidates for splitting.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 47320,
+        "page_number": 606
+      },
+      {
+        "fact_text": "Classiﬁcation: Let \u02c6Cb(x) be the class prediction of the bth random-forest tree. Then \u02c6CB rf(x) = majority vote {\u02c6Cb(x)} B 1.",
+        "fact_type": "formula",
+        "importance_rank": 4,
+        "paragraph_id": 47315,
+        "page_number": 606
+      },
+      {
+        "fact_text": "Since trees are notoriously noisy, they benefit greatly from the averaging. Moreover, since each tree generated in bagging is identically distributed (i.d.), the expectation of an average of B such trees is the same as the expectation of any one of them. This means the bias of bagged trees is the same as that of the individual trees, and the only hope of improvement is through variance reduction.",
+        "fact_type": "comparison",
+        "importance_rank": 5,
+        "paragraph_id": 47316,
+        "page_number": 606
+      }
+    ]
+  },
+  {
+    "concept_id": 599,
+    "concept_name": "l1 normalized margin",
+    "facts": [
+      {
+        "fact_text": "Schapire et al. (1998) define the normalized L1 margin of a fitted model f(x) = \u03a3k \u03b1kTk(x) as min[yi\u00b7f(xi)]/\u03a3k|\u03b1k|. Here the minimum is taken over the training sample, and yi \u2208 {\u22121, +1}. Unlike the L2 margin (4.40) of support vector machines, the L1 margin m(f) measures the distance to the closest training point in L\u221e units (maximum coordinate distance).",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47319,
+        "page_number": 606
+      },
+      {
+        "fact_text": "An average of B i.i.d. random variables, each with variance \u03c32, has variance 1/B \u03c32. If the variables are simply i.d. (identically distributed, but not necessarily independent) with positive pairwise correlation \u03c1, the variance of the average is \u03c1\u03c32 + (1\u2212\u03c1)/B \u03c32.",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 47316,
+        "page_number": 606
+      },
+      {
+        "fact_text": "Boosting appears to dominate bagging on most problems, and became the preferred choice.",
+        "fact_type": "comparison",
+        "importance_rank": 3,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "Before each split, select m \u2264 p of the input variables at random as candidates for splitting.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 47320,
+        "page_number": 606
+      },
+      {
+        "fact_text": "The essential idea in bagging (Section 8.7) is to average many noisy but approximately unbiased models, and hence reduce the variance.",
+        "fact_type": "intuition",
+        "importance_rank": 5,
+        "paragraph_id": 47304,
+        "page_number": 605
+      }
+    ]
+  },
+  {
+    "concept_id": 603,
+    "concept_name": "markov random field",
+    "facts": [
+      {
+        "fact_text": "We restrict our discussion to undirected graphical models, also known as Markov random fields or Markov networks. In these graphs, the absence of an edge between two vertices has a special meaning: the corresponding random variables are conditionally independent given all other variables in the graph.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "Random forests (Breiman, 2001) is a substantial modification of bagging that builds a large collection of de-correlated trees, and then averages them.",
+        "fact_type": "comparison",
+        "importance_rank": 2,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "The idea in random forests (algorithm 15.1) is to improve the variance reduction of bagging by reducing the correlation between the trees, without increasing the variance too much. This is achieved in the tree-growing process through random selection of the input variables.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 47319,
+        "page_number": 606
+      },
+      {
+        "fact_text": "An average of B i.i.d. random variables, each with variance \u03c32, has variance 1/B \u03c32. If the variables are simply i.d. (identically distributed, but not necessarily independent) with positive pairwise correlation \u03c1, the variance of the average is \u03c1\u03c32 + (1\u2212\u03c1)/B \u03c32.",
+        "fact_type": "formula",
+        "importance_rank": 4,
+        "paragraph_id": 47316,
+        "page_number": 606
+      }
+    ]
+  },
+  {
+    "concept_id": 604,
+    "concept_name": "pairwise markov independence",
+    "facts": [
+      {
+        "fact_text": "In a Markov graph G, the absence of an edge implies that the corresponding random variables are conditionally independent given the variables at the other vertices. This is expressed with the following pairwise Markov independence assumption: for each pair of non-adjacent vertices s, t: Xs \u22a5 Xt | X rest.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "An average of B i.i.d. random variables, each with variance \u03c32, has variance 1/B \u03c32. If the variables are simply i.d. (identically distributed, but not necessarily independent) with positive pairwise correlation \u03c1, the variance of the average is \u03c1\u03c32 + (1\u2212\u03c1)/B \u03c32.",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 47316,
+        "page_number": 606
+      },
+      {
+        "fact_text": "The idea in random forests (algorithm 15.1) is to improve the variance reduction of bagging by reducing the correlation between the trees, without increasing the variance too much. This is achieved in the tree-growing process through random selection of the input variables.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 47319,
+        "page_number": 606
+      },
+      {
+        "fact_text": "Before each split, select m \u2264 p of the input variables at random as candidates for splitting.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 47320,
+        "page_number": 606
+      }
+    ]
+  },
+  {
+    "concept_id": 607,
+    "concept_name": "clique potential",
+    "facts": [
+      {
+        "fact_text": "A probability density function f over a Markov graph G can be represented as a product over cliques, where C is the set of maximal cliques, and the positive functions \u03c8C(\u00b7) are called clique potentials or clique factors: f(x) = (1/Z) \u03a0_{C \u2208 C} \u03c8C(xC).",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47319,
+        "page_number": 606
+      },
+      {
+        "fact_text": "An average of B i.i.d. random variables, each with variance \u03c32, has variance 1/B \u03c32. If the variables are simply i.d. (identically distributed, but not necessarily independent) with positive pairwise correlation \u03c1, the variance of the average is \u03c1\u03c32 + (1\u2212\u03c1)/B \u03c32.",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 47316,
+        "page_number": 606
+      },
+      {
+        "fact_text": "The idea in random forests (algorithm 15.1) is to improve the variance reduction of bagging by reducing the correlation between the trees, without increasing the variance too much.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 47319,
+        "page_number": 606
+      },
+      {
+        "fact_text": "Before each split, select m \u2264 p of the input variables at random as candidates for splitting.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 47320,
+        "page_number": 606
+      }
+    ]
+  },
+  {
+    "concept_id": 608,
+    "concept_name": "hammersley-clifford theorem",
+    "facts": [
+      {
+        "fact_text": "This result holds for Markov networks G with positive distributions, and is known as the Hammersley-Clifford theorem (Hammersley and Clifford, 1971; Clifford, 1990).",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "An average of B i.i.d. random variables, each with variance \u03c32, has variance 1/B \u03c32. If the variables are simply i.d. (identically distributed, but not necessarily independent) with positive pairwise correlation \u03c1, the variance of the average is \u03c1\u03c32 + (1\u2212\u03c1)/B \u03c32.",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 47316,
+        "page_number": 606
+      },
+      {
+        "fact_text": "The idea in random forests (algorithm 15.1) is to improve the variance reduction of bagging by reducing the correlation between the trees, without increasing the variance too much. This is achieved in the tree-growing process through random selection of the input variables.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 47319,
+        "page_number": 606
+      },
+      {
+        "fact_text": "Before each split, select m \u2264 p of the input variables at random as candidates for splitting.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 47320,
+        "page_number": 606
+      }
+    ]
+  },
+  {
+    "concept_id": 585,
+    "concept_name": "random forest",
+    "facts": [
+      {
+        "fact_text": "Random forests (Breiman, 2001) is a substantial modification of bagging that builds a large collection of de-correlated trees, and then averages them. On many problems the performance of random forests is very similar to boosting, and they are simpler to train and tune. As a consequence, random forests are popular, and are implemented in a variety of packages.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47302,
+        "page_number": 605
+      },
+      {
+        "fact_text": "The essential idea in bagging (Section 8.7) is to average many noisy but approximately unbiased models, and hence reduce the variance. Trees are ideal candidates for bagging, since they can capture complex interaction structures in the data, and if grown sufficiently deep, have relatively low bias.",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 47304,
+        "page_number": 605
+      },
+      {
+        "fact_text": "The idea in random forests (algorithm 15.1) is to improve the variance reduction of bagging by reducing the correlation between the trees, without increasing the variance too much. This is achieved in the tree-growing process through random selection of the input variables. Specifically, when growing a tree on a bootstrapped dataset: Before each split, select m \u2264 p of the input variables at random as candidates for splitting.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 47319,
+        "page_number": 606
+      },
+      {
+        "fact_text": "An average of B i.i.d. random variables, each with variance \u03c32, has variance 1/B \u03c32. If the variables are simply i.d. (identically distributed, but not necessarily independent) with positive pairwise correlation \u03c1, the variance of the average is \u03c1\u03c32 + (1\u2212\u03c1)/B \u03c32.",
+        "fact_type": "formula",
+        "importance_rank": 4,
+        "paragraph_id": 47316,
+        "page_number": 606
+      },
+      {
+        "fact_text": "Classiﬁcation: Let \u02c6Cb(x) be the class prediction of the bth random-forest tree. Then \u02c6CB rf(x) = majority vote {\u02c6Cb(x)} B 1.",
+        "fact_type": "formula",
+        "importance_rank": 5,
+        "paragraph_id": 47315,
+        "page_number": 606
+      },
+      {
+        "fact_text": "Typically values for m are \u221ap or even as low as 1. After B such trees {T(x; \u0398b)} B 1 are grown, the random forest (regression) predictor is \u02c6f B rf(x) = (1/B) \u03a3 T(x; \u0398b).",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 47322,
+        "page_number": 607
+      },
+      {
+        "fact_text": "Intuitively, reducing m will reduce the correlation between any pair of trees in the ensemble, and hence by (15.1) reduce the variance of the average.",
+        "fact_type": "intuition",
+        "importance_rank": 7,
+        "paragraph_id": 47327,
+        "page_number": 607
+      }
+    ]
+  },
+  {
+    "concept_id": 62,
+    "concept_name": "Gini",
+    "facts": [
+      {
+        "fact_text": "Variable importance plots can be constructed for random forests in exactly the same way as they were for gradient-boosted models (Section 10.13). At each split in each tree, the improvement in the split-criterion is the importance measure attributed to the splitting variable, and is accumulated over all the trees in the forest separately for each variable.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47377,
+        "page_number": 611
+      },
+      {
+        "fact_text": "An oob error estimate is almost identical to that obtained by N-fold cross-validation; see Exercise 15.2. Hence unlike many other nonlinear estimators, random forests can be fit in one sequence, with cross-validation being performed along the way.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 47375,
+        "page_number": 611
+      },
+      {
+        "fact_text": "For each observation zi = (xi, yi), construct its random forest predictor by averaging only those trees corresponding to bootstrap samples in which zi did not appear.",
+        "fact_type": "definition",
+        "importance_rank": 3,
+        "paragraph_id": 47374,
+        "page_number": 611
+      }
+    ]
+  },
+  {
+    "concept_id": 586,
+    "concept_name": "out-of-bag samples",
+    "facts": [
+      {
+        "fact_text": "For each observation zi = (xi, yi), construct its random forest predictor by averaging only those trees corresponding to bootstrap samples in which zi did not appear.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47374,
+        "page_number": 611
+      },
+      {
+        "fact_text": "An oob error estimate is almost identical to that obtained by N-fold cross-validation; see Exercise 15.2. Hence unlike many other nonlinear estimators, random forests can be fit in one sequence, with cross-validation being performed along the way. Once the oob error stabilizes, the training can be terminated.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 47375,
+        "page_number": 611
+      },
+      {
+        "fact_text": "Variable importance plots can be constructed for random forests in exactly the same way as they were for gradient-boosted models (Section 10.13). At each split in each tree, the improvement in the split-criterion is the importance measure attributed to the splitting variable, and is accumulated over all the trees in the forest separately for each variable.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 47377,
+        "page_number": 611
+      }
+    ]
+  },
+  {
+    "concept_id": 587,
+    "concept_name": "out-of-bag error",
+    "facts": [
+      {
+        "fact_text": "An oob error estimate is almost identical to that obtained by N-fold cross-validation; see Exercise 15.2. Hence unlike many other nonlinear estimators, random forests can be fit in one sequence, with cross-validation being performed along the way. Once the oob error stabilizes, the training can be terminated.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47375,
+        "page_number": 611
+      },
+      {
+        "fact_text": "For each observation zi = (xi, yi), construct its random forest predictor by averaging only those trees corresponding to bootstrap samples in which zi did not appear.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 47374,
+        "page_number": 611
+      },
+      {
+        "fact_text": "Variable importance plots can be constructed for random forests in exactly the same way as they were for gradient-boosted models (Section 10.13). At each split in each tree, the improvement in the split-criterion is the importance measure attributed to the splitting variable, and is accumulated over all the trees in the forest separately for each variable.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 47377,
+        "page_number": 611
+      }
+    ]
+  },
+  {
+    "concept_id": 591,
+    "concept_name": "sampling correlation in random forests",
+    "facts": [
+      {
+        "fact_text": "\u03c1(x) is the sampling correlation between any pair of trees used in the averaging: \u03c1(x) = corr[T(x; \u03981(Z)), T(x; \u03982(Z))], where \u03981(Z) and \u03982(Z) are a randomly drawn pair of random forest trees grown to the randomly sampled Z.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47439,
+        "page_number": 616
+      },
+      {
+        "fact_text": "Var \u02c6frf(x) = \u03c1(x)\u03c3\u00b2(x).",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 47437,
+        "page_number": 616
+      },
+      {
+        "fact_text": "It is easy to confuse \u03c1(x) with the average correlation between fitted trees in a given random-forest ensemble; that is, think of the fitted trees as N-vectors, and compute the average pairwise correlation between these vectors, conditioned on the data. This is not the case; this conditional correlation is not directly relevant in the averaging process, and the dependence on x in \u03c1(x) warns us of the distinction. Rather, \u03c1(x) is the theoretical correlation between a pair of random-forest trees evaluated at x, induced by repeatedly making training sample draws Z from the population, and then drawing a pair of random forest trees. In statistical jargon, this is the correlation induced by the sampling distribution of Z and \u0398.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 47443,
+        "page_number": 616
+      },
+      {
+        "fact_text": "The limiting form (B \u2192\u221e) of the random forest regression estimator is \u02c6frf(x) = E\u0398|Z T(x; \u0398(Z)), where we have made explicit the dependence on the training data Z.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 47427,
+        "page_number": 615
+      },
+      {
+        "fact_text": "In fact, the conditional covariance of a pair of tree fits at x is zero, because the bootstrap and feature sampling is i.i.d; see Exercise 15.5.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 47447,
+        "page_number": 617
+      },
+      {
+        "fact_text": "In this section we analyze the mechanisms at play with the additional randomization employed by random forests. For this discussion we focus on regression and squared error loss, since this gets at the main points, and bias and variance are more complex with 0\u20131 loss (see Section 7.3.1). Furthermore, even in the case of a classiﬁcation problem, we can consider the random-forest average as an estimate of the class posterior probabilities, for which bias and variance are appropriate descriptors.",
+        "fact_type": "intuition",
+        "importance_rank": 6,
+        "paragraph_id": 47425,
+        "page_number": 615
+      }
+    ]
+  },
+  {
+    "concept_id": 593,
+    "concept_name": "random forest as adaptive nearest neighbors",
+    "facts": [
+      {
+        "fact_text": "The random forest classiﬁer has much in common with the k-nearest neighbor classiﬁer (Section 13.3); in fact a weighted version thereof. Since each tree is grown to maximal size, for a particular \u0398\u2217, T(x; \u0398\u2217(Z)) is the response value for one of the training samples. The tree-growing algorithm ﬁnds an \u201coptimal\u201d path to that observation, choosing the most informative predictors from those at its disposal.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47484,
+        "page_number": 619
+      },
+      {
+        "fact_text": "Bias(x) = \u03bc(x) \u2212 EZ \u02c6frf(x) = \u03bc(x) \u2212 EZ E\u0398|Z T(x; \u0398(Z)).",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 47481,
+        "page_number": 619
+      },
+      {
+        "fact_text": "This is also typically greater (in absolute terms) than the bias of an unpruned tree grown to Z, since the randomization and reduced sample space impose restrictions. Hence the improvements in prediction obtained by bagging or random forests are solely a result of variance reduction.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 47482,
+        "page_number": 619
+      },
+      {
+        "fact_text": "Var \u02c6frf(x) = \u03c1(x)\u03c3\u00b2(x).",
+        "fact_type": "formula",
+        "importance_rank": 4,
+        "paragraph_id": 47437,
+        "page_number": 616
+      }
+    ]
+  },
+  {
+    "concept_id": 594,
+    "concept_name": "error-correcting output codes",
+    "facts": [
+      {
+        "fact_text": "An early example of a learning ensemble is a method designed for multi-class classiﬁcation using error-correcting output codes (Dietterich and Bakiri, 1995, ECOC). Consider the 10-class digit classiﬁcation problem, and the coding matrix C given in Table 16.1.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47818,
+        "page_number": 624
+      },
+      {
+        "fact_text": "Note that the \u2113th column of the coding matrix C\u2113 deﬁnes a two-class variable that merges all the original classes into two groups.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 47822,
+        "page_number": 624
+      },
+      {
+        "fact_text": "Each row of C is a binary code for representing that class. The rows have more bits than is necessary, and the idea is that the redundant \u201cerror-correcting\u201d bits allow for some inaccuracies, and can improve performance. In fact, the full code matrix C above has a minimum Hamming distance of 7 between any pair of rows.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 47826,
+        "page_number": 624
+      },
+      {
+        "fact_text": "Deﬁne \u03b4k(x) = \u03a3_\u2113 |Ck\u2113 \u2212 \u02c6p\u2113(x)|, the discriminant function for the kth class, where Ck\u2113 is the entry for row k and column \u2113 in Table 16.1.",
+        "fact_type": "formula",
+        "importance_rank": 4,
+        "paragraph_id": 47825,
+        "page_number": 624
+      },
+      {
+        "fact_text": "Note that even the indicator response coding (Section 4.2) is redundant, since 10 classes require only \u2308log2 10\u2309 = 4 bits for their unique representation. Dietterich and Bakiri (1995) showed impressive improvements in performance for a variety of multiclass problems when classiﬁcation trees were used as the base classiﬁer.",
+        "fact_type": "comparison",
+        "importance_rank": 5,
+        "paragraph_id": 47827,
+        "page_number": 624
+      },
+      {
+        "fact_text": "The idea of ensemble learning is to build a prediction model by combining the strengths of a collection of simpler base models.",
+        "fact_type": "intuition",
+        "importance_rank": 6,
+        "paragraph_id": 47816,
+        "page_number": 623
+      }
+    ]
+  },
+  {
+    "concept_id": 595,
+    "concept_name": "hamming distance",
+    "facts": [
+      {
+        "fact_text": "The Hamming distance between two vectors is the number mismatches between corresponding entries.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47828,
+        "page_number": 624
+      },
+      {
+        "fact_text": "In fact, the full code matrix C above has a minimum Hamming distance of 7 between any pair of rows.",
+        "fact_type": "example",
+        "importance_rank": 2,
+        "paragraph_id": 47826,
+        "page_number": 624
+      },
+      {
+        "fact_text": "Each row of C is a binary code for representing that class. The rows have more bits than is necessary, and the idea is that the redundant \u201cerror-correcting\u201d bits allow for some inaccuracies, and can improve performance.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 47826,
+        "page_number": 624
+      },
+      {
+        "fact_text": "Deﬁne \u03b4k(x) = \u03a3_\u2113 |Ck\u2113 \u2212 \u02c6p\u2113(x)|, the discriminant function for the kth class, where Ck\u2113 is the entry for row k and column \u2113 in Table 16.1.",
+        "fact_type": "formula",
+        "importance_rank": 4,
+        "paragraph_id": 47825,
+        "page_number": 624
+      },
+      {
+        "fact_text": "Note that even the indicator response coding (Section 4.2) is redundant, since 10 classes require only \u2308log2 10\u2309 = 4 bits for their unique representation.",
+        "fact_type": "comparison",
+        "importance_rank": 5,
+        "paragraph_id": 47827,
+        "page_number": 624
+      }
+    ]
+  }
+]

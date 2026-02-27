@@ -1,0 +1,376 @@
+{
+  "concepts": [
+    {
+      "name": "pagerank algorithm",
+      "type": "algorithm",
+      "description": "An algorithm used by Google to rank webpages, considering a webpage important if many other important webpages point to it, with recursive weighting based on the PageRank of linking pages and their number of outgoing links.",
+      "quote": "The PageRank algorithm considers a webpage to be important if many other webpages point to it. However the linking webpages that point to a given page are not treated equally: the algorithm also takes into account both the importance (PageRank) of the linking pages and the number of outgoing links that they have.",
+      "paragraph_ids": [47104]
+    },
+    {
+      "name": "random forest",
+      "type": "method",
+      "description": "A substantial modification of bagging that builds a large collection of de-correlated trees by randomly selecting a subset of variables at each split, and then averages them.",
+      "quote": "Random forests (Breiman, 2001) is a substantial modiﬁcation of bagging that builds a large collection of de-correlated trees, and then averages them. On many problems the performance of random forests is very similar to boosting, and they are simpler to train and tune.",
+      "paragraph_ids": [47302]
+    },
+    {
+      "name": "out-of-bag samples",
+      "type": "technique",
+      "description": "A validation technique in random forests where each observation's prediction is made using only trees from bootstrap samples in which that observation did not appear, providing a built-in cross-validation estimate.",
+      "quote": "For each observation zi = (xi, yi), construct its random forest predictor by averaging only those trees corresponding to bootstrap samples in which zi did not appear.",
+      "paragraph_ids": [47374]
+    },
+    {
+      "name": "out-of-bag error",
+      "type": "metric",
+      "description": "An error estimate in random forests that is almost identical to N-fold cross-validation, computed using out-of-bag samples.",
+      "quote": "An oob error estimate is almost identical to that obtained by N-fold cross-validation; see Exercise 15.2. Hence unlike many other nonlinear estimators, random forests can be ﬁt in one sequence, with cross-validation being performed along the way.",
+      "paragraph_ids": [47375]
+    },
+    {
+      "name": "variable importance via permutation",
+      "type": "technique",
+      "description": "A method in random forests to measure variable importance by randomly permuting values of a variable in out-of-bag samples and measuring the decrease in prediction accuracy.",
+      "quote": "When the bth tree is grown, the oob samples are passed down the tree, and the prediction accuracy is recorded. Then the values for the jth variable are randomly permuted in the oob samples, and the accuracy is again computed. The decrease in accuracy as a result of this permuting is averaged over all trees, and is used as a measure of the importance of variable j in the random forest.",
+      "paragraph_ids": [47377]
+    },
+    {
+      "name": "proximity matrix",
+      "type": "technique",
+      "description": "An N × N matrix accumulated in random forests where for every tree, any pair of out-of-bag observations sharing a terminal node has their proximity increased by one, used to visualize similarity between observations.",
+      "quote": "In growing a random forest, an N × N proximity matrix is accumulated for the training data. For every tree, any pair of oob observations sharing a terminal node has their proximity increased by one. This proximity matrix is then represented in two dimensions using multidimensional scaling.",
+      "paragraph_ids": [47406]
+    },
+    {
+      "name": "proximity plot",
+      "type": "technique",
+      "description": "A two-dimensional visualization of the proximity matrix using multidimensional scaling, showing which observations are effectively close together according to the random forest classifier.",
+      "quote": "This proximity matrix is then represented in two dimensions using multidimensional scaling (Section 14.8). The idea is that even though the data may be high-dimensional, involving mixed variables, etc., the proximity plot gives an indication of which observations are eﬀectively close together in the eyes of the random forest classiﬁer.",
+      "paragraph_ids": [47406]
+    },
+    {
+      "name": "de-correlation effect in random forests",
+      "type": "property",
+      "description": "The variance reduction mechanism in random forests achieved by reducing correlation between trees through random selection of input variables at each split.",
+      "quote": "The idea in random forests (algorithm 15.1) is to improve the variance reduction of bagging by reducing the correlation between the trees, without increasing the variance too much. This is achieved in the tree-growing process through random selection of the input variables.",
+      "paragraph_ids": [47319]
+    },
+    {
+      "name": "sampling correlation in random forests",
+      "type": "metric",
+      "description": "The theoretical correlation ρ(x) between a pair of random-forest trees evaluated at x, induced by the sampling distribution of training data and randomization parameters.",
+      "quote": "ρ(x) is the sampling correlation between any pair of trees used in the averaging: ρ(x) = corr[T(x; Θ1(Z)), T(x; Θ2(Z))], where Θ1(Z) and Θ2(Z) are a randomly drawn pair of random forest trees grown to the randomly sampled Z",
+      "paragraph_ids": [47439]
+    },
+    {
+      "name": "within-z variance",
+      "type": "property",
+      "description": "The variance component in random forests due to randomization conditional on a fixed training set, which increases as the number of randomly selected variables (m) decreases.",
+      "quote": "The second term is the within-Z variance— a result of the randomization, which increases as m decreases. The ﬁrst term is in fact the sampling variance of the random forest ensemble (shown in the right panel), which decreases as m decreases.",
+      "paragraph_ids": [47462]
+    },
+    {
+      "name": "random forest as adaptive nearest neighbors",
+      "type": "property",
+      "description": "An interpretation of random forests as a weighted k-nearest neighbor classifier where the tree-growing algorithm finds optimal paths to training observations and the averaging process assigns weights forming an equivalent kernel.",
+      "quote": "The random forest classiﬁer has much in common with the k-nearest neighbor classiﬁer (Section 13.3); in fact a weighted version thereof. Since each tree is grown to maximal size, for a particular Θ∗, T(x; Θ∗(Z)) is the response value for one of the training samples. The tree-growing algorithm ﬁnds an 'optimal' path to that observation, choosing the most informative predictors from those at its disposal.",
+      "paragraph_ids": [47484]
+    },
+    {
+      "name": "error-correcting output codes",
+      "type": "method",
+      "description": "An ensemble method for multiclass classification that uses a coding matrix to convert a K-class problem into L binary classification problems, where redundant bits allow for inaccuracies and can improve performance.",
+      "quote": "An early example of a learning ensemble is a method designed for multi-class classiﬁcation using error-correcting output codes (Dietterich and Bakiri, 1995, ECOC).",
+      "paragraph_ids": [47818]
+    },
+    {
+      "name": "hamming distance",
+      "type": "metric",
+      "description": "A distance metric between two vectors measuring the number of mismatches between corresponding entries.",
+      "quote": "The Hamming distance between two vectors is the number mismatches between corresponding entries.",
+      "paragraph_ids": [47828]
+    },
+    {
+      "name": "forward stagewise linear regression",
+      "type": "algorithm",
+      "description": "A regularization algorithm that starts with zero coefficients and at each iteration selects the basis function that best fits current residuals, incrementing its coefficient by an infinitesimal amount while leaving others unchanged.",
+      "quote": "At each successive step, the tree Tk∗ is selected that best ﬁts the current residuals in line 2(a). Its corresponding coeﬃcient α̌k∗ is then incremented or decremented by an inﬁnitesimal amount in 2(b), while all other coeﬃcients α̌k, k ≠ k∗ are left unchanged.",
+      "paragraph_ids": [47867]
+    },
+    {
+      "name": "bet on sparsity principle",
+      "type": "principle",
+      "description": "A principle for high-dimensional problems stating to use procedures that work well in sparse settings, since no procedure does well in dense problems where there are too many nonzero coefficients relative to sample size.",
+      "quote": "Use a procedure that does well in sparse problems, since no procedure does well in dense problems.",
+      "paragraph_ids": [47905]
+    },
+    {
+      "name": "monotone lasso",
+      "type": "method",
+      "description": "A variant of the lasso solved by infinitesimal forward stagewise regression, characterized by monotone nondecreasing coefficient paths in an augmented dictionary with non-negative coefficients.",
+      "quote": "Hastie et al. (2007) show that this inﬁnitesimal forward stagewise algorithm (FS0) ﬁts a monotone version of the lasso, which optimally reduces at each step the loss function for a given increase in the arc length of the coeﬃcient path.",
+      "paragraph_ids": [47900]
+    },
+    {
+      "name": "l1 normalized margin",
+      "type": "metric",
+      "description": "A margin measure for classification models defined as the minimum over training samples of y·f(x) divided by the L1 norm of coefficients, measuring distance to closest training point in L∞ units.",
+      "quote": "Schapire et al. (1998) deﬁne the normalized L1 margin of a ﬁtted model f(x) = Σk αkTk(x) as min[yi·f(xi)]/Σk|αk|. Here the minimum is taken over the training sample, and yi ∈ {−1, +1}. Unlike the L2 margin (4.40) of support vector machines, the L1 margin m(f) measures the distance to the closest training point in L∞ units (maximum coordinate distance).",
+      "paragraph_ids": [47993]
+    },
+    {
+      "name": "importance sampled learning ensemble",
+      "type": "method",
+      "description": "A hybrid ensemble learning approach that generates a finite dictionary of basis functions via randomized sub-sampling and then fits a lasso regularization path to select and weight the most relevant basis functions.",
+      "quote": "Friedman and Popescu (2003) propose a hybrid approach which breaks this process down into two stages: A ﬁnite dictionary TL = {T1(x), T2(x), . . . , TM(x)} of basis functions is induced from the training data; A family of functions fλ(x) is built by ﬁtting a lasso path in this dictionary",
+      "paragraph_ids": [48012, 48013, 48014]
+    },
+    {
+      "name": "characteristic width of sampling scheme",
+      "type": "metric",
+      "description": "A measure σ of the randomness in an ensemble generation sampling scheme, defined as the expected increase in loss Q(γ) above the optimal value Q(γ*), balancing between too narrow (similar basis functions) and too wide (many irrelevant cases).",
+      "quote": "They propose a natural measure of the characteristic width σ of the sampling scheme S, σ = ES[Q(γ) − Q(γ∗)]. σ too narrow suggests too many of the b(x; γm) look alike, and similar to b(x; γ∗); σ too wide implies a large spread in the b(x; γm), but possibly consisting of many irrelevant cases.",
+      "paragraph_ids": [48040, 48041, 48042]
+    },
+    {
+      "name": "stochastic gradient boosting",
+      "type": "method",
+      "description": "A variant of gradient boosting that uses sub-sampling (without replacement) to introduce randomness and improve performance through decorrelation of trees.",
+      "quote": "Stochastic gradient boosting (Friedman, 1999) follows the recipe exactly.",
+      "paragraph_ids": [48057]
+    },
+    {
+      "name": "rule ensemble",
+      "type": "method",
+      "description": "An ensemble method that extracts individual rules from each tree in a collection, creating an over-complete basis of simpler interpretable components that can be post-processed with lasso or other regularization.",
+      "quote": "Here we describe a modiﬁcation of the tree-ensemble method that focuses on individual rules (Friedman and Popescu, 2003). We encountered rules in Section 9.3 in the discussion of the PRIM method. The idea is to enlarge an ensemble of trees by constructing a set of rules from each of the trees in the collection.",
+      "paragraph_ids": [48085]
+    },
+    {
+      "name": "markov random field",
+      "type": "model",
+      "description": "An undirected graphical model where vertices represent random variables and the absence of edges implies conditional independence given other variables, also known as Markov networks.",
+      "quote": "We restrict our discussion to undirected graphical models, also known as Markov random ﬁelds or Markov networks. In these graphs, the absence of an edge between two vertices has a special meaning: the corresponding random variables are conditionally independent, given the other variables.",
+      "paragraph_ids": [48127]
+    },
+    {
+      "name": "pairwise markov independence",
+      "type": "property",
+      "description": "The property in Markov graphs that if two vertices are not adjacent, the corresponding random variables are conditionally independent given all other variables.",
+      "quote": "In a Markov graph G, the absence of an edge implies that the corresponding random variables are conditionally independent given the variables at the other vertices. This is expressed with the following notation: X ⊥ Y | rest if X and Y are not adjacent, where 'rest' refers to all of the other vertices in the graph.",
+      "paragraph_ids": [48160, 48163]
+    },
+    {
+      "name": "global markov property",
+      "type": "property",
+      "description": "The property in Markov graphs that if subgraph C separates subgraphs A and B, then A and B are conditionally independent given C, allowing decomposition into smaller manageable pieces.",
+      "quote": "Separators have the nice property that they break the graph into conditionally independent pieces. Speciﬁcally, in a Markov graph G with subgraphs A, B and C, [if C separates A and B then] A ⊥ B | C. These are known as the global Markov properties of G.",
+      "paragraph_ids": [48163, 48165]
+    },
+    {
+      "name": "clique in graph theory",
+      "type": "definition",
+      "description": "A complete subgraph where all vertices are adjacent to one another; a maximal clique is one where no additional vertices can be added while maintaining the property.",
+      "quote": "A clique is a complete subgraph— a set of vertices that are all adjacent to one another; it is called maximal if it is a clique and no other vertices can be added to it and still yield a clique.",
+      "paragraph_ids": [48165]
+    },
+    {
+      "name": "clique potential",
+      "type": "definition",
+      "description": "Positive functions ψC(·) in the factorization of probability densities over Markov graphs that capture dependence in variables within a clique by scoring certain instances higher than others, though not necessarily being density functions themselves.",
+      "quote": "A probability density function f over a Markov graph G can be can represented as [product over cliques] where C is the set of maximal cliques, and the positive functions ψC(·) are called clique potentials. These are not in general density functions, but rather are aﬃnities that capture the dependence in XC by scoring certain instances xC higher than others.",
+      "paragraph_ids": [48170, 48176]
+    },
+    {
+      "name": "hammersley-clifford theorem",
+      "type": "theorem",
+      "description": "A fundamental result stating that for Markov networks with positive distributions, the representation of probability density as a product of clique potentials is equivalent to the independence properties defined by the graph structure.",
+      "quote": "This result holds for Markov networks G with positive distributions, and is known as the Hammersley-Cliﬀord theorem (Hammersley and Cliﬀord, 1971; Cliﬀord, 1990).",
+      "paragraph_ids": [48181]
+    },
+    {
+      "name": "junction tree algorithm",
+      "type": "algorithm",
+      "description": "An algorithm for computing marginal and low-order probabilities from joint distributions on graphs by decomposing the graph into maximal cliques and accumulating quantities across them, also known as join tree algorithm.",
+      "quote": "A prominent example is the join tree or junction tree algorithm for computing marginal and low order probabilities from the joint distribution on a graph.",
+      "paragraph_ids": [48181]
+    }
+  ],
+  "relationships": [
+    {
+      "source": "random forest",
+      "target": "bagging",
+      "type": "generalizes",
+      "quote": "Random forests (Breiman, 2001) is a substantial modiﬁcation of bagging that builds a large collection of de-correlated trees, and then averages them."
+    },
+    {
+      "source": "random forest",
+      "target": "boosting",
+      "type": "contrasts_with",
+      "quote": "On many problems the performance of random forests is very similar to boosting, and they are simpler to train and tune."
+    },
+    {
+      "source": "out-of-bag error",
+      "target": "cross-validation",
+      "type": "equivalent_to",
+      "quote": "An oob error estimate is almost identical to that obtained by N-fold cross-validation"
+    },
+    {
+      "source": "out-of-bag samples",
+      "target": "random forest",
+      "type": "uses",
+      "quote": "An important feature of random forests is its use of out-of-bag (oob) samples"
+    },
+    {
+      "source": "variable importance via permutation",
+      "target": "out-of-bag samples",
+      "type": "uses",
+      "quote": "Random forests also use the oob samples to construct a diﬀerent variable-importance measure"
+    },
+    {
+      "source": "proximity matrix",
+      "target": "out-of-bag samples",
+      "type": "uses",
+      "quote": "For every tree, any pair of oob observations sharing a terminal node has their proximity increased by one."
+    },
+    {
+      "source": "proximity plot",
+      "target": "proximity matrix",
+      "type": "uses",
+      "quote": "This proximity matrix is then represented in two dimensions using multidimensional scaling"
+    },
+    {
+      "source": "proximity plot",
+      "target": "multidimensional scaling",
+      "type": "uses",
+      "quote": "This proximity matrix is then represented in two dimensions using multidimensional scaling (Section 14.8)."
+    },
+    {
+      "source": "de-correlation effect in random forests",
+      "target": "random forest",
+      "type": "example_of",
+      "quote": "The idea in random forests (algorithm 15.1) is to improve the variance reduction of bagging by reducing the correlation between the trees"
+    },
+    {
+      "source": "random forest",
+      "target": "variance reduction",
+      "type": "uses",
+      "quote": "these improvements in prediction obtained by bagging or random forests are solely a result of variance reduction."
+    },
+    {
+      "source": "random forest as adaptive nearest neighbors",
+      "target": "k-nearest neighbors",
+      "type": "generalizes",
+      "quote": "The random forest classiﬁer has much in common with the k-nearest neighbor classiﬁer (Section 13.3); in fact a weighted version thereof."
+    },
+    {
+      "source": "error-correcting output codes",
+      "target": "bagging",
+      "type": "contrasts_with",
+      "quote": "They also argued that the main beneﬁt of the coding was in variance reduction (as in bagging and random forests)"
+    },
+    {
+      "source": "forward stagewise linear regression",
+      "target": "lasso",
+      "type": "equivalent_to",
+      "quote": "However, a feasible forward stagewise strategy exists that closely approximates the eﬀect of the lasso, and is very similar to boosting"
+    },
+    {
+      "source": "forward stagewise linear regression",
+      "target": "boosting",
+      "type": "equivalent_to",
+      "quote": "Tree boosting (Algorithm 10.3) with shrinkage (10.41) closely resembles Algorithm 16.1, with the learning rate parameter ν corresponding to ε."
+    },
+    {
+      "source": "bet on sparsity principle",
+      "target": "lasso",
+      "type": "uses",
+      "quote": "Use of the L1 penalty follows what we call the 'bet on sparsity' principle for high-dimensional problems"
+    },
+    {
+      "source": "monotone lasso",
+      "target": "lasso",
+      "type": "special_case_of",
+      "quote": "Hastie et al. (2007) show that this inﬁnitesimal forward stagewise algorithm (FS0) ﬁts a monotone version of the lasso"
+    },
+    {
+      "source": "monotone lasso",
+      "target": "forward stagewise linear regression",
+      "type": "equivalent_to",
+      "quote": "Hastie et al. (2007) show that this inﬁnitesimal forward stagewise algorithm (FS0) ﬁts a monotone version of the lasso"
+    },
+    {
+      "source": "l1 normalized margin",
+      "target": "support vector machine",
+      "type": "contrasts_with",
+      "quote": "Unlike the L2 margin (4.40) of support vector machines, the L1 margin m(f) measures the distance to the closest training point in L∞ units"
+    },
+    {
+      "source": "boosting",
+      "target": "l1 normalized margin",
+      "type": "uses",
+      "quote": "The sequence of boosted classiﬁers form an L1-regularized monotone path to a margin-maximizing solution."
+    },
+    {
+      "source": "importance sampled learning ensemble",
+      "target": "lasso",
+      "type": "uses",
+      "quote": "A family of functions fλ(x) is built by ﬁtting a lasso path in this dictionary"
+    },
+    {
+      "source": "importance sampled learning ensemble",
+      "target": "random forest",
+      "type": "generalizes",
+      "quote": "In its simplest form this model could be seen as a way of post-processing boosting or random forests, taking for TL the collection of trees produced by the gradient boosting or random forest algorithms."
+    },
+    {
+      "source": "stochastic gradient boosting",
+      "target": "gradient boosting",
+      "type": "special_case_of",
+      "quote": "Stochastic gradient boosting (Friedman, 1999) follows the recipe exactly."
+    },
+    {
+      "source": "rule ensemble",
+      "target": "decision trees",
+      "type": "uses",
+      "quote": "For each tree Tm in an ensemble T, we can construct its mini-ensemble of rules TmRULE"
+    },
+    {
+      "source": "rule ensemble",
+      "target": "lasso",
+      "type": "uses",
+      "quote": "This is then treated like any other ensemble, and post-processed via the lasso or similar regularized procedure."
+    },
+    {
+      "source": "markov random field",
+      "target": "conditional independence",
+      "type": "uses",
+      "quote": "In these graphs, the absence of an edge between two vertices has a special meaning: the corresponding random variables are conditionally independent, given the other variables."
+    },
+    {
+      "source": "pairwise markov independence",
+      "target": "global markov property",
+      "type": "equivalent_to",
+      "quote": "It turns out that the pairwise and global Markov properties of a graph are equivalent (for graphs with positive distributions)."
+    },
+    {
+      "source": "clique potential",
+      "target": "markov random field",
+      "type": "uses",
+      "quote": "A probability density function f over a Markov graph G can be can represented as [product over cliques with clique potentials]"
+    },
+    {
+      "source": "hammersley-clifford theorem",
+      "target": "markov random field",
+      "type": "proves",
+      "quote": "This result holds for Markov networks G with positive distributions, and is known as the Hammersley-Cliﬀord theorem"
+    },
+    {
+      "source": "junction tree algorithm",
+      "target": "clique",
+      "type": "uses",
+      "quote": "Many of the methods for estimation and computation on graphs ﬁrst decompose the graph into its maximal cliques."
+    }
+  ]
+}

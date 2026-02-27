@@ -1,0 +1,463 @@
+{
+  "concepts": [
+    {
+      "name": "pre-conditioned lasso",
+      "type": "method",
+      "description": "A variant of the lasso where the outcome variable is first denoised using supervised principal components, then the lasso is applied with the denoised outcome as the target. All features are used in the lasso fit, not just those retained in thresholding.",
+      "quote": "In this approach, one first computes the supervised principal component predictor ŷi for each observation in the training set (with the threshold selected by cross-validation). Then we apply the lasso with ŷi as the outcome variable, in place of the usual outcome yi.",
+      "paragraph_ids": [48909, 48917]
+    },
+    {
+      "name": "thresholded partial least squares",
+      "type": "method",
+      "description": "A variant of partial least squares where features are thresholded based on their correlation with the outcome before applying PLS, similar to supervised principal components.",
+      "quote": "Supervised principal components and thresholded PLS work best over a wide range of the number of selected features, with the former showing consistently lower test errors.",
+      "paragraph_ids": [48899]
+    },
+    {
+      "name": "two-sample t-statistic for genes",
+      "type": "metric",
+      "description": "A standardized measure of differential expression between two groups for each gene, computed as the difference in mean expression divided by pooled standard error.",
+      "quote": "To identify informative genes, we construct a two-sample t-statistic for each gene.",
+      "paragraph_ids": [48926, 48930]
+    },
+    {
+      "name": "pooled within-group standard error",
+      "type": "metric",
+      "description": "The standard error estimate for a gene computed by pooling variance estimates across both treatment groups.",
+      "quote": "The quantity sej is the pooled within-group standard error for gene j:",
+      "paragraph_ids": [48930]
+    },
+    {
+      "name": "permutation distribution for hypothesis testing",
+      "type": "method",
+      "description": "A nonparametric approach to computing p-values by permuting sample labels and computing test statistics for each permutation, avoiding distributional assumptions.",
+      "quote": "An attractive alternative approach is to use the permutation distribution, since it avoids assumptions about the distribution of the data. We compute (in principle) all K = (58 choose 14) permutations of the sample labels, and for each permutation k compute the t-statistics tk_j.",
+      "paragraph_ids": [48943, 48949]
+    },
+    {
+      "name": "pooled permutation p-values",
+      "type": "method",
+      "description": "P-values computed by pooling test statistic results across all genes rather than computing separate permutation distributions for each gene, yielding more granular p-values.",
+      "quote": "To exploit the fact that the genes are similar (e.g., measured on the same scale), we can instead pool the results for all genes in computing the p-values.",
+      "paragraph_ids": [48949, 48955]
+    },
+    {
+      "name": "family-wise error rate",
+      "type": "metric",
+      "description": "The probability of making at least one false rejection among all hypothesis tests, a conservative measure of overall error in multiple testing.",
+      "quote": "The family-wise error rate (FWER) is the probability of at least one false rejection, and is a commonly used overall measure of error.",
+      "paragraph_ids": [48958]
+    },
+    {
+      "name": "bonferroni method",
+      "type": "method",
+      "description": "A multiple testing correction that controls family-wise error rate by testing each hypothesis at significance level α/M, where M is the number of tests.",
+      "quote": "One of the simplest approaches to multiple testing is the Bonferroni method. It makes each individual test more stringent, in order to make the FWER equal to at most α: we reject H0j if pj < α/M.",
+      "paragraph_ids": [48958]
+    },
+    {
+      "name": "false discovery rate",
+      "type": "metric",
+      "description": "The expected proportion of false positives among all features called significant, defined as E[V/max(R,1)] where V is false positives and R is total rejections.",
+      "quote": "In the microarray setting, this is the expected proportion of genes that are incorrectly called significant, among the R genes that are called significant.",
+      "paragraph_ids": [48962, 48967]
+    },
+    {
+      "name": "benjamini-hochberg procedure",
+      "type": "method",
+      "description": "A procedure for controlling false discovery rate at level α by ordering p-values and finding the largest index where p(j) ≤ jα/M, then rejecting all hypotheses with smaller p-values.",
+      "quote": "Benjamini and Hochberg (1995) first proposed the notion of false discovery rate, and gave a testing procedure (Algorithm 18.2) whose FDR is bounded by a user-defined level α.",
+      "paragraph_ids": [48967, 48973, 48978]
+    },
+    {
+      "name": "plug-in estimate of false discovery rate",
+      "type": "method",
+      "description": "A direct estimate of FDR computed as the average number of permutation values exceeding a threshold divided by the number of observed values exceeding that threshold.",
+      "quote": "The total number of permutation values |tk_j| equal or greater than 4.101 is 1518, for an average of 1518/1000 = 1.518 per permutation. Thus a direct estimate of the false discovery rate is FDR̂ = 1.518/11 ≈ 14%.",
+      "paragraph_ids": [48998, 48999]
+    },
+    {
+      "name": "significance analysis of microarrays",
+      "type": "method",
+      "description": "A method for computing asymmetric significance cutpoints by plotting ordered test statistics against expected order statistics from permutations and finding where points leave a band of width Δ from the 45° line.",
+      "quote": "The significance analysis of microarrays (SAM) approach offers a way of doing this. The basis of the SAM method is shown in Figure 18.20. On the vertical axis we have plotted the ordered test statistics t(1) ≤ t(2) ≤ ... ≤ t(M), while the horizontal axis shows the expected order statistics from the permutations of the data.",
+      "paragraph_ids": [49007]
+    },
+    {
+      "name": "asymmetric cutpoints in multiple testing",
+      "type": "technique",
+      "description": "Using different significance thresholds for positive and negative test statistics when most differentially expressed features change in one direction.",
+      "quote": "In the testing methods described above, we used the absolute value of the test statistic tj, and hence applied the same cut-points to both positive and negative values of the statistic. In some experiments, it might happen that most or all of the differentially expressed genes change in the positive direction (or all in the negative direction). For this situation it is advantageous to derive separate cut-points for the two cases.",
+      "paragraph_ids": [49007]
+    },
+    {
+      "name": "positive false discovery rate",
+      "type": "metric",
+      "description": "A variant of FDR defined as E[V/R | R > 0], the expected false discovery rate conditional on making at least one rejection.",
+      "quote": "First we need to define the positive false discovery rate (pFDR) as",
+      "paragraph_ids": [49023]
+    },
+    {
+      "name": "mixture model for hypothesis testing",
+      "type": "technique",
+      "description": "A Bayesian framework where each test statistic comes from either the null distribution F0 with probability π0 or the alternative distribution F1 with probability 1-π0.",
+      "quote": "We define a random variable Zj which equals 0 if the jth null hypothesis is true, and 1 otherwise. We assume that each pair (tj, Zj) are i.i.d random variables with",
+      "paragraph_ids": [49027, 49029]
+    },
+    {
+      "name": "q-value",
+      "type": "metric",
+      "description": "The smallest false discovery rate over all rejection regions that would reject a given test statistic, providing a local measure of significance for each feature.",
+      "quote": "The q-value (Storey, 2003) of a test statistic tj is defined to be the smallest FDR over all rejection regions that reject tj. That is, for symmetric rejection regions, the q-value for tj = 2 is defined to be the FDR for the rejection region Γ = {-(∞, -2) ∪ (2, ∞)}.",
+      "paragraph_ids": [49034]
+    },
+    {
+      "name": "local false discovery rate",
+      "type": "metric",
+      "description": "The positive FDR for an infinitesimal rejection region surrounding a specific test statistic value, providing the most local measure of significance.",
+      "quote": "The local false discovery rate (Efron and Tibshirani, 2002) at t = t0 is defined to be",
+      "paragraph_ids": [49034]
+    },
+    {
+      "name": "supervised principal components for feature selection",
+      "type": "method",
+      "description": "A method that thresholds features based on univariate association with outcome, then performs principal components analysis on retained features and uses components in supervised learning.",
+      "quote": "Supervised principal components can yield lower test errors than competing methods, as shown in Figure 18.16. However, it does not always produce a sparse model involving only a small number of features (genes).",
+      "paragraph_ids": [48901]
+    },
+    {
+      "name": "denoising the outcome variable",
+      "type": "technique",
+      "description": "Using a first-stage predictor to reduce noise in the outcome before applying a second-stage method, reducing overfitting with many noisy features.",
+      "quote": "The idea is that by first denoising the outcome variable, the lasso should not be as adversely affected by the large number of noise features.",
+      "paragraph_ids": [48917]
+    },
+    {
+      "name": "feature assessment without prediction models",
+      "type": "technique",
+      "description": "Assessing significance of individual features for scientific understanding rather than building multivariate predictive models, focusing on hypothesis testing.",
+      "quote": "Thus our goal is to assess the significance of individual features. This assessment is usually done without the use of a multivariate predictive model like those in the first part of this chapter.",
+      "paragraph_ids": [48921]
+    },
+    {
+      "name": "type-I error rate",
+      "type": "metric",
+      "description": "The probability of falsely rejecting a true null hypothesis, typically set at α = 0.05 for individual tests.",
+      "quote": "This test has type-I error equal to α; that is, the probability of falsely rejecting H0j is α.",
+      "paragraph_ids": [48958]
+    },
+    {
+      "name": "positive dependence between tests",
+      "type": "property",
+      "description": "A correlation structure where Pr(Aj|Ak) > Pr(Aj), meaning tests are more likely to reject together, which reduces family-wise error rate below the independent case.",
+      "quote": "On the other hand, if the tests have positive dependence, that is Pr(Aj|Ak) > Pr(Aj), then the FWER will be less than (1 - (1 - α)^M). Positive dependence between tests often occurs in practice, in particular in genomic studies.",
+      "paragraph_ids": [48958]
+    },
+    {
+      "name": "bh rejection threshold",
+      "type": "metric",
+      "description": "The p-value cutoff p(L) determined by the Benjamini-Hochberg procedure, where L is the largest index satisfying p(j) ≤ jα/M.",
+      "quote": "Reject all hypotheses H0j for which pj ≤ p(L), the BH rejection threshold.",
+      "paragraph_ids": [48978]
+    },
+    {
+      "name": "expected order statistics from permutations",
+      "type": "metric",
+      "description": "The average of ordered test statistics across permutations, denoted ť(j) = (1/K)Σk tk(j), used as null reference in SAM procedure.",
+      "quote": "On the vertical axis we have plotted the ordered test statistics t(1) ≤ t(2) ≤ ... ≤ t(M), while the horizontal axis shows the expected order statistics from the permutations of the data: ť(j) = (1/K) ΣK k=1 tk(j)",
+      "paragraph_ids": [49007]
+    },
+    {
+      "name": "sam tuning parameter delta",
+      "type": "technique",
+      "description": "The width parameter Δ in SAM that defines parallel bands around the 45° line, controlling the distance at which genes are called significant.",
+      "quote": "Two lines are drawn, parallel to the 45° line, Δ units away. Starting at the origin and moving to the right, we find the first place that the genes leave the band. This defines the upper cutpoint Chi and all genes beyond that point are called significant.",
+      "paragraph_ids": [49007]
+    },
+    {
+      "name": "bayesian interpretation of fdr",
+      "type": "technique",
+      "description": "Under a mixture model, the pFDR equals the posterior probability that the null hypothesis is true given the test statistic falls in the rejection region.",
+      "quote": "Hence under the mixture model (18.51), the pFDR is the posterior probability that the null hypothesis it true, given that test statistic falls in the rejection region for the test; that is, given that we reject the null hypothesis",
+      "paragraph_ids": [49034]
+    },
+    {
+      "name": "radiation sensitivity gene expression study",
+      "type": "example",
+      "description": "A microarray study with 58 patient samples (44 normal, 14 radiation-sensitive) and 12,625 genes, used to identify genes associated with adverse radiation response.",
+      "quote": "Consider, for example, the microarray data in Table 18.4, taken from a study on the sensitivity of cancer patients to ionizing radiation treatment (Rieger et al., 2004). Each row consists of the expression of genes in 58 patient samples: 44 samples were from patients with a normal reaction, and 14 from patients who had a severe reaction to radiation.",
+      "paragraph_ids": [48926]
+    },
+    {
+      "name": "diagonal linear discriminant analysis for high dimensions",
+      "type": "method",
+      "description": "A variant of LDA that uses a diagonal covariance matrix, appropriate when p >> N and features can be assumed independent.",
+      "quote": "Levina (2002) does some mathematical analysis comparing diagonal LDA to full LDA, as p, N → ∞ with p > N. She shows that with reasonable assumptions diagonal LDA has a lower asymptotic error rate than full LDA.",
+      "paragraph_ids": [49038]
+    },
+    {
+      "name": "nearest shrunken centroids classifier",
+      "type": "method",
+      "description": "A classification method that shrinks class centroids toward the overall mean, effectively performing feature selection by setting some centroid components to zero.",
+      "quote": "Tibshirani et al. (2001a) and Tibshirani et al. (2003) proposed the nearest shrunken-centroid classifier.",
+      "paragraph_ids": [49038]
+    },
+    {
+      "name": "fused lasso",
+      "type": "method",
+      "description": "A variant of lasso that penalizes both absolute values of coefficients and differences between adjacent coefficients, useful for ordered features like genomic data.",
+      "quote": "The fused lasso was proposed by Tibshirani et al. (2005)",
+      "paragraph_ids": [49038]
+    },
+    {
+      "name": "elastic net",
+      "type": "method",
+      "description": "A regularization method combining L1 (lasso) and L2 (ridge) penalties, providing both feature selection and grouping of correlated features.",
+      "quote": "while Zou and Hastie (2005) introduced the elastic net.",
+      "paragraph_ids": [49038]
+    }
+  ],
+  "relationships": [
+    {
+      "source": "pre-conditioned lasso",
+      "target": "supervised principal components",
+      "type": "uses",
+      "quote": "In this approach, one first computes the supervised principal component predictor ŷi for each observation in the training set (with the threshold selected by cross-validation). Then we apply the lasso with ŷi as the outcome variable, in place of the usual outcome yi."
+    },
+    {
+      "source": "pre-conditioned lasso",
+      "target": "lasso",
+      "type": "special_case_of",
+      "quote": "Then we apply the lasso with ŷi as the outcome variable, in place of the usual outcome yi."
+    },
+    {
+      "source": "pre-conditioned lasso",
+      "target": "denoising the outcome variable",
+      "type": "uses",
+      "quote": "The idea is that by first denoising the outcome variable, the lasso should not be as adversely affected by the large number of noise features."
+    },
+    {
+      "source": "thresholded partial least squares",
+      "target": "supervised principal components",
+      "type": "contrasts_with",
+      "quote": "Supervised principal components and thresholded PLS work best over a wide range of the number of selected features, with the former showing consistently lower test errors."
+    },
+    {
+      "source": "supervised principal components",
+      "target": "lasso",
+      "type": "contrasts_with",
+      "quote": "Although a linear model in the first 50 features is optimal, the lasso (green) is adversely affected by the large number of noisy features, and starts overfitting when far fewer are in the model."
+    },
+    {
+      "source": "pre-conditioned lasso",
+      "target": "supervised principal components",
+      "type": "contrasts_with",
+      "quote": "Figure 18.17 shows that pre-conditioning (purple curve) has been successful here, yielding much lower test error than the usual lasso, and as low (in this case) as for supervised principal components. It also can achieve this using less features."
+    },
+    {
+      "source": "two-sample t-statistic for genes",
+      "target": "pooled within-group standard error",
+      "type": "uses",
+      "quote": "The quantity sej is the pooled within-group standard error for gene j:"
+    },
+    {
+      "source": "permutation distribution for hypothesis testing",
+      "target": "type-I error rate",
+      "type": "uses",
+      "quote": "An attractive alternative approach is to use the permutation distribution, since it avoids assumptions about the distribution of the data."
+    },
+    {
+      "source": "pooled permutation p-values",
+      "target": "permutation distribution for hypothesis testing",
+      "type": "special_case_of",
+      "quote": "To exploit the fact that the genes are similar (e.g., measured on the same scale), we can instead pool the results for all genes in computing the p-values."
+    },
+    {
+      "source": "bonferroni method",
+      "target": "family-wise error rate",
+      "type": "uses",
+      "quote": "One of the simplest approaches to multiple testing is the Bonferroni method. It makes each individual test more stringent, in order to make the FWER equal to at most α"
+    },
+    {
+      "source": "false discovery rate",
+      "target": "family-wise error rate",
+      "type": "contrasts_with",
+      "quote": "A different approach to multiple testing does not try to control the FWER, but focuses instead on the proportion of falsely significant genes."
+    },
+    {
+      "source": "benjamini-hochberg procedure",
+      "target": "false discovery rate",
+      "type": "uses",
+      "quote": "Benjamini and Hochberg (1995) first proposed the notion of false discovery rate, and gave a testing procedure (Algorithm 18.2) whose FDR is bounded by a user-defined level α."
+    },
+    {
+      "source": "plug-in estimate of false discovery rate",
+      "target": "benjamini-hochberg procedure",
+      "type": "equivalent_to",
+      "quote": "This correspondence between the BH method and the plug-in estimate is not a coincidence. Exercise 18.17 shows that they are equivalent in general."
+    },
+    {
+      "source": "plug-in estimate of false discovery rate",
+      "target": "permutation distribution for hypothesis testing",
+      "type": "uses",
+      "quote": "The total number of permutation values |tk_j| equal or greater than 4.101 is 1518, for an average of 1518/1000 = 1.518 per permutation."
+    },
+    {
+      "source": "significance analysis of microarrays",
+      "target": "asymmetric cutpoints in multiple testing",
+      "type": "uses",
+      "quote": "The significance analysis of microarrays (SAM) approach offers a way of doing this."
+    },
+    {
+      "source": "significance analysis of microarrays",
+      "target": "expected order statistics from permutations",
+      "type": "uses",
+      "quote": "On the vertical axis we have plotted the ordered test statistics t(1) ≤ t(2) ≤ ... ≤ t(M), while the horizontal axis shows the expected order statistics from the permutations of the data"
+    },
+    {
+      "source": "significance analysis of microarrays",
+      "target": "plug-in estimate of false discovery rate",
+      "type": "uses",
+      "quote": "Thus each value of the tuning parameter Δ defines upper and lower cutpoints, and the plug-in estimate F̂DR for each of these cutpoints is estimated as before."
+    },
+    {
+      "source": "positive false discovery rate",
+      "target": "false discovery rate",
+      "type": "special_case_of",
+      "quote": "First we need to define the positive false discovery rate (pFDR) as"
+    },
+    {
+      "source": "bayesian interpretation of fdr",
+      "target": "positive false discovery rate",
+      "type": "uses",
+      "quote": "Hence under the mixture model (18.51), the pFDR is the posterior probability that the null hypothesis it true, given that test statistic falls in the rejection region"
+    },
+    {
+      "source": "bayesian interpretation of fdr",
+      "target": "mixture model for hypothesis testing",
+      "type": "uses",
+      "quote": "Suppose that M identical simple hypothesis tests are performed with the i.i.d. statistics t1, ..., tM and rejection region Γ. We define a random variable Zj which equals 0 if the jth null hypothesis is true, and 1 otherwise."
+    },
+    {
+      "source": "q-value",
+      "target": "false discovery rate",
+      "type": "uses",
+      "quote": "The q-value (Storey, 2003) of a test statistic tj is defined to be the smallest FDR over all rejection regions that reject tj."
+    },
+    {
+      "source": "local false discovery rate",
+      "target": "positive false discovery rate",
+      "type": "special_case_of",
+      "quote": "This is the (positive) FDR for an infinitesimal rejection region surrounding the value tj = t0."
+    },
+    {
+      "source": "q-value",
+      "target": "local false discovery rate",
+      "type": "contrasts_with",
+      "quote": "The q-value for tj = 5 will be smaller than that for tj = 2, reflecting the fact that tj = 5 is more significant than tj = 2."
+    },
+    {
+      "source": "supervised principal components for feature selection",
+      "target": "lasso",
+      "type": "contrasts_with",
+      "quote": "How do the test errors of the two methods compare on the simulated example of the last section? Figure 18.17 shows the test errors for one realization from model (18.37) for the lasso, supervised principal components, and the pre-conditioned lasso"
+    },
+    {
+      "source": "pre-conditioned lasso",
+      "target": "supervised principal components for feature selection",
+      "type": "generalizes",
+      "quote": "Pre-conditioning can be applied in a variety of settings, using initial estimates other than supervised principal components and post-processors other than the lasso."
+    },
+    {
+      "source": "feature assessment without prediction models",
+      "target": "supervised principal components",
+      "type": "contrasts_with",
+      "quote": "Thus our goal is to assess the significance of individual features. This assessment is usually done without the use of a multivariate predictive model like those in the first part of this chapter."
+    },
+    {
+      "source": "bonferroni method",
+      "target": "type-I error rate",
+      "type": "uses",
+      "quote": "One of the simplest approaches to multiple testing is the Bonferroni method. It makes each individual test more stringent, in order to make the FWER equal to at most α: we reject H0j if pj < α/M."
+    },
+    {
+      "source": "family-wise error rate",
+      "target": "type-I error rate",
+      "type": "generalizes",
+      "quote": "Let Aj be the event that H0j is falsely rejected; by definition Pr(Aj) = α. The family-wise error rate (FWER) is the probability of at least one false rejection"
+    },
+    {
+      "source": "false discovery rate",
+      "target": "type-I error rate",
+      "type": "contrasts_with",
+      "quote": "We must remember that the FDR is not the same as type-I error, for which 0.05 is the customary choice."
+    },
+    {
+      "source": "positive dependence between tests",
+      "target": "family-wise error rate",
+      "type": "uses",
+      "quote": "if the tests have positive dependence, that is Pr(Aj|Ak) > Pr(Aj), then the FWER will be less than (1 - (1 - α)^M)"
+    },
+    {
+      "source": "bh rejection threshold",
+      "target": "benjamini-hochberg procedure",
+      "type": "uses",
+      "quote": "Reject all hypotheses H0j for which pj ≤ p(L), the BH rejection threshold."
+    },
+    {
+      "source": "sam tuning parameter delta",
+      "target": "significance analysis of microarrays",
+      "type": "uses",
+      "quote": "Two lines are drawn, parallel to the 45° line, Δ units away."
+    },
+    {
+      "source": "diagonal linear discriminant analysis for high dimensions",
+      "target": "lasso",
+      "type": "contrasts_with",
+      "quote": "Levina (2002) does some mathematical analysis comparing diagonal LDA to full LDA, as p, N → ∞ with p > N."
+    },
+    {
+      "source": "nearest shrunken centroids classifier",
+      "target": "supervised principal components",
+      "type": "contrasts_with",
+      "quote": "Tibshirani et al. (2001a) and Tibshirani et al. (2003) proposed the nearest shrunken-centroid classifier."
+    },
+    {
+      "source": "fused lasso",
+      "target": "lasso",
+      "type": "special_case_of",
+      "quote": "The fused lasso was proposed by Tibshirani et al. (2005)"
+    },
+    {
+      "source": "elastic net",
+      "target": "lasso",
+      "type": "generalizes",
+      "quote": "while Zou and Hastie (2005) introduced the elastic net."
+    },
+    {
+      "source": "elastic net",
+      "target": "ridge regression",
+      "type": "generalizes",
+      "quote": "while Zou and Hastie (2005) introduced the elastic net."
+    },
+    {
+      "source": "two-sample t-statistic for genes",
+      "target": "feature assessment without prediction models",
+      "type": "uses",
+      "quote": "To identify informative genes, we construct a two-sample t-statistic for each gene."
+    },
+    {
+      "source": "radiation sensitivity gene expression study",
+      "target": "two-sample t-statistic for genes",
+      "type": "example_of",
+      "quote": "Consider, for example, the microarray data in Table 18.4, taken from a study on the sensitivity of cancer patients to ionizing radiation treatment"
+    },
+    {
+      "source": "benjamini-hochberg procedure",
+      "target": "bonferroni method",
+      "type": "contrasts_with",
+      "quote": "The Bonferroni method can be useful if M is relatively small, but for large M it is too conservative, that is, it calls too few genes significant."
+    }
+  ]
+}

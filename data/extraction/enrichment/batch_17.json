@@ -1,0 +1,3381 @@
+{
+  "batch_number": 17,
+  "concepts": [
+    {
+      "id": 374,
+      "name": "gradient boosted models",
+      "description": "A generalization of tree boosting that fits additive models using any differentiable loss function, providing robustness and accuracy for data mining.",
+      "category": "multi_model",
+      "subcategory": "aggregating",
+      "existing_quote": "Gradient boosting is a generalization of tree boosting that allows optimization of any differentiable loss function.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 29982,
+          "text": "352\n10. Boosting and Additive Trees",
+          "type": "narrative",
+          "page": 370
+        },
+        {
+          "id": 29983,
+          "text": "between joint values of the input variables and the resulting predicted re-\nsponse value. Thus, black box methods such as neural networks, which can\nbe quite useful in purely predictive settings such as pattern recognition,\nare far less useful for data mining.\nThese requirements of speed, interpretability and the messy nature of\nthe data sharply limit the usefulness of most learning procedures as o\ufb00-\nthe-shelf methods for data mining. An \u201co\ufb00-the-shelf\u201d method is one that\ncan be directly applied to the data without requiring a great deal of time-\nconsuming data preprocessing or careful tuning of the learning procedure.\nOf all the well-known learning methods, decision trees come closest to\nmeeting the requirements for serving as an o\ufb00-the-shelf procedure for data\nmining. They are relatively fast to construct and they produce interpretable\nmodels (if the trees are small). As discussed in Section 9.2, they naturally\nincorporate mixtures of numeric and categorical predictor variables and\nmissing values. They are invariant under (strictly monotone) transforma-\ntions of the individual predictors. As a result, scaling and/or more general\ntransformations are not an issue, and they are immune to the e\ufb00ects of pre-\ndictor outliers. They perform internal feature selection as an integral part\nof the procedure. They are thereby resistant, if not completely immune,\nto the inclusion of many irrelevant predictor variables. These properties of\ndecision trees are largely the reason that they have emerged as the most\npopular learning method for data mining.\nTrees have one aspect that prevents them from being the ideal tool for\npredictive learning, namely inaccuracy. They seldom provide predictive ac-\ncuracy comparable to the best that can be achieved with the data at hand.\nAs seen in Section 10.1, boosting decision trees improves their accuracy,\noften dramatically. At the same time it maintains most of their desirable\nproperties for data mining. Some advantages of trees that are sacri\ufb01ced by\nboosting are speed, interpretability, and, for AdaBoost, robustness against\noverlapping class distributions and especially mislabeling of the training\ndata. A gradient boosted model (GBM) is a generalization of tree boosting\nthat attempts to mitigate these problems, so as to produce an accurate and\ne\ufb00ective o\ufb00-the-shelf procedure for data mining.",
+          "type": "narrative",
+          "page": 370
+        },
+        {
+          "id": 29985,
+          "text": "Before we go into the details of gradient boosting, we demonstrate its abili-\nties on a two-class classi\ufb01cation problem. The spam data are introduced in\nChapter 1, and used as an example for many of the procedures in Chapter 9\n(Sections 9.1.2, 9.2.5, 9.3.1 and 9.4.1).\nApplying gradient boosting to these data resulted in a test error rate of\n4.5%, using the same test set as was used in Section 9.1.2. By comparison,\nan additive logistic regression achieved 5.5%, a CART tree fully grown and",
+          "type": "narrative",
+          "page": 370
+        },
+        {
+          "id": 29810,
+          "text": "\u2022 We develop a class of gradient boosted models (GBMs), for boosting\ntrees with any loss function (Section 10.10).",
+          "type": "narrative",
+          "page": 359
+        },
+        {
+          "id": 30133,
+          "text": "The algorithm for classi\ufb01cation is similar. Lines 2(a)\u2013(d) are repeated\nK times at each iteration m, once for each class using (10.38). The result\nat line 3 is K di\ufb00erent (coupled) tree expansions fkM(x), k = 1, 2, . . . , K.\nThese produce probabilities via (10.21) or do classi\ufb01cation as in (10.20).\nDetails are given in Exercise 10.9. Two basic tuning parameters are the\nnumber of iterations M and the sizes of each of the constituent trees\nJm, m = 1, 2, . . . , M.\nThe original implementation of this algorithm was called MART for\n\u201cmultiple additive regression trees,\u201d and was referred to in the \ufb01rst edi-\ntion of this book. Many of the \ufb01gures in this chapter were produced by\nMART. Gradient boosting as described here is implemented in the R gbm\npackage (Ridgeway, 1999, \u201cGradient Boosted Models\u201d), and is freely avail-\nable. The gbm package is used in Section 10.14.2, and extensively in Chap-\nters 16 and 15. Another R implementation of boosting is mboost (Hothorn\nand B\u00a8uhlmann, 2006). A commercial implementation of gradient boost-\ning/MART called TreeNet\u00ae is available from Salford Systems, Inc.",
+          "type": "narrative",
+          "page": 379
+        }
+      ]
+    },
+    {
+      "id": 375,
+      "name": "partial dependence plot",
+      "description": "A visualization showing the marginal effect of selected predictors on the predicted outcome, averaging over the other predictors to reveal predictor contributions.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "One way to define the average or partial dependence of f(X) on XS is the marginal average of f.",
+      "existing_formula": "\\bar{f}_S(X_S) = E_{X_C}[f(X_S, X_C)] = \\int f(X_S, X_C) p_C(X_C) dX_C",
+      "paragraphs": [
+        {
+          "id": 29987,
+          "text": "pruned by cross-validation 8.7%, and MARS 5.5%. The standard error of\nthese estimates is around 0.6%, although gradient boosting is signi\ufb01cantly\nbetter than all of them using the McNemar test (Exercise 10.6).\nIn Section 10.13 below we develop a relative importance measure for\neach predictor, as well as a partial dependence plot describing a predictor\u2019s\ncontribution to the \ufb01tted model. We now illustrate these for the spam data.\nFigure 10.6 displays the relative importance spectrum for all 57 predictor\nvariables. Clearly some predictors are more important than others in sep-\narating spam from email. The frequencies of the character strings !, $, hp,\nand remove are estimated to be the four most relevant predictor variables.\nAt the other end of the spectrum, the character strings 857, 415, table, and\n3d have virtually no relevance.\nThe quantity being modeled here is the log-odds of spam versus email",
+          "type": "narrative",
+          "page": 371
+        },
+        {
+          "id": 29988,
+          "text": "f(x) = log Pr(spam|x)",
+          "type": "narrative",
+          "page": 371
+        },
+        {
+          "id": 29989,
+          "text": "Pr(email|x)\n(10.24)",
+          "type": "narrative",
+          "page": 371
+        },
+        {
+          "id": 29990,
+          "text": "(see Section 10.13 below). Figure 10.7 shows the partial dependence of the\nlog-odds on selected important predictors, two positively associated with\nspam (! and remove), and two negatively associated (edu and hp). These\nparticular dependencies are seen to be essentially monotonic.There is a\ngeneral agreement with the corresponding functions found by the additive\nlogistic regression model; see Figure 9.1 on page 303.\nRunning a gradient boosted model on these data with J = 2 terminal-\nnode trees produces a purely additive (main e\ufb00ects) model for the log-\nodds, with a corresponding error rate of 4.7%, as compared to 4.5% for the\nfull gradient boosted model (with J = 5 terminal-node trees). Although\nnot signi\ufb01cant, this slightly higher error rate suggests that there may be\ninteractions among some of the important predictor variables. This can\nbe diagnosed through two-variable partial dependence plots. Figure 10.8\nshows one of the several such plots displaying strong interaction e\ufb00ects.\nOne sees that for very low frequencies of hp, the log-odds of spam are\ngreatly increased. For high frequencies of hp, the log-odds of spam tend to\nbe much lower and roughly constant as a function of !. As the frequency\nof hp decreases, the functional relationship with ! strengthens.",
+          "type": "narrative",
+          "page": 371
+        },
+        {
+          "id": 29992,
+          "text": "Regression and classi\ufb01cation trees are discussed in detail in Section 9.2.\nThey partition the space of all joint predictor variable values into disjoint\nregions Rj, j = 1, 2, . . . , J, as represented by the terminal nodes of the tree.\nA constant \u03b3j is assigned to each such region and the predictive rule is",
+          "type": "narrative",
+          "page": 371
+        },
+        {
+          "id": 29993,
+          "text": "x \u2208Rj \u21d2f(x) = \u03b3j.",
+          "type": "narrative",
+          "page": 371
+        },
+        {
+          "id": 29994,
+          "text": "354\n10. Boosting and Additive Trees",
+          "type": "narrative",
+          "page": 372
+        },
+        {
+          "id": 29995,
+          "text": "!\n$\nhp\nremove\nfree\nCAPAVE\nyour\nCAPMAX\ngeorge\nCAPTOT\nedu\nyou\nour\nmoney\nwill\n1999\nbusiness\nre\n(\nreceive\ninternet\n000\nemail\nmeeting\n;\n650\nover\nmail\npm\npeople\ntechnology\nhpl\nall\norder\naddress\nmake\nfont\nproject\ndata\noriginal\nreport\nconference\nlab\n[\ncredit\nparts\n#\n85\ntable\ncs\ndirect\n415\n857\ntelnet\nlabs\naddresses\n3d",
+          "type": "narrative",
+          "page": 372
+        },
+        {
+          "id": 29996,
+          "text": "0\n20\n40\n60\n80\n100",
+          "type": "equation",
+          "page": 372
+        },
+        {
+          "id": 29997,
+          "text": "Relative Importance",
+          "type": "narrative",
+          "page": 372
+        },
+        {
+          "id": 30000,
+          "text": "!",
+          "type": "equation",
+          "page": 373
+        },
+        {
+          "id": 30001,
+          "text": "Partial Dependence",
+          "type": "narrative",
+          "page": 373
+        },
+        {
+          "id": 30002,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 373
+        },
+        {
+          "id": 30003,
+          "text": "-0.2 0.0 0.2 0.4 0.6 0.8 1.0",
+          "type": "equation",
+          "page": 373
+        },
+        {
+          "id": 30004,
+          "text": "remove",
+          "type": "narrative",
+          "page": 373
+        },
+        {
+          "id": 30005,
+          "text": "Partial Dependence",
+          "type": "narrative",
+          "page": 373
+        },
+        {
+          "id": 30006,
+          "text": "0.0\n0.2\n0.4\n0.6",
+          "type": "equation",
+          "page": 373
+        },
+        {
+          "id": 30007,
+          "text": "-0.2 0.0 0.2 0.4 0.6 0.8 1.0",
+          "type": "equation",
+          "page": 373
+        },
+        {
+          "id": 30008,
+          "text": "edu",
+          "type": "narrative",
+          "page": 373
+        },
+        {
+          "id": 30009,
+          "text": "Partial Dependence",
+          "type": "narrative",
+          "page": 373
+        },
+        {
+          "id": 30010,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 373
+        },
+        {
+          "id": 30011,
+          "text": "-1.0\n-0.6\n-0.2 0.0 0.2",
+          "type": "equation",
+          "page": 373
+        },
+        {
+          "id": 30012,
+          "text": "hp",
+          "type": "narrative",
+          "page": 373
+        },
+        {
+          "id": 30013,
+          "text": "Partial Dependence",
+          "type": "narrative",
+          "page": 373
+        },
+        {
+          "id": 30014,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 373
+        },
+        {
+          "id": 30015,
+          "text": "-1.0\n-0.6\n-0.2 0.0 0.2",
+          "type": "equation",
+          "page": 373
+        },
+        {
+          "id": 30017,
+          "text": "0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 373
+        },
+        {
+          "id": 30018,
+          "text": "0.2",
+          "type": "equation",
+          "page": 373
+        },
+        {
+          "id": 30019,
+          "text": "0.4",
+          "type": "equation",
+          "page": 373
+        },
+        {
+          "id": 30020,
+          "text": "0.6",
+          "type": "equation",
+          "page": 373
+        }
+      ]
+    },
+    {
+      "id": 376,
+      "name": "steepest descent",
+      "description": "An optimization method that chooses the increment vector as negative of the gradient times a scalar step size, moving in the direction of most rapid decrease.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "Steepest descent chooses hm = \u2212\u03c1mgm where \u03c1m is a scalar and gm \u2208 IRN is the gradient of L(f) evaluated at f = fm\u22121.",
+      "existing_formula": "f_m = f_{m-1} - \\rho_m g_m",
+      "paragraphs": [
+        {
+          "id": 30070,
+          "text": "358\n10. Boosting and Additive Trees",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30071,
+          "text": "absolute loss it is just the median of the residuals in each respective region.\nFor the other criteria fast iterative algorithms exist for solving (10.30),\nand usually their faster \u201csingle-step\u201d approximations are adequate. The\nproblem is tree induction. Simple fast algorithms do not exist for solving\n(10.29) for these more general loss criteria, and approximations like (10.27)\nbecome essential.",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30073,
+          "text": "Fast approximate algorithms for solving (10.29) with any di\ufb00erentiable loss\ncriterion can be derived by analogy to numerical optimization. The loss in\nusing f(x) to predict y on the training data is",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30074,
+          "text": "L(f) =",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30075,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30076,
+          "text": "i=1\nL(yi, f(xi)).\n(10.33)",
+          "type": "equation",
+          "page": 376
+        },
+        {
+          "id": 30077,
+          "text": "The goal is to minimize L(f) with respect to f, where here f(x) is con-\nstrained to be a sum of trees (10.28). Ignoring this constraint, minimizing\n(10.33) can be viewed as a numerical optimization",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30078,
+          "text": "\u02c6f = arg min\nf\nL(f),\n(10.34)",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30079,
+          "text": "where the \u201cparameters\u201d f \u2208IRN are the values of the approximating func-\ntion f(xi) at each of the N data points xi:",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30080,
+          "text": "f = {f(x1), f(x2)), . . . , f(xN)}.",
+          "type": "equation",
+          "page": 376
+        },
+        {
+          "id": 30081,
+          "text": "Numerical optimization procedures solve (10.34) as a sum of component\nvectors",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30082,
+          "text": "fM =",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30083,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30084,
+          "text": "m=0\nhm ,\nhm \u2208IRN,",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30085,
+          "text": "where f0 = h0 is an initial guess, and each successive fm is induced based\non the current parameter vector fm\u22121, which is the sum of the previously\ninduced updates. Numerical optimization methods di\ufb00er in their prescrip-\ntions for computing each increment vector hm (\u201cstep\u201d).",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30087,
+          "text": "Steepest descent chooses hm = \u2212\u03c1mgm where \u03c1m is a scalar and gm \u2208IRN",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30088,
+          "text": "is the gradient of L(f) evaluated at f = fm\u22121. The components of the\ngradient gm are",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30089,
+          "text": "gim =\n\n\u2202L(yi, f(xi))",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30090,
+          "text": "\u2202f(xi)",
+          "type": "narrative",
+          "page": 376
+        },
+        {
+          "id": 30091,
+          "text": "f(xi)=fm\u22121(xi)\n(10.35)",
+          "type": "narrative",
+          "page": 376
+        }
+      ]
+    },
+    {
+      "id": 377,
+      "name": "gradient boosting",
+      "description": "A boosting technique that uses the gradient of the loss function to fit trees at each iteration, generalizing boosting to arbitrary differentiable loss functions.",
+      "category": "multi_model",
+      "subcategory": "aggregating",
+      "existing_quote": "A possible resolution to this dilemma is to induce a tree T(x; \u0398m) at the mth iteration whose predictions tm are as close as possible to the negative gradient.",
+      "existing_formula": "\\tilde{\\theta}_m = \\arg\\min_{\\theta} \\sum_{i=1}^N \\left(-g_{im} - T(x_i; \\theta)\\right)^2",
+      "paragraphs": [
+        {
+          "id": 30093,
+          "text": "The step length \u03c1m is the solution to",
+          "type": "narrative",
+          "page": 377
+        },
+        {
+          "id": 30094,
+          "text": "\u03c1m = arg min\n\u03c1 L(fm\u22121 \u2212\u03c1gm).\n(10.36)",
+          "type": "narrative",
+          "page": 377
+        },
+        {
+          "id": 30095,
+          "text": "The current solution is then updated",
+          "type": "narrative",
+          "page": 377
+        },
+        {
+          "id": 30096,
+          "text": "fm = fm\u22121 \u2212\u03c1mgm",
+          "type": "narrative",
+          "page": 377
+        },
+        {
+          "id": 30097,
+          "text": "and the process repeated at the next iteration. Steepest descent can be\nviewed as a very greedy strategy, since \u2212gm is the local direction in IRN",
+          "type": "narrative",
+          "page": 377
+        },
+        {
+          "id": 30098,
+          "text": "for which L(f) is most rapidly decreasing at f = fm\u22121.",
+          "type": "narrative",
+          "page": 377
+        },
+        {
+          "id": 30100,
+          "text": "Forward stagewise boosting (Algorithm 10.2) is also a very greedy strategy.\nAt each step the solution tree is the one that maximally reduces (10.29),\ngiven the current model fm\u22121 and its \ufb01ts fm\u22121(xi). Thus, the tree predic-\ntions T(xi; \u0398m) are analogous to the components of the negative gradient\n(10.35). The principal di\ufb00erence between them is that the tree compo-\nnents tm = (T(x1; \u0398m), . . . , T(xN; \u0398m) are not independent. They are con-\nstrained to be the predictions of a Jm-terminal node decision tree, whereas\nthe negative gradient is the unconstrained maximal descent direction.\nThe solution to (10.30) in the stagewise approach is analogous to the line\nsearch (10.36) in steepest descent. The di\ufb00erence is that (10.30) performs\na separate line search for those components of tm that correspond to each\nseparate terminal region {T(xi; \u0398m)}xi\u2208Rjm.\nIf minimizing loss on the training data (10.33) were the only goal, steep-\nest descent would be the preferred strategy. The gradient (10.35) is trivial\nto calculate for any di\ufb00erentiable loss function L(y, f(x)), whereas solving\n(10.29) is di\ufb03cult for the robust criteria discussed in Section 10.6. Unfor-\ntunately the gradient (10.35) is de\ufb01ned only at the training data points xi,\nwhereas the ultimate goal is to generalize fM(x) to new data not repre-\nsented in the training set.\nA possible resolution to this dilemma is to induce a tree T(x; \u0398m) at the\nmth iteration whose predictions tm are as close as possible to the negative\ngradient. Using squared error to measure closeness, this leads us to",
+          "type": "narrative",
+          "page": 377
+        },
+        {
+          "id": 30101,
+          "text": "\u02dc\u0398m = arg min\n\u0398",
+          "type": "narrative",
+          "page": 377
+        },
+        {
+          "id": 30102,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 377
+        },
+        {
+          "id": 30103,
+          "text": "i=1\n(\u2212gim \u2212T(xi; \u0398))2 .\n(10.37)",
+          "type": "equation",
+          "page": 377
+        },
+        {
+          "id": 30104,
+          "text": "That is, one \ufb01ts the tree T to the negative gradient values (10.35) by least\nsquares. As noted in Section 10.9 fast algorithms exist for least squares\ndecision tree induction. Although the solution regions \u02dcRjm to (10.37) will\nnot be identical to the regions Rjm that solve (10.29), it is generally sim-\nilar enough to serve the same purpose. In any case, the forward stagewise",
+          "type": "narrative",
+          "page": 377
+        }
+      ]
+    },
+    {
+      "id": 379,
+      "name": "right-sized trees for boosting",
+      "description": "The practice of using trees of fixed size J in boosting, where J controls the level of interaction effects that can be captured.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "The simplest strategy for avoiding this problem is to restrict all trees to be the same size, Jm = J \u2200m.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 30119,
+          "text": "Algorithm 10.3 Gradient Tree Boosting Algorithm.",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30120,
+          "text": "1. Initialize f0(x) = arg min\u03b3\n\tN\ni=1 L(yi, \u03b3).",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30121,
+          "text": "2. For m = 1 to M:",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30122,
+          "text": "(a) For i = 1, 2, . . . , N compute",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30123,
+          "text": "rim = \u2212\n\n\u2202L(yi, f(xi))",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30124,
+          "text": "\u2202f(xi)",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30125,
+          "text": "f=fm\u22121\n.",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30126,
+          "text": "(b) Fit a regression tree to the targets rim giving terminal regions\nRjm, j = 1, 2, . . . , Jm.",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30127,
+          "text": "(c) For j = 1, 2, . . . , Jm compute",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30128,
+          "text": "\u03b3jm = arg min\n\u03b3",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30129,
+          "text": "\u0002",
+          "type": "equation",
+          "page": 379
+        },
+        {
+          "id": 30130,
+          "text": "xi\u2208Rjm\nL (yi, fm\u22121(xi) + \u03b3) .",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30131,
+          "text": "(d) Update fm(x) = fm\u22121(x) + \tJm\nj=1 \u03b3jmI(x \u2208Rjm).",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30132,
+          "text": "3. Output \u02c6f(x) = fM(x).",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30133,
+          "text": "The algorithm for classi\ufb01cation is similar. Lines 2(a)\u2013(d) are repeated\nK times at each iteration m, once for each class using (10.38). The result\nat line 3 is K di\ufb00erent (coupled) tree expansions fkM(x), k = 1, 2, . . . , K.\nThese produce probabilities via (10.21) or do classi\ufb01cation as in (10.20).\nDetails are given in Exercise 10.9. Two basic tuning parameters are the\nnumber of iterations M and the sizes of each of the constituent trees\nJm, m = 1, 2, . . . , M.\nThe original implementation of this algorithm was called MART for\n\u201cmultiple additive regression trees,\u201d and was referred to in the \ufb01rst edi-\ntion of this book. Many of the \ufb01gures in this chapter were produced by\nMART. Gradient boosting as described here is implemented in the R gbm\npackage (Ridgeway, 1999, \u201cGradient Boosted Models\u201d), and is freely avail-\nable. The gbm package is used in Section 10.14.2, and extensively in Chap-\nters 16 and 15. Another R implementation of boosting is mboost (Hothorn\nand B\u00a8uhlmann, 2006). A commercial implementation of gradient boost-\ning/MART called TreeNet\u00ae is available from Salford Systems, Inc.",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30135,
+          "text": "Historically, boosting was considered to be a technique for combining mod-\nels, here trees. As such, the tree building algorithm was regarded as a",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30136,
+          "text": "362\n10. Boosting and Additive Trees",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30137,
+          "text": "primitive that produced models to be combined by the boosting proce-\ndure. In this scenario, the optimal size of each tree is estimated separately\nin the usual manner when it is built (Section 9.2). A very large (oversized)\ntree is \ufb01rst induced, and then a bottom-up procedure is employed to prune\nit to the estimated optimal number of terminal nodes. This approach as-\nsumes implicitly that each tree is the last one in the expansion (10.28).\nExcept perhaps for the very last tree, this is clearly a very poor assump-\ntion. The result is that trees tend to be much too large, especially during\nthe early iterations. This substantially degrades performance and increases\ncomputation.\nThe simplest strategy for avoiding this problem is to restrict all trees\nto be the same size, Jm = J \u2200m. At each iteration a J-terminal node\nregression tree is induced. Thus J becomes a meta-parameter of the entire\nboosting procedure, to be adjusted to maximize estimated performance for\nthe data at hand.\nOne can get an idea of useful values for J by considering the properties\nof the \u201ctarget\u201d function",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30138,
+          "text": "\u03b7 = arg min\nf\nEXY L(Y, f(X)).\n(10.39)",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30139,
+          "text": "Here the expected value is over the population joint distribution of (X, Y ).\nThe target function \u03b7(x) is the one with minimum prediction risk on future\ndata. This is the function we are trying to approximate.\nOne relevant property of \u03b7(X) is the degree to which the coordinate vari-\nables XT = (X1, X2, . . . , Xp) interact with one another. This is captured\nby its ANOVA (analysis of variance) expansion",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30140,
+          "text": "\u03b7(X) =\n\u0002",
+          "type": "equation",
+          "page": 380
+        },
+        {
+          "id": 30141,
+          "text": "j\n\u03b7j(Xj)+\n\u0002",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30142,
+          "text": "jk\n\u03b7jk(Xj, Xk)+\n\u0002",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30143,
+          "text": "jkl\n\u03b7jkl(Xj, Xk, Xl)+\u00b7 \u00b7 \u00b7 . (10.40)",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30144,
+          "text": "The \ufb01rst sum in (10.40) is over functions of only a single predictor variable\nXj. The particular functions \u03b7j(Xj) are those that jointly best approximate\n\u03b7(X) under the loss criterion being used. Each such \u03b7j(Xj) is called the\n\u201cmain e\ufb00ect\u201d of Xj. The second sum is over those two-variable functions\nthat when added to the main e\ufb00ects best \ufb01t \u03b7(X). These are called the\nsecond-order interactions of each respective variable pair (Xj, Xk). The\nthird sum represents third-order interactions, and so on. For many problems\nencountered in practice, low-order interaction e\ufb00ects tend to dominate.\nWhen this is the case, models that produce strong higher-order interaction\ne\ufb00ects, such as large decision trees, su\ufb00er in accuracy.\nThe interaction level of tree-based approximations is limited by the tree\nsize J. Namely, no interaction e\ufb00ects of level greater that J \u22121 are pos-\nsible. Since boosted models are additive in the trees (10.28), this limit\nextends to them as well. Setting\nJ = 2 (single split \u201cdecision stump\u201d)\nproduces boosted models with only main e\ufb00ects; no interactions are per-\nmitted. With J = 3, two-variable interaction e\ufb00ects are also allowed, and",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30146,
+          "text": "Number of Terms",
+          "type": "narrative",
+          "page": 381
+        },
+        {
+          "id": 30147,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 381
+        },
+        {
+          "id": 30148,
+          "text": "0\n100\n200\n300\n400",
+          "type": "equation",
+          "page": 381
+        },
+        {
+          "id": 30149,
+          "text": "0.0\n0.1\n0.2\n0.3\n0.4",
+          "type": "equation",
+          "page": 381
+        },
+        {
+          "id": 30150,
+          "text": "Stumps\n10 Node\n100 Node\nAdaboost",
+          "type": "narrative",
+          "page": 381
+        }
+      ]
+    },
+    {
+      "id": 380,
+      "name": "anova expansion",
+      "description": "A decomposition of a function into main effects, second-order interactions, and higher-order interactions between variables.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "One relevant property of \u03b7(X) is the degree to which the coordinate variables interact with one another. This is captured by its ANOVA (analysis of variance) expansion.",
+      "existing_formula": "\\eta(X) = \\sum_j \\eta_j(X_j) + \\sum_{jk} \\eta_{jk}(X_j, X_k) + \\cdots",
+      "paragraphs": [
+        {
+          "id": 30119,
+          "text": "Algorithm 10.3 Gradient Tree Boosting Algorithm.",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30120,
+          "text": "1. Initialize f0(x) = arg min\u03b3\n\tN\ni=1 L(yi, \u03b3).",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30121,
+          "text": "2. For m = 1 to M:",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30122,
+          "text": "(a) For i = 1, 2, . . . , N compute",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30123,
+          "text": "rim = \u2212\n\n\u2202L(yi, f(xi))",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30124,
+          "text": "\u2202f(xi)",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30125,
+          "text": "f=fm\u22121\n.",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30126,
+          "text": "(b) Fit a regression tree to the targets rim giving terminal regions\nRjm, j = 1, 2, . . . , Jm.",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30127,
+          "text": "(c) For j = 1, 2, . . . , Jm compute",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30128,
+          "text": "\u03b3jm = arg min\n\u03b3",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30129,
+          "text": "\u0002",
+          "type": "equation",
+          "page": 379
+        },
+        {
+          "id": 30130,
+          "text": "xi\u2208Rjm\nL (yi, fm\u22121(xi) + \u03b3) .",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30131,
+          "text": "(d) Update fm(x) = fm\u22121(x) + \tJm\nj=1 \u03b3jmI(x \u2208Rjm).",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30132,
+          "text": "3. Output \u02c6f(x) = fM(x).",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30133,
+          "text": "The algorithm for classi\ufb01cation is similar. Lines 2(a)\u2013(d) are repeated\nK times at each iteration m, once for each class using (10.38). The result\nat line 3 is K di\ufb00erent (coupled) tree expansions fkM(x), k = 1, 2, . . . , K.\nThese produce probabilities via (10.21) or do classi\ufb01cation as in (10.20).\nDetails are given in Exercise 10.9. Two basic tuning parameters are the\nnumber of iterations M and the sizes of each of the constituent trees\nJm, m = 1, 2, . . . , M.\nThe original implementation of this algorithm was called MART for\n\u201cmultiple additive regression trees,\u201d and was referred to in the \ufb01rst edi-\ntion of this book. Many of the \ufb01gures in this chapter were produced by\nMART. Gradient boosting as described here is implemented in the R gbm\npackage (Ridgeway, 1999, \u201cGradient Boosted Models\u201d), and is freely avail-\nable. The gbm package is used in Section 10.14.2, and extensively in Chap-\nters 16 and 15. Another R implementation of boosting is mboost (Hothorn\nand B\u00a8uhlmann, 2006). A commercial implementation of gradient boost-\ning/MART called TreeNet\u00ae is available from Salford Systems, Inc.",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30135,
+          "text": "Historically, boosting was considered to be a technique for combining mod-\nels, here trees. As such, the tree building algorithm was regarded as a",
+          "type": "narrative",
+          "page": 379
+        },
+        {
+          "id": 30136,
+          "text": "362\n10. Boosting and Additive Trees",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30137,
+          "text": "primitive that produced models to be combined by the boosting proce-\ndure. In this scenario, the optimal size of each tree is estimated separately\nin the usual manner when it is built (Section 9.2). A very large (oversized)\ntree is \ufb01rst induced, and then a bottom-up procedure is employed to prune\nit to the estimated optimal number of terminal nodes. This approach as-\nsumes implicitly that each tree is the last one in the expansion (10.28).\nExcept perhaps for the very last tree, this is clearly a very poor assump-\ntion. The result is that trees tend to be much too large, especially during\nthe early iterations. This substantially degrades performance and increases\ncomputation.\nThe simplest strategy for avoiding this problem is to restrict all trees\nto be the same size, Jm = J \u2200m. At each iteration a J-terminal node\nregression tree is induced. Thus J becomes a meta-parameter of the entire\nboosting procedure, to be adjusted to maximize estimated performance for\nthe data at hand.\nOne can get an idea of useful values for J by considering the properties\nof the \u201ctarget\u201d function",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30138,
+          "text": "\u03b7 = arg min\nf\nEXY L(Y, f(X)).\n(10.39)",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30139,
+          "text": "Here the expected value is over the population joint distribution of (X, Y ).\nThe target function \u03b7(x) is the one with minimum prediction risk on future\ndata. This is the function we are trying to approximate.\nOne relevant property of \u03b7(X) is the degree to which the coordinate vari-\nables XT = (X1, X2, . . . , Xp) interact with one another. This is captured\nby its ANOVA (analysis of variance) expansion",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30140,
+          "text": "\u03b7(X) =\n\u0002",
+          "type": "equation",
+          "page": 380
+        },
+        {
+          "id": 30141,
+          "text": "j\n\u03b7j(Xj)+\n\u0002",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30142,
+          "text": "jk\n\u03b7jk(Xj, Xk)+\n\u0002",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30143,
+          "text": "jkl\n\u03b7jkl(Xj, Xk, Xl)+\u00b7 \u00b7 \u00b7 . (10.40)",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30144,
+          "text": "The \ufb01rst sum in (10.40) is over functions of only a single predictor variable\nXj. The particular functions \u03b7j(Xj) are those that jointly best approximate\n\u03b7(X) under the loss criterion being used. Each such \u03b7j(Xj) is called the\n\u201cmain e\ufb00ect\u201d of Xj. The second sum is over those two-variable functions\nthat when added to the main e\ufb00ects best \ufb01t \u03b7(X). These are called the\nsecond-order interactions of each respective variable pair (Xj, Xk). The\nthird sum represents third-order interactions, and so on. For many problems\nencountered in practice, low-order interaction e\ufb00ects tend to dominate.\nWhen this is the case, models that produce strong higher-order interaction\ne\ufb00ects, such as large decision trees, su\ufb00er in accuracy.\nThe interaction level of tree-based approximations is limited by the tree\nsize J. Namely, no interaction e\ufb00ects of level greater that J \u22121 are pos-\nsible. Since boosted models are additive in the trees (10.28), this limit\nextends to them as well. Setting\nJ = 2 (single split \u201cdecision stump\u201d)\nproduces boosted models with only main e\ufb00ects; no interactions are per-\nmitted. With J = 3, two-variable interaction e\ufb00ects are also allowed, and",
+          "type": "narrative",
+          "page": 380
+        },
+        {
+          "id": 30146,
+          "text": "Number of Terms",
+          "type": "narrative",
+          "page": 381
+        },
+        {
+          "id": 30147,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 381
+        },
+        {
+          "id": 30148,
+          "text": "0\n100\n200\n300\n400",
+          "type": "equation",
+          "page": 381
+        },
+        {
+          "id": 30149,
+          "text": "0.0\n0.1\n0.2\n0.3\n0.4",
+          "type": "equation",
+          "page": 381
+        },
+        {
+          "id": 30150,
+          "text": "Stumps\n10 Node\n100 Node\nAdaboost",
+          "type": "narrative",
+          "page": 381
+        }
+      ]
+    },
+    {
+      "id": 385,
+      "name": "learning rate in boosting",
+      "description": "The parameter \u03bd controlling how much each tree contributes to the boosted model, with smaller values requiring more iterations but often yielding better test error.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "The parameter \u03bd can be regarded as controlling the learning rate of the boosting procedure. Smaller values of \u03bd (more shrinkage) result in larger training risk for the same number of iterations M.",
+      "existing_formula": "f_m(x) = f_{m-1}(x) + \\nu \\cdot T(x; \\Theta_m)",
+      "paragraphs": [
+        {
+          "id": 30153,
+          "text": "364\n10. Boosting and Additive Trees",
+          "type": "narrative",
+          "page": 382
+        },
+        {
+          "id": 30154,
+          "text": "Coordinate Functions for Additive Logistic Trees",
+          "type": "narrative",
+          "page": 382
+        },
+        {
+          "id": 30155,
+          "text": "f1(x1)\nf2(x2)\nf3(x3)\nf4(x4)\nf5(x5)",
+          "type": "equation",
+          "page": 382
+        },
+        {
+          "id": 30156,
+          "text": "f6(x6)\nf7(x7)\nf8(x8)\nf9(x9)\nf10(x10)",
+          "type": "equation",
+          "page": 382
+        },
+        {
+          "id": 30159,
+          "text": "Besides the size of the constituent trees, J, the other meta-parameter of\ngradient boosting is the number of boosting iterations M. Each iteration\nusually reduces the training risk L(fM), so that for M large enough this risk\ncan be made arbitrarily small. However, \ufb01tting the training data too well\ncan lead to over\ufb01tting, which degrades the risk on future predictions. Thus,\nthere is an optimal number M \u2217minimizing future risk that is application\ndependent. A convenient way to estimate M \u2217is to monitor prediction risk\nas a function of M on a validation sample. The value of M that minimizes\nthis risk is taken to be an estimate of M \u2217. This is analogous to the early\nstopping strategy often used with neural networks (Section 11.4).",
+          "type": "narrative",
+          "page": 382
+        },
+        {
+          "id": 30161,
+          "text": "Controlling the value of M is not the only possible regularization strategy.\nAs with ridge regression and neural networks, shrinkage techniques can be\nemployed as well (see Sections 3.4.1 and 11.5). The simplest implementation\nof shrinkage in the context of boosting is to scale the contribution of each\ntree by a factor 0 < \u03bd < 1 when it is added to the current approximation.\nThat is, line 2(d) of Algorithm 10.3 is replaced by",
+          "type": "narrative",
+          "page": 382
+        },
+        {
+          "id": 30162,
+          "text": "fm(x) = fm\u22121(x) + \u03bd \u00b7",
+          "type": "narrative",
+          "page": 382
+        },
+        {
+          "id": 30163,
+          "text": "J\n\u0002",
+          "type": "narrative",
+          "page": 382
+        },
+        {
+          "id": 30164,
+          "text": "j=1\n\u03b3jmI(x \u2208Rjm).\n(10.41)",
+          "type": "narrative",
+          "page": 382
+        },
+        {
+          "id": 30165,
+          "text": "The parameter \u03bd can be regarded as controlling the learning rate of the\nboosting procedure. Smaller values of \u03bd (more shrinkage) result in larger\ntraining risk for the same number of iterations M. Thus, both \u03bd and M\ncontrol prediction risk on the training data. However, these parameters do",
+          "type": "narrative",
+          "page": 382
+        }
+      ]
+    },
+    {
+      "id": 387,
+      "name": "subsampling in boosting",
+      "description": "Sampling a fraction of training data at each boosting iteration to reduce computation time and often improve accuracy.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "Not only does the sampling reduce the computing time by the same fraction \u03b7, but in many cases it actually produces a more accurate model.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 30167,
+          "text": "not operate independently. Smaller values of \u03bd lead to larger values of M\nfor the same training risk, so that there is a tradeo\ufb00between them.\nEmpirically it has been found (Friedman, 2001) that smaller values of \u03bd\nfavor better test error, and require correspondingly larger values of M. In\nfact, the best strategy appears to be to set \u03bd to be very small (\u03bd < 0.1)\nand then choose M by early stopping. This yields dramatic improvements\n(over no shrinkage \u03bd = 1) for regression and for probability estimation. The\ncorresponding improvements in misclassi\ufb01cation risk via (10.20) are less,\nbut still substantial. The price paid for these improvements is computa-\ntional: smaller values of \u03bd give rise to larger values of M, and computation\nis proportional to the latter. However, as seen below, many iterations are\ngenerally computationally feasible even on very large data sets. This is\npartly due to the fact that small trees are induced at each step with no\npruning.\nFigure 10.11 shows test error curves for the simulated example (10.2) of\nFigure 10.2. A gradient boosted model (MART) was trained using binomial\ndeviance, using either stumps or six terminal-node trees, and with or with-\nout shrinkage. The bene\ufb01ts of shrinkage are evident, especially when the\nbinomial deviance is tracked. With shrinkage, each test error curve reaches\na lower value, and stays there for many iterations.\nSection 16.2.1 draws a connection between forward stagewise shrinkage\nin boosting and the use of an L1 penalty for regularizing model parame-\nters (the \u201classo\u201d). We argue that L1 penalties may be superior to the L2\npenalties used by methods such as the support vector machine.",
+          "type": "narrative",
+          "page": 383
+        },
+        {
+          "id": 30169,
+          "text": "We saw in Section 8.7 that bootstrap averaging (bagging) improves the\nperformance of a noisy classi\ufb01er through averaging. Chapter 15 discusses\nin some detail the variance-reduction mechanism of this sampling followed\nby averaging. We can exploit the same device in gradient boosting, both\nto improve performance and computational e\ufb03ciency.\nWith stochastic gradient boosting (Friedman, 1999), at each iteration we\nsample a fraction \u03b7 of the training observations (without replacement),\nand grow the next tree using that subsample. The rest of the algorithm is\nidentical. A typical value for \u03b7 can be 1",
+          "type": "narrative",
+          "page": 383
+        },
+        {
+          "id": 30170,
+          "text": "2, although for large N, \u03b7 can be\nsubstantially smaller than 1",
+          "type": "narrative",
+          "page": 383
+        },
+        {
+          "id": 30171,
+          "text": "2.\nNot only does the sampling reduce the computing time by the same\nfraction \u03b7, but in many cases it actually produces a more accurate model.\nFigure 10.12 illustrates the e\ufb00ect of subsampling using the simulated\nexample (10.2), both as a classi\ufb01cation and as a regression example. We\nsee in both cases that sampling along with shrinkage slightly outperformed\nthe rest. It appears here that subsampling without shrinkage does poorly.",
+          "type": "narrative",
+          "page": 383
+        },
+        {
+          "id": 30172,
+          "text": "366\n10. Boosting and Additive Trees",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30173,
+          "text": "Boosting Iterations",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30174,
+          "text": "Test Set Deviance",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30175,
+          "text": "0\n500\n1000\n1500\n2000",
+          "type": "equation",
+          "page": 384
+        },
+        {
+          "id": 30176,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0",
+          "type": "equation",
+          "page": 384
+        },
+        {
+          "id": 30177,
+          "text": "No shrinkage\nShrinkage=0.2",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30178,
+          "text": "Stumps\nDeviance",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30179,
+          "text": "Boosting Iterations",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30180,
+          "text": "Test Set Misclassification Error",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30181,
+          "text": "0\n500\n1000\n1500\n2000",
+          "type": "equation",
+          "page": 384
+        },
+        {
+          "id": 30182,
+          "text": "0.0\n0.1\n0.2\n0.3\n0.4\n0.5",
+          "type": "equation",
+          "page": 384
+        },
+        {
+          "id": 30183,
+          "text": "No shrinkage\nShrinkage=0.2",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30184,
+          "text": "Stumps\nMisclassification Error",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30185,
+          "text": "Boosting Iterations",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30186,
+          "text": "Test Set Deviance",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30187,
+          "text": "0\n500\n1000\n1500\n2000",
+          "type": "equation",
+          "page": 384
+        },
+        {
+          "id": 30188,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0",
+          "type": "equation",
+          "page": 384
+        },
+        {
+          "id": 30189,
+          "text": "No shrinkage\nShrinkage=0.6",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30190,
+          "text": "6-Node Trees\nDeviance",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30191,
+          "text": "Boosting Iterations",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30192,
+          "text": "Test Set Misclassification Error",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30193,
+          "text": "0\n500\n1000\n1500\n2000",
+          "type": "equation",
+          "page": 384
+        },
+        {
+          "id": 30194,
+          "text": "0.0\n0.1\n0.2\n0.3\n0.4\n0.5",
+          "type": "equation",
+          "page": 384
+        },
+        {
+          "id": 30195,
+          "text": "No shrinkage\nShrinkage=0.6",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30196,
+          "text": "6-Node Trees\nMisclassification Error",
+          "type": "narrative",
+          "page": 384
+        },
+        {
+          "id": 30199,
+          "text": "0\n200\n400\n600\n800\n1000",
+          "type": "equation",
+          "page": 385
+        }
+      ]
+    },
+    {
+      "id": 388,
+      "name": "relative importance of predictor variables",
+      "description": "A measure quantifying the relevance of each input variable in boosted tree models, based on squared improvements in the splitting criterion.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "For a single decision tree T, Breiman et al. (1984) proposed [the sum over internal nodes of squared improvements] as a measure of relevance for each predictor variable X\u2113.",
+      "existing_formula": "I_\\ell^2(T) = \\sum_{t=1}^{J-1} \\hat{i}_t^2 \\mathbb{1}(v(t) = \\ell)",
+      "paragraphs": [
+        {
+          "id": 30199,
+          "text": "0\n200\n400\n600\n800\n1000",
+          "type": "equation",
+          "page": 385
+        },
+        {
+          "id": 30200,
+          "text": "0.4\n0.6\n0.8\n1.0\n1.2\n1.4",
+          "type": "equation",
+          "page": 385
+        },
+        {
+          "id": 30201,
+          "text": "Boosting Iterations",
+          "type": "narrative",
+          "page": 385
+        },
+        {
+          "id": 30202,
+          "text": "Test Set Deviance",
+          "type": "narrative",
+          "page": 385
+        },
+        {
+          "id": 30203,
+          "text": "Deviance",
+          "type": "narrative",
+          "page": 385
+        },
+        {
+          "id": 30204,
+          "text": "4\u2212Node Trees",
+          "type": "narrative",
+          "page": 385
+        },
+        {
+          "id": 30205,
+          "text": "0\n200\n400\n600\n800\n1000",
+          "type": "equation",
+          "page": 385
+        },
+        {
+          "id": 30206,
+          "text": "0.30\n0.35\n0.40\n0.45\n0.50",
+          "type": "equation",
+          "page": 385
+        },
+        {
+          "id": 30207,
+          "text": "Boosting Iterations",
+          "type": "narrative",
+          "page": 385
+        },
+        {
+          "id": 30208,
+          "text": "Test Set Absolute Error",
+          "type": "narrative",
+          "page": 385
+        },
+        {
+          "id": 30209,
+          "text": "No shrinkage\nShrink=0.1\nSample=0.5\nShrink=0.1 Sample=0.5",
+          "type": "narrative",
+          "page": 385
+        },
+        {
+          "id": 30210,
+          "text": "Absolute Error",
+          "type": "narrative",
+          "page": 385
+        },
+        {
+          "id": 30212,
+          "text": "The downside is that we now have four parameters to set: J, M, \u03bd and\n\u03b7. Typically some early explorations determine suitable values for J, \u03bd and\n\u03b7, leaving M as the primary parameter.",
+          "type": "narrative",
+          "page": 385
+        },
+        {
+          "id": 30214,
+          "text": "Single decision trees are highly interpretable. The entire model can be com-\npletely represented by a simple two-dimensional graphic (binary tree) that\nis easily visualized. Linear combinations of trees (10.28) lose this important\nfeature, and must therefore be interpreted in a di\ufb00erent way.",
+          "type": "narrative",
+          "page": 385
+        },
+        {
+          "id": 30216,
+          "text": "In data mining applications the input predictor variables are seldom equally\nrelevant. Often only a few of them have substantial in\ufb02uence on the re-\nsponse; the vast majority are irrelevant and could just as well have not\nbeen included. It is often useful to learn the relative importance or contri-\nbution of each input variable in predicting the response.",
+          "type": "narrative",
+          "page": 385
+        },
+        {
+          "id": 30217,
+          "text": "368\n10. Boosting and Additive Trees",
+          "type": "narrative",
+          "page": 386
+        },
+        {
+          "id": 30218,
+          "text": "For a single decision tree T, Breiman et al. (1984) proposed",
+          "type": "narrative",
+          "page": 386
+        },
+        {
+          "id": 30219,
+          "text": "I2\n\u2113(T) =",
+          "type": "narrative",
+          "page": 386
+        },
+        {
+          "id": 30220,
+          "text": "J\u22121\n\u0002",
+          "type": "equation",
+          "page": 386
+        },
+        {
+          "id": 30221,
+          "text": "t=1\n\u02c6\u01312\nt I(v(t) = \u2113)\n(10.42)",
+          "type": "narrative",
+          "page": 386
+        },
+        {
+          "id": 30222,
+          "text": "as a measure of relevance for each predictor variable X\u2113. The sum is over\nthe J \u22121 internal nodes of the tree. At each such node t, one of the input\nvariables Xv(t) is used to partition the region associated with that node into\ntwo subregions; within each a separate constant is \ufb01t to the response values.\nThe particular variable chosen is the one that gives maximal estimated\nimprovement \u02c6\u01312\nt in squared error risk over that for a constant \ufb01t over the\nentire region. The squared relative importance of variable X\u2113is the sum of\nsuch squared improvements over all internal nodes for which it was chosen\nas the splitting variable.\nThis importance measure is easily generalized to additive tree expansions\n(10.28); it is simply averaged over the trees",
+          "type": "narrative",
+          "page": 386
+        },
+        {
+          "id": 30223,
+          "text": "I2\n\u2113= 1",
+          "type": "narrative",
+          "page": 386
+        },
+        {
+          "id": 30224,
+          "text": "M",
+          "type": "narrative",
+          "page": 386
+        },
+        {
+          "id": 30225,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 386
+        },
+        {
+          "id": 30226,
+          "text": "m=1\nI2\n\u2113(Tm).\n(10.43)",
+          "type": "equation",
+          "page": 386
+        },
+        {
+          "id": 30227,
+          "text": "Due to the stabilizing e\ufb00ect of averaging, this measure turns out to be more\nreliable than is its counterpart (10.42) for a single tree. Also, because of\nshrinkage (Section 10.12.1) the masking of important variables by others\nwith which they are highly correlated is much less of a problem. Note\nthat (10.42) and (10.43) refer to squared relevance; the actual relevances\nare their respective square roots. Since these measures are relative, it is\ncustomary to assign the largest a value of 100 and then scale the others\naccordingly. Figure 10.6 shows the relevant importance of the 57 inputs in\npredicting spam versus email.\nFor K-class classi\ufb01cation, K separate models fk(x), k = 1, 2, . . . , K are\ninduced, each consisting of a sum of trees",
+          "type": "narrative",
+          "page": 386
+        },
+        {
+          "id": 30228,
+          "text": "fk(x) =",
+          "type": "narrative",
+          "page": 386
+        },
+        {
+          "id": 30229,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 386
+        },
+        {
+          "id": 30230,
+          "text": "m=1\nTkm(x).\n(10.44)",
+          "type": "equation",
+          "page": 386
+        },
+        {
+          "id": 30231,
+          "text": "In this case (10.43) generalizes to",
+          "type": "narrative",
+          "page": 386
+        }
+      ]
+    },
+    {
+      "id": 390,
+      "name": "weak learner",
+      "description": "An algorithm for producing a two-class classifier with performance guaranteed to be significantly better than random guessing.",
+      "category": "multi_model",
+      "subcategory": "aggregating",
+      "existing_quote": "A weak learner is an algorithm for producing a two-class classifier with performance guaranteed (with high probability) to be significantly better than a coin-flip.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 30366,
+          "text": "OrbVel\nSpeed\nDistance\nDisOrgMatter\nCodendSize\nPentade\nTidalCurr\nSlope\nChlaCase2\nSSTGrad\nSalResid\nSusPartMatter\nAvgDepth\nTempResid",
+          "type": "narrative",
+          "page": 397
+        },
+        {
+          "id": 30367,
+          "text": "Relative influence",
+          "type": "narrative",
+          "page": 397
+        },
+        {
+          "id": 30368,
+          "text": "0\n10\n25\n\u22124\n0\n2\n4\n6",
+          "type": "equation",
+          "page": 397
+        },
+        {
+          "id": 30369,
+          "text": "\u22127\n\u22125\n\u22123\n\u22121",
+          "type": "equation",
+          "page": 397
+        },
+        {
+          "id": 30370,
+          "text": "TempResid",
+          "type": "narrative",
+          "page": 397
+        },
+        {
+          "id": 30371,
+          "text": "f(TempResid)",
+          "type": "narrative",
+          "page": 397
+        },
+        {
+          "id": 30372,
+          "text": "0\n500\n1000\n2000",
+          "type": "equation",
+          "page": 397
+        },
+        {
+          "id": 30373,
+          "text": "\u22126\n\u22124\n\u22122",
+          "type": "equation",
+          "page": 397
+        },
+        {
+          "id": 30374,
+          "text": "AvgDepth",
+          "type": "narrative",
+          "page": 397
+        },
+        {
+          "id": 30375,
+          "text": "f(AvgDepth)",
+          "type": "narrative",
+          "page": 397
+        },
+        {
+          "id": 30376,
+          "text": "0\n5\n10\n15",
+          "type": "equation",
+          "page": 397
+        },
+        {
+          "id": 30377,
+          "text": "\u22127\n\u22125\n\u22123",
+          "type": "equation",
+          "page": 397
+        },
+        {
+          "id": 30378,
+          "text": "SusPartMatter",
+          "type": "narrative",
+          "page": 397
+        },
+        {
+          "id": 30379,
+          "text": "f(SusPartMatter)",
+          "type": "narrative",
+          "page": 397
+        },
+        {
+          "id": 30380,
+          "text": "\u22120.8\n\u22120.4\n0.0\n0.4",
+          "type": "equation",
+          "page": 397
+        },
+        {
+          "id": 30381,
+          "text": "\u22127\n\u22125\n\u22123\n\u22121",
+          "type": "equation",
+          "page": 397
+        },
+        {
+          "id": 30382,
+          "text": "SalResid",
+          "type": "narrative",
+          "page": 397
+        },
+        {
+          "id": 30383,
+          "text": "f(SalResid)",
+          "type": "narrative",
+          "page": 397
+        },
+        {
+          "id": 30384,
+          "text": "0.00\n0.05\n0.10\n0.15",
+          "type": "equation",
+          "page": 397
+        },
+        {
+          "id": 30385,
+          "text": "\u22127\n\u22125\n\u22123\n\u22121",
+          "type": "equation",
+          "page": 397
+        },
+        {
+          "id": 30386,
+          "text": "SSTGrad",
+          "type": "narrative",
+          "page": 397
+        },
+        {
+          "id": 30387,
+          "text": "f(SSTGrad)",
+          "type": "narrative",
+          "page": 397
+        },
+        {
+          "id": 30389,
+          "text": "Because of their ability to model interactions and automatically select\nvariables, as well as robustness to outliers and missing data, GBM models\nare rapidly gaining popularity in this data-rich and enthusiastic community.",
+          "type": "narrative",
+          "page": 397
+        },
+        {
+          "id": 30391,
+          "text": "In this section we illustrate gradient boosting on a multiclass classi\ufb01ca-\ntion problem, using MART. The data come from 9243 questionnaires \ufb01lled\nout by shopping mall customers in the San Francisco Bay Area (Impact\nResources, Inc., Columbus, OH). Among the questions are 14 concerning\ndemographics. For this illustration the goal is to predict occupation us-\ning the other 13 variables as predictors, and hence identify demographic\nvariables that discriminate between di\ufb00erent occupational categories. We\nrandomly divided the data into a training set (80%) and test set (20%),\nand used J = 6 node trees with a learning rate \u03bd = 0.1.\nFigure 10.22 shows the K = 9 occupation class values along with their\ncorresponding error rates. The overall error rate is 42.5%, which can be\ncompared to the null rate of 69% obtained by predicting the most numerous",
+          "type": "narrative",
+          "page": 397
+        },
+        {
+          "id": 30392,
+          "text": "380\n10. Boosting and Additive Trees",
+          "type": "narrative",
+          "page": 398
+        },
+        {
+          "id": 30394,
+          "text": "class Prof/Man (Professional/Managerial). The four best predicted classes\nare seen to be Retired, Student, Prof/Man, and Homemaker.\nFigure 10.23 shows the relative predictor variable importances as aver-\naged over all classes (10.46). Figure 10.24 displays the individual relative\nimportance distributions (10.45) for each of the four best predicted classes.\nOne sees that the most relevant predictors are generally di\ufb00erent for each\nrespective class. An exception is age which is among the three most relevant\nfor predicting Retired, Student, and Prof/Man.\nFigure 10.25 shows the partial dependence of the log-odds (10.52) on age\nfor these three classes. The abscissa values are ordered codes for respective\nequally spaced age intervals. One sees that after accounting for the contri-\nbutions of the other variables, the odds of being retired are higher for older\npeople, whereas the opposite is the case for being a student. The odds of\nbeing professional/managerial are highest for middle-aged people. These\nresults are of course not surprising. They illustrate that inspecting partial\ndependences separately for each class can lead to sensible results.",
+          "type": "narrative",
+          "page": 398
+        },
+        {
+          "id": 30396,
+          "text": "Schapire (1990) developed the \ufb01rst simple boosting procedure in the PAC\nlearning framework (Valiant, 1984; Kearns and Vazirani, 1994). Schapire",
+          "type": "narrative",
+          "page": 398
+        },
+        {
+          "id": 30398,
+          "text": "Sales",
+          "type": "narrative",
+          "page": 399
+        },
+        {
+          "id": 30399,
+          "text": "Unemployed",
+          "type": "narrative",
+          "page": 399
+        },
+        {
+          "id": 30400,
+          "text": "Military",
+          "type": "narrative",
+          "page": 399
+        }
+      ]
+    },
+    {
+      "id": 378,
+      "name": "pseudo residuals",
+      "description": "The negative gradient components in gradient boosting, also called generalized residuals, which serve as targets for fitting regression trees.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "The components of the negative gradient computed at line 2(a) are referred to as generalized or pseudo residuals, r.",
+      "existing_formula": "r_{im} = -\\left[\\frac{\\partial L(y_i, f(x_i))}{\\partial f(x_i)}\\right]_{f=f_{m-1}}",
+      "paragraphs": [
+        {
+          "id": 30526,
+          "text": "This is page 389\nPrinter: Opaque this\n11\nNeural Networks",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30528,
+          "text": "In this chapter we describe a class of learning methods that was developed\nseparately in di\ufb00erent \ufb01elds\u2014statistics and arti\ufb01cial intelligence\u2014based\non essentially identical models. The central idea is to extract linear com-\nbinations of the inputs as derived features, and then model the target as\na nonlinear function of these features. The result is a powerful learning\nmethod, with widespread applications in many \ufb01elds. We \ufb01rst discuss the\nprojection pursuit model, which evolved in the domain of semiparamet-\nric statistics and smoothing. The rest of the chapter is devoted to neural\nnetwork models.",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30530,
+          "text": "As in our generic supervised learning problem, assume we have an input\nvector X with p components, and a target Y . Let \u03c9m, m = 1, 2, . . . , M, be\nunit p-vectors of unknown parameters. The projection pursuit regression\n(PPR) model has the form",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30531,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30532,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30533,
+          "text": "m=1\ngm(\u03c9T\nmX).\n(11.1)",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30534,
+          "text": "This is an additive model, but in the derived features Vm = \u03c9T\nmX rather\nthan the inputs themselves. The functions gm are unspeci\ufb01ed and are esti-",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30535,
+          "text": "390\nNeural Networks",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30536,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30537,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30538,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30539,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30541,
+          "text": "2.\n(Right:) g(V ) = (V + 0.1) sin(1/(V/3 + 0.1)), where V = X1.",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30542,
+          "text": "mated along with the directions \u03c9m using some \ufb02exible smoothing method\n(see below).\nThe function gm(\u03c9T\nmX) is called a ridge function in IRp. It varies only\nin the direction de\ufb01ned by the vector \u03c9m. The scalar variable Vm = \u03c9T\nmX\nis the projection of X onto the unit vector \u03c9m, and we seek \u03c9m so that\nthe model \ufb01ts well, hence the name \u201cprojection pursuit.\u201d Figure 11.1 shows\nsome examples of ridge functions. In the example on the left \u03c9 = (1/\n\u221a",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30543,
+          "text": "2)(1, 1)T ,\nso that the function only varies in the direction X1 + X2. In the example\non the right, \u03c9 = (1, 0).\nThe PPR model (11.1) is very general, since the operation of forming\nnonlinear functions of linear combinations generates a surprisingly large\nclass of models. For example, the product X1 \u00b7X2 can be written as [(X1 +\nX2)2 \u2212(X1 \u2212X2)2]/4, and higher-order products can be represented simi-\nlarly.\nIn fact, if M is taken arbitrarily large, for appropriate choice of gm the\nPPR model can approximate any continuous function in IRp arbitrarily\nwell. Such a class of models is called a universal approximator. However\nthis generality comes at a price. Interpretation of the \ufb01tted model is usually\ndi\ufb03cult, because each input enters into the model in a complex and multi-\nfaceted way. As a result, the PPR model is most useful for prediction, and\nnot very useful for producing an understandable model for the data. The\nM = 1 model, known as the single index model in econometrics, is an\nexception. It is slightly more general than the linear regression model, and\no\ufb00ers a similar interpretation.\nHow do we \ufb01t a PPR model, given training data (xi, yi), i = 1, 2, . . . , N?\nWe seek the approximate minimizers of the error function",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30544,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30545,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30546,
+          "text": "$",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30547,
+          "text": "yi \u2212",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30548,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30549,
+          "text": "m=1\ngm(\u03c9T\nmxi)",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30550,
+          "text": "%2",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30551,
+          "text": "(11.2)",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30553,
+          "text": "over functions gm and direction vectors \u03c9m, m = 1, 2, . . . , M. As in other\nsmoothing problems, we need either explicitly or implicitly to impose com-\nplexity constraints on the gm, to avoid over\ufb01t solutions.\nConsider just one term (M = 1, and drop the subscript). Given the\ndirection vector \u03c9, we form the derived variables vi = \u03c9T xi. Then we have\na one-dimensional smoothing problem, and we can apply any scatterplot\nsmoother, such as a smoothing spline, to obtain an estimate of g.\nOn the other hand, given g, we want to minimize (11.2) over \u03c9. A Gauss\u2013\nNewton search is convenient for this task. This is a quasi-Newton method,\nin which the part of the Hessian involving the second derivative of g is\ndiscarded. It can be simply derived as follows. Let \u03c9old be the current\nestimate for \u03c9. We write",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30554,
+          "text": "g(\u03c9T xi) \u2248g(\u03c9T\noldxi) + g\u2032(\u03c9T\noldxi)(\u03c9 \u2212\u03c9old)T xi\n(11.3)",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30555,
+          "text": "to give",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30556,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30557,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30558,
+          "text": "\u0013\nyi \u2212g(\u03c9T xi)\n\u00142 \u2248",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30559,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        }
+      ]
+    },
+    {
+      "id": 381,
+      "name": "main effect",
+      "description": "The contribution of a single predictor variable to the target function, independent of interactions with other variables.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "The first sum in (10.40) is over functions of only a single predictor variable Xj. The particular functions \u03b7j(Xj) are those that jointly best approximate \u03b7(X) under the loss criterion being used. Each such \u03b7j(Xj) is called the 'main effect' of Xj.",
+      "existing_formula": "\\eta_j(X_j)",
+      "paragraphs": [
+        {
+          "id": 30526,
+          "text": "This is page 389\nPrinter: Opaque this\n11\nNeural Networks",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30528,
+          "text": "In this chapter we describe a class of learning methods that was developed\nseparately in di\ufb00erent \ufb01elds\u2014statistics and arti\ufb01cial intelligence\u2014based\non essentially identical models. The central idea is to extract linear com-\nbinations of the inputs as derived features, and then model the target as\na nonlinear function of these features. The result is a powerful learning\nmethod, with widespread applications in many \ufb01elds. We \ufb01rst discuss the\nprojection pursuit model, which evolved in the domain of semiparamet-\nric statistics and smoothing. The rest of the chapter is devoted to neural\nnetwork models.",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30530,
+          "text": "As in our generic supervised learning problem, assume we have an input\nvector X with p components, and a target Y . Let \u03c9m, m = 1, 2, . . . , M, be\nunit p-vectors of unknown parameters. The projection pursuit regression\n(PPR) model has the form",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30531,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30532,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30533,
+          "text": "m=1\ngm(\u03c9T\nmX).\n(11.1)",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30534,
+          "text": "This is an additive model, but in the derived features Vm = \u03c9T\nmX rather\nthan the inputs themselves. The functions gm are unspeci\ufb01ed and are esti-",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30535,
+          "text": "390\nNeural Networks",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30536,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30537,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30538,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30539,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30541,
+          "text": "2.\n(Right:) g(V ) = (V + 0.1) sin(1/(V/3 + 0.1)), where V = X1.",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30542,
+          "text": "mated along with the directions \u03c9m using some \ufb02exible smoothing method\n(see below).\nThe function gm(\u03c9T\nmX) is called a ridge function in IRp. It varies only\nin the direction de\ufb01ned by the vector \u03c9m. The scalar variable Vm = \u03c9T\nmX\nis the projection of X onto the unit vector \u03c9m, and we seek \u03c9m so that\nthe model \ufb01ts well, hence the name \u201cprojection pursuit.\u201d Figure 11.1 shows\nsome examples of ridge functions. In the example on the left \u03c9 = (1/\n\u221a",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30543,
+          "text": "2)(1, 1)T ,\nso that the function only varies in the direction X1 + X2. In the example\non the right, \u03c9 = (1, 0).\nThe PPR model (11.1) is very general, since the operation of forming\nnonlinear functions of linear combinations generates a surprisingly large\nclass of models. For example, the product X1 \u00b7X2 can be written as [(X1 +\nX2)2 \u2212(X1 \u2212X2)2]/4, and higher-order products can be represented simi-\nlarly.\nIn fact, if M is taken arbitrarily large, for appropriate choice of gm the\nPPR model can approximate any continuous function in IRp arbitrarily\nwell. Such a class of models is called a universal approximator. However\nthis generality comes at a price. Interpretation of the \ufb01tted model is usually\ndi\ufb03cult, because each input enters into the model in a complex and multi-\nfaceted way. As a result, the PPR model is most useful for prediction, and\nnot very useful for producing an understandable model for the data. The\nM = 1 model, known as the single index model in econometrics, is an\nexception. It is slightly more general than the linear regression model, and\no\ufb00ers a similar interpretation.\nHow do we \ufb01t a PPR model, given training data (xi, yi), i = 1, 2, . . . , N?\nWe seek the approximate minimizers of the error function",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30544,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30545,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30546,
+          "text": "$",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30547,
+          "text": "yi \u2212",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30548,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30549,
+          "text": "m=1\ngm(\u03c9T\nmxi)",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30550,
+          "text": "%2",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30551,
+          "text": "(11.2)",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30553,
+          "text": "over functions gm and direction vectors \u03c9m, m = 1, 2, . . . , M. As in other\nsmoothing problems, we need either explicitly or implicitly to impose com-\nplexity constraints on the gm, to avoid over\ufb01t solutions.\nConsider just one term (M = 1, and drop the subscript). Given the\ndirection vector \u03c9, we form the derived variables vi = \u03c9T xi. Then we have\na one-dimensional smoothing problem, and we can apply any scatterplot\nsmoother, such as a smoothing spline, to obtain an estimate of g.\nOn the other hand, given g, we want to minimize (11.2) over \u03c9. A Gauss\u2013\nNewton search is convenient for this task. This is a quasi-Newton method,\nin which the part of the Hessian involving the second derivative of g is\ndiscarded. It can be simply derived as follows. Let \u03c9old be the current\nestimate for \u03c9. We write",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30554,
+          "text": "g(\u03c9T xi) \u2248g(\u03c9T\noldxi) + g\u2032(\u03c9T\noldxi)(\u03c9 \u2212\u03c9old)T xi\n(11.3)",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30555,
+          "text": "to give",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30556,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30557,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30558,
+          "text": "\u0013\nyi \u2212g(\u03c9T xi)\n\u00142 \u2248",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30559,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        }
+      ]
+    },
+    {
+      "id": 382,
+      "name": "decision stump",
+      "description": "A tree with a single split (J=2), producing boosted models with only main effects and no interactions.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "Setting J = 2 (single split 'decision stump') produces boosted models with only main effects; no interactions are permitted.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 30526,
+          "text": "This is page 389\nPrinter: Opaque this\n11\nNeural Networks",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30528,
+          "text": "In this chapter we describe a class of learning methods that was developed\nseparately in di\ufb00erent \ufb01elds\u2014statistics and arti\ufb01cial intelligence\u2014based\non essentially identical models. The central idea is to extract linear com-\nbinations of the inputs as derived features, and then model the target as\na nonlinear function of these features. The result is a powerful learning\nmethod, with widespread applications in many \ufb01elds. We \ufb01rst discuss the\nprojection pursuit model, which evolved in the domain of semiparamet-\nric statistics and smoothing. The rest of the chapter is devoted to neural\nnetwork models.",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30530,
+          "text": "As in our generic supervised learning problem, assume we have an input\nvector X with p components, and a target Y . Let \u03c9m, m = 1, 2, . . . , M, be\nunit p-vectors of unknown parameters. The projection pursuit regression\n(PPR) model has the form",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30531,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30532,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30533,
+          "text": "m=1\ngm(\u03c9T\nmX).\n(11.1)",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30534,
+          "text": "This is an additive model, but in the derived features Vm = \u03c9T\nmX rather\nthan the inputs themselves. The functions gm are unspeci\ufb01ed and are esti-",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30535,
+          "text": "390\nNeural Networks",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30536,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30537,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30538,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30539,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30541,
+          "text": "2.\n(Right:) g(V ) = (V + 0.1) sin(1/(V/3 + 0.1)), where V = X1.",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30542,
+          "text": "mated along with the directions \u03c9m using some \ufb02exible smoothing method\n(see below).\nThe function gm(\u03c9T\nmX) is called a ridge function in IRp. It varies only\nin the direction de\ufb01ned by the vector \u03c9m. The scalar variable Vm = \u03c9T\nmX\nis the projection of X onto the unit vector \u03c9m, and we seek \u03c9m so that\nthe model \ufb01ts well, hence the name \u201cprojection pursuit.\u201d Figure 11.1 shows\nsome examples of ridge functions. In the example on the left \u03c9 = (1/\n\u221a",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30543,
+          "text": "2)(1, 1)T ,\nso that the function only varies in the direction X1 + X2. In the example\non the right, \u03c9 = (1, 0).\nThe PPR model (11.1) is very general, since the operation of forming\nnonlinear functions of linear combinations generates a surprisingly large\nclass of models. For example, the product X1 \u00b7X2 can be written as [(X1 +\nX2)2 \u2212(X1 \u2212X2)2]/4, and higher-order products can be represented simi-\nlarly.\nIn fact, if M is taken arbitrarily large, for appropriate choice of gm the\nPPR model can approximate any continuous function in IRp arbitrarily\nwell. Such a class of models is called a universal approximator. However\nthis generality comes at a price. Interpretation of the \ufb01tted model is usually\ndi\ufb03cult, because each input enters into the model in a complex and multi-\nfaceted way. As a result, the PPR model is most useful for prediction, and\nnot very useful for producing an understandable model for the data. The\nM = 1 model, known as the single index model in econometrics, is an\nexception. It is slightly more general than the linear regression model, and\no\ufb00ers a similar interpretation.\nHow do we \ufb01t a PPR model, given training data (xi, yi), i = 1, 2, . . . , N?\nWe seek the approximate minimizers of the error function",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30544,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30545,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30546,
+          "text": "$",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30547,
+          "text": "yi \u2212",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30548,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30549,
+          "text": "m=1\ngm(\u03c9T\nmxi)",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30550,
+          "text": "%2",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30551,
+          "text": "(11.2)",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30553,
+          "text": "over functions gm and direction vectors \u03c9m, m = 1, 2, . . . , M. As in other\nsmoothing problems, we need either explicitly or implicitly to impose com-\nplexity constraints on the gm, to avoid over\ufb01t solutions.\nConsider just one term (M = 1, and drop the subscript). Given the\ndirection vector \u03c9, we form the derived variables vi = \u03c9T xi. Then we have\na one-dimensional smoothing problem, and we can apply any scatterplot\nsmoother, such as a smoothing spline, to obtain an estimate of g.\nOn the other hand, given g, we want to minimize (11.2) over \u03c9. A Gauss\u2013\nNewton search is convenient for this task. This is a quasi-Newton method,\nin which the part of the Hessian involving the second derivative of g is\ndiscarded. It can be simply derived as follows. Let \u03c9old be the current\nestimate for \u03c9. We write",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30554,
+          "text": "g(\u03c9T xi) \u2248g(\u03c9T\noldxi) + g\u2032(\u03c9T\noldxi)(\u03c9 \u2212\u03c9old)T xi\n(11.3)",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30555,
+          "text": "to give",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30556,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30557,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30558,
+          "text": "\u0013\nyi \u2212g(\u03c9T xi)\n\u00142 \u2248",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30559,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        }
+      ]
+    },
+    {
+      "id": 383,
+      "name": "early stopping",
+      "description": "A regularization strategy where training is terminated before reaching the global minimum, monitoring validation error to prevent overfitting.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "A convenient way to estimate M* is to monitor prediction risk as a function of M on a validation sample. The value of M that minimizes this risk is taken to be an estimate of M*. This is analogous to the early stopping strategy often used with neural networks.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 30526,
+          "text": "This is page 389\nPrinter: Opaque this\n11\nNeural Networks",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30528,
+          "text": "In this chapter we describe a class of learning methods that was developed\nseparately in di\ufb00erent \ufb01elds\u2014statistics and arti\ufb01cial intelligence\u2014based\non essentially identical models. The central idea is to extract linear com-\nbinations of the inputs as derived features, and then model the target as\na nonlinear function of these features. The result is a powerful learning\nmethod, with widespread applications in many \ufb01elds. We \ufb01rst discuss the\nprojection pursuit model, which evolved in the domain of semiparamet-\nric statistics and smoothing. The rest of the chapter is devoted to neural\nnetwork models.",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30530,
+          "text": "As in our generic supervised learning problem, assume we have an input\nvector X with p components, and a target Y . Let \u03c9m, m = 1, 2, . . . , M, be\nunit p-vectors of unknown parameters. The projection pursuit regression\n(PPR) model has the form",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30531,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30532,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30533,
+          "text": "m=1\ngm(\u03c9T\nmX).\n(11.1)",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30534,
+          "text": "This is an additive model, but in the derived features Vm = \u03c9T\nmX rather\nthan the inputs themselves. The functions gm are unspeci\ufb01ed and are esti-",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30535,
+          "text": "390\nNeural Networks",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30536,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30537,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30538,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30539,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30541,
+          "text": "2.\n(Right:) g(V ) = (V + 0.1) sin(1/(V/3 + 0.1)), where V = X1.",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30542,
+          "text": "mated along with the directions \u03c9m using some \ufb02exible smoothing method\n(see below).\nThe function gm(\u03c9T\nmX) is called a ridge function in IRp. It varies only\nin the direction de\ufb01ned by the vector \u03c9m. The scalar variable Vm = \u03c9T\nmX\nis the projection of X onto the unit vector \u03c9m, and we seek \u03c9m so that\nthe model \ufb01ts well, hence the name \u201cprojection pursuit.\u201d Figure 11.1 shows\nsome examples of ridge functions. In the example on the left \u03c9 = (1/\n\u221a",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30543,
+          "text": "2)(1, 1)T ,\nso that the function only varies in the direction X1 + X2. In the example\non the right, \u03c9 = (1, 0).\nThe PPR model (11.1) is very general, since the operation of forming\nnonlinear functions of linear combinations generates a surprisingly large\nclass of models. For example, the product X1 \u00b7X2 can be written as [(X1 +\nX2)2 \u2212(X1 \u2212X2)2]/4, and higher-order products can be represented simi-\nlarly.\nIn fact, if M is taken arbitrarily large, for appropriate choice of gm the\nPPR model can approximate any continuous function in IRp arbitrarily\nwell. Such a class of models is called a universal approximator. However\nthis generality comes at a price. Interpretation of the \ufb01tted model is usually\ndi\ufb03cult, because each input enters into the model in a complex and multi-\nfaceted way. As a result, the PPR model is most useful for prediction, and\nnot very useful for producing an understandable model for the data. The\nM = 1 model, known as the single index model in econometrics, is an\nexception. It is slightly more general than the linear regression model, and\no\ufb00ers a similar interpretation.\nHow do we \ufb01t a PPR model, given training data (xi, yi), i = 1, 2, . . . , N?\nWe seek the approximate minimizers of the error function",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30544,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30545,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30546,
+          "text": "$",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30547,
+          "text": "yi \u2212",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30548,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30549,
+          "text": "m=1\ngm(\u03c9T\nmxi)",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30550,
+          "text": "%2",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30551,
+          "text": "(11.2)",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30553,
+          "text": "over functions gm and direction vectors \u03c9m, m = 1, 2, . . . , M. As in other\nsmoothing problems, we need either explicitly or implicitly to impose com-\nplexity constraints on the gm, to avoid over\ufb01t solutions.\nConsider just one term (M = 1, and drop the subscript). Given the\ndirection vector \u03c9, we form the derived variables vi = \u03c9T xi. Then we have\na one-dimensional smoothing problem, and we can apply any scatterplot\nsmoother, such as a smoothing spline, to obtain an estimate of g.\nOn the other hand, given g, we want to minimize (11.2) over \u03c9. A Gauss\u2013\nNewton search is convenient for this task. This is a quasi-Newton method,\nin which the part of the Hessian involving the second derivative of g is\ndiscarded. It can be simply derived as follows. Let \u03c9old be the current\nestimate for \u03c9. We write",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30554,
+          "text": "g(\u03c9T xi) \u2248g(\u03c9T\noldxi) + g\u2032(\u03c9T\noldxi)(\u03c9 \u2212\u03c9old)T xi\n(11.3)",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30555,
+          "text": "to give",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30556,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30557,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30558,
+          "text": "\u0013\nyi \u2212g(\u03c9T xi)\n\u00142 \u2248",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30559,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        }
+      ]
+    },
+    {
+      "id": 384,
+      "name": "shrinkage in boosting",
+      "description": "Scaling the contribution of each tree by a learning rate factor 0 < \u03bd < 1 when added to the current approximation, controlling the learning rate of boosting.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "The simplest implementation of shrinkage in the context of boosting is to scale the contribution of each tree by a factor 0 < \u03bd < 1 when it is added to the current approximation.",
+      "existing_formula": "f_m(x) = f_{m-1}(x) + \\nu \\cdot \\beta_m b(x; \\gamma_m)",
+      "paragraphs": [
+        {
+          "id": 30526,
+          "text": "This is page 389\nPrinter: Opaque this\n11\nNeural Networks",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30528,
+          "text": "In this chapter we describe a class of learning methods that was developed\nseparately in di\ufb00erent \ufb01elds\u2014statistics and arti\ufb01cial intelligence\u2014based\non essentially identical models. The central idea is to extract linear com-\nbinations of the inputs as derived features, and then model the target as\na nonlinear function of these features. The result is a powerful learning\nmethod, with widespread applications in many \ufb01elds. We \ufb01rst discuss the\nprojection pursuit model, which evolved in the domain of semiparamet-\nric statistics and smoothing. The rest of the chapter is devoted to neural\nnetwork models.",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30530,
+          "text": "As in our generic supervised learning problem, assume we have an input\nvector X with p components, and a target Y . Let \u03c9m, m = 1, 2, . . . , M, be\nunit p-vectors of unknown parameters. The projection pursuit regression\n(PPR) model has the form",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30531,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30532,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30533,
+          "text": "m=1\ngm(\u03c9T\nmX).\n(11.1)",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30534,
+          "text": "This is an additive model, but in the derived features Vm = \u03c9T\nmX rather\nthan the inputs themselves. The functions gm are unspeci\ufb01ed and are esti-",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30535,
+          "text": "390\nNeural Networks",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30536,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30537,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30538,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30539,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30541,
+          "text": "2.\n(Right:) g(V ) = (V + 0.1) sin(1/(V/3 + 0.1)), where V = X1.",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30542,
+          "text": "mated along with the directions \u03c9m using some \ufb02exible smoothing method\n(see below).\nThe function gm(\u03c9T\nmX) is called a ridge function in IRp. It varies only\nin the direction de\ufb01ned by the vector \u03c9m. The scalar variable Vm = \u03c9T\nmX\nis the projection of X onto the unit vector \u03c9m, and we seek \u03c9m so that\nthe model \ufb01ts well, hence the name \u201cprojection pursuit.\u201d Figure 11.1 shows\nsome examples of ridge functions. In the example on the left \u03c9 = (1/\n\u221a",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30543,
+          "text": "2)(1, 1)T ,\nso that the function only varies in the direction X1 + X2. In the example\non the right, \u03c9 = (1, 0).\nThe PPR model (11.1) is very general, since the operation of forming\nnonlinear functions of linear combinations generates a surprisingly large\nclass of models. For example, the product X1 \u00b7X2 can be written as [(X1 +\nX2)2 \u2212(X1 \u2212X2)2]/4, and higher-order products can be represented simi-\nlarly.\nIn fact, if M is taken arbitrarily large, for appropriate choice of gm the\nPPR model can approximate any continuous function in IRp arbitrarily\nwell. Such a class of models is called a universal approximator. However\nthis generality comes at a price. Interpretation of the \ufb01tted model is usually\ndi\ufb03cult, because each input enters into the model in a complex and multi-\nfaceted way. As a result, the PPR model is most useful for prediction, and\nnot very useful for producing an understandable model for the data. The\nM = 1 model, known as the single index model in econometrics, is an\nexception. It is slightly more general than the linear regression model, and\no\ufb00ers a similar interpretation.\nHow do we \ufb01t a PPR model, given training data (xi, yi), i = 1, 2, . . . , N?\nWe seek the approximate minimizers of the error function",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30544,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30545,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30546,
+          "text": "$",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30547,
+          "text": "yi \u2212",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30548,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30549,
+          "text": "m=1\ngm(\u03c9T\nmxi)",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30550,
+          "text": "%2",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30551,
+          "text": "(11.2)",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30553,
+          "text": "over functions gm and direction vectors \u03c9m, m = 1, 2, . . . , M. As in other\nsmoothing problems, we need either explicitly or implicitly to impose com-\nplexity constraints on the gm, to avoid over\ufb01t solutions.\nConsider just one term (M = 1, and drop the subscript). Given the\ndirection vector \u03c9, we form the derived variables vi = \u03c9T xi. Then we have\na one-dimensional smoothing problem, and we can apply any scatterplot\nsmoother, such as a smoothing spline, to obtain an estimate of g.\nOn the other hand, given g, we want to minimize (11.2) over \u03c9. A Gauss\u2013\nNewton search is convenient for this task. This is a quasi-Newton method,\nin which the part of the Hessian involving the second derivative of g is\ndiscarded. It can be simply derived as follows. Let \u03c9old be the current\nestimate for \u03c9. We write",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30554,
+          "text": "g(\u03c9T xi) \u2248g(\u03c9T\noldxi) + g\u2032(\u03c9T\noldxi)(\u03c9 \u2212\u03c9old)T xi\n(11.3)",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30555,
+          "text": "to give",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30556,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30557,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30558,
+          "text": "\u0013\nyi \u2212g(\u03c9T xi)\n\u00142 \u2248",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30559,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        }
+      ]
+    },
+    {
+      "id": 389,
+      "name": "partial dependence plots",
+      "description": "Graphical visualization showing the marginal effect of a subset of predictor variables on the prediction function after accounting for the average effects of other variables.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "One way to define the average or partial dependence of f(X) on XS is the marginal average of f.",
+      "existing_formula": "\\bar{f}_S(X_S) = E_{X_C}[f(X_S, X_C)]",
+      "paragraphs": [
+        {
+          "id": 30526,
+          "text": "This is page 389\nPrinter: Opaque this\n11\nNeural Networks",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30528,
+          "text": "In this chapter we describe a class of learning methods that was developed\nseparately in di\ufb00erent \ufb01elds\u2014statistics and arti\ufb01cial intelligence\u2014based\non essentially identical models. The central idea is to extract linear com-\nbinations of the inputs as derived features, and then model the target as\na nonlinear function of these features. The result is a powerful learning\nmethod, with widespread applications in many \ufb01elds. We \ufb01rst discuss the\nprojection pursuit model, which evolved in the domain of semiparamet-\nric statistics and smoothing. The rest of the chapter is devoted to neural\nnetwork models.",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30530,
+          "text": "As in our generic supervised learning problem, assume we have an input\nvector X with p components, and a target Y . Let \u03c9m, m = 1, 2, . . . , M, be\nunit p-vectors of unknown parameters. The projection pursuit regression\n(PPR) model has the form",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30531,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30532,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30533,
+          "text": "m=1\ngm(\u03c9T\nmX).\n(11.1)",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30534,
+          "text": "This is an additive model, but in the derived features Vm = \u03c9T\nmX rather\nthan the inputs themselves. The functions gm are unspeci\ufb01ed and are esti-",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30535,
+          "text": "390\nNeural Networks",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30536,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30537,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30538,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30539,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30541,
+          "text": "2.\n(Right:) g(V ) = (V + 0.1) sin(1/(V/3 + 0.1)), where V = X1.",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30542,
+          "text": "mated along with the directions \u03c9m using some \ufb02exible smoothing method\n(see below).\nThe function gm(\u03c9T\nmX) is called a ridge function in IRp. It varies only\nin the direction de\ufb01ned by the vector \u03c9m. The scalar variable Vm = \u03c9T\nmX\nis the projection of X onto the unit vector \u03c9m, and we seek \u03c9m so that\nthe model \ufb01ts well, hence the name \u201cprojection pursuit.\u201d Figure 11.1 shows\nsome examples of ridge functions. In the example on the left \u03c9 = (1/\n\u221a",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30543,
+          "text": "2)(1, 1)T ,\nso that the function only varies in the direction X1 + X2. In the example\non the right, \u03c9 = (1, 0).\nThe PPR model (11.1) is very general, since the operation of forming\nnonlinear functions of linear combinations generates a surprisingly large\nclass of models. For example, the product X1 \u00b7X2 can be written as [(X1 +\nX2)2 \u2212(X1 \u2212X2)2]/4, and higher-order products can be represented simi-\nlarly.\nIn fact, if M is taken arbitrarily large, for appropriate choice of gm the\nPPR model can approximate any continuous function in IRp arbitrarily\nwell. Such a class of models is called a universal approximator. However\nthis generality comes at a price. Interpretation of the \ufb01tted model is usually\ndi\ufb03cult, because each input enters into the model in a complex and multi-\nfaceted way. As a result, the PPR model is most useful for prediction, and\nnot very useful for producing an understandable model for the data. The\nM = 1 model, known as the single index model in econometrics, is an\nexception. It is slightly more general than the linear regression model, and\no\ufb00ers a similar interpretation.\nHow do we \ufb01t a PPR model, given training data (xi, yi), i = 1, 2, . . . , N?\nWe seek the approximate minimizers of the error function",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30544,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30545,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30546,
+          "text": "$",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30547,
+          "text": "yi \u2212",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30548,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30549,
+          "text": "m=1\ngm(\u03c9T\nmxi)",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30550,
+          "text": "%2",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30551,
+          "text": "(11.2)",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30553,
+          "text": "over functions gm and direction vectors \u03c9m, m = 1, 2, . . . , M. As in other\nsmoothing problems, we need either explicitly or implicitly to impose com-\nplexity constraints on the gm, to avoid over\ufb01t solutions.\nConsider just one term (M = 1, and drop the subscript). Given the\ndirection vector \u03c9, we form the derived variables vi = \u03c9T xi. Then we have\na one-dimensional smoothing problem, and we can apply any scatterplot\nsmoother, such as a smoothing spline, to obtain an estimate of g.\nOn the other hand, given g, we want to minimize (11.2) over \u03c9. A Gauss\u2013\nNewton search is convenient for this task. This is a quasi-Newton method,\nin which the part of the Hessian involving the second derivative of g is\ndiscarded. It can be simply derived as follows. Let \u03c9old be the current\nestimate for \u03c9. We write",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30554,
+          "text": "g(\u03c9T xi) \u2248g(\u03c9T\noldxi) + g\u2032(\u03c9T\noldxi)(\u03c9 \u2212\u03c9old)T xi\n(11.3)",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30555,
+          "text": "to give",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30556,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30557,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30558,
+          "text": "\u0013\nyi \u2212g(\u03c9T xi)\n\u00142 \u2248",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30559,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        }
+      ]
+    },
+    {
+      "id": 392,
+      "name": "ridge function",
+      "description": "A function in p-dimensional space that varies only in the direction defined by a vector, of the form g(\u03c9\u1d40X).",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "The function gm(\u03c9\u1d40mX) is called a ridge function in IRp. It varies only in the direction defined by the vector \u03c9m.",
+      "existing_formula": "g(\\omega^T X)",
+      "paragraphs": [
+        {
+          "id": 30526,
+          "text": "This is page 389\nPrinter: Opaque this\n11\nNeural Networks",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30528,
+          "text": "In this chapter we describe a class of learning methods that was developed\nseparately in di\ufb00erent \ufb01elds\u2014statistics and arti\ufb01cial intelligence\u2014based\non essentially identical models. The central idea is to extract linear com-\nbinations of the inputs as derived features, and then model the target as\na nonlinear function of these features. The result is a powerful learning\nmethod, with widespread applications in many \ufb01elds. We \ufb01rst discuss the\nprojection pursuit model, which evolved in the domain of semiparamet-\nric statistics and smoothing. The rest of the chapter is devoted to neural\nnetwork models.",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30530,
+          "text": "As in our generic supervised learning problem, assume we have an input\nvector X with p components, and a target Y . Let \u03c9m, m = 1, 2, . . . , M, be\nunit p-vectors of unknown parameters. The projection pursuit regression\n(PPR) model has the form",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30531,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30532,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30533,
+          "text": "m=1\ngm(\u03c9T\nmX).\n(11.1)",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30534,
+          "text": "This is an additive model, but in the derived features Vm = \u03c9T\nmX rather\nthan the inputs themselves. The functions gm are unspeci\ufb01ed and are esti-",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30535,
+          "text": "390\nNeural Networks",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30536,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30537,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30538,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30539,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30541,
+          "text": "2.\n(Right:) g(V ) = (V + 0.1) sin(1/(V/3 + 0.1)), where V = X1.",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30542,
+          "text": "mated along with the directions \u03c9m using some \ufb02exible smoothing method\n(see below).\nThe function gm(\u03c9T\nmX) is called a ridge function in IRp. It varies only\nin the direction de\ufb01ned by the vector \u03c9m. The scalar variable Vm = \u03c9T\nmX\nis the projection of X onto the unit vector \u03c9m, and we seek \u03c9m so that\nthe model \ufb01ts well, hence the name \u201cprojection pursuit.\u201d Figure 11.1 shows\nsome examples of ridge functions. In the example on the left \u03c9 = (1/\n\u221a",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30543,
+          "text": "2)(1, 1)T ,\nso that the function only varies in the direction X1 + X2. In the example\non the right, \u03c9 = (1, 0).\nThe PPR model (11.1) is very general, since the operation of forming\nnonlinear functions of linear combinations generates a surprisingly large\nclass of models. For example, the product X1 \u00b7X2 can be written as [(X1 +\nX2)2 \u2212(X1 \u2212X2)2]/4, and higher-order products can be represented simi-\nlarly.\nIn fact, if M is taken arbitrarily large, for appropriate choice of gm the\nPPR model can approximate any continuous function in IRp arbitrarily\nwell. Such a class of models is called a universal approximator. However\nthis generality comes at a price. Interpretation of the \ufb01tted model is usually\ndi\ufb03cult, because each input enters into the model in a complex and multi-\nfaceted way. As a result, the PPR model is most useful for prediction, and\nnot very useful for producing an understandable model for the data. The\nM = 1 model, known as the single index model in econometrics, is an\nexception. It is slightly more general than the linear regression model, and\no\ufb00ers a similar interpretation.\nHow do we \ufb01t a PPR model, given training data (xi, yi), i = 1, 2, . . . , N?\nWe seek the approximate minimizers of the error function",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30544,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30545,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30546,
+          "text": "$",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30547,
+          "text": "yi \u2212",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30548,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30549,
+          "text": "m=1\ngm(\u03c9T\nmxi)",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30550,
+          "text": "%2",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30551,
+          "text": "(11.2)",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30553,
+          "text": "over functions gm and direction vectors \u03c9m, m = 1, 2, . . . , M. As in other\nsmoothing problems, we need either explicitly or implicitly to impose com-\nplexity constraints on the gm, to avoid over\ufb01t solutions.\nConsider just one term (M = 1, and drop the subscript). Given the\ndirection vector \u03c9, we form the derived variables vi = \u03c9T xi. Then we have\na one-dimensional smoothing problem, and we can apply any scatterplot\nsmoother, such as a smoothing spline, to obtain an estimate of g.\nOn the other hand, given g, we want to minimize (11.2) over \u03c9. A Gauss\u2013\nNewton search is convenient for this task. This is a quasi-Newton method,\nin which the part of the Hessian involving the second derivative of g is\ndiscarded. It can be simply derived as follows. Let \u03c9old be the current\nestimate for \u03c9. We write",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30554,
+          "text": "g(\u03c9T xi) \u2248g(\u03c9T\noldxi) + g\u2032(\u03c9T\noldxi)(\u03c9 \u2212\u03c9old)T xi\n(11.3)",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30555,
+          "text": "to give",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30556,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30557,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30558,
+          "text": "\u0013\nyi \u2212g(\u03c9T xi)\n\u00142 \u2248",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30559,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        }
+      ]
+    },
+    {
+      "id": 393,
+      "name": "single index model",
+      "description": "A projection pursuit regression model with M=1, known in econometrics, slightly more general than linear regression.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "The M = 1 model, known as the single index model in econometrics, is an exception. It is slightly more general than the linear regression model, and offers a similar interpretation.",
+      "existing_formula": "f(X) = g(\\omega^T X)",
+      "paragraphs": [
+        {
+          "id": 30526,
+          "text": "This is page 389\nPrinter: Opaque this\n11\nNeural Networks",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30528,
+          "text": "In this chapter we describe a class of learning methods that was developed\nseparately in di\ufb00erent \ufb01elds\u2014statistics and arti\ufb01cial intelligence\u2014based\non essentially identical models. The central idea is to extract linear com-\nbinations of the inputs as derived features, and then model the target as\na nonlinear function of these features. The result is a powerful learning\nmethod, with widespread applications in many \ufb01elds. We \ufb01rst discuss the\nprojection pursuit model, which evolved in the domain of semiparamet-\nric statistics and smoothing. The rest of the chapter is devoted to neural\nnetwork models.",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30530,
+          "text": "As in our generic supervised learning problem, assume we have an input\nvector X with p components, and a target Y . Let \u03c9m, m = 1, 2, . . . , M, be\nunit p-vectors of unknown parameters. The projection pursuit regression\n(PPR) model has the form",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30531,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30532,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30533,
+          "text": "m=1\ngm(\u03c9T\nmX).\n(11.1)",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30534,
+          "text": "This is an additive model, but in the derived features Vm = \u03c9T\nmX rather\nthan the inputs themselves. The functions gm are unspeci\ufb01ed and are esti-",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30535,
+          "text": "390\nNeural Networks",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30536,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30537,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30538,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30539,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30541,
+          "text": "2.\n(Right:) g(V ) = (V + 0.1) sin(1/(V/3 + 0.1)), where V = X1.",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30542,
+          "text": "mated along with the directions \u03c9m using some \ufb02exible smoothing method\n(see below).\nThe function gm(\u03c9T\nmX) is called a ridge function in IRp. It varies only\nin the direction de\ufb01ned by the vector \u03c9m. The scalar variable Vm = \u03c9T\nmX\nis the projection of X onto the unit vector \u03c9m, and we seek \u03c9m so that\nthe model \ufb01ts well, hence the name \u201cprojection pursuit.\u201d Figure 11.1 shows\nsome examples of ridge functions. In the example on the left \u03c9 = (1/\n\u221a",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30543,
+          "text": "2)(1, 1)T ,\nso that the function only varies in the direction X1 + X2. In the example\non the right, \u03c9 = (1, 0).\nThe PPR model (11.1) is very general, since the operation of forming\nnonlinear functions of linear combinations generates a surprisingly large\nclass of models. For example, the product X1 \u00b7X2 can be written as [(X1 +\nX2)2 \u2212(X1 \u2212X2)2]/4, and higher-order products can be represented simi-\nlarly.\nIn fact, if M is taken arbitrarily large, for appropriate choice of gm the\nPPR model can approximate any continuous function in IRp arbitrarily\nwell. Such a class of models is called a universal approximator. However\nthis generality comes at a price. Interpretation of the \ufb01tted model is usually\ndi\ufb03cult, because each input enters into the model in a complex and multi-\nfaceted way. As a result, the PPR model is most useful for prediction, and\nnot very useful for producing an understandable model for the data. The\nM = 1 model, known as the single index model in econometrics, is an\nexception. It is slightly more general than the linear regression model, and\no\ufb00ers a similar interpretation.\nHow do we \ufb01t a PPR model, given training data (xi, yi), i = 1, 2, . . . , N?\nWe seek the approximate minimizers of the error function",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30544,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30545,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30546,
+          "text": "$",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30547,
+          "text": "yi \u2212",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30548,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30549,
+          "text": "m=1\ngm(\u03c9T\nmxi)",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30550,
+          "text": "%2",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30551,
+          "text": "(11.2)",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30553,
+          "text": "over functions gm and direction vectors \u03c9m, m = 1, 2, . . . , M. As in other\nsmoothing problems, we need either explicitly or implicitly to impose com-\nplexity constraints on the gm, to avoid over\ufb01t solutions.\nConsider just one term (M = 1, and drop the subscript). Given the\ndirection vector \u03c9, we form the derived variables vi = \u03c9T xi. Then we have\na one-dimensional smoothing problem, and we can apply any scatterplot\nsmoother, such as a smoothing spline, to obtain an estimate of g.\nOn the other hand, given g, we want to minimize (11.2) over \u03c9. A Gauss\u2013\nNewton search is convenient for this task. This is a quasi-Newton method,\nin which the part of the Hessian involving the second derivative of g is\ndiscarded. It can be simply derived as follows. Let \u03c9old be the current\nestimate for \u03c9. We write",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30554,
+          "text": "g(\u03c9T xi) \u2248g(\u03c9T\noldxi) + g\u2032(\u03c9T\noldxi)(\u03c9 \u2212\u03c9old)T xi\n(11.3)",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30555,
+          "text": "to give",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30556,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30557,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30558,
+          "text": "\u0013\nyi \u2212g(\u03c9T xi)\n\u00142 \u2248",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30559,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        }
+      ]
+    },
+    {
+      "id": 394,
+      "name": "gauss-newton search",
+      "description": "A quasi-Newton optimization method that discards the part of the Hessian involving second derivatives, used for fitting projection pursuit models.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "A Gauss\u2013Newton search is convenient for this task. This is a quasi-Newton method, in which the part of the Hessian involving the second derivative of g is discarded.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 30526,
+          "text": "This is page 389\nPrinter: Opaque this\n11\nNeural Networks",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30528,
+          "text": "In this chapter we describe a class of learning methods that was developed\nseparately in di\ufb00erent \ufb01elds\u2014statistics and arti\ufb01cial intelligence\u2014based\non essentially identical models. The central idea is to extract linear com-\nbinations of the inputs as derived features, and then model the target as\na nonlinear function of these features. The result is a powerful learning\nmethod, with widespread applications in many \ufb01elds. We \ufb01rst discuss the\nprojection pursuit model, which evolved in the domain of semiparamet-\nric statistics and smoothing. The rest of the chapter is devoted to neural\nnetwork models.",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30530,
+          "text": "As in our generic supervised learning problem, assume we have an input\nvector X with p components, and a target Y . Let \u03c9m, m = 1, 2, . . . , M, be\nunit p-vectors of unknown parameters. The projection pursuit regression\n(PPR) model has the form",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30531,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30532,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30533,
+          "text": "m=1\ngm(\u03c9T\nmX).\n(11.1)",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30534,
+          "text": "This is an additive model, but in the derived features Vm = \u03c9T\nmX rather\nthan the inputs themselves. The functions gm are unspeci\ufb01ed and are esti-",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30535,
+          "text": "390\nNeural Networks",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30536,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30537,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30538,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30539,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30541,
+          "text": "2.\n(Right:) g(V ) = (V + 0.1) sin(1/(V/3 + 0.1)), where V = X1.",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30542,
+          "text": "mated along with the directions \u03c9m using some \ufb02exible smoothing method\n(see below).\nThe function gm(\u03c9T\nmX) is called a ridge function in IRp. It varies only\nin the direction de\ufb01ned by the vector \u03c9m. The scalar variable Vm = \u03c9T\nmX\nis the projection of X onto the unit vector \u03c9m, and we seek \u03c9m so that\nthe model \ufb01ts well, hence the name \u201cprojection pursuit.\u201d Figure 11.1 shows\nsome examples of ridge functions. In the example on the left \u03c9 = (1/\n\u221a",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30543,
+          "text": "2)(1, 1)T ,\nso that the function only varies in the direction X1 + X2. In the example\non the right, \u03c9 = (1, 0).\nThe PPR model (11.1) is very general, since the operation of forming\nnonlinear functions of linear combinations generates a surprisingly large\nclass of models. For example, the product X1 \u00b7X2 can be written as [(X1 +\nX2)2 \u2212(X1 \u2212X2)2]/4, and higher-order products can be represented simi-\nlarly.\nIn fact, if M is taken arbitrarily large, for appropriate choice of gm the\nPPR model can approximate any continuous function in IRp arbitrarily\nwell. Such a class of models is called a universal approximator. However\nthis generality comes at a price. Interpretation of the \ufb01tted model is usually\ndi\ufb03cult, because each input enters into the model in a complex and multi-\nfaceted way. As a result, the PPR model is most useful for prediction, and\nnot very useful for producing an understandable model for the data. The\nM = 1 model, known as the single index model in econometrics, is an\nexception. It is slightly more general than the linear regression model, and\no\ufb00ers a similar interpretation.\nHow do we \ufb01t a PPR model, given training data (xi, yi), i = 1, 2, . . . , N?\nWe seek the approximate minimizers of the error function",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30544,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30545,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30546,
+          "text": "$",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30547,
+          "text": "yi \u2212",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30548,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30549,
+          "text": "m=1\ngm(\u03c9T\nmxi)",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30550,
+          "text": "%2",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30551,
+          "text": "(11.2)",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30553,
+          "text": "over functions gm and direction vectors \u03c9m, m = 1, 2, . . . , M. As in other\nsmoothing problems, we need either explicitly or implicitly to impose com-\nplexity constraints on the gm, to avoid over\ufb01t solutions.\nConsider just one term (M = 1, and drop the subscript). Given the\ndirection vector \u03c9, we form the derived variables vi = \u03c9T xi. Then we have\na one-dimensional smoothing problem, and we can apply any scatterplot\nsmoother, such as a smoothing spline, to obtain an estimate of g.\nOn the other hand, given g, we want to minimize (11.2) over \u03c9. A Gauss\u2013\nNewton search is convenient for this task. This is a quasi-Newton method,\nin which the part of the Hessian involving the second derivative of g is\ndiscarded. It can be simply derived as follows. Let \u03c9old be the current\nestimate for \u03c9. We write",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30554,
+          "text": "g(\u03c9T xi) \u2248g(\u03c9T\noldxi) + g\u2032(\u03c9T\noldxi)(\u03c9 \u2212\u03c9old)T xi\n(11.3)",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30555,
+          "text": "to give",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30556,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30557,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30558,
+          "text": "\u0013\nyi \u2212g(\u03c9T xi)\n\u00142 \u2248",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30559,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        }
+      ]
+    },
+    {
+      "id": 395,
+      "name": "single hidden layer perceptron",
+      "description": "A neural network with one hidden layer, also called a vanilla neural net or single hidden layer back-propagation network.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "Here we describe the most widely used 'vanilla' neural net, sometimes called the single hidden layer back-propagation network, or single layer perceptron.",
+      "existing_formula": "f_k(X) = g_k\\left(\\beta_{0k} + \\sum_{m=1}^M \\beta_{mk} Z_m\\right), \\quad Z_m = \\sigma(\\alpha_{0m} + \\alpha_m^T X)",
+      "paragraphs": [
+        {
+          "id": 30526,
+          "text": "This is page 389\nPrinter: Opaque this\n11\nNeural Networks",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30528,
+          "text": "In this chapter we describe a class of learning methods that was developed\nseparately in di\ufb00erent \ufb01elds\u2014statistics and arti\ufb01cial intelligence\u2014based\non essentially identical models. The central idea is to extract linear com-\nbinations of the inputs as derived features, and then model the target as\na nonlinear function of these features. The result is a powerful learning\nmethod, with widespread applications in many \ufb01elds. We \ufb01rst discuss the\nprojection pursuit model, which evolved in the domain of semiparamet-\nric statistics and smoothing. The rest of the chapter is devoted to neural\nnetwork models.",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30530,
+          "text": "As in our generic supervised learning problem, assume we have an input\nvector X with p components, and a target Y . Let \u03c9m, m = 1, 2, . . . , M, be\nunit p-vectors of unknown parameters. The projection pursuit regression\n(PPR) model has the form",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30531,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30532,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30533,
+          "text": "m=1\ngm(\u03c9T\nmX).\n(11.1)",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30534,
+          "text": "This is an additive model, but in the derived features Vm = \u03c9T\nmX rather\nthan the inputs themselves. The functions gm are unspeci\ufb01ed and are esti-",
+          "type": "narrative",
+          "page": 407
+        },
+        {
+          "id": 30535,
+          "text": "390\nNeural Networks",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30536,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30537,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30538,
+          "text": "g(V )",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30539,
+          "text": "X1\nX2",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30541,
+          "text": "2.\n(Right:) g(V ) = (V + 0.1) sin(1/(V/3 + 0.1)), where V = X1.",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30542,
+          "text": "mated along with the directions \u03c9m using some \ufb02exible smoothing method\n(see below).\nThe function gm(\u03c9T\nmX) is called a ridge function in IRp. It varies only\nin the direction de\ufb01ned by the vector \u03c9m. The scalar variable Vm = \u03c9T\nmX\nis the projection of X onto the unit vector \u03c9m, and we seek \u03c9m so that\nthe model \ufb01ts well, hence the name \u201cprojection pursuit.\u201d Figure 11.1 shows\nsome examples of ridge functions. In the example on the left \u03c9 = (1/\n\u221a",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30543,
+          "text": "2)(1, 1)T ,\nso that the function only varies in the direction X1 + X2. In the example\non the right, \u03c9 = (1, 0).\nThe PPR model (11.1) is very general, since the operation of forming\nnonlinear functions of linear combinations generates a surprisingly large\nclass of models. For example, the product X1 \u00b7X2 can be written as [(X1 +\nX2)2 \u2212(X1 \u2212X2)2]/4, and higher-order products can be represented simi-\nlarly.\nIn fact, if M is taken arbitrarily large, for appropriate choice of gm the\nPPR model can approximate any continuous function in IRp arbitrarily\nwell. Such a class of models is called a universal approximator. However\nthis generality comes at a price. Interpretation of the \ufb01tted model is usually\ndi\ufb03cult, because each input enters into the model in a complex and multi-\nfaceted way. As a result, the PPR model is most useful for prediction, and\nnot very useful for producing an understandable model for the data. The\nM = 1 model, known as the single index model in econometrics, is an\nexception. It is slightly more general than the linear regression model, and\no\ufb00ers a similar interpretation.\nHow do we \ufb01t a PPR model, given training data (xi, yi), i = 1, 2, . . . , N?\nWe seek the approximate minimizers of the error function",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30544,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30545,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30546,
+          "text": "$",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30547,
+          "text": "yi \u2212",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30548,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30549,
+          "text": "m=1\ngm(\u03c9T\nmxi)",
+          "type": "narrative",
+          "page": 408
+        },
+        {
+          "id": 30550,
+          "text": "%2",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30551,
+          "text": "(11.2)",
+          "type": "equation",
+          "page": 408
+        },
+        {
+          "id": 30553,
+          "text": "over functions gm and direction vectors \u03c9m, m = 1, 2, . . . , M. As in other\nsmoothing problems, we need either explicitly or implicitly to impose com-\nplexity constraints on the gm, to avoid over\ufb01t solutions.\nConsider just one term (M = 1, and drop the subscript). Given the\ndirection vector \u03c9, we form the derived variables vi = \u03c9T xi. Then we have\na one-dimensional smoothing problem, and we can apply any scatterplot\nsmoother, such as a smoothing spline, to obtain an estimate of g.\nOn the other hand, given g, we want to minimize (11.2) over \u03c9. A Gauss\u2013\nNewton search is convenient for this task. This is a quasi-Newton method,\nin which the part of the Hessian involving the second derivative of g is\ndiscarded. It can be simply derived as follows. Let \u03c9old be the current\nestimate for \u03c9. We write",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30554,
+          "text": "g(\u03c9T xi) \u2248g(\u03c9T\noldxi) + g\u2032(\u03c9T\noldxi)(\u03c9 \u2212\u03c9old)T xi\n(11.3)",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30555,
+          "text": "to give",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30556,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30557,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30558,
+          "text": "\u0013\nyi \u2212g(\u03c9T xi)\n\u00142 \u2248",
+          "type": "narrative",
+          "page": 409
+        },
+        {
+          "id": 30559,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 409
+        }
+      ]
+    }
+  ]
+}

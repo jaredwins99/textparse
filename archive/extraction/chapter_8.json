@@ -1,0 +1,837 @@
+{
+  "chapter": "8",
+  "sections": [
+    {
+      "number": "8.1",
+      "title": "Introduction",
+      "page_start": 279
+    },
+    {
+      "number": "8.2",
+      "title": "The Bootstrap and Maximum Likelihood",
+      "page_start": 279
+    },
+    {
+      "number": "8.2.1",
+      "title": "A Smoothing Example",
+      "page_start": 279
+    },
+    {
+      "number": "8.2.2",
+      "title": "Maximum Likelihood Inference",
+      "page_start": 283
+    },
+    {
+      "number": "8.2.3",
+      "title": "Bootstrap versus Maximum Likelihood",
+      "page_start": 285
+    },
+    {
+      "number": "8.3",
+      "title": "Bayesian Methods",
+      "page_start": 285
+    },
+    {
+      "number": "8.4",
+      "title": "Relationship Between the Bootstrap and Bayesian Inference",
+      "page_start": 289
+    },
+    {
+      "number": "8.5",
+      "title": "The EM Algorithm",
+      "page_start": 290
+    },
+    {
+      "number": "8.5.1",
+      "title": "Two-Component Mixture Model",
+      "page_start": 290
+    },
+    {
+      "number": "8.5.2",
+      "title": "The EM Algorithm in General",
+      "page_start": 294
+    },
+    {
+      "number": "8.5.3",
+      "title": "EM as a Maximization\u2013Maximization Procedure",
+      "page_start": 295
+    },
+    {
+      "number": "8.6",
+      "title": "MCMC for Sampling from the Posterior",
+      "page_start": 297
+    },
+    {
+      "number": "8.7",
+      "title": "Bagging",
+      "page_start": 300
+    },
+    {
+      "number": "8.7.1",
+      "title": "Example: Trees with Simulated Data",
+      "page_start": 301
+    },
+    {
+      "number": "8.8",
+      "title": "Model Averaging and Stacking",
+      "page_start": 306
+    },
+    {
+      "number": "8.9",
+      "title": "Stochastic Search: Bumping",
+      "page_start": 308
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": 25809,
+      "page": 279,
+      "seq": 0,
+      "text": "This is page 261\nPrinter: Opaque this\n8\nModel Inference and Averaging"
+    },
+    {
+      "id": 25811,
+      "page": 279,
+      "seq": 2,
+      "text": "For most of this book, the \ufb01tting (learning) of models has been achieved by\nminimizing a sum of squares for regression, or by minimizing cross-entropy\nfor classi\ufb01cation. In fact, both of these minimizations are instances of the\nmaximum likelihood approach to \ufb01tting.\nIn this chapter we provide a general exposition of the maximum likeli-\nhood approach, as well as the Bayesian method for inference. The boot-\nstrap, introduced in Chapter 7, is discussed in this context, and its relation\nto maximum likelihood and Bayes is described. Finally, we present some\nrelated techniques for model averaging and improvement, including com-\nmittee methods, bagging, stacking and bumping."
+    },
+    {
+      "id": 25814,
+      "page": 279,
+      "seq": 5,
+      "text": "The bootstrap method provides a direct computational way of assessing\nuncertainty, by sampling from the training data. Here we illustrate the\nbootstrap in a simple one-dimensional smoothing problem, and show its\nconnection to maximum likelihood."
+    },
+    {
+      "id": 25840,
+      "page": 280,
+      "seq": 25,
+      "text": "Denote the training data by Z = {z1, z2, . . . , zN}, with zi = (xi, yi),\ni = 1, 2, . . . , N. Here xi is a one-dimensional input, and yi the outcome,\neither continuous or categorical. As an example, consider the N = 50 data\npoints shown in the left panel of Figure 8.1.\nSuppose we decide to \ufb01t a cubic spline to the data, with three knots\nplaced at the quartiles of the X values. This is a seven-dimensional lin-\near space of functions, and can be represented, for example, by a linear\nexpansion of B-spline basis functions (see Section 5.9.2):"
+    },
+    {
+      "id": 25844,
+      "page": 280,
+      "seq": 29,
+      "text": "Here the hj(x), j = 1, 2, . . . , 7 are the seven functions shown in the right\npanel of Figure 8.1. We can think of \u03bc(x) as representing the conditional\nmean E(Y |X = x).\nLet H be the N \u00d77 matrix with ijth element hj(xi). The usual estimate\nof \u03b2, obtained by minimizing the squared error over the training set, is\ngiven by"
+    },
+    {
+      "id": 25846,
+      "page": 280,
+      "seq": 31,
+      "text": "The corresponding \ufb01t \u02c6\u03bc(x) = \t7\nj=1 \u02c6\u03b2jhj(x) is shown in the top left panel\nof Figure 8.2.\nThe estimated covariance matrix of \u02c6\u03b2 is"
+    },
+    {
+      "id": 25848,
+      "page": 280,
+      "seq": 33,
+      "text": "where we have estimated the noise variance by \u02c6\u03c32 = \tN\ni=1(yi \u2212\u02c6\u03bc(xi))2/N.\nLetting h(x)T = (h1(x), h2(x), . . . , h7(x)), the standard error of a predic-"
+    },
+    {
+      "id": 25930,
+      "page": 282,
+      "seq": 3,
+      "text": "In the top right panel of Figure 8.2 we have plotted \u02c6\u03bc(x)\u00b11.96\u00b7 2se[\u02c6\u03bc(x)].\nSince 1.96 is the 97.5% point of the standard normal distribution, these\nrepresent approximate 100 \u22122 \u00d7 2.5% = 95% pointwise con\ufb01dence bands\nfor \u03bc(x).\nHere is how we could apply the bootstrap in this example. We draw B\ndatasets each of size N = 50 with replacement from our training data, the\nsampling unit being the pair zi = (xi, yi). To each bootstrap dataset Z\u2217"
+    },
+    {
+      "id": 25931,
+      "page": 282,
+      "seq": 4,
+      "text": "we \ufb01t a cubic spline \u02c6\u03bc\u2217(x); the \ufb01ts from ten such samples are shown in the\nbottom left panel of Figure 8.2. Using B = 200 bootstrap samples, we can\nform a 95% pointwise con\ufb01dence band from the percentiles at each x: we\n\ufb01nd the 2.5% \u00d7 200 = \ufb01fth largest and smallest values at each x. These are\nplotted in the bottom right panel of Figure 8.2. The bands look similar to\nthose in the top right, being a little wider at the endpoints.\nThere is actually a close connection between the least squares estimates\n(8.2) and (8.3), the bootstrap, and maximum likelihood. Suppose we further\nassume that the model errors are Gaussian,"
+    },
+    {
+      "id": 25936,
+      "page": 282,
+      "seq": 9,
+      "text": "The bootstrap method described above, in which we sample with re-\nplacement from the training data, is called the nonparametric bootstrap.\nThis really means that the method is \u201cmodel-free,\u201d since it uses the raw\ndata, not a speci\ufb01c parametric model, to generate new datasets. Consider\na variation of the bootstrap, called the parametric bootstrap, in which we\nsimulate new responses by adding Gaussian noise to the predicted values:"
+    },
+    {
+      "id": 25937,
+      "page": 282,
+      "seq": 10,
+      "text": "y\u2217\ni = \u02c6\u03bc(xi) + \u03b5\u2217\ni ;\n\u03b5\u2217\ni \u223cN(0, \u02c6\u03c32); i = 1, 2, . . . , N.\n(8.6)"
+    },
+    {
+      "id": 25938,
+      "page": 282,
+      "seq": 11,
+      "text": "This process is repeated B times, where B = 200 say. The resulting boot-\nstrap datasets have the form (x1, y\u2217\n1), . . . , (xN, y\u2217\nN) and we recompute the\nB-spline smooth on each. The con\ufb01dence bands from this method will ex-\nactly equal the least squares bands in the top right panel, as the number of\nbootstrap samples goes to in\ufb01nity. A function estimated from a bootstrap\nsample y\u2217is given by \u02c6\u03bc\u2217(x) = h(x)T (HT H)\u22121HT y\u2217, and has distribution"
+    },
+    {
+      "id": 25940,
+      "page": 282,
+      "seq": 13,
+      "text": "Notice that the mean of this distribution is the least squares estimate, and\nthe standard deviation is the same as the approximate formula (8.4)."
+    },
+    {
+      "id": 25943,
+      "page": 283,
+      "seq": 2,
+      "text": "It turns out that the parametric bootstrap agrees with least squares in the\nprevious example because the model (8.5) has additive Gaussian errors. In\ngeneral, the parametric bootstrap agrees not with least squares but with\nmaximum likelihood, which we now review.\nWe begin by specifying a probability density or probability mass function\nfor our observations"
+    },
+    {
+      "id": 25945,
+      "page": 283,
+      "seq": 4,
+      "text": "In this expression \u03b8 represents one or more unknown parameters that gov-\nern the distribution of Z. This is called a parametric model for Z. As an\nexample, if Z has a normal distribution with mean \u03bc and variance \u03c32, then"
+    },
+    {
+      "id": 25951,
+      "page": 283,
+      "seq": 10,
+      "text": "Maximum likelihood is based on the likelihood function, given by"
+    },
+    {
+      "id": 25955,
+      "page": 283,
+      "seq": 14,
+      "text": "the probability of the observed data under the model g\u03b8. The likelihood is\nde\ufb01ned only up to a positive multiplier, which we have taken to be one.\nWe think of L(\u03b8; Z) as a function of \u03b8, with our data Z \ufb01xed.\nDenote the logarithm of L(\u03b8; Z) by"
+    },
+    {
+      "id": 25962,
+      "page": 283,
+      "seq": 21,
+      "text": "which we will sometimes abbreviate as \u2113(\u03b8). This expression is called the\nlog-likelihood, and each value \u2113(\u03b8; zi) = log g\u03b8(zi) is called a log-likelihood\ncomponent. The method of maximum likelihood chooses the value \u03b8 = \u02c6\u03b8\nto maximize \u2113(\u03b8; Z).\nThe likelihood function can be used to assess the precision of \u02c6\u03b8. We need\na few more de\ufb01nitions. The score function is de\ufb01ned by"
+    },
+    {
+      "id": 25967,
+      "page": 284,
+      "seq": 1,
+      "text": "where \u02d9\u2113(\u03b8; zi) = \u2202\u2113(\u03b8; zi)/\u2202\u03b8. Assuming that the likelihood takes its maxi-\nmum in the interior of the parameter space, \u02d9\u2113(\u02c6\u03b8; Z) = 0. The information\nmatrix is"
+    },
+    {
+      "id": 25973,
+      "page": 284,
+      "seq": 7,
+      "text": "When I(\u03b8) is evaluated at \u03b8 = \u02c6\u03b8, it is often called the observed information.\nThe Fisher information (or expected information) is"
+    },
+    {
+      "id": 25975,
+      "page": 284,
+      "seq": 9,
+      "text": "Finally, let \u03b80 denote the true value of \u03b8.\nA standard result says that the sampling distribution of the maximum\nlikelihood estimator has a limiting normal distribution"
+    },
+    {
+      "id": 25977,
+      "page": 284,
+      "seq": 11,
+      "text": "as N \u2192\u221e. Here we are independently sampling from g\u03b80(z). This suggests\nthat the sampling distribution of \u02c6\u03b8 may be approximated by"
+    },
+    {
+      "id": 25979,
+      "page": 284,
+      "seq": 13,
+      "text": "where \u02c6\u03b8 represents the maximum likelihood estimate from the observed\ndata.\nThe corresponding estimates for the standard errors of \u02c6\u03b8j are obtained\nfrom\n\u0015"
+    },
+    {
+      "id": 25982,
+      "page": 284,
+      "seq": 16,
+      "text": "Con\ufb01dence points for \u03b8j can be constructed from either approximation\nin (8.17). Such a con\ufb01dence point has the form"
+    },
+    {
+      "id": 25986,
+      "page": 284,
+      "seq": 20,
+      "text": "respectively, where z(1\u2212\u03b1) is the 1 \u2212\u03b1 percentile of the standard normal\ndistribution. More accurate con\ufb01dence intervals can be derived from the\nlikelihood function, by using the chi-squared approximation"
+    },
+    {
+      "id": 25988,
+      "page": 284,
+      "seq": 22,
+      "text": "where p is the number of components in \u03b8. The resulting 1 \u22122\u03b1 con\ufb01-\ndence interval is the set of all \u03b80 such that 2[\u2113(\u02c6\u03b8) \u2212\u2113(\u03b80)] \u2264\u03c72\np\n(1\u22122\u03b1),"
+    },
+    {
+      "id": 25989,
+      "page": 284,
+      "seq": 23,
+      "text": "where \u03c72\np\n(1\u22122\u03b1) is the 1\u22122\u03b1 percentile of the chi-squared distribution with\np degrees of freedom."
+    },
+    {
+      "id": 25991,
+      "page": 285,
+      "seq": 1,
+      "text": "Let\u2019s return to our smoothing example to see what maximum likelihood\nyields. The parameters are \u03b8 = (\u03b2, \u03c32). The log-likelihood is"
+    },
+    {
+      "id": 25996,
+      "page": 285,
+      "seq": 6,
+      "text": "The maximum likelihood estimate is obtained by setting \u2202\u2113/\u2202\u03b2 = 0 and\n\u2202\u2113/\u2202\u03c32 = 0, giving"
+    },
+    {
+      "id": 26001,
+      "page": 285,
+      "seq": 11,
+      "text": "which are the same as the usual estimates given in (8.2) and below (8.3).\nThe information matrix for \u03b8 = (\u03b2, \u03c32) is block-diagonal, and the block\ncorresponding to \u03b2 is"
+    },
+    {
+      "id": 26003,
+      "page": 285,
+      "seq": 13,
+      "text": "so that the estimated variance (HT H)\u22121\u02c6\u03c32 agrees with the least squares\nestimate (8.3)."
+    },
+    {
+      "id": 26005,
+      "page": 285,
+      "seq": 15,
+      "text": "In essence the bootstrap is a computer implementation of nonparametric or\nparametric maximum likelihood. The advantage of the bootstrap over the\nmaximum likelihood formula is that it allows us to compute maximum like-\nlihood estimates of standard errors and other quantities in settings where\nno formulas are available.\nIn our example, suppose that we adaptively choose by cross-validation\nthe number and position of the knots that de\ufb01ne the B-splines, rather\nthan \ufb01x them in advance. Denote by \u03bb the collection of knots and their\npositions. Then the standard errors and con\ufb01dence bands should account\nfor the adaptive choice of \u03bb, but there is no way to do this analytically.\nWith the bootstrap, we compute the B-spline smooth with an adaptive\nchoice of knots for each bootstrap sample. The percentiles of the resulting\ncurves capture the variability from both the noise in the targets as well as\nthat from \u02c6\u03bb. In this particular example the con\ufb01dence bands (not shown)\ndon\u2019t look much di\ufb00erent than the \ufb01xed \u03bb bands. But in other problems,\nwhere more adaptation is used, this can be an important e\ufb00ect to capture."
+    },
+    {
+      "id": 26007,
+      "page": 285,
+      "seq": 17,
+      "text": "In the Bayesian approach to inference, we specify a sampling model Pr(Z|\u03b8)\n(density or probability mass function) for our data given the parameters,"
+    },
+    {
+      "id": 26009,
+      "page": 286,
+      "seq": 1,
+      "text": "and a prior distribution for the parameters Pr(\u03b8) re\ufb02ecting our knowledge\nabout \u03b8 before we see the data. We then compute the posterior distribution"
+    },
+    {
+      "id": 26010,
+      "page": 286,
+      "seq": 2,
+      "text": "Pr(\u03b8|Z) =\nPr(Z|\u03b8) \u00b7 Pr(\u03b8)\n#\nPr(Z|\u03b8) \u00b7 Pr(\u03b8)d\u03b8,\n(8.23)"
+    },
+    {
+      "id": 26011,
+      "page": 286,
+      "seq": 3,
+      "text": "which represents our updated knowledge about \u03b8 after we see the data. To\nunderstand this posterior distribution, one might draw samples from it or\nsummarize by computing its mean or mode. The Bayesian approach di\ufb00ers\nfrom the standard (\u201cfrequentist\u201d) method for inference in its use of a prior\ndistribution to express the uncertainty present before seeing the data, and\nto allow the uncertainty remaining after seeing the data to be expressed in\nthe form of a posterior distribution.\nThe posterior distribution also provides the basis for predicting the values\nof a future observation znew, via the predictive distribution:"
+    },
+    {
+      "id": 26013,
+      "page": 286,
+      "seq": 5,
+      "text": "In contrast, the maximum likelihood approach would use Pr(znew|\u02c6\u03b8),\nthe data density evaluated at the maximum likelihood estimate, to predict\nfuture data. Unlike the predictive distribution (8.24), this does not account\nfor the uncertainty in estimating \u03b8.\nLet\u2019s walk through the Bayesian approach in our smoothing example.\nWe start with the parametric model given by equation (8.5), and assume\nfor the moment that \u03c32 is known. We assume that the observed feature\nvalues x1, x2, . . . , xN are \ufb01xed, so that the randomness in the data comes\nsolely from y varying around its mean \u03bc(x).\nThe second ingredient we need is a prior distribution. Distributions on\nfunctions are fairly complex entities: one approach is to use a Gaussian\nprocess prior in which we specify the prior covariance between any two\nfunction values \u03bc(x) and \u03bc(x\u2032) (Wahba, 1990; Neal, 1996).\nHere we take a simpler route: by considering a \ufb01nite B-spline basis for\n\u03bc(x), we can instead provide a prior for the coe\ufb03cients \u03b2, and this implicitly\nde\ufb01nes a prior for \u03bc(x). We choose a Gaussian prior centered at zero"
+    },
+    {
+      "id": 26015,
+      "page": 286,
+      "seq": 7,
+      "text": "with the choices of the prior correlation matrix \u03a3 and variance \u03c4 to be\ndiscussed below. The implicit process prior for \u03bc(x) is hence Gaussian,\nwith covariance kernel"
+    },
+    {
+      "id": 26016,
+      "page": 286,
+      "seq": 8,
+      "text": "K(x, x\u2032)\n=\ncov[\u03bc(x), \u03bc(x\u2032)]\n=\n\u03c4 \u00b7 h(x)T \u03a3h(x\u2032).\n(8.26)"
+    },
+    {
+      "id": 26023,
+      "page": 287,
+      "seq": 6,
+      "text": "The posterior distribution for \u03b2 is also Gaussian, with mean and covariance"
+    },
+    {
+      "id": 26035,
+      "page": 287,
+      "seq": 18,
+      "text": "How do we choose the prior correlation matrix \u03a3? In some settings the\nprior can be chosen from subject matter knowledge about the parameters.\nHere we are willing to say the function \u03bc(x) should be smooth, and have\nguaranteed this by expressing \u03bc in a smooth low-dimensional basis of B-\nsplines. Hence we can take the prior correlation matrix to be the identity\n\u03a3 = I. When the number of basis functions is large, this might not be suf-\n\ufb01cient, and additional smoothness can be enforced by imposing restrictions\non \u03a3; this is exactly the case with smoothing splines (Section 5.8.1).\nFigure 8.3 shows ten draws from the corresponding prior for \u03bc(x). To\ngenerate posterior values of the function \u03bc(x), we generate values \u03b2\u2032 from its\nposterior (8.27), giving corresponding posterior value \u03bc\u2032(x) = \t7\n1 \u03b2\u2032\njhj(x).\nTen such posterior curves are shown in Figure 8.4. Two di\ufb00erent values\nwere used for the prior variance \u03c4, 1 and 1000. Notice how similar the\nright panel looks to the bootstrap distribution in the bottom left panel"
+    },
+    {
+      "id": 26076,
+      "page": 288,
+      "seq": 40,
+      "text": "of Figure 8.2 on page 263. This similarity is no accident. As \u03c4 \u2192\u221e, the\nposterior distribution (8.27) and the bootstrap distribution (8.7) coincide.\nOn the other hand, for \u03c4 = 1, the posterior curves \u03bc(x) in the left panel\nof Figure 8.4 are smoother than the bootstrap curves, because we have\nimposed more prior weight on smoothness.\nThe distribution (8.25) with \u03c4 \u2192\u221eis called a noninformative prior for\n\u03b8. In Gaussian models, maximum likelihood and parametric bootstrap anal-\nyses tend to agree with Bayesian analyses that use a noninformative prior\nfor the free parameters. These tend to agree, because with a constant prior,\nthe posterior distribution is proportional to the likelihood. This correspon-\ndence also extends to the nonparametric case, where the nonparametric\nbootstrap approximates a noninformative Bayes analysis; Section 8.4 has\nthe details.\nWe have, however, done some things that are not proper from a Bayesian\npoint of view. We have used a noninformative (constant) prior for \u03c32 and\nreplaced it with the maximum likelihood estimate \u02c6\u03c32 in the posterior. A\nmore standard Bayesian analysis would also put a prior on \u03c3 (typically\ng(\u03c3) \u221d1/\u03c3), calculate a joint posterior for \u03bc(x) and \u03c3, and then integrate\nout \u03c3, rather than just extract the maximum of the posterior distribution\n(\u201cMAP\u201d estimate)."
+    },
+    {
+      "id": 26079,
+      "page": 289,
+      "seq": 2,
+      "text": "Consider \ufb01rst a very simple example, in which we observe a single obser-\nvation z from a normal distribution"
+    },
+    {
+      "id": 26081,
+      "page": 289,
+      "seq": 4,
+      "text": "To carry out a Bayesian analysis for \u03b8, we need to specify a prior. The\nmost convenient and common choice would be \u03b8 \u223cN(0, \u03c4) giving posterior\ndistribution"
+    },
+    {
+      "id": 26084,
+      "page": 289,
+      "seq": 7,
+      "text": "Now the larger we take \u03c4, the more concentrated the posterior becomes\naround the maximum likelihood estimate \u02c6\u03b8 = z. In the limit as \u03c4 \u2192\u221ewe\nobtain a noninformative (constant) prior, and the posterior distribution is"
+    },
+    {
+      "id": 26086,
+      "page": 289,
+      "seq": 9,
+      "text": "This is the same as a parametric bootstrap distribution in which we gen-\nerate bootstrap values z\u2217from the maximum likelihood estimate of the\nsampling density N(z, 1).\nThere are three ingredients that make this correspondence work:"
+    },
+    {
+      "id": 26088,
+      "page": 289,
+      "seq": 11,
+      "text": "2. The dependence of the log-likelihood \u2113(\u03b8; Z) on the data Z only\nthrough the maximum likelihood estimate \u02c6\u03b8. Hence we can write the\nlog-likelihood as \u2113(\u03b8; \u02c6\u03b8)."
+    },
+    {
+      "id": 26089,
+      "page": 289,
+      "seq": 12,
+      "text": "3. The symmetry of the log-likelihood in \u03b8 and \u02c6\u03b8, that is, \u2113(\u03b8; \u02c6\u03b8) =\n\u2113(\u02c6\u03b8; \u03b8) + constant."
+    },
+    {
+      "id": 26090,
+      "page": 289,
+      "seq": 13,
+      "text": "Properties (2) and (3) essentially only hold for the Gaussian distribu-\ntion. However, they also hold approximately for the multinomial distribu-\ntion, leading to a correspondence between the nonparametric bootstrap\nand Bayes inference, which we outline next.\nAssume that we have a discrete sample space with L categories. Let wj be\nthe probability that a sample point falls in category j, and \u02c6wj the observed\nproportion in category j. Let w = (w1, w2, . . . , wL), \u02c6w = ( \u02c6w1, \u02c6w2, . . . , \u02c6wL).\nDenote our estimator by S( \u02c6w); take as a prior distribution for w a sym-\nmetric Dirichlet distribution with parameter a:"
+    },
+    {
+      "id": 26093,
+      "page": 290,
+      "seq": 1,
+      "text": "that is, the prior probability mass function is proportional to /L\n\u2113=1 wa\u22121\n\u2113\n.\nThen the posterior density of w is"
+    },
+    {
+      "id": 26095,
+      "page": 290,
+      "seq": 3,
+      "text": "where N is the sample size. Letting a \u21920 to obtain a noninformative prior\ngives"
+    },
+    {
+      "id": 26097,
+      "page": 290,
+      "seq": 5,
+      "text": "Now the bootstrap distribution, obtained by sampling with replacement\nfrom the data, can be expressed as sampling the category proportions from\na multinomial distribution. Speci\ufb01cally,"
+    },
+    {
+      "id": 26099,
+      "page": 290,
+      "seq": 7,
+      "text": "where Mult(N, \u02c6w) denotes a multinomial distribution, having probability\nmass function\n\u0005\nN\nN \u02c6\nw\u2217\n1,...,N \u02c6\nw\u2217\nL\n\u0006 / \u02c6wN \u02c6\nw\u2217\n\u2113\n\u2113\n. This distribution is similar to the pos-\nterior distribution above, having the same support, same mean, and nearly\nthe same covariance matrix. Hence the bootstrap distribution of S( \u02c6w\u2217) will\nclosely approximate the posterior distribution of S(w).\nIn this sense, the bootstrap distribution represents an (approximate)\nnonparametric, noninformative posterior distribution for our parameter.\nBut this bootstrap distribution is obtained painlessly\u2014without having to\nformally specify a prior and without having to sample from the posterior\ndistribution. Hence we might think of the bootstrap distribution as a \u201cpoor\nman\u2019s\u201d Bayes posterior. By perturbing the data, the bootstrap approxi-\nmates the Bayesian e\ufb00ect of perturbing the parameters, and is typically\nmuch simpler to carry out."
+    },
+    {
+      "id": 26101,
+      "page": 290,
+      "seq": 9,
+      "text": "The EM algorithm is a popular tool for simplifying di\ufb03cult maximum\nlikelihood problems. We \ufb01rst describe it in the context of a simple mixture\nmodel."
+    },
+    {
+      "id": 26103,
+      "page": 290,
+      "seq": 11,
+      "text": "In this section we describe a simple mixture model for density estimation,\nand the associated EM algorithm for carrying out maximum likelihood\nestimation. This has a natural connection to Gibbs sampling methods for\nBayesian inference. Mixture models are discussed and demonstrated in sev-\neral other parts of the book, in particular Sections 6.8, 12.7 and 13.2.3.\nThe left panel of Figure 8.5 shows a histogram of the 20 \ufb01ctitious data\npoints in Table 8.1."
+    },
+    {
+      "id": 26116,
+      "page": 291,
+      "seq": 12,
+      "text": "-0.39\n0.12\n0.94\n1.67\n1.76\n2.44\n3.72\n4.28\n4.92\n5.53\n0.06\n0.48\n1.01\n1.68\n1.80\n3.25\n4.12\n4.60\n5.28\n6.22"
+    },
+    {
+      "id": 26117,
+      "page": 291,
+      "seq": 13,
+      "text": "We would like to model the density of the data points, and due to the\napparent bi-modality, a Gaussian distribution would not be appropriate.\nThere seems to be two separate underlying regimes, so instead we model\nY as a mixture of two normal distributions:"
+    },
+    {
+      "id": 26119,
+      "page": 291,
+      "seq": 15,
+      "text": "where \u0394 \u2208{0, 1} with Pr(\u0394 = 1) = \u03c0. This generative representation is\nexplicit: generate a \u0394 \u2208{0, 1} with probability \u03c0, and then depending on\nthe outcome, deliver either Y1 or Y2. Let \u03c6\u03b8(x) denote the normal density\nwith parameters \u03b8 = (\u03bc, \u03c32). Then the density of Y is"
+    },
+    {
+      "id": 26121,
+      "page": 291,
+      "seq": 17,
+      "text": "Now suppose we wish to \ufb01t this model to the data in Figure 8.5 by maxi-\nmum likelihood. The parameters are"
+    },
+    {
+      "id": 26123,
+      "page": 291,
+      "seq": 19,
+      "text": "The log-likelihood based on the N training cases is"
+    },
+    {
+      "id": 26128,
+      "page": 292,
+      "seq": 1,
+      "text": "Direct maximization of \u2113(\u03b8; Z) is quite di\ufb03cult numerically, because of\nthe sum of terms inside the logarithm. There is, however, a simpler ap-\nproach. We consider unobserved latent variables \u0394i taking values 0 or 1 as\nin (8.36): if \u0394i = 1 then Yi comes from model 2, otherwise it comes from\nmodel 1. Suppose we knew the values of the \u0394i\u2019s. Then the log-likelihood\nwould be"
+    },
+    {
+      "id": 26135,
+      "page": 292,
+      "seq": 8,
+      "text": "and the maximum likelihood estimates of \u03bc1 and \u03c32\n1 would be the sample\nmean and variance for those data with \u0394i = 0, and similarly those for \u03bc2\nand \u03c32\n2 would be the sample mean and variance of the data with \u0394i = 1.\nThe estimate of \u03c0 would be the proportion of \u0394i = 1.\nSince the values of the \u0394i\u2019s are actually unknown, we proceed in an\niterative fashion, substituting for each \u0394i in (8.40) its expected value"
+    },
+    {
+      "id": 26137,
+      "page": 292,
+      "seq": 10,
+      "text": "also called the responsibility of model 2 for observation i. We use a proce-\ndure called the EM algorithm, given in Algorithm 8.1 for the special case of\nGaussian mixtures. In the expectation step, we do a soft assignment of each\nobservation to each model: the current estimates of the parameters are used\nto assign responsibilities according to the relative density of the training\npoints under each model. In the maximization step, these responsibilities\nare used in weighted maximum-likelihood \ufb01ts to update the estimates of\nthe parameters.\nA good way to construct initial guesses for \u02c6\u03bc1 and \u02c6\u03bc2 is simply to choose\ntwo of the yi at random. Both \u02c6\u03c32\n1 and \u02c6\u03c32\n2 can be set equal to the overall\nsample variance \tN\ni=1(yi \u2212\u00afy)2/N. The mixing proportion \u02c6\u03c0 can be started\nat the value 0.5.\nNote that the actual maximizer of the likelihood occurs when we put a\nspike of in\ufb01nite height at any one data point, that is, \u02c6\u03bc1 = yi for some\ni and \u02c6\u03c32\n1 = 0. This gives in\ufb01nite likelihood, but is not a useful solution.\nHence we are actually looking for a good local maximum of the likelihood,\none for which \u02c6\u03c32\n1, \u02c6\u03c32\n2 > 0. To further complicate matters, there can be\nmore than one local maximum having \u02c6\u03c32\n1, \u02c6\u03c32\n2 > 0. In our example, we\nran the EM algorithm with a number of di\ufb00erent initial guesses for the\nparameters, all having \u02c6\u03c32\nk > 0.5, and chose the run that gave us the highest\nmaximized likelihood. Figure 8.6 shows the progress of the EM algorithm in\nmaximizing the log-likelihood. Table 8.2 shows \u02c6\u03c0 ="
+    },
+    {
+      "id": 26138,
+      "page": 292,
+      "seq": 11,
+      "text": "i \u02c6\u03b3i/N, the maximum\nlikelihood estimate of the proportion of observations in class 2, at selected\niterations of the EM procedure."
+    },
+    {
+      "id": 26140,
+      "page": 293,
+      "seq": 1,
+      "text": "Algorithm 8.1 EM Algorithm for Two-component Gaussian Mixture."
+    },
+    {
+      "id": 26141,
+      "page": 293,
+      "seq": 2,
+      "text": "1. Take initial guesses for the parameters \u02c6\u03bc1, \u02c6\u03c32\n1, \u02c6\u03bc2, \u02c6\u03c32\n2, \u02c6\u03c0 (see text)."
+    },
+    {
+      "id": 26144,
+      "page": 293,
+      "seq": 5,
+      "text": "(1 \u2212\u02c6\u03c0)\u03c6\u02c6\u03b81(yi) + \u02c6\u03c0\u03c6\u02c6\u03b82.(yi), i = 1, 2, . . . , N.\n(8.42)"
+    },
+    {
+      "id": 26145,
+      "page": 293,
+      "seq": 6,
+      "text": "3. Maximization Step: compute the weighted means and variances:"
+    },
+    {
+      "id": 26146,
+      "page": 293,
+      "seq": 7,
+      "text": "\u02c6\u03bc1 =\n\tN\ni=1(1 \u2212\u02c6\u03b3i)yi\n\tN\ni=1(1 \u2212\u02c6\u03b3i)\n,\n\u02c6\u03c32\n1 =\n\tN\ni=1(1 \u2212\u02c6\u03b3i)(yi \u2212\u02c6\u03bc1)2"
+    },
+    {
+      "id": 26148,
+      "page": 293,
+      "seq": 9,
+      "text": "\u02c6\u03bc2 =\n\tN\ni=1 \u02c6\u03b3iyi\n\tN\ni=1 \u02c6\u03b3i\n,\n\u02c6\u03c32\n2 =\n\tN\ni=1 \u02c6\u03b3i(yi \u2212\u02c6\u03bc2)2"
+    },
+    {
+      "id": 26156,
+      "page": 293,
+      "seq": 17,
+      "text": "The right panel of Figure 8.5 shows the estimated Gaussian mixture density\nfrom this procedure (solid red curve), along with the responsibilities (dotted\ngreen curve). Note that mixtures are also useful for supervised learning; in\nSection 6.7 we show how the Gaussian mixture model leads to a version of\nradial basis functions."
+    },
+    {
+      "id": 26168,
+      "page": 294,
+      "seq": 11,
+      "text": "The above procedure is an example of the EM (or Baum\u2013Welch) algorithm\nfor maximizing likelihoods in certain classes of problems. These problems\nare ones for which maximization of the likelihood is di\ufb03cult, but made\neasier by enlarging the sample with latent (unobserved) data. This is called\ndata augmentation. Here the latent data are the model memberships \u0394i.\nIn other problems, the latent data are actual data that should have been\nobserved but are missing.\nAlgorithm 8.2 gives the general formulation of the EM algorithm. Our\nobserved data is Z, having log-likelihood \u2113(\u03b8; Z) depending on parameters\n\u03b8. The latent or missing data is Zm, so that the complete data is T =\n(Z, Zm) with log-likelihood \u21130(\u03b8; T), \u21130 based on the complete density. In\nthe mixture problem (Z, Zm) = (y, \u0394), and \u21130(\u03b8; T) is given in (8.40).\nIn our mixture example, E(\u21130(\u03b8\u2032; T)|Z, \u02c6\u03b8(j)) is simply (8.40) with the \u0394i\nreplaced by the responsibilities \u02c6\u03b3i(\u02c6\u03b8), and the maximizers in step 3 are just\nweighted means and variances.\nWe now give an explanation of why the EM algorithm works in general.\nSince"
+    },
+    {
+      "id": 26173,
+      "page": 294,
+      "seq": 16,
+      "text": "In terms of log-likelihoods, we have \u2113(\u03b8\u2032; Z) = \u21130(\u03b8\u2032; T)\u2212\u21131(\u03b8\u2032; Zm|Z), where\n\u21131 is based on the conditional density Pr(Zm|Z, \u03b8\u2032). Taking conditional\nexpectations with respect to the distribution of T|Z governed by parameter\n\u03b8 gives"
+    },
+    {
+      "id": 26177,
+      "page": 295,
+      "seq": 2,
+      "text": "1. Start with initial guesses for the parameters \u02c6\u03b8(0)."
+    },
+    {
+      "id": 26181,
+      "page": 295,
+      "seq": 6,
+      "text": "3. Maximization Step: determine the new estimate \u02c6\u03b8(j+1) as the maxi-\nmizer of Q(\u03b8\u2032, \u02c6\u03b8(j)) over \u03b8\u2032."
+    },
+    {
+      "id": 26184,
+      "page": 295,
+      "seq": 9,
+      "text": "In the M step, the EM algorithm maximizes Q(\u03b8\u2032, \u03b8) over \u03b8\u2032, rather than\nthe actual objective function \u2113(\u03b8\u2032; Z). Why does it succeed in maximizing\n\u2113(\u03b8\u2032; Z)? Note that R(\u03b8\u2217, \u03b8) is the expectation of a log-likelihood of a density\n(indexed by \u03b8\u2217), with respect to the same density indexed by \u03b8, and hence\n(by Jensen\u2019s inequality) is maximized as a function of \u03b8\u2217, when \u03b8\u2217= \u03b8 (see\nExercise 8.1). So if \u03b8\u2032 maximizes Q(\u03b8\u2032, \u03b8), we see that"
+    },
+    {
+      "id": 26186,
+      "page": 295,
+      "seq": 11,
+      "text": "Hence the EM iteration never decreases the log-likelihood.\nThis argument also makes it clear that a full maximization in the M\nstep is not necessary: we need only to \ufb01nd a value \u02c6\u03b8(j+1) so that Q(\u03b8\u2032, \u02c6\u03b8(j))\nincreases as a function of the \ufb01rst argument, that is, Q(\u02c6\u03b8(j+1), \u02c6\u03b8(j)) >\nQ(\u02c6\u03b8(j), \u02c6\u03b8(j)). Such procedures are called GEM (generalized EM) algorithms.\nThe EM algorithm can also be viewed as a minorization procedure: see\nExercise 8.7."
+    },
+    {
+      "id": 26188,
+      "page": 295,
+      "seq": 13,
+      "text": "Here is a di\ufb00erent view of the EM procedure, as a joint maximization\nalgorithm. Consider the function"
+    },
+    {
+      "id": 26189,
+      "page": 295,
+      "seq": 14,
+      "text": "F(\u03b8\u2032, \u02dcP) = E \u02dc\nP [\u21130(\u03b8\u2032; T)] \u2212E \u02dc\nP [log \u02dcP(Zm)].\n(8.48)"
+    },
+    {
+      "id": 26190,
+      "page": 295,
+      "seq": 15,
+      "text": "Here \u02dcP(Zm) is any distribution over the latent data Zm. In the mixture\nexample, \u02dcP(Zm) comprises the set of probabilities \u03b3i = Pr(\u0394i = 1|\u03b8, Z).\nNote that F evaluated at \u02dcP(Zm) = Pr(Zm|Z, \u03b8\u2032), is the log-likelihood of"
+    },
+    {
+      "id": 26202,
+      "page": 296,
+      "seq": 11,
+      "text": "the observed data, from (8.46)1. The function F expands the domain of\nthe log-likelihood, to facilitate its maximization.\nThe EM algorithm can be viewed as a joint maximization method for F\nover \u03b8\u2032 and \u02dcP(Zm), by \ufb01xing one argument and maximizing over the other.\nThe maximizer over \u02dcP(Zm) for \ufb01xed \u03b8\u2032 can be shown to be"
+    },
+    {
+      "id": 26204,
+      "page": 296,
+      "seq": 13,
+      "text": "(Exercise 8.2). This is the distribution computed by the E step, for example,\n(8.42) in the mixture example. In the M step, we maximize F(\u03b8\u2032, \u02dcP) over \u03b8\u2032"
+    },
+    {
+      "id": 26205,
+      "page": 296,
+      "seq": 14,
+      "text": "with \u02dcP \ufb01xed: this is the same as maximizing the \ufb01rst term E \u02dc\nP [\u21130(\u03b8\u2032; T)|Z, \u03b8]\nsince the second term does not involve \u03b8\u2032.\nFinally, since F(\u03b8\u2032, \u02dcP) and the observed data log-likelihood agree when\n\u02dcP(Zm) = Pr(Zm|Z, \u03b8\u2032), maximization of the former accomplishes maxi-\nmization of the latter. Figure 8.7 shows a schematic view of this process.\nThis view of the EM algorithm leads to alternative maximization proce-"
+    },
+    {
+      "id": 26209,
+      "page": 297,
+      "seq": 2,
+      "text": "1. Take some initial values U (0)\nk , k = 1, 2, . . . , K."
+    },
+    {
+      "id": 26211,
+      "page": 297,
+      "seq": 4,
+      "text": "For k = 1, 2, . . . , K generate U (t)\nk\nfrom\nPr(U (t)\nk |U (t)\n1 , . . . , U (t)\nk\u22121, U (t\u22121)\nk+1 , . . . , U (t\u22121)\nK\n)."
+    },
+    {
+      "id": 26212,
+      "page": 297,
+      "seq": 5,
+      "text": "3. Continue step 2 until the joint distribution of (U (t)\n1 , U (t)\n2 , . . . , U (t)\nK )\ndoes not change."
+    },
+    {
+      "id": 26213,
+      "page": 297,
+      "seq": 6,
+      "text": "dures. For example, one does not need to maximize with respect to all of\nthe latent data parameters at once, but could instead maximize over one\nof them at a time, alternating with the M step."
+    },
+    {
+      "id": 26215,
+      "page": 297,
+      "seq": 8,
+      "text": "Having de\ufb01ned a Bayesian model, one would like to draw samples from\nthe resulting posterior distribution, in order to make inferences about the\nparameters. Except for simple models, this is often a di\ufb03cult computa-\ntional problem. In this section we discuss the Markov chain Monte Carlo\n(MCMC) approach to posterior sampling. We will see that Gibbs sampling,\nan MCMC procedure, is closely related to the EM algorithm: the main dif-\nference is that it samples from the conditional distributions rather than\nmaximizing over them.\nConsider \ufb01rst the following abstract problem. We have random variables\nU1, U2, . . . , UK and we wish to draw a sample from their joint distribution.\nSuppose this is di\ufb03cult to do, but it is easy to simulate from the conditional\ndistributions Pr(Uj|U1, U2, . . . , Uj\u22121, Uj+1, . . . , UK), j = 1, 2, . . . , K. The\nGibbs sampling procedure alternatively simulates from each of these distri-\nbutions and when the process stabilizes, provides a sample from the desired\njoint distribution. The procedure is de\ufb01ned Algorithm 8.3.\nUnder regularity conditions it can be shown that this procedure even-\ntually stabilizes, and the resulting random variables are indeed a sample\nfrom the joint distribution of U1, U2, . . . , UK. This occurs despite the fact\nthat the samples (U (t)\n1 , U (t)\n2 , . . . , U (t)\nK ) are clearly not independent for dif-\nferent t. More formally, Gibbs sampling produces a Markov chain whose\nstationary distribution is the true joint distribution, and hence the term\n\u201cMarkov chain Monte Carlo.\u201d It is not surprising that the true joint dis-\ntribution is stationary under this process, as the successive steps leave the\nmarginal distributions of the Uk\u2019s unchanged."
+    },
+    {
+      "id": 26217,
+      "page": 298,
+      "seq": 1,
+      "text": "Note that we don\u2019t need to know the explicit form of the conditional\ndensities, but just need to be able to sample from them. After the procedure\nreaches stationarity, the marginal density of any subset of the variables\ncan be approximated by a density estimate applied to the sample values.\nHowever if the explicit form of the conditional density Pr(Uk, |U\u2113, \u2113\u0338= k)\nis available, a better estimate of say the marginal density of Uk can be\nobtained from (Exercise 8.3):"
+    },
+    {
+      "id": 26221,
+      "page": 298,
+      "seq": 5,
+      "text": "Here we have averaged over the last M \u2212m + 1 members of the sequence,\nto allow for an initial \u201cburn-in\u201d period before stationarity is reached.\nNow getting back to Bayesian inference, our goal is to draw a sample from\nthe joint posterior of the parameters given the data Z. Gibbs sampling will\nbe helpful if it is easy to sample from the conditional distribution of each\nparameter given the other parameters and Z. An example\u2014the Gaussian\nmixture problem\u2014is detailed next.\nThere is a close connection between Gibbs sampling from a posterior and\nthe EM algorithm in exponential family models. The key is to consider the\nlatent data Zm from the EM procedure to be another parameter for the\nGibbs sampler. To make this explicit for the Gaussian mixture problem,\nwe take our parameters to be (\u03b8, Zm). For simplicity we \ufb01x the variances\n\u03c32\n1, \u03c32\n2 and mixing proportion \u03c0 at their maximum likelihood values so that\nthe only unknown parameters in \u03b8 are the means \u03bc1 and \u03bc2. The Gibbs\nsampler for the mixture problem is given in Algorithm 8.4. We see that\nsteps 2(a) and 2(b) are the same as the E and M steps of the EM pro-\ncedure, except that we sample rather than maximize. In step 2(a), rather\nthan compute the maximum likelihood responsibilities \u03b3i = E(\u0394i|\u03b8, Z),\nthe Gibbs sampling procedure simulates the latent data \u0394i from the distri-\nbutions Pr(\u0394i|\u03b8, Z). In step 2(b), rather than compute the maximizers of\nthe posterior Pr(\u03bc1, \u03bc2, \u0394|Z) we simulate from the conditional distribution\nPr(\u03bc1, \u03bc2|\u0394, Z).\nFigure 8.8 shows 200 iterations of Gibbs sampling, with the mean param-\neters \u03bc1 (lower) and \u03bc2 (upper) shown in the left panel, and the proportion\nof class 2 observations \t\ni \u0394i/N on the right. Horizontal broken lines have\nbeen drawn at the maximum likelihood estimate values \u02c6\u03bc1, \u02c6\u03bc2 and"
+    },
+    {
+      "id": 26222,
+      "page": 298,
+      "seq": 6,
+      "text": "i \u02c6\u03b3i/N\nin each case. The values seem to stabilize quite quickly, and are distributed\nevenly around the maximum likelihood values.\nThe above mixture model was simpli\ufb01ed, in order to make the clear\nconnection between Gibbs sampling and the EM algorithm. More realisti-\ncally, one would put a prior distribution on the variances \u03c32\n1, \u03c32\n2 and mixing\nproportion \u03c0, and include separate Gibbs sampling steps in which we sam-\nple from their posterior distributions, conditional on the other parameters.\nOne can also incorporate proper (informative) priors for the mean param-"
+    },
+    {
+      "id": 26225,
+      "page": 299,
+      "seq": 2,
+      "text": "1. Take some initial values \u03b8(0) = (\u03bc(0)\n1 , \u03bc(0)\n2 )."
+    },
+    {
+      "id": 26227,
+      "page": 299,
+      "seq": 4,
+      "text": "(a) For i = 1, 2, . . . , N generate \u0394(t)\ni\n\u2208{0, 1} with Pr(\u0394(t)\ni\n= 1) =\n\u02c6\u03b3i(\u03b8(t)), from equation (8.42)."
+    },
+    {
+      "id": 26231,
+      "page": 299,
+      "seq": 8,
+      "text": "and generate \u03bc(t)\n1\n\u223cN(\u02c6\u03bc1, \u02c6\u03c32\n1) and \u03bc(t)\n2\n\u223cN(\u02c6\u03bc2, \u02c6\u03c32\n2)."
+    },
+    {
+      "id": 26232,
+      "page": 299,
+      "seq": 9,
+      "text": "3. Continue step 2 until the joint distribution of (\u0394(t), \u03bc(t)\n1 , \u03bc(t)\n2 ) doesn\u2019t\nchange"
+    },
+    {
+      "id": 26244,
+      "page": 300,
+      "seq": 1,
+      "text": "eters. These priors must not be improper as this will lead to a degenerate\nposterior, with all the mixing weight on one component.\nGibbs sampling is just one of a number of recently developed procedures\nfor sampling from posterior distributions. It uses conditional sampling of\neach parameter given the rest, and is useful when the structure of the prob-\nlem makes this sampling easy to carry out. Other methods do not require\nsuch structure, for example the Metropolis\u2013Hastings algorithm. These and\nother computational Bayesian methods have been applied to sophisticated\nlearning algorithms such as Gaussian process models and neural networks.\nDetails may be found in the references given in the Bibliographic Notes at\nthe end of this chapter."
+    },
+    {
+      "id": 26246,
+      "page": 300,
+      "seq": 3,
+      "text": "Earlier we introduced the bootstrap as a way of assessing the accuracy of a\nparameter estimate or a prediction. Here we show how to use the bootstrap\nto improve the estimate or prediction itself. In Section 8.4 we investigated\nthe relationship between the bootstrap and Bayes approaches, and found\nthat the bootstrap mean is approximately a posterior average. Bagging\nfurther exploits this connection.\nConsider \ufb01rst the regression problem. Suppose we \ufb01t a model to our\ntraining data Z = {(x1, y1), (x2, y2), . . . , (xN, yN)}, obtaining the predic-\ntion \u02c6f(x) at input x. Bootstrap aggregation or bagging averages this predic-\ntion over a collection of bootstrap samples, thereby reducing its variance.\nFor each bootstrap sample Z\u2217b, b = 1, 2, . . . , B, we \ufb01t our model, giving\nprediction \u02c6f \u2217b(x). The bagging estimate is de\ufb01ned by"
+    },
+    {
+      "id": 26251,
+      "page": 300,
+      "seq": 8,
+      "text": "Denote by \u02c6P the empirical distribution putting equal probability 1/N on\neach of the data points (xi, yi). In fact the \u201ctrue\u201d bagging estimate is\nde\ufb01ned by E \u02c6\nP \u02c6f \u2217(x), where Z\u2217= (x\u2217\n1, y\u2217\n1), (x\u2217\n2, y\u2217\n2), . . . , (x\u2217\nN, y\u2217\nN) and each\n(x\u2217\ni , y\u2217\ni ) \u223c\u02c6P. Expression (8.51) is a Monte Carlo estimate of the true\nbagging estimate, approaching it as B \u2192\u221e.\nThe bagged estimate (8.51) will di\ufb00er from the original estimate \u02c6f(x)\nonly when the latter is a nonlinear or adaptive function of the data. For\nexample, to bag the B-spline smooth of Section 8.2.1, we average the curves\nin the bottom left panel of Figure 8.2 at each value of x. The B-spline\nsmoother is linear in the data if we \ufb01x the inputs; hence if we sample using\nthe parametric bootstrap in equation (8.6), then \u02c6fbag(x) \u2192\u02c6f(x) as B \u2192\u221e\n(Exercise 8.4). Hence bagging just reproduces the original smooth in the"
+    },
+    {
+      "id": 26253,
+      "page": 301,
+      "seq": 1,
+      "text": "top left panel of Figure 8.2. The same is approximately true if we were to\nbag using the nonparametric bootstrap.\nA more interesting example is a regression tree, where \u02c6f(x) denotes the\ntree\u2019s prediction at input vector x (regression trees are described in Chap-\nter 9). Each bootstrap tree will typically involve di\ufb00erent features than the\noriginal, and might have a di\ufb00erent number of terminal nodes. The bagged\nestimate is the average prediction at x from these B trees.\nNow suppose our tree produces a classi\ufb01er \u02c6G(x) for a K-class response.\nHere it is useful to consider an underlying indicator-vector function \u02c6f(x),\nwith value a single one and K \u22121 zeroes, such that \u02c6G(x) = arg maxk \u02c6f(x).\nThen the bagged estimate \u02c6fbag(x) (8.51) is a K-vector [p1(x), p2(x), . . . ,\npK(x)], with pk(x) equal to the proportion of trees predicting class k at x.\nThe bagged classi\ufb01er selects the class with the most \u201cvotes\u201d from the B\ntrees, \u02c6Gbag(x) = arg maxk \u02c6fbag(x).\nOften we require the class-probability estimates at x, rather than the\nclassi\ufb01cations themselves. It is tempting to treat the voting proportions\npk(x) as estimates of these probabilities. A simple two-class example shows\nthat they fail in this regard. Suppose the true probability of class 1 at x is\n0.75, and each of the bagged classi\ufb01ers accurately predict a 1. Then p1(x) =\n1, which is incorrect. For many classi\ufb01ers \u02c6G(x), however, there is already\nan underlying function \u02c6f(x) that estimates the class probabilities at x (for\ntrees, the class proportions in the terminal node). An alternative bagging\nstrategy is to average these instead, rather than the vote indicator vectors.\nNot only does this produce improved estimates of the class probabilities,\nbut it also tends to produce bagged classi\ufb01ers with lower variance, especially\nfor small B (see Figure 8.10 in the next example)."
+    },
+    {
+      "id": 26255,
+      "page": 301,
+      "seq": 3,
+      "text": "We generated a sample of size N = 30, with two classes and p = 5 features,\neach having a standard Gaussian distribution with pairwise correlation\n0.95. The response Y was generated according to Pr(Y = 1|x1 \u22640.5) = 0.2,\nPr(Y = 1|x1 > 0.5) = 0.8. The Bayes error is 0.2. A test sample of size\n2000 was also generated from the same population. We \ufb01t classi\ufb01cation\ntrees to the training sample and to each of 200 bootstrap samples (classi\ufb01-\ncation trees are described in Chapter 9). No pruning was used. Figure 8.9\nshows the original tree and \ufb01ve bootstrap trees. Notice how the trees are\nall di\ufb00erent, with di\ufb00erent splitting features and cutpoints. The test error\nfor the original tree and the bagged tree is shown in Figure 8.10. In this\nexample the trees have high variance due to the correlation in the predic-\ntors. Bagging succeeds in smoothing out this variance and hence reducing\nthe test error.\nBagging can dramatically reduce the variance of unstable procedures\nlike trees, leading to improved prediction. A simple argument shows why"
+    },
+    {
+      "id": 26341,
+      "page": 303,
+      "seq": 10,
+      "text": "bagging helps under squared-error loss, in short because averaging reduces\nvariance and leaves bias unchanged.\nAssume our training observations (xi, yi), i = 1, . . . , N are indepen-\ndently drawn from a distribution P, and consider the ideal aggregate es-\ntimator fag(x) = EP \u02c6f \u2217(x). Here x is \ufb01xed and the bootstrap dataset Z\u2217"
+    },
+    {
+      "id": 26342,
+      "page": 303,
+      "seq": 11,
+      "text": "consists of observations x\u2217\ni , y\u2217\ni , i = 1, 2, . . . , N sampled from P. Note that\nfag(x) is a bagging estimate, drawing bootstrap samples from the actual\npopulation P rather than the data. It is not an estimate that we can use\nin practice, but is convenient for analysis. We can write"
+    },
+    {
+      "id": 26346,
+      "page": 303,
+      "seq": 15,
+      "text": "The extra error on the right-hand side comes from the variance of \u02c6f \u2217(x)\naround its mean fag(x). Therefore true population aggregation never in-\ncreases mean squared error. This suggests that bagging\u2014drawing samples\nfrom the training data\u2014 will often decrease mean-squared error.\nThe above argument does not hold for classi\ufb01cation under 0-1 loss, be-\ncause of the nonadditivity of bias and variance. In that setting, bagging a"
+    },
+    {
+      "id": 26348,
+      "page": 304,
+      "seq": 1,
+      "text": "good classi\ufb01er can make it better, but bagging a bad classi\ufb01er can make it\nworse. Here is a simple example, using a randomized rule. Suppose Y = 1\nfor all x, and the classi\ufb01er \u02c6G(x) predicts Y = 1 (for all x) with proba-\nbility 0.4 and predicts Y = 0 (for all x) with probability 0.6. Then the\nmisclassi\ufb01cation error of \u02c6G(x) is 0.6 but that of the bagged classi\ufb01er is 1.0.\nFor classi\ufb01cation we can understand the bagging e\ufb00ect in terms of a\nconsensus of independent weak learners (Dietterich, 2000a). Let the Bayes\noptimal decision at x be G(x) = 1 in a two-class example. Suppose each\nof the weak learners G\u2217\nb have an error-rate eb = e < 0.5, and let S1(x) =\n\tB\nb=1 I(G\u2217\nb(x) = 1) be the consensus vote for class 1. Since the weak learn-\ners are assumed to be independent, S1(x) \u223cBin(B, 1 \u2212e), and Pr(S1 >\nB/2) \u21921 as B gets large. This concept has been popularized outside of\nstatistics as the \u201cWisdom of Crowds\u201d (Surowiecki, 2004) \u2014 the collective\nknowledge of a diverse and independent body of people typically exceeds\nthe knowledge of any single individual, and can be harnessed by voting.\nOf course, the main caveat here is \u201cindependent,\u201d and bagged trees are\nnot. Figure 8.11 illustrates the power of a consensus vote in a simulated\nexample, where only 30% of the voters have some knowledge.\nIn Chapter 15 we see how random forests improve on bagging by reducing\nthe correlation between the sampled trees.\nNote that when we bag a model, any simple structure in the model is\nlost. As an example, a bagged tree is no longer a tree. For interpretation\nof the model this is clearly a drawback. More stable procedures like near-\nest neighbors are typically not a\ufb00ected much by bagging. Unfortunately,\nthe unstable models most helped by bagging are unstable because of the\nemphasis on interpretability, and this is lost in the bagging process.\nFigure 8.12 shows an example where bagging doesn\u2019t help. The 100 data\npoints shown have two features and two classes, separated by the gray\nlinear boundary x1 + x2 = 1. We choose as our classi\ufb01er \u02c6G(x) a single\naxis-oriented split, choosing the split along either x1 or x2 that produces\nthe largest decrease in training misclassi\ufb01cation error.\nThe decision boundary obtained from bagging the 0-1 decision rule over\nB = 50 bootstrap samples is shown by the blue curve in the left panel.\nIt does a poor job of capturing the true boundary. The single split rule,\nderived from the training data, splits near 0 (the middle of the range of x1\nor x2), and hence has little contribution away from the center. Averaging\nthe probabilities rather than the classi\ufb01cations does not help here. Bagging\nestimates the expected class probabilities from the single split rule, that is,\naveraged over many replications. Note that the expected class probabilities\ncomputed by bagging cannot be realized on any single replication, in the\nsame way that a woman cannot have 2.4 children. In this sense, bagging\nincreases somewhat the space of models of the individual base classi\ufb01er.\nHowever, it doesn\u2019t help in this and many other examples where a greater\nenlargement of the model class is needed. \u201cBoosting\u201d is a way of doing this"
+    },
+    {
+      "id": 26671,
+      "page": 306,
+      "seq": 314,
+      "text": "and is described in Chapter 10. The decision boundary in the right panel is\nthe result of the boosting procedure, and it roughly captures the diagonal\nboundary."
+    },
+    {
+      "id": 26673,
+      "page": 306,
+      "seq": 316,
+      "text": "In Section 8.4 we viewed bootstrap values of an estimator as approximate\nposterior values of a corresponding parameter, from a kind of nonparamet-\nric Bayesian analysis. Viewed in this way, the bagged estimate (8.51) is\nan approximate posterior Bayesian mean. In contrast, the training sample\nestimate \u02c6f(x) corresponds to the mode of the posterior. Since the posterior\nmean (not mode) minimizes squared-error loss, it is not surprising that\nbagging can often reduce mean squared-error.\nHere we discuss Bayesian model averaging more generally. We have a\nset of candidate models Mm, m = 1, . . . , M for our training set Z. These\nmodels may be of the same type with di\ufb00erent parameter values (e.g.,\nsubsets in linear regression), or di\ufb00erent models for the same task (e.g.,\nneural networks and regression trees).\nSuppose \u03b6 is some quantity of interest, for example, a prediction f(x) at\nsome \ufb01xed feature value x. The posterior distribution of \u03b6 is"
+    },
+    {
+      "id": 26682,
+      "page": 307,
+      "seq": 5,
+      "text": "This Bayesian prediction is a weighted average of the individual predictions,\nwith weights proportional to the posterior probability of each model.\nThis formulation leads to a number of di\ufb00erent model-averaging strate-\ngies. Committee methods take a simple unweighted average of the predic-\ntions from each model, essentially giving equal probability to each model.\nMore ambitiously, the development in Section 7.7 shows the BIC criterion\ncan be used to estimate posterior model probabilities. This is applicable\nin cases where the di\ufb00erent models arise from the same parametric model,\nwith di\ufb00erent parameter values. The BIC gives weight to each model de-\npending on how well it \ufb01ts and how many parameters it uses. One can also\ncarry out the Bayesian recipe in full. If each model Mm has parameters\n\u03b8m, we write"
+    },
+    {
+      "id": 26686,
+      "page": 307,
+      "seq": 9,
+      "text": "In principle one can specify priors Pr(\u03b8m|Mm) and numerically com-\npute the posterior probabilities from (8.55), to be used as model-averaging\nweights. However, we have seen no real evidence that this is worth all of\nthe e\ufb00ort, relative to the much simpler BIC approximation.\nHow can we approach model averaging from a frequentist viewpoint?\nGiven predictions \u02c6f1(x), \u02c6f2(x), . . . , \u02c6fM(x), under squared-error loss, we can\nseek the weights w = (w1, w2, . . . , wM) such that"
+    },
+    {
+      "id": 26690,
+      "page": 307,
+      "seq": 13,
+      "text": "Here the input value x is \ufb01xed and the N observations in the dataset Z (and\nthe target Y ) are distributed according to P. The solution is the population\nlinear regression of Y on \u02c6F(x)T \u2261[ \u02c6f1(x), \u02c6f2(x), . . . , \u02c6fM(x)]:"
+    },
+    {
+      "id": 26692,
+      "page": 307,
+      "seq": 15,
+      "text": "Now the full regression has smaller error than any single model"
+    },
+    {
+      "id": 26700,
+      "page": 307,
+      "seq": 23,
+      "text": "so combining models never makes things worse, at the population level."
+    },
+    {
+      "id": 26702,
+      "page": 308,
+      "seq": 1,
+      "text": "Of course the population linear regression (8.57) is not available, and it\nis natural to replace it with the linear regression over the training set. But\nthere are simple examples where this does not work well. For example, if\n\u02c6fm(x), m = 1, 2, . . . , M represent the prediction from the best subset of\ninputs of size m among M total inputs, then linear regression would put all\nof the weight on the largest model, that is, \u02c6wM = 1, \u02c6wm = 0, m < M. The\nproblem is that we have not put each of the models on the same footing\nby taking into account their complexity (the number of inputs m in this\nexample).\nStacked generalization, or stacking, is a way of doing this. Let \u02c6f \u2212i\nm (x)\nbe the prediction at x, using model m, applied to the dataset with the\nith training observation removed. The stacking estimate of the weights is\nobtained from the least squares linear regression of yi on \u02c6f \u2212i\nm (xi), m =\n1, 2, . . . , M. In detail the stacking weights are given by"
+    },
+    {
+      "id": 26712,
+      "page": 308,
+      "seq": 11,
+      "text": "The \ufb01nal prediction is \t\nm \u02c6wst\nm \u02c6fm(x). By using the cross-validated pre-\ndictions \u02c6f \u2212i\nm (x), stacking avoids giving unfairly high weight to models with\nhigher complexity. Better results can be obtained by restricting the weights\nto be nonnegative, and to sum to 1. This seems like a reasonable restriction\nif we interpret the weights as posterior model probabilities as in equation\n(8.54), and it leads to a tractable quadratic programming problem.\nThere is a close connection between stacking and model selection via\nleave-one-out cross-validation (Section 7.10). If we restrict the minimization\nin (8.59) to weight vectors w that have one unit weight and the rest zero,\nthis leads to a model choice \u02c6m with smallest leave-one-out cross-validation\nerror. Rather than choose a single model, stacking combines them with\nestimated optimal weights. This will often lead to better prediction, but\nless interpretability than the choice of only one of the M models.\nThe stacking idea is actually more general than described above. One\ncan use any learning method, not just linear regression, to combine the\nmodels as in (8.59); the weights could also depend on the input location\nx. In this way, learning methods are \u201cstacked\u201d on top of one another, to\nimprove prediction performance."
+    },
+    {
+      "id": 26714,
+      "page": 308,
+      "seq": 13,
+      "text": "The \ufb01nal method described in this chapter does not involve averaging or\ncombining models, but rather is a technique for \ufb01nding a better single\nmodel. Bumping uses bootstrap sampling to move randomly through model\nspace. For problems where \ufb01tting method \ufb01nds many local minima, bump-\ning can help the method to avoid getting stuck in poor solutions."
+    },
+    {
+      "id": 27395,
+      "page": 309,
+      "seq": 680,
+      "text": "As in bagging, we draw bootstrap samples and \ufb01t a model to each. But\nrather than average the predictions, we choose the model estimated from a\nbootstrap sample that best \ufb01ts the training data. In detail, we draw boot-\nstrap samples Z\u22171, . . . , Z\u2217B and \ufb01t our model to each, giving predictions\n\u02c6f \u2217b(x), b = 1, 2, . . . , B at input point x. We then choose the model that\nproduces the smallest prediction error, averaged over the original training\nset. For squared error, for example, we choose the model obtained from\nbootstrap sample \u02c6b, where"
+    },
+    {
+      "id": 27399,
+      "page": 309,
+      "seq": 684,
+      "text": "The corresponding model predictions are \u02c6f \u2217\u02c6b(x). By convention we also\ninclude the original training sample in the set of bootstrap samples, so that\nthe method is free to pick the original model if it has the lowest training\nerror.\nBy perturbing the data, bumping tries to move the \ufb01tting procedure\naround to good areas of model space. For example, if a few data points are\ncausing the procedure to \ufb01nd a poor solution, any bootstrap sample that\nomits those data points should procedure a better solution.\nFor another example, consider the classi\ufb01cation data in Figure 8.13, the\nnotorious exclusive or (XOR) problem. There are two classes (blue and\norange) and two input features, with the features exhibiting a pure inter-"
+    },
+    {
+      "id": 27401,
+      "page": 310,
+      "seq": 1,
+      "text": "action. By splitting the data at x1 = 0 and then splitting each resulting\nstrata at x2 = 0, (or vice versa) a tree-based classi\ufb01er could achieve per-\nfect discrimination. However, the greedy, short-sighted CART algorithm\n(Section 9.2) tries to \ufb01nd the best split on either feature, and then splits\nthe resulting strata. Because of the balanced nature of the data, all initial\nsplits on x1 or x2 appear to be useless, and the procedure essentially gener-\nates a random split at the top level. The actual split found for these data is\nshown in the left panel of Figure 8.13. By bootstrap sampling from the data,\nbumping breaks the balance in the classes, and with a reasonable number\nof bootstrap samples (here 20), it will by chance produce at least one tree\nwith initial split near either x1 = 0 or x2 = 0. Using just 20 bootstrap\nsamples, bumping found the near optimal splits shown in the right panel\nof Figure 8.13. This shortcoming of the greedy tree-growing algorithm is\nexacerbated if we add a number of noise features that are independent of\nthe class label. Then the tree-growing algorithm cannot distinguish x1 or\nx2 from the others, and gets seriously lost.\nSince bumping compares di\ufb00erent models on the training data, one must\nensure that the models have roughly the same complexity. In the case of\ntrees, this would mean growing trees with the same number of terminal\nnodes on each bootstrap sample. Bumping can also help in problems where\nit is di\ufb03cult to optimize the \ufb01tting criterion, perhaps because of a lack of\nsmoothness. The trick is to optimize a di\ufb00erent, more convenient criterion\nover the bootstrap samples, and then choose the model producing the best\nresults for the desired criterion on the training sample."
+    },
+    {
+      "id": 27403,
+      "page": 310,
+      "seq": 3,
+      "text": "There are many books on classical statistical inference: Cox and Hink-\nley (1974) and Silvey (1975) give nontechnical accounts. The bootstrap\nis due to Efron (1979) and is described more fully in Efron and Tibshi-\nrani (1993) and Hall (1992). A good modern book on Bayesian inference\nis Gelman et al. (1995). A lucid account of the application of Bayesian\nmethods to neural networks is given in Neal (1996). The statistical appli-\ncation of Gibbs sampling is due to Geman and Geman (1984), and Gelfand\nand Smith (1990), with related work by Tanner and Wong (1987). Markov\nchain Monte Carlo methods, including Gibbs sampling and the Metropolis\u2013\nHastings algorithm, are discussed in Spiegelhalter et al. (1996). The EM\nalgorithm is due to Dempster et al. (1977); as the discussants in that pa-\nper make clear, there was much related, earlier work. The view of EM as\na joint maximization scheme for a penalized complete-data log-likelihood\nwas elucidated by Neal and Hinton (1998); they credit Csiszar and Tusn\u00b4ady\n(1984) and Hathaway (1986) as having noticed this connection earlier. Bag-\nging was proposed by Breiman (1996a). Stacking is due to Wolpert (1992);"
+    },
+    {
+      "id": 27405,
+      "page": 311,
+      "seq": 1,
+      "text": "Breiman (1996b) contains an accessible discussion for statisticians. Leblanc\nand Tibshirani (1996) describe variations on stacking based on the boot-\nstrap. Model averaging in the Bayesian framework has been recently advo-\ncated by Madigan and Raftery (1994). Bumping was proposed by Tibshi-\nrani and Knight (1999)."
+    },
+    {
+      "id": 27409,
+      "page": 311,
+      "seq": 5,
+      "text": "is maximized as a function of r(y) when r(y) = q(y). Hence show that\nR(\u03b8, \u03b8) \u2265R(\u03b8\u2032, \u03b8) as stated below equation (8.46)."
+    },
+    {
+      "id": 27416,
+      "page": 311,
+      "seq": 12,
+      "text": "(a) Fit a cubic smooth spline to the relative change in spinal BMD, as a\nfunction of age. Use cross-validation to estimate the optimal amount\nof smoothing. Construct pointwise 90% con\ufb01dence bands for the un-\nderlying function."
+    },
+    {
+      "id": 27417,
+      "page": 311,
+      "seq": 13,
+      "text": "(b) Compute the posterior mean and covariance for the true function via\n(8.28), and compare the posterior bands to those obtained in (a)."
+    },
+    {
+      "id": 27419,
+      "page": 312,
+      "seq": 1,
+      "text": "(c) Compute 100 bootstrap replicates of the \ufb01tted curves, as in the bottom\nleft panel of Figure 8.2. Compare the results to those obtained in (a)\nand (b)."
+    },
+    {
+      "id": 27422,
+      "page": 312,
+      "seq": 4,
+      "text": "for all x, y in the domain. This is useful for maximizing f(x) since is easy\nto show that f(x) is non-decreasing under the update"
+    },
+    {
+      "id": 27424,
+      "page": 312,
+      "seq": 6,
+      "text": "There are analogous de\ufb01nitions for majorization, for minimizing a function\nf(x). The resulting algorithms are known as MM algorithms, for \u201cMinorize-\nMaximize\u201d or \u201cMajorize-Minimize.\u201d\nShow that the EM algorithm (Section 8.5.2) is an example of an MM al-\ngorithm, using Q(\u03b8\u2032, \u03b8)+log Pr(Z|\u03b8)\u2212Q(\u03b8, \u03b8) to minorize the observed data\nlog-likelihood \u2113(\u03b8\u2032; Z). (Note that only the \ufb01rst term involves the relevant\nparameter \u03b8\u2032)."
+    }
+  ]
+}

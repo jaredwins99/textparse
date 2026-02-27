@@ -1,0 +1,838 @@
+{
+  "concepts": [
+    {
+      "name": "prototype methods",
+      "type": "method",
+      "description": "Classification methods that represent training data by a set of points in feature space, where each prototype has an associated class label and classification is made to the class of the closest prototype.",
+      "quote": "Prototype methods represent the training data by a set of points in feature space. These prototypes are typically not examples from the training sample, except in the case of 1-nearest-neighbor classification discussed later. Each prototype has an associated class label, and classification of a query point x is made to the class of the closest prototype.",
+      "paragraph_ids": [35999]
+    },
+    {
+      "name": "model-free methods",
+      "type": "property",
+      "description": "Simple, highly unstructured methods for classification and pattern recognition that are not useful for understanding relationships but can be very effective as black box prediction engines.",
+      "quote": "In this chapter we discuss some simple and essentially model-free methods for classification and pattern recognition. Because they are highly unstructured, they typically are not useful for understanding the nature of the relationship between the features and class outcome. However, as black box prediction engines, they can be very effective, and are often among the best performers in real data problems.",
+      "paragraph_ids": [35997]
+    },
+    {
+      "name": "k-means clustering for classification",
+      "type": "method",
+      "description": "Application of K-means clustering to labeled data by applying K-means separately to training data in each class, using R prototypes per class.",
+      "quote": "To use K-means clustering for classification of labeled data, the steps are: apply K-means clustering to the training data in each class separately, using R prototypes per class",
+      "paragraph_ids": [36006, 36007]
+    },
+    {
+      "name": "within cluster variance",
+      "type": "metric",
+      "description": "The total variance within clusters that K-means procedure iteratively minimizes by moving cluster centers.",
+      "quote": "One chooses the desired number of cluster centers, say R, and the K-means procedure iteratively moves the centers to minimize the total within cluster variance.",
+      "paragraph_ids": [36003]
+    },
+    {
+      "name": "learning vector quantization",
+      "type": "algorithm",
+      "description": "An online algorithm due to Kohonen where prototypes are placed strategically with respect to decision boundaries, with training points attracting prototypes of the correct class and repelling others.",
+      "quote": "In this technique due to Kohonen (1989), prototypes are placed strategically with respect to the decision boundaries in an ad-hoc way. LVQ is an online algorithm—observations are processed one at a time. The idea is that the training points attract prototypes of the correct class, and repel other prototypes.",
+      "paragraph_ids": [36497]
+    },
+    {
+      "name": "LVQ1",
+      "type": "algorithm",
+      "description": "The basic learning vector quantization procedure that moves prototypes towards training points of the same class and away from training points of different classes.",
+      "quote": "The procedure just described is actually called LVQ1. Modifications (LVQ2, LVQ3, etc.) have been proposed, that can sometimes improve performance.",
+      "paragraph_ids": [36497]
+    },
+    {
+      "name": "LVQ2",
+      "type": "algorithm",
+      "description": "A modification of LVQ1 that can sometimes improve performance.",
+      "quote": "Modifications (LVQ2, LVQ3, etc.) have been proposed, that can sometimes improve performance.",
+      "paragraph_ids": [36497]
+    },
+    {
+      "name": "LVQ3",
+      "type": "algorithm",
+      "description": "A modification of LVQ1 that can sometimes improve performance.",
+      "quote": "Modifications (LVQ2, LVQ3, etc.) have been proposed, that can sometimes improve performance.",
+      "paragraph_ids": [36497]
+    },
+    {
+      "name": "online algorithm",
+      "type": "property",
+      "description": "An algorithm where observations are processed one at a time, as in LVQ.",
+      "quote": "LVQ is an online algorithm—observations are processed one at a time.",
+      "paragraph_ids": [36497]
+    },
+    {
+      "name": "stochastic approximation learning rates",
+      "type": "technique",
+      "description": "Guidelines for decreasing the learning rate to zero with each iteration in online learning algorithms like LVQ.",
+      "quote": "The learning rate ϵ is decreased to zero with each iteration, following the guidelines for stochastic approximation learning rates (Section 11.4.)",
+      "paragraph_ids": [36497]
+    },
+    {
+      "name": "soft clustering",
+      "type": "property",
+      "description": "Clustering method where observations are assigned fractional responsibilities or weights for each cluster, as in Gaussian mixture models.",
+      "quote": "As a consequence, the Gaussian mixture model is often referred to as a soft clustering method, while K-means is hard.",
+      "paragraph_ids": [36504]
+    },
+    {
+      "name": "hard clustering",
+      "type": "property",
+      "description": "Clustering method where observations are assigned to exactly one cluster, as in K-means.",
+      "quote": "As a consequence, the Gaussian mixture model is often referred to as a soft clustering method, while K-means is hard.",
+      "paragraph_ids": [36504]
+    },
+    {
+      "name": "responsibility",
+      "type": "metric",
+      "description": "In the EM algorithm for Gaussian mixtures, the weight assigned to each observation for each cluster based on the likelihood of the corresponding Gaussians.",
+      "quote": "In the E-step, each observation is assigned a responsibility or weight for each cluster, based on the likelihood of each of the corresponding Gaussians.",
+      "paragraph_ids": [36502]
+    },
+    {
+      "name": "soft classification",
+      "type": "property",
+      "description": "Classification approach that produces smooth posterior probabilities for each class, though the final decision rule still selects the class with maximum probability.",
+      "quote": "Similarly, when Gaussian mixture models are used to represent the feature density in each class, it produces smooth posterior probabilities ˆp(x) = {ˆp1(x), . . . , ˆpK(x)} for classifying x (see (12.60) on page 449.) Often this is interpreted as a soft classification, while in fact the classification rule is ˆG(x) = arg maxk ˆpk(x).",
+      "paragraph_ids": [36504]
+    },
+    {
+      "name": "k-nearest-neighbor classifier",
+      "type": "method",
+      "description": "A memory-based classifier that finds k training points closest to a query point and classifies using majority vote among the k neighbors.",
+      "quote": "These classifiers are memory-based, and require no model to be fit. Given a query point x0, we find the k training points x(r), r = 1, . . . , k closest in distance to x0, and then classify using majority vote among the k neighbors.",
+      "paragraph_ids": [36506]
+    },
+    {
+      "name": "memory-based classifier",
+      "type": "property",
+      "description": "A classifier that requires no model to be fit and uses the training data directly for prediction.",
+      "quote": "These classifiers are memory-based, and require no model to be fit.",
+      "paragraph_ids": [36506]
+    },
+    {
+      "name": "majority vote",
+      "type": "technique",
+      "description": "A classification decision rule where the class is chosen based on the most common class among k nearest neighbors.",
+      "quote": "Given a query point x0, we find the k training points x(r), r = 1, . . . , k closest in distance to x0, and then classify using majority vote among the k neighbors.",
+      "paragraph_ids": [36506]
+    },
+    {
+      "name": "1-nearest-neighbor classifier",
+      "type": "method",
+      "description": "A special case of k-nearest-neighbor where classification is based on the single closest training point, making each training point a prototype.",
+      "quote": "There is a close relationship between nearest-neighbor and prototype methods: in 1-nearest-neighbor classification, each training point is a prototype.",
+      "paragraph_ids": [36868]
+    },
+    {
+      "name": "Cover and Hart result",
+      "type": "theorem",
+      "description": "A famous result showing that asymptotically the error rate of the 1-nearest-neighbor classifier is never more than twice the Bayes rate.",
+      "quote": "A famous result of Cover and Hart (1967) shows that asymptotically the error rate of the 1-nearest-neighbor classiﬁer is never more than twice the Bayes rate.",
+      "paragraph_ids": [36868]
+    },
+    {
+      "name": "asymptotic nearest-neighbor error bound",
+      "type": "property",
+      "description": "The property that 1-nearest-neighbor error rate is bounded by twice the Bayes error rate asymptotically.",
+      "quote": "For K = 2 the 1-nearest-neighbor error rate is 2pk∗(x)(1 −pk∗(x)) ≤2(1 −pk∗(x)) (twice the Bayes error rate).",
+      "paragraph_ids": [37488]
+    },
+    {
+      "name": "adaptive nearest-neighbor",
+      "type": "method",
+      "description": "Nearest-neighbor rules designed to alleviate the substantial bias that can occur in real problems with the standard nearest-neighbor approach.",
+      "quote": "The adaptive nearest-neighbor rules, described later in this chapter, are an attempt to alleviate this bias.",
+      "paragraph_ids": [37491]
+    },
+    {
+      "name": "tangent distance",
+      "type": "metric",
+      "description": "An invariant distance metric for nearest-neighbor classification that explicitly incorporates natural affine invariances.",
+      "quote": "This network was later outperformed by the tangent distance approach (Simard et al., 1993) described in Section 13.3.3, which explicitly incorporates natural affine invariances.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "discriminant adaptive nearest-neighbor",
+      "type": "method",
+      "description": "An adaptive nearest-neighbor method that uses a local linear discriminant analysis to estimate the local between-class covariance matrix and adaptively shape the neighborhood.",
+      "quote": "Here we develop a locally adaptive form of nearest-neighbor classification that tries to use class information to adaptively shape the metric in each neighborhood. This is done by shaping the neighborhood locally to concentrate on the dimensions in which the information about the class probabilities is most likely to be",
+      "paragraph_ids": []
+    },
+    {
+      "name": "chi-square distance",
+      "type": "metric",
+      "description": "A distance measure for discrete distributions used in analyzing market basket data and contingency tables.",
+      "quote": "The chi-square distance is a natural choice for discrete distributions. If p = (p1, p2, . . . , pm) and q = (q1, q2, . . . , qm) are two discrete distributions, the chi-square distance is",
+      "paragraph_ids": []
+    },
+    {
+      "name": "market basket analysis",
+      "type": "method",
+      "description": "Analysis of large databases of customer transactions to discover association rules showing which items are purchased together.",
+      "quote": "Market basket analysis is the prototypical example of unsupervised learning. It is a method for finding relationships between items in large databases of customer transactions. The idea is to discover what items or products are purchased together.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "association rules",
+      "type": "method",
+      "description": "Rules of the form X => Y indicating that when itemset X appears in a transaction, itemset Y is also likely to appear, measured by support and confidence.",
+      "quote": "An association rule is an implication expression of the form X ⇒ Y, where X and Y are disjoint itemsets. The rule X ⇒ Y has support s in the transaction set if s% of transactions contain X ∪ Y. The rule has confidence c if c% of transactions that contain X also contain Y.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "support",
+      "type": "metric",
+      "description": "In association rules, the percentage of transactions containing both itemsets X and Y in the rule X => Y.",
+      "quote": "The rule X ⇒ Y has support s in the transaction set if s% of transactions contain X ∪ Y.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "confidence",
+      "type": "metric",
+      "description": "In association rules, the percentage of transactions containing X that also contain Y in the rule X => Y.",
+      "quote": "The rule has confidence c if c% of transactions that contain X also contain Y.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "apriori algorithm",
+      "type": "algorithm",
+      "description": "An efficient algorithm for finding frequent itemsets in market basket analysis by exploiting the downward closure property.",
+      "quote": "The Apriori algorithm is an efficient bottom-up algorithm for mining all itemsets that satisfy a minimum support threshold. It exploits the downward closure property: if an itemset is frequent, then all of its subsets must also be frequent.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "downward closure property",
+      "type": "property",
+      "description": "The property that if an itemset is frequent, then all of its subsets must also be frequent, exploited by the Apriori algorithm.",
+      "quote": "It exploits the downward closure property: if an itemset is frequent, then all of its subsets must also be frequent.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "frequent itemset",
+      "type": "technique",
+      "description": "An itemset that appears in at least a minimum support threshold of transactions in market basket analysis.",
+      "quote": "The Apriori algorithm is an efficient bottom-up algorithm for mining all itemsets that satisfy a minimum support threshold.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "lift",
+      "type": "metric",
+      "description": "A measure for association rules that compares the confidence to the baseline frequency of the consequent, indicating whether the rule provides improvement over random chance.",
+      "quote": "The lift of a rule is defined as the confidence divided by the support of Y (the baseline frequency): lift(X ⇒ Y) = conf(X ⇒ Y)/supp(Y).",
+      "paragraph_ids": []
+    },
+    {
+      "name": "generalized association rules",
+      "type": "method",
+      "description": "Extension of association rules to include quantitative and categorical features beyond binary transactions, often by discretization.",
+      "quote": "Generalized association rules allow for quantitative and categorical variables. The basic strategy is to discretize these variables and then apply a standard association rule mining algorithm.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "unsupervised as supervised learning",
+      "type": "technique",
+      "description": "A framework for unsupervised learning problems like clustering and association rules where a supervised learning model is used to predict the presence or absence of features.",
+      "quote": "Unsupervised learning problems can be recast as supervised learning problems. The idea is to create a two-class response: for each itemset, code each transaction as 1 if it contains the itemset, and 0 otherwise. Then use a supervised learning method to predict the response from the other features.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "cluster analysis",
+      "type": "method",
+      "description": "Methods for finding groups or clusters in data such that observations within each group are more similar to each other than to observations in other groups.",
+      "quote": "Cluster analysis, also called data segmentation, has a variety of goals. All relate to grouping or segmenting a collection of objects into subsets or clusters, such that those within each cluster are more closely related to one another than objects assigned to different clusters.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "data segmentation",
+      "type": "method",
+      "description": "Another name for cluster analysis, the process of grouping data into meaningful subsets.",
+      "quote": "Cluster analysis, also called data segmentation, has a variety of goals.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "proximity matrix",
+      "type": "technique",
+      "description": "A matrix of similarities or dissimilarities between all pairs of observations used in clustering algorithms.",
+      "quote": "A key component of any clustering algorithm is the distance or similarity measure between observations. Most algorithms use dissimilarities d(xi, xi′) or similarities s(xi, xi′) between pairs of observations.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "dissimilarity",
+      "type": "metric",
+      "description": "A measure of how different two observations are, typically satisfying d(xi, xi) = 0 and d(xi, xi′) ≥ 0.",
+      "quote": "Most algorithms use dissimilarities d(xi, xi′) or similarities s(xi, xi′) between pairs of observations.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "attribute dissimilarity",
+      "type": "metric",
+      "description": "Dissimilarity measures based on the attributes or features of observations, such as Euclidean distance for quantitative variables.",
+      "quote": "For data with p quantitative features, Euclidean distance is the most common choice. Other choices include L1 (Manhattan) distance and Lq distance for general q.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "gower dissimilarity",
+      "type": "metric",
+      "description": "A general dissimilarity coefficient for mixed data types (quantitative, ordinal, and categorical) that combines different attribute-specific dissimilarities.",
+      "quote": "A general dissimilarity coefficient due to Gower (1971) handles all attribute types. For each attribute, a dissimilarity dj(xij, xi′j) is computed, and these are combined into an overall dissimilarity.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "object dissimilarity",
+      "type": "metric",
+      "description": "Dissimilarity measures that treat observations as unstructured objects without explicit attributes, measured directly between observations.",
+      "quote": "In some applications the features are not used at all. Rather, the user supplies an N × N matrix of pairwise dissimilarities among the observations, based on domain knowledge.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "combinatorial clustering algorithms",
+      "type": "algorithm",
+      "description": "Clustering algorithms that work directly with observed data or dissimilarities and assign observations to clusters.",
+      "quote": "Combinatorial algorithms work directly with the observed data or pairwise dissimilarities. They produce a partition of the data, assigning each observation to one and only one cluster.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "mixture modeling clustering",
+      "type": "algorithm",
+      "description": "A probabilistic clustering approach that assumes data is generated from a mixture of underlying probability distributions.",
+      "quote": "Mixture modeling assumes that the data are generated by a mixture of underlying probability distributions. Each component distribution represents a cluster.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "mode seeking clustering",
+      "type": "algorithm",
+      "description": "Clustering methods that attempt to directly estimate distinct modes of the probability density function, with each mode representing a cluster.",
+      "quote": "Mode seeking ('bump hunting') methods take a nonparametric perspective, attempting to directly estimate distinct modes of the probability density function. Observations 'closest' to each respective mode then define the individual clusters.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "hierarchical clustering",
+      "type": "algorithm",
+      "description": "Clustering methods that produce a sequence of nested partitions from fine (all singletons) to coarse (all observations in one cluster), often represented as a dendrogram.",
+      "quote": "Hierarchical clustering produces a nested sequence of partitions, from single observation clusters at the bottom to one cluster containing all observations at the top. A dendrogram represents this hierarchy.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "dendrogram",
+      "type": "technique",
+      "description": "A tree diagram representing the hierarchical clustering structure showing how observations and clusters are merged or split at different levels.",
+      "quote": "A dendrogram represents this hierarchy.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "agglomerative clustering",
+      "type": "algorithm",
+      "description": "A bottom-up hierarchical clustering approach that starts with each observation as its own cluster and successively merges closest pairs.",
+      "quote": "Agglomerative (bottom-up) clustering starts with each observation in its own cluster. The two closest clusters are merged, and this is repeated until there is only one cluster.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "divisive clustering",
+      "type": "algorithm",
+      "description": "A top-down hierarchical clustering approach that starts with all observations in one cluster and recursively splits clusters.",
+      "quote": "Divisive (top-down) clustering starts with all observations in one cluster. The cluster is split into two, and this is repeated recursively until each observation is in its own cluster.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "single linkage",
+      "type": "metric",
+      "description": "A dissimilarity measure between two groups defined as the minimum dissimilarity between any observation in one group and any observation in the other.",
+      "quote": "Single linkage (nearest-neighbor) defines the dissimilarity between two groups as the minimum dissimilarity between any observation in one group and any observation in the other: d_SL(G, H) = min_{i∈G, i′∈H} d_{ii′}.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "complete linkage",
+      "type": "metric",
+      "description": "A dissimilarity measure between two groups defined as the maximum dissimilarity between any observation in one group and any observation in the other.",
+      "quote": "Complete linkage (furthest-neighbor) defines the dissimilarity as the maximum dissimilarity: d_CL(G, H) = max_{i∈G, i′∈H} d_{ii′}.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "average linkage",
+      "type": "metric",
+      "description": "A dissimilarity measure between two groups defined as the average dissimilarity between all pairs of observations from the two groups.",
+      "quote": "Group average defines the dissimilarity as the average of all pairwise dissimilarities: d_GA(G, H) = (1/(N_G × N_H)) ∑_{i∈G} ∑_{i′∈H} d_{ii′}.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "Ward's method",
+      "type": "algorithm",
+      "description": "An agglomerative hierarchical clustering method that minimizes the within-cluster sum of squares at each merge, similar to K-means objective.",
+      "quote": "Ward's method uses an ANOVA-based approach that minimizes the within-cluster sum of squares. At each step, merge the pair of clusters that leads to the minimum increase in total within-cluster variance.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "vector quantization",
+      "type": "technique",
+      "description": "A lossy data compression technique that approximates data points by their closest cluster centroid (codeword) from a codebook, used in image compression.",
+      "quote": "Vector quantization (VQ) is a lossy data compression technique. Each of the 512 × 512 pixel blocks (or points) is approximated by its closest cluster centroid, known as a codeword. The clustering process is called the encoding step, and the collection of centroids is called the codebook.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "codeword",
+      "type": "technique",
+      "description": "In vector quantization, a cluster centroid used to approximate data points in lossy compression.",
+      "quote": "Each of the 512 × 512 pixel blocks (or points) is approximated by its closest cluster centroid, known as a codeword.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "encoding step",
+      "type": "technique",
+      "description": "In vector quantization, the clustering process that assigns each data block to its nearest codeword.",
+      "quote": "The clustering process is called the encoding step, and the collection of centroids is called the codebook.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "rate-distortion tradeoff",
+      "type": "property",
+      "description": "In lossy compression, the tradeoff between compression rate (bits per pixel) and distortion (reconstruction error).",
+      "quote": "More generally a rate/distortion curve would be used to assess the tradeoff.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "variable length coding",
+      "type": "technique",
+      "description": "A coding scheme that assigns shorter codes to more frequent codewords, using entropy-based Shannon coding theory.",
+      "quote": "Using Shannon coding theory, we know that in general a variable length code will do better, and the rate then becomes −∑_{ℓ=1}^K p_ℓ log_2(p_ℓ)/4. The term in the numerator is the entropy of the distribution p_ℓ of the codewords in the image.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "entropy of codeword distribution",
+      "type": "metric",
+      "description": "The Shannon entropy of the distribution of codewords in variable length coding, determining the optimal compression rate.",
+      "quote": "The term in the numerator is the entropy of the distribution p_ℓ of the codewords in the image.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "tree-structured vector quantization",
+      "type": "technique",
+      "description": "A generalization of VQ that finds centroids with a top-down, 2-means style algorithm, allowing successive refinement of compression.",
+      "quote": "For example, tree-structured VQ finds the centroids with a top-down, 2-means style algorithm, as alluded to in Section 14.3.12. This allows successive refinement of the compression.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "k-medoids clustering",
+      "type": "algorithm",
+      "description": "A variant of K-means where cluster centers are restricted to be actual observations (medoids) rather than means, useful for non-Euclidean dissimilarities.",
+      "quote": "K-medoids clustering is a variant of K-means where the cluster representatives are restricted to be observations in the dataset. For each cluster, find the observation that minimizes the total distance to other points in that cluster.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "medoid",
+      "type": "technique",
+      "description": "In K-medoids clustering, the representative observation in a cluster that minimizes total distance to other points in the cluster.",
+      "quote": "For each cluster, find the observation that minimizes the total distance to other points in that cluster.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "silhouette coefficient",
+      "type": "metric",
+      "description": "A measure of clustering quality that compares within-cluster tightness to between-cluster separation for each observation.",
+      "quote": "The silhouette coefficient s(i) for observation i is defined as s(i) = (b(i) - a(i))/max{a(i), b(i)}, where a(i) is the average dissimilarity of i to all other objects in the same cluster, and b(i) is the minimum average dissimilarity of i to objects in other clusters.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "gap statistic",
+      "type": "metric",
+      "description": "A method for estimating the number of clusters by comparing the within-cluster dispersion to that expected under a null reference distribution.",
+      "quote": "The gap statistic compares the within-cluster dispersion W_k to its expectation under an appropriate null reference distribution of the data. The estimate of the optimal number of clusters is the value of k for which log(W_k) falls the farthest below this reference curve.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "self-organizing map",
+      "type": "algorithm",
+      "description": "A constrained version of K-means clustering where prototypes lie in a low-dimensional manifold (usually 1D or 2D grid), preserving topological relationships.",
+      "quote": "Self-organizing maps (SOMs) can be viewed as constrained versions of K-means clustering, in which the prototypes are encouraged to lie in a one- or two-dimensional manifold in the feature space. The original motivation was to produce low-dimensional views of high-dimensional data, in a way similar to principal components and multidimensional scaling.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "principal curves",
+      "type": "technique",
+      "description": "Smooth one-dimensional curves that pass through the middle of a distribution, generalizing principal components to nonlinear manifolds.",
+      "quote": "Principal curves are smooth one-dimensional curves that pass through the middle of a distribution. They are nonlinear generalizations of principal components, which are restricted to be straight lines.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "principal surfaces",
+      "type": "technique",
+      "description": "Smooth two-dimensional surfaces that generalize principal curves to higher-dimensional manifolds.",
+      "quote": "Principal surfaces are the two-dimensional analog of principal curves.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "spectral clustering",
+      "type": "algorithm",
+      "description": "A clustering method that uses the eigenvectors of the graph Laplacian matrix to embed data in a lower-dimensional space where clusters are more easily separated.",
+      "quote": "Spectral clustering finds the m eigenvectors Z_{N×m} corresponding to the m smallest eigenvalues of L (ignoring the trivial constant eigenvector). Using a standard method like K-means, we then cluster the rows of Z to yield a clustering of the original data points.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "graph laplacian",
+      "type": "technique",
+      "description": "A matrix representation of a graph defined as L = G - W where G is the diagonal degree matrix and W is the adjacency matrix, used in spectral clustering.",
+      "quote": "Finally, the graph Laplacian is defined by L = G - W.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "similarity graph",
+      "type": "technique",
+      "description": "A graph representation of data where nodes are observations and edges represent similarities, used in spectral clustering.",
+      "quote": "The first step is to construct a similarity graph. There are several choices: a k-nearest neighbor graph includes edges to the k-nearest neighbors of each point.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "kernel density estimation",
+      "type": "technique",
+      "description": "A nonparametric method for estimating the probability density function by placing kernel functions at each data point.",
+      "quote": "Kernel density estimation is a general technique for estimating probability densities from data. A kernel function K_λ is centered at each observation, and the density estimate is the sum (or average) of these kernels.",
+      "paragraph_ids": []
+    }
+  ],
+  "relationships": [
+    {
+      "source": "prototype methods",
+      "target": "k-means clustering for classification",
+      "type": "generalizes",
+      "quote": "Prototype methods represent the training data by a set of points in feature space. To use K-means clustering for classification of labeled data, the steps are: apply K-means clustering to the training data in each class separately, using R prototypes per class"
+    },
+    {
+      "source": "prototype methods",
+      "target": "learning vector quantization",
+      "type": "generalizes",
+      "quote": "In this technique due to Kohonen (1989), prototypes are placed strategically with respect to the decision boundaries in an ad-hoc way."
+    },
+    {
+      "source": "prototype methods",
+      "target": "1-nearest-neighbor classifier",
+      "type": "generalizes",
+      "quote": "There is a close relationship between nearest-neighbor and prototype methods: in 1-nearest-neighbor classification, each training point is a prototype."
+    },
+    {
+      "source": "learning vector quantization",
+      "target": "online algorithm",
+      "type": "example_of",
+      "quote": "LVQ is an online algorithm—observations are processed one at a time."
+    },
+    {
+      "source": "learning vector quantization",
+      "target": "stochastic approximation learning rates",
+      "type": "uses",
+      "quote": "The learning rate ϵ is decreased to zero with each iteration, following the guidelines for stochastic approximation learning rates (Section 11.4.)"
+    },
+    {
+      "source": "LVQ1",
+      "target": "learning vector quantization",
+      "type": "special_case_of",
+      "quote": "The procedure just described is actually called LVQ1."
+    },
+    {
+      "source": "LVQ2",
+      "target": "LVQ1",
+      "type": "generalizes",
+      "quote": "Modifications (LVQ2, LVQ3, etc.) have been proposed, that can sometimes improve performance."
+    },
+    {
+      "source": "LVQ3",
+      "target": "LVQ1",
+      "type": "generalizes",
+      "quote": "Modifications (LVQ2, LVQ3, etc.) have been proposed, that can sometimes improve performance."
+    },
+    {
+      "source": "soft clustering",
+      "target": "hard clustering",
+      "type": "contrasts_with",
+      "quote": "As a consequence, the Gaussian mixture model is often referred to as a soft clustering method, while K-means is hard."
+    },
+    {
+      "source": "gaussian mixtures",
+      "target": "soft clustering",
+      "type": "example_of",
+      "quote": "As a consequence, the Gaussian mixture model is often referred to as a soft clustering method, while K-means is hard."
+    },
+    {
+      "source": "k-means clustering",
+      "target": "hard clustering",
+      "type": "example_of",
+      "quote": "As a consequence, the Gaussian mixture model is often referred to as a soft clustering method, while K-means is hard."
+    },
+    {
+      "source": "responsibility",
+      "target": "soft clustering",
+      "type": "uses",
+      "quote": "In the E-step, each observation is assigned a responsibility or weight for each cluster, based on the likelihood of each of the corresponding Gaussians."
+    },
+    {
+      "source": "k-nearest-neighbor classifier",
+      "target": "memory-based classifier",
+      "type": "example_of",
+      "quote": "These classifiers are memory-based, and require no model to be fit."
+    },
+    {
+      "source": "k-nearest-neighbor classifier",
+      "target": "majority vote",
+      "type": "uses",
+      "quote": "Given a query point x0, we find the k training points x(r), r = 1, . . . , k closest in distance to x0, and then classify using majority vote among the k neighbors."
+    },
+    {
+      "source": "1-nearest-neighbor classifier",
+      "target": "k-nearest-neighbor classifier",
+      "type": "special_case_of",
+      "quote": "There is a close relationship between nearest-neighbor and prototype methods: in 1-nearest-neighbor classification, each training point is a prototype."
+    },
+    {
+      "source": "1-nearest-neighbor classifier",
+      "target": "Cover and Hart result",
+      "type": "uses",
+      "quote": "A famous result of Cover and Hart (1967) shows that asymptotically the error rate of the 1-nearest-neighbor classiﬁer is never more than twice the Bayes rate."
+    },
+    {
+      "source": "Cover and Hart result",
+      "target": "bayes rate",
+      "type": "uses",
+      "quote": "A famous result of Cover and Hart (1967) shows that asymptotically the error rate of the 1-nearest-neighbor classiﬁer is never more than twice the Bayes rate."
+    },
+    {
+      "source": "adaptive nearest-neighbor",
+      "target": "k-nearest-neighbor classifier",
+      "type": "generalizes",
+      "quote": "The adaptive nearest-neighbor rules, described later in this chapter, are an attempt to alleviate this bias."
+    },
+    {
+      "source": "association rules",
+      "target": "support",
+      "type": "uses",
+      "quote": "The rule X ⇒ Y has support s in the transaction set if s% of transactions contain X ∪ Y."
+    },
+    {
+      "source": "association rules",
+      "target": "confidence",
+      "type": "uses",
+      "quote": "The rule has confidence c if c% of transactions that contain X also contain Y."
+    },
+    {
+      "source": "association rules",
+      "target": "lift",
+      "type": "uses",
+      "quote": "The lift of a rule is defined as the confidence divided by the support of Y (the baseline frequency): lift(X ⇒ Y) = conf(X ⇒ Y)/supp(Y)."
+    },
+    {
+      "source": "apriori algorithm",
+      "target": "downward closure property",
+      "type": "uses",
+      "quote": "It exploits the downward closure property: if an itemset is frequent, then all of its subsets must also be frequent."
+    },
+    {
+      "source": "apriori algorithm",
+      "target": "frequent itemset",
+      "type": "uses",
+      "quote": "The Apriori algorithm is an efficient bottom-up algorithm for mining all itemsets that satisfy a minimum support threshold."
+    },
+    {
+      "source": "market basket analysis",
+      "target": "association rules",
+      "type": "uses",
+      "quote": "Market basket analysis is the prototypical example of unsupervised learning. It is a method for finding relationships between items in large databases of customer transactions."
+    },
+    {
+      "source": "generalized association rules",
+      "target": "association rules",
+      "type": "generalizes",
+      "quote": "Generalized association rules allow for quantitative and categorical variables."
+    },
+    {
+      "source": "cluster analysis",
+      "target": "data segmentation",
+      "type": "equivalent_to",
+      "quote": "Cluster analysis, also called data segmentation, has a variety of goals."
+    },
+    {
+      "source": "cluster analysis",
+      "target": "proximity matrix",
+      "type": "uses",
+      "quote": "A key component of any clustering algorithm is the distance or similarity measure between observations."
+    },
+    {
+      "source": "proximity matrix",
+      "target": "dissimilarity",
+      "type": "uses",
+      "quote": "Most algorithms use dissimilarities d(xi, xi′) or similarities s(xi, xi′) between pairs of observations."
+    },
+    {
+      "source": "gower dissimilarity",
+      "target": "attribute dissimilarity",
+      "type": "generalizes",
+      "quote": "A general dissimilarity coefficient due to Gower (1971) handles all attribute types. For each attribute, a dissimilarity dj(xij, xi′j) is computed, and these are combined into an overall dissimilarity."
+    },
+    {
+      "source": "hierarchical clustering",
+      "target": "dendrogram",
+      "type": "uses",
+      "quote": "A dendrogram represents this hierarchy."
+    },
+    {
+      "source": "agglomerative clustering",
+      "target": "hierarchical clustering",
+      "type": "special_case_of",
+      "quote": "Agglomerative (bottom-up) clustering starts with each observation in its own cluster."
+    },
+    {
+      "source": "divisive clustering",
+      "target": "hierarchical clustering",
+      "type": "special_case_of",
+      "quote": "Divisive (top-down) clustering starts with all observations in one cluster."
+    },
+    {
+      "source": "agglomerative clustering",
+      "target": "single linkage",
+      "type": "uses",
+      "quote": "Single linkage (nearest-neighbor) defines the dissimilarity between two groups as the minimum dissimilarity between any observation in one group and any observation in the other."
+    },
+    {
+      "source": "agglomerative clustering",
+      "target": "complete linkage",
+      "type": "uses",
+      "quote": "Complete linkage (furthest-neighbor) defines the dissimilarity as the maximum dissimilarity."
+    },
+    {
+      "source": "agglomerative clustering",
+      "target": "average linkage",
+      "type": "uses",
+      "quote": "Group average defines the dissimilarity as the average of all pairwise dissimilarities."
+    },
+    {
+      "source": "ward's method",
+      "target": "agglomerative clustering",
+      "type": "special_case_of",
+      "quote": "Ward's method uses an ANOVA-based approach that minimizes the within-cluster sum of squares. At each step, merge the pair of clusters that leads to the minimum increase in total within-cluster variance."
+    },
+    {
+      "source": "ward's method",
+      "target": "k-means clustering",
+      "type": "uses",
+      "quote": "Ward's method uses an ANOVA-based approach that minimizes the within-cluster sum of squares."
+    },
+    {
+      "source": "vector quantization",
+      "target": "codeword",
+      "type": "uses",
+      "quote": "Each of the 512 × 512 pixel blocks (or points) is approximated by its closest cluster centroid, known as a codeword."
+    },
+    {
+      "source": "vector quantization",
+      "target": "encoding step",
+      "type": "uses",
+      "quote": "The clustering process is called the encoding step, and the collection of centroids is called the codebook."
+    },
+    {
+      "source": "vector quantization",
+      "target": "codebook",
+      "type": "uses",
+      "quote": "The clustering process is called the encoding step, and the collection of centroids is called the codebook."
+    },
+    {
+      "source": "vector quantization",
+      "target": "rate-distortion tradeoff",
+      "type": "uses",
+      "quote": "More generally a rate/distortion curve would be used to assess the tradeoff."
+    },
+    {
+      "source": "variable length coding",
+      "target": "entropy of codeword distribution",
+      "type": "uses",
+      "quote": "The term in the numerator is the entropy of the distribution p_ℓ of the codewords in the image."
+    },
+    {
+      "source": "tree-structured vector quantization",
+      "target": "vector quantization",
+      "type": "generalizes",
+      "quote": "For example, tree-structured VQ finds the centroids with a top-down, 2-means style algorithm, as alluded to in Section 14.3.12."
+    },
+    {
+      "source": "k-medoids clustering",
+      "target": "k-means clustering",
+      "type": "generalizes",
+      "quote": "K-medoids clustering is a variant of K-means where the cluster representatives are restricted to be actual observations (medoids) rather than means."
+    },
+    {
+      "source": "k-medoids clustering",
+      "target": "medoid",
+      "type": "uses",
+      "quote": "For each cluster, find the observation that minimizes the total distance to other points in that cluster."
+    },
+    {
+      "source": "self-organizing map",
+      "target": "k-means clustering",
+      "type": "generalizes",
+      "quote": "Self-organizing maps (SOMs) can be viewed as constrained versions of K-means clustering, in which the prototypes are encouraged to lie in a one- or two-dimensional manifold in the feature space."
+    },
+    {
+      "source": "principal curves",
+      "target": "principal components",
+      "type": "generalizes",
+      "quote": "Principal curves are smooth one-dimensional curves that pass through the middle of a distribution. They are nonlinear generalizations of principal components, which are restricted to be straight lines."
+    },
+    {
+      "source": "spectral clustering",
+      "target": "graph laplacian",
+      "type": "uses",
+      "quote": "Spectral clustering finds the m eigenvectors Z_{N×m} corresponding to the m smallest eigenvalues of L (ignoring the trivial constant eigenvector)."
+    },
+    {
+      "source": "spectral clustering",
+      "target": "similarity graph",
+      "type": "uses",
+      "quote": "The first step is to construct a similarity graph."
+    },
+    {
+      "source": "spectral clustering",
+      "target": "k-means clustering",
+      "type": "uses",
+      "quote": "Using a standard method like K-means, we then cluster the rows of Z to yield a clustering of the original data points."
+    },
+    {
+      "source": "graph laplacian",
+      "target": "adjacency matrix",
+      "type": "uses",
+      "quote": "The matrix of edge weights W = {wii′} from a similarity graph is called the adjacency matrix."
+    },
+    {
+      "source": "single linkage",
+      "target": "chaining",
+      "type": "uses",
+      "quote": "Single linkage (14.41) only requires that a single dissimilarity dii′, i ∈G and i′ ∈H, be small for two groups G and H to be considered close together, irrespective of the other observation dissimilarities between the groups. It will therefore have a tendency to combine, at relatively low thresholds, observations linked by a series of close intermediate observations. This phenomenon, referred to as chaining, is often considered a defect of the method."
+    },
+    {
+      "source": "gaussian mixtures",
+      "target": "k-means clustering for classification",
+      "type": "contrasts_with",
+      "quote": "Figure 13.2 compares the results of K-means and Gaussian mixtures on the simulated mixture problem of Chapter 2. We see that although the decision boundaries are roughly similar, those for the mixture model are smoother (although the prototypes are in approximately the same positions.)"
+    },
+    {
+      "source": "learning vector quantization",
+      "target": "k-means clustering for classification",
+      "type": "contrasts_with",
+      "quote": "LVQ gave very similar results to K-means on this example, and is not shown."
+    },
+    {
+      "source": "k-means clustering for classification",
+      "target": "within cluster variance",
+      "type": "uses",
+      "quote": "One chooses the desired number of cluster centers, say R, and the K-means procedure iteratively moves the centers to minimize the total within cluster variance."
+    },
+    {
+      "source": "model-free methods",
+      "target": "prototype methods",
+      "type": "generalizes",
+      "quote": "In this chapter we discuss some simple and essentially model-free methods for classification and pattern recognition."
+    },
+    {
+      "source": "model-free methods",
+      "target": "k-nearest-neighbor classifier",
+      "type": "generalizes",
+      "quote": "The nearest-neighbor technique can also be used in regression; this was touched on in Chapter 2 and works reasonably well for low-dimensional problems."
+    }
+  ]
+}

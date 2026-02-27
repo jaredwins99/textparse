@@ -1,0 +1,2835 @@
+{
+  "batch_number": 5,
+  "concepts": [
+    {
+      "id": 177,
+      "name": "bias-variance tradeoff in model selection",
+      "description": "Shrinkage and selection methods sacrifice some bias to reduce variance, potentially improving overall prediction accuracy.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "Prediction accuracy can sometimes be improved by shrinking or setting some coefficients to zero. By doing so we sacrifice a little bit of bias to reduce the variance of the predicted values, and hence may improve the overall prediction accuracy.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        }
+      ]
+    },
+    {
+      "id": 178,
+      "name": "mean squared error decomposition",
+      "description": "MSE = variance + (bias)^2, showing tradeoff between variance and bias in estimation.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "MSE(\u03b8\u0303) = E[(\u03b8\u0303 \u2212 \u03b8)^2] = Var(\u03b8\u0303) + [E(\u03b8\u0303) \u2212 \u03b8]^2. The first term is the variance, while the second term is the squared bias.",
+      "existing_formula": "\\text{MSE}(\\tilde{\\theta}) = \\text{Var}(\\tilde{\\theta}) + [E(\\tilde{\\theta}) - \\theta]^2",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        }
+      ]
+    },
+    {
+      "id": 172,
+      "name": "z-score for regression coefficients",
+      "description": "The standardized coefficient z_j = beta-hat_j / se(beta-hat_j) used for hypothesis testing, distributed as t_{N-p-1} under null hypothesis.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "To test the hypothesis that a particular coefficient \u03b2_j = 0, we form the standardized coefficient or Z-score z_j = \u03b2\u0302_j/sqrt(v_j \u03c3\u0302^2) where v_j is the jth diagonal element of (X^T X)^{-1}.",
+      "existing_formula": "z_j = \\frac{\\hat{\\beta}_j}{\\sqrt{v_j\\hat{\\sigma}^2}}",
+      "paragraphs": [
+        {
+          "id": 4521,
+          "text": "44\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4523,
+          "text": "As introduced in Chapter 2, we have an input vector XT = (X1, X2, . . . , Xp),\nand want to predict a real-valued output Y . The linear regression model\nhas the form",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4524,
+          "text": "f(X) = \u03b20 +",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4525,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4526,
+          "text": "j=1\nXj\u03b2j.\n(3.1)",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4527,
+          "text": "The linear model either assumes that the regression function E(Y |X) is\nlinear, or that the linear model is a reasonable approximation. Here the\n\u03b2j\u2019s are unknown parameters or coe\ufb03cients, and the variables Xj can come\nfrom di\ufb00erent sources:",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4528,
+          "text": "\u2022 quantitative inputs;",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4529,
+          "text": "\u2022 transformations of quantitative inputs, such as log, square-root or\nsquare;",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4530,
+          "text": "\u2022 basis expansions, such as X2 = X2\n1, X3 = X3\n1, leading to a polynomial\nrepresentation;",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4531,
+          "text": "\u2022 numeric or \u201cdummy\u201d coding of the levels of qualitative inputs. For\nexample, if G is a \ufb01ve-level factor input, we might create Xj, j =\n1, . . . , 5, such that Xj = I(G = j). Together this group of Xj repre-\nsents the e\ufb00ect of G by a set of level-dependent constants, since in\n\t5\nj=1 Xj\u03b2j, one of the Xjs is one, and the others are zero.",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4532,
+          "text": "\u2022 interactions between variables, for example, X3 = X1 \u00b7 X2.",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4533,
+          "text": "No matter the source of the Xj, the model is linear in the parameters.\nTypically we have a set of training data (x1, y1) . . . (xN, yN) from which\nto estimate the parameters \u03b2. Each xi = (xi1, xi2, . . . , xip)T is a vector\nof feature measurements for the ith case. The most popular estimation\nmethod is least squares, in which we pick the coe\ufb03cients \u03b2 = (\u03b20, \u03b21, . . . , \u03b2p)T",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4534,
+          "text": "to minimize the residual sum of squares",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4535,
+          "text": "RSS(\u03b2)\n=",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4536,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4537,
+          "text": "i=1\n(yi \u2212f(xi))2",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4538,
+          "text": "=",
+          "type": "equation",
+          "page": 62
+        },
+        {
+          "id": 4539,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4540,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4541,
+          "text": "\u0007\nyi \u2212\u03b20 \u2212",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4542,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4543,
+          "text": "j=1\nxij\u03b2j\n\b2\n.\n(3.2)",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4544,
+          "text": "From a statistical point of view, this criterion is reasonable if the training\nobservations (xi, yi) represent independent random draws from their popu-\nlation. Even if the xi\u2019s were not drawn randomly, the criterion is still valid\nif the yi\u2019s are conditionally independent given the inputs xi. Figure 3.1\nillustrates the geometry of least-squares \ufb01tting in the IRp+1-dimensional",
+          "type": "narrative",
+          "page": 62
+        },
+        {
+          "id": 4546,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 63
+        },
+        {
+          "id": 4547,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 63
+        },
+        {
+          "id": 4548,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 63
+        },
+        {
+          "id": 4549,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 63
+        },
+        {
+          "id": 4550,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 63
+        },
+        {
+          "id": 4551,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 63
+        },
+        {
+          "id": 4552,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 63
+        }
+      ]
+    },
+    {
+      "id": 173,
+      "name": "f-statistic for nested models",
+      "description": "Test statistic for comparing nested linear models, measuring change in RSS per additional parameter normalized by error variance estimate.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "The F statistic measures the change in residual sum-of-squares per additional parameter in the bigger model, and it is normalized by an estimate of \u03c3^2.",
+      "existing_formula": "F = \\frac{(RSS_0 - RSS_1)/(p_1-p_0)}{RSS_1/(N-p_1-1)}",
+      "paragraphs": [
+        {
+          "id": 4643,
+          "text": "zero. The F statistic measures the change in residual sum-of-squares per\nadditional parameter in the bigger model, and it is normalized by an esti-\nmate of \u03c32. Under the Gaussian assumptions, and the null hypothesis that\nthe smaller model is correct, the F statistic will have a Fp1\u2212p0,N\u2212p1\u22121 dis-\ntribution. It can be shown (Exercise 3.1) that the zj in (3.12) are equivalent\nto the F statistic for dropping the single coe\ufb03cient \u03b2j from the model. For\nlarge N, the quantiles of the Fp1\u2212p0,N\u2212p1\u22121 approach those of the \u03c72\np1\u2212p0.\nSimilarly, we can isolate \u03b2j in (3.10) to obtain a 1\u22122\u03b1 con\ufb01dence interval\nfor \u03b2j:",
+          "type": "narrative",
+          "page": 67
+        },
+        {
+          "id": 4644,
+          "text": "(\u02c6\u03b2j \u2212z(1\u2212\u03b1)v",
+          "type": "narrative",
+          "page": 67
+        },
+        {
+          "id": 4645,
+          "text": "1\n2\nj \u02c6\u03c3,\n\u02c6\u03b2j + z(1\u2212\u03b1)v",
+          "type": "narrative",
+          "page": 67
+        },
+        {
+          "id": 4646,
+          "text": "1\n2\nj \u02c6\u03c3).\n(3.14)",
+          "type": "equation",
+          "page": 67
+        },
+        {
+          "id": 4647,
+          "text": "Here z(1\u2212\u03b1) is the 1 \u2212\u03b1 percentile of the normal distribution:",
+          "type": "narrative",
+          "page": 67
+        },
+        {
+          "id": 4648,
+          "text": "z(1\u22120.025)\n=\n1.96,\nz(1\u2212.05)\n=\n1.645, etc.",
+          "type": "equation",
+          "page": 67
+        },
+        {
+          "id": 4649,
+          "text": "Hence the standard practice of reporting \u02c6\u03b2 \u00b1 2 \u00b7 se(\u02c6\u03b2) amounts to an ap-\nproximate 95% con\ufb01dence interval. Even if the Gaussian error assumption\ndoes not hold, this interval will be approximately correct, with its coverage\napproaching 1 \u22122\u03b1 as the sample size N \u2192\u221e.\nIn a similar fashion we can obtain an approximate con\ufb01dence set for the\nentire parameter vector \u03b2, namely",
+          "type": "narrative",
+          "page": 67
+        },
+        {
+          "id": 4650,
+          "text": "C\u03b2 = {\u03b2|(\u02c6\u03b2 \u2212\u03b2)T XT X(\u02c6\u03b2 \u2212\u03b2) \u2264\u02c6\u03c32\u03c72\np+1\n(1\u2212\u03b1)},\n(3.15)",
+          "type": "narrative",
+          "page": 67
+        },
+        {
+          "id": 4651,
+          "text": "where \u03c72\n\u2113\n(1\u2212\u03b1) is the 1 \u2212\u03b1 percentile of the chi-squared distribution on \u2113\ndegrees of freedom: for example, \u03c72\n5\n(1\u22120.05) = 11.1, \u03c72\n5\n(1\u22120.1) = 9.2. This\ncon\ufb01dence set for \u03b2 generates a corresponding con\ufb01dence set for the true\nfunction f(x) = xT \u03b2, namely {xT \u03b2|\u03b2 \u2208C\u03b2} (Exercise 3.2; see also Fig-\nure 5.4 in Section 5.2.2 for examples of con\ufb01dence bands for functions).",
+          "type": "narrative",
+          "page": 67
+        },
+        {
+          "id": 4653,
+          "text": "The data for this example come from a study by Stamey et al. (1989). They\nexamined the correlation between the level of prostate-speci\ufb01c antigen and\na number of clinical measures in men who were about to receive a radical\nprostatectomy. The variables are log cancer volume (lcavol), log prostate\nweight (lweight), age, log of the amount of benign prostatic hyperplasia\n(lbph), seminal vesicle invasion (svi), log of capsular penetration (lcp),\nGleason score (gleason), and percent of Gleason scores 4 or 5 (pgg45).\nThe correlation matrix of the predictors given in Table 3.1 shows many\nstrong correlations. Figure 1.1 (page 3) of Chapter 1 is a scatterplot matrix\nshowing every pairwise plot between the variables. We see that svi is a\nbinary variable, and gleason is an ordered categorical variable. We see, for",
+          "type": "narrative",
+          "page": 67
+        },
+        {
+          "id": 4654,
+          "text": "50\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 68
+        },
+        {
+          "id": 4656,
+          "text": "lcavol\nlweight\nage\nlbph\nsvi\nlcp\ngleason\nlweight\n0.300\nage\n0.286\n0.317\nlbph\n0.063\n0.437\n0.287\nsvi\n0.593\n0.181\n0.129\n\u22120.139\nlcp\n0.692\n0.157\n0.173\n\u22120.089\n0.671\ngleason\n0.426\n0.024\n0.366\n0.033\n0.307\n0.476\npgg45\n0.483\n0.074\n0.276\n\u22120.030\n0.481\n0.663\n0.757",
+          "type": "narrative",
+          "page": 68
+        },
+        {
+          "id": 4658,
+          "text": "Term\nCoe\ufb03cient\nStd. Error\nZ Score\nIntercept\n2.46\n0.09\n27.60\nlcavol\n0.68\n0.13\n5.37\nlweight\n0.26\n0.10\n2.75\nage\n\u22120.14\n0.10\n\u22121.40\nlbph\n0.21\n0.10\n2.06\nsvi\n0.31\n0.12\n2.47\nlcp\n\u22120.29\n0.15\n\u22121.87\ngleason\n\u22120.02\n0.15\n\u22120.15\npgg45\n0.27\n0.15\n1.74",
+          "type": "narrative",
+          "page": 68
+        },
+        {
+          "id": 4659,
+          "text": "example, that both lcavol and lcp show a strong relationship with the\nresponse lpsa, and with each other. We need to \ufb01t the e\ufb00ects jointly to\nuntangle the relationships between the predictors and the response.\nWe \ufb01t a linear model to the log of prostate-speci\ufb01c antigen, lpsa, after\n\ufb01rst standardizing the predictors to have unit variance. We randomly split\nthe dataset into a training set of size 67 and a test set of size 30. We ap-\nplied least squares estimation to the training set, producing the estimates,\nstandard errors and Z-scores shown in Table 3.2. The Z-scores are de\ufb01ned\nin (3.12), and measure the e\ufb00ect of dropping that variable from the model.\nA Z-score greater than 2 in absolute value is approximately signi\ufb01cant at\nthe 5% level. (For our example, we have nine parameters, and the 0.025 tail\nquantiles of the t67\u22129 distribution are \u00b12.002!) The predictor lcavol shows\nthe strongest e\ufb00ect, with lweight and svi also strong. Notice that lcp is\nnot signi\ufb01cant, once lcavol is in the model (when used in a model without\nlcavol, lcp is strongly signi\ufb01cant). We can also test for the exclusion of\na number of terms at once, using the F-statistic (3.13). For example, we\nconsider dropping all the non-signi\ufb01cant terms in Table 3.2, namely age,",
+          "type": "narrative",
+          "page": 68
+        }
+      ]
+    },
+    {
+      "id": 138,
+      "name": "gauss-markov theorem",
+      "description": "States that the least squares estimates of parameters have the smallest variance among all linear unbiased estimates.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "The Gauss\u2013Markov theorem states that if we have any other linear estimator \u03b8\u0303 = c^T y that is unbiased for a^T \u03b2, that is, E(c^T y) = a^T \u03b2, then Var(a^T \u03b2\u0302) \u2264 Var(c^T y).",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4661,
+          "text": "lcp, gleason, and pgg45. We get",
+          "type": "narrative",
+          "page": 69
+        },
+        {
+          "id": 4662,
+          "text": "F = (32.81 \u221229.43)/(9 \u22125)",
+          "type": "equation",
+          "page": 69
+        },
+        {
+          "id": 4663,
+          "text": "29.43/(67 \u22129)\n= 1.67,\n(3.16)",
+          "type": "equation",
+          "page": 69
+        },
+        {
+          "id": 4664,
+          "text": "which has a p-value of 0.17 (Pr(F4,58 > 1.67) = 0.17), and hence is not\nsigni\ufb01cant.\nThe mean prediction error on the test data is 0.521. In contrast, predic-\ntion using the mean training value of lpsa has a test error of 1.057, which\nis called the \u201cbase error rate.\u201d Hence the linear model reduces the base\nerror rate by about 50%. We will return to this example later to compare\nvarious selection and shrinkage methods.",
+          "type": "narrative",
+          "page": 69
+        },
+        {
+          "id": 4666,
+          "text": "One of the most famous results in statistics asserts that the least squares\nestimates of the parameters \u03b2 have the smallest variance among all linear\nunbiased estimates. We will make this precise here, and also make clear\nthat the restriction to unbiased estimates is not necessarily a wise one. This\nobservation will lead us to consider biased estimates such as ridge regression\nlater in the chapter. We focus on estimation of any linear combination of\nthe parameters \u03b8 = aT \u03b2; for example, predictions f(x0) = xT\n0 \u03b2 are of this\nform. The least squares estimate of aT \u03b2 is",
+          "type": "narrative",
+          "page": 69
+        },
+        {
+          "id": 4667,
+          "text": "\u02c6\u03b8 = aT \u02c6\u03b2 = aT (XT X)\u22121XT y.\n(3.17)",
+          "type": "narrative",
+          "page": 69
+        },
+        {
+          "id": 4668,
+          "text": "Considering X to be \ufb01xed, this is a linear function cT\n0 y of the response\nvector y. If we assume that the linear model is correct, aT \u02c6\u03b2 is unbiased\nsince",
+          "type": "narrative",
+          "page": 69
+        },
+        {
+          "id": 4669,
+          "text": "E(aT \u02c6\u03b2)\n=\nE(aT (XT X)\u22121XT y)\n=\naT (XT X)\u22121XT X\u03b2\n=\naT \u03b2.\n(3.18)",
+          "type": "narrative",
+          "page": 69
+        },
+        {
+          "id": 4670,
+          "text": "The Gauss\u2013Markov theorem states that if we have any other linear estima-\ntor \u02dc\u03b8 = cT y that is unbiased for aT \u03b2, that is, E(cT y) = aT \u03b2, then",
+          "type": "narrative",
+          "page": 69
+        },
+        {
+          "id": 4671,
+          "text": "Var(aT \u02c6\u03b2) \u2264Var(cT y).\n(3.19)",
+          "type": "narrative",
+          "page": 69
+        },
+        {
+          "id": 4672,
+          "text": "The proof (Exercise 3.3) uses the triangle inequality. For simplicity we have\nstated the result in terms of estimation of a single parameter aT \u03b2, but with\na few more de\ufb01nitions one can state it in terms of the entire parameter\nvector \u03b2 (Exercise 3.3).\nConsider the mean squared error of an estimator \u02dc\u03b8 in estimating \u03b8:",
+          "type": "narrative",
+          "page": 69
+        },
+        {
+          "id": 4673,
+          "text": "MSE(\u02dc\u03b8)\n=\nE(\u02dc\u03b8 \u2212\u03b8)2",
+          "type": "narrative",
+          "page": 69
+        },
+        {
+          "id": 4674,
+          "text": "=\nVar(\u02dc\u03b8) + [E(\u02dc\u03b8) \u2212\u03b8]2.\n(3.20)",
+          "type": "equation",
+          "page": 69
+        }
+      ]
+    },
+    {
+      "id": 141,
+      "name": "gram-schmidt orthogonalization",
+      "description": "A procedure for constructing an orthogonal basis from a set of vectors by sequential orthogonalization.",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "Algorithm 3.1 is known as the Gram\u2013Schmidt procedure for multiple regression, and is also a useful numerical strategy for computing the estimates.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4675,
+          "text": "52\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4676,
+          "text": "The \ufb01rst term is the variance, while the second term is the squared bias.\nThe Gauss-Markov theorem implies that the least squares estimator has the\nsmallest mean squared error of all linear estimators with no bias. However,\nthere may well exist a biased estimator with smaller mean squared error.\nSuch an estimator would trade a little bias for a larger reduction in variance.\nBiased estimates are commonly used. Any method that shrinks or sets to\nzero some of the least squares coe\ufb03cients may result in a biased estimate.\nWe discuss many examples, including variable subset selection and ridge\nregression, later in this chapter. From a more pragmatic point of view, most\nmodels are distortions of the truth, and hence are biased; picking the right\nmodel amounts to creating the right balance between bias and variance.\nWe go into these issues in more detail in Chapter 7.\nMean squared error is intimately related to prediction accuracy, as dis-\ncussed in Chapter 2. Consider the prediction of the new response at input\nx0,",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4677,
+          "text": "Y0 = f(x0) + \u03b50.\n(3.21)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4678,
+          "text": "Then the expected prediction error of an estimate \u02dcf(x0) = xT\n0 \u02dc\u03b2 is",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4679,
+          "text": "E(Y0 \u2212\u02dcf(x0))2\n=\n\u03c32 + E(xT\n0 \u02dc\u03b2 \u2212f(x0))2",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4680,
+          "text": "=\n\u03c32 + MSE( \u02dcf(x0)).\n(3.22)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4681,
+          "text": "Therefore, expected prediction error and mean squared error di\ufb00er only by\nthe constant \u03c32, representing the variance of the new observation y0.",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4683,
+          "text": "The linear model (3.1) with p > 1 inputs is called the multiple linear\nregression model. The least squares estimates (3.6) for this model are best\nunderstood in terms of the estimates for the univariate (p = 1) linear\nmodel, as we indicate in this section.\nSuppose \ufb01rst that we have a univariate model with no intercept, that is,",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4684,
+          "text": "Y = X\u03b2 + \u03b5.\n(3.23)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4685,
+          "text": "The least squares estimate and residuals are",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4686,
+          "text": "\u02c6\u03b2 =\n\tN\n1 xiyi\n\tN\n1 x2\ni\n,",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4687,
+          "text": "ri = yi \u2212xi \u02c6\u03b2.",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4688,
+          "text": "(3.24)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4689,
+          "text": "In convenient vector notation, we let y = (y1, . . . , yN)T , x = (x1, . . . , xN)T",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4690,
+          "text": "and de\ufb01ne",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4691,
+          "text": "\u27e8x, y\u27e9\n=",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4692,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4693,
+          "text": "i=1\nxiyi,",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4694,
+          "text": "=\nxT y,\n(3.25)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4696,
+          "text": "the inner product between x and y1. Then we can write",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4697,
+          "text": "\u02c6\u03b2 = \u27e8x, y\u27e9",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4698,
+          "text": "\u27e8x, x\u27e9,",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4699,
+          "text": "r = y \u2212x\u02c6\u03b2.\n(3.26)",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4700,
+          "text": "As we will see, this simple univariate regression provides the building block\nfor multiple linear regression. Suppose next that the inputs x1, x2, . . . , xp\n(the columns of the data matrix X) are orthogonal; that is \u27e8xj, xk\u27e9= 0\nfor all j \u0338= k. Then it is easy to check that the multiple least squares esti-\nmates \u02c6\u03b2j are equal to \u27e8xj, y\u27e9/\u27e8xj, xj\u27e9\u2014the univariate estimates. In other\nwords, when the inputs are orthogonal, they have no e\ufb00ect on each other\u2019s\nparameter estimates in the model.\nOrthogonal inputs occur most often with balanced, designed experiments\n(where orthogonality is enforced), but almost never with observational\ndata. Hence we will have to orthogonalize them in order to carry this idea\nfurther. Suppose next that we have an intercept and a single input x. Then\nthe least squares coe\ufb03cient of x has the form",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4701,
+          "text": "\u02c6\u03b21 =\n\u27e8x \u2212\u00afx1, y\u27e9\n\u27e8x \u2212\u00afx1, x \u2212\u00afx1\u27e9,\n(3.27)",
+          "type": "equation",
+          "page": 71
+        },
+        {
+          "id": 4702,
+          "text": "where \u00afx =",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4703,
+          "text": "i xi/N, and 1 = x0, the vector of N ones. We can view the\nestimate (3.27) as the result of two applications of the simple regression\n(3.26). The steps are:",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4704,
+          "text": "1. regress x on 1 to produce the residual z = x \u2212\u00afx1;",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4705,
+          "text": "2. regress y on the residual z to give the coe\ufb03cient \u02c6\u03b21.",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4706,
+          "text": "In this procedure, \u201cregress b on a\u201d means a simple univariate regression of b\non a with no intercept, producing coe\ufb03cient \u02c6\u03b3 = \u27e8a, b\u27e9/\u27e8a, a\u27e9and residual\nvector b \u2212\u02c6\u03b3a. We say that b is adjusted for a, or is \u201corthogonalized\u201d with\nrespect to a.\nStep 1 orthogonalizes x with respect to x0 = 1. Step 2 is just a simple\nunivariate regression, using the orthogonal predictors 1 and z. Figure 3.4\nshows this process for two general inputs x1 and x2. The orthogonalization\ndoes not change the subspace spanned by x1 and x2, it simply produces an\northogonal basis for representing it.\nThis recipe generalizes to the case of p inputs, as shown in Algorithm 3.1.\nNote that the inputs z0, . . . , zj\u22121 in step 2 are orthogonal, hence the simple\nregression coe\ufb03cients computed there are in fact also the multiple regres-\nsion coe\ufb03cients.",
+          "type": "narrative",
+          "page": 71
+        }
+      ]
+    },
+    {
+      "id": 175,
+      "name": "multiple regression coefficient interpretation",
+      "description": "The jth coefficient represents the additional contribution of x_j on y after x_j has been adjusted for all other predictors.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "The multiple regression coefficient \u03b2\u0302_j represents the additional contribution of x_j on y, after x_j has been adjusted for all other predictors.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4675,
+          "text": "52\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4676,
+          "text": "The \ufb01rst term is the variance, while the second term is the squared bias.\nThe Gauss-Markov theorem implies that the least squares estimator has the\nsmallest mean squared error of all linear estimators with no bias. However,\nthere may well exist a biased estimator with smaller mean squared error.\nSuch an estimator would trade a little bias for a larger reduction in variance.\nBiased estimates are commonly used. Any method that shrinks or sets to\nzero some of the least squares coe\ufb03cients may result in a biased estimate.\nWe discuss many examples, including variable subset selection and ridge\nregression, later in this chapter. From a more pragmatic point of view, most\nmodels are distortions of the truth, and hence are biased; picking the right\nmodel amounts to creating the right balance between bias and variance.\nWe go into these issues in more detail in Chapter 7.\nMean squared error is intimately related to prediction accuracy, as dis-\ncussed in Chapter 2. Consider the prediction of the new response at input\nx0,",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4677,
+          "text": "Y0 = f(x0) + \u03b50.\n(3.21)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4678,
+          "text": "Then the expected prediction error of an estimate \u02dcf(x0) = xT\n0 \u02dc\u03b2 is",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4679,
+          "text": "E(Y0 \u2212\u02dcf(x0))2\n=\n\u03c32 + E(xT\n0 \u02dc\u03b2 \u2212f(x0))2",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4680,
+          "text": "=\n\u03c32 + MSE( \u02dcf(x0)).\n(3.22)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4681,
+          "text": "Therefore, expected prediction error and mean squared error di\ufb00er only by\nthe constant \u03c32, representing the variance of the new observation y0.",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4683,
+          "text": "The linear model (3.1) with p > 1 inputs is called the multiple linear\nregression model. The least squares estimates (3.6) for this model are best\nunderstood in terms of the estimates for the univariate (p = 1) linear\nmodel, as we indicate in this section.\nSuppose \ufb01rst that we have a univariate model with no intercept, that is,",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4684,
+          "text": "Y = X\u03b2 + \u03b5.\n(3.23)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4685,
+          "text": "The least squares estimate and residuals are",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4686,
+          "text": "\u02c6\u03b2 =\n\tN\n1 xiyi\n\tN\n1 x2\ni\n,",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4687,
+          "text": "ri = yi \u2212xi \u02c6\u03b2.",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4688,
+          "text": "(3.24)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4689,
+          "text": "In convenient vector notation, we let y = (y1, . . . , yN)T , x = (x1, . . . , xN)T",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4690,
+          "text": "and de\ufb01ne",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4691,
+          "text": "\u27e8x, y\u27e9\n=",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4692,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4693,
+          "text": "i=1\nxiyi,",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4694,
+          "text": "=\nxT y,\n(3.25)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4696,
+          "text": "the inner product between x and y1. Then we can write",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4697,
+          "text": "\u02c6\u03b2 = \u27e8x, y\u27e9",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4698,
+          "text": "\u27e8x, x\u27e9,",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4699,
+          "text": "r = y \u2212x\u02c6\u03b2.\n(3.26)",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4700,
+          "text": "As we will see, this simple univariate regression provides the building block\nfor multiple linear regression. Suppose next that the inputs x1, x2, . . . , xp\n(the columns of the data matrix X) are orthogonal; that is \u27e8xj, xk\u27e9= 0\nfor all j \u0338= k. Then it is easy to check that the multiple least squares esti-\nmates \u02c6\u03b2j are equal to \u27e8xj, y\u27e9/\u27e8xj, xj\u27e9\u2014the univariate estimates. In other\nwords, when the inputs are orthogonal, they have no e\ufb00ect on each other\u2019s\nparameter estimates in the model.\nOrthogonal inputs occur most often with balanced, designed experiments\n(where orthogonality is enforced), but almost never with observational\ndata. Hence we will have to orthogonalize them in order to carry this idea\nfurther. Suppose next that we have an intercept and a single input x. Then\nthe least squares coe\ufb03cient of x has the form",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4701,
+          "text": "\u02c6\u03b21 =\n\u27e8x \u2212\u00afx1, y\u27e9\n\u27e8x \u2212\u00afx1, x \u2212\u00afx1\u27e9,\n(3.27)",
+          "type": "equation",
+          "page": 71
+        },
+        {
+          "id": 4702,
+          "text": "where \u00afx =",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4703,
+          "text": "i xi/N, and 1 = x0, the vector of N ones. We can view the\nestimate (3.27) as the result of two applications of the simple regression\n(3.26). The steps are:",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4704,
+          "text": "1. regress x on 1 to produce the residual z = x \u2212\u00afx1;",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4705,
+          "text": "2. regress y on the residual z to give the coe\ufb03cient \u02c6\u03b21.",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4706,
+          "text": "In this procedure, \u201cregress b on a\u201d means a simple univariate regression of b\non a with no intercept, producing coe\ufb03cient \u02c6\u03b3 = \u27e8a, b\u27e9/\u27e8a, a\u27e9and residual\nvector b \u2212\u02c6\u03b3a. We say that b is adjusted for a, or is \u201corthogonalized\u201d with\nrespect to a.\nStep 1 orthogonalizes x with respect to x0 = 1. Step 2 is just a simple\nunivariate regression, using the orthogonal predictors 1 and z. Figure 3.4\nshows this process for two general inputs x1 and x2. The orthogonalization\ndoes not change the subspace spanned by x1 and x2, it simply produces an\northogonal basis for representing it.\nThis recipe generalizes to the case of p inputs, as shown in Algorithm 3.1.\nNote that the inputs z0, . . . , zj\u22121 in step 2 are orthogonal, hence the simple\nregression coe\ufb03cients computed there are in fact also the multiple regres-\nsion coe\ufb03cients.",
+          "type": "narrative",
+          "page": 71
+        }
+      ]
+    },
+    {
+      "id": 176,
+      "name": "multicollinearity",
+      "description": "When predictors are highly correlated, coefficients become unstable with high variance, as small residual vectors lead to imprecise estimates.",
+      "category": "guarantees",
+      "subcategory": "assumptions",
+      "existing_quote": "If x_p is highly correlated with some of the other x_k's, the residual vector z_p will be close to zero, and from (3.28) the coefficient \u03b2\u0302_p will be very unstable.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4675,
+          "text": "52\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4676,
+          "text": "The \ufb01rst term is the variance, while the second term is the squared bias.\nThe Gauss-Markov theorem implies that the least squares estimator has the\nsmallest mean squared error of all linear estimators with no bias. However,\nthere may well exist a biased estimator with smaller mean squared error.\nSuch an estimator would trade a little bias for a larger reduction in variance.\nBiased estimates are commonly used. Any method that shrinks or sets to\nzero some of the least squares coe\ufb03cients may result in a biased estimate.\nWe discuss many examples, including variable subset selection and ridge\nregression, later in this chapter. From a more pragmatic point of view, most\nmodels are distortions of the truth, and hence are biased; picking the right\nmodel amounts to creating the right balance between bias and variance.\nWe go into these issues in more detail in Chapter 7.\nMean squared error is intimately related to prediction accuracy, as dis-\ncussed in Chapter 2. Consider the prediction of the new response at input\nx0,",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4677,
+          "text": "Y0 = f(x0) + \u03b50.\n(3.21)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4678,
+          "text": "Then the expected prediction error of an estimate \u02dcf(x0) = xT\n0 \u02dc\u03b2 is",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4679,
+          "text": "E(Y0 \u2212\u02dcf(x0))2\n=\n\u03c32 + E(xT\n0 \u02dc\u03b2 \u2212f(x0))2",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4680,
+          "text": "=\n\u03c32 + MSE( \u02dcf(x0)).\n(3.22)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4681,
+          "text": "Therefore, expected prediction error and mean squared error di\ufb00er only by\nthe constant \u03c32, representing the variance of the new observation y0.",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4683,
+          "text": "The linear model (3.1) with p > 1 inputs is called the multiple linear\nregression model. The least squares estimates (3.6) for this model are best\nunderstood in terms of the estimates for the univariate (p = 1) linear\nmodel, as we indicate in this section.\nSuppose \ufb01rst that we have a univariate model with no intercept, that is,",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4684,
+          "text": "Y = X\u03b2 + \u03b5.\n(3.23)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4685,
+          "text": "The least squares estimate and residuals are",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4686,
+          "text": "\u02c6\u03b2 =\n\tN\n1 xiyi\n\tN\n1 x2\ni\n,",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4687,
+          "text": "ri = yi \u2212xi \u02c6\u03b2.",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4688,
+          "text": "(3.24)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4689,
+          "text": "In convenient vector notation, we let y = (y1, . . . , yN)T , x = (x1, . . . , xN)T",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4690,
+          "text": "and de\ufb01ne",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4691,
+          "text": "\u27e8x, y\u27e9\n=",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4692,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4693,
+          "text": "i=1\nxiyi,",
+          "type": "narrative",
+          "page": 70
+        },
+        {
+          "id": 4694,
+          "text": "=\nxT y,\n(3.25)",
+          "type": "equation",
+          "page": 70
+        },
+        {
+          "id": 4696,
+          "text": "the inner product between x and y1. Then we can write",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4697,
+          "text": "\u02c6\u03b2 = \u27e8x, y\u27e9",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4698,
+          "text": "\u27e8x, x\u27e9,",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4699,
+          "text": "r = y \u2212x\u02c6\u03b2.\n(3.26)",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4700,
+          "text": "As we will see, this simple univariate regression provides the building block\nfor multiple linear regression. Suppose next that the inputs x1, x2, . . . , xp\n(the columns of the data matrix X) are orthogonal; that is \u27e8xj, xk\u27e9= 0\nfor all j \u0338= k. Then it is easy to check that the multiple least squares esti-\nmates \u02c6\u03b2j are equal to \u27e8xj, y\u27e9/\u27e8xj, xj\u27e9\u2014the univariate estimates. In other\nwords, when the inputs are orthogonal, they have no e\ufb00ect on each other\u2019s\nparameter estimates in the model.\nOrthogonal inputs occur most often with balanced, designed experiments\n(where orthogonality is enforced), but almost never with observational\ndata. Hence we will have to orthogonalize them in order to carry this idea\nfurther. Suppose next that we have an intercept and a single input x. Then\nthe least squares coe\ufb03cient of x has the form",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4701,
+          "text": "\u02c6\u03b21 =\n\u27e8x \u2212\u00afx1, y\u27e9\n\u27e8x \u2212\u00afx1, x \u2212\u00afx1\u27e9,\n(3.27)",
+          "type": "equation",
+          "page": 71
+        },
+        {
+          "id": 4702,
+          "text": "where \u00afx =",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4703,
+          "text": "i xi/N, and 1 = x0, the vector of N ones. We can view the\nestimate (3.27) as the result of two applications of the simple regression\n(3.26). The steps are:",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4704,
+          "text": "1. regress x on 1 to produce the residual z = x \u2212\u00afx1;",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4705,
+          "text": "2. regress y on the residual z to give the coe\ufb03cient \u02c6\u03b21.",
+          "type": "narrative",
+          "page": 71
+        },
+        {
+          "id": 4706,
+          "text": "In this procedure, \u201cregress b on a\u201d means a simple univariate regression of b\non a with no intercept, producing coe\ufb03cient \u02c6\u03b3 = \u27e8a, b\u27e9/\u27e8a, a\u27e9and residual\nvector b \u2212\u02c6\u03b3a. We say that b is adjusted for a, or is \u201corthogonalized\u201d with\nrespect to a.\nStep 1 orthogonalizes x with respect to x0 = 1. Step 2 is just a simple\nunivariate regression, using the orthogonal predictors 1 and z. Figure 3.4\nshows this process for two general inputs x1 and x2. The orthogonalization\ndoes not change the subspace spanned by x1 and x2, it simply produces an\northogonal basis for representing it.\nThis recipe generalizes to the case of p inputs, as shown in Algorithm 3.1.\nNote that the inputs z0, . . . , zj\u22121 in step 2 are orthogonal, hence the simple\nregression coe\ufb03cients computed there are in fact also the multiple regres-\nsion coe\ufb03cients.",
+          "type": "narrative",
+          "page": 71
+        }
+      ]
+    },
+    {
+      "id": 142,
+      "name": "best subset selection",
+      "description": "For each k, finds the subset of size k that gives the smallest residual sum of squares.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "Best subset regression finds for each k \u2208{0, 1, 2, . . . , p} the subset of size k that gives smallest residual sum of squares (3.2).",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4762,
+          "text": "There are two reasons why we are often not satis\ufb01ed with the least squares\nestimates (3.6).",
+          "type": "narrative",
+          "page": 75
+        },
+        {
+          "id": 4763,
+          "text": "\u2022 The \ufb01rst is prediction accuracy: the least squares estimates often have\nlow bias but large variance. Prediction accuracy can sometimes be\nimproved by shrinking or setting some coe\ufb03cients to zero. By doing\nso we sacri\ufb01ce a little bit of bias to reduce the variance of the predicted\nvalues, and hence may improve the overall prediction accuracy.",
+          "type": "narrative",
+          "page": 75
+        },
+        {
+          "id": 4764,
+          "text": "\u2022 The second reason is interpretation. With a large number of predic-\ntors, we often would like to determine a smaller subset that exhibit\nthe strongest e\ufb00ects. In order to get the \u201cbig picture,\u201d we are willing\nto sacri\ufb01ce some of the small details.",
+          "type": "narrative",
+          "page": 75
+        },
+        {
+          "id": 4765,
+          "text": "In this section we describe a number of approaches to variable subset selec-\ntion with linear regression. In later sections we discuss shrinkage and hybrid\napproaches for controlling variance, as well as other dimension-reduction\nstrategies. These all fall under the general heading model selection. Model\nselection is not restricted to linear models; Chapter 7 covers this topic in\nsome detail.\nWith subset selection we retain only a subset of the variables, and elim-\ninate the rest from the model. Least squares regression is used to estimate\nthe coe\ufb03cients of the inputs that are retained. There are a number of dif-\nferent strategies for choosing the subset.",
+          "type": "narrative",
+          "page": 75
+        },
+        {
+          "id": 4767,
+          "text": "Best subset regression \ufb01nds for each k \u2208{0, 1, 2, . . . , p} the subset of size k\nthat gives smallest residual sum of squares (3.2). An e\ufb03cient algorithm\u2014\nthe leaps and bounds procedure (Furnival and Wilson, 1974)\u2014makes this\nfeasible for p as large as 30 or 40. Figure 3.5 shows all the subset models\nfor the prostate cancer example. The lower boundary represents the models\nthat are eligible for selection by the best-subsets approach. Note that the\nbest subset of size 2, for example, need not include the variable that was\nin the best subset of size 1 (for this example all the subsets are nested).\nThe best-subset curve (red lower boundary in Figure 3.5) is necessarily\ndecreasing, so cannot be used to select the subset size k. The question of\nhow to choose k involves the tradeo\ufb00between bias and variance, along with\nthe more subjective desire for parsimony. There are a number of criteria\nthat one may use; typically we choose the smallest model that minimizes\nan estimate of the expected prediction error.\nMany of the other approaches that we discuss in this chapter are similar,\nin that they use the training data to produce a sequence of models varying\nin complexity and indexed by a single parameter. In the next section we use",
+          "type": "narrative",
+          "page": 75
+        }
+      ]
+    },
+    {
+      "id": 145,
+      "name": "backward stepwise selection",
+      "description": "Starts with the full model and sequentially deletes the predictor with the smallest Z-score (least impact on fit).",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "Backward-stepwise selection starts with the full model, and sequentially deletes the predictor that has the least impact on the fit. The candidate for dropping is the variable with the smallest Z-score",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4768,
+          "text": "58\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 76
+        },
+        {
+          "id": 4769,
+          "text": "Subset Size k",
+          "type": "narrative",
+          "page": 76
+        },
+        {
+          "id": 4770,
+          "text": "Residual Sum\u2212of\u2212Squares",
+          "type": "narrative",
+          "page": 76
+        },
+        {
+          "id": 4771,
+          "text": "0\n20\n40\n60\n80\n100",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4772,
+          "text": "0\n1\n2\n3\n4\n5\n6\n7\n8",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4773,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4774,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4775,
+          "text": "\u2022\n\u2022\u2022\n\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4776,
+          "text": "\u2022\u2022\u2022\u2022\u2022\n\u2022\u2022\u2022\n\u2022\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4777,
+          "text": "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4778,
+          "text": "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4779,
+          "text": "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4780,
+          "text": "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4781,
+          "text": "\u2022\u2022\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4782,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4783,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4784,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4785,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4787,
+          "text": "cross-validation to estimate prediction error and select k; the AIC criterion\nis a popular alternative. We defer more detailed discussion of these and\nother approaches to Chapter 7.",
+          "type": "narrative",
+          "page": 76
+        },
+        {
+          "id": 4789,
+          "text": "Rather than search through all possible subsets (which becomes infeasible\nfor p much larger than 40), we can seek a good path through them. Forward-\nstepwise selection starts with the intercept, and then sequentially adds into\nthe model the predictor that most improves the \ufb01t. With many candidate\npredictors, this might seem like a lot of computation; however, clever up-\ndating algorithms can exploit the QR decomposition for the current \ufb01t to\nrapidly establish the next candidate (Exercise 3.9). Like best-subset re-\ngression, forward stepwise produces a sequence of models indexed by k, the\nsubset size, which must be determined.\nForward-stepwise selection is a greedy algorithm, producing a nested se-\nquence of models. In this sense it might seem sub-optimal compared to\nbest-subset selection. However, there are several reasons why it might be\npreferred:",
+          "type": "narrative",
+          "page": 76
+        },
+        {
+          "id": 4791,
+          "text": "\u2022 Computational; for large p we cannot compute the best subset se-\nquence, but we can always compute the forward stepwise sequence\n(even when p \u226bN).",
+          "type": "narrative",
+          "page": 77
+        },
+        {
+          "id": 4792,
+          "text": "\u2022 Statistical; a price is paid in variance for selecting the best subset\nof each size; forward stepwise is a more constrained search, and will\nhave lower variance, but perhaps more bias.",
+          "type": "narrative",
+          "page": 77
+        },
+        {
+          "id": 4793,
+          "text": "0\n5\n10\n15\n20\n25\n30",
+          "type": "equation",
+          "page": 77
+        },
+        {
+          "id": 4794,
+          "text": "0.65\n0.70\n0.75\n0.80\n0.85\n0.90\n0.95",
+          "type": "equation",
+          "page": 77
+        },
+        {
+          "id": 4795,
+          "text": "Best Subset\nForward Stepwise\nBackward Stepwise\nForward Stagewise",
+          "type": "narrative",
+          "page": 77
+        },
+        {
+          "id": 4796,
+          "text": "E||\u02c6\u03b2(k) \u2212\u03b2||2",
+          "type": "narrative",
+          "page": 77
+        },
+        {
+          "id": 4797,
+          "text": "Subset Size k",
+          "type": "narrative",
+          "page": 77
+        },
+        {
+          "id": 4799,
+          "text": "Backward-stepwise selection starts with the full model, and sequentially\ndeletes the predictor that has the least impact on the \ufb01t. The candidate for\ndropping is the variable with the smallest Z-score (Exercise 3.10). Backward\nselection can only be used when N > p, while forward stepwise can always\nbe used.\nFigure 3.6 shows the results of a small simulation study to compare\nbest-subset regression with the simpler alternatives forward and backward\nselection. Their performance is very similar, as is often the case. Included in\nthe \ufb01gure is forward stagewise regression (next section), which takes longer\nto reach minimum error.",
+          "type": "narrative",
+          "page": 77
+        }
+      ]
+    },
+    {
+      "id": 179,
+      "name": "aic criterion",
+      "description": "A criterion for model selection that accounts for the number of parameters fit, used to choose tuning parameters.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "cross-validation to estimate prediction error and select k; the AIC criterion is a popular alternative.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4768,
+          "text": "58\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 76
+        },
+        {
+          "id": 4769,
+          "text": "Subset Size k",
+          "type": "narrative",
+          "page": 76
+        },
+        {
+          "id": 4770,
+          "text": "Residual Sum\u2212of\u2212Squares",
+          "type": "narrative",
+          "page": 76
+        },
+        {
+          "id": 4771,
+          "text": "0\n20\n40\n60\n80\n100",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4772,
+          "text": "0\n1\n2\n3\n4\n5\n6\n7\n8",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4773,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4774,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4775,
+          "text": "\u2022\n\u2022\u2022\n\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4776,
+          "text": "\u2022\u2022\u2022\u2022\u2022\n\u2022\u2022\u2022\n\u2022\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4777,
+          "text": "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4778,
+          "text": "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4779,
+          "text": "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4780,
+          "text": "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4781,
+          "text": "\u2022\u2022\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4782,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4783,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4784,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4785,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 76
+        },
+        {
+          "id": 4787,
+          "text": "cross-validation to estimate prediction error and select k; the AIC criterion\nis a popular alternative. We defer more detailed discussion of these and\nother approaches to Chapter 7.",
+          "type": "narrative",
+          "page": 76
+        },
+        {
+          "id": 4789,
+          "text": "Rather than search through all possible subsets (which becomes infeasible\nfor p much larger than 40), we can seek a good path through them. Forward-\nstepwise selection starts with the intercept, and then sequentially adds into\nthe model the predictor that most improves the \ufb01t. With many candidate\npredictors, this might seem like a lot of computation; however, clever up-\ndating algorithms can exploit the QR decomposition for the current \ufb01t to\nrapidly establish the next candidate (Exercise 3.9). Like best-subset re-\ngression, forward stepwise produces a sequence of models indexed by k, the\nsubset size, which must be determined.\nForward-stepwise selection is a greedy algorithm, producing a nested se-\nquence of models. In this sense it might seem sub-optimal compared to\nbest-subset selection. However, there are several reasons why it might be\npreferred:",
+          "type": "narrative",
+          "page": 76
+        },
+        {
+          "id": 4791,
+          "text": "\u2022 Computational; for large p we cannot compute the best subset se-\nquence, but we can always compute the forward stepwise sequence\n(even when p \u226bN).",
+          "type": "narrative",
+          "page": 77
+        },
+        {
+          "id": 4792,
+          "text": "\u2022 Statistical; a price is paid in variance for selecting the best subset\nof each size; forward stepwise is a more constrained search, and will\nhave lower variance, but perhaps more bias.",
+          "type": "narrative",
+          "page": 77
+        },
+        {
+          "id": 4793,
+          "text": "0\n5\n10\n15\n20\n25\n30",
+          "type": "equation",
+          "page": 77
+        },
+        {
+          "id": 4794,
+          "text": "0.65\n0.70\n0.75\n0.80\n0.85\n0.90\n0.95",
+          "type": "equation",
+          "page": 77
+        },
+        {
+          "id": 4795,
+          "text": "Best Subset\nForward Stepwise\nBackward Stepwise\nForward Stagewise",
+          "type": "narrative",
+          "page": 77
+        },
+        {
+          "id": 4796,
+          "text": "E||\u02c6\u03b2(k) \u2212\u03b2||2",
+          "type": "narrative",
+          "page": 77
+        },
+        {
+          "id": 4797,
+          "text": "Subset Size k",
+          "type": "narrative",
+          "page": 77
+        },
+        {
+          "id": 4799,
+          "text": "Backward-stepwise selection starts with the full model, and sequentially\ndeletes the predictor that has the least impact on the \ufb01t. The candidate for\ndropping is the variable with the smallest Z-score (Exercise 3.10). Backward\nselection can only be used when N > p, while forward stepwise can always\nbe used.\nFigure 3.6 shows the results of a small simulation study to compare\nbest-subset regression with the simpler alternatives forward and backward\nselection. Their performance is very similar, as is often the case. Included in\nthe \ufb01gure is forward stagewise regression (next section), which takes longer\nto reach minimum error.",
+          "type": "narrative",
+          "page": 77
+        }
+      ]
+    },
+    {
+      "id": 146,
+      "name": "forward stagewise regression",
+      "description": "Starts with all coefficients zero, identifies the variable most correlated with residual, computes simple linear regression coefficient of residual on that variable, and adds it to current coefficient without adjusting other variables.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "At each step the algorithm identifies the variable most correlated with the current residual. It then computes the simple linear regression coefficient of the residual on this chosen variable, and then adds it to the current coefficient for that variable.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4800,
+          "text": "60\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 78
+        },
+        {
+          "id": 4801,
+          "text": "On the prostate cancer example, best-subset, forward and backward se-\nlection all gave exactly the same sequence of terms.\nSome software packages implement hybrid stepwise-selection strategies\nthat consider both forward and backward moves at each step, and select\nthe \u201cbest\u201d of the two. For example in the R package the step function uses\nthe AIC criterion for weighing the choices, which takes proper account of\nthe number of parameters \ufb01t; at each step an add or drop will be performed\nthat minimizes the AIC score.\nOther more traditional packages base the selection on F-statistics, adding\n\u201csigni\ufb01cant\u201d terms, and dropping \u201cnon-signi\ufb01cant\u201d terms. These are out\nof fashion, since they do not take proper account of the multiple testing\nissues. It is also tempting after a model search to print out a summary of\nthe chosen model, such as in Table 3.2; however, the standard errors are\nnot valid, since they do not account for the search process. The bootstrap\n(Section 8.2) can be useful in such settings.\nFinally, we note that often variables come in groups (such as the dummy\nvariables that code a multi-level categorical predictor). Smart stepwise pro-\ncedures (such as step in R) will add or drop whole groups at a time, taking\nproper account of their degrees-of-freedom.",
+          "type": "narrative",
+          "page": 78
+        },
+        {
+          "id": 4803,
+          "text": "Forward-stagewise regression (FS) is even more constrained than forward-\nstepwise regression. It starts like forward-stepwise regression, with an in-\ntercept equal to \u00afy, and centered predictors with coe\ufb03cients initially all 0.\nAt each step the algorithm identi\ufb01es the variable most correlated with the\ncurrent residual. It then computes the simple linear regression coe\ufb03cient\nof the residual on this chosen variable, and then adds it to the current co-\ne\ufb03cient for that variable. This is continued till none of the variables have\ncorrelation with the residuals\u2014i.e. the least-squares \ufb01t when N > p.\nUnlike forward-stepwise regression, none of the other variables are ad-\njusted when a term is added to the model. As a consequence, forward\nstagewise can take many more than p steps to reach the least squares \ufb01t,\nand historically has been dismissed as being ine\ufb03cient. It turns out that\nthis \u201cslow \ufb01tting\u201d can pay dividends in high-dimensional problems. We\nsee in Section 3.8.1 that both forward stagewise and a variant which is\nslowed down even further are quite competitive, especially in very high-\ndimensional problems.\nForward-stagewise regression is included in Figure 3.6. In this example it\ntakes over 1000 steps to get all the correlations below 10\u22124. For subset size\nk, we plotted the error for the last step for which there where k nonzero\ncoe\ufb03cients. Although it catches up with the best \ufb01t, it takes longer to\ndo so.",
+          "type": "narrative",
+          "page": 78
+        },
+        {
+          "id": 56,
+          "text": "3\nLinear Methods for Regression\n43\n3.1\nIntroduction\n. . . . . . . . . . . . . . . . . . . . . . . . .\n43\n3.2\nLinear Regression Models and Least Squares . . . . . . .\n44\n3.2.1\nExample: Prostate Cancer\n. . . . . . . . . . . .\n49\n3.2.2\nThe Gauss\u2013Markov Theorem . . . . . . . . . . .\n51\n3.2.3\nMultiple Regression\nfrom Simple Univariate Regression . . . . . . . .\n52\n3.2.4\nMultiple Outputs\n. . . . . . . . . . . . . . . . .\n56\n3.3\nSubset Selection . . . . . . . . . . . . . . . . . . . . . . .\n57\n3.3.1\nBest-Subset Selection . . . . . . . . . . . . . . .\n57\n3.3.2\nForward- and Backward-Stepwise Selection . . .\n58\n3.3.3\nForward-Stagewise Regression\n. . . . . . . . . .\n60\n3.3.4\nProstate Cancer Data Example (Continued)\n. .\n61\n3.4\nShrinkage Methods . . . . . . . . . . . . . . . . . . . . . .\n61\n3.4.1\nRidge Regression . . . . . . . . . . . . . . . . .\n61\n3.4.2\nThe Lasso\n. . . . . . . . . . . . . . . . . . . . .\n68\n3.4.3\nDiscussion: Subset Selection, Ridge Regression\nand the Lasso\n. . . . . . . . . . . . . . . . . . .\n69\n3.4.4\nLeast Angle Regression . . . . . . . . . . . . . .\n73\n3.5\nMethods Using Derived Input Directions\n. . . . . . . . .\n79\n3.5.1\nPrincipal Components Regression\n. . . . . . . .\n79\n3.5.2\nPartial Least Squares . . . . . . . . . . . . . . .\n80\n3.6\nDiscussion: A Comparison of the Selection\nand Shrinkage Methods . . . . . . . . . . . . . . . . . . .\n82\n3.7\nMultiple Outcome Shrinkage and Selection\n. . . . . . . .\n84\n3.8\nMore on the Lasso and Related Path Algorithms . . . . .\n86\n3.8.1\nIncremental Forward Stagewise Regression\n. . .\n86\n3.8.2\nPiecewise-Linear Path Algorithms . . . . . . . .\n89\n3.8.3\nThe Dantzig Selector\n. . . . . . . . . . . . . . .\n89\n3.8.4\nThe Grouped Lasso . . . . . . . . . . . . . . . .\n90\n3.8.5\nFurther Properties of the Lasso . . . . . . . . . .\n91\n3.8.6\nPathwise Coordinate Optimization . . . . . . . .\n92\n3.9\nComputational Considerations . . . . . . . . . . . . . . .\n93\nBibliographic Notes . . . . . . . . . . . . . . . . . . . . . . . . .\n94\nExercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n94",
+          "type": "narrative",
+          "page": 10
+        },
+        {
+          "id": 4799,
+          "text": "Backward-stepwise selection starts with the full model, and sequentially\ndeletes the predictor that has the least impact on the \ufb01t. The candidate for\ndropping is the variable with the smallest Z-score (Exercise 3.10). Backward\nselection can only be used when N > p, while forward stepwise can always\nbe used.\nFigure 3.6 shows the results of a small simulation study to compare\nbest-subset regression with the simpler alternatives forward and backward\nselection. Their performance is very similar, as is often the case. Included in\nthe \ufb01gure is forward stagewise regression (next section), which takes longer\nto reach minimum error.",
+          "type": "narrative",
+          "page": 77
+        },
+        {
+          "id": 5233,
+          "text": "which again agrees with the LAR algorithm.\nFigure 3.16 compares LAR and lasso to forward stepwise and stagewise\nregression. The setup is the same as in Figure 3.6 on page 59, except here\nN = 100 here rather than 300, so the problem is more di\ufb03cult. We see\nthat the more aggressive forward stepwise starts to over\ufb01t quite early (well\nbefore the 10 true variables can enter the model), and ultimately performs\nworse than the slower forward stagewise regression. The behavior of LAR\nand lasso is similar to that of forward stagewise regression. Incremental\nforward stagewise is similar to LAR and lasso, and is described in Sec-\ntion 3.8.1.",
+          "type": "narrative",
+          "page": 95
+        },
+        {
+          "id": 5355,
+          "text": "Algorithm 3.4 Incremental Forward Stagewise Regression\u2014FS\u03f5.",
+          "type": "narrative",
+          "page": 104
+        },
+        {
+          "id": 5389,
+          "text": "linear models, one could explicitly construct the piecewise-linear lasso paths\nof Figure 3.10. This led him to propose the LAR procedure of Section 3.4.4,\nas well as the incremental version of forward-stagewise regression presented\nhere.\nConsider the linear-regression version of the forward-stagewise boosting\nalgorithm 16.1 proposed in Section 16.1 (page 608). It generates a coe\ufb03cient\npro\ufb01le by repeatedly updating (by a small amount \u03f5) the coe\ufb03cient of the\nvariable most correlated with the current residuals. Algorithm 3.4 gives\nthe details. Figure 3.19 (left panel) shows the progress of the algorithm on\nthe prostate data with step size \u03f5 = 0.01. If \u03b4j = \u27e8xj, r\u27e9(the least-squares\ncoe\ufb03cient of the residual on jth predictor), then this is exactly the usual\nforward stagewise procedure (FS) outlined in Section 3.3.3.\nHere we are mainly interested in small values of \u03f5. Letting \u03f5 \u21920 gives\nthe right panel of Figure 3.19, which in this case is identical to the lasso\npath in Figure 3.10. We call this limiting procedure in\ufb01nitesimal forward\nstagewise regression or FS0. This procedure plays an important role in\nnon-linear, adaptive methods like boosting (Chapters 10 and 16) and is the\nversion of incremental forward stagewise regression that is most amenable\nto theoretical analysis. B\u00a8uhlmann and Hothorn (2008) refer to the same\nprocedure as \u201cL2boost\u201d, because of its connections to boosting.",
+          "type": "narrative",
+          "page": 105
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Lasso",
+      "description": "FIGURE 3.15. Left panel shows the LAR coe\ufb03cient pro\ufb01les on the simulated\ndata, as a function of the L1 arc length. The right panel shows the Lasso pro\ufb01le.\nThey are identical until the dark-blue coe\ufb03cient crosses zero at an arc length of\nabout 18.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "Because of the nature of the constraint, making t sufficiently small will cause some of the coefficients to be exactly zero. Thus the lasso does a kind of continuous subset selection.",
+      "existing_formula": "\\hat{\\beta}^{lasso} = \\arg\\min_\\beta \\sum_{i=1}^N (y_i - \\beta_0 - \\sum_{j=1}^p x_{ij}\\beta_j)^2 \\text{ subject to } \\sum_{j=1}^p |\\beta_j| \\leq t",
+      "paragraphs": [
+        {
+          "id": 4808,
+          "text": "By retaining a subset of the predictors and discarding the rest, subset selec-\ntion produces a model that is interpretable and has possibly lower predic-\ntion error than the full model. However, because it is a discrete process\u2014\nvariables are either retained or discarded\u2014it often exhibits high variance,\nand so doesn\u2019t reduce the prediction error of the full model. Shrinkage\nmethods are more continuous, and don\u2019t su\ufb00er as much from high\nvariability.",
+          "type": "narrative",
+          "page": 79
+        },
+        {
+          "id": 4810,
+          "text": "Ridge regression shrinks the regression coe\ufb03cients by imposing a penalty\non their size. The ridge coe\ufb03cients minimize a penalized residual sum of",
+          "type": "narrative",
+          "page": 79
+        },
+        {
+          "id": 4811,
+          "text": "62\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4812,
+          "text": "Subset Size",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4813,
+          "text": "CV Error",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4814,
+          "text": "0\n2\n4\n6\n8",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4815,
+          "text": "0.6\n0.8\n1.0\n1.2\n1.4\n1.6\n1.8",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4816,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4817,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4818,
+          "text": "All Subsets",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4819,
+          "text": "Degrees of Freedom",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4820,
+          "text": "CV Error",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4821,
+          "text": "0\n2\n4\n6\n8",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4822,
+          "text": "0.6\n0.8\n1.0\n1.2\n1.4\n1.6\n1.8",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4823,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4824,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4825,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4826,
+          "text": "Ridge Regression",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4827,
+          "text": "Shrinkage Factor s",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4828,
+          "text": "CV Error",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4829,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4830,
+          "text": "0.6\n0.8\n1.0\n1.2\n1.4\n1.6\n1.8",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4831,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4832,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4833,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4834,
+          "text": "Lasso",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4835,
+          "text": "Number of Directions",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4836,
+          "text": "CV Error",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4837,
+          "text": "0\n2\n4\n6\n8",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4838,
+          "text": "0.6\n0.8\n1.0\n1.2\n1.4\n1.6\n1.8",
+          "type": "equation",
+          "page": 80
+        }
+      ]
+    },
+    {
+      "id": 147,
+      "name": "ridge regression",
+      "description": "Shrinks regression coefficients by imposing an L2 penalty on their size, controlled by parameter lambda.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "Ridge regression shrinks the regression coefficients by imposing a penalty on their size. The ridge coefficients minimize a penalized residual sum of squares",
+      "existing_formula": "\\hat{\\beta}^{ridge} = \\arg\\min_\\beta \\left\\{\\sum_{i=1}^N (y_i - \\beta_0 - \\sum_{j=1}^p x_{ij}\\beta_j)^2 + \\lambda\\sum_{j=1}^p \\beta_j^2\\right\\}",
+      "paragraphs": [
+        {
+          "id": 4808,
+          "text": "By retaining a subset of the predictors and discarding the rest, subset selec-\ntion produces a model that is interpretable and has possibly lower predic-\ntion error than the full model. However, because it is a discrete process\u2014\nvariables are either retained or discarded\u2014it often exhibits high variance,\nand so doesn\u2019t reduce the prediction error of the full model. Shrinkage\nmethods are more continuous, and don\u2019t su\ufb00er as much from high\nvariability.",
+          "type": "narrative",
+          "page": 79
+        },
+        {
+          "id": 4810,
+          "text": "Ridge regression shrinks the regression coe\ufb03cients by imposing a penalty\non their size. The ridge coe\ufb03cients minimize a penalized residual sum of",
+          "type": "narrative",
+          "page": 79
+        },
+        {
+          "id": 4811,
+          "text": "62\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4812,
+          "text": "Subset Size",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4813,
+          "text": "CV Error",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4814,
+          "text": "0\n2\n4\n6\n8",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4815,
+          "text": "0.6\n0.8\n1.0\n1.2\n1.4\n1.6\n1.8",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4816,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4817,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4818,
+          "text": "All Subsets",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4819,
+          "text": "Degrees of Freedom",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4820,
+          "text": "CV Error",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4821,
+          "text": "0\n2\n4\n6\n8",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4822,
+          "text": "0.6\n0.8\n1.0\n1.2\n1.4\n1.6\n1.8",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4823,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4824,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4825,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4826,
+          "text": "Ridge Regression",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4827,
+          "text": "Shrinkage Factor s",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4828,
+          "text": "CV Error",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4829,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4830,
+          "text": "0.6\n0.8\n1.0\n1.2\n1.4\n1.6\n1.8",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4831,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4832,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4833,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4834,
+          "text": "Lasso",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4835,
+          "text": "Number of Directions",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4836,
+          "text": "CV Error",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 4837,
+          "text": "0\n2\n4\n6\n8",
+          "type": "equation",
+          "page": 80
+        },
+        {
+          "id": 4838,
+          "text": "0.6\n0.8\n1.0\n1.2\n1.4\n1.6\n1.8",
+          "type": "equation",
+          "page": 80
+        }
+      ]
+    },
+    {
+      "id": 154,
+      "name": "least angle regression",
+      "description": "A democratic version of forward stepwise that enters 'as much' of a predictor as it deserves, moving coefficients toward least squares continuously while keeping correlations tied.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "Least angle regression uses a similar strategy, but only enters \"as much\" of a predictor as it deserves. At the first step it identifies the variable most correlated with the response. Rather than fit this variable completely, LAR moves the coefficient of this variable continuously toward its least-squares value",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5177,
+          "text": "q = 1.2\n\u03b1 = 0.2",
+          "type": "equation",
+          "page": 91
+        },
+        {
+          "id": 5178,
+          "text": "Lq\nElastic Net",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5180,
+          "text": "j |\u03b2j|q for q = 1.2 (left plot),\nand the elastic-net penalty P",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5181,
+          "text": "j(\u03b1\u03b22\nj +(1\u2212\u03b1)|\u03b2j|) for \u03b1 = 0.2 (right plot). Although\nvisually very similar, the elastic-net has sharp (non-di\ufb00erentiable) corners, while\nthe q = 1.2 penalty does not.",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5182,
+          "text": "setting coe\ufb03cients exactly to zero. Partly for this reason as well as for\ncomputational tractability, Zou and Hastie (2005) introduced the elastic-\nnet penalty",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5183,
+          "text": "\u03bb",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5184,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5185,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5186,
+          "text": "\u0005\n\u03b1\u03b22\nj + (1 \u2212\u03b1)|\u03b2j|\n\u0006\n,\n(3.54)",
+          "type": "equation",
+          "page": 91
+        },
+        {
+          "id": 5187,
+          "text": "a di\ufb00erent compromise between ridge and lasso. Figure 3.13 compares the\nLq penalty with q = 1.2 and the elastic-net penalty with \u03b1 = 0.2; it is\nhard to detect the di\ufb00erence by eye. The elastic-net selects variables like\nthe lasso, and shrinks together the coe\ufb03cients of correlated predictors like\nridge. It also has considerable computational advantages over the Lq penal-\nties. We discuss the elastic-net further in Section 18.4.",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5189,
+          "text": "Least angle regression (LAR) is a relative newcomer (Efron et al., 2004),\nand can be viewed as a kind of \u201cdemocratic\u201d version of forward stepwise\nregression (Section 3.3.2). As we will see, LAR is intimately connected\nwith the lasso, and in fact provides an extremely e\ufb03cient algorithm for\ncomputing the entire lasso path as in Figure 3.10.\nForward stepwise regression builds a model sequentially, adding one vari-\nable at a time. At each step, it identi\ufb01es the best variable to include in the\nactive set, and then updates the least squares \ufb01t to include all the active\nvariables.\nLeast angle regression uses a similar strategy, but only enters \u201cas much\u201d\nof a predictor as it deserves. At the \ufb01rst step it identi\ufb01es the variable\nmost correlated with the response. Rather than \ufb01t this variable completely,\nLAR moves the coe\ufb03cient of this variable continuously toward its least-\nsquares value (causing its correlation with the evolving residual to decrease\nin absolute value). As soon as another variable \u201ccatches up\u201d in terms of\ncorrelation with the residual, the process is paused. The second variable\nthen joins the active set, and their coe\ufb03cients are moved together in a way\nthat keeps their correlations tied and decreasing. This process is continued",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5190,
+          "text": "74\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5191,
+          "text": "until all the variables are in the model, and ends at the full least-squares\n\ufb01t. Algorithm 3.2 provides the details. The termination condition in step 5\nrequires some explanation. If p > N \u22121, the LAR algorithm reaches a zero\nresidual solution after N \u22121 steps (the \u22121 is because we have centered the\ndata).",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5192,
+          "text": "Algorithm 3.2 Least Angle Regression.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5193,
+          "text": "1. Standardize the predictors to have mean zero and unit norm. Start\nwith the residual r = y \u2212\u00afy, \u03b21, \u03b22, . . . , \u03b2p = 0.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5194,
+          "text": "2. Find the predictor xj most correlated with r.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5195,
+          "text": "3. Move \u03b2j from 0 towards its least-squares coe\ufb03cient \u27e8xj, r\u27e9, until some\nother competitor xk has as much correlation with the current residual\nas does xj.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5196,
+          "text": "4. Move \u03b2j and \u03b2k in the direction de\ufb01ned by their joint least squares\ncoe\ufb03cient of the current residual on (xj, xk), until some other com-\npetitor xl has as much correlation with the current residual.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5197,
+          "text": "5. Continue in this way until all p predictors have been entered. After\nmin(N \u22121, p) steps, we arrive at the full least-squares solution.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5198,
+          "text": "Suppose Ak is the active set of variables at the beginning of the kth\nstep, and let \u03b2Ak be the coe\ufb03cient vector for these variables at this step;\nthere will be k \u22121 nonzero values, and the one just entered will be zero. If\nrk = y \u2212XAk\u03b2Ak is the current residual, then the direction for this step is",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5199,
+          "text": "\u03b4k = (XT\nAkXAk)\u22121XT\nAkrk.\n(3.55)",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5200,
+          "text": "The coe\ufb03cient pro\ufb01le then evolves as \u03b2Ak(\u03b1) = \u03b2Ak + \u03b1 \u00b7 \u03b4k. Exercise 3.23\nveri\ufb01es that the directions chosen in this fashion do what is claimed: keep\nthe correlations tied and decreasing. If the \ufb01t vector at the beginning of\nthis step is \u02c6fk, then it evolves as \u02c6fk(\u03b1) = fk + \u03b1 \u00b7 uk, where uk = XAk\u03b4k\nis the new \ufb01t direction. The name \u201cleast angle\u201d arises from a geometrical\ninterpretation of this process; uk makes the smallest (and equal) angle\nwith each of the predictors in Ak (Exercise 3.24). Figure 3.14 shows the\nabsolute correlations decreasing and joining ranks with each step of the\nLAR algorithm, using simulated data.\nBy construction the coe\ufb03cients in LAR change in a piecewise linear fash-\nion. Figure 3.15 [left panel] shows the LAR coe\ufb03cient pro\ufb01le evolving as a\nfunction of their L1 arc length 2. Note that we do not need to take small",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5201,
+          "text": "2The L1 arc-length of a di\ufb00erentiable curve \u03b2(s) for s \u2208[0, S] is given by TV(\u03b2, S) =\nR S\n0 || \u02d9\u03b2(s)||1ds, where \u02d9\u03b2(s) = \u2202\u03b2(s)/\u2202s. For the piecewise-linear LAR coe\ufb03cient pro\ufb01le,\nthis amounts to summing the L1 norms of the changes in coe\ufb03cients from step to step.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5203,
+          "text": "0\n5\n10\n15",
+          "type": "equation",
+          "page": 93
+        },
+        {
+          "id": 5204,
+          "text": "0.0\n0.1\n0.2\n0.3\n0.4",
+          "type": "equation",
+          "page": 93
+        },
+        {
+          "id": 5205,
+          "text": "v2\nv6\nv4\nv5\nv3\nv1",
+          "type": "narrative",
+          "page": 93
+        },
+        {
+          "id": 5206,
+          "text": "L1 Arc Length",
+          "type": "narrative",
+          "page": 93
+        },
+        {
+          "id": 5207,
+          "text": "Absolute Correlations",
+          "type": "narrative",
+          "page": 93
+        },
+        {
+          "id": 5209,
+          "text": "0\n5\n10\n15",
+          "type": "equation",
+          "page": 93
+        },
+        {
+          "id": 5210,
+          "text": "\u22121.5\n\u22121.0\n\u22120.5\n0.0\n0.5",
+          "type": "equation",
+          "page": 93
+        }
+      ]
+    },
+    {
+      "id": 156,
+      "name": "homotopy algorithm",
+      "description": "An algorithm for computing piecewise-linear lasso path discovered by Osborne et al.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "Osborne et al. (2000a) also discovered a piecewise-linear path for computing the lasso, which they called a homotopy algorithm.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5177,
+          "text": "q = 1.2\n\u03b1 = 0.2",
+          "type": "equation",
+          "page": 91
+        },
+        {
+          "id": 5178,
+          "text": "Lq\nElastic Net",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5180,
+          "text": "j |\u03b2j|q for q = 1.2 (left plot),\nand the elastic-net penalty P",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5181,
+          "text": "j(\u03b1\u03b22\nj +(1\u2212\u03b1)|\u03b2j|) for \u03b1 = 0.2 (right plot). Although\nvisually very similar, the elastic-net has sharp (non-di\ufb00erentiable) corners, while\nthe q = 1.2 penalty does not.",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5182,
+          "text": "setting coe\ufb03cients exactly to zero. Partly for this reason as well as for\ncomputational tractability, Zou and Hastie (2005) introduced the elastic-\nnet penalty",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5183,
+          "text": "\u03bb",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5184,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5185,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5186,
+          "text": "\u0005\n\u03b1\u03b22\nj + (1 \u2212\u03b1)|\u03b2j|\n\u0006\n,\n(3.54)",
+          "type": "equation",
+          "page": 91
+        },
+        {
+          "id": 5187,
+          "text": "a di\ufb00erent compromise between ridge and lasso. Figure 3.13 compares the\nLq penalty with q = 1.2 and the elastic-net penalty with \u03b1 = 0.2; it is\nhard to detect the di\ufb00erence by eye. The elastic-net selects variables like\nthe lasso, and shrinks together the coe\ufb03cients of correlated predictors like\nridge. It also has considerable computational advantages over the Lq penal-\nties. We discuss the elastic-net further in Section 18.4.",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5189,
+          "text": "Least angle regression (LAR) is a relative newcomer (Efron et al., 2004),\nand can be viewed as a kind of \u201cdemocratic\u201d version of forward stepwise\nregression (Section 3.3.2). As we will see, LAR is intimately connected\nwith the lasso, and in fact provides an extremely e\ufb03cient algorithm for\ncomputing the entire lasso path as in Figure 3.10.\nForward stepwise regression builds a model sequentially, adding one vari-\nable at a time. At each step, it identi\ufb01es the best variable to include in the\nactive set, and then updates the least squares \ufb01t to include all the active\nvariables.\nLeast angle regression uses a similar strategy, but only enters \u201cas much\u201d\nof a predictor as it deserves. At the \ufb01rst step it identi\ufb01es the variable\nmost correlated with the response. Rather than \ufb01t this variable completely,\nLAR moves the coe\ufb03cient of this variable continuously toward its least-\nsquares value (causing its correlation with the evolving residual to decrease\nin absolute value). As soon as another variable \u201ccatches up\u201d in terms of\ncorrelation with the residual, the process is paused. The second variable\nthen joins the active set, and their coe\ufb03cients are moved together in a way\nthat keeps their correlations tied and decreasing. This process is continued",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5190,
+          "text": "74\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5191,
+          "text": "until all the variables are in the model, and ends at the full least-squares\n\ufb01t. Algorithm 3.2 provides the details. The termination condition in step 5\nrequires some explanation. If p > N \u22121, the LAR algorithm reaches a zero\nresidual solution after N \u22121 steps (the \u22121 is because we have centered the\ndata).",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5192,
+          "text": "Algorithm 3.2 Least Angle Regression.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5193,
+          "text": "1. Standardize the predictors to have mean zero and unit norm. Start\nwith the residual r = y \u2212\u00afy, \u03b21, \u03b22, . . . , \u03b2p = 0.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5194,
+          "text": "2. Find the predictor xj most correlated with r.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5195,
+          "text": "3. Move \u03b2j from 0 towards its least-squares coe\ufb03cient \u27e8xj, r\u27e9, until some\nother competitor xk has as much correlation with the current residual\nas does xj.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5196,
+          "text": "4. Move \u03b2j and \u03b2k in the direction de\ufb01ned by their joint least squares\ncoe\ufb03cient of the current residual on (xj, xk), until some other com-\npetitor xl has as much correlation with the current residual.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5197,
+          "text": "5. Continue in this way until all p predictors have been entered. After\nmin(N \u22121, p) steps, we arrive at the full least-squares solution.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5198,
+          "text": "Suppose Ak is the active set of variables at the beginning of the kth\nstep, and let \u03b2Ak be the coe\ufb03cient vector for these variables at this step;\nthere will be k \u22121 nonzero values, and the one just entered will be zero. If\nrk = y \u2212XAk\u03b2Ak is the current residual, then the direction for this step is",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5199,
+          "text": "\u03b4k = (XT\nAkXAk)\u22121XT\nAkrk.\n(3.55)",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5200,
+          "text": "The coe\ufb03cient pro\ufb01le then evolves as \u03b2Ak(\u03b1) = \u03b2Ak + \u03b1 \u00b7 \u03b4k. Exercise 3.23\nveri\ufb01es that the directions chosen in this fashion do what is claimed: keep\nthe correlations tied and decreasing. If the \ufb01t vector at the beginning of\nthis step is \u02c6fk, then it evolves as \u02c6fk(\u03b1) = fk + \u03b1 \u00b7 uk, where uk = XAk\u03b4k\nis the new \ufb01t direction. The name \u201cleast angle\u201d arises from a geometrical\ninterpretation of this process; uk makes the smallest (and equal) angle\nwith each of the predictors in Ak (Exercise 3.24). Figure 3.14 shows the\nabsolute correlations decreasing and joining ranks with each step of the\nLAR algorithm, using simulated data.\nBy construction the coe\ufb03cients in LAR change in a piecewise linear fash-\nion. Figure 3.15 [left panel] shows the LAR coe\ufb03cient pro\ufb01le evolving as a\nfunction of their L1 arc length 2. Note that we do not need to take small",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5201,
+          "text": "2The L1 arc-length of a di\ufb00erentiable curve \u03b2(s) for s \u2208[0, S] is given by TV(\u03b2, S) =\nR S\n0 || \u02d9\u03b2(s)||1ds, where \u02d9\u03b2(s) = \u2202\u03b2(s)/\u2202s. For the piecewise-linear LAR coe\ufb03cient pro\ufb01le,\nthis amounts to summing the L1 norms of the changes in coe\ufb03cients from step to step.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5203,
+          "text": "0\n5\n10\n15",
+          "type": "equation",
+          "page": 93
+        },
+        {
+          "id": 5204,
+          "text": "0.0\n0.1\n0.2\n0.3\n0.4",
+          "type": "equation",
+          "page": 93
+        },
+        {
+          "id": 5205,
+          "text": "v2\nv6\nv4\nv5\nv3\nv1",
+          "type": "narrative",
+          "page": 93
+        },
+        {
+          "id": 5206,
+          "text": "L1 Arc Length",
+          "type": "narrative",
+          "page": 93
+        },
+        {
+          "id": 5207,
+          "text": "Absolute Correlations",
+          "type": "narrative",
+          "page": 93
+        },
+        {
+          "id": 5209,
+          "text": "0\n5\n10\n15",
+          "type": "equation",
+          "page": 93
+        },
+        {
+          "id": 5210,
+          "text": "\u22121.5\n\u22121.0\n\u22120.5\n0.0\n0.5",
+          "type": "equation",
+          "page": 93
+        }
+      ]
+    },
+    {
+      "id": 181,
+      "name": "l1 arc length",
+      "description": "The total L1 distance traveled along a coefficient path, summing L1 norms of coefficient changes at each step.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "For the piecewise-linear LAR coefficient profile, this amounts to summing the L1 norms of the changes in coefficients from step to step.",
+      "existing_formula": "TV(\\beta, S) = \\int_0^S \\|\\dot{\\beta}(s)\\|_1 ds",
+      "paragraphs": [
+        {
+          "id": 5177,
+          "text": "q = 1.2\n\u03b1 = 0.2",
+          "type": "equation",
+          "page": 91
+        },
+        {
+          "id": 5178,
+          "text": "Lq\nElastic Net",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5180,
+          "text": "j |\u03b2j|q for q = 1.2 (left plot),\nand the elastic-net penalty P",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5181,
+          "text": "j(\u03b1\u03b22\nj +(1\u2212\u03b1)|\u03b2j|) for \u03b1 = 0.2 (right plot). Although\nvisually very similar, the elastic-net has sharp (non-di\ufb00erentiable) corners, while\nthe q = 1.2 penalty does not.",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5182,
+          "text": "setting coe\ufb03cients exactly to zero. Partly for this reason as well as for\ncomputational tractability, Zou and Hastie (2005) introduced the elastic-\nnet penalty",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5183,
+          "text": "\u03bb",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5184,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5185,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5186,
+          "text": "\u0005\n\u03b1\u03b22\nj + (1 \u2212\u03b1)|\u03b2j|\n\u0006\n,\n(3.54)",
+          "type": "equation",
+          "page": 91
+        },
+        {
+          "id": 5187,
+          "text": "a di\ufb00erent compromise between ridge and lasso. Figure 3.13 compares the\nLq penalty with q = 1.2 and the elastic-net penalty with \u03b1 = 0.2; it is\nhard to detect the di\ufb00erence by eye. The elastic-net selects variables like\nthe lasso, and shrinks together the coe\ufb03cients of correlated predictors like\nridge. It also has considerable computational advantages over the Lq penal-\nties. We discuss the elastic-net further in Section 18.4.",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5189,
+          "text": "Least angle regression (LAR) is a relative newcomer (Efron et al., 2004),\nand can be viewed as a kind of \u201cdemocratic\u201d version of forward stepwise\nregression (Section 3.3.2). As we will see, LAR is intimately connected\nwith the lasso, and in fact provides an extremely e\ufb03cient algorithm for\ncomputing the entire lasso path as in Figure 3.10.\nForward stepwise regression builds a model sequentially, adding one vari-\nable at a time. At each step, it identi\ufb01es the best variable to include in the\nactive set, and then updates the least squares \ufb01t to include all the active\nvariables.\nLeast angle regression uses a similar strategy, but only enters \u201cas much\u201d\nof a predictor as it deserves. At the \ufb01rst step it identi\ufb01es the variable\nmost correlated with the response. Rather than \ufb01t this variable completely,\nLAR moves the coe\ufb03cient of this variable continuously toward its least-\nsquares value (causing its correlation with the evolving residual to decrease\nin absolute value). As soon as another variable \u201ccatches up\u201d in terms of\ncorrelation with the residual, the process is paused. The second variable\nthen joins the active set, and their coe\ufb03cients are moved together in a way\nthat keeps their correlations tied and decreasing. This process is continued",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5190,
+          "text": "74\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5191,
+          "text": "until all the variables are in the model, and ends at the full least-squares\n\ufb01t. Algorithm 3.2 provides the details. The termination condition in step 5\nrequires some explanation. If p > N \u22121, the LAR algorithm reaches a zero\nresidual solution after N \u22121 steps (the \u22121 is because we have centered the\ndata).",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5192,
+          "text": "Algorithm 3.2 Least Angle Regression.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5193,
+          "text": "1. Standardize the predictors to have mean zero and unit norm. Start\nwith the residual r = y \u2212\u00afy, \u03b21, \u03b22, . . . , \u03b2p = 0.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5194,
+          "text": "2. Find the predictor xj most correlated with r.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5195,
+          "text": "3. Move \u03b2j from 0 towards its least-squares coe\ufb03cient \u27e8xj, r\u27e9, until some\nother competitor xk has as much correlation with the current residual\nas does xj.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5196,
+          "text": "4. Move \u03b2j and \u03b2k in the direction de\ufb01ned by their joint least squares\ncoe\ufb03cient of the current residual on (xj, xk), until some other com-\npetitor xl has as much correlation with the current residual.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5197,
+          "text": "5. Continue in this way until all p predictors have been entered. After\nmin(N \u22121, p) steps, we arrive at the full least-squares solution.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5198,
+          "text": "Suppose Ak is the active set of variables at the beginning of the kth\nstep, and let \u03b2Ak be the coe\ufb03cient vector for these variables at this step;\nthere will be k \u22121 nonzero values, and the one just entered will be zero. If\nrk = y \u2212XAk\u03b2Ak is the current residual, then the direction for this step is",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5199,
+          "text": "\u03b4k = (XT\nAkXAk)\u22121XT\nAkrk.\n(3.55)",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5200,
+          "text": "The coe\ufb03cient pro\ufb01le then evolves as \u03b2Ak(\u03b1) = \u03b2Ak + \u03b1 \u00b7 \u03b4k. Exercise 3.23\nveri\ufb01es that the directions chosen in this fashion do what is claimed: keep\nthe correlations tied and decreasing. If the \ufb01t vector at the beginning of\nthis step is \u02c6fk, then it evolves as \u02c6fk(\u03b1) = fk + \u03b1 \u00b7 uk, where uk = XAk\u03b4k\nis the new \ufb01t direction. The name \u201cleast angle\u201d arises from a geometrical\ninterpretation of this process; uk makes the smallest (and equal) angle\nwith each of the predictors in Ak (Exercise 3.24). Figure 3.14 shows the\nabsolute correlations decreasing and joining ranks with each step of the\nLAR algorithm, using simulated data.\nBy construction the coe\ufb03cients in LAR change in a piecewise linear fash-\nion. Figure 3.15 [left panel] shows the LAR coe\ufb03cient pro\ufb01le evolving as a\nfunction of their L1 arc length 2. Note that we do not need to take small",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5201,
+          "text": "2The L1 arc-length of a di\ufb00erentiable curve \u03b2(s) for s \u2208[0, S] is given by TV(\u03b2, S) =\nR S\n0 || \u02d9\u03b2(s)||1ds, where \u02d9\u03b2(s) = \u2202\u03b2(s)/\u2202s. For the piecewise-linear LAR coe\ufb03cient pro\ufb01le,\nthis amounts to summing the L1 norms of the changes in coe\ufb03cients from step to step.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5203,
+          "text": "0\n5\n10\n15",
+          "type": "equation",
+          "page": 93
+        },
+        {
+          "id": 5204,
+          "text": "0.0\n0.1\n0.2\n0.3\n0.4",
+          "type": "equation",
+          "page": 93
+        },
+        {
+          "id": 5205,
+          "text": "v2\nv6\nv4\nv5\nv3\nv1",
+          "type": "narrative",
+          "page": 93
+        },
+        {
+          "id": 5206,
+          "text": "L1 Arc Length",
+          "type": "narrative",
+          "page": 93
+        },
+        {
+          "id": 5207,
+          "text": "Absolute Correlations",
+          "type": "narrative",
+          "page": 93
+        },
+        {
+          "id": 5209,
+          "text": "0\n5\n10\n15",
+          "type": "equation",
+          "page": 93
+        },
+        {
+          "id": 5210,
+          "text": "\u22121.5\n\u22121.0\n\u22120.5\n0.0\n0.5",
+          "type": "equation",
+          "page": 93
+        }
+      ]
+    },
+    {
+      "id": 182,
+      "name": "piecewise-linear solution path",
+      "description": "Property of LAR and lasso where coefficient profiles are piecewise linear as tuning parameter varies, enabling efficient computation.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "By construction the coefficients in LAR change in a piecewise linear fashion.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5177,
+          "text": "q = 1.2\n\u03b1 = 0.2",
+          "type": "equation",
+          "page": 91
+        },
+        {
+          "id": 5178,
+          "text": "Lq\nElastic Net",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5180,
+          "text": "j |\u03b2j|q for q = 1.2 (left plot),\nand the elastic-net penalty P",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5181,
+          "text": "j(\u03b1\u03b22\nj +(1\u2212\u03b1)|\u03b2j|) for \u03b1 = 0.2 (right plot). Although\nvisually very similar, the elastic-net has sharp (non-di\ufb00erentiable) corners, while\nthe q = 1.2 penalty does not.",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5182,
+          "text": "setting coe\ufb03cients exactly to zero. Partly for this reason as well as for\ncomputational tractability, Zou and Hastie (2005) introduced the elastic-\nnet penalty",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5183,
+          "text": "\u03bb",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5184,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5185,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5186,
+          "text": "\u0005\n\u03b1\u03b22\nj + (1 \u2212\u03b1)|\u03b2j|\n\u0006\n,\n(3.54)",
+          "type": "equation",
+          "page": 91
+        },
+        {
+          "id": 5187,
+          "text": "a di\ufb00erent compromise between ridge and lasso. Figure 3.13 compares the\nLq penalty with q = 1.2 and the elastic-net penalty with \u03b1 = 0.2; it is\nhard to detect the di\ufb00erence by eye. The elastic-net selects variables like\nthe lasso, and shrinks together the coe\ufb03cients of correlated predictors like\nridge. It also has considerable computational advantages over the Lq penal-\nties. We discuss the elastic-net further in Section 18.4.",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5189,
+          "text": "Least angle regression (LAR) is a relative newcomer (Efron et al., 2004),\nand can be viewed as a kind of \u201cdemocratic\u201d version of forward stepwise\nregression (Section 3.3.2). As we will see, LAR is intimately connected\nwith the lasso, and in fact provides an extremely e\ufb03cient algorithm for\ncomputing the entire lasso path as in Figure 3.10.\nForward stepwise regression builds a model sequentially, adding one vari-\nable at a time. At each step, it identi\ufb01es the best variable to include in the\nactive set, and then updates the least squares \ufb01t to include all the active\nvariables.\nLeast angle regression uses a similar strategy, but only enters \u201cas much\u201d\nof a predictor as it deserves. At the \ufb01rst step it identi\ufb01es the variable\nmost correlated with the response. Rather than \ufb01t this variable completely,\nLAR moves the coe\ufb03cient of this variable continuously toward its least-\nsquares value (causing its correlation with the evolving residual to decrease\nin absolute value). As soon as another variable \u201ccatches up\u201d in terms of\ncorrelation with the residual, the process is paused. The second variable\nthen joins the active set, and their coe\ufb03cients are moved together in a way\nthat keeps their correlations tied and decreasing. This process is continued",
+          "type": "narrative",
+          "page": 91
+        },
+        {
+          "id": 5190,
+          "text": "74\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5191,
+          "text": "until all the variables are in the model, and ends at the full least-squares\n\ufb01t. Algorithm 3.2 provides the details. The termination condition in step 5\nrequires some explanation. If p > N \u22121, the LAR algorithm reaches a zero\nresidual solution after N \u22121 steps (the \u22121 is because we have centered the\ndata).",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5192,
+          "text": "Algorithm 3.2 Least Angle Regression.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5193,
+          "text": "1. Standardize the predictors to have mean zero and unit norm. Start\nwith the residual r = y \u2212\u00afy, \u03b21, \u03b22, . . . , \u03b2p = 0.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5194,
+          "text": "2. Find the predictor xj most correlated with r.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5195,
+          "text": "3. Move \u03b2j from 0 towards its least-squares coe\ufb03cient \u27e8xj, r\u27e9, until some\nother competitor xk has as much correlation with the current residual\nas does xj.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5196,
+          "text": "4. Move \u03b2j and \u03b2k in the direction de\ufb01ned by their joint least squares\ncoe\ufb03cient of the current residual on (xj, xk), until some other com-\npetitor xl has as much correlation with the current residual.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5197,
+          "text": "5. Continue in this way until all p predictors have been entered. After\nmin(N \u22121, p) steps, we arrive at the full least-squares solution.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5198,
+          "text": "Suppose Ak is the active set of variables at the beginning of the kth\nstep, and let \u03b2Ak be the coe\ufb03cient vector for these variables at this step;\nthere will be k \u22121 nonzero values, and the one just entered will be zero. If\nrk = y \u2212XAk\u03b2Ak is the current residual, then the direction for this step is",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5199,
+          "text": "\u03b4k = (XT\nAkXAk)\u22121XT\nAkrk.\n(3.55)",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5200,
+          "text": "The coe\ufb03cient pro\ufb01le then evolves as \u03b2Ak(\u03b1) = \u03b2Ak + \u03b1 \u00b7 \u03b4k. Exercise 3.23\nveri\ufb01es that the directions chosen in this fashion do what is claimed: keep\nthe correlations tied and decreasing. If the \ufb01t vector at the beginning of\nthis step is \u02c6fk, then it evolves as \u02c6fk(\u03b1) = fk + \u03b1 \u00b7 uk, where uk = XAk\u03b4k\nis the new \ufb01t direction. The name \u201cleast angle\u201d arises from a geometrical\ninterpretation of this process; uk makes the smallest (and equal) angle\nwith each of the predictors in Ak (Exercise 3.24). Figure 3.14 shows the\nabsolute correlations decreasing and joining ranks with each step of the\nLAR algorithm, using simulated data.\nBy construction the coe\ufb03cients in LAR change in a piecewise linear fash-\nion. Figure 3.15 [left panel] shows the LAR coe\ufb03cient pro\ufb01le evolving as a\nfunction of their L1 arc length 2. Note that we do not need to take small",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5201,
+          "text": "2The L1 arc-length of a di\ufb00erentiable curve \u03b2(s) for s \u2208[0, S] is given by TV(\u03b2, S) =\nR S\n0 || \u02d9\u03b2(s)||1ds, where \u02d9\u03b2(s) = \u2202\u03b2(s)/\u2202s. For the piecewise-linear LAR coe\ufb03cient pro\ufb01le,\nthis amounts to summing the L1 norms of the changes in coe\ufb03cients from step to step.",
+          "type": "narrative",
+          "page": 92
+        },
+        {
+          "id": 5203,
+          "text": "0\n5\n10\n15",
+          "type": "equation",
+          "page": 93
+        },
+        {
+          "id": 5204,
+          "text": "0.0\n0.1\n0.2\n0.3\n0.4",
+          "type": "equation",
+          "page": 93
+        },
+        {
+          "id": 5205,
+          "text": "v2\nv6\nv4\nv5\nv3\nv1",
+          "type": "narrative",
+          "page": 93
+        },
+        {
+          "id": 5206,
+          "text": "L1 Arc Length",
+          "type": "narrative",
+          "page": 93
+        },
+        {
+          "id": 5207,
+          "text": "Absolute Correlations",
+          "type": "narrative",
+          "page": 93
+        },
+        {
+          "id": 5209,
+          "text": "0\n5\n10\n15",
+          "type": "equation",
+          "page": 93
+        },
+        {
+          "id": 5210,
+          "text": "\u22121.5\n\u22121.0\n\u22120.5\n0.0\n0.5",
+          "type": "equation",
+          "page": 93
+        }
+      ]
+    },
+    {
+      "id": 158,
+      "name": "principal components regression",
+      "description": "Forms derived inputs as principal components of X, then regresses y on the first M components.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "Principal component regression forms the derived input columns z_m = Xv_m, and then regresses y on z_1, z_2, . . . , z_M for some M \u2264 p.",
+      "existing_formula": "\\hat{y}^{pcr}_M = \\bar{y}\\mathbf{1} + \\sum_{m=1}^M \\hat{\\theta}_m z_m",
+      "paragraphs": [
+        {
+          "id": 5250,
+          "text": "often takes more than p steps, since predictors can drop out. Hence the\nde\ufb01nition is a little di\ufb00erent; for the lasso, at any stage df(\u02c6y) approximately\nequals the number of predictors in the model. While this approximation\nworks reasonably well anywhere in the lasso path, for each k it works best\nat the last model in the sequence that contains k predictors. A detailed\nstudy of the degrees of freedom for the lasso may be found in Zou et al.\n(2007).",
+          "type": "narrative",
+          "page": 97
+        },
+        {
+          "id": 5252,
+          "text": "In many situations we have a large number of inputs, often very correlated.\nThe methods in this section produce a small number of linear combinations\nZm, m = 1, . . . , M of the original inputs Xj, and the Zm are then used in\nplace of the Xj as inputs in the regression. The methods di\ufb00er in how the\nlinear combinations are constructed.",
+          "type": "narrative",
+          "page": 97
+        },
+        {
+          "id": 5254,
+          "text": "In this approach the linear combinations Zm used are the principal com-\nponents as de\ufb01ned in Section 3.4.1 above.\nPrincipal component regression forms the derived input columns zm =\nXvm, and then regresses y on z1, z2, . . . , zM for some M \u2264p. Since the zm\nare orthogonal, this regression is just a sum of univariate regressions:",
+          "type": "narrative",
+          "page": 97
+        },
+        {
+          "id": 5255,
+          "text": "\u02c6ypcr\n(M) = \u00afy1 +",
+          "type": "narrative",
+          "page": 97
+        },
+        {
+          "id": 5256,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 97
+        },
+        {
+          "id": 5257,
+          "text": "m=1\n\u02c6\u03b8mzm,\n(3.61)",
+          "type": "narrative",
+          "page": 97
+        },
+        {
+          "id": 5258,
+          "text": "where \u02c6\u03b8m = \u27e8zm, y\u27e9/\u27e8zm, zm\u27e9. Since the zm are each linear combinations\nof the original xj, we can express the solution (3.61) in terms of coe\ufb03cients\nof the xj (Exercise 3.13):",
+          "type": "narrative",
+          "page": 97
+        },
+        {
+          "id": 5259,
+          "text": "\u02c6\u03b2pcr(M) =",
+          "type": "narrative",
+          "page": 97
+        },
+        {
+          "id": 5260,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 97
+        },
+        {
+          "id": 5261,
+          "text": "m=1\n\u02c6\u03b8mvm.\n(3.62)",
+          "type": "narrative",
+          "page": 97
+        },
+        {
+          "id": 5262,
+          "text": "As with ridge regression, principal components depend on the scaling of\nthe inputs, so typically we \ufb01rst standardize them. Note that if M = p, we\nwould just get back the usual least squares estimates, since the columns of\nZ = UD span the column space of X. For M < p we get a reduced regres-\nsion. We see that principal components regression is very similar to ridge\nregression: both operate via the principal components of the input ma-\ntrix. Ridge regression shrinks the coe\ufb03cients of the principal components\n(Figure 3.17), shrinking more depending on the size of the corresponding\neigenvalue; principal components regression discards the p \u2212M smallest\neigenvalue components. Figure 3.17 illustrates this.",
+          "type": "narrative",
+          "page": 97
+        }
+      ]
+    },
+    {
+      "id": 160,
+      "name": "canonical correlation analysis",
+      "description": "Finds uncorrelated linear combinations of inputs and outputs with successively maximized correlations.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "Similar to PCA, CCA finds a sequence of uncorrelated linear combinations Xv_m, m = 1, . . . , M of the x_j, and a corresponding sequence of uncorrelated linear combinations Yu_m of the responses y_k, such that the correlations are successively maximized.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5321,
+          "text": "84\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 102
+        },
+        {
+          "id": 5323,
+          "text": "As noted in Section 3.2.4, the least squares estimates in a multiple-output\nlinear model are simply the individual least squares estimates for each of\nthe outputs.\nTo apply selection and shrinkage methods in the multiple output case,\none could apply a univariate technique individually to each outcome or si-\nmultaneously to all outcomes. With ridge regression, for example, we could\napply formula (3.44) to each of the K columns of the outcome matrix Y ,\nusing possibly di\ufb00erent parameters \u03bb, or apply it to all columns using the\nsame value of \u03bb. The former strategy would allow di\ufb00erent amounts of\nregularization to be applied to di\ufb00erent outcomes but require estimation\nof k separate regularization parameters \u03bb1, . . . , \u03bbk, while the latter would\npermit all k outputs to be used in estimating the sole regularization pa-\nrameter \u03bb.\nOther more sophisticated shrinkage and selection strategies that exploit\ncorrelations in the di\ufb00erent responses can be helpful in the multiple output\ncase. Suppose for example that among the outputs we have",
+          "type": "narrative",
+          "page": 102
+        },
+        {
+          "id": 5324,
+          "text": "Yk\n=\nf(X) + \u03b5k\n(3.65)",
+          "type": "narrative",
+          "page": 102
+        },
+        {
+          "id": 5325,
+          "text": "Y\u2113\n=\nf(X) + \u03b5\u2113;\n(3.66)",
+          "type": "narrative",
+          "page": 102
+        },
+        {
+          "id": 5326,
+          "text": "i.e., (3.65) and (3.66) share the same structural part f(X) in their models.\nIt is clear in this case that we should pool our observations on Yk and Yl\nto estimate the common f.\nCombining responses is at the heart of canonical correlation analysis\n(CCA), a data reduction technique developed for the multiple output case.\nSimilar to PCA, CCA \ufb01nds a sequence of uncorrelated linear combina-\ntions Xvm, m = 1, . . . , M of the xj, and a corresponding sequence of\nuncorrelated linear combinations Yum of the responses yk, such that the\ncorrelations",
+          "type": "narrative",
+          "page": 102
+        },
+        {
+          "id": 5327,
+          "text": "Corr2(Yum, Xvm)\n(3.67)",
+          "type": "narrative",
+          "page": 102
+        },
+        {
+          "id": 5328,
+          "text": "are successively maximized. Note that at most M = min(K, p) directions\ncan be found. The leading canonical response variates are those linear com-\nbinations (derived responses) best predicted by the xj; in contrast, the\ntrailing canonical variates can be poorly predicted by the xj, and are can-\ndidates for being dropped. The CCA solution is computed using a general-\nized SVD of the sample cross-covariance matrix YT X/N (assuming Y and\nX are centered; Exercise 3.20).\nReduced-rank regression (Izenman, 1975; van der Merwe and Zidek, 1980)\nformalizes this approach in terms of a regression model that explicitly pools\ninformation. Given an error covariance Cov(\u03b5) = \u03a3, we solve the following",
+          "type": "narrative",
+          "page": 102
+        },
+        {
+          "id": 5330,
+          "text": "restricted multivariate regression problem:",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5331,
+          "text": "\u02c6Brr(m) =\nargmin\nrank(B)=m",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5332,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5333,
+          "text": "i=1\n(yi \u2212BT xi)T \u03a3\u22121(yi \u2212BT xi).\n(3.68)",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5334,
+          "text": "With \u03a3 replaced by the estimate YT Y/N, one can show (Exercise 3.21)\nthat the solution is given by a CCA of Y and X:",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5335,
+          "text": "\u02c6Brr(m) = \u02c6BUmU\u2212\nm,\n(3.69)",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5336,
+          "text": "where Um is the K \u00d7 m sub-matrix of U consisting of the \ufb01rst m columns,\nand U is the K \u00d7 M matrix of left canonical vectors u1, u2, . . . , uM. U\u2212\nm\nis its generalized inverse. Writing the solution as",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5337,
+          "text": "\u02c6Brr(M) = (XT X)\u22121XT (YUm)U\u2212\nm,\n(3.70)",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5338,
+          "text": "we see that reduced-rank regression performs a linear regression on the\npooled response matrix YUm, and then maps the coe\ufb03cients (and hence\nthe \ufb01ts as well) back to the original response space. The reduced-rank \ufb01ts\nare given by",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5339,
+          "text": "\u02c6Yrr(m) = X(XT X)\u22121XT YUmU\u2212\nm\n= HYPm,\n(3.71)",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5340,
+          "text": "where H is the usual linear regression projection operator, and Pm is the\nrank-m CCA response projection operator. Although a better estimate of\n\u03a3 would be (Y\u2212X \u02c6B)T (Y\u2212X \u02c6B)/(N \u2212pK), one can show that the solution\nremains the same (Exercise 3.22).\nReduced-rank regression borrows strength among responses by truncat-\ning the CCA. Breiman and Friedman (1997) explored with some success\nshrinkage of the canonical variates between X and Y, a smooth version of\nreduced rank regression. Their proposal has the form (compare (3.69))",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5341,
+          "text": "\u02c6Bc+w = \u02c6BU\u039bU\u22121,\n(3.72)",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5342,
+          "text": "where \u039b is a diagonal shrinkage matrix (the \u201cc+w\u201d stands for \u201cCurds\nand Whey,\u201d the name they gave to their procedure). Based on optimal\nprediction in the population setting, they show that \u039b has diagonal entries",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5343,
+          "text": "\u03bbm =\nc2\nm\nc2m + p",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5344,
+          "text": "N (1 \u2212c2m), m = 1, . . . , M,\n(3.73)",
+          "type": "equation",
+          "page": 103
+        },
+        {
+          "id": 5345,
+          "text": "where cm is the mth canonical correlation coe\ufb03cient. Note that as the ratio\nof the number of input variables to sample size p/N gets small, the shrink-\nage factors approach 1. Breiman and Friedman (1997) proposed modi\ufb01ed\nversions of \u039b based on training data and cross-validation, but the general\nform is the same. Here the \ufb01tted response has the form",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5346,
+          "text": "\u02c6Yc+w = HYSc+w,\n(3.74)",
+          "type": "narrative",
+          "page": 103
+        }
+      ]
+    }
+  ]
+}

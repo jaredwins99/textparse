@@ -1,0 +1,444 @@
+{
+  "concepts": [
+    {
+      "name": "recursive binary partition",
+      "type": "technique",
+      "description": "A tree-building strategy that splits feature space into regions by recursively splitting into two subregions at each step, using axis-parallel splits.",
+      "quote": "To simplify matters, we restrict attention to recursive binary partitions like that in the top right panel of Figure 9.2. We first split the space into two regions, and model the response by the mean of Y in each region.",
+      "paragraph_ids": [27587]
+    },
+    {
+      "name": "cost-complexity pruning",
+      "type": "technique",
+      "description": "A tree pruning method that balances tree size against goodness of fit by minimizing a penalized criterion Cα(T) = Σ NmQm(T) + α|T|.",
+      "quote": "The preferred strategy is to grow a large tree T0, stopping the splitting process only when some minimum node size (say 5) is reached. Then this large tree is pruned using cost-complexity pruning, which we now describe.",
+      "paragraph_ids": [27639]
+    },
+    {
+      "name": "weakest link pruning",
+      "type": "algorithm",
+      "description": "A method to find the optimal subtree Tα by successively collapsing internal nodes that produce the smallest per-node increase in node impurity.",
+      "quote": "To find Tα we use weakest link pruning: we successively collapse the internal node that produces the smallest per-node increase in Σ NmQm(T), and continue until we produce the single-node (root) tree.",
+      "paragraph_ids": [27652]
+    },
+    {
+      "name": "node impurity",
+      "type": "metric",
+      "description": "A measure of heterogeneity within a tree node, used to guide splitting decisions. For classification, common measures are Gini index, cross-entropy, and misclassification error.",
+      "quote": "Different measures Qm(T) of node impurity include the following: Misclassification error, Gini index, Cross-entropy or deviance",
+      "paragraph_ids": [27668, 27669, 27670, 27671]
+    },
+    {
+      "name": "gini index",
+      "type": "metric",
+      "description": "A node impurity measure for classification trees equal to Σk≠k' p̂mk p̂mk' = ΣK p̂mk(1 - p̂mk), measuring the probability of misclassification if class labels are randomly assigned according to node proportions.",
+      "quote": "Gini index: Σk≠k' p̂mk p̂mk' = ΣK p̂mk(1 - p̂mk).",
+      "paragraph_ids": [27670, 27673]
+    },
+    {
+      "name": "cross-entropy for trees",
+      "type": "metric",
+      "description": "A node impurity measure for classification trees defined as -ΣK p̂mk log p̂mk, which is more sensitive to changes in node probabilities than misclassification rate.",
+      "quote": "Cross-entropy or deviance: -ΣK p̂mk log p̂mk.",
+      "paragraph_ids": [27671]
+    },
+    {
+      "name": "surrogate splits",
+      "type": "technique",
+      "description": "Alternative splitting predictors used in tree construction when the primary splitting predictor has missing values, exploiting correlations between predictors.",
+      "quote": "The second more general approach is the construction of surrogate variables. When considering a predictor for a split, we use only the observations for which that predictor is not missing. Having chosen the best (primary) predictor and split point, we form a list of surrogate predictors and split points.",
+      "paragraph_ids": [27682]
+    },
+    {
+      "name": "sensitivity in classification",
+      "type": "metric",
+      "description": "The probability of predicting disease (positive class) given the true state is disease; also called true positive rate.",
+      "quote": "Sensitivity: probability of predicting disease given true state is disease.",
+      "paragraph_ids": [27710]
+    },
+    {
+      "name": "specificity in classification",
+      "type": "metric",
+      "description": "The probability of predicting non-disease (negative class) given the true state is non-disease; also called true negative rate.",
+      "quote": "Specificity: probability of predicting non-disease given true state is non-disease.",
+      "paragraph_ids": [27712]
+    },
+    {
+      "name": "receiver operating characteristic curve",
+      "type": "metric",
+      "description": "A plot of sensitivity versus specificity as classification threshold varies, used to assess the tradeoff between true positive and false positive rates. Area under ROC curve summarizes classifier performance.",
+      "quote": "The receiver operating characteristic curve (ROC) is a commonly used summary for assessing the tradeoff between sensitivity and specificity. It is a plot of the sensitivity versus specificity as we vary the parameters of a classification rule.",
+      "paragraph_ids": [27833]
+    },
+    {
+      "name": "c-statistic",
+      "type": "metric",
+      "description": "The area under the ROC curve, equivalent to the Mann-Whitney U statistic for the median difference between prediction scores in two groups.",
+      "quote": "The area under the ROC curve, used above, is sometimes called the c-statistic. Interestingly, it can be shown that the area under the ROC curve is equivalent to the Mann-Whitney U statistic (or Wilcoxon rank-sum test), for the median difference between the prediction scores in the two groups",
+      "paragraph_ids": [27834]
+    },
+    {
+      "name": "patient rule induction method",
+      "type": "method",
+      "description": "A bump hunting algorithm (PRIM) that finds box-shaped regions in feature space where the response average is high, using top-down peeling and bottom-up pasting.",
+      "quote": "The patient rule induction method (PRIM) also finds boxes in the feature space, but seeks boxes in which the response average is high. Hence it looks for maxima in the target function, an exercise known as bump hunting.",
+      "paragraph_ids": [27838]
+    },
+    {
+      "name": "top-down peeling",
+      "type": "technique",
+      "description": "PRIM's greedy algorithm that starts with a box containing all data, then repeatedly compresses one face to peel off observations, choosing the compression that maximizes the box mean.",
+      "quote": "The main box construction method in PRIM works from the top down, starting with a box containing all of the data. The box is compressed along one face by a small amount, and the observations then falling outside the box are peeled off. The face chosen for compression is the one resulting in the largest box mean, after the compression is performed.",
+      "paragraph_ids": [27838]
+    },
+    {
+      "name": "mars basis functions",
+      "type": "technique",
+      "description": "Piecewise linear functions (x-t)+ and (t-x)+ used in MARS, forming reflected pairs with knots at observed values. Products of these create tensor products for modeling interactions.",
+      "quote": "MARS uses expansions in piecewise linear basis functions of the form (x - t)+ and (t - x)+. The '+' means positive part, so (x-t)+ = x - t if x > t, 0 otherwise.",
+      "paragraph_ids": [29539, 29540]
+    },
+    {
+      "name": "reflected pair",
+      "type": "technique",
+      "description": "In MARS, the two complementary basis functions (x-t)+ and (t-x)+ that form a knot at value t, allowing locally adaptive modeling.",
+      "quote": "Each function is piecewise linear, with a knot at the value t. In the terminology of Chapter 5, these are linear splines. We call the two functions a reflected pair in the discussion below.",
+      "paragraph_ids": [29548]
+    },
+    {
+      "name": "generalized cross-validation for mars",
+      "type": "metric",
+      "description": "A criterion GCV(λ) = Σ(yi - f̂λ(xi))²/N / [1 - M(λ)/N]² used to select model size in MARS, accounting for effective parameters including knot selection penalty.",
+      "quote": "For computational savings the MARS procedure instead uses generalized cross-validation. This criterion is defined as GCV(λ) = ...",
+      "paragraph_ids": [29580, 29583]
+    },
+    {
+      "name": "hierarchical mixtures of experts",
+      "type": "method",
+      "description": "A tree-based method with soft probabilistic splits instead of hard decisions, fitting linear or logistic regression models in terminal nodes (experts) combined by gating networks.",
+      "quote": "The hierarchical mixtures of experts (HME) procedure can be viewed as a variant of tree-based methods. The main difference is that the tree splits are not hard decisions but rather soft probabilistic ones. At each node an observation goes left or right with probabilities depending on its input values.",
+      "paragraph_ids": [29630]
+    },
+    {
+      "name": "gating networks in hme",
+      "type": "technique",
+      "description": "Soft multinomial logistic functions gj(x,γj) = e^(γjᵀx) / Σ e^(γkᵀx) at internal nodes of HME that assign observations to branches probabilistically.",
+      "quote": "The top gating network has the output gj(x, γj) = e^(γjᵀx) / ΣK e^(γkᵀx), j = 1, 2, ..., K, where each γj is a vector of unknown parameters. This represents a soft K-way split.",
+      "paragraph_ids": [29653]
+    },
+    {
+      "name": "missing at random",
+      "type": "property",
+      "description": "Data are MAR if the distribution of the missingness indicator R depends on the data Z only through observed entries Zobs, not on unobserved values.",
+      "quote": "Data is said to be missing at random (MAR) if the distribution of R depends on the data Z only through Zobs: Pr(R|Z, θ) = Pr(R|Zobs, θ).",
+      "paragraph_ids": [29674]
+    },
+    {
+      "name": "missing completely at random",
+      "type": "property",
+      "description": "Data are MCAR if the distribution of missingness doesn't depend on observed or missing data: Pr(R|Z,θ) = Pr(R|θ). Stronger assumption than MAR.",
+      "quote": "Data are said to be missing completely at random (MCAR) if the distribution of R doesn't depend on the observed or missing data: Pr(R|Z, θ) = Pr(R|θ).",
+      "paragraph_ids": [29676]
+    },
+    {
+      "name": "adaboost.m1",
+      "type": "algorithm",
+      "description": "A boosting algorithm that sequentially applies a weak classifier to reweighted data, upweighting misclassified observations, and combines classifiers via weighted majority vote.",
+      "quote": "We begin by describing the most popular boosting algorithm due to Freund and Schapire (1997) called 'AdaBoost.M1.' ... At step m, those observations that were misclassified by the classifier Gm-1(x) induced at the previous step have their weights increased",
+      "paragraph_ids": [29740, 29778]
+    },
+    {
+      "name": "weak classifier",
+      "type": "method",
+      "description": "A classifier whose error rate is only slightly better than random guessing. Boosting combines many weak classifiers to produce a powerful committee.",
+      "quote": "A weak classifier is one whose error rate is only slightly better than random guessing. The purpose of boosting is to sequentially apply the weak classification algorithm to repeatedly modified versions of the data",
+      "paragraph_ids": [29745]
+    },
+    {
+      "name": "forward stagewise additive modeling",
+      "type": "technique",
+      "description": "An approach to fitting additive models f(x) = Σ βm b(x;γm) by sequentially adding basis functions without modifying previously added terms.",
+      "quote": "Forward stagewise modeling approximates the solution to (10.4) by sequentially adding new basis functions to the expansion without adjusting the parameters and coefficients of those that have already been added.",
+      "paragraph_ids": [29847]
+    },
+    {
+      "name": "exponential loss for classification",
+      "type": "metric",
+      "description": "Loss function L(y, f(x)) = exp(-y f(x)) used by AdaBoost, where y ∈ {-1,1}. Leads to simple reweighting algorithm but sensitive to outliers.",
+      "quote": "We now show that AdaBoost.M1 (Algorithm 10.1) is equivalent to forward stagewise additive modeling (Algorithm 10.2) using the loss function L(y, G(x)) = exp(-y G(x)).",
+      "paragraph_ids": [29855]
+    },
+    {
+      "name": "margin in classification",
+      "type": "property",
+      "description": "The product yf(x) in classification with y ∈ {-1,1}. Positive margin indicates correct classification, negative margin indicates misclassification. Analogous to residuals in regression.",
+      "quote": "In classification (with a -1/1 response) the margin plays a role analogous to the residuals y-f(x) in regression. The classification rule G(x) = sign[f(x)] implies that observations with positive margin yif(xi) > 0 are classified correctly whereas those with negative margin yif(xi) < 0 are misclassified.",
+      "paragraph_ids": [29920]
+    },
+    {
+      "name": "binomial deviance",
+      "type": "metric",
+      "description": "Loss function -[y' log p(x) + (1-y') log(1-p(x))] for binary classification, where p(x) = e^f(x)/(1+e^f(x)). More robust than exponential loss to outliers and mislabeling.",
+      "quote": "Another loss criterion with the same population minimizer is the binomial negative log-likelihood or deviance (also known as cross-entropy), interpreting f as the logit transform.",
+      "paragraph_ids": [29909]
+    },
+    {
+      "name": "multinomial deviance",
+      "type": "metric",
+      "description": "Extension of binomial deviance to K classes: -Σ I(yi=Gk) log pk(xi) where pk(x) = e^fk(x)/Σe^fℓ(x). Penalizes incorrect predictions linearly.",
+      "quote": "The binomial deviance extends naturally to the K-class multinomial deviance loss function: -Σi Σk I(yi=Gk) log pk(xi).",
+      "paragraph_ids": [29937, 29947]
+    },
+    {
+      "name": "huber loss",
+      "type": "metric",
+      "description": "A robust regression loss criterion that is quadratic for small residuals |y-f(x)| ≤ δ and linear for large residuals, providing resistance to outliers.",
+      "quote": "One such criterion is the Huber loss criterion used for M-regression: L(y, f(x)) = [y - f(x)]² for |y - f(x)| ≤ δ, 2δ(|y - f(x)| - δ²) otherwise.",
+      "paragraph_ids": [29950]
+    },
+    {
+      "name": "gradient boosted models",
+      "type": "method",
+      "description": "A generalization of tree boosting that fits additive models using any differentiable loss function, providing robustness and accuracy for data mining.",
+      "quote": "A gradient boosted model (GBM) is a generalization of tree boosting that attempts to mitigate these problems, so as to produce an accurate and effective off-the-shelf procedure for data mining.",
+      "paragraph_ids": [29983]
+    },
+    {
+      "name": "partial dependence plot",
+      "type": "technique",
+      "description": "A visualization showing the marginal effect of selected predictors on the predicted outcome, averaging over the other predictors to reveal predictor contributions.",
+      "quote": "In Section 10.13 below we develop a relative importance measure for each predictor, as well as a partial dependence plot describing a predictor's contribution to the fitted model.",
+      "paragraph_ids": [29987]
+    }
+  ],
+  "relationships": [
+    {
+      "source": "recursive binary partition",
+      "target": "regression trees",
+      "type": "uses",
+      "quote": "To simplify matters, we restrict attention to recursive binary partitions like that in the top right panel of Figure 9.2."
+    },
+    {
+      "source": "cost-complexity pruning",
+      "target": "regression trees",
+      "type": "uses",
+      "quote": "The preferred strategy is to grow a large tree T0, stopping the splitting process only when some minimum node size (say 5) is reached. Then this large tree is pruned using cost-complexity pruning"
+    },
+    {
+      "source": "weakest link pruning",
+      "target": "cost-complexity pruning",
+      "type": "uses",
+      "quote": "To find Tα we use weakest link pruning: we successively collapse the internal node that produces the smallest per-node increase"
+    },
+    {
+      "source": "gini index",
+      "target": "node impurity",
+      "type": "example_of",
+      "quote": "Different measures Qm(T) of node impurity include the following: ... Gini index"
+    },
+    {
+      "source": "cross-entropy for trees",
+      "target": "node impurity",
+      "type": "example_of",
+      "quote": "Different measures Qm(T) of node impurity include the following: ... Cross-entropy or deviance"
+    },
+    {
+      "source": "gini index",
+      "target": "cross-entropy for trees",
+      "type": "contrasts_with",
+      "quote": "All three are similar, but cross-entropy and the Gini index are differentiable, and hence more amenable to numerical optimization."
+    },
+    {
+      "source": "surrogate splits",
+      "target": "missing completely at random",
+      "type": "uses",
+      "quote": "Surrogate splits exploit correlations between predictors to try and alleviate the effect of missing data."
+    },
+    {
+      "source": "sensitivity in classification",
+      "target": "receiver operating characteristic curve",
+      "type": "uses",
+      "quote": "The receiver operating characteristic curve (ROC) is a commonly used summary for assessing the tradeoff between sensitivity and specificity. It is a plot of the sensitivity versus specificity"
+    },
+    {
+      "source": "specificity in classification",
+      "target": "receiver operating characteristic curve",
+      "type": "uses",
+      "quote": "The receiver operating characteristic curve (ROC) is a commonly used summary for assessing the tradeoff between sensitivity and specificity."
+    },
+    {
+      "source": "c-statistic",
+      "target": "receiver operating characteristic curve",
+      "type": "equivalent_to",
+      "quote": "The area under the ROC curve, used above, is sometimes called the c-statistic."
+    },
+    {
+      "source": "patient rule induction method",
+      "target": "bump hunting",
+      "type": "uses",
+      "quote": "The patient rule induction method (PRIM) also finds boxes in the feature space, but seeks boxes in which the response average is high. Hence it looks for maxima in the target function, an exercise known as bump hunting."
+    },
+    {
+      "source": "patient rule induction method",
+      "target": "regression trees",
+      "type": "contrasts_with",
+      "quote": "PRIM also differs from tree-based partitioning methods in that the box definitions are not described by a binary tree."
+    },
+    {
+      "source": "top-down peeling",
+      "target": "pasting",
+      "type": "prerequisite",
+      "quote": "After the top-down sequence is computed, PRIM reverses the process, expanding along any edge, if such an expansion increases the box mean. This is called pasting."
+    },
+    {
+      "source": "mars basis functions",
+      "target": "reflected pair",
+      "type": "uses",
+      "quote": "MARS uses expansions in piecewise linear basis functions of the form (x - t)+ and (t - x)+... We call the two functions a reflected pair"
+    },
+    {
+      "source": "mars",
+      "target": "regression trees",
+      "type": "contrasts_with",
+      "quote": "MARS forgoes the tree structure and gains the ability to capture additive effects."
+    },
+    {
+      "source": "mars",
+      "target": "forward stepwise regression",
+      "type": "generalizes",
+      "quote": "MARS is an adaptive procedure for regression, and is well suited for high-dimensional problems (i.e., a large number of inputs). It can be viewed as a generalization of stepwise linear regression"
+    },
+    {
+      "source": "generalized cross-validation for mars",
+      "target": "cross-validation",
+      "type": "special_case_of",
+      "quote": "One could use cross-validation to estimate the optimal value of λ, but for computational savings the MARS procedure instead uses generalized cross-validation."
+    },
+    {
+      "source": "hierarchical mixtures of experts",
+      "target": "regression trees",
+      "type": "contrasts_with",
+      "quote": "The hierarchical mixtures of experts (HME) procedure can be viewed as a variant of tree-based methods. The main difference is that the tree splits are not hard decisions but rather soft probabilistic ones."
+    },
+    {
+      "source": "hierarchical mixtures of experts",
+      "target": "em algorithm",
+      "type": "uses",
+      "quote": "To estimate the parameters, we maximize the log-likelihood of the data, Σi log Pr(yi|xi, Ψ), over the parameters in Ψ. The most convenient method for doing this is the EM algorithm"
+    },
+    {
+      "source": "gating networks in hme",
+      "target": "hierarchical mixtures of experts",
+      "type": "uses",
+      "quote": "The terminal nodes are called experts, and the non-terminal nodes are called gating networks."
+    },
+    {
+      "source": "missing at random",
+      "target": "missing completely at random",
+      "type": "generalizes",
+      "quote": "MCAR is a stronger assumption than MAR: most imputation methods rely on MCAR for their validity."
+    },
+    {
+      "source": "adaboost.m1",
+      "target": "weak classifier",
+      "type": "uses",
+      "quote": "A weak classifier is one whose error rate is only slightly better than random guessing. The purpose of boosting is to sequentially apply the weak classification algorithm"
+    },
+    {
+      "source": "adaboost.m1",
+      "target": "forward stagewise additive modeling",
+      "type": "equivalent_to",
+      "quote": "We now show that AdaBoost.M1 (Algorithm 10.1) is equivalent to forward stagewise additive modeling (Algorithm 10.2)"
+    },
+    {
+      "source": "adaboost.m1",
+      "target": "exponential loss for classification",
+      "type": "uses",
+      "quote": "AdaBoost.M1 (Algorithm 10.1) is equivalent to forward stagewise additive modeling (Algorithm 10.2) using the loss function L(y, G(x)) = exp(-y G(x))."
+    },
+    {
+      "source": "exponential loss for classification",
+      "target": "binomial deviance",
+      "type": "contrasts_with",
+      "quote": "Binomial deviance concentrates relatively less influence on such observations, more evenly spreading the influence among all of the data. It is therefore far more robust in noisy settings"
+    },
+    {
+      "source": "margin in classification",
+      "target": "exponential loss for classification",
+      "type": "uses",
+      "quote": "Both the exponential (10.8) and binomial deviance (10.18) yield the same solution when applied to the population joint distribution... Both criteria are monotone decreasing functions of the 'margin' yf(x)."
+    },
+    {
+      "source": "margin in classification",
+      "target": "binomial deviance",
+      "type": "uses",
+      "quote": "Both criteria are monotone decreasing functions of the 'margin' yf(x)."
+    },
+    {
+      "source": "binomial deviance",
+      "target": "multinomial deviance",
+      "type": "special_case_of",
+      "quote": "The binomial deviance extends naturally to the K-class multinomial deviance loss function"
+    },
+    {
+      "source": "huber loss",
+      "target": "squared error loss",
+      "type": "contrasts_with",
+      "quote": "Other more robust criteria, such as absolute loss, perform much better in these situations. In the statistical robustness literature, a variety of regression loss criteria have been proposed that provide strong resistance (if not absolute immunity) to gross outliers while being nearly as efficient as least squares for Gaussian errors."
+    },
+    {
+      "source": "huber loss",
+      "target": "absolute loss",
+      "type": "contrasts_with",
+      "quote": "They are often better than either for error distributions with moderately heavy tails. One such criterion is the Huber loss criterion"
+    },
+    {
+      "source": "gradient boosted models",
+      "target": "adaboost.m1",
+      "type": "generalizes",
+      "quote": "A gradient boosted model (GBM) is a generalization of tree boosting that attempts to mitigate these problems"
+    },
+    {
+      "source": "gradient boosted models",
+      "target": "regression trees",
+      "type": "uses",
+      "quote": "It is argued that decision trees are an ideal base learner for data mining applications of boosting"
+    },
+    {
+      "source": "partial dependence plot",
+      "target": "gradient boosted models",
+      "type": "uses",
+      "quote": "In Section 10.13 below we develop a relative importance measure for each predictor, as well as a partial dependence plot describing a predictor's contribution to the fitted model."
+    },
+    {
+      "source": "cost-complexity pruning",
+      "target": "cross-validation",
+      "type": "uses",
+      "quote": "Estimation of α is achieved by five- or tenfold cross-validation: we choose the value α̂ to minimize the cross-validated sum of squares."
+    },
+    {
+      "source": "patient rule induction method",
+      "target": "top-down peeling",
+      "type": "uses",
+      "quote": "The main box construction method in PRIM works from the top down"
+    },
+    {
+      "source": "regression trees",
+      "target": "greedy algorithm",
+      "type": "uses",
+      "quote": "Now finding the best binary partition in terms of minimum sum of squares is generally computationally infeasible. Hence we proceed with a greedy algorithm."
+    },
+    {
+      "source": "mars",
+      "target": "mars basis functions",
+      "type": "uses",
+      "quote": "MARS uses expansions in piecewise linear basis functions of the form (x - t)+ and (t - x)+"
+    },
+    {
+      "source": "adaboost.m1",
+      "target": "bagging",
+      "type": "contrasts_with",
+      "quote": "From this perspective boosting bears a resemblance to bagging and other committee-based approaches (Section 8.8). However we shall see that the connection is at best superficial and that boosting is fundamentally different."
+    }
+  ]
+}

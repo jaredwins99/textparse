@@ -1,0 +1,1123 @@
+{
+  "batch_id": 9,
+  "page_range": "431-477",
+  "sections": [
+    {
+      "number": "11.10",
+      "title": "Computational Considerations",
+      "page_start": 432
+    },
+    {
+      "number": "12.1",
+      "title": "Introduction",
+      "page_start": 435
+    },
+    {
+      "number": "12.2",
+      "title": "The Support Vector Classi\ufb01er",
+      "page_start": 435
+    },
+    {
+      "number": "12.2.1",
+      "title": "Computing the Support Vector Classi\ufb01er",
+      "page_start": 438
+    },
+    {
+      "number": "12.2.2",
+      "title": "Mixture Example (Continued)",
+      "page_start": 439
+    },
+    {
+      "number": "12.3",
+      "title": "Support Vector Machines and Kernels",
+      "page_start": 441
+    },
+    {
+      "number": "12.3.1",
+      "title": "Computing the SVM for Classi\ufb01cation",
+      "page_start": 441
+    },
+    {
+      "number": "12.3.2",
+      "title": "The SVM as a Penalization Method",
+      "page_start": 444
+    },
+    {
+      "number": "12.3.3",
+      "title": "Function Estimation and Reproducing Kernels",
+      "page_start": 446
+    },
+    {
+      "number": "12.3.4",
+      "title": "SVMs and the Curse of Dimensionality",
+      "page_start": 449
+    },
+    {
+      "number": "12.3.5",
+      "title": "A Path Algorithm for the SVM Classi\ufb01er",
+      "page_start": 450
+    },
+    {
+      "number": "12.3.6",
+      "title": "Support Vector Machines for Regression",
+      "page_start": 452
+    },
+    {
+      "number": "12.3.7",
+      "title": "Regression and Kernels",
+      "page_start": 454
+    },
+    {
+      "number": "12.3.8",
+      "title": "Discussion",
+      "page_start": 456
+    },
+    {
+      "number": "12.4",
+      "title": "Generalizing Linear Discriminant Analysis",
+      "page_start": 456
+    },
+    {
+      "number": "12.5",
+      "title": "Flexible Discriminant Analysis",
+      "page_start": 458
+    },
+    {
+      "number": "12.5.1",
+      "title": "Computing the FDA Estimates",
+      "page_start": 462
+    },
+    {
+      "number": "12.6",
+      "title": "Penalized Discriminant Analysis",
+      "page_start": 464
+    },
+    {
+      "number": "12.7",
+      "title": "Mixture Discriminant Analysis",
+      "page_start": 467
+    },
+    {
+      "number": "12.7.1",
+      "title": "Example: Waveform Data",
+      "page_start": 469
+    },
+    {
+      "number": "3",
+      "title": "Subclasses, Penalized 4 df",
+      "page_start": 472
+    },
+    {
+      "number": "13.1",
+      "title": "Introduction",
+      "page_start": 477
+    },
+    {
+      "number": "13.2",
+      "title": "Prototype Methods",
+      "page_start": 477
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": 31213,
+      "page": 431,
+      "text": "This analysis was carried out by Nicholas Johnson, and full details may\nbe found in Johnson (2008)3. The results are shown in Figure 11.12 and\nTable 11.3.\nThe \ufb01gure and table show Bayesian, boosted and bagged neural networks,\nboosted trees, and random forests, using both the screened and reduced\nfeatures sets. The error bars at the top of each plot indicate one standard\nerror of the di\ufb00erence between two error rates. Bayesian neural networks\nagain emerge as the winner, although for some datasets the di\ufb00erences\nbetween the test error rates is not statistically signi\ufb01cant. Random forests\nperforms the best among the competitors using the selected feature set,\nwhile the boosted neural networks perform best with the reduced feature\nset, and nearly match the Bayesian neural net.\nThe superiority of boosted neural networks over boosted trees suggest\nthat the neural network model is better suited to these particular prob-\nlems. Speci\ufb01cally, individual features might not be good predictors here"
+    },
+    {
+      "id": 31214,
+      "page": 431,
+      "text": "3We also thank Isabelle Guyon for help in preparing the results of this section."
+    },
+    {
+      "id": 31217,
+      "page": 432,
+      "text": "Screened Features\nARD Reduced Features\nMethod\nAverage\nAverage\nAverage\nAverage\nRank\nTime\nRank\nTime\nBayesian neural networks\n1.5\n384(138)\n1.6\n600(186)\nBoosted trees\n3.4\n3.03(2.5)\n4.0\n34.1(32.4)\nBoosted neural networks\n3.8\n9.4(8.6)\n2.2\n35.6(33.5)\nRandom forests\n2.7\n1.9(1.7)\n3.2\n11.2(9.3)\nBagged neural networks\n3.6\n3.5(1.1)\n4.0\n6.4(4.4)"
+    },
+    {
+      "id": 31218,
+      "page": 432,
+      "text": "and linear combinations of features work better. However the impressive\nperformance of random forests is at odds with this explanation, and came\nas a surprise to us.\nSince the reduced feature sets come from the Bayesian neural network\napproach, only the methods that use the screened features are legitimate,\nself-contained procedures. However, this does suggest that better methods\nfor internal feature selection might help the overall performance of boosted\nneural networks.\nThe table also shows the approximate training time required for each\nmethod. Here the non-Bayesian methods show a clear advantage.\nOverall, the superior performance of Bayesian neural networks here may\nbe due to the fact that"
+    },
+    {
+      "id": 31219,
+      "page": 432,
+      "text": "(a) the neural network model is well suited to these \ufb01ve problems, and"
+    },
+    {
+      "id": 31220,
+      "page": 432,
+      "text": "(b) the MCMC approach provides an e\ufb03cient way of exploring the im-\nportant part of the parameter space, and then averaging the resulting\nmodels according to their quality."
+    },
+    {
+      "id": 31221,
+      "page": 432,
+      "text": "The Bayesian approach works well for smoothly parametrized models like\nneural nets; it is not yet clear that it works as well for non-smooth models\nlike trees."
+    },
+    {
+      "id": 31223,
+      "page": 432,
+      "text": "With N observations, p predictors, M hidden units and L training epochs, a\nneural network \ufb01t typically requires O(NpML) operations. There are many\npackages available for \ufb01tting neural networks, probably many more than\nexist for mainstream statistical methods. Because the available software\nvaries widely in quality, and the learning problem for neural networks is\nsensitive to issues such as input scaling, such software should be carefully\nchosen and tested."
+    },
+    {
+      "id": 31226,
+      "page": 433,
+      "text": "Projection pursuit was proposed by Friedman and Tukey (1974), and spe-\ncialized to regression by Friedman and Stuetzle (1981). Huber (1985) gives\na scholarly overview, and Roosen and Hastie (1994) present a formulation\nusing smoothing splines. The motivation for neural networks dates back\nto McCulloch and Pitts (1943), Widrow and Ho\ufb00(1960) (reprinted in An-\nderson and Rosenfeld (1988)) and Rosenblatt (1962). Hebb (1949) heavily\nin\ufb02uenced the development of learning algorithms. The resurgence of neural\nnetworks in the mid 1980s was due to Werbos (1974), Parker (1985) and\nRumelhart et al. (1986), who proposed the back-propagation algorithm.\nToday there are many books written on the topic, for a broad range of\naudiences. For readers of this book, Hertz et al. (1991), Bishop (1995) and\nRipley (1996) may be the most informative. Bayesian learning for neural\nnetworks is described in Neal (1996). The ZIP code example was taken from\nLe Cun (1989); see also Le Cun et al. (1990) and Le Cun et al. (1998).\nWe do not discuss theoretical topics such as approximation properties of\nneural networks, such as the work of Barron (1993), Girosi et al. (1995)\nand Jones (1992). Some of these results are summarized by Ripley (1996)."
+    },
+    {
+      "id": 31233,
+      "page": 433,
+      "text": "(a) Write a program to \ufb01t a single hidden layer neural network (ten hidden\nunits) via back-propagation and weight decay."
+    },
+    {
+      "id": 31237,
+      "page": 434,
+      "text": "where \u03c3 is the sigmoid function, Z is standard normal, XT = (X1, X2),\neach Xj being independent standard normal, and a1 = (3, 3), a2 =\n(3, \u22123). Generate a test sample of size 1000, and plot the training and\ntest error curves as a function of the number of training epochs, for\ndi\ufb00erent values of the weight decay parameter. Discuss the over\ufb01tting\nbehavior in each case."
+    },
+    {
+      "id": 31238,
+      "page": 434,
+      "text": "(c) Vary the number of hidden units in the network, from 1 up to 10, and\ndetermine the minimum number needed to perform well for this task."
+    },
+    {
+      "id": 31241,
+      "page": 435,
+      "text": "This is page 417\nPrinter: Opaque this\n12\nSupport Vector Machines and\nFlexible Discriminants"
+    },
+    {
+      "id": 31243,
+      "page": 435,
+      "text": "In this chapter we describe generalizations of linear decision boundaries\nfor classi\ufb01cation. Optimal separating hyperplanes are introduced in Chap-\nter 4 for the case when two classes are linearly separable. Here we cover\nextensions to the nonseparable case, where the classes overlap. These tech-\nniques are then generalized to what is known as the support vector machine,\nwhich produces nonlinear boundaries by constructing a linear boundary in\na large, transformed version of the feature space. The second set of methods\ngeneralize Fisher\u2019s linear discriminant analysis (LDA). The generalizations\ninclude \ufb02exible discriminant analysis which facilitates construction of non-\nlinear boundaries in a manner very similar to the support vector machines,\npenalized discriminant analysis for problems such as signal and image clas-\nsi\ufb01cation where the large number of features are highly correlated, and\nmixture discriminant analysis for irregularly shaped classes."
+    },
+    {
+      "id": 31245,
+      "page": 435,
+      "text": "In Chapter 4 we discussed a technique for constructing an optimal separat-\ning hyperplane between two perfectly separated classes. We review this and\ngeneralize to the nonseparable case, where the classes may not be separable\nby a linear boundary."
+    },
+    {
+      "id": 31289,
+      "page": 436,
+      "text": "Our training data consists of N pairs (x1, y1), (x2, y2), . . . , (xN, yN), with\nxi \u2208IRp and yi \u2208{\u22121, 1}. De\ufb01ne a hyperplane by"
+    },
+    {
+      "id": 31291,
+      "page": 436,
+      "text": "where \u03b2 is a unit vector: \u2225\u03b2\u2225= 1. A classi\ufb01cation rule induced by f(x) is"
+    },
+    {
+      "id": 31293,
+      "page": 436,
+      "text": "The geometry of hyperplanes is reviewed in Section 4.5, where we show that\nf(x) in (12.1) gives the signed distance from a point x to the hyperplane\nf(x) = xT \u03b2+\u03b20 = 0. Since the classes are separable, we can \ufb01nd a function\nf(x) = xT \u03b2 + \u03b20 with yif(xi) > 0 \u2200i. Hence we are able to \ufb01nd the\nhyperplane that creates the biggest margin between the training points for\nclass 1 and \u22121 (see Figure 12.1). The optimization problem"
+    },
+    {
+      "id": 31295,
+      "page": 436,
+      "text": "subject to yi(xT\ni \u03b2 + \u03b20) \u2265M, i = 1, . . . , N,\n(12.3)"
+    },
+    {
+      "id": 31296,
+      "page": 436,
+      "text": "captures this concept. The band in the \ufb01gure is M units away from the\nhyperplane on either side, and hence 2M units wide. It is called the margin.\nWe showed that this problem can be more conveniently rephrased as"
+    },
+    {
+      "id": 31298,
+      "page": 436,
+      "text": "subject to yi(xT\ni \u03b2 + \u03b20) \u22651, i = 1, . . . , N,\n(12.4)"
+    },
+    {
+      "id": 31300,
+      "page": 437,
+      "text": "where we have dropped the norm constraint on \u03b2. Note that M = 1/\u2225\u03b2\u2225.\nExpression (12.4) is the usual way of writing the support vector criterion\nfor separated data. This is a convex optimization problem (quadratic cri-\nterion, linear inequality constraints), and the solution is characterized in\nSection 4.5.2.\nSuppose now that the classes overlap in feature space. One way to deal\nwith the overlap is to still maximize M, but allow for some points to be on\nthe wrong side of the margin. De\ufb01ne the slack variables \u03be = (\u03be1, \u03be2, . . . , \u03beN).\nThere are two natural ways to modify the constraint in (12.3):"
+    },
+    {
+      "id": 31303,
+      "page": 437,
+      "text": "\u2200i, \u03bei \u22650, \tN\ni=1 \u03bei \u2264constant. The two choices lead to di\ufb00erent solutions.\nThe \ufb01rst choice seems more natural, since it measures overlap in actual\ndistance from the margin; the second choice measures the overlap in relative\ndistance, which changes with the width of the margin M. However, the \ufb01rst\nchoice results in a nonconvex optimization problem, while the second is\nconvex; thus (12.6) leads to the \u201cstandard\u201d support vector classi\ufb01er, which\nwe use from here on.\nHere is the idea of the formulation. The value \u03bei in the constraint yi(xT\ni \u03b2+\n\u03b20) \u2265M(1 \u2212\u03bei) is the proportional amount by which the prediction\nf(xi) = xT\ni \u03b2+\u03b20 is on the wrong side of its margin. Hence by bounding the\nsum \t \u03bei, we bound the total proportional amount by which predictions\nfall on the wrong side of their margin. Misclassi\ufb01cations occur when \u03bei > 1,\nso bounding \t \u03bei at a value K say, bounds the total number of training\nmisclassi\ufb01cations at K.\nAs in (4.48) in Section 4.5.2, we can drop the norm constraint on \u03b2,\nde\ufb01ne M = 1/\u2225\u03b2\u2225, and write (12.4) in the equivalent form"
+    },
+    {
+      "id": 31305,
+      "page": 437,
+      "text": "\u0003\nyi(xT\ni \u03b2 + \u03b20) \u22651 \u2212\u03bei \u2200i,\n\u03bei \u22650, \t \u03bei \u2264constant.\n(12.7)"
+    },
+    {
+      "id": 31306,
+      "page": 437,
+      "text": "This is the usual way the support vector classi\ufb01er is de\ufb01ned for the non-\nseparable case. However we \ufb01nd confusing the presence of the \ufb01xed scale\n\u201c1\u201d in the constraint yi(xT\ni \u03b2 +\u03b20) \u22651\u2212\u03bei, and prefer to start with (12.6).\nThe right panel of Figure 12.1 illustrates this overlapping case.\nBy the nature of the criterion (12.7), we see that points well inside their\nclass boundary do not play a big role in shaping the boundary. This seems\nlike an attractive property, and one that di\ufb00erentiates it from linear dis-\ncriminant analysis (Section 4.3). In LDA, the decision boundary is deter-\nmined by the covariance of the class distributions and the positions of the\nclass centroids. We will see in Section 12.3.3 that logistic regression is more\nsimilar to the support vector classi\ufb01er in this regard."
+    },
+    {
+      "id": 31309,
+      "page": 438,
+      "text": "The problem (12.7) is quadratic with linear inequality constraints, hence it\nis a convex optimization problem. We describe a quadratic programming\nsolution using Lagrange multipliers. Computationally it is convenient to\nre-express (12.7) in the equivalent form"
+    },
+    {
+      "id": 31315,
+      "page": 438,
+      "text": "where the \u201ccost\u201d parameter C replaces the constant in (12.7); the separable\ncase corresponds to C = \u221e.\nThe Lagrange (primal) function is"
+    },
+    {
+      "id": 31324,
+      "page": 438,
+      "text": "which we minimize w.r.t \u03b2, \u03b20 and \u03bei. Setting the respective derivatives to\nzero, we get"
+    },
+    {
+      "id": 31332,
+      "page": 438,
+      "text": "as well as the positivity constraints \u03b1i, \u03bci, \u03bei \u22650 \u2200i. By substituting\n(12.10)\u2013(12.12) into (12.9), we obtain the Lagrangian (Wolfe) dual objec-\ntive function"
+    },
+    {
+      "id": 31341,
+      "page": 438,
+      "text": "which gives a lower bound on the objective function (12.8) for any feasible\npoint. We maximize LD subject to 0 \u2264\u03b1i \u2264C and \tN\ni=1 \u03b1iyi = 0. In\naddition to (12.10)\u2013(12.12), the Karush\u2013Kuhn\u2013Tucker conditions include\nthe constraints"
+    },
+    {
+      "id": 31344,
+      "page": 438,
+      "text": "for i = 1, . . . , N. Together these equations (12.10)\u2013(12.16) uniquely char-\nacterize the solution to the primal and dual problem."
+    },
+    {
+      "id": 31346,
+      "page": 439,
+      "text": "From (12.10) we see that the solution for \u03b2 has the form"
+    },
+    {
+      "id": 31350,
+      "page": 439,
+      "text": "with nonzero coe\ufb03cients \u02c6\u03b1i only for those observations i for which the\nconstraints in (12.16) are exactly met (due to (12.14)). These observations\nare called the support vectors, since \u02c6\u03b2 is represented in terms of them\nalone. Among these support points, some will lie on the edge of the margin\n(\u02c6\u03bei = 0), and hence from (12.15) and (12.12) will be characterized by\n0 < \u02c6\u03b1i < C; the remainder (\u02c6\u03bei > 0) have \u02c6\u03b1i = C. From (12.14) we can\nsee that any of these margin points (0 < \u02c6\u03b1i, \u02c6\u03bei = 0) can be used to solve\nfor \u03b20, and we typically use an average of all the solutions for numerical\nstability.\nMaximizing the dual (12.13) is a simpler convex quadratic programming\nproblem than the primal (12.9), and can be solved with standard techniques\n(Murray et al., 1981, for example).\nGiven the solutions \u02c6\u03b20 and \u02c6\u03b2, the decision function can be written as"
+    },
+    {
+      "id": 31353,
+      "page": 439,
+      "text": "The tuning parameter of this procedure is the cost parameter C."
+    },
+    {
+      "id": 31357,
+      "page": 440,
+      "text": ".. . . .\n. . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."
+    },
+    {
+      "id": 31358,
+      "page": 440,
+      "text": ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . .\n. . . . .."
+    },
+    {
+      "id": 31522,
+      "page": 440,
+      "text": "Training Error: 0.270\nTest Error:       0.288\nBayes Error:    0.210"
+    },
+    {
+      "id": 31524,
+      "page": 440,
+      "text": ".. .\n. . . .\n. . . . .\n. . . . . . .\n. . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."
+    },
+    {
+      "id": 31525,
+      "page": 440,
+      "text": ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . .\n. . . . . . .\n. . . . .\n. . . .\n. .."
+    },
+    {
+      "id": 31688,
+      "page": 440,
+      "text": "Training Error: 0.26\nTest Error:       0.30\nBayes Error:    0.21"
+    },
+    {
+      "id": 31693,
+      "page": 441,
+      "text": "The support vector classi\ufb01er described so far \ufb01nds linear boundaries in the\ninput feature space. As with other linear methods, we can make the pro-\ncedure more \ufb02exible by enlarging the feature space using basis expansions\nsuch as polynomials or splines (Chapter 5). Generally linear boundaries\nin the enlarged space achieve better training-class separation, and trans-\nlate to nonlinear boundaries in the original space. Once the basis functions\nhm(x), m = 1, . . . , M are selected, the procedure is the same as before. We\n\ufb01t the SV classi\ufb01er using input features h(xi) = (h1(xi), h2(xi), . . . , hM(xi)),\ni = 1, . . . , N, and produce the (nonlinear) function \u02c6f(x) = h(x)T \u02c6\u03b2 + \u02c6\u03b20.\nThe classi\ufb01er is \u02c6G(x) = sign( \u02c6f(x)) as before.\nThe support vector machine classi\ufb01er is an extension of this idea, where\nthe dimension of the enlarged space is allowed to get very large, in\ufb01nite\nin some cases. It might seem that the computations would become pro-\nhibitive. It would also seem that with su\ufb03cient basis functions, the data\nwould be separable, and over\ufb01tting would occur. We \ufb01rst show how the\nSVM technology deals with these issues. We then see that in fact the SVM\nclassi\ufb01er is solving a function-\ufb01tting problem using a particular criterion\nand form of regularization, and is part of a much bigger class of problems\nthat includes the smoothing splines of Chapter 5. The reader may wish\nto consult Section 5.8, which provides background material and overlaps\nsomewhat with the next two sections."
+    },
+    {
+      "id": 31695,
+      "page": 441,
+      "text": "We can represent the optimization problem (12.9) and its solution in a\nspecial way that only involves the input features via inner products. We do\nthis directly for the transformed feature vectors h(xi). We then see that for\nparticular choices of h, these inner products can be computed very cheaply.\nThe Lagrange dual function (12.13) has the form"
+    },
+    {
+      "id": 31704,
+      "page": 441,
+      "text": "From (12.10) we see that the solution function f(x) can be written"
+    },
+    {
+      "id": 31709,
+      "page": 441,
+      "text": "As before, given \u03b1i, \u03b20 can be determined by solving yif(xi) = 1 in (12.20)\nfor any (or all) xi for which 0 < \u03b1i < C."
+    },
+    {
+      "id": 31711,
+      "page": 442,
+      "text": "So both (12.19) and (12.20) involve h(x) only through inner products. In\nfact, we need not specify the transformation h(x) at all, but require only\nknowledge of the kernel function"
+    },
+    {
+      "id": 31713,
+      "page": 442,
+      "text": "that computes inner products in the transformed space. K should be a\nsymmetric positive (semi-) de\ufb01nite function; see Section 5.8.1.\nThree popular choices for K in the SVM literature are"
+    },
+    {
+      "id": 31715,
+      "page": 442,
+      "text": "Radial basis: K(x, x\u2032) = exp(\u2212\u03b3\u2225x \u2212x\u2032\u22252),\nNeural network: K(x, x\u2032) = tanh(\u03ba1\u27e8x, x\u2032\u27e9+ \u03ba2)."
+    },
+    {
+      "id": 31717,
+      "page": 442,
+      "text": "Consider for example a feature space with two inputs X1 and X2, and a\npolynomial kernel of degree 2. Then"
+    },
+    {
+      "id": 31724,
+      "page": 442,
+      "text": "2X1X2, then K(X, X\u2032) =\n\u27e8h(X), h(X\u2032)\u27e9. From (12.20) we see that the solution can be written"
+    },
+    {
+      "id": 31728,
+      "page": 442,
+      "text": "The role of the parameter C is clearer in an enlarged feature space,\nsince perfect separation is often achievable there. A large value of C will\ndiscourage any positive \u03bei, and lead to an over\ufb01t wiggly boundary in the\noriginal feature space; a small value of C will encourage a small value of\n\u2225\u03b2\u2225, which in turn causes f(x) and hence the boundary to be smoother.\nFigure 12.3 show two nonlinear support vector machines applied to the\nmixture example of Chapter 2. The regularization parameter was chosen\nin both cases to achieve good test error. The radial basis kernel produces\na boundary quite similar to the Bayes optimal boundary for this example;\ncompare Figure 2.5.\nIn the early literature on support vectors, there were claims that the\nkernel property of the support vector machine is unique to it and allows\none to \ufb01nesse the curse of dimensionality. Neither of these claims is true,\nand we go into both of these issues in the next three subsections."
+    },
+    {
+      "id": 31731,
+      "page": 443,
+      "text": ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . .\n.\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n.\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n.\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."
+    },
+    {
+      "id": 31732,
+      "page": 443,
+      "text": ". . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . .\n. . . . . . .\n. . . . ."
+    },
+    {
+      "id": 31902,
+      "page": 443,
+      "text": "Training Error: 0.180\nTest Error:       0.245\nBayes Error:    0.210"
+    },
+    {
+      "id": 31904,
+      "page": 443,
+      "text": ". . . . . . .\n. . . . . . .\n. . . . . .\n. . . . . .\n. . . . .\n. . . . .\n. . . .\n. . . .\n. . . .\n. . . .\n. . .\n. . .\n. . .\n. . .\n. . .\n. . .\n. . .\n. . .\n. . .\n. . .\n. . .\n. . . .\n. . . .\n. . . .\n. . . .\n. . . . .\n. . . . .\n. . . . . .\n. . . . . .\n. . . . . . .\n. . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . ."
+    },
+    {
+      "id": 31905,
+      "page": 443,
+      "text": ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. .\n. . . . . . . . . . . . .\n. . . . . . . . . . .\n.\n. . . . . . . . . . . .\n. . . . . . . . . . .\n.\n. . . . . . . . . .\n. . . . . . . . . . . .\n.\n. . . . . . . . . .\n. . . . . . . . . . . .\n.\n. . . . . . . .\n. . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . ."
+    },
+    {
+      "id": 32090,
+      "page": 443,
+      "text": "Training Error: 0.160\nTest Error:       0.218\nBayes Error:    0.210"
+    },
+    {
+      "id": 32095,
+      "page": 444,
+      "text": "Hinge Loss\nBinomial Deviance\nSquared Error\nClass Huber"
+    },
+    {
+      "id": 32100,
+      "page": 444,
+      "text": "With f(x) = h(x)T \u03b2 + \u03b20, consider the optimization problem"
+    },
+    {
+      "id": 32105,
+      "page": 444,
+      "text": "where the subscript \u201c+\u201d indicates positive part. This has the form loss +\npenalty, which is a familiar paradigm in function estimation. It is easy to\nshow (Exercise 12.1) that the solution to (12.25), with \u03bb = 1/C, is the\nsame as that for (12.8).\nExamination of the \u201chinge\u201d loss function L(y, f) = [1 \u2212yf]+ shows that\nit is reasonable for two-class classi\ufb01cation, when compared to other more\ntraditional loss functions. Figure 12.4 compares it to the log-likelihood loss\nfor logistic regression, as well as squared-error loss and a variant thereof.\nThe (negative) log-likelihood or binomial deviance has similar tails as the\nSVM loss, giving zero penalty to points well inside their margin, and a"
+    },
+    {
+      "id": 32109,
+      "page": 445,
+      "text": "Binomial\nDeviance\nlog[1 + e\u2212yf(x)]\nf(x) = log Pr(Y = +1|x)"
+    },
+    {
+      "id": 32120,
+      "page": 445,
+      "text": "linear penalty to points on the wrong side and far away. Squared-error, on\nthe other hand gives a quadratic penalty, and points well inside their own\nmargin have a strong in\ufb02uence on the model as well. The squared hinge\nloss L(y, f) = [1 \u2212yf]2\n+ is like the quadratic, except it is zero for points\ninside their margin. It still rises quadratically in the left tail, and will be\nless robust than hinge or deviance to misclassi\ufb01ed observations. Recently\nRosset and Zhu (2007) proposed a \u201cHuberized\u201d version of the squared hinge\nloss, which converts smoothly to a linear loss at yf = \u22121.\nWe can characterize these loss functions in terms of what they are es-\ntimating at the population level. We consider minimizing EL(Y, f(X)).\nTable 12.1 summarizes the results. Whereas the hinge loss estimates the\nclassi\ufb01er G(x) itself, all the others estimate a transformation of the class\nposterior probabilities. The \u201cHuberized\u201d square hinge loss shares attractive\nproperties of logistic regression (smooth loss function, estimates probabili-\nties), as well as the SVM hinge loss (support points).\nFormulation (12.25) casts the SVM as a regularized function estimation\nproblem, where the coe\ufb03cients of the linear expansion f(x) = \u03b20 + h(x)T \u03b2\nare shrunk toward zero (excluding the constant). If h(x) represents a hierar-\nchical basis having some ordered structure (such as ordered in roughness),"
+    },
+    {
+      "id": 32122,
+      "page": 446,
+      "text": "then the uniform shrinkage makes more sense if the rougher elements hj in\nthe vector h have smaller norm.\nAll the loss-function in Table 12.1 except squared-error are so called\n\u201cmargin maximizing loss-functions\u201d (Rosset et al., 2004b). This means that\nif the data are separable, then the limit of \u02c6\u03b2\u03bb in (12.25) as \u03bb \u21920 de\ufb01nes\nthe optimal separating hyperplane1."
+    },
+    {
+      "id": 32124,
+      "page": 446,
+      "text": "Here we describe SVMs in terms of function estimation in reproducing\nkernel Hilbert spaces, where the kernel property abounds. This material is\ndiscussed in some detail in Section 5.8. This provides another view of the\nsupport vector classi\ufb01er, and helps to clarify how it works.\nSuppose the basis h arises from the (possibly \ufb01nite) eigen-expansion of\na positive de\ufb01nite kernel K,"
+    },
+    {
+      "id": 32128,
+      "page": 446,
+      "text": "and hm(x) = \u221a\u03b4m\u03c6m(x). Then with \u03b8m = \u221a\u03b4m\u03b2m, we can write (12.25)\nas"
+    },
+    {
+      "id": 32142,
+      "page": 446,
+      "text": "Now (12.27) is identical in form to (5.49) on page 169 in Section 5.8, and\nthe theory of reproducing kernel Hilbert spaces described there guarantees\na \ufb01nite-dimensional solution of the form"
+    },
+    {
+      "id": 32146,
+      "page": 446,
+      "text": "In particular we see there an equivalent version of the optimization crite-\nrion (12.19) [Equation (5.67) in Section 5.8.2; see also Wahba et al. (2000)],"
+    },
+    {
+      "id": 32151,
+      "page": 446,
+      "text": "where K is the N \u00d7 N matrix of kernel evaluations for all pairs of training\nfeatures (Exercise 12.2).\nThese models are quite general, and include, for example, the entire fam-\nily of smoothing splines, additive and interaction spline models discussed"
+    },
+    {
+      "id": 32152,
+      "page": 446,
+      "text": "1For logistic regression with separable data, \u02c6\u03b2\u03bb diverges, but \u02c6\u03b2\u03bb/||\u02c6\u03b2\u03bb converges to\nthe optimal separating direction."
+    },
+    {
+      "id": 32154,
+      "page": 447,
+      "text": "in Chapters 5 and 9, and in more detail in Wahba (1990) and Hastie and\nTibshirani (1990). They can be expressed more generally as"
+    },
+    {
+      "id": 32158,
+      "page": 447,
+      "text": "where H is the structured space of functions, and J(f) an appropriate reg-\nularizer on that space. For example, suppose H is the space of additive\nfunctions f(x) = \tp\nj=1 fj(xj), and J(f) = \t\nj\n#\n{f \u2032\u2032\nj(xj)}2dxj. Then the\nsolution to (12.30) is an additive cubic spline, and has a kernel representa-\ntion (12.28) with K(x, x\u2032) = \tp\nj=1 Kj(xj, x\u2032\nj). Each of the Kj is the kernel\nappropriate for the univariate smoothing spline in xj (Wahba, 1990).\nConversely this discussion also shows that, for example, any of the kernels\ndescribed in (12.22) above can be used with any convex loss function, and\nwill also lead to a \ufb01nite-dimensional representation of the form (12.28).\nFigure 12.5 uses the same kernel functions as in Figure 12.3, except using\nthe binomial log-likelihood as a loss function2. The \ufb01tted function is hence\nan estimate of the log-odds,"
+    },
+    {
+      "id": 32163,
+      "page": 447,
+      "text": "or conversely we get an estimate of the class probabilities"
+    },
+    {
+      "id": 32166,
+      "page": 447,
+      "text": "The \ufb01tted models are quite similar in shape and performance. Examples\nand more details are given in Section 5.8.\nIt does happen that for SVMs, a sizable fraction of the N values of \u03b1i\ncan be zero (the nonsupport points). In the two examples in Figure 12.3,\nthese fractions are 42% and 45%, respectively. This is a consequence of the\npiecewise linear nature of the \ufb01rst part of the criterion (12.25). The lower\nthe class overlap (on the training data), the greater this fraction will be.\nReducing \u03bb will generally reduce the overlap (allowing a more \ufb02exible f).\nA small number of support points means that \u02c6f(x) can be evaluated more\nquickly, which is important at lookup time. Of course, reducing the overlap\ntoo much can lead to poor generalization."
+    },
+    {
+      "id": 32167,
+      "page": 447,
+      "text": "2Ji Zhu assisted in the preparation of these examples."
+    },
+    {
+      "id": 32170,
+      "page": 448,
+      "text": ". . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n.\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n.\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n.\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n.\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."
+    },
+    {
+      "id": 32171,
+      "page": 448,
+      "text": ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . .\n. . . . . . .\n. . ."
+    },
+    {
+      "id": 32333,
+      "page": 448,
+      "text": "Training Error: 0.190\nTest Error:       0.263\nBayes Error:    0.210"
+    },
+    {
+      "id": 32335,
+      "page": 448,
+      "text": ".\n. . . .\n. . . . .\n. . . . . .\n. . . . . . .\n. . . . . . . .\n. . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. .\n. . . . . . . . . . . . .\n. . . . . .\n.\n. . . . . . . . . . . . . .\n. . . . . . .\n. .\n. . . . . . . . . . . . . . .\n. . . . . . . .\n. . .\n. . . . . . . . . . . . . . .\n. . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."
+    },
+    {
+      "id": 32336,
+      "page": 448,
+      "text": ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n.\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . .\n. . . . . . . . . . .\n. . . . . . . . . . . . .\n. .\n. . . . . . . . . .\n. . . . . . . . . . . .\n. .\n. . . . . . . .\n. . . . . . . . . . . .\n. .\n. . . . . .\n. . . . . . . . . . . .\n.\n. . .\n. . . . . . . . . . . .\n.\n. . . . . . . . . . . . .\n.\n. . . . . . . . . . . . .\n.\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n.\n. . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . . . ."
+    },
+    {
+      "id": 32498,
+      "page": 448,
+      "text": "Training Error: 0.150\nTest Error:       0.221\nBayes Error:    0.210"
+    },
+    {
+      "id": 32502,
+      "page": 449,
+      "text": "Test Error (SE)\nMethod\nNo Noise Features\nSix Noise Features\n1\nSV Classi\ufb01er\n0.450 (0.003)\n0.472 (0.003)\n2\nSVM/poly 2\n0.078 (0.003)\n0.152 (0.004)\n3\nSVM/poly 5\n0.180 (0.004)\n0.370 (0.004)\n4\nSVM/poly 10\n0.230 (0.003)\n0.434 (0.002)\n5\nBRUTO\n0.084 (0.003)\n0.090 (0.003)\n6\nMARS\n0.156 (0.004)\n0.173 (0.005)\nBayes\n0.029\n0.029"
+    },
+    {
+      "id": 32504,
+      "page": 449,
+      "text": "In this section, we address the question of whether SVMs have some edge\non the curse of dimensionality. Notice that in expression (12.23) we are not\nallowed a fully general inner product in the space of powers and products.\nFor example, all terms of the form 2XjX\u2032\nj are given equal weight, and the\nkernel cannot adapt itself to concentrate on subspaces. If the number of\nfeatures p were large, but the class separation occurred only in the linear\nsubspace spanned by say X1 and X2, this kernel would not easily \ufb01nd the\nstructure and would su\ufb00er from having many dimensions to search over.\nOne would have to build knowledge about the subspace into the kernel;\nthat is, tell it to ignore all but the \ufb01rst two inputs. If such knowledge were\navailable a priori, much of statistical learning would be made much easier.\nA major goal of adaptive methods is to discover such structure.\nWe support these statements with an illustrative example. We generated\n100 observations in each of two classes. The \ufb01rst class has four standard\nnormal independent features X1, X2, X3, X4. The second class also has four\nstandard normal independent features, but conditioned on 9 \u2264\t X2\nj \u226416.\nThis is a relatively easy problem. As a second harder problem, we aug-\nmented the features with an additional six standard Gaussian noise fea-\ntures. Hence the second class almost completely surrounds the \ufb01rst, like the\nskin surrounding the orange, in a four-dimensional subspace. The Bayes er-\nror rate for this problem is 0.029 (irrespective of dimension). We generated\n1000 test observations to compare di\ufb00erent procedures. The average test\nerrors over 50 simulations, with and without noise features, are shown in\nTable 12.2.\nLine 1 uses the support vector classi\ufb01er in the original feature space.\nLines 2\u20134 refer to the support vector machine with a 2-, 5- and 10-dimension-\nal polynomial kernel. For all support vector procedures, we chose the cost\nparameter C to minimize the test error, to be as fair as possible to the"
+    },
+    {
+      "id": 32514,
+      "page": 450,
+      "text": "method. Line 5 \ufb01ts an additive spline model to the (\u22121, +1) response by\nleast squares, using the BRUTO algorithm for additive models, described\nin Hastie and Tibshirani (1990). Line 6 uses MARS (multivariate adaptive\nregression splines) allowing interaction of all orders, as described in Chap-\nter 9; as such it is comparable with the SVM/poly 10. Both BRUTO and\nMARS have the ability to ignore redundant variables. Test error was not\nused to choose the smoothing parameters in either of lines 5 or 6.\nIn the original feature space, a hyperplane cannot separate the classes,\nand the support vector classi\ufb01er (line 1) does poorly. The polynomial sup-\nport vector machine makes a substantial improvement in test error rate,\nbut is adversely a\ufb00ected by the six noise features. It is also very sensitive to\nthe choice of kernel: the second degree polynomial kernel (line 2) does best,\nsince the true decision boundary is a second-degree polynomial. However,\nhigher-degree polynomial kernels (lines 3 and 4) do much worse. BRUTO\nperforms well, since the boundary is additive. BRUTO and MARS adapt\nwell: their performance does not deteriorate much in the presence of noise."
+    },
+    {
+      "id": 32516,
+      "page": 450,
+      "text": "The regularization parameter for the SVM classi\ufb01er is the cost parameter\nC, or its inverse \u03bb in (12.25). Common usage is to set C high, leading often\nto somewhat over\ufb01t classi\ufb01ers.\nFigure 12.6 shows the test error on the mixture data as a function of\nC, using di\ufb00erent radial-kernel parameters \u03b3. When \u03b3 = 5 (narrow peaked\nkernels), the heaviest regularization (small C) is called for. With \u03b3 = 1"
+    },
+    {
+      "id": 32552,
+      "page": 451,
+      "text": "(the value used in Figure 12.3), an intermediate value of C is required.\nClearly in situations such as these, we need to determine a good choice\nfor C, perhaps by cross-validation. Here we describe a path algorithm (in\nthe spirit of Section 3.8) for e\ufb03ciently \ufb01tting the entire sequence of SVM\nmodels obtained by varying C.\nIt is convenient to use the loss+penalty formulation (12.25), along with\nFigure 12.4. This leads to a solution for \u03b2 at a given value of \u03bb:"
+    },
+    {
+      "id": 32557,
+      "page": 451,
+      "text": "The \u03b1i are again Lagrange multipliers, but in this case they all lie in [0, 1].\nFigure 12.7 illustrates the setup. It can be shown that the KKT optimal-\nity conditions imply that the labeled points (xi, yi) fall into three distinct\ngroups:"
+    },
+    {
+      "id": 32559,
+      "page": 452,
+      "text": "\u2022 Observations correctly classi\ufb01ed and outside their margins. They have\nyif(xi) > 1, and Lagrange multipliers \u03b1i = 0. Examples are the\norange points 8, 9 and 11, and the blue points 1 and 4."
+    },
+    {
+      "id": 32560,
+      "page": 452,
+      "text": "\u2022 Observations sitting on their margins with yif(xi) = 1, with Lagrange\nmultipliers \u03b1i \u2208[0, 1]. Examples are the orange 7 and the blue 2 and\n8."
+    },
+    {
+      "id": 32561,
+      "page": 452,
+      "text": "\u2022 Observations inside their margins have yif(xi) < 1, with \u03b1i = 1.\nExamples are the blue 3 and 5, and the orange 10 and 12."
+    },
+    {
+      "id": 32562,
+      "page": 452,
+      "text": "The idea for the path algorithm is as follows. Initially \u03bb is large, the\nmargin 1/||\u03b2\u03bb|| is wide, and all points are inside their margin and have\n\u03b1i = 1. As \u03bb decreases, 1/||\u03b2\u03bb|| decreases, and the margin gets narrower.\nSome points will move from inside their margins to outside their margins,\nand their \u03b1i will change from 1 to 0. By continuity of the \u03b1i(\u03bb), these points\nwill linger on the margin during this transition. From (12.33) we see that\nthe points with \u03b1i = 1 make \ufb01xed contributions to \u03b2(\u03bb), and those with\n\u03b1i = 0 make no contribution. So all that changes as \u03bb decreases are the\n\u03b1i \u2208[0, 1] of those (small number) of points on the margin. Since all these\npoints have yif(xi) = 1, this results in a small set of linear equations that\nprescribe how \u03b1i(\u03bb) and hence \u03b2\u03bb changes during these transitions. This\nresults in piecewise linear paths for each of the \u03b1i(\u03bb). The breaks occur\nwhen points cross the margin. Figure 12.7 (right panel) shows the \u03b1i(\u03bb)\npro\ufb01les for the small example in the left panel.\nAlthough we have described this for linear SVMs, exactly the same idea\nworks for nonlinear models, in which (12.33) is replaced by"
+    },
+    {
+      "id": 32567,
+      "page": 452,
+      "text": "Details can be found in Hastie et al. (2004). An R package svmpath is\navailable on CRAN for \ufb01tting these models."
+    },
+    {
+      "id": 32569,
+      "page": 452,
+      "text": "In this section we show how SVMs can be adapted for regression with a\nquantitative response, in ways that inherit some of the properties of the\nSVM classi\ufb01er. We \ufb01rst discuss the linear regression model"
+    },
+    {
+      "id": 32571,
+      "page": 452,
+      "text": "and then handle nonlinear generalizations. To estimate \u03b2, we consider min-\nimization of"
+    },
+    {
+      "id": 32589,
+      "page": 453,
+      "text": "This is an \u201c\u03f5-insensitive\u201d error measure, ignoring errors of size less than\n\u03f5 (left panel of Figure 12.8). There is a rough analogy with the support\nvector classi\ufb01cation setup, where points on the correct side of the deci-\nsion boundary and far away from it, are ignored in the optimization. In\nregression, these \u201clow error\u201d points are the ones with small residuals.\nIt is interesting to contrast this with error measures used in robust re-\ngression in statistics. The most popular, due to Huber (1964), has the form"
+    },
+    {
+      "id": 32592,
+      "page": 453,
+      "text": "shown in the right panel of Figure 12.8. This function reduces from quadratic\nto linear the contributions of observations with absolute residual greater\nthan a prechosen constant c. This makes the \ufb01tting less sensitive to out-\nliers. The support vector error measure (12.37) also has linear tails (beyond\n\u03f5), but in addition it \ufb02attens the contributions of those cases with small\nresiduals.\nIf \u02c6\u03b2, \u02c6\u03b20 are the minimizers of H, the solution function can be shown to\nhave the form"
+    },
+    {
+      "id": 32600,
+      "page": 454,
+      "text": "where \u02c6\u03b1i, \u02c6\u03b1\u2217\ni are positive and solve the quadratic programming problem"
+    },
+    {
+      "id": 32614,
+      "page": 454,
+      "text": "Due to the nature of these constraints, typically only a subset of the solution\nvalues (\u02c6\u03b1\u2217\ni \u2212\u02c6\u03b1i) are nonzero, and the associated data values are called the\nsupport vectors. As was the case in the classi\ufb01cation setting, the solution\ndepends on the input values only through the inner products \u27e8xi, xi\u2032\u27e9. Thus\nwe can generalize the methods to richer spaces by de\ufb01ning an appropriate\ninner product, for example, one of those de\ufb01ned in (12.22).\nNote that there are parameters, \u03f5 and \u03bb, associated with the criterion\n(12.36). These seem to play di\ufb00erent roles. \u03f5 is a parameter of the loss\nfunction V\u03f5, just like c is for VH. Note that both V\u03f5 and VH depend on the\nscale of y and hence r. If we scale our response (and hence use VH(r/\u03c3) and\nV\u03f5(r/\u03c3) instead), then we might consider using preset values for c and \u03f5 (the\nvalue c = 1.345 achieves 95% e\ufb03ciency for the Gaussian). The quantity \u03bb\nis a more traditional regularization parameter, and can be estimated for\nexample by cross-validation."
+    },
+    {
+      "id": 32616,
+      "page": 454,
+      "text": "As discussed in Section 12.3.3, this kernel property is not unique to sup-\nport vector machines. Suppose we consider approximation of the regression\nfunction in terms of a set of basis functions {hm(x)}, m = 1, 2, . . . , M:"
+    },
+    {
+      "id": 32626,
+      "page": 454,
+      "text": "for some general error measure V (r). For any choice of V (r), the solution\n\u02c6f(x) = \t \u02c6\u03b2mhm(x) + \u02c6\u03b20 has the form"
+    },
+    {
+      "id": 32631,
+      "page": 455,
+      "text": "with K(x, y) = \tM\nm=1 hm(x)hm(y). Notice that this has the same form\nas both the radial basis function expansion and a regularization estimate,\ndiscussed in Chapters 5 and 6.\nFor concreteness, let\u2019s work out the case V (r) = r2. Let H be the N \u00d7M\nbasis matrix with imth element hm(xi), and suppose that M > N is large.\nFor simplicity we assume that \u03b20 = 0, or that the constant is absorbed in\nh; see Exercise 12.3 for an alternative.\nWe estimate \u03b2 by minimizing the penalized least squares criterion"
+    },
+    {
+      "id": 32637,
+      "page": 455,
+      "text": "From this it appears that we need to evaluate the M \u00d7 M matrix of inner\nproducts in the transformed space. However, we can premultiply by H to\ngive"
+    },
+    {
+      "id": 32639,
+      "page": 455,
+      "text": "The N \u00d7N matrix HHT consists of inner products between pairs of obser-\nvations i, i\u2032; that is, the evaluation of an inner product kernel {HHT }i,i\u2032 =\nK(xi, xi\u2032). It is easy to show (12.44) directly in this case, that the predicted\nvalues at an arbitrary x satisfy"
+    },
+    {
+      "id": 32644,
+      "page": 455,
+      "text": "where \u02c6\u03b1 = (HHT +\u03bbI)\u22121y. As in the support vector machine, we need not\nspecify or evaluate the large set of functions h1(x), h2(x), . . . , hM(x). Only\nthe inner product kernel K(xi, xi\u2032) need be evaluated, at the N training\npoints for each i, i\u2032 and at points x for predictions there. Careful choice\nof hm (such as the eigenfunctions of particular, easy-to-evaluate kernels\nK) means, for example, that HHT can be computed at a cost of N 2/2\nevaluations of K, rather than the direct cost N 2M.\nNote, however, that this property depends on the choice of squared norm\n\u2225\u03b2\u22252 in the penalty. It does not hold, for example, for the L1 norm |\u03b2|,\nwhich may lead to a superior model."
+    },
+    {
+      "id": 32647,
+      "page": 456,
+      "text": "The support vector machine can be extended to multiclass problems, es-\nsentially by solving many two-class problems. A classi\ufb01er is built for each\npair of classes, and the \ufb01nal classi\ufb01er is the one that dominates the most\n(Kressel, 1999; Friedman, 1996; Hastie and Tibshirani, 1998). Alternatively,\none could use the multinomial loss function along with a suitable kernel,\nas in Section 12.3.3. SVMs have applications in many other supervised\nand unsupervised learning problems. At the time of this writing, empirical\nevidence suggests that it performs well in many real learning problems.\nFinally, we mention the connection of the support vector machine and\nstructural risk minimization (7.9). Suppose the training points (or their\nbasis expansion) are contained in a sphere of radius R, and let G(x) =\nsign[f(x)] = sign[\u03b2T x + \u03b20] as in (12.2). Then one can show that the class\nof functions {G(x), \u2225\u03b2\u2225\u2264A} has VC-dimension h satisfying"
+    },
+    {
+      "id": 32649,
+      "page": 456,
+      "text": "If f(x) separates the training data, optimally for \u2225\u03b2\u2225\u2264A, then with\nprobability at least 1 \u2212\u03b7 over training sets (Vapnik, 1996, page 139):"
+    },
+    {
+      "id": 32652,
+      "page": 456,
+      "text": "The support vector classi\ufb01er was one of the \ufb01rst practical learning pro-\ncedures for which useful bounds on the VC dimension could be obtained,\nand hence the SRM program could be carried out. However in the deriva-\ntion, balls are put around the data points\u2014a process that depends on the\nobserved values of the features. Hence in a strict sense, the VC complexity\nof the class is not \ufb01xed a priori, before seeing the features.\nThe regularization parameter C controls an upper bound on the VC\ndimension of the classi\ufb01er. Following the SRM paradigm, we could choose C\nby minimizing the upper bound on the test error, given in (12.51). However,\nit is not clear that this has any advantage over the use of cross-validation\nfor choice of C."
+    },
+    {
+      "id": 32654,
+      "page": 456,
+      "text": "In Section 4.3 we discussed linear discriminant analysis (LDA), a funda-\nmental tool for classi\ufb01cation. For the remainder of this chapter we discuss\na class of techniques that produce better classi\ufb01ers than LDA by directly\ngeneralizing LDA.\nSome of the virtues of LDA are as follows:"
+    },
+    {
+      "id": 32655,
+      "page": 456,
+      "text": "\u2022 It is a simple prototype classi\ufb01er. A new observation is classi\ufb01ed to the\nclass with closest centroid. A slight twist is that distance is measured\nin the Mahalanobis metric, using a pooled covariance estimate."
+    },
+    {
+      "id": 32657,
+      "page": 457,
+      "text": "\u2022 LDA is the estimated Bayes classi\ufb01er if the observations are multi-\nvariate Gaussian in each class, with a common covariance matrix.\nSince this assumption is unlikely to be true, this might not seem to\nbe much of a virtue."
+    },
+    {
+      "id": 32658,
+      "page": 457,
+      "text": "\u2022 The decision boundaries created by LDA are linear, leading to deci-\nsion rules that are simple to describe and implement."
+    },
+    {
+      "id": 32659,
+      "page": 457,
+      "text": "\u2022 LDA provides natural low-dimensional views of the data. For exam-\nple, Figure 12.12 is an informative two-dimensional view of data in\n256 dimensions with ten classes."
+    },
+    {
+      "id": 32660,
+      "page": 457,
+      "text": "\u2022 Often LDA produces the best classi\ufb01cation results, because of its\nsimplicity and low variance. LDA was among the top three classi\ufb01ers\nfor 11 of the 22 datasets studied in the STATLOG project (Michie et\nal., 1994)3."
+    },
+    {
+      "id": 32661,
+      "page": 457,
+      "text": "Unfortunately the simplicity of LDA causes it to fail in a number of situa-\ntions as well:"
+    },
+    {
+      "id": 32662,
+      "page": 457,
+      "text": "\u2022 Often linear decision boundaries do not adequately separate the classes.\nWhen N is large, it is possible to estimate more complex decision\nboundaries. Quadratic discriminant analysis (QDA) is often useful\nhere, and allows for quadratic decision boundaries. More generally\nwe would like to be able to model irregular decision boundaries."
+    },
+    {
+      "id": 32663,
+      "page": 457,
+      "text": "\u2022 The aforementioned shortcoming of LDA can often be paraphrased\nby saying that a single prototype per class is insu\ufb03cient. LDA uses\na single prototype (class centroid) plus a common covariance matrix\nto describe the spread of the data in each class. In many situations,\nseveral prototypes are more appropriate."
+    },
+    {
+      "id": 32664,
+      "page": 457,
+      "text": "\u2022 At the other end of the spectrum, we may have way too many (corre-\nlated) predictors, for example, in the case of digitized analogue signals\nand images. In this case LDA uses too many parameters, which are\nestimated with high variance, and its performance su\ufb00ers. In cases\nsuch as this we need to restrict or regularize LDA even further."
+    },
+    {
+      "id": 32665,
+      "page": 457,
+      "text": "In the remainder of this chapter we describe a class of techniques that\nattend to all these issues by generalizing the LDA model. This is achieved\nlargely by three di\ufb00erent ideas.\nThe \ufb01rst idea is to recast the LDA problem as a linear regression problem.\nMany techniques exist for generalizing linear regression to more \ufb02exible,\nnonparametric forms of regression. This in turn leads to more \ufb02exible forms\nof discriminant analysis, which we call FDA. In most cases of interest, the"
+    },
+    {
+      "id": 32668,
+      "page": 458,
+      "text": "regression procedures can be seen to identify an enlarged set of predictors\nvia basis expansions. FDA amounts to LDA in this enlarged space, the\nsame paradigm used in SVMs.\nIn the case of too many predictors, such as the pixels of a digitized image,\nwe do not want to expand the set: it is already too large. The second idea is\nto \ufb01t an LDA model, but penalize its coe\ufb03cients to be smooth or otherwise\ncoherent in the spatial domain, that is, as an image. We call this procedure\npenalized discriminant analysis or PDA. With FDA itself, the expanded\nbasis set is often so large that regularization is also required (again as in\nSVMs). Both of these can be achieved via a suitably regularized regression\nin the context of the FDA model.\nThe third idea is to model each class by a mixture of two or more Gaus-\nsians with di\ufb00erent centroids, but with every component Gaussian, both\nwithin and between classes, sharing the same covariance matrix. This allows\nfor more complex decision boundaries, and allows for subspace reduction\nas in LDA. We call this extension mixture discriminant analysis or MDA.\nAll three of these generalizations use a common framework by exploiting\ntheir connection with LDA."
+    },
+    {
+      "id": 32670,
+      "page": 458,
+      "text": "In this section we describe a method for performing LDA using linear re-\ngression on derived responses. This in turn leads to nonparametric and \ufb02ex-\nible alternatives to LDA. As in Chapter 4, we assume we have observations\nwith a quantitative response G falling into one of K classes G = {1, . . . , K},\neach having measured features X. Suppose \u03b8 : G \u0015\u2192IR1 is a function that\nassigns scores to the classes, such that the transformed class labels are op-\ntimally predicted by linear regression on X: If our training sample has the\nform (gi, xi), i = 1, 2, . . . , N, then we solve"
+    },
+    {
+      "id": 32675,
+      "page": 458,
+      "text": "with restrictions on \u03b8 to avoid a trivial solution (mean zero and unit vari-\nance over the training data). This produces a one-dimensional separation\nbetween the classes.\nMore generally, we can \ufb01nd up to L \u2264K \u22121 sets of independent scorings\nfor the class labels, \u03b81, \u03b82, . . . , \u03b8L, and L corresponding linear maps \u03b7\u2113(X) =\nXT \u03b2\u2113, \u2113= 1, . . . , L, chosen to be optimal for multiple regression in IRp. The\nscores \u03b8\u2113(g) and the maps \u03b2\u2113are chosen to minimize the average squared\nresidual,"
+    },
+    {
+      "id": 32685,
+      "page": 459,
+      "text": "The set of scores are assumed to be mutually orthogonal and normalized\nwith respect to an appropriate inner product to prevent trivial zero\nsolutions.\nWhy are we going down this road? It can be shown that the sequence of\ndiscriminant (canonical) vectors \u03bd\u2113derived in Section(4.3.3) are identical\nto the sequence \u03b2\u2113up to a constant (Mardia et al., 1979; Hastie et al.,\n1995). Moreover, the Mahalanobis distance of a test point x to the kth\nclass centroid \u02c6\u03bck is given by"
+    },
+    {
+      "id": 32689,
+      "page": 459,
+      "text": "where \u00af\u03b7k\n\u2113is the mean of the \u02c6\u03b7\u2113(xi) in the kth class, and D(x) does not\ndepend on k. Here w\u2113are coordinate weights that are de\ufb01ned in terms of\nthe mean squared residual r2\n\u2113of the \u2113th optimally scored \ufb01t"
+    },
+    {
+      "id": 32691,
+      "page": 459,
+      "text": "In Section 4.3.2 we saw that these canonical distances are all that is needed\nfor classi\ufb01cation in the Gaussian setup, with equal covariances in each class.\nTo summarize:"
+    },
+    {
+      "id": 32692,
+      "page": 459,
+      "text": "LDA can be performed by a sequence of linear regressions, fol-\nlowed by classi\ufb01cation to the closest class centroid in the space\nof \ufb01ts. The analogy applies both to the reduced rank version,\nor the full rank case when L = K \u22121."
+    },
+    {
+      "id": 32693,
+      "page": 459,
+      "text": "The real power of this result is in the generalizations that it invites. We\ncan replace the linear regression \ufb01ts \u03b7\u2113(x) = xT \u03b2\u2113by far more \ufb02exible,\nnonparametric \ufb01ts, and by analogy achieve a more \ufb02exible classi\ufb01er than\nLDA. We have in mind generalized additive \ufb01ts, spline functions, MARS\nmodels and the like. In this more general form the regression problems are\nde\ufb01ned via the criterion"
+    },
+    {
+      "id": 32702,
+      "page": 459,
+      "text": "where J is a regularizer appropriate for some forms of nonparametric regres-\nsion, such as smoothing splines, additive splines and lower-order ANOVA\nspline models. Also included are the classes of functions and associated\npenalties generated by kernels, as in Section 12.3.3.\nBefore we describe the computations involved in this generalization, let\nus consider a very simple example. Suppose we use degree-2 polynomial\nregression for each \u03b7\u2113. The decision boundaries implied by the (12.54) will\nbe quadratic surfaces, since each of the \ufb01tted functions is quadratic, and as"
+    },
+    {
+      "id": 32791,
+      "page": 460,
+      "text": "4I). The solid black ellipse is the decision boundary found by FDA using\ndegree-two polynomial regression. The dashed purple circle is the Bayes decision\nboundary."
+    },
+    {
+      "id": 32792,
+      "page": 460,
+      "text": "in LDA their squares cancel out when comparing distances. We could have\nachieved identical quadratic boundaries in a more conventional way, by\naugmenting our original predictors with their squares and cross-products.\nIn the enlarged space one performs an LDA, and the linear boundaries in\nthe enlarged space map down to quadratic boundaries in the original space.\nA classic example is a pair of multivariate Gaussians centered at the origin,\none having covariance matrix I, and the other cI for c > 1; Figure 12.9\nillustrates. The Bayes decision boundary is the sphere \u2225x\u2225= pc log c"
+    },
+    {
+      "id": 32793,
+      "page": 460,
+      "text": "2(c\u22121), which\nis a linear boundary in the enlarged space.\nMany nonparametric regression procedures operate by generating a basis\nexpansion of derived variables, and then performing a linear regression in\nthe enlarged space. The MARS procedure (Chapter 9) is exactly of this\nform. Smoothing splines and additive spline models generate an extremely\nlarge basis set (N \u00d7p basis functions for additive splines), but then perform\na penalized regression \ufb01t in the enlarged space. SVMs do as well; see also\nthe kernel-based regression example in Section 12.3.7. FDA in this case can\nbe shown to perform a penalized linear discriminant analysis in the enlarged\nspace. We elaborate in Section 12.6. Linear boundaries in the enlarged space\nmap down to nonlinear boundaries in the reduced space. This is exactly the\nsame paradigm that is used with support vector machines (Section 12.3).\nWe illustrate FDA on the speech recognition example used in Chapter\n4.), with K = 11 classes and p = 10 predictors. The classes correspond to"
+    },
+    {
+      "id": 33009,
+      "page": 461,
+      "text": "11 vowel sounds, each contained in 11 di\ufb00erent words. Here are the words,\npreceded by the symbols that represent them:"
+    },
+    {
+      "id": 33010,
+      "page": 461,
+      "text": "Vowel\nWord\nVowel\nWord\nVowel\nWord\nVowel\nWord\ni:\nheed\nO\nhod\nI\nhid\nC:\nhoard\nE\nhead\nU\nhood\nA\nhad\nu:\nwho\u2019d\na:\nhard\n3:\nheard\nY\nhud"
+    },
+    {
+      "id": 33011,
+      "page": 461,
+      "text": "Each of eight speakers spoke each word six times in the training set, and\nlikewise seven speakers in the test set. The ten predictors are derived from\nthe digitized speech in a rather complicated way, but standard in the speech\nrecognition world. There are thus 528 training observations, and 462 test\nobservations. Figure 12.10 shows two-dimensional projections produced by\nLDA and FDA. The FDA model used adaptive additive-spline regression\nfunctions to model the \u03b7\u2113(x), and the points plotted in the right plot have\ncoordinates \u02c6\u03b71(xi) and \u02c6\u03b72(xi). The routine used in S-PLUS is called bruto,\nhence the heading on the plot and in Table 12.3. We see that \ufb02exible model-\ning has helped to separate the classes in this case. Table 12.3 shows training\nand test error rates for a number of classi\ufb01cation techniques. FDA/MARS\nrefers to Friedman\u2019s multivariate adaptive regression splines; degree = 2\nmeans pairwise products are permitted. Notice that for FDA/MARS, the\nbest classi\ufb01cation results are obtained in a reduced-rank subspace."
+    },
+    {
+      "id": 33015,
+      "page": 462,
+      "text": "(1)\nLDA\n0.32\n0.56\nSoftmax\n0.48\n0.67\n(2)\nQDA\n0.01\n0.53\n(3)\nCART\n0.05\n0.56\n(4)\nCART (linear combination splits)\n0.05\n0.54\n(5)\nSingle-layer perceptron\n0.67\n(6)\nMulti-layer perceptron (88 hidden units)\n0.49\n(7)\nGaussian node network (528 hidden units)\n0.45\n(8)\nNearest neighbor\n0.44\n(9)\nFDA/BRUTO\n0.06\n0.44\nSoftmax\n0.11\n0.50\n(10)\nFDA/MARS (degree = 1)\n0.09\n0.45\nBest reduced dimension (=2)\n0.18\n0.42\nSoftmax\n0.14\n0.48\n(11)\nFDA/MARS (degree = 2)\n0.02\n0.42\nBest reduced dimension (=6)\n0.13\n0.39\nSoftmax\n0.10\n0.50"
+    },
+    {
+      "id": 33017,
+      "page": 462,
+      "text": "The computations for the FDA coordinates can be simpli\ufb01ed in many im-\nportant cases, in particular when the nonparametric regression procedure\ncan be represented as a linear operator. We will denote this operator by\nS\u03bb; that is, \u02c6y = S\u03bby, where y is the vector of responses and \u02c6y the vector\nof \ufb01ts. Additive splines have this property, if the smoothing parameters are\n\ufb01xed, as does MARS once the basis functions are selected. The subscript \u03bb\ndenotes the entire set of smoothing parameters. In this case optimal scoring\nis equivalent to a canonical correlation problem, and the solution can be\ncomputed by a single eigen-decomposition. This is pursued in Exercise 12.6,\nand the resulting algorithm is presented here.\nWe create an N \u00d7 K indicator response matrix Y from the responses gi,\nsuch that yik = 1 if gi = k, otherwise yik = 0. For a \ufb01ve-class problem Y\nmight look like the following:"
+    },
+    {
+      "id": 33021,
+      "page": 463,
+      "text": "C1\nC2\nC3\nC4\nC5\ng1 = 2\n0\n1\n0\n0\n0\ng2 = 1\n1\n0\n0\n0\n0\ng3 = 1\n1\n0\n0\n0\n0\ng4 = 5\n0\n0\n0\n0\n1\ng5 = 4\n0\n0\n0\n1\n0\n...\n...\ngN = 3\n0\n0\n1\n0\n0"
+    },
+    {
+      "id": 33025,
+      "page": 463,
+      "text": "1. Multivariate nonparametric regression. Fit a multiresponse, adaptive\nnonparametric regression of Y on X, giving \ufb01tted values \u02c6Y. Let S\u03bb\nbe the linear operator that \ufb01ts the \ufb01nal chosen model, and \u03b7\u2217(x) be\nthe vector of \ufb01tted regression functions."
+    },
+    {
+      "id": 33026,
+      "page": 463,
+      "text": "2. Optimal scores. Compute the eigen-decomposition of YT \u02c6Y = YT S\u03bbY,\nwhere the eigenvectors \u0398 are normalized: \u0398T D\u03c0\u0398 = I. Here D\u03c0 =\nYT Y/N is a diagonal matrix of the estimated class prior\nprobabilities."
+    },
+    {
+      "id": 33027,
+      "page": 463,
+      "text": "3. Update the model from step 1 using the optimal scores: \u03b7(x) = \u0398T \u03b7\u2217(x)."
+    },
+    {
+      "id": 33028,
+      "page": 463,
+      "text": "The \ufb01rst of the K functions in \u03b7(x) is the constant function\u2014 a trivial\nsolution; the remaining K \u22121 functions are the discriminant functions. The\nconstant function, along with the normalization, causes all the remaining\nfunctions to be centered.\nAgain S\u03bb can correspond to any regression method. When S\u03bb = HX, the\nlinear regression projection operator, then FDA is linear discriminant anal-\nysis. The software that we reference in the Computational Considerations\nsection on page 455 makes good use of this modularity; the fda function\nhas a method= argument that allows one to supply any regression function,\nas long as it follows some natural conventions. The regression functions\nwe provide allow for polynomial regression, adaptive additive models and\nMARS. They all e\ufb03ciently handle multiple responses, so step (1) is a single\ncall to a regression routine. The eigen-decomposition in step (2) simulta-\nneously computes all the optimal scoring functions.\nIn Section 4.2 we discussed the pitfalls of using linear regression on an\nindicator response matrix as a method for classi\ufb01cation. In particular, se-\nvere masking can occur with three or more classes. FDA uses the \ufb01ts from\nsuch a regression in step (1), but then transforms them further to produce\nuseful discriminant functions that are devoid of these pitfalls. Exercise 12.9\ntakes another view of this phenomenon."
+    },
+    {
+      "id": 33031,
+      "page": 464,
+      "text": "Although FDA is motivated by generalizing optimal scoring, it can also be\nviewed directly as a form of regularized discriminant analysis. Suppose the\nregression procedure used in FDA amounts to a linear regression onto a\nbasis expansion h(X), with a quadratic penalty on the coe\ufb03cients:"
+    },
+    {
+      "id": 33040,
+      "page": 464,
+      "text": "The choice of \u03a9 depends on the problem. If \u03b7\u2113(x) = h(x)\u03b2\u2113is an expansion\non spline basis functions, \u03a9 might constrain \u03b7\u2113to be smooth over IRp. In\nthe case of additive splines, there are N spline basis functions for each\ncoordinate, resulting in a total of Np basis functions in h(x); \u03a9 in this case\nis Np \u00d7 Np and block diagonal.\nThe steps in FDA can then be viewed as a generalized form of LDA,\nwhich we call penalized discriminant analysis, or PDA:"
+    },
+    {
+      "id": 33041,
+      "page": 464,
+      "text": "\u2022 Enlarge the set of predictors X via a basis expansion h(X)."
+    },
+    {
+      "id": 33042,
+      "page": 464,
+      "text": "\u2022 Use (penalized) LDA in the enlarged space, where the penalized\nMahalanobis distance is given by"
+    },
+    {
+      "id": 33043,
+      "page": 464,
+      "text": "D(x, \u03bc) = (h(x) \u2212h(\u03bc))T (\u03a3W + \u03bb\u03a9)\u22121(h(x) \u2212h(\u03bc)),\n(12.58)"
+    },
+    {
+      "id": 33044,
+      "page": 464,
+      "text": "where \u03a3W is the within-class covariance matrix of the derived vari-\nables h(xi)."
+    },
+    {
+      "id": 33045,
+      "page": 464,
+      "text": "\u2022 Decompose the classi\ufb01cation subspace using a penalized metric:"
+    },
+    {
+      "id": 33047,
+      "page": 464,
+      "text": "Loosely speaking, the penalized Mahalanobis distance tends to give less\nweight to \u201crough\u201d coordinates, and more weight to \u201csmooth\u201d ones; since\nthe penalty is not diagonal, the same applies to linear combinations that\nare rough or smooth.\nFor some classes of problems, the \ufb01rst step, involving the basis expansion,\nis not needed; we already have far too many (correlated) predictors. A\nleading example is when the objects to be classi\ufb01ed are digitized analog\nsignals:"
+    },
+    {
+      "id": 33048,
+      "page": 464,
+      "text": "\u2022 the log-periodogram of a fragment of spoken speech, sampled at a set\nof 256 frequencies; see Figure 5.5 on page 149."
+    },
+    {
+      "id": 33049,
+      "page": 464,
+      "text": "\u2022 the grayscale pixel values in a digitized image of a handwritten digit."
+    },
+    {
+      "id": 33052,
+      "page": 465,
+      "text": "PDA: Coefficient 1\nLDA: Coefficient 2\nPDA: Coefficient 2\nLDA: Coefficient 3"
+    },
+    {
+      "id": 33063,
+      "page": 465,
+      "text": "It is also intuitively clear in these cases why regularization is needed.\nTake the digitized image as an example. Neighboring pixel values will tend\nto be correlated, being often almost the same. This implies that the pair\nof corresponding LDA coe\ufb03cients for these pixels can be wildly di\ufb00erent\nand opposite in sign, and thus cancel when applied to similar pixel values.\nPositively correlated predictors lead to noisy, negatively correlated coe\ufb03-\ncient estimates, and this noise results in unwanted sampling variance. A\nreasonable strategy is to regularize the coe\ufb03cients to be smooth over the\nspatial domain, as with images. This is what PDA does. The computations\nproceed just as for FDA, except that an appropriate penalized regression\nmethod is used. Here hT (X)\u03b2\u2113= X\u03b2\u2113, and \u03a9 is chosen so that \u03b2T\n\u2113\u03a9\u03b2\u2113\npenalizes roughness in \u03b2\u2113when viewed as an image. Figure 1.2 on page 4\nshows some examples of handwritten digits. Figure 12.11 shows the dis-\ncriminant variates using LDA and PDA. Those produced by LDA appear\nas salt-and-pepper images, while those produced by PDA are smooth im-\nages. The \ufb01rst smooth image can be seen as the coe\ufb03cients of a linear\ncontrast functional for separating images with a dark central vertical strip\n(ones, possibly sevens) from images that are hollow in the middle (zeros,\nsome fours). Figure 12.12 supports this interpretation, and with more dif-\n\ufb01culty allows an interpretation of the second coordinate. This and other"
+    },
+    {
+      "id": 34547,
+      "page": 467,
+      "text": "examples are discussed in more detail in Hastie et al. (1995), who also show\nthat the regularization improves the classi\ufb01cation performance of LDA on\nindependent test data by a factor of around 25% in the cases they tried."
+    },
+    {
+      "id": 34549,
+      "page": 467,
+      "text": "Linear discriminant analysis can be viewed as a prototype classi\ufb01er. Each\nclass is represented by its centroid, and we classify to the closest using an\nappropriate metric. In many situations a single prototype is not su\ufb03cient\nto represent inhomogeneous classes, and mixture models are more appro-\npriate. In this section we review Gaussian mixture models and show how\nthey can be generalized via the FDA and PDA methods discussed earlier.\nA Gaussian mixture model for the kth class has density"
+    },
+    {
+      "id": 34553,
+      "page": 467,
+      "text": "where the mixing proportions \u03c0kr sum to one. This has Rk prototypes for\nthe kth class, and in our speci\ufb01cation, the same covariance matrix \u03a3 is\nused as the metric throughout. Given such a model for each class, the class\nposterior probabilities are given by"
+    },
+    {
+      "id": 34554,
+      "page": 467,
+      "text": "P(G = k|X = x) =\n\tRk\nr=1 \u03c0kr\u03c6(X; \u03bckr, \u03a3)\u03a0k\n\tK\n\u2113=1\n\tR\u2113\nr=1 \u03c0\u2113r\u03c6(X; \u03bc\u2113r, \u03a3)\u03a0\u2113\n,\n(12.60)"
+    },
+    {
+      "id": 34555,
+      "page": 467,
+      "text": "where \u03a0k represent the class prior probabilities.\nWe saw these calculations for the special case of two components in\nChapter 8. As in LDA, we estimate the parameters by maximum likelihood,\nusing the joint log-likelihood based on P(G, X):"
+    },
+    {
+      "id": 34564,
+      "page": 467,
+      "text": "The sum within the log makes this a rather messy optimization problem\nif tackled directly. The classical and natural method for computing the\nmaximum-likelihood estimates (MLEs) for mixture distributions is the EM\nalgorithm (Dempster et al., 1977), which is known to possess good conver-\ngence properties. EM alternates between the two steps:"
+    },
+    {
+      "id": 34566,
+      "page": 468,
+      "text": "E-step: Given the current parameters, compute the responsibility of sub-\nclass ckr within class k for each of the class-k observations (gi = k):"
+    },
+    {
+      "id": 34567,
+      "page": 468,
+      "text": "W(ckr|xi, gi) =\n\u03c0kr\u03c6(xi; \u03bckr, \u03a3)\n\tRk\n\u2113=1 \u03c0k\u2113\u03c6(xi; \u03bck\u2113, \u03a3)\n.\n(12.62)"
+    },
+    {
+      "id": 34568,
+      "page": 468,
+      "text": "M-step: Compute the weighted MLEs for the parameters of each of the\ncomponent Gaussians within each of the classes, using the weights\nfrom the E-step."
+    },
+    {
+      "id": 34569,
+      "page": 468,
+      "text": "In the E-step, the algorithm apportions the unit weight of an observation\nin class k to the various subclasses assigned to that class. If it is close to the\ncentroid of a particular subclass, and far from the others, it will receive a\nmass close to one for that subclass. On the other hand, observations halfway\nbetween two subclasses will get approximately equal weight for both.\nIn the M-step, an observation in class k is used Rk times, to estimate the\nparameters in each of the Rk component densities, with a di\ufb00erent weight\nfor each. The EM algorithm is studied in detail in Chapter 8. The algorithm\nrequires initialization, which can have an impact, since mixture likelihoods\nare generally multimodal. Our software (referenced in the Computational\nConsiderations on page 455) allows several strategies; here we describe the\ndefault. The user supplies the number Rk of subclasses per class. Within\nclass k, a k-means clustering model, with multiple random starts, is \ufb01tted\nto the data. This partitions the observations into Rk disjoint groups, from\nwhich an initial weight matrix, consisting of zeros and ones, is created.\nOur assumption of an equal component covariance matrix \u03a3 throughout\nbuys an additional simplicity; we can incorporate rank restrictions in the\nmixture formulation just like in LDA. To understand this, we review a little-\nknown fact about LDA. The rank-L LDA \ufb01t (Section 4.3.3) is equivalent to\nthe maximum-likelihood \ufb01t of a Gaussian model,where the di\ufb00erent mean\nvectors in each class are con\ufb01ned to a rank-L subspace of IRp (Exercise 4.8).\nWe can inherit this property for the mixture model, and maximize the log-\nlikelihood (12.61) subject to rank constraints on all the \t\nk Rk centroids:\nrank{\u03bck\u2113} = L.\nAgain the EM algorithm is available, and the M-step turns out to be\na weighted version of LDA, with R = \tK\nk=1 Rk \u201cclasses.\u201d Furthermore,\nwe can use optimal scoring as before to solve the weighted LDA problem,\nwhich allows us to use a weighted version of FDA or PDA at this stage.\nOne would expect, in addition to an increase in the number of \u201cclasses,\u201d a\nsimilar increase in the number of \u201cobservations\u201d in the kth class by a factor\nof Rk. It turns out that this is not the case if linear operators are used for\nthe optimal scoring regression. The enlarged indicator Y matrix collapses\nin this case to a blurred response matrix Z, which is intuitively pleasing.\nFor example, suppose there are K = 3 classes, and Rk = 3 subclasses per\nclass. Then Z might be"
+    },
+    {
+      "id": 34573,
+      "page": 469,
+      "text": "c11\nc12\nc13\nc21\nc22\nc23\nc31\nc32\nc33\ng1 = 2\n0\n0\n0\n0.3\n0.5\n0.2\n0\n0\n0\ng2 = 1\n0.9\n0.1\n0.0\n0\n0\n0\n0\n0\n0\ng3 = 1\n0.1\n0.8\n0.1\n0\n0\n0\n0\n0\n0\ng4 = 3\n0\n0\n0\n0\n0\n0\n0.5\n0.4\n0.1\ng5 = 2\n0\n0\n0\n0.7\n0.1\n0.2\n0\n0\n0\n...\n...\ngN = 3\n0\n0\n0\n0\n0\n0\n0.1\n0.1\n0.8"
+    },
+    {
+      "id": 34577,
+      "page": 469,
+      "text": "where the entries in a class-k row correspond to W(ckr|x, gi).\nThe remaining steps are the same:"
+    },
+    {
+      "id": 34582,
+      "page": 469,
+      "text": "These simple modi\ufb01cations add considerable \ufb02exibility to the mixture\nmodel:"
+    },
+    {
+      "id": 34583,
+      "page": 469,
+      "text": "\u2022 The dimension reduction step in LDA, FDA or PDA is limited by\nthe number of classes; in particular, for K = 2 classes no reduction is\npossible. MDA substitutes subclasses for classes, and then allows us\nto look at low-dimensional views of the subspace spanned by these\nsubclass centroids. This subspace will often be an important one for\ndiscrimination."
+    },
+    {
+      "id": 34584,
+      "page": 469,
+      "text": "\u2022 By using FDA or PDA in the M-step, we can adapt even more to par-\nticular situations. For example, we can \ufb01t MDA models to digitized\nanalog signals and images, with smoothness constraints built in."
+    },
+    {
+      "id": 34587,
+      "page": 469,
+      "text": "We now illustrate some of these ideas on a popular simulated example,\ntaken from Breiman et al. (1984, pages 49\u201355), and used in Hastie and\nTibshirani (1996b) and elsewhere. It is a three-class problem with 21 vari-\nables, and is considered to be a di\ufb03cult pattern recognition problem. The\npredictors are de\ufb01ned by"
+    },
+    {
+      "id": 34589,
+      "page": 469,
+      "text": "Xj\n=\nUh1(j) + (1 \u2212U)h3(j) + \u03f5j\nClass 2,\n(12.64)\nXj\n=\nUh2(j) + (1 \u2212U)h3(j) + \u03f5j\nClass 3,"
+    },
+    {
+      "id": 34590,
+      "page": 469,
+      "text": "where j = 1, 2, . . . , 21, U is uniform on (0, 1), \u03f5j are standard normal vari-\nates, and the h\u2113are the shifted triangular waveforms: h1(j) = max(6 \u2212"
+    },
+    {
+      "id": 34593,
+      "page": 470,
+      "text": ". . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . .\n.\n. . . . . . . . . . .\n. . . . . . . . . . . . . .\n.\n. . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . .\n.\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . ."
+    },
+    {
+      "id": 34594,
+      "page": 470,
+      "text": ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . ."
+    },
+    {
+      "id": 34756,
+      "page": 470,
+      "text": "Training Error: 0.185\nTest Error:       0.235\nBayes Error:    0.210"
+    },
+    {
+      "id": 34758,
+      "page": 470,
+      "text": ".... .\n. .\n. . .\n. . .\n. . .\n. . . .\n.\n. . . .\n.\n. . . .\n. .\n. . . . .\n. . .\n. . . . .\n. . .\n. . . . . .\n. . . .\n. . . . . .\n. . . .\n. . . . . .\n. . . . .\n. . . . . . .\n. . . . . .\n. . . . . . .\n. . . . . .\n. . . . . . . .\n. . . . . . .\n. . . . . . . .\n. . . . . . .\n. . . . . . . . .\n. . . . . . . .\n. . . . . . . . .\n. . . . . . . .\n. . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . .\n. . .\n. . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . ."
+    },
+    {
+      "id": 34759,
+      "page": 470,
+      "text": ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . .\n. .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . ."
+    },
+    {
+      "id": 34934,
+      "page": 470,
+      "text": "Training Error: 0.17\nTest Error:       0.22\nBayes Error:    0.21"
+    },
+    {
+      "id": 35100,
+      "page": 471,
+      "text": "|j \u221211|, 0), h2(j) = h1(j \u22124) and h3(j) = h1(j + 4). Figure 12.14 shows\nsome example waveforms from each class.\nTable 12.4 shows the results of MDA applied to the waveform data, as\nwell as several other methods from this and other chapters. Each train-\ning sample has 300 observations, and equal priors were used, so there are\nroughly 100 observations in each class. We used test samples of size 500.\nThe two MDA models are described in the caption.\nFigure 12.15 shows the leading canonical variates for the penalized MDA\nmodel, evaluated at the test data. As we might have guessed, the classes\nappear to lie on the edges of a triangle. This is because the hj(i) are repre-\nsented by three points in 21-space, thereby forming vertices of a triangle,\nand each class is represented as a convex combination of a pair of vertices,\nand hence lie on an edge. Also it is clear visually that all the information\nlies in the \ufb01rst two dimensions; the percentage of variance explained by the\n\ufb01rst two coordinates is 99.8%, and we would lose nothing by truncating the\nsolution there. The Bayes risk for this problem has been estimated to be\nabout 0.14 (Breiman et al., 1984). MDA comes close to the optimal rate,\nwhich is not surprising since the structure of the MDA model is similar to\nthe generating model."
+    },
+    {
+      "id": 35104,
+      "page": 472,
+      "text": "LDA\n0.121(0.006)\n0.191(0.006)\nQDA\n0.039(0.004)\n0.205(0.006)\nCART\n0.072(0.003)\n0.289(0.004)\nFDA/MARS (degree = 1)\n0.100(0.006)\n0.191(0.006)\nFDA/MARS (degree = 2)\n0.068(0.004)\n0.215(0.002)\nMDA (3 subclasses)\n0.087(0.005)\n0.169(0.006)\nMDA (3 subclasses, penalized 4 df)\n0.137(0.006)\n0.157(0.005)\nPDA (penalized 4 df)\n0.150(0.005)\n0.171(0.005)\nBayes\n0.140"
+    },
+    {
+      "id": 35945,
+      "page": 473,
+      "text": "With N training cases, p predictors, and m support vectors, the support\nvector machine requires m3 + mN + mpN operations, assuming m \u2248N.\nThey do not scale well with N, although computational shortcuts are avail-\nable (Platt, 1999). Since these are evolving rapidly, the reader is urged to\nsearch the web for the latest technology.\nLDA requires Np2 + p3 operations, as does PDA. The complexity of\nFDA depends on the regression method used. Many techniques are linear\nin N, such as additive models and MARS. General splines and kernel-based\nregression methods will typically require N 3 operations.\nSoftware is available for \ufb01tting FDA, PDA and MDA models in the R\npackage mda, which is also available in S-PLUS."
+    },
+    {
+      "id": 35947,
+      "page": 473,
+      "text": "The theory behind support vector machines is due to Vapnik and is de-\nscribed in Vapnik (1996). There is a burgeoning literature on SVMs; an\nonline bibliography, created and maintained by Alex Smola and Bernhard\nSch\u00a8olkopf, can be found at:\nhttp://www.kernel-machines.org.\nOur treatment is based on Wahba et al. (2000) and Evgeniou et al. (2000),\nand the tutorial by Burges (Burges, 1998).\nLinear discriminant analysis is due to Fisher (1936) and Rao (1973). The\nconnection with optimal scoring dates back at least to Breiman and Ihaka\n(1984), and in a simple form to Fisher (1936). There are strong connections\nwith correspondence analysis (Greenacre, 1984). The description of \ufb02exible,\npenalized and mixture discriminant analysis is taken from Hastie et al.\n(1994), Hastie et al. (1995) and Hastie and Tibshirani (1996b), and all\nthree are summarized in Hastie et al. (1998); see also Ripley (1996)."
+    },
+    {
+      "id": 35954,
+      "page": 474,
+      "text": "mension L \u2264K \u22121 given by z = UT x, where U is the p \u00d7 L matrix of\ndiscriminant coe\ufb03cients, and p > K is the dimension of x."
+    },
+    {
+      "id": 35956,
+      "page": 474,
+      "text": "\u2225z \u2212\u00afzk\u22252 \u2212\u2225z \u2212\u00afzk\u2032\u22252 = \u2225x \u2212\u00afxk\u22252\nW \u2212\u2225x \u2212\u00afxk\u2032\u22252\nW ,"
+    },
+    {
+      "id": 35957,
+      "page": 474,
+      "text": "where \u2225\u00b7\u2225W denotes Mahalanobis distance with respect to the covari-\nance W."
+    },
+    {
+      "id": 35958,
+      "page": 474,
+      "text": "(b) If L < K \u22121, show that the same expression on the left measures\nthe di\ufb00erence in Mahalanobis squared distances for the distributions\nprojected onto the subspace spanned by U."
+    },
+    {
+      "id": 35961,
+      "page": 474,
+      "text": "consists of digitized log-periodograms for phonemes uttered by 60 speakers,\neach speaker having produced phonemes from each of \ufb01ve classes. It is\nappropriate to plot each vector of 256 \u201cfeatures\u201d against the frequencies\n0\u2013255."
+    },
+    {
+      "id": 35962,
+      "page": 474,
+      "text": "(a) Produce a separate plot of all the phoneme curves against frequency\nfor each class."
+    },
+    {
+      "id": 35963,
+      "page": 474,
+      "text": "(b) You plan to use a nearest prototype classi\ufb01cation scheme to classify\nthe curves into phoneme classes. In particular, you will use a K-means\nclustering algorithm in each class (kmeans() in R), and then classify\nobservations to the class of the closest cluster center. The curves are\nhigh-dimensional and you have a rather small sample-size-to-variables\nratio. You decide to restrict all the prototypes to be smooth functions\nof frequency. In particular, you decide to represent each prototype m\nas m = B\u03b8 where B is a 256 \u00d7 J matrix of natural spline basis\nfunctions with J knots uniformly chosen in (0, 255) and boundary\nknots at 0 and 255. Describe how to proceed analytically, and in\nparticular, how to avoid costly high-dimensional \ufb01tting procedures.\n(Hint: It may help to restrict B to be orthogonal.)"
+    },
+    {
+      "id": 35964,
+      "page": 474,
+      "text": "(c) Implement your procedure on the phoneme data, and try it out. Divide\nthe data into a training set and a test set (50-50), making sure that\nspeakers are not split across sets (why?). Use K = 1, 3, 5, 7 centers\nper class, and for each use J = 5, 10, 15 knots (taking care to start\nthe K-means procedure at the same starting values for each value of\nJ), and compare the results."
+    },
+    {
+      "id": 35967,
+      "page": 475,
+      "text": "(a) Show that the optimal scoring problem (12.52) can be written in vector\nnotation as\nmin\n\u03b8,\u03b2 \u2225Y\u03b8 \u2212H\u03b2\u22252 ,\n(12.65)"
+    },
+    {
+      "id": 35968,
+      "page": 475,
+      "text": "where \u03b8 is a vector of K real numbers, and H is the N \u00d7 M matrix\nof evaluations hj(xi)."
+    },
+    {
+      "id": 35969,
+      "page": 475,
+      "text": "(b) Suppose that the normalization on \u03b8 is \u03b8T D\u03c01 = 0 and \u03b8T D\u03c0\u03b8 = 1.\nInterpret these normalizations in terms of the original scored \u03b8(gi)."
+    },
+    {
+      "id": 35970,
+      "page": 475,
+      "text": "(c) Show that, with this normalization, (12.65) can be partially optimized\nw.r.t. \u03b2, and leads to\nmax\n\u03b8\n\u03b8T S\u03b8,\n(12.66)"
+    },
+    {
+      "id": 35971,
+      "page": 475,
+      "text": "subject to the normalization constraints, where S is the projection\noperator corresponding to the basis matrix H."
+    },
+    {
+      "id": 35972,
+      "page": 475,
+      "text": "(d) Suppose that the hj include the constant function. Show that the\nlargest eigenvalue of S is 1."
+    },
+    {
+      "id": 35973,
+      "page": 475,
+      "text": "(e) Let \u0398 be a K \u00d7 K matrix of scores (in columns), and suppose the\nnormalization is \u0398T D\u03c0\u0398 = I. Show that the solution to (12.53) is\ngiven by the complete set of eigenvectors of S; the \ufb01rst eigenvector is\ntrivial, and takes care of the centering of the scores. The remainder\ncharacterize the optimal scoring solution."
+    },
+    {
+      "id": 35983,
+      "page": 476,
+      "text": "a mixture of joint densities. Furthermore we assume"
+    },
+    {
+      "id": 35985,
+      "page": 476,
+      "text": "This model consists of regions centered at \u03bcr, and for each there is a class\npro\ufb01le Pr(G). The posterior class distribution is given by"
+    },
+    {
+      "id": 35988,
+      "page": 476,
+      "text": "where the denominator is the marginal distribution P(X)."
+    },
+    {
+      "id": 35989,
+      "page": 476,
+      "text": "(a) Show that this model (called MDA2) can be viewed as a generalization\nof MDA since"
+    },
+    {
+      "id": 35992,
+      "page": 476,
+      "text": "where \u03c0rk = \u03c0rPr(G = k)/ \tR\nr=1 \u03c0rPr(G = k) corresponds to the\nmixing proportions for the kth class."
+    },
+    {
+      "id": 35994,
+      "page": 476,
+      "text": "(c) Show that if the initial weight matrix is constructed as in MDA, in-\nvolving separate k-means clustering in each class, then the algorithm\nfor MDA2 is identical to the original MDA procedure."
+    },
+    {
+      "id": 35995,
+      "page": 477,
+      "text": "This is page 459\nPrinter: Opaque this\n13\nPrototype Methods and\nNearest-Neighbors"
+    }
+  ]
+}

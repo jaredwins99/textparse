@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gauss-Markov Theorem | ESL Ch 3</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0d1117;
+  color: #e6edf3;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+
+/* ---- HEADER ---- */
+.header {
+  background: #161b22;
+  border-bottom: 1px solid #30363d;
+  padding: 28px 40px 20px;
+}
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.badge {
+  background: #1f3a5c;
+  color: #79c0ff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.section-tag {
+  color: #8b949e;
+  font-size: 13px;
+}
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #f0f6fc;
+  margin-bottom: 8px;
+}
+.tagline {
+  font-size: 15px;
+  color: #8b949e;
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.tagline strong { color: #79c0ff; font-style: normal; }
+
+/* ---- LAYOUT ---- */
+.page { max-width: 1200px; margin: 0 auto; padding: 32px 40px 0; }
+.section {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+.section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #58a6ff;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #21262d;
+}
+
+/* ---- BENEFITS SECTION ---- */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+.benefit-card {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 16px;
+}
+.benefit-card.warn { border-color: #3d2b1f; background: #120d09; }
+.benefit-card.win { border-color: #1a3a2a; background: #0a1710; }
+.benefit-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.benefit-label.green { color: #3fb950; }
+.benefit-label.yellow { color: #d29922; }
+.benefit-headline {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #e6edf3;
+  margin-bottom: 4px;
+}
+.benefit-sub {
+  font-size: 12px;
+  color: #8b949e;
+  line-height: 1.5;
+}
+
+/* ---- ASSUMPTIONS ---- */
+.assumption-item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 8px;
+  align-items: start;
+  padding: 14px 0;
+  border-bottom: 1px solid #21262d;
+}
+.assumption-item:last-child { border-bottom: none; }
+.check { font-size: 16px; }
+.check.yes { color: #3fb950; }
+.check.no { color: #f85149; }
+.assump-name { font-size: 14px; font-weight: 600; color: #e6edf3; margin-bottom: 3px; }
+.assump-formula { font-size: 12px; color: #79c0ff; margin-bottom: 4px; }
+.assump-explain { font-size: 12px; color: #8b949e; line-height: 1.5; }
+.assump-break { font-size: 12px; color: #da3633; margin-top: 4px; }
+
+/* ---- VIZ SECTION ---- */
+.viz-label {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.estimator-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.estimator-card {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 14px;
+}
+.est-name {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.est-name.ols { color: #58a6ff; }
+.est-name.comp { color: #ff7b72; }
+.est-name.ridge { color: #ffa657; }
+.est-tag {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-right: 4px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.est-tag.green { background: #1a3a2a; color: #3fb950; }
+.est-tag.red { background: #3d1f1f; color: #f85149; }
+.est-tag.yellow { background: #3d2e1a; color: #d29922; }
+.est-desc { font-size: 12px; color: #8b949e; line-height: 1.5; margin-bottom: 6px; }
+.est-stats { font-size: 12px; color: #e6edf3; }
+.est-stats span { color: #79c0ff; font-weight: 600; }
+
+.btn {
+  background: #21262d;
+  color: #58a6ff;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn:hover { background: #30363d; }
+
+.plot-container { width: 100%; }
+
+/* ---- GUARANTEES ---- */
+.guarantee-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.guarantee-card {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+.g-question { font-size: 12px; color: #8b949e; margin-bottom: 8px; }
+.g-answer { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.g-answer.yes { color: #3fb950; }
+.g-answer.no { color: #f85149; }
+.g-note { font-size: 11px; color: #8b949e; line-height: 1.4; }
+
+/* ---- FORMULA SECTION ---- */
+.formula-box {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 18px 24px;
+  text-align: center;
+  font-size: 16px;
+  color: #79c0ff;
+  margin-bottom: 16px;
+}
+.quote-block {
+  border-left: 3px solid #30363d;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  color: #8b949e;
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.quote-block:last-child { margin-bottom: 0; }
+
+/* ---- MSE VIZ ---- */
+.mse-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.mse-card {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+.mse-name { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.mse-bar-wrap { height: 80px; display: flex; align-items: flex-end; justify-content: center; gap: 8px; margin-bottom: 8px; }
+.mse-bar { width: 30px; border-radius: 3px 3px 0 0; transition: height 0.4s; }
+.mse-bar-label { font-size: 10px; text-align: center; margin-top: 2px; }
+.mse-total { font-size: 12px; color: #8b949e; margin-top: 4px; }
+.mse-total span { font-weight: 700; }
+
+.callout {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-left: 4px solid #58a6ff;
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #8b949e;
+  line-height: 1.6;
+  margin-top: 16px;
+}
+.callout strong { color: #e6edf3; }
+
+/* ---- SAMPLING DIST CAPTION ---- */
+.dist-caption {
+  background: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #8b949e;
+  margin-top: 12px;
+  line-height: 1.6;
+}
+.dist-caption strong { color: #e6edf3; }
+</style>
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<div class="header">
+  <div class="header-meta">
+    <span class="badge">Principles / Guarantees</span>
+    <span class="section-tag">Section 3.2.2 &mdash; The Gauss-Markov Theorem</span>
+  </div>
+  <h1>Gauss-Markov Theorem</h1>
+  <div class="tagline">
+    The least squares estimator has the <strong>smallest variance</strong> among all linear unbiased estimators.
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ========== SECTION 1: WHAT IT MEANS ========== -->
+<div class="section">
+  <div class="section-title">What the Theorem Says (Plain English)</div>
+  <div class="benefits-grid">
+    <div class="benefit-card win">
+      <div class="benefit-label green">The Win</div>
+      <div class="benefit-headline">OLS is BLUE</div>
+      <div class="benefit-sub">
+        <strong style="color:#3fb950">Best Linear Unbiased Estimator.</strong>
+        Among every estimator that is (1) a linear function of y, and (2) unbiased,
+        OLS achieves the lowest possible variance.
+      </div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-label yellow">The Scope</div>
+      <div class="benefit-headline">Only among linear, unbiased rivals</div>
+      <div class="benefit-sub">
+        "Competitors" are other ways to compute a slope estimate using a
+        linear combination of the y values that also happen to be unbiased.
+        There are infinitely many — OLS beats them all.
+      </div>
+    </div>
+    <div class="benefit-card warn">
+      <div class="benefit-label yellow">The Catch</div>
+      <div class="benefit-headline">Does NOT guarantee minimum MSE</div>
+      <div class="benefit-sub">
+        Biased estimators like ridge regression are outside the theorem's scope.
+        They can have <em>lower total error</em> (MSE) by trading a little bias
+        for a big drop in variance.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SECTION 2: ASSUMPTIONS ========== -->
+<div class="section">
+  <div class="section-title">Required Assumptions (The Theorem Only Holds When These Are Met)</div>
+
+  <div class="assumption-item">
+    <span class="check yes">&#10003;</span>
+    <div>
+      <div class="assump-name">Linear Model</div>
+      <div class="assump-formula">\( y = X\beta + \varepsilon \)</div>
+      <div class="assump-explain">The true relationship between predictors and response is linear in the parameters.</div>
+      <div class="assump-break">If violated: OLS is still computable but the "true" coefficients may not exist in the linear sense.</div>
+    </div>
+  </div>
+
+  <div class="assumption-item">
+    <span class="check yes">&#10003;</span>
+    <div>
+      <div class="assump-name">Zero-Mean Errors (Unbiasedness)</div>
+      <div class="assump-formula">\( E[\varepsilon] = 0 \)</div>
+      <div class="assump-explain">Errors average to zero — no systematic bias in the noise.</div>
+      <div class="assump-break">If violated: OLS estimates are biased. The theorem's unbiasedness guarantee collapses.</div>
+    </div>
+  </div>
+
+  <div class="assumption-item">
+    <span class="check yes">&#10003;</span>
+    <div>
+      <div class="assump-name">Homoscedasticity &amp; No Autocorrelation</div>
+      <div class="assump-formula">\( \text{Var}(\varepsilon) = \sigma^2 I \)</div>
+      <div class="assump-explain">Every error has the same variance \(\sigma^2\) and no two errors are correlated.
+        The covariance matrix is a scalar multiple of the identity — perfectly spherical noise.</div>
+      <div class="assump-break">If violated (e.g. heteroscedastic errors): OLS is still unbiased but no longer BLUE.
+        Weighted Least Squares would beat it.</div>
+    </div>
+  </div>
+
+  <div class="assumption-item">
+    <span class="check no">&#10007;</span>
+    <div>
+      <div class="assump-name">NOT Required: Normality of Errors</div>
+      <div class="assump-formula">\( \varepsilon \sim \mathcal{N}(0, \sigma^2 I) \) &mdash; <em>not needed for Gauss-Markov</em></div>
+      <div class="assump-explain">Normality is only needed for exact t-tests and F-tests (confidence intervals, p-values).
+        The BLUE property holds for any error distribution satisfying the three assumptions above.</div>
+    </div>
+  </div>
+
+  <div class="assumption-item">
+    <span class="check no">&#10007;</span>
+    <div>
+      <div class="assump-name">NOT Required: Correct Model Specification</div>
+      <div class="assump-explain">Gauss-Markov doesn't say the linear model is right — only that if it is,
+        OLS is the best linear unbiased way to estimate it. A correctly specified nonlinear model
+        could outperform OLS entirely.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SECTION 3: WHAT IS A COMPETITOR ========== -->
+<div class="section">
+  <div class="section-title">Visualization 1 &mdash; What Is a "Competitor" Estimator?</div>
+
+  <p style="font-size:13px; color:#8b949e; margin-bottom:16px; line-height:1.6;">
+    A <strong style="color:#e6edf3">competitor estimator</strong> is any rule of the form
+    \(\tilde{\theta} = c^\top y\) that is <em>linear in the data y</em> and <em>unbiased</em>
+    (meaning \(E[\tilde{\theta}] = \beta\) for any true \(\beta\)).
+    There are infinitely many such rules — the question is which has the smallest variance.
+    Below, three estimators fit a regression line to the same dataset. Regenerate to see the pattern persist.
+  </p>
+
+  <div class="estimator-grid" id="est-cards">
+    <div class="estimator-card">
+      <div class="est-name ols">OLS (Gauss-Markov winner)</div>
+      <span class="est-tag green">Linear &#10003;</span>
+      <span class="est-tag green">Unbiased &#10003;</span>
+      <div class="est-desc">
+        \(\hat{\beta} = (X^\top X)^{-1} X^\top y\)<br>
+        Weights each point by how far its x is from the mean. Optimal allocation.
+      </div>
+      <div class="est-stats">Var: <span id="ols-var-1">—</span></div>
+    </div>
+    <div class="estimator-card">
+      <div class="est-name comp">Rival Linear Estimator</div>
+      <span class="est-tag green">Linear &#10003;</span>
+      <span class="est-tag green">Unbiased &#10003;</span>
+      <div class="est-desc">
+        \(\tilde{\beta} = \frac{\sum w_i (y_i - \bar{y}_w)}{\sum w_i (x_i - \bar{x}_w)}\)<br>
+        Uses \(w_i \propto 1 + 0.8\,u_i\) (random unequal weights, renormalized to be unbiased).
+        Legal competitor — but wasteful with information.
+      </div>
+      <div class="est-stats">Var: <span id="comp-var-1">—</span></div>
+    </div>
+    <div class="estimator-card">
+      <div class="estimator-card" style="border:0;padding:0;background:none;">
+      <div class="est-name ridge">Ridge Regression</div>
+      <span class="est-tag yellow">Linear &#10003;</span>
+      <span class="est-tag red">Unbiased &#10007;</span>
+      <div class="est-desc">
+        \(\hat{\beta}^{\text{ridge}} = (X^\top X + \lambda I)^{-1} X^\top y\)<br>
+        Shrinks estimates toward zero. Biased — Gauss-Markov doesn't apply.
+        Can still beat OLS on MSE.
+      </div>
+      <div class="est-stats">Var: <span id="ridge-var-1">—</span> &nbsp;|&nbsp; MSE: <span id="ridge-mse-1">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn" onclick="regenerateData()" style="margin-bottom:18px;">Regenerate Data</button>
+
+  <div class="plot-container">
+    <div id="viz1" style="height:380px;"></div>
+  </div>
+
+  <div class="dist-caption" id="caption1">
+    Each line was fit to the same 20 data points.
+    <strong>OLS</strong> and the <strong>rival</strong> are both unbiased (centered on true &beta;),
+    but OLS has lower variance — its line is more stable across samples.
+    <strong>Ridge</strong> is biased (it undershoots) but even more stable.
+  </div>
+</div>
+
+<!-- ========== SECTION 4: SAMPLING DISTRIBUTIONS ========== -->
+<div class="section">
+  <div class="section-title">Visualization 2 &mdash; Sampling Distributions: Run 200 Datasets</div>
+
+  <p style="font-size:13px; color:#8b949e; margin-bottom:16px; line-height:1.6;">
+    To see <em>variance</em> you must imagine the estimator applied to many different datasets
+    drawn from the same true model. Each dataset gives a slightly different slope estimate.
+    The <strong style="color:#e6edf3">spread of those estimates across datasets</strong> is the variance.
+    Run the simulation to see all three estimators' sampling distributions at once.
+  </p>
+
+  <button class="btn" onclick="runSamplingDist()" style="margin-bottom:18px;">Run 200 Simulated Datasets</button>
+
+  <div class="plot-container">
+    <div id="viz2" style="height:360px;"></div>
+  </div>
+
+  <div class="dist-caption">
+    <strong>What to look for:</strong>
+    All three distributions are shown. OLS (blue) and the rival (red) should be centered near the
+    true &beta; = 2.0 — they're both unbiased. But OLS is <em>narrower</em>.
+    Ridge (orange) is shifted left (biased toward zero) but <em>narrowest of all</em>.
+    Gauss-Markov says: among the blue and red, the blue always wins.
+    It says nothing about the orange.
+  </div>
+</div>
+
+<!-- ========== SECTION 5: WHY BIASED CAN BE BETTER ========== -->
+<div class="section">
+  <div class="section-title">Visualization 3 &mdash; The Catch: MSE = Bias&sup2; + Variance</div>
+
+  <p style="font-size:13px; color:#8b949e; margin-bottom:16px; line-height:1.6;">
+    Gauss-Markov guarantees OLS wins the <em>variance</em> game among unbiased estimators.
+    But total prediction error is measured by <strong style="color:#e6edf3">MSE = Bias&sup2; + Variance</strong>.
+    A biased estimator can win the <em>total game</em> by trading a small amount of bias for a
+    large reduction in variance.
+  </p>
+
+  <div class="mse-grid">
+    <div class="mse-card">
+      <div class="mse-name" style="color:#58a6ff;">OLS</div>
+      <div class="mse-bar-wrap">
+        <div>
+          <div class="mse-bar" id="bar-ols-bias" style="background:#8b949e; height:2px;"></div>
+          <div class="mse-bar-label" style="color:#8b949e;">Bias&sup2;</div>
+        </div>
+        <div>
+          <div class="mse-bar" id="bar-ols-var" style="background:#58a6ff; height:60px;"></div>
+          <div class="mse-bar-label" style="color:#58a6ff;">Var</div>
+        </div>
+      </div>
+      <div class="mse-total">MSE = 0 + Var = <span id="mse-ols">—</span></div>
+    </div>
+    <div class="mse-card">
+      <div class="mse-name" style="color:#ff7b72;">Rival Estimator</div>
+      <div class="mse-bar-wrap">
+        <div>
+          <div class="mse-bar" id="bar-comp-bias" style="background:#8b949e; height:2px;"></div>
+          <div class="mse-bar-label" style="color:#8b949e;">Bias&sup2;</div>
+        </div>
+        <div>
+          <div class="mse-bar" id="bar-comp-var" style="background:#ff7b72; height:80px;"></div>
+          <div class="mse-bar-label" style="color:#ff7b72;">Var</div>
+        </div>
+      </div>
+      <div class="mse-total">MSE = 0 + Var = <span id="mse-comp">—</span></div>
+    </div>
+    <div class="mse-card">
+      <div class="mse-name" style="color:#ffa657;">Ridge</div>
+      <div class="mse-bar-wrap">
+        <div>
+          <div class="mse-bar" id="bar-ridge-bias" style="background:#da8b42; height:30px;"></div>
+          <div class="mse-bar-label" style="color:#da8b42;">Bias&sup2;</div>
+        </div>
+        <div>
+          <div class="mse-bar" id="bar-ridge-var" style="background:#ffa657; height:20px;"></div>
+          <div class="mse-bar-label" style="color:#ffa657;">Var</div>
+        </div>
+      </div>
+      <div class="mse-total">MSE = Bias&sup2; + Var = <span id="mse-ridge">—</span></div>
+    </div>
+  </div>
+
+  <button class="btn" onclick="runMSEPlot()" style="margin-bottom:18px;">Compute MSE Decomposition</button>
+  <div class="plot-container">
+    <div id="viz3" style="height:320px;"></div>
+  </div>
+
+  <div class="callout">
+    <strong>The key insight:</strong>
+    Gauss-Markov guarantees OLS wins the variance game. But the total game (MSE) can be won
+    by a biased player. This is exactly why ridge regression exists — and why
+    "the restriction to unbiased estimates is not necessarily a wise one" (ESL, p.51).
+  </div>
+</div>
+
+<!-- ========== SECTION 6: GUARANTEES PANEL ========== -->
+<div class="section">
+  <div class="section-title">At-a-Glance: What OLS Guarantees</div>
+  <div class="guarantee-grid">
+    <div class="guarantee-card">
+      <div class="g-question">BLUE<br>(Best Linear Unbiased)?</div>
+      <div class="g-answer yes">YES</div>
+      <div class="g-note">That's literally the theorem. Best = minimum variance.</div>
+    </div>
+    <div class="guarantee-card">
+      <div class="g-question">Minimum Variance<br>(among linear unbiased)?</div>
+      <div class="g-answer yes">YES</div>
+      <div class="g-note">No other unbiased linear rule can beat it.</div>
+    </div>
+    <div class="guarantee-card">
+      <div class="g-question">Minimum MSE<br>(overall)?</div>
+      <div class="g-answer no">NO</div>
+      <div class="g-note">Ridge, LASSO, and other biased estimators can achieve lower MSE.</div>
+    </div>
+    <div class="guarantee-card">
+      <div class="g-question">Requires Normality<br>of Errors?</div>
+      <div class="g-answer no">NO</div>
+      <div class="g-note">Only needs \(E[\varepsilon]=0\) and \(\text{Var}(\varepsilon)=\sigma^2 I\).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SECTION 7: FORMULA & QUOTES ========== -->
+<div class="section">
+  <div class="section-title">Formal Statement &amp; Book Quotes</div>
+  <div class="formula-box">
+    \[
+      \text{Var}(a^\top \hat{\beta}^{\text{OLS}}) \;\leq\; \text{Var}(c^\top y)
+      \quad \text{for any linear unbiased } \tilde{\theta} = c^\top y
+    \]
+  </div>
+  <div class="quote-block">
+    "The Gauss-Markov theorem states that if we have any other linear estimator
+    &theta;&#771; = c&#7488;y that is unbiased for a&#7488;&beta;, then
+    Var(a&#7488;&beta;&#770;) &le; Var(c&#7488;y)."
+    <br><br>
+    &mdash; Hastie, Tibshirani, Friedman, <em>Elements of Statistical Learning</em>, p.51
+  </div>
+  <div class="quote-block">
+    "However, it may well exist a biased estimator with smaller mean squared error.
+    Such an estimator would trade a little bias for a larger reduction in variance.
+    Biased models are the topic of Chapter 3 and beyond. The restriction to
+    unbiased estimates is not necessarily a wise one."
+    <br><br>
+    &mdash; ESL, p.51
+  </div>
+</div>
+
+</div><!-- end .page -->
+
+<script>
+/* ===================== UTILITIES ===================== */
+function randn() {
+  var u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+}
+
+function mean(arr) {
+  return arr.reduce(function(a, b) { return a + b; }, 0) / arr.length;
+}
+
+function variance(arr) {
+  var m = mean(arr);
+  return arr.reduce(function(a, b) { return a + (b - m) * (b - m); }, 0) / (arr.length - 1);
+}
+
+/* ===================== DATA GENERATION ===================== */
+var TRUE_BETA = 2.0;
+var TRUE_ALPHA = 1.0;
+var SIGMA = 1.5;
+var N_OBS = 20;
+var LAMBDA = 0.8;  // ridge penalty
+
+function generateDataset(seed) {
+  // Fixed X design (same every time for comparison clarity in viz1)
+  var X = [];
+  for (var i = 0; i < N_OBS; i++) {
+    X.push(-3 + (6 * i / (N_OBS - 1)));
+  }
+  var eps = [];
+  for (var i = 0; i < N_OBS; i++) {
+    eps.push(SIGMA * randn());
+  }
+  var y = X.map(function(x, i) { return TRUE_ALPHA + TRUE_BETA * x + eps[i]; });
+  return { X: X, y: y };
+}
+
+function fitOLS(X, y) {
+  var n = X.length;
+  var xbar = mean(X);
+  var ybar = mean(y);
+  var sxx = X.reduce(function(a, x) { return a + (x - xbar) * (x - xbar); }, 0);
+  var sxy = X.reduce(function(a, x, i) { return a + (x - xbar) * (y[i] - ybar); }, 0);
+  var beta = sxy / sxx;
+  var alpha = ybar - beta * xbar;
+  return { alpha: alpha, beta: beta };
+}
+
+/* Competitor: random unequal weights w_i ~ 1 + 0.8*Uniform, renormalized so estimator is unbiased.
+   The weights determine which y_i contribute to estimating beta.
+   We build c_i = w_i * (x_i - xbar_w) / sum(w_i*(x_i-xbar_w)*x_i) to satisfy unbiasedness. */
+function fitCompetitor(X, y) {
+  var n = X.length;
+  // Random weights — new weights each call
+  var w = X.map(function() { return 0.2 + Math.random(); });
+  var wsum = w.reduce(function(a, b) { return a + b; }, 0);
+  w = w.map(function(wi) { return wi / wsum * n; }); // normalize to average 1
+
+  // Weighted means
+  var wTotal = w.reduce(function(a, b) { return a + b; }, 0);
+  var xbarW = X.reduce(function(a, x, i) { return a + w[i] * x; }, 0) / wTotal;
+  var ybarW = y.reduce(function(a, yi, i) { return a + w[i] * yi; }, 0) / wTotal;
+
+  // Weighted slope
+  var wsxx = X.reduce(function(a, x, i) { return a + w[i] * (x - xbarW) * (x - xbarW); }, 0);
+  var wsxy = X.reduce(function(a, x, i) { return a + w[i] * (x - xbarW) * (y[i] - ybarW); }, 0);
+  var beta = wsxx > 0 ? wsxy / wsxx : 0;
+  var alpha = ybarW - beta * xbarW;
+  return { alpha: alpha, beta: beta };
+}
+
+function fitRidge(X, y, lambda) {
+  var n = X.length;
+  // Standardize X for ridge (center only, single predictor)
+  var xbar = mean(X);
+  var ybar = mean(y);
+  var sxx = X.reduce(function(a, x) { return a + (x - xbar) * (x - xbar); }, 0);
+  var sxy = X.reduce(function(a, x, i) { return a + (x - xbar) * (y[i] - ybar); }, 0);
+  var beta = sxy / (sxx + lambda);
+  var alpha = ybar - beta * xbar;
+  return { alpha: alpha, beta: beta };
+}
+
+/* ===================== VIZ 1: Scatter + Three Lines ===================== */
+var currentDataset = null;
+var currentCompWeights = null;
+
+function regenerateData() {
+  var ds = generateDataset();
+  currentDataset = ds;
+  drawViz1(ds);
+}
+
+function drawViz1(ds) {
+  var X = ds.X, y = ds.y;
+
+  var ols = fitOLS(X, y);
+  var comp = fitCompetitor(X, y);
+  var ridge = fitRidge(X, y, LAMBDA);
+
+  // Update cards
+  // We'll approximate variance from a small bootstrap
+  var BOOT = 200;
+  var olsBetas = [], compBetas = [], ridgeBetas = [];
+  for (var b = 0; b < BOOT; b++) {
+    var ds2 = generateDataset();
+    olsBetas.push(fitOLS(ds2.X, ds2.y).beta);
+    compBetas.push(fitCompetitor(ds2.X, ds2.y).beta);
+    ridgeBetas.push(fitRidge(ds2.X, ds2.y, LAMBDA).beta);
+  }
+  var olsV = variance(olsBetas);
+  var compV = variance(compBetas);
+  var ridgeV = variance(ridgeBetas);
+  var ridgeMean = mean(ridgeBetas);
+  var ridgeBias2 = (ridgeMean - TRUE_BETA) * (ridgeMean - TRUE_BETA);
+  var ridgeMSE = ridgeBias2 + ridgeV;
+  var olsMSE = olsV; // bias=0
+
+  document.getElementById('ols-var-1').textContent = olsV.toFixed(4);
+  document.getElementById('comp-var-1').textContent = compV.toFixed(4);
+  document.getElementById('ridge-var-1').textContent = ridgeV.toFixed(4);
+  document.getElementById('ridge-mse-1').textContent = ridgeMSE.toFixed(4);
+
+  // Line points
+  var xMin = Math.min.apply(null, X) - 0.2;
+  var xMax = Math.max.apply(null, X) + 0.2;
+  var xLine = [xMin, xMax];
+
+  var traces = [
+    {
+      type: 'scatter', mode: 'markers',
+      name: 'Data points',
+      x: X, y: y,
+      marker: { color: '#8b949e', size: 7, opacity: 0.8 }
+    },
+    {
+      type: 'scatter', mode: 'lines',
+      name: 'True line (\u03b2=' + TRUE_BETA + ')',
+      x: xLine,
+      y: xLine.map(function(x) { return TRUE_ALPHA + TRUE_BETA * x; }),
+      line: { color: '#f0f6fc', width: 2, dash: 'dot' },
+      opacity: 0.5
+    },
+    {
+      type: 'scatter', mode: 'lines',
+      name: 'OLS (BLUE)',
+      x: xLine,
+      y: xLine.map(function(x) { return ols.alpha + ols.beta * x; }),
+      line: { color: '#58a6ff', width: 3 }
+    },
+    {
+      type: 'scatter', mode: 'lines',
+      name: 'Rival Linear Estimator',
+      x: xLine,
+      y: xLine.map(function(x) { return comp.alpha + comp.beta * x; }),
+      line: { color: '#ff7b72', width: 3, dash: 'dash' }
+    },
+    {
+      type: 'scatter', mode: 'lines',
+      name: 'Ridge (\u03bb=' + LAMBDA + ', biased)',
+      x: xLine,
+      y: xLine.map(function(x) { return ridge.alpha + ridge.beta * x; }),
+      line: { color: '#ffa657', width: 3, dash: 'dashdot' }
+    }
+  ];
+
+  var layout = {
+    paper_bgcolor: '#0d1117',
+    plot_bgcolor: '#161b22',
+    font: { color: '#e6edf3', size: 12 },
+    xaxis: {
+      title: 'x',
+      gridcolor: '#21262d',
+      zerolinecolor: '#30363d',
+      color: '#8b949e'
+    },
+    yaxis: {
+      title: 'y',
+      gridcolor: '#21262d',
+      zerolinecolor: '#30363d',
+      color: '#8b949e'
+    },
+    legend: {
+      x: 0.01, y: 0.99,
+      bgcolor: 'rgba(13,17,23,0.8)',
+      bordercolor: '#30363d',
+      borderwidth: 1,
+      font: { size: 12 }
+    },
+    margin: { l: 50, r: 20, t: 20, b: 50 },
+    annotations: [
+      {
+        x: 0.99, y: 0.02, xref: 'paper', yref: 'paper',
+        text: 'OLS var: ' + olsV.toFixed(3) + ' | Rival var: ' + compV.toFixed(3) + ' | Ridge var: ' + ridgeV.toFixed(3),
+        showarrow: false,
+        font: { size: 11, color: '#8b949e' },
+        xanchor: 'right', yanchor: 'bottom'
+      }
+    ]
+  };
+
+  Plotly.react('viz1', traces, layout, { responsive: true, displayModeBar: false });
+}
+
+/* ===================== VIZ 2: Sampling Distributions ===================== */
+function runSamplingDist() {
+  var NSIM = 200;
+  var olsBetas = [], compBetas = [], ridgeBetas = [];
+
+  for (var s = 0; s < NSIM; s++) {
+    var ds = generateDataset();
+    olsBetas.push(fitOLS(ds.X, ds.y).beta);
+    compBetas.push(fitCompetitor(ds.X, ds.y).beta);
+    ridgeBetas.push(fitRidge(ds.X, ds.y, LAMBDA).beta);
+  }
+
+  var olsV = variance(olsBetas);
+  var compV = variance(compBetas);
+  var ridgeV = variance(ridgeBetas);
+
+  var traces = [
+    {
+      type: 'histogram',
+      name: 'OLS (BLUE, unbiased)',
+      x: olsBetas,
+      nbinsx: 30,
+      marker: { color: 'rgba(88,166,255,0.6)', line: { color: '#58a6ff', width: 1 } },
+      opacity: 0.8
+    },
+    {
+      type: 'histogram',
+      name: 'Rival estimator (unbiased)',
+      x: compBetas,
+      nbinsx: 30,
+      marker: { color: 'rgba(255,123,114,0.5)', line: { color: '#ff7b72', width: 1 } },
+      opacity: 0.75
+    },
+    {
+      type: 'histogram',
+      name: 'Ridge (biased, \u03bb=' + LAMBDA + ')',
+      x: ridgeBetas,
+      nbinsx: 30,
+      marker: { color: 'rgba(255,166,87,0.5)', line: { color: '#ffa657', width: 1 } },
+      opacity: 0.7
+    }
+  ];
+
+  var layout = {
+    paper_bgcolor: '#0d1117',
+    plot_bgcolor: '#161b22',
+    font: { color: '#e6edf3', size: 12 },
+    barmode: 'overlay',
+    xaxis: {
+      title: 'Estimated \u03b2',
+      gridcolor: '#21262d',
+      zerolinecolor: '#30363d',
+      color: '#8b949e'
+    },
+    yaxis: {
+      title: 'Count (out of 200 simulations)',
+      gridcolor: '#21262d',
+      color: '#8b949e'
+    },
+    shapes: [
+      {
+        type: 'line',
+        x0: TRUE_BETA, x1: TRUE_BETA, y0: 0, y1: 1,
+        xref: 'x', yref: 'paper',
+        line: { color: '#f0f6fc', width: 2, dash: 'dot' }
+      }
+    ],
+    annotations: [
+      {
+        x: TRUE_BETA, y: 1, xref: 'x', yref: 'paper',
+        text: 'True \u03b2 = ' + TRUE_BETA,
+        showarrow: false,
+        font: { color: '#f0f6fc', size: 11 },
+        yanchor: 'bottom', xanchor: 'left',
+        bgcolor: 'rgba(13,17,23,0.7)',
+        borderpad: 3
+      },
+      {
+        x: 0.5, y: -0.18, xref: 'paper', yref: 'paper',
+        text: 'OLS var=' + olsV.toFixed(3) + '  |  Rival var=' + compV.toFixed(3) + '  |  Ridge var=' + ridgeV.toFixed(3) + '  (Gauss-Markov: OLS var &le; Rival var)',
+        showarrow: false,
+        font: { size: 11, color: '#58a6ff' },
+        xanchor: 'center'
+      }
+    ],
+    legend: {
+      x: 0.01, y: 0.99,
+      bgcolor: 'rgba(13,17,23,0.8)',
+      bordercolor: '#30363d',
+      borderwidth: 1
+    },
+    margin: { l: 60, r: 20, t: 20, b: 70 }
+  };
+
+  Plotly.react('viz2', traces, layout, { responsive: true, displayModeBar: false });
+}
+
+/* ===================== VIZ 3: MSE Decomposition ===================== */
+function runMSEPlot() {
+  var NSIM = 500;
+  var olsBetas = [], compBetas = [], ridgeBetas = [];
+
+  for (var s = 0; s < NSIM; s++) {
+    var ds = generateDataset();
+    olsBetas.push(fitOLS(ds.X, ds.y).beta);
+    compBetas.push(fitCompetitor(ds.X, ds.y).beta);
+    ridgeBetas.push(fitRidge(ds.X, ds.y, LAMBDA).beta);
+  }
+
+  var olsV = variance(olsBetas);
+  var compV = variance(compBetas);
+  var ridgeV = variance(ridgeBetas);
+
+  var olsMean = mean(olsBetas);
+  var compMean = mean(compBetas);
+  var ridgeMean = mean(ridgeBetas);
+
+  var olsBias2 = (olsMean - TRUE_BETA) * (olsMean - TRUE_BETA);
+  var compBias2 = (compMean - TRUE_BETA) * (compMean - TRUE_BETA);
+  var ridgeBias2 = (ridgeMean - TRUE_BETA) * (ridgeMean - TRUE_BETA);
+
+  var olsMSE = olsBias2 + olsV;
+  var compMSE = compBias2 + compV;
+  var ridgeMSE = ridgeBias2 + ridgeV;
+
+  // Update stat cards
+  document.getElementById('mse-ols').textContent = olsMSE.toFixed(4);
+  document.getElementById('mse-comp').textContent = compMSE.toFixed(4);
+  document.getElementById('mse-ridge').textContent = ridgeMSE.toFixed(4);
+
+  // Update bar heights proportionally
+  var maxMSE = Math.max(olsMSE, compMSE, ridgeMSE);
+  var scale = 70 / maxMSE;
+
+  var barOlsBias = document.getElementById('bar-ols-bias');
+  var barOlsVar = document.getElementById('bar-ols-var');
+  var barCompBias = document.getElementById('bar-comp-bias');
+  var barCompVar = document.getElementById('bar-comp-var');
+  var barRidgeBias = document.getElementById('bar-ridge-bias');
+  var barRidgeVar = document.getElementById('bar-ridge-var');
+
+  if (barOlsBias) barOlsBias.style.height = Math.max(2, olsBias2 * scale) + 'px';
+  if (barOlsVar) barOlsVar.style.height = Math.max(2, olsV * scale) + 'px';
+  if (barCompBias) barCompBias.style.height = Math.max(2, compBias2 * scale) + 'px';
+  if (barCompVar) barCompVar.style.height = Math.max(2, compV * scale) + 'px';
+  if (barRidgeBias) barRidgeBias.style.height = Math.max(2, ridgeBias2 * scale) + 'px';
+  if (barRidgeVar) barRidgeVar.style.height = Math.max(2, ridgeV * scale) + 'px';
+
+  // Plotly grouped bar for MSE breakdown
+  var estimators = ['OLS', 'Rival Estimator', 'Ridge'];
+  var bias2vals = [olsBias2, compBias2, ridgeBias2];
+  var varVals = [olsV, compV, ridgeV];
+  var mseVals = [olsMSE, compMSE, ridgeMSE];
+  var barColors = ['#58a6ff', '#ff7b72', '#ffa657'];
+  var biasColors = ['#4a7ba8', '#a85a55', '#a87040'];
+
+  var traces = [
+    {
+      type: 'bar',
+      name: 'Bias\u00b2',
+      x: estimators,
+      y: bias2vals,
+      marker: { color: biasColors },
+      text: bias2vals.map(function(v) { return v.toFixed(4); }),
+      textposition: 'auto'
+    },
+    {
+      type: 'bar',
+      name: 'Variance',
+      x: estimators,
+      y: varVals,
+      marker: { color: barColors },
+      text: varVals.map(function(v) { return v.toFixed(4); }),
+      textposition: 'auto'
+    }
+  ];
+
+  var layout = {
+    paper_bgcolor: '#0d1117',
+    plot_bgcolor: '#161b22',
+    font: { color: '#e6edf3', size: 12 },
+    barmode: 'stack',
+    xaxis: {
+      gridcolor: '#21262d',
+      color: '#8b949e'
+    },
+    yaxis: {
+      title: 'MSE Component',
+      gridcolor: '#21262d',
+      color: '#8b949e'
+    },
+    legend: {
+      x: 0.99, y: 0.99, xanchor: 'right',
+      bgcolor: 'rgba(13,17,23,0.8)',
+      bordercolor: '#30363d',
+      borderwidth: 1
+    },
+    annotations: estimators.map(function(name, i) {
+      return {
+        x: name, y: mseVals[i],
+        text: 'MSE=' + mseVals[i].toFixed(3),
+        showarrow: false,
+        yshift: 10,
+        font: { size: 11, color: '#f0f6fc' }
+      };
+    }),
+    margin: { l: 60, r: 20, t: 30, b: 50 }
+  };
+
+  Plotly.react('viz3', traces, layout, { responsive: true, displayModeBar: false });
+}
+
+/* ===================== INIT ===================== */
+window.addEventListener('load', function() {
+  regenerateData();
+  // Render empty placeholders for viz2 and viz3
+  Plotly.react('viz2', [], {
+    paper_bgcolor: '#0d1117',
+    plot_bgcolor: '#161b22',
+    font: { color: '#8b949e' },
+    annotations: [{
+      x: 0.5, y: 0.5, xref: 'paper', yref: 'paper',
+      text: 'Click "Run 200 Simulated Datasets" to generate sampling distributions',
+      showarrow: false,
+      font: { size: 14, color: '#8b949e' },
+      xanchor: 'center', yanchor: 'middle'
+    }],
+    margin: { l: 60, r: 20, t: 20, b: 50 },
+    xaxis: { visible: false },
+    yaxis: { visible: false }
+  }, { responsive: true, displayModeBar: false });
+
+  Plotly.react('viz3', [], {
+    paper_bgcolor: '#0d1117',
+    plot_bgcolor: '#161b22',
+    font: { color: '#8b949e' },
+    annotations: [{
+      x: 0.5, y: 0.5, xref: 'paper', yref: 'paper',
+      text: 'Click "Compute MSE Decomposition" to run simulation',
+      showarrow: false,
+      font: { size: 14, color: '#8b949e' },
+      xanchor: 'center', yanchor: 'middle'
+    }],
+    margin: { l: 60, r: 20, t: 30, b: 50 },
+    xaxis: { visible: false },
+    yaxis: { visible: false }
+  }, { responsive: true, displayModeBar: false });
+
+  // Trigger MathJax render
+  if (window.MathJax) {
+    MathJax.typesetPromise();
+  }
+});
+</script>
+</body>
+</html>

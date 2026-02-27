@@ -1,0 +1,468 @@
+[
+  {
+    "concept_id": 647,
+    "concept_name": "cox proportional hazards model",
+    "facts": [
+      {
+        "fact_text": "For survival problems, Cox's proportional hazards regression model is widely used; hence we use the score test from this model in step (1) and the multivariate Cox model in step (2b).",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48863,
+        "page_number": 696
+      },
+      {
+        "fact_text": "We used a Cox-score cutoff of 3.53, yielding 27 genes, where the value 3.53 was found through 10-fold cross-validation. We then computed the first principal component (m = 1) using just this subset of the data, as well as its value for each of the test observations. We included this as a quantitative predictor in a Cox regression model, and its likelihood-ratio significance was p = 0.005.",
+        "fact_type": "example",
+        "importance_rank": 2,
+        "paragraph_id": 48863,
+        "page_number": 696
+      },
+      {
+        "fact_text": "When dichotomized (using the mean score on the training data as a threshold), it clearly separates the patients in the test set into low and high risk groups (middle-right panel of Figure 18.14, p = 0.006).",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 48863,
+        "page_number": 696
+      },
+      {
+        "fact_text": "The supervision in step (1) encourages the principal components to align with the outcome, and thus in most cases only the first or first few components tend to be useful for prediction.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 48863,
+        "page_number": 696
+      },
+      {
+        "fact_text": "The top-right panel of Figure 18.14 uses the top scoring gene (dichotomized) alone as a predictor of survival. It is not significant on the test set. Likewise, the lower-right panel shows the dichotomized principal component using all the training data, which is also not significant.",
+        "fact_type": "comparison",
+        "importance_rank": 5,
+        "paragraph_id": 48863,
+        "page_number": 696
+      }
+    ]
+  },
+  {
+    "concept_id": 669,
+    "concept_name": "supervised principal components for feature selection",
+    "facts": [
+      {
+        "fact_text": "Supervised principal components can yield lower test errors than competing methods, as shown in Figure 18.16. However, it does not always produce a sparse model involving only a small number of features (genes).",
+        "fact_type": "property",
+        "importance_rank": 1,
+        "paragraph_id": 48901,
+        "page_number": 699
+      },
+      {
+        "fact_text": "The test errors of principal components and partial least squares are shown at the right of the plot; both are badly affected by the noisy features in the data. Supervised principal components and thresholded PLS work best over a wide range of the number of selected features, with the former showing consistently lower test errors.",
+        "fact_type": "comparison",
+        "importance_rank": 2,
+        "paragraph_id": 48899,
+        "page_number": 699
+      },
+      {
+        "fact_text": "Even if the thresholding in Step (1) of the algorithm yields a relatively small number of features, it may be that some of the omitted features have sizable inner products with the supervised principal component (and could act as a good surrogate). In addition, highly correlated features will tend to be chosen together, and there may be great deal of redundancy in the set of selected features.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 48909,
+        "page_number": 700
+      },
+      {
+        "fact_text": "We see that supervised principal components (orange curve) reaches its lowest error when about 50 features are included in the model, which is the correct number for the simulation. Although a linear model in the first 50 features is optimal, the lasso (green) is adversely affected by the large number of noisy features, and starts overfitting when far fewer are in the model.",
+        "fact_type": "example",
+        "importance_rank": 4,
+        "paragraph_id": 48909,
+        "page_number": 700
+      },
+      {
+        "fact_text": "Then we apply the lasso with \u0177i as the outcome variable, in place of the usual outcome yi. All features are used in the lasso fit, not just those that were retained in the thresholding step in supervised principal components. The idea is that by first denoising the outcome variable, the lasso should not be as adversely affected by the large number of noise features.",
+        "fact_type": "intuition",
+        "importance_rank": 5,
+        "paragraph_id": 48917,
+        "page_number": 701
+      },
+      {
+        "fact_text": "While this example seems \u2018tailor-made\u2019 for supervised principal components, its good performance seems to hold in other simulated and real datasets (Bair et al., 2006).",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 48899,
+        "page_number": 699
+      },
+      {
+        "fact_text": "The usual lasso, applied to the raw outcome, starts to overfit more quickly than the pre-conditioned version. Overfitting is not a problem, since the outcome variable has been denoised. We usually select the tuning parameter for the pre-conditioned lasso on more subjective grounds, like parsimony.",
+        "fact_type": "comparison",
+        "importance_rank": 7,
+        "paragraph_id": 48917,
+        "page_number": 701
+      }
+    ]
+  },
+  {
+    "concept_id": 654,
+    "concept_name": "two-sample t-statistic for genes",
+    "facts": [
+      {
+        "fact_text": "To identify informative genes, we construct a two-sample t-statistic for each gene.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48926,
+        "page_number": 702
+      },
+      {
+        "fact_text": "The quantity sej is the pooled within-group standard error for gene j:",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 48930,
+        "page_number": 702
+      },
+      {
+        "fact_text": "A histogram of the 12,625 t-statistics is shown in orange in Figure 18.18, ranging in value from \u22124.7 to 5.0. If the tj values were normally distributed we could consider any value greater than two in absolute value to be significantly large. This would correspond to a significance level of about 5%.",
+        "fact_type": "example",
+        "importance_rank": 3,
+        "paragraph_id": 48943,
+        "page_number": 703
+      },
+      {
+        "fact_text": "Here there are 1189 genes with |tj| \u22652. However with 12,625 genes we would expect many large values to occur by chance, even if the treatment had no effect on any gene. For example, if the genes were independent (which they are surely not), the number of falsely significant genes would have a binomial distribution with mean 12, 625 \u00b7 0.05 = 631.3 and standard deviation 24.5; the actual 1189 is way out of range.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 48943,
+        "page_number": 703
+      },
+      {
+        "fact_text": "An attractive alternative approach is to use the permutation distribution, since it avoids assumptions about the distribution of the data. We compute (in principle) all K = \u221258\n14\u2213 permutations of the sample labels, and for each permutation k compute the t-statistics tkj.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 48943,
+        "page_number": 703
+      },
+      {
+        "fact_text": "How do we assess the results for all 12,625 genes? This is called the multiple testing problem. We can start as above by computing a p-value for each gene. This can be done using the theoretical t-distribution probabilities, which assumes the features are normally distributed.",
+        "fact_type": "intuition",
+        "importance_rank": 6,
+        "paragraph_id": 48943,
+        "page_number": 703
+      }
+    ]
+  },
+  {
+    "concept_id": 655,
+    "concept_name": "pooled within-group standard error",
+    "facts": [
+      {
+        "fact_text": "The quantity sej is the pooled within-group standard error for gene j:",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48930,
+        "page_number": 702
+      },
+      {
+        "fact_text": "Here C\u2113 are the indices of the N\u2113 samples in group \u2113, where \u2113 = 1 is the untreated group and \u2113 = 2 is the treated group.",
+        "fact_type": "definition",
+        "importance_rank": 2,
+        "paragraph_id": 48930,
+        "page_number": 702
+      },
+      {
+        "fact_text": "tj = \u0305x2j \u2212 \u0305x1j",
+        "fact_type": "formula",
+        "importance_rank": 3,
+        "paragraph_id": 48927,
+        "page_number": 702
+      },
+      {
+        "fact_text": "A histogram of the 12,625 t-statistics is shown in orange in Figure 18.18, ranging in value from \u22124.7 to 5.0. If the tj values were normally distributed we could consider any value greater than two in absolute value to be significantly large. This would correspond to a significance level of about 5%.",
+        "fact_type": "example",
+        "importance_rank": 4,
+        "paragraph_id": 48943,
+        "page_number": 703
+      },
+      {
+        "fact_text": "To identify informative genes, we construct a two-sample t-statistic for each gene.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 48926,
+        "page_number": 702
+      }
+    ]
+  },
+  {
+    "concept_id": 657,
+    "concept_name": "pooled permutation p-values",
+    "facts": [
+      {
+        "fact_text": "An attractive alternative approach is to use the permutation distribution, since it avoids assumptions about the distribution of the data. We compute (in principle) all K = \u221258\n14\u2213 permutations of the sample labels, and for each permutation k compute the t-statistics tkj.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48943,
+        "page_number": 703
+      },
+      {
+        "fact_text": "How do we assess the results for all 12,625 genes? This is called the multiple testing problem. We can start as above by computing a p-value for each gene. This can be done using the theoretical t-distribution probabilities, which assumes the features are normally distributed.",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 48943,
+        "page_number": 703
+      },
+      {
+        "fact_text": "Here there are 1189 genes with |tj| \u22652. However with 12,625 genes we would expect many large values to occur by chance, even if the treatment had no effect on any gene. For example, if the genes were independent (which they are surely not), the number of falsely significant genes would have a binomial distribution with mean 12, 625 \u00b7 0.05 = 631.3 and standard deviation 24.5; the actual 1189 is way out of range.",
+        "fact_type": "example",
+        "importance_rank": 3,
+        "paragraph_id": 48943,
+        "page_number": 703
+      },
+      {
+        "fact_text": "The feature assessment problem moves our focus from prediction to the traditional statistical topic of multiple hypothesis testing. For the remainder of this chapter we will use M instead of p to denote the number of features, since we will frequently be referring to p-values.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 48921,
+        "page_number": 702
+      }
+    ]
+  },
+  {
+    "concept_id": 659,
+    "concept_name": "bonferroni method",
+    "facts": [
+      {
+        "fact_text": "There are variations to this approach that adjust the individual p-values to achieve an FWER of at most \u03b1, with some approaches avoiding the assumption of independence; see, e.g., Dudoit et al. (2002b).",
+        "fact_type": "property",
+        "importance_rank": 1,
+        "paragraph_id": 48960,
+        "page_number": 705
+      },
+      {
+        "fact_text": "A different approach to multiple testing does not try to control the FWER, but focuses instead on the proportion of falsely significant genes. As we will see, this approach has a strong practical appeal.",
+        "fact_type": "comparison",
+        "importance_rank": 2,
+        "paragraph_id": 48962,
+        "page_number": 705
+      },
+      {
+        "fact_text": "Note that the family-wise error rate is Pr(V \u22651).",
+        "fact_type": "definition",
+        "importance_rank": 3,
+        "paragraph_id": 48962,
+        "page_number": 705
+      },
+      {
+        "fact_text": "Here there are 1189 genes with |tj| \u22652. However with 12,625 genes we would expect many large values to occur by chance, even if the treatment had no effect on any gene.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 48943,
+        "page_number": 703
+      },
+      {
+        "fact_text": "The feature assessment problem moves our focus from prediction to the traditional statistical topic of multiple hypothesis testing.",
+        "fact_type": "definition",
+        "importance_rank": 5,
+        "paragraph_id": 48921,
+        "page_number": 702
+      }
+    ]
+  },
+  {
+    "concept_id": 678,
+    "concept_name": "radiation sensitivity gene expression study",
+    "facts": [
+      {
+        "fact_text": "Consider, for example, the microarray data in Table 18.4, taken from a study on the sensitivity of cancer patients to ionizing radiation treatment (Rieger et al., 2004). Each row consists of the expression of genes in 58 patient samples: 44 samples were from patients with a normal reaction, and 14 from patients who had a severe reaction to radiation.",
+        "fact_type": "example",
+        "importance_rank": 1,
+        "paragraph_id": 48926,
+        "page_number": 702
+      },
+      {
+        "fact_text": "The measurements were made on oligo-nucleotide microarrays. The object of the experiment was to find genes whose expression was different in the radiation sensitive group of patients. There are M = 12, 625 genes altogether; the table shows the data for some of the genes and samples for illustration.",
+        "fact_type": "definition",
+        "importance_rank": 2,
+        "paragraph_id": 48926,
+        "page_number": 702
+      },
+      {
+        "fact_text": "To identify informative genes, we construct a two-sample t-statistic for each gene.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 48926,
+        "page_number": 702
+      },
+      {
+        "fact_text": "A histogram of the 12,625 t-statistics is shown in orange in Figure 18.18, ranging in value from \u22124.7 to 5.0. If the tj values were normally distributed we could consider any value greater than two in absolute value to be significantly large. This would correspond to a significance level of about 5%.",
+        "fact_type": "example",
+        "importance_rank": 4,
+        "paragraph_id": 48943,
+        "page_number": 703
+      },
+      {
+        "fact_text": "Here there are 1189 genes with |tj| \u22652. However with 12,625 genes we would expect many large values to occur by chance, even if the treatment had no effect on any gene. For example, if the genes were independent (which they are surely not), the number of falsely significant genes would have a binomial distribution with mean 12, 625 \u00b7 0.05 = 631.3 and standard deviation 24.5; the actual 1189 is way out of range.",
+        "fact_type": "intuition",
+        "importance_rank": 5,
+        "paragraph_id": 48943,
+        "page_number": 703
+      },
+      {
+        "fact_text": "Thus our goal is to assess the significance of individual features. This assessment is usually done without the use of a multivariate predictive model like those in the first part of this chapter.",
+        "fact_type": "intuition",
+        "importance_rank": 6,
+        "paragraph_id": 48921,
+        "page_number": 702
+      }
+    ]
+  },
+  {
+    "concept_id": 660,
+    "concept_name": "false discovery rate",
+    "facts": [
+      {
+        "fact_text": "FDR = E(V/R).",
+        "fact_type": "formula",
+        "importance_rank": 1,
+        "paragraph_id": 48966,
+        "page_number": 705
+      },
+      {
+        "fact_text": "In the microarray setting, this is the expected proportion of genes that are incorrectly called significant, among the R genes that are called significant. The expectation is taken over the population from which the data are generated.",
+        "fact_type": "definition",
+        "importance_rank": 2,
+        "paragraph_id": 48967,
+        "page_number": 705
+      },
+      {
+        "fact_text": "Benjamini and Hochberg (1995) first proposed the notion of false discovery rate, and gave a testing procedure (Algorithm 18.2) whose FDR is bounded by a user-defined level \u03b1. The Benjamini\u2013Hochberg (BH) procedure is based on p-values; these can be obtained from an asymptotic approximation to the test statistic (e.g., Gaussian), or a permutation distribution, as is done here.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 48967,
+        "page_number": 705
+      },
+      {
+        "fact_text": "If the hypotheses are independent, Benjamini and Hochberg (1995) show that regardless of how many null hypotheses are true and regardless of the distribution of the p-values when the null hypothesis is false, this procedure has the property FDR \u2264 M0/M \u03b1 \u2264 \u03b1.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 48967,
+        "page_number": 705
+      },
+      {
+        "fact_text": "A different approach to multiple testing does not try to control the FWER, but focuses instead on the proportion of falsely significant genes. As we will see, this approach has a strong practical appeal.",
+        "fact_type": "comparison",
+        "importance_rank": 5,
+        "paragraph_id": 48962,
+        "page_number": 705
+      },
+      {
+        "fact_text": "We must remember that the FDR is not the same as type-I error, for which 0.05 is the customary choice. For the scientist, the false discovery rate is the expected proportion of false positive genes among the list of genes that the statistician tells him are significant. Microarray experiments with FDRs as high as 0.15 might still be useful, especially if they are exploratory in nature.",
+        "fact_type": "intuition",
+        "importance_rank": 6,
+        "paragraph_id": 49005,
+        "page_number": 708
+      },
+      {
+        "fact_text": "For illustration we chose \u03b1 = 0.15. The bottom left panel of Figure 18.18 shows a plot of the ordered p-values p(j), and the line with slope 0.15/12625.",
+        "fact_type": "example",
+        "importance_rank": 7,
+        "paragraph_id": 48970,
+        "page_number": 705
+      }
+    ]
+  },
+  {
+    "concept_id": 664,
+    "concept_name": "asymmetric cutpoints in multiple testing",
+    "facts": [
+      {
+        "fact_text": "In the testing methods described above, we used the absolute value of the test statistic tj, and hence applied the same cut-points to both positive and negative values of the statistic. In some experiments, it might happen that most or all of the differentially expressed genes change in the positive direction (or all in the negative direction). For this situation it is advantageous to derive separate cut-points for the two cases.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 49007,
+        "page_number": 708
+      },
+      {
+        "fact_text": "The significance analysis of microarrays (SAM) approach offers a way of doing this. The basis of the SAM method is shown in Figure 18.20. On the vertical axis we have plotted the ordered test statistics t(1) \u2264 t(2) \u2264 \u00b7 \u00b7 \u00b7 \u2264 t(M), while the horizontal axis shows the expected order statistics from the permutations of the data.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 49007,
+        "page_number": 708
+      },
+      {
+        "fact_text": "Two lines are drawn, parallel to the 45\u00b0 line, \u0394 units away. Starting at the origin and moving to the right, we find the first place that the genes leave the band. This defines the upper cutpoint Chi and all genes beyond that point are called significant (marked red). Similarly we find the lower cutpoint Clow for genes in the bottom left corner.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 49007,
+        "page_number": 708
+      },
+      {
+        "fact_text": "Thus each value of the tuning parameter \u0394 defines upper and lower cutpoints, and the plug-in estimate \u0302FDR for each of these cutpoints is estimated as before. Typically a range of values of \u0394 and associated \u0302FDR values are computed, from which a particular pair are chosen on subjective grounds.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 49007,
+        "page_number": 708
+      },
+      {
+        "fact_text": "The advantage of the SAM approach lies in the possible asymmetry of the cutpoints. In the example of Figure 18.20, with \u0394 = 0.71 we obtain 11 significant genes; they are all in the upper right. The data points in the bottom left never leave the band, and hence Clow = \u2212\u221e. Hence for this value of \u0394, no genes are called significant on the left (negative) side.",
+        "fact_type": "example",
+        "importance_rank": 5,
+        "paragraph_id": 49007,
+        "page_number": 708
+      },
+      {
+        "fact_text": "We do not impose symmetry on the cutpoints, as was done in Section 18.7.1, as there is no reason to assume similar behavior at the two ends.",
+        "fact_type": "intuition",
+        "importance_rank": 6,
+        "paragraph_id": 49007,
+        "page_number": 708
+      },
+      {
+        "fact_text": "since the permutation distribution uses M rather M0 null hypotheses. Hence if an estimate of M0 is available, a better estimate of FDR can be obtained from (\u0302M0/M) \u00b7 \u0302FDR.",
+        "fact_type": "property",
+        "importance_rank": 7,
+        "paragraph_id": 49005,
+        "page_number": 708
+      }
+    ]
+  },
+  {
+    "concept_id": 677,
+    "concept_name": "bayesian interpretation of fdr",
+    "facts": [
+      {
+        "fact_text": "pFDR(\u0393) = Pr(Zj = 0|tj \u2208 \u0393).",
+        "fact_type": "formula",
+        "importance_rank": 1,
+        "paragraph_id": 49033,
+        "page_number": 711
+      },
+      {
+        "fact_text": "Hence under the mixture model (18.51), the pFDR is the posterior probability that the null hypothesis it true, given that test statistic falls in the rejection region for the test; that is, given that we reject the null hypothesis.",
+        "fact_type": "definition",
+        "importance_rank": 2,
+        "paragraph_id": 49034,
+        "page_number": 711
+      },
+      {
+        "fact_text": "The false discovery rate provides a measure of accuracy for tests based on an entire rejection region, such as |tj| \u22652. But if the FDR of such a test is say 10%, then a gene with say tj = 5 will be more significant than a gene with tj = 2. Thus it is of interest to derive a local (gene-specific) version of the FDR.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 49034,
+        "page_number": 711
+      },
+      {
+        "fact_text": "The q-value (Storey, 2003) of a test statistic tj is defined to be the smallest FDR over all rejection regions that reject tj. That is, for symmetric rejection regions, the q-value for tj = 2 is defined to be the FDR for the rejection region \u0393 = {(\u2212\u221e, \u22122) \u222a (2, \u221e)}. Thus the q-value for tj = 5 will be smaller than that for tj = 2, reflecting the fact that tj = 5 is more significant than tj = 2.",
+        "fact_type": "definition",
+        "importance_rank": 4,
+        "paragraph_id": 49034,
+        "page_number": 711
+      },
+      {
+        "fact_text": "The local false discovery rate (Efron and Tibshirani, 2002) at t = t0 is defined to be Pr(Zj = 0|tj = t0). This is the (positive) FDR for an infinitesimal rejection region surrounding the value tj = t0.",
+        "fact_type": "definition",
+        "importance_rank": 5,
+        "paragraph_id": 49036,
+        "page_number": 711
+      },
+      {
+        "fact_text": "The false discovery rate was proposed by Benjamini and Hochberg (1995), and studied and generalized in subsequent papers by these authors and many others.",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 49038,
+        "page_number": 711
+      }
+    ]
+  }
+]

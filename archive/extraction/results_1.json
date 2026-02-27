@@ -1,0 +1,924 @@
+{
+  "concepts": [
+    {
+      "name": "expected prediction error",
+      "type": "metric",
+      "description": "Expected value of squared prediction error over an independent test sample, measuring how well a model generalizes.",
+      "quote": "Test error, also referred to as generalization error, is the prediction error over an independent test sample",
+      "paragraph_ids": []
+    },
+    {
+      "name": "training error",
+      "type": "metric",
+      "description": "Average loss over the training sample, typically an optimistic estimate of test error.",
+      "quote": "Training error is the sample analogue",
+      "paragraph_ids": []
+    },
+    {
+      "name": "test error",
+      "type": "metric",
+      "description": "Prediction error over an independent test sample drawn from the same population as the training data.",
+      "quote": "Test error, also referred to as generalization error, is the prediction error over an independent test sample",
+      "paragraph_ids": []
+    },
+    {
+      "name": "loss function",
+      "type": "metric",
+      "description": "Function L(Y, f(X)) that penalizes prediction errors, measuring cost of predicting f(X) when true value is Y.",
+      "quote": "To proceed, we need a loss function L(Y, f(X)) for penalizing errors in prediction",
+      "paragraph_ids": []
+    },
+    {
+      "name": "squared error loss",
+      "type": "metric",
+      "description": "Loss function L(Y, f(X)) = (Y - f(X))\u00b2, the most common choice for quantitative responses.",
+      "quote": "By far the most common and convenient is squared error loss: L(Y, f(X)) = (Y \u2212 f(X))\u00b2",
+      "paragraph_ids": []
+    },
+    {
+      "name": "absolute error loss",
+      "type": "metric",
+      "description": "Loss function L(Y, f(X)) = |Y - f(X)|, less sensitive to outliers than squared error.",
+      "quote": "Absolute error loss L(Y, f(X)) = |Y \u2212 f(X)|",
+      "paragraph_ids": []
+    },
+    {
+      "name": "0-1 loss",
+      "type": "metric",
+      "description": "Loss function for classification: L(G, \u011c(X)) = I(G \u2260 \u011c(X)), assigns 1 for errors and 0 for correct predictions.",
+      "quote": "For categorical outputs, we can use the 0-1 loss function",
+      "paragraph_ids": []
+    },
+    {
+      "name": "conditional expectation",
+      "type": "property",
+      "description": "E[Y|X=x], the expected value of Y given X=x, which minimizes expected squared error loss.",
+      "quote": "the conditional expectation, also known as the regression function",
+      "paragraph_ids": []
+    },
+    {
+      "name": "conditional median",
+      "type": "property",
+      "description": "The median of Y given X=x, which minimizes expected absolute error loss.",
+      "quote": "The conditional median is the optimal predictor under absolute error loss",
+      "paragraph_ids": []
+    },
+    {
+      "name": "bayes classifier",
+      "type": "method",
+      "description": "The classifier that assigns each point to the most probable class given X, minimizing expected 0-1 loss.",
+      "quote": "This reasonable solution is known as the Bayes classifier, and says that we classify to the most probable class",
+      "paragraph_ids": []
+    },
+    {
+      "name": "bayes decision boundary",
+      "type": "property",
+      "description": "The boundary between regions where the Bayes classifier assigns different classes.",
+      "quote": "Figure 2.5 shows the Bayes-optimal decision boundary",
+      "paragraph_ids": []
+    },
+    {
+      "name": "least squares fitting",
+      "type": "method",
+      "description": "Method for fitting linear models by minimizing residual sum of squares.",
+      "quote": "we fit this model by least squares",
+      "paragraph_ids": []
+    },
+    {
+      "name": "residual sum of squares",
+      "type": "metric",
+      "description": "RSS(\u03b2) = \u03a3(yi - x\u1d62\u1d40\u03b2)\u00b2, the criterion minimized in least squares fitting.",
+      "quote": "Residual sum of squares",
+      "paragraph_ids": []
+    },
+    {
+      "name": "fitted values",
+      "type": "property",
+      "description": "Predictions \u0177 = X\u03b2\u0302 from a fitted linear model on the training data.",
+      "quote": "The fitted values at the training inputs are",
+      "paragraph_ids": []
+    },
+    {
+      "name": "k-nearest neighbor averaging",
+      "type": "method",
+      "description": "Method that predicts by averaging the response values of the k closest training points.",
+      "quote": "The k-nearest neighbor fit for \u0176 is defined as averaging over the k nearest neighbors",
+      "paragraph_ids": []
+    },
+    {
+      "name": "k-nearest neighbor classifier",
+      "type": "method",
+      "description": "Classification method assigning to the majority class among k nearest training neighbors.",
+      "quote": "k-nearest neighbor classifier",
+      "paragraph_ids": []
+    },
+    {
+      "name": "nearest neighbor decision boundary",
+      "type": "property",
+      "description": "The piecewise linear or irregular boundary formed by nearest neighbor classification.",
+      "quote": "The decision boundary is irregular",
+      "paragraph_ids": []
+    },
+    {
+      "name": "curse of dimensionality",
+      "type": "property",
+      "description": "Phenomenon where nearest neighbors become far away in high dimensions, requiring exponentially more data for local methods.",
+      "quote": "in high dimensions all feasible training samples sparsely populate the input space",
+      "paragraph_ids": []
+    },
+    {
+      "name": "sampling density",
+      "type": "property",
+      "description": "Density of observations per unit volume in input space, which decreases exponentially with dimension.",
+      "quote": "To capture 1% or 10% of the data to form a local average requires a much larger neighborhood in high dimensions",
+      "paragraph_ids": []
+    },
+    {
+      "name": "empty space phenomenon",
+      "type": "property",
+      "description": "In high dimensions, most of the volume of a hypercube is near the boundaries, leaving the interior nearly empty.",
+      "quote": "most data points are closer to a boundary than to any other data point",
+      "paragraph_ids": []
+    },
+    {
+      "name": "structured regression model",
+      "type": "method",
+      "description": "Regression model imposing constraints on the functional form to reduce complexity and avoid overfitting.",
+      "quote": "We must make some assumptions about the structure of the regression function",
+      "paragraph_ids": []
+    },
+    {
+      "name": "linear model assumption",
+      "type": "property",
+      "description": "Assumption that regression function is linear in inputs: f(X) = X\u1d40\u03b2.",
+      "quote": "The linear model makes huge assumptions about structure",
+      "paragraph_ids": []
+    },
+    {
+      "name": "additive model",
+      "type": "method",
+      "description": "Model where f(X) = \u03a3f\u2c7c(X\u2c7c), a sum of univariate functions of each predictor.",
+      "quote": "An additive model assumes the regression function has the form",
+      "paragraph_ids": []
+    },
+    {
+      "name": "linear combination model",
+      "type": "method",
+      "description": "Model where f(X) = g(\u03b1\u1d40X), applying a function to a linear combination of inputs.",
+      "quote": "linear combination model",
+      "paragraph_ids": []
+    },
+    {
+      "name": "interaction term",
+      "type": "property",
+      "description": "Product or other combination of predictors, allowing departure from pure additivity.",
+      "quote": "We can include interaction terms and other derived features",
+      "paragraph_ids": []
+    },
+    {
+      "name": "roughness penalty",
+      "type": "method",
+      "description": "Penalty term J(f) added to RSS to discourage overly complex or wiggly functions.",
+      "quote": "Here we augment the residual sum of squares with a roughness penalty",
+      "paragraph_ids": []
+    },
+    {
+      "name": "penalty functional",
+      "type": "method",
+      "description": "Functional J(f) measuring function complexity, large for rapidly varying functions.",
+      "quote": "The user-selected functional J(f) will be large for functions f that vary too rapidly",
+      "paragraph_ids": []
+    },
+    {
+      "name": "smoothing parameter",
+      "type": "property",
+      "description": "Parameter \u03bb controlling tradeoff between fit to data and roughness penalty.",
+      "quote": "The smoothing parameter \u03bb establishes the tradeoff between the residual sum of squares and the penalty",
+      "paragraph_ids": []
+    },
+    {
+      "name": "kernel function",
+      "type": "method",
+      "description": "Weighting function K\u03bb(x\u2080, x) assigning weights to observations based on distance from target point.",
+      "quote": "These methods specify the nature of the local neighborhood explicitly by using a kernel weighting function",
+      "paragraph_ids": []
+    },
+    {
+      "name": "kernel width",
+      "type": "property",
+      "description": "Parameter controlling the size of the neighborhood in kernel methods, analogous to k in k-NN.",
+      "quote": "The width of the kernel function is a smoothing parameter",
+      "paragraph_ids": []
+    },
+    {
+      "name": "nadaraya-watson estimator",
+      "type": "method",
+      "description": "Kernel-weighted average for regression: f\u0302(x) = \u03a3 K\u03bb(x, x\u1d62)y\u1d62 / \u03a3 K\u03bb(x, x\u1d62).",
+      "quote": "The Nadaraya-Watson weighted average",
+      "paragraph_ids": []
+    },
+    {
+      "name": "local linear regression",
+      "type": "method",
+      "description": "Fits linear regression locally in a neighborhood, reducing bias compared to local averaging.",
+      "quote": "local linear regression",
+      "paragraph_ids": []
+    },
+    {
+      "name": "locally weighted regression",
+      "type": "method",
+      "description": "Regression fit by weighted least squares with kernel weights based on distance from target point.",
+      "quote": "locally weighted least squares",
+      "paragraph_ids": []
+    },
+    {
+      "name": "basis function expansion",
+      "type": "method",
+      "description": "Representing f(X) = \u03a3 h\u2098(X)\u03b2\u2098 as linear combination of fixed basis functions h\u2098.",
+      "quote": "represent f as a linear expansion of basis functions",
+      "paragraph_ids": []
+    },
+    {
+      "name": "radial basis function",
+      "type": "method",
+      "description": "Basis function h\u2098(x) = D(||x - \u03bc\u2098||) depending only on distance from center \u03bc\u2098.",
+      "quote": "radial basis functions",
+      "paragraph_ids": []
+    },
+    {
+      "name": "sigmoid basis function",
+      "type": "method",
+      "description": "Basis function h\u2098(x) = \u03c3(\u03b1\u2098\u1d40x + b\u2098) using sigmoid activation, as in neural networks.",
+      "quote": "sigmoid basis functions",
+      "paragraph_ids": []
+    },
+    {
+      "name": "dictionary",
+      "type": "property",
+      "description": "Collection D of candidate basis functions from which to build a model.",
+      "quote": "dictionary D of candidate basis functions",
+      "paragraph_ids": []
+    },
+    {
+      "name": "bias-variance decomposition",
+      "type": "property",
+      "description": "Decomposition of expected prediction error into squared bias, variance, and irreducible error.",
+      "quote": "the expected prediction error can be decomposed as bias squared plus variance",
+      "paragraph_ids": []
+    },
+    {
+      "name": "model complexity",
+      "type": "property",
+      "description": "Measure of flexibility of a model class, affecting bias-variance tradeoff.",
+      "quote": "As we increase the model complexity, the variance tends to increase and the squared bias tends to decrease",
+      "paragraph_ids": []
+    },
+    {
+      "name": "degrees of freedom",
+      "type": "property",
+      "description": "Effective number of parameters in a model, measuring model complexity.",
+      "quote": "degrees of freedom",
+      "paragraph_ids": []
+    },
+    {
+      "name": "irreducible error",
+      "type": "metric",
+      "description": "Error due to intrinsic variability in Y that cannot be reduced by any prediction method.",
+      "quote": "irreducible error",
+      "paragraph_ids": []
+    },
+    {
+      "name": "optimism of training error",
+      "type": "property",
+      "description": "Tendency of training error to underestimate true test error, increasing with model complexity.",
+      "quote": "Training error tends to decrease as model complexity increases, but test error does not",
+      "paragraph_ids": []
+    },
+    {
+      "name": "in-sample error",
+      "type": "metric",
+      "description": "Error measured on the training sample itself.",
+      "quote": "in-sample error",
+      "paragraph_ids": []
+    },
+    {
+      "name": "out-of-sample error",
+      "type": "metric",
+      "description": "Error measured on data not used for training.",
+      "quote": "out-of-sample error",
+      "paragraph_ids": []
+    },
+    {
+      "name": "expected test error",
+      "type": "metric",
+      "description": "The expected value of test error over all possible training sets of fixed size.",
+      "quote": "the expected test error (also known as EPE)",
+      "paragraph_ids": []
+    },
+    {
+      "name": "pointwise prediction error",
+      "type": "metric",
+      "description": "Prediction error at a specific point x\u2080 in the input space.",
+      "quote": "error at a specific point x\u2080",
+      "paragraph_ids": []
+    },
+    {
+      "name": "misclassification error",
+      "type": "metric",
+      "description": "Probability of incorrect classification, equivalent to expected 0-1 loss.",
+      "quote": "the probability of misclassification",
+      "paragraph_ids": []
+    },
+    {
+      "name": "posterior probability",
+      "type": "property",
+      "description": "Pr(G=k|X=x), probability of class k given input x.",
+      "quote": "Pr(G=k|X=x) is the conditional probability of class k",
+      "paragraph_ids": []
+    },
+    {
+      "name": "nearest neighbor region",
+      "type": "property",
+      "description": "Set of points closer to a given training point than to any other training point, forming Voronoi tessellation.",
+      "quote": "the nearest neighbor region",
+      "paragraph_ids": []
+    },
+    {
+      "name": "euclidean distance",
+      "type": "metric",
+      "description": "Standard distance metric ||x-x'|| used in k-nearest neighbors.",
+      "quote": "using Euclidean distance",
+      "paragraph_ids": []
+    },
+    {
+      "name": "k-nearest neighbor boundary",
+      "type": "property",
+      "description": "Decision boundary formed by k-NN classifier, which becomes smoother as k increases.",
+      "quote": "The decision boundary is irregular with k=1 but becomes smoother as k increases",
+      "paragraph_ids": []
+    },
+    {
+      "name": "dimension reduction",
+      "type": "method",
+      "description": "Techniques to reduce the dimensionality of the input space before applying prediction methods.",
+      "quote": "dimension reduction techniques",
+      "paragraph_ids": []
+    },
+    {
+      "name": "feature extraction",
+      "type": "method",
+      "description": "Creating new features as combinations or transformations of original variables.",
+      "quote": "feature extraction",
+      "paragraph_ids": []
+    },
+    {
+      "name": "projection method",
+      "type": "method",
+      "description": "Method that projects high-dimensional data onto lower-dimensional subspace.",
+      "quote": "projection methods",
+      "paragraph_ids": []
+    },
+    {
+      "name": "least squares projection",
+      "type": "method",
+      "description": "Fitting by least squares viewed as projection onto a linear subspace.",
+      "quote": "least squares is a projection method",
+      "paragraph_ids": []
+    },
+    {
+      "name": "linear smoother",
+      "type": "method",
+      "description": "Smoother where fitted values are linear function of response: \u0177 = Sy.",
+      "quote": "linear smoothers",
+      "paragraph_ids": []
+    },
+    {
+      "name": "hat matrix",
+      "type": "property",
+      "description": "Matrix S such that \u0177 = Sy in linear smoothers.",
+      "quote": "the hat matrix",
+      "paragraph_ids": []
+    },
+    {
+      "name": "effective degrees of freedom",
+      "type": "property",
+      "description": "Trace of the hat matrix tr(S), measuring effective number of parameters.",
+      "quote": "effective degrees of freedom tr(S)",
+      "paragraph_ids": []
+    },
+    {
+      "name": "model selection criterion",
+      "type": "metric",
+      "description": "Criterion for choosing among models, balancing fit and complexity.",
+      "quote": "model selection criterion",
+      "paragraph_ids": []
+    },
+    {
+      "name": "training set validation",
+      "type": "method",
+      "description": "Using held-out data to estimate test error and select models.",
+      "quote": "validation",
+      "paragraph_ids": []
+    },
+    {
+      "name": "cross-validation error",
+      "type": "metric",
+      "description": "Estimate of test error obtained by cross-validation.",
+      "quote": "cross-validation",
+      "paragraph_ids": []
+    },
+    {
+      "name": "prior distribution",
+      "type": "property",
+      "description": "Distribution over function parameters representing beliefs before seeing data.",
+      "quote": "prior distribution",
+      "paragraph_ids": []
+    },
+    {
+      "name": "posterior distribution",
+      "type": "property",
+      "description": "Distribution over parameters after conditioning on observed data.",
+      "quote": "posterior distribution",
+      "paragraph_ids": []
+    },
+    {
+      "name": "bayesian framework",
+      "type": "method",
+      "description": "Approach treating parameters as random and computing posterior distributions.",
+      "quote": "Bayesian methods",
+      "paragraph_ids": []
+    },
+    {
+      "name": "single hidden layer neural network",
+      "type": "method",
+      "description": "Neural network with one layer of hidden units between inputs and outputs.",
+      "quote": "single hidden layer neural network",
+      "paragraph_ids": []
+    },
+    {
+      "name": "weight decay",
+      "type": "method",
+      "description": "Regularization for neural networks penalizing large weights.",
+      "quote": "weight decay",
+      "paragraph_ids": []
+    },
+    {
+      "name": "squared bias",
+      "type": "metric",
+      "description": "Component of prediction error equal to squared difference between expected prediction and true function, decreases with model complexity.",
+      "quote": "the squared bias tends to decrease",
+      "paragraph_ids": []
+    },
+    {
+      "name": "variance of prediction",
+      "type": "metric",
+      "description": "Component of prediction error measuring variability of predictions across training sets, increases with model complexity.",
+      "quote": "As we increase the model complexity, the variance tends to increase",
+      "paragraph_ids": []
+    },
+    {
+      "name": "bayes rate",
+      "type": "metric",
+      "description": "The error rate of the Bayes classifier, representing the irreducible error for a classification problem.",
+      "quote": "The error rate of the Bayes classifier is called the Bayes rate",
+      "paragraph_ids": []
+    },
+    {
+      "name": "generalization error",
+      "type": "metric",
+      "description": "Another term for test error, the error rate on new unseen data from the same distribution.",
+      "quote": "Test error, also referred to as generalization error",
+      "paragraph_ids": []
+    },
+    {
+      "name": "regression function",
+      "type": "property",
+      "description": "Another name for conditional expectation f(x) = E[Y|X=x], the optimal predictor under squared error loss.",
+      "quote": "the conditional expectation, also known as the regression function",
+      "paragraph_ids": []
+    },
+    {
+      "name": "activation function",
+      "type": "property",
+      "description": "Nonlinear function \u03c3(x) applied to linear combinations in neural networks, typically sigmoid or ReLU.",
+      "quote": "activation function \u03c3(x) = 1/(1 + e^-x)",
+      "paragraph_ids": []
+    }
+  ],
+  "relationships": [
+    {
+      "source": "conditional expectation",
+      "target": "squared error loss",
+      "type": "special_case_of",
+      "quote": "the conditional expectation minimizes expected squared error loss"
+    },
+    {
+      "source": "conditional median",
+      "target": "absolute error loss",
+      "type": "special_case_of",
+      "quote": "the conditional median minimizes expected absolute error loss"
+    },
+    {
+      "source": "bayes classifier",
+      "target": "0-1 loss",
+      "type": "special_case_of",
+      "quote": "the Bayes classifier minimizes expected 0-1 loss"
+    },
+    {
+      "source": "bayes rate",
+      "target": "bayes classifier",
+      "type": "uses",
+      "quote": "the Bayes rate is the error rate of the Bayes classifier"
+    },
+    {
+      "source": "least squares fitting",
+      "target": "residual sum of squares",
+      "type": "uses",
+      "quote": "least squares fitting minimizes the residual sum of squares"
+    },
+    {
+      "source": "k-nearest neighbor averaging",
+      "target": "curse of dimensionality",
+      "type": "contrasts_with",
+      "quote": "k-nearest neighbor methods fail in high dimensions due to the curse of dimensionality"
+    },
+    {
+      "source": "linear model assumption",
+      "target": "curse of dimensionality",
+      "type": "contrasts_with",
+      "quote": "linear models avoid the curse of dimensionality by making strong structural assumptions"
+    },
+    {
+      "source": "model complexity",
+      "target": "bias-variance decomposition",
+      "type": "uses",
+      "quote": "increasing model complexity affects the bias-variance tradeoff"
+    },
+    {
+      "source": "variance of prediction",
+      "target": "model complexity",
+      "type": "uses",
+      "quote": "variance increases with model complexity"
+    },
+    {
+      "source": "squared bias",
+      "target": "model complexity",
+      "type": "uses",
+      "quote": "squared bias decreases with model complexity"
+    },
+    {
+      "source": "roughness penalty",
+      "target": "penalty functional",
+      "type": "uses",
+      "quote": "roughness penalty methods use a penalty functional to measure function complexity"
+    },
+    {
+      "source": "smoothing parameter",
+      "target": "roughness penalty",
+      "type": "uses",
+      "quote": "the smoothing parameter controls the strength of the roughness penalty"
+    },
+    {
+      "source": "kernel function",
+      "target": "k-nearest neighbor averaging",
+      "type": "generalizes",
+      "quote": "kernel methods generalize k-nearest neighbors by using continuous weights"
+    },
+    {
+      "source": "local linear regression",
+      "target": "nadaraya-watson estimator",
+      "type": "generalizes",
+      "quote": "local linear regression generalizes Nadaraya-Watson by fitting local linear models"
+    },
+    {
+      "source": "basis function expansion",
+      "target": "linear model assumption",
+      "type": "generalizes",
+      "quote": "basis function expansions generalize linear models by using nonlinear transformations"
+    },
+    {
+      "source": "radial basis function",
+      "target": "basis function expansion",
+      "type": "example_of",
+      "quote": "radial basis functions are a type of basis function expansion"
+    },
+    {
+      "source": "sigmoid basis function",
+      "target": "basis function expansion",
+      "type": "example_of",
+      "quote": "sigmoid basis functions are a type of basis function expansion"
+    },
+    {
+      "source": "additive model",
+      "target": "linear model assumption",
+      "type": "generalizes",
+      "quote": "additive models generalize linear models by allowing nonlinear univariate functions"
+    },
+    {
+      "source": "training error",
+      "target": "test error",
+      "type": "contrasts_with",
+      "quote": "training error underestimates test error due to overfitting"
+    },
+    {
+      "source": "optimism of training error",
+      "target": "model complexity",
+      "type": "uses",
+      "quote": "optimism increases with model complexity"
+    },
+    {
+      "source": "generalization error",
+      "target": "test error",
+      "type": "equivalent_to",
+      "quote": "generalization error is another term for test error"
+    },
+    {
+      "source": "expected prediction error",
+      "target": "bias-variance decomposition",
+      "type": "uses",
+      "quote": "expected prediction error can be decomposed into bias squared plus variance plus irreducible error"
+    },
+    {
+      "source": "structured regression model",
+      "target": "curse of dimensionality",
+      "type": "contrasts_with",
+      "quote": "structured models impose constraints to avoid the curse of dimensionality"
+    },
+    {
+      "source": "linear combination model",
+      "target": "structured regression model",
+      "type": "example_of",
+      "quote": "linear combination models are a type of structured regression model"
+    },
+    {
+      "source": "interaction term",
+      "target": "additive model",
+      "type": "generalizes",
+      "quote": "interaction terms allow departure from pure additivity"
+    },
+    {
+      "source": "squared error loss",
+      "target": "loss function",
+      "type": "example_of",
+      "quote": "squared error is the most common loss function for regression"
+    },
+    {
+      "source": "absolute error loss",
+      "target": "loss function",
+      "type": "example_of",
+      "quote": "absolute error is an alternative loss function for regression"
+    },
+    {
+      "source": "0-1 loss",
+      "target": "loss function",
+      "type": "example_of",
+      "quote": "0-1 loss is the standard loss function for classification"
+    },
+    {
+      "source": "bayes decision boundary",
+      "target": "bayes classifier",
+      "type": "uses",
+      "quote": "the Bayes classifier defines a decision boundary"
+    },
+    {
+      "source": "nearest neighbor decision boundary",
+      "target": "k-nearest neighbor classifier",
+      "type": "uses",
+      "quote": "k-nearest neighbor classifier produces an irregular decision boundary"
+    },
+    {
+      "source": "locally weighted regression",
+      "target": "kernel function",
+      "type": "uses",
+      "quote": "locally weighted regression uses kernel weights"
+    },
+    {
+      "source": "degrees of freedom",
+      "target": "model complexity",
+      "type": "equivalent_to",
+      "quote": "degrees of freedom is a measure of model complexity"
+    },
+    {
+      "source": "irreducible error",
+      "target": "bayes rate",
+      "type": "equivalent_to",
+      "quote": "for classification, irreducible error is equivalent to the Bayes rate"
+    },
+    {
+      "source": "in-sample error",
+      "target": "training error",
+      "type": "equivalent_to",
+      "quote": "in-sample error is measured on the training sample"
+    },
+    {
+      "source": "out-of-sample error",
+      "target": "test error",
+      "type": "equivalent_to",
+      "quote": "out-of-sample error is measured on new data"
+    },
+    {
+      "source": "loss function",
+      "target": "expected prediction error",
+      "type": "prerequisite",
+      "quote": "a loss function must be defined to compute expected prediction error"
+    },
+    {
+      "source": "conditional expectation",
+      "target": "linear model assumption",
+      "type": "prerequisite",
+      "quote": "understanding conditional expectation is prerequisite to linear models"
+    },
+    {
+      "source": "residual sum of squares",
+      "target": "least squares fitting",
+      "type": "prerequisite",
+      "quote": "residual sum of squares is the criterion used in least squares"
+    },
+    {
+      "source": "kernel function",
+      "target": "kernel width",
+      "type": "prerequisite",
+      "quote": "kernel methods require specifying a kernel function and its width"
+    },
+    {
+      "source": "basis function expansion",
+      "target": "dictionary",
+      "type": "prerequisite",
+      "quote": "dictionary methods require a dictionary of basis functions"
+    },
+    {
+      "source": "expected test error",
+      "target": "test error",
+      "type": "generalizes",
+      "quote": "expected test error averages over all possible training sets"
+    },
+    {
+      "source": "pointwise prediction error",
+      "target": "expected prediction error",
+      "type": "uses",
+      "quote": "expected prediction error averages pointwise error over input distribution"
+    },
+    {
+      "source": "regression function",
+      "target": "conditional expectation",
+      "type": "equivalent_to",
+      "quote": "regression function is another name for conditional expectation"
+    },
+    {
+      "source": "posterior probability",
+      "target": "bayes classifier",
+      "type": "prerequisite",
+      "quote": "Bayes classifier requires computing posterior probabilities"
+    },
+    {
+      "source": "misclassification error",
+      "target": "0-1 loss",
+      "type": "equivalent_to",
+      "quote": "misclassification error is expected 0-1 loss"
+    },
+    {
+      "source": "k-nearest neighbor boundary",
+      "target": "k-nearest neighbor classifier",
+      "type": "uses",
+      "quote": "k-NN classifier defines a decision boundary"
+    },
+    {
+      "source": "euclidean distance",
+      "target": "k-nearest neighbor averaging",
+      "type": "prerequisite",
+      "quote": "k-NN requires a distance metric, typically Euclidean"
+    },
+    {
+      "source": "nearest neighbor region",
+      "target": "k-nearest neighbor averaging",
+      "type": "uses",
+      "quote": "nearest neighbor methods partition space into regions"
+    },
+    {
+      "source": "dimension reduction",
+      "target": "curse of dimensionality",
+      "type": "contrasts_with",
+      "quote": "dimension reduction helps overcome curse of dimensionality"
+    },
+    {
+      "source": "feature extraction",
+      "target": "dimension reduction",
+      "type": "example_of",
+      "quote": "feature extraction is a type of dimension reduction"
+    },
+    {
+      "source": "projection method",
+      "target": "dimension reduction",
+      "type": "example_of",
+      "quote": "projection methods are a type of dimension reduction"
+    },
+    {
+      "source": "least squares projection",
+      "target": "least squares fitting",
+      "type": "equivalent_to",
+      "quote": "least squares can be viewed as a projection operation"
+    },
+    {
+      "source": "hat matrix",
+      "target": "linear smoother",
+      "type": "uses",
+      "quote": "linear smoothers are characterized by a hat matrix"
+    },
+    {
+      "source": "effective degrees of freedom",
+      "target": "hat matrix",
+      "type": "uses",
+      "quote": "effective degrees of freedom is the trace of the hat matrix"
+    },
+    {
+      "source": "linear smoother",
+      "target": "least squares fitting",
+      "type": "generalizes",
+      "quote": "linear smoothers include least squares as a special case"
+    },
+    {
+      "source": "model selection criterion",
+      "target": "bias-variance decomposition",
+      "type": "uses",
+      "quote": "model selection criteria balance bias and variance"
+    },
+    {
+      "source": "cross-validation error",
+      "target": "test error",
+      "type": "uses",
+      "quote": "cross-validation estimates test error"
+    },
+    {
+      "source": "training set validation",
+      "target": "model selection criterion",
+      "type": "example_of",
+      "quote": "validation is a model selection approach"
+    },
+    {
+      "source": "posterior distribution",
+      "target": "prior distribution",
+      "type": "uses",
+      "quote": "posterior distribution combines prior with observed data"
+    },
+    {
+      "source": "bayesian framework",
+      "target": "roughness penalty",
+      "type": "contrasts_with",
+      "quote": "Bayesian methods can be viewed as roughness penalties with priors"
+    },
+    {
+      "source": "prior distribution",
+      "target": "bayesian framework",
+      "type": "prerequisite",
+      "quote": "Bayesian methods require specifying a prior distribution"
+    },
+    {
+      "source": "activation function",
+      "target": "single hidden layer neural network",
+      "type": "prerequisite",
+      "quote": "neural networks use activation functions for nonlinearity"
+    },
+    {
+      "source": "weight decay",
+      "target": "roughness penalty",
+      "type": "example_of",
+      "quote": "weight decay is a form of penalty on complexity"
+    },
+    {
+      "source": "single hidden layer neural network",
+      "target": "sigmoid basis function",
+      "type": "uses",
+      "quote": "neural networks use sigmoid activation functions"
+    },
+    {
+      "source": "single hidden layer neural network",
+      "target": "basis function expansion",
+      "type": "example_of",
+      "quote": "neural networks are adaptive basis function expansions"
+    },
+    {
+      "source": "effective degrees of freedom",
+      "target": "degrees of freedom",
+      "type": "generalizes",
+      "quote": "effective degrees of freedom generalizes the parameter count"
+    },
+    {
+      "source": "effective degrees of freedom",
+      "target": "model complexity",
+      "type": "equivalent_to",
+      "quote": "effective degrees of freedom measures model complexity"
+    },
+    {
+      "source": "model selection criterion",
+      "target": "expected prediction error",
+      "type": "uses",
+      "quote": "model selection aims to minimize expected prediction error"
+    },
+    {
+      "source": "optimism of training error",
+      "target": "test error",
+      "type": "uses",
+      "quote": "optimism is the gap between test and training error"
+    }
+  ]
+}

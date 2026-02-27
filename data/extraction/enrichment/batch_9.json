@@ -1,0 +1,3249 @@
+{
+  "batch_number": 9,
+  "concepts": [
+    {
+      "id": 254,
+      "name": "wavelet transform",
+      "description": "A transformation decomposing signals into wavelet coefficients at different scales and locations.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "for signal or image recognition a popular approach is to first transform the raw features via a wavelet transform x* = H\u1d40x (Section 5.9)",
+      "existing_formula": "x^* = H^T x",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 257,
+      "name": "AIC statistic",
+      "description": "Akaike Information Criterion - a model selection criterion balancing fit and complexity, used for term selection in stepwise procedures.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "The AIC statistic (Section 7.5) was used to drop terms, and all the terms remaining in the final model would cause AIC to increase if deleted from the model",
+      "existing_formula": "\\text{AIC} = -2\\cdot\\log\\text{lik} + 2\\cdot d",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 258,
+      "name": "B-spline basis",
+      "description": "A numerically stable basis for representing splines, allowing efficient computation even with many knots.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "The B-spline basis, described in the Appendix to this chapter, allows for efficient computations even when the number of knots K is large.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 259,
+      "name": "boundary knots",
+      "description": "The extreme knots defining the domain boundaries where spline behavior can become erratic.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "The polynomials fit beyond the boundary knots behave even more wildly than the corresponding global polynomials in that region.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 260,
+      "name": "interior knots",
+      "description": "Knots placed within the data range, controlling spline flexibility in regions with data.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "bs(x,df=7) in R generates a basis matrix of cubic-spline functions evaluated at the N observations in x, with the 7\u22123 = 4 interior knots",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 264,
+      "name": "idempotent matrix",
+      "description": "A matrix A satisfying A\u00b2 = A, characteristic of projection operators in linear algebra.",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "H\u03be H\u03be = H\u03be (idempotent), while S\u03bb S\u03bb \u2aaf S\u03bb, meaning that the right-hand side exceeds the left-hand side by a positive semidefinite matrix.",
+      "existing_formula": "A^2 = A",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 265,
+      "name": "positive semidefinite matrix",
+      "description": "A symmetric matrix with non-negative eigenvalues, ensuring non-negative quadratic forms.",
+      "category": "guarantees",
+      "subcategory": "assumptions",
+      "existing_quote": "Both are symmetric, positive semidefinite matrices.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 266,
+      "name": "eigendecomposition",
+      "description": "The decomposition of a matrix into eigenvectors and eigenvalues, revealing the structure of linear operators.",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "Since S\u03bb is symmetric (and positive semidefinite), it has a real eigendecomposition.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "regression splines",
+      "description": "It is claimed that cubic splines are the lowest-order spline for which the\nknot-discontinuity is not visible to the human eye. There is seldom any\ngood reason to go beyond cubic-splines, unless one is interested in smooth\nderivatives. In practice the most widely used orders are M = 1, 2 and 4.\nThese \ufb01xed-knot splines are also known as regression splines. One needs\nto select the order of the spline, the number of knots and their placement.\nOne simple approach is to parameterize a family of splines by the number\nof basis functions or degrees of freedom, and have the observations xi de-\ntermine the positions of the knots. For example, the expression bs(x,df=7)\nin R generates a basis matrix of cubic-spline functions evaluated at the N\nobservations in x, with the 7\u22123 = 41 interior knots at the appropriate per-\ncentiles of x (20, 40, 60 and 80th.) One can be more explicit, however; bs(x,\ndegree=1, knots = c(0.2, 0.4, 0.6)) generates a basis for linear splines,\nwith three interior knots, and returns an N \u00d7 4 matrix.\nSince the space of spline functions of a particular order and knot sequence\nis a vector space, there are many equivalent bases for representing them\n(just as there are for ordinary polynomials.) While the truncated power\nbasis is conceptually simple, it is not too attractive numerically: powers of\nlarge numbers can lead to severe rounding problems. The B-spline basis,\ndescribed in the Appendix to this chapter, allows for e\ufb03cient computations\neven when the number of knots K is large.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "These fixed-knot splines are also known as regression splines. One needs to select the order of the spline, the number of knots and their placement.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19429,
+          "text": "The size of the model is limited by the number of basis functions Mj\nused for each component function fj.",
+          "type": "narrative",
+          "page": 159
+        },
+        {
+          "id": 19430,
+          "text": "\u2022 Selection methods, which adaptively scan the dictionary and include\nonly those basis functions hm that contribute signi\ufb01cantly to the \ufb01t of\nthe model. Here the variable selection techniques discussed in Chap-\nter 3 are useful. The stagewise greedy approaches such as CART,\nMARS and boosting fall into this category as well.",
+          "type": "narrative",
+          "page": 159
+        },
+        {
+          "id": 19431,
+          "text": "\u2022 Regularization methods where we use the entire dictionary but re-\nstrict the coe\ufb03cients. Ridge regression is a simple example of a regu-\nlarization approach, while the lasso is both a regularization and selec-\ntion method. Here we discuss these and more sophisticated methods\nfor regularization.",
+          "type": "narrative",
+          "page": 159
+        },
+        {
+          "id": 19433,
+          "text": "We assume until Section 5.7 that X is one-dimensional. A piecewise poly-\nnomial function f(X) is obtained by dividing the domain of X into contigu-\nous intervals, and representing f by a separate polynomial in each interval.\nFigure 5.1 shows two simple piecewise polynomials. The \ufb01rst is piecewise\nconstant, with three basis functions:",
+          "type": "narrative",
+          "page": 159
+        },
+        {
+          "id": 19434,
+          "text": "h1(X) = I(X < \u03be1),\nh2(X) = I(\u03be1 \u2264X < \u03be2),\nh3(X) = I(\u03be2 \u2264X).",
+          "type": "narrative",
+          "page": 159
+        },
+        {
+          "id": 19435,
+          "text": "Since these are positive over disjoint regions, the least squares estimate of\nthe model f(X) = \t3\nm=1 \u03b2mhm(X) amounts to \u02c6\u03b2m = \u00afYm, the mean of Y\nin the mth region.\nThe top right panel shows a piecewise linear \ufb01t. Three additional basis\nfunctions are needed: hm+3 = hm(X)X, m = 1, . . . , 3. Except in special\ncases, we would typically prefer the third panel, which is also piecewise\nlinear, but restricted to be continuous at the two knots. These continu-\nity restrictions lead to linear constraints on the parameters; for example,\nf(\u03be\u2212\n1 ) = f(\u03be+\n1 ) implies that \u03b21 + \u03be1\u03b24 = \u03b22 + \u03be1\u03b25. In this case, since there\nare two restrictions, we expect to get back two parameters, leaving four free\nparameters.\nA more direct way to proceed in this case is to use a basis that incorpo-\nrates the constraints:",
+          "type": "narrative",
+          "page": 159
+        },
+        {
+          "id": 19436,
+          "text": "h1(X) = 1,\nh2(X) = X,\nh3(X) = (X \u2212\u03be1)+,\nh4(X) = (X \u2212\u03be2)+,",
+          "type": "equation",
+          "page": 159
+        },
+        {
+          "id": 19437,
+          "text": "where t+ denotes the positive part. The function h3 is shown in the lower\nright panel of Figure 5.1. We often prefer smoother functions, and these\ncan be achieved by increasing the order of the local polynomial. Figure 5.2\nshows a series of piecewise-cubic polynomials \ufb01t to the same data, with",
+          "type": "narrative",
+          "page": 159
+        },
+        {
+          "id": 19438,
+          "text": "142\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19439,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19440,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19441,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19442,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19443,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19444,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19445,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19446,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19447,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19448,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19449,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19450,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19451,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19452,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19453,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19454,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19455,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19456,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19457,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19458,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        },
+        {
+          "id": 19459,
+          "text": "O",
+          "type": "narrative",
+          "page": 160
+        }
+      ]
+    },
+    {
+      "id": 230,
+      "name": "natural cubic spline",
+      "description": "A cubic spline with the additional constraint that the function is linear beyond the boundary knots, reducing boundary variance.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "A natural cubic spline adds additional constraints, namely that the function is linear beyond the boundary knots. This frees up four degrees of freedom (two constraints each in both boundary regions), which can be spent more profitably by sprinkling more knots in the interior region.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19789,
+          "text": "144\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19790,
+          "text": "More generally, an order-M spline with knots \u03bej, j = 1, . . . , K is a\npiecewise-polynomial of order M, and has continuous derivatives up to\norder M \u22122. A cubic spline has M = 4. In fact the piecewise-constant\nfunction in Figure 5.1 is an order-1 spline, while the continuous piece-\nwise linear function is an order-2 spline. Likewise the general form for the\ntruncated-power basis set would be",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19791,
+          "text": "hj(X)\n=\nXj\u22121, j = 1, . . . , M,",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19792,
+          "text": "hM+\u2113(X)\n=\n(X \u2212\u03be\u2113)M\u22121\n+\n, \u2113= 1, . . . , K.",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19793,
+          "text": "It is claimed that cubic splines are the lowest-order spline for which the\nknot-discontinuity is not visible to the human eye. There is seldom any\ngood reason to go beyond cubic-splines, unless one is interested in smooth\nderivatives. In practice the most widely used orders are M = 1, 2 and 4.\nThese \ufb01xed-knot splines are also known as regression splines. One needs\nto select the order of the spline, the number of knots and their placement.\nOne simple approach is to parameterize a family of splines by the number\nof basis functions or degrees of freedom, and have the observations xi de-\ntermine the positions of the knots. For example, the expression bs(x,df=7)\nin R generates a basis matrix of cubic-spline functions evaluated at the N\nobservations in x, with the 7\u22123 = 41 interior knots at the appropriate per-\ncentiles of x (20, 40, 60 and 80th.) One can be more explicit, however; bs(x,\ndegree=1, knots = c(0.2, 0.4, 0.6)) generates a basis for linear splines,\nwith three interior knots, and returns an N \u00d7 4 matrix.\nSince the space of spline functions of a particular order and knot sequence\nis a vector space, there are many equivalent bases for representing them\n(just as there are for ordinary polynomials.) While the truncated power\nbasis is conceptually simple, it is not too attractive numerically: powers of\nlarge numbers can lead to severe rounding problems. The B-spline basis,\ndescribed in the Appendix to this chapter, allows for e\ufb03cient computations\neven when the number of knots K is large.",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19795,
+          "text": "We know that the behavior of polynomials \ufb01t to data tends to be erratic\nnear the boundaries, and extrapolation can be dangerous. These problems\nare exacerbated with splines. The polynomials \ufb01t beyond the boundary\nknots behave even more wildly than the corresponding global polynomials\nin that region. This can be conveniently summarized in terms of the point-\nwise variance of spline functions \ufb01t by least squares (see the example in the\nnext section for details on these variance calculations). Figure 5.3 compares",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19796,
+          "text": "1A cubic spline with four knots is eight-dimensional. The bs() function omits by\ndefault the constant term in the basis, since terms like this are typically included with\nother terms in the model.",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19798,
+          "text": "X",
+          "type": "narrative",
+          "page": 163
+        },
+        {
+          "id": 19799,
+          "text": "Pointwise Variances",
+          "type": "narrative",
+          "page": 163
+        },
+        {
+          "id": 19800,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19801,
+          "text": "0.0\n0.1\n0.2\n0.3\n0.4\n0.5\n0.6",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19802,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19803,
+          "text": "\u2022\u2022\n\u2022\n\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022 \u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19804,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19805,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19806,
+          "text": "\u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022\u2022 \u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19807,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19808,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19809,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19810,
+          "text": "\u2022\u2022\n\u2022\n\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022 \u2022\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19811,
+          "text": "\u2022\u2022\u2022\u2022\n\u2022\n\u2022\u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19812,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19813,
+          "text": "\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022\u2022 \u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022 \u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19814,
+          "text": "Global Linear\nGlobal Cubic Polynomial\nCubic Spline - 2 knots\nNatural Cubic Spline - 6 knots",
+          "type": "narrative",
+          "page": 163
+        },
+        {
+          "id": 19816,
+          "text": "the pointwise variances for a variety of di\ufb00erent models. The explosion of\nthe variance near the boundaries is clear, and inevitably is worst for cubic\nsplines.\nA natural cubic spline adds additional constraints, namely that the func-\ntion is linear beyond the boundary knots. This frees up four degrees of\nfreedom (two constraints each in both boundary regions), which can be\nspent more pro\ufb01tably by sprinkling more knots in the interior region. This\ntradeo\ufb00is illustrated in terms of variance in Figure 5.3. There will be a\nprice paid in bias near the boundaries, but assuming the function is lin-\near near the boundaries (where we have less information anyway) is often\nconsidered reasonable.\nA natural cubic spline with K knots is represented by K basis functions.\nOne can start from a basis for cubic splines, and derive the reduced ba-\nsis by imposing the boundary constraints. For example, starting from the\ntruncated power series basis described in Section 5.2, we arrive at (Exer-\ncise 5.4):",
+          "type": "narrative",
+          "page": 163
+        },
+        {
+          "id": 19817,
+          "text": "N1(X) = 1,\nN2(X) = X,\nNk+2(X) = dk(X) \u2212dK\u22121(X),\n(5.4)",
+          "type": "narrative",
+          "page": 163
+        }
+      ]
+    },
+    {
+      "id": 231,
+      "name": "order-M spline",
+      "description": "A piecewise-polynomial of order M with continuous derivatives up to order M-2 at the knots.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "More generally, an order-M spline with knots \u03bej, j = 1, . . . , K is a piecewise-polynomial of order M, and has continuous derivatives up to order M \u2212 2.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19789,
+          "text": "144\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19790,
+          "text": "More generally, an order-M spline with knots \u03bej, j = 1, . . . , K is a\npiecewise-polynomial of order M, and has continuous derivatives up to\norder M \u22122. A cubic spline has M = 4. In fact the piecewise-constant\nfunction in Figure 5.1 is an order-1 spline, while the continuous piece-\nwise linear function is an order-2 spline. Likewise the general form for the\ntruncated-power basis set would be",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19791,
+          "text": "hj(X)\n=\nXj\u22121, j = 1, . . . , M,",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19792,
+          "text": "hM+\u2113(X)\n=\n(X \u2212\u03be\u2113)M\u22121\n+\n, \u2113= 1, . . . , K.",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19793,
+          "text": "It is claimed that cubic splines are the lowest-order spline for which the\nknot-discontinuity is not visible to the human eye. There is seldom any\ngood reason to go beyond cubic-splines, unless one is interested in smooth\nderivatives. In practice the most widely used orders are M = 1, 2 and 4.\nThese \ufb01xed-knot splines are also known as regression splines. One needs\nto select the order of the spline, the number of knots and their placement.\nOne simple approach is to parameterize a family of splines by the number\nof basis functions or degrees of freedom, and have the observations xi de-\ntermine the positions of the knots. For example, the expression bs(x,df=7)\nin R generates a basis matrix of cubic-spline functions evaluated at the N\nobservations in x, with the 7\u22123 = 41 interior knots at the appropriate per-\ncentiles of x (20, 40, 60 and 80th.) One can be more explicit, however; bs(x,\ndegree=1, knots = c(0.2, 0.4, 0.6)) generates a basis for linear splines,\nwith three interior knots, and returns an N \u00d7 4 matrix.\nSince the space of spline functions of a particular order and knot sequence\nis a vector space, there are many equivalent bases for representing them\n(just as there are for ordinary polynomials.) While the truncated power\nbasis is conceptually simple, it is not too attractive numerically: powers of\nlarge numbers can lead to severe rounding problems. The B-spline basis,\ndescribed in the Appendix to this chapter, allows for e\ufb03cient computations\neven when the number of knots K is large.",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19795,
+          "text": "We know that the behavior of polynomials \ufb01t to data tends to be erratic\nnear the boundaries, and extrapolation can be dangerous. These problems\nare exacerbated with splines. The polynomials \ufb01t beyond the boundary\nknots behave even more wildly than the corresponding global polynomials\nin that region. This can be conveniently summarized in terms of the point-\nwise variance of spline functions \ufb01t by least squares (see the example in the\nnext section for details on these variance calculations). Figure 5.3 compares",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19796,
+          "text": "1A cubic spline with four knots is eight-dimensional. The bs() function omits by\ndefault the constant term in the basis, since terms like this are typically included with\nother terms in the model.",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19798,
+          "text": "X",
+          "type": "narrative",
+          "page": 163
+        },
+        {
+          "id": 19799,
+          "text": "Pointwise Variances",
+          "type": "narrative",
+          "page": 163
+        },
+        {
+          "id": 19800,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19801,
+          "text": "0.0\n0.1\n0.2\n0.3\n0.4\n0.5\n0.6",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19802,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19803,
+          "text": "\u2022\u2022\n\u2022\n\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022 \u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19804,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19805,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19806,
+          "text": "\u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022\u2022 \u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19807,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19808,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19809,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19810,
+          "text": "\u2022\u2022\n\u2022\n\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022 \u2022\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19811,
+          "text": "\u2022\u2022\u2022\u2022\n\u2022\n\u2022\u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19812,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19813,
+          "text": "\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022\u2022 \u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022 \u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19814,
+          "text": "Global Linear\nGlobal Cubic Polynomial\nCubic Spline - 2 knots\nNatural Cubic Spline - 6 knots",
+          "type": "narrative",
+          "page": 163
+        },
+        {
+          "id": 19816,
+          "text": "the pointwise variances for a variety of di\ufb00erent models. The explosion of\nthe variance near the boundaries is clear, and inevitably is worst for cubic\nsplines.\nA natural cubic spline adds additional constraints, namely that the func-\ntion is linear beyond the boundary knots. This frees up four degrees of\nfreedom (two constraints each in both boundary regions), which can be\nspent more pro\ufb01tably by sprinkling more knots in the interior region. This\ntradeo\ufb00is illustrated in terms of variance in Figure 5.3. There will be a\nprice paid in bias near the boundaries, but assuming the function is lin-\near near the boundaries (where we have less information anyway) is often\nconsidered reasonable.\nA natural cubic spline with K knots is represented by K basis functions.\nOne can start from a basis for cubic splines, and derive the reduced ba-\nsis by imposing the boundary constraints. For example, starting from the\ntruncated power series basis described in Section 5.2, we arrive at (Exer-\ncise 5.4):",
+          "type": "narrative",
+          "page": 163
+        },
+        {
+          "id": 19817,
+          "text": "N1(X) = 1,\nN2(X) = X,\nNk+2(X) = dk(X) \u2212dK\u22121(X),\n(5.4)",
+          "type": "narrative",
+          "page": 163
+        }
+      ]
+    },
+    {
+      "id": 232,
+      "name": "cubic spline",
+      "description": "An order-4 spline with continuous first and second derivatives at knots, the lowest order where knot discontinuity is invisible to the human eye.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "It is claimed that cubic splines are the lowest-order spline for which the knot-discontinuity is not visible to the human eye.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19789,
+          "text": "144\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19790,
+          "text": "More generally, an order-M spline with knots \u03bej, j = 1, . . . , K is a\npiecewise-polynomial of order M, and has continuous derivatives up to\norder M \u22122. A cubic spline has M = 4. In fact the piecewise-constant\nfunction in Figure 5.1 is an order-1 spline, while the continuous piece-\nwise linear function is an order-2 spline. Likewise the general form for the\ntruncated-power basis set would be",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19791,
+          "text": "hj(X)\n=\nXj\u22121, j = 1, . . . , M,",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19792,
+          "text": "hM+\u2113(X)\n=\n(X \u2212\u03be\u2113)M\u22121\n+\n, \u2113= 1, . . . , K.",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19793,
+          "text": "It is claimed that cubic splines are the lowest-order spline for which the\nknot-discontinuity is not visible to the human eye. There is seldom any\ngood reason to go beyond cubic-splines, unless one is interested in smooth\nderivatives. In practice the most widely used orders are M = 1, 2 and 4.\nThese \ufb01xed-knot splines are also known as regression splines. One needs\nto select the order of the spline, the number of knots and their placement.\nOne simple approach is to parameterize a family of splines by the number\nof basis functions or degrees of freedom, and have the observations xi de-\ntermine the positions of the knots. For example, the expression bs(x,df=7)\nin R generates a basis matrix of cubic-spline functions evaluated at the N\nobservations in x, with the 7\u22123 = 41 interior knots at the appropriate per-\ncentiles of x (20, 40, 60 and 80th.) One can be more explicit, however; bs(x,\ndegree=1, knots = c(0.2, 0.4, 0.6)) generates a basis for linear splines,\nwith three interior knots, and returns an N \u00d7 4 matrix.\nSince the space of spline functions of a particular order and knot sequence\nis a vector space, there are many equivalent bases for representing them\n(just as there are for ordinary polynomials.) While the truncated power\nbasis is conceptually simple, it is not too attractive numerically: powers of\nlarge numbers can lead to severe rounding problems. The B-spline basis,\ndescribed in the Appendix to this chapter, allows for e\ufb03cient computations\neven when the number of knots K is large.",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19795,
+          "text": "We know that the behavior of polynomials \ufb01t to data tends to be erratic\nnear the boundaries, and extrapolation can be dangerous. These problems\nare exacerbated with splines. The polynomials \ufb01t beyond the boundary\nknots behave even more wildly than the corresponding global polynomials\nin that region. This can be conveniently summarized in terms of the point-\nwise variance of spline functions \ufb01t by least squares (see the example in the\nnext section for details on these variance calculations). Figure 5.3 compares",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19796,
+          "text": "1A cubic spline with four knots is eight-dimensional. The bs() function omits by\ndefault the constant term in the basis, since terms like this are typically included with\nother terms in the model.",
+          "type": "narrative",
+          "page": 162
+        },
+        {
+          "id": 19798,
+          "text": "X",
+          "type": "narrative",
+          "page": 163
+        },
+        {
+          "id": 19799,
+          "text": "Pointwise Variances",
+          "type": "narrative",
+          "page": 163
+        },
+        {
+          "id": 19800,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19801,
+          "text": "0.0\n0.1\n0.2\n0.3\n0.4\n0.5\n0.6",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19802,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19803,
+          "text": "\u2022\u2022\n\u2022\n\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022 \u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19804,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19805,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19806,
+          "text": "\u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022\u2022 \u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19807,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19808,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19809,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19810,
+          "text": "\u2022\u2022\n\u2022\n\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022 \u2022\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19811,
+          "text": "\u2022\u2022\u2022\u2022\n\u2022\n\u2022\u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19812,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19813,
+          "text": "\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022\u2022 \u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022 \u2022\u2022\n\u2022\u2022\u2022\u2022 \u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022 \u2022\u2022\u2022 \u2022\u2022\n\u2022\u2022 \u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 163
+        },
+        {
+          "id": 19814,
+          "text": "Global Linear\nGlobal Cubic Polynomial\nCubic Spline - 2 knots\nNatural Cubic Spline - 6 knots",
+          "type": "narrative",
+          "page": 163
+        },
+        {
+          "id": 19816,
+          "text": "the pointwise variances for a variety of di\ufb00erent models. The explosion of\nthe variance near the boundaries is clear, and inevitably is worst for cubic\nsplines.\nA natural cubic spline adds additional constraints, namely that the func-\ntion is linear beyond the boundary knots. This frees up four degrees of\nfreedom (two constraints each in both boundary regions), which can be\nspent more pro\ufb01tably by sprinkling more knots in the interior region. This\ntradeo\ufb00is illustrated in terms of variance in Figure 5.3. There will be a\nprice paid in bias near the boundaries, but assuming the function is lin-\near near the boundaries (where we have less information anyway) is often\nconsidered reasonable.\nA natural cubic spline with K knots is represented by K basis functions.\nOne can start from a basis for cubic splines, and derive the reduced ba-\nsis by imposing the boundary constraints. For example, starting from the\ntruncated power series basis described in Section 5.2, we arrive at (Exer-\ncise 5.4):",
+          "type": "narrative",
+          "page": 163
+        },
+        {
+          "id": 19817,
+          "text": "N1(X) = 1,\nN2(X) = X,\nNk+2(X) = dk(X) \u2212dK\u22121(X),\n(5.4)",
+          "type": "narrative",
+          "page": 163
+        }
+      ]
+    },
+    {
+      "id": 234,
+      "name": "backward stepwise deletion",
+      "description": "A model selection procedure that iteratively removes terms from a model to minimize an information criterion while preserving group structure.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "We carried out a backward stepwise deletion process, dropping terms from this model while preserving the group structure of each term, rather than dropping one coefficient at a time.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19818,
+          "text": "146\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 164
+        },
+        {
+          "id": 19819,
+          "text": "where",
+          "type": "narrative",
+          "page": 164
+        },
+        {
+          "id": 19820,
+          "text": "dk(X) = (X \u2212\u03bek)3\n+ \u2212(X \u2212\u03beK)3\n+\n\u03beK \u2212\u03bek\n.\n(5.5)",
+          "type": "narrative",
+          "page": 164
+        },
+        {
+          "id": 19821,
+          "text": "Each of these basis functions can be seen to have zero second and third\nderivative for X \u2265\u03beK.",
+          "type": "narrative",
+          "page": 164
+        },
+        {
+          "id": 19823,
+          "text": "In Section 4.4.2 we \ufb01t linear logistic regression models to the South African\nheart disease data. Here we explore nonlinearities in the functions using\nnatural splines. The functional form of the model is",
+          "type": "narrative",
+          "page": 164
+        },
+        {
+          "id": 19824,
+          "text": "logit[Pr(chd|X)] = \u03b80 + h1(X1)T \u03b81 + h2(X2)T \u03b82 + \u00b7 \u00b7 \u00b7 + hp(Xp)T \u03b8p, (5.6)",
+          "type": "narrative",
+          "page": 164
+        },
+        {
+          "id": 19825,
+          "text": "where each of the \u03b8j are vectors of coe\ufb03cients multiplying their associated\nvector of natural spline basis functions hj.\nWe use four natural spline bases for each term in the model. For example,\nwith X1 representing sbp, h1(X1) is a basis consisting of four basis func-\ntions. This actually implies three rather than two interior knots (chosen at\nuniform quantiles of sbp), plus two boundary knots at the extremes of the\ndata, since we exclude the constant term from each of the hj.\nSince famhist is a two-level factor, it is coded by a simple binary or\ndummy variable, and is associated with a single coe\ufb03cient in the \ufb01t of the\nmodel.\nMore compactly we can combine all p vectors of basis functions (and\nthe constant term) into one big vector h(X), and then the model is simply\nh(X)T \u03b8, with total number of parameters df = 1 + \tp\nj=1 dfj, the sum of\nthe parameters in each component term. Each basis function is evaluated\nat each of the N samples, resulting in a N \u00d7 df basis matrix H. At this\npoint the model is like any other linear logistic model, and the algorithms\ndescribed in Section 4.4.1 apply.\nWe carried out a backward stepwise deletion process, dropping terms\nfrom this model while preserving the group structure of each term, rather\nthan dropping one coe\ufb03cient at a time. The AIC statistic (Section 7.5) was\nused to drop terms, and all the terms remaining in the \ufb01nal model would\ncause AIC to increase if deleted from the model (see Table 5.1). Figure 5.4\nshows a plot of the \ufb01nal model selected by the stepwise regression. The\nfunctions displayed are \u02c6fj(Xj) = hj(Xj)T \u02c6\u03b8j for each variable Xj. The\ncovariance matrix Cov(\u02c6\u03b8) = \u03a3 is estimated by \u02c6\u03a3 = (HT WH)\u22121, where W\nis the diagonal weight matrix from the logistic regression. Hence vj(Xj) =\nVar[ \u02c6fj(Xj)] = hj(Xj)T \u02c6\u03a3jjhj(Xj) is the pointwise variance function of \u02c6fj,\nwhere Cov(\u02c6\u03b8j) = \u02c6\u03a3jj is the appropriate sub-matrix of \u02c6\u03a3. The shaded region\nin each panel is de\ufb01ned by \u02c6fj(Xj) \u00b1 2\n\"",
+          "type": "narrative",
+          "page": 164
+        },
+        {
+          "id": 19826,
+          "text": "vj(Xj).\nThe AIC statistic is slightly more generous than the likelihood-ratio test\n(deviance test). Both sbp and obesity are included in this model, while",
+          "type": "narrative",
+          "page": 164
+        },
+        {
+          "id": 19828,
+          "text": "100\n120\n140\n160\n180\n200\n220",
+          "type": "equation",
+          "page": 165
+        },
+        {
+          "id": 19829,
+          "text": "-2\n0\n2\n4",
+          "type": "equation",
+          "page": 165
+        },
+        {
+          "id": 19830,
+          "text": "0\n5\n10\n15\n20\n25\n30",
+          "type": "equation",
+          "page": 165
+        },
+        {
+          "id": 19831,
+          "text": "0\n2\n4\n6\n8",
+          "type": "equation",
+          "page": 165
+        },
+        {
+          "id": 19832,
+          "text": "2\n4\n6\n8\n10\n12\n14",
+          "type": "equation",
+          "page": 165
+        },
+        {
+          "id": 19833,
+          "text": "-4\n-2\n0\n2\n4",
+          "type": "equation",
+          "page": 165
+        },
+        {
+          "id": 19834,
+          "text": "-4\n-2\n0\n2\n4",
+          "type": "equation",
+          "page": 165
+        },
+        {
+          "id": 19835,
+          "text": "Absent\nPresent",
+          "type": "narrative",
+          "page": 165
+        },
+        {
+          "id": 19836,
+          "text": "15\n20\n25\n30\n35\n40\n45",
+          "type": "equation",
+          "page": 165
+        },
+        {
+          "id": 19837,
+          "text": "-2\n0\n2\n4\n6",
+          "type": "equation",
+          "page": 165
+        },
+        {
+          "id": 19838,
+          "text": "20\n30\n40\n50\n60",
+          "type": "equation",
+          "page": 165
+        },
+        {
+          "id": 19839,
+          "text": "-6\n-4\n-2\n0\n2",
+          "type": "equation",
+          "page": 165
+        },
+        {
+          "id": 19840,
+          "text": "\u02c6f(sbp)",
+          "type": "narrative",
+          "page": 165
+        },
+        {
+          "id": 19841,
+          "text": "sbp",
+          "type": "narrative",
+          "page": 165
+        },
+        {
+          "id": 19842,
+          "text": "\u02c6f(tobacco)",
+          "type": "narrative",
+          "page": 165
+        },
+        {
+          "id": 19843,
+          "text": "tobacco",
+          "type": "narrative",
+          "page": 165
+        },
+        {
+          "id": 19844,
+          "text": "\u02c6f(ldl)",
+          "type": "narrative",
+          "page": 165
+        },
+        {
+          "id": 19845,
+          "text": "ldl",
+          "type": "narrative",
+          "page": 165
+        },
+        {
+          "id": 19846,
+          "text": "\u02c6f(obesity)",
+          "type": "narrative",
+          "page": 165
+        },
+        {
+          "id": 19847,
+          "text": "obesity",
+          "type": "narrative",
+          "page": 165
+        },
+        {
+          "id": 19848,
+          "text": "\u02c6f(age)",
+          "type": "narrative",
+          "page": 165
+        },
+        {
+          "id": 19849,
+          "text": "age",
+          "type": "narrative",
+          "page": 165
+        }
+      ]
+    },
+    {
+      "id": 121,
+      "name": "feature extraction",
+      "description": "Preprocessing high-dimensional features through transformation (linear or nonlinear) before applying a learning algorithm.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "Preprocessing of high-dimensional features is a very general and powerful method for improving the performance of a learning algorithm.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19874,
+          "text": "150\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 168
+        },
+        {
+          "id": 19875,
+          "text": "which we approximate by",
+          "type": "narrative",
+          "page": 168
+        },
+        {
+          "id": 19876,
+          "text": "256\n\u0002",
+          "type": "equation",
+          "page": 168
+        },
+        {
+          "id": 19877,
+          "text": "j=1\nX(fj)\u03b2(fj) =",
+          "type": "narrative",
+          "page": 168
+        },
+        {
+          "id": 19878,
+          "text": "256\n\u0002",
+          "type": "equation",
+          "page": 168
+        },
+        {
+          "id": 19879,
+          "text": "j=1\nxj\u03b2j.\n(5.8)",
+          "type": "narrative",
+          "page": 168
+        },
+        {
+          "id": 19880,
+          "text": "The coe\ufb03cients compute a contrast functional, and will have appreciable\nvalues in regions of frequency where the log-periodograms di\ufb00er between\nthe two classes.\nThe gray curves are very rough. Since the input signals have fairly strong\npositive autocorrelation, this results in negative autocorrelation in the co-\ne\ufb03cients. In addition the sample size e\ufb00ectively provides only four obser-\nvations per coe\ufb03cient.\nApplications such as this permit a natural regularization. We force the\ncoe\ufb03cients to vary smoothly as a function of frequency. The red curve in the\nlower panel of Figure 5.5 shows such a smooth coe\ufb03cient curve \ufb01t to these\ndata. We see that the lower frequencies o\ufb00er the most discriminatory power.\nNot only does the smoothing allow easier interpretation of the contrast, it\nalso produces a more accurate classi\ufb01er:",
+          "type": "narrative",
+          "page": 168
+        },
+        {
+          "id": 19881,
+          "text": "Raw\nRegularized\nTraining error\n0.080\n0.185\nTest error\n0.255\n0.158",
+          "type": "narrative",
+          "page": 168
+        },
+        {
+          "id": 19882,
+          "text": "The smooth red curve was obtained through a very simple use of natural\ncubic splines. We can represent the coe\ufb03cient function as an expansion of\nsplines \u03b2(f) = \tM\nm=1 hm(f)\u03b8m. In practice this means that \u03b2 = H\u03b8 where,\nH is a p \u00d7 M basis matrix of natural cubic splines, de\ufb01ned on the set of\nfrequencies. Here we used M = 12 basis functions, with knots uniformly\nplaced over the integers 1, 2, . . . , 256 representing the frequencies. Since\nxT \u03b2 = xT H\u03b8, we can simply replace the input features x by their \ufb01ltered\nversions x\u2217= HT x, and \ufb01t \u03b8 by linear logistic regression on the x\u2217. The\nred curve is thus \u02c6\u03b2(f) = h(f)T \u02c6\u03b8.",
+          "type": "narrative",
+          "page": 168
+        },
+        {
+          "id": 19884,
+          "text": "In the previous example, we constructed a p\u00d7M basis matrix H, and then\ntransformed our features x into new features x\u2217= HT x. These \ufb01ltered\nversions of the features were then used as inputs into a learning procedure:\nin the previous example, this was linear logistic regression.\nPreprocessing of high-dimensional features is a very general and pow-\nerful method for improving the performance of a learning algorithm. The\npreprocessing need not be linear as it was above, but can be a general",
+          "type": "narrative",
+          "page": 168
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "shrinking smoothers",
+      "description": "either left alone, or shrunk to zero\u2014that is, a projection matrix such\nas H\u03be above has M eigenvalues equal to 1, and the rest are 0. For\nthis reason smoothing splines are referred to as shrinking smoothers,\nwhile regression splines are projection smoothers (see Figure 3.17 on\npage 80).",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "either left alone, or shrunk to zero\u2014that is, a projection matrix such as H\u03be above has M eigenvalues equal to 1, and the rest are 0. For this reason smoothing splines are referred to as shrinking smoothers, while regression splines are projection smoothers",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19886,
+          "text": "(nonlinear) function of the form x\u2217= g(x). The derived features x\u2217can\nthen be used as inputs into any (linear or nonlinear) learning procedure.\nFor example, for signal or image recognition a popular approach is to \ufb01rst\ntransform the raw features via a wavelet transform x\u2217= HT x (Section 5.9)\nand then use the features x\u2217as inputs into a neural network (Chapter 11).\nWavelets are e\ufb00ective in capturing discrete jumps or edges, and the neural\nnetwork is a powerful tool for constructing nonlinear functions of these\nfeatures for predicting the target variable. By using domain knowledge\nto construct appropriate features, one can often improve upon a learning\nmethod that has only the raw features x at its disposal.",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19888,
+          "text": "Here we discuss a spline basis method that avoids the knot selection prob-\nlem completely by using a maximal set of knots. The complexity of the \ufb01t\nis controlled by regularization. Consider the following problem: among all\nfunctions f(x) with two continuous derivatives, \ufb01nd one that minimizes the\npenalized residual sum of squares",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19889,
+          "text": "RSS(f, \u03bb) =",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19890,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19891,
+          "text": "i=1\n{yi \u2212f(xi)}2 + \u03bb\n\u0004\n{f \u2032\u2032(t)}2dt,\n(5.9)",
+          "type": "equation",
+          "page": 169
+        },
+        {
+          "id": 19892,
+          "text": "where \u03bb is a \ufb01xed smoothing parameter. The \ufb01rst term measures closeness\nto the data, while the second term penalizes curvature in the function, and\n\u03bb establishes a tradeo\ufb00between the two. Two special cases are:",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19893,
+          "text": "\u03bb = 0 : f can be any function that interpolates the data.",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19894,
+          "text": "\u03bb = \u221e: the simple least squares line \ufb01t, since no second derivative can\nbe tolerated.",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19895,
+          "text": "These vary from very rough to very smooth, and the hope is that \u03bb \u2208(0, \u221e)\nindexes an interesting class of functions in between.\nThe criterion (5.9) is de\ufb01ned on an in\ufb01nite-dimensional function space\u2014\nin fact, a Sobolev space of functions for which the second term is de\ufb01ned.\nRemarkably, it can be shown that (5.9) has an explicit, \ufb01nite-dimensional,\nunique minimizer which is a natural cubic spline with knots at the unique\nvalues of the xi, i = 1, . . . , N (Exercise 5.7). At face value it seems that\nthe family is still over-parametrized, since there are as many as N knots,\nwhich implies N degrees of freedom. However, the penalty term translates\nto a penalty on the spline coe\ufb03cients, which are shrunk some of the way\ntoward the linear \ufb01t.\nSince the solution is a natural spline, we can write it as",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19896,
+          "text": "f(x) =",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19897,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19898,
+          "text": "j=1\nNj(x)\u03b8j,\n(5.10)",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19899,
+          "text": "152\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 170
+        },
+        {
+          "id": 19900,
+          "text": "Age",
+          "type": "narrative",
+          "page": 170
+        },
+        {
+          "id": 19901,
+          "text": "Relative Change in Spinal BMD",
+          "type": "narrative",
+          "page": 170
+        },
+        {
+          "id": 19902,
+          "text": "10\n15\n20\n25",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19903,
+          "text": "-0.05\n0.0\n0.05\n0.10\n0.15\n0.20",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19904,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19905,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19906,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19907,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19908,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19909,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19910,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19911,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19912,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19913,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19914,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19915,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19916,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        }
+      ]
+    },
+    {
+      "id": 94,
+      "name": "roughness penalty",
+      "description": "A penalty term based on the integrated squared second derivative, penalizing curvature in the function.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "the second term penalizes curvature in the function",
+      "existing_formula": "\\lambda \\int [f''(t)]^2 dt",
+      "paragraphs": [
+        {
+          "id": 19886,
+          "text": "(nonlinear) function of the form x\u2217= g(x). The derived features x\u2217can\nthen be used as inputs into any (linear or nonlinear) learning procedure.\nFor example, for signal or image recognition a popular approach is to \ufb01rst\ntransform the raw features via a wavelet transform x\u2217= HT x (Section 5.9)\nand then use the features x\u2217as inputs into a neural network (Chapter 11).\nWavelets are e\ufb00ective in capturing discrete jumps or edges, and the neural\nnetwork is a powerful tool for constructing nonlinear functions of these\nfeatures for predicting the target variable. By using domain knowledge\nto construct appropriate features, one can often improve upon a learning\nmethod that has only the raw features x at its disposal.",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19888,
+          "text": "Here we discuss a spline basis method that avoids the knot selection prob-\nlem completely by using a maximal set of knots. The complexity of the \ufb01t\nis controlled by regularization. Consider the following problem: among all\nfunctions f(x) with two continuous derivatives, \ufb01nd one that minimizes the\npenalized residual sum of squares",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19889,
+          "text": "RSS(f, \u03bb) =",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19890,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19891,
+          "text": "i=1\n{yi \u2212f(xi)}2 + \u03bb\n\u0004\n{f \u2032\u2032(t)}2dt,\n(5.9)",
+          "type": "equation",
+          "page": 169
+        },
+        {
+          "id": 19892,
+          "text": "where \u03bb is a \ufb01xed smoothing parameter. The \ufb01rst term measures closeness\nto the data, while the second term penalizes curvature in the function, and\n\u03bb establishes a tradeo\ufb00between the two. Two special cases are:",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19893,
+          "text": "\u03bb = 0 : f can be any function that interpolates the data.",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19894,
+          "text": "\u03bb = \u221e: the simple least squares line \ufb01t, since no second derivative can\nbe tolerated.",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19895,
+          "text": "These vary from very rough to very smooth, and the hope is that \u03bb \u2208(0, \u221e)\nindexes an interesting class of functions in between.\nThe criterion (5.9) is de\ufb01ned on an in\ufb01nite-dimensional function space\u2014\nin fact, a Sobolev space of functions for which the second term is de\ufb01ned.\nRemarkably, it can be shown that (5.9) has an explicit, \ufb01nite-dimensional,\nunique minimizer which is a natural cubic spline with knots at the unique\nvalues of the xi, i = 1, . . . , N (Exercise 5.7). At face value it seems that\nthe family is still over-parametrized, since there are as many as N knots,\nwhich implies N degrees of freedom. However, the penalty term translates\nto a penalty on the spline coe\ufb03cients, which are shrunk some of the way\ntoward the linear \ufb01t.\nSince the solution is a natural spline, we can write it as",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19896,
+          "text": "f(x) =",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19897,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19898,
+          "text": "j=1\nNj(x)\u03b8j,\n(5.10)",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19899,
+          "text": "152\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 170
+        },
+        {
+          "id": 19900,
+          "text": "Age",
+          "type": "narrative",
+          "page": 170
+        },
+        {
+          "id": 19901,
+          "text": "Relative Change in Spinal BMD",
+          "type": "narrative",
+          "page": 170
+        },
+        {
+          "id": 19902,
+          "text": "10\n15\n20\n25",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19903,
+          "text": "-0.05\n0.0\n0.05\n0.10\n0.15\n0.20",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19904,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19905,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19906,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19907,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19908,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19909,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19910,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19911,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19912,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19913,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19914,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19915,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19916,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        }
+      ]
+    },
+    {
+      "id": 238,
+      "name": "smoothing spline",
+      "description": "A spline that minimizes penalized RSS with a knot at every unique x value, controlling complexity via a roughness penalty rather than knot selection.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "Here we discuss a spline basis method that avoids the knot selection problem completely by using a maximal set of knots. The complexity of the fit is controlled by regularization.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19886,
+          "text": "(nonlinear) function of the form x\u2217= g(x). The derived features x\u2217can\nthen be used as inputs into any (linear or nonlinear) learning procedure.\nFor example, for signal or image recognition a popular approach is to \ufb01rst\ntransform the raw features via a wavelet transform x\u2217= HT x (Section 5.9)\nand then use the features x\u2217as inputs into a neural network (Chapter 11).\nWavelets are e\ufb00ective in capturing discrete jumps or edges, and the neural\nnetwork is a powerful tool for constructing nonlinear functions of these\nfeatures for predicting the target variable. By using domain knowledge\nto construct appropriate features, one can often improve upon a learning\nmethod that has only the raw features x at its disposal.",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19888,
+          "text": "Here we discuss a spline basis method that avoids the knot selection prob-\nlem completely by using a maximal set of knots. The complexity of the \ufb01t\nis controlled by regularization. Consider the following problem: among all\nfunctions f(x) with two continuous derivatives, \ufb01nd one that minimizes the\npenalized residual sum of squares",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19889,
+          "text": "RSS(f, \u03bb) =",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19890,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19891,
+          "text": "i=1\n{yi \u2212f(xi)}2 + \u03bb\n\u0004\n{f \u2032\u2032(t)}2dt,\n(5.9)",
+          "type": "equation",
+          "page": 169
+        },
+        {
+          "id": 19892,
+          "text": "where \u03bb is a \ufb01xed smoothing parameter. The \ufb01rst term measures closeness\nto the data, while the second term penalizes curvature in the function, and\n\u03bb establishes a tradeo\ufb00between the two. Two special cases are:",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19893,
+          "text": "\u03bb = 0 : f can be any function that interpolates the data.",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19894,
+          "text": "\u03bb = \u221e: the simple least squares line \ufb01t, since no second derivative can\nbe tolerated.",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19895,
+          "text": "These vary from very rough to very smooth, and the hope is that \u03bb \u2208(0, \u221e)\nindexes an interesting class of functions in between.\nThe criterion (5.9) is de\ufb01ned on an in\ufb01nite-dimensional function space\u2014\nin fact, a Sobolev space of functions for which the second term is de\ufb01ned.\nRemarkably, it can be shown that (5.9) has an explicit, \ufb01nite-dimensional,\nunique minimizer which is a natural cubic spline with knots at the unique\nvalues of the xi, i = 1, . . . , N (Exercise 5.7). At face value it seems that\nthe family is still over-parametrized, since there are as many as N knots,\nwhich implies N degrees of freedom. However, the penalty term translates\nto a penalty on the spline coe\ufb03cients, which are shrunk some of the way\ntoward the linear \ufb01t.\nSince the solution is a natural spline, we can write it as",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19896,
+          "text": "f(x) =",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19897,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19898,
+          "text": "j=1\nNj(x)\u03b8j,\n(5.10)",
+          "type": "narrative",
+          "page": 169
+        },
+        {
+          "id": 19899,
+          "text": "152\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 170
+        },
+        {
+          "id": 19900,
+          "text": "Age",
+          "type": "narrative",
+          "page": 170
+        },
+        {
+          "id": 19901,
+          "text": "Relative Change in Spinal BMD",
+          "type": "narrative",
+          "page": 170
+        },
+        {
+          "id": 19902,
+          "text": "10\n15\n20\n25",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19903,
+          "text": "-0.05\n0.0\n0.05\n0.10\n0.15\n0.20",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19904,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19905,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19906,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19907,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19908,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19909,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19910,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19911,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19912,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19913,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19914,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19915,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        },
+        {
+          "id": 19916,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 170
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "smoother matrix",
+      "description": "Again the \ufb01t is linear in y, and the \ufb01nite linear operator S\u03bb is known as\nthe smoother matrix. One consequence of this linearity is that the recipe\nfor producing \u02c6f from y does not depend on y itself; S\u03bb depends only on\nthe xi and \u03bb.\nLinear operators are familiar in more traditional least squares \ufb01tting as\nwell. Suppose B\u03be is a N \u00d7 M matrix of M cubic-spline basis functions\nevaluated at the N training points xi, with knot sequence \u03be, and M \u226aN.\nThen the vector of \ufb01tted spline values is given by",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "Again the fit is linear in y, and the finite linear operator S\u03bb is known as the smoother matrix. One consequence of this linearity is that the recipe for producing f\u0302 from y does not depend on y itself; S\u03bb depends only on the xi and \u03bb.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 20249,
+          "text": "summary reinforces the evidence in the data that the growth spurt for\nfemales precedes that for males by about two years. In both cases the\nsmoothing parameter \u03bb was approximately 0.00022; this choice is discussed\nin the next section.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20251,
+          "text": "We have not yet indicated how \u03bb is chosen for the smoothing spline. Later\nin this chapter we describe automatic methods using techniques such as\ncross-validation. In this section we discuss intuitive ways of prespecifying\nthe amount of smoothing.\nA smoothing spline with prechosen \u03bb is an example of a linear smoother\n(as in linear operator). This is because the estimated parameters in (5.12)\nare a linear combination of the yi. Denote by \u02c6f the N-vector of \ufb01tted values\n\u02c6f(xi) at the training predictors xi. Then",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20252,
+          "text": "\u02c6f\n=\nN(NT N + \u03bb\u03a9N)\u22121NT y",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20253,
+          "text": "=\nS\u03bby.\n(5.14)",
+          "type": "equation",
+          "page": 171
+        },
+        {
+          "id": 20254,
+          "text": "Again the \ufb01t is linear in y, and the \ufb01nite linear operator S\u03bb is known as\nthe smoother matrix. One consequence of this linearity is that the recipe\nfor producing \u02c6f from y does not depend on y itself; S\u03bb depends only on\nthe xi and \u03bb.\nLinear operators are familiar in more traditional least squares \ufb01tting as\nwell. Suppose B\u03be is a N \u00d7 M matrix of M cubic-spline basis functions\nevaluated at the N training points xi, with knot sequence \u03be, and M \u226aN.\nThen the vector of \ufb01tted spline values is given by",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20255,
+          "text": "\u02c6f\n=\nB\u03be(BT\n\u03be B\u03be)\u22121BT\n\u03be y\n=\nH\u03bey.\n(5.15)",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20256,
+          "text": "Here the linear operator H\u03be is a projection operator, also known as the hat\nmatrix in statistics. There are some important similarities and di\ufb00erences\nbetween H\u03be and S\u03bb:",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20257,
+          "text": "\u2022 Both are symmetric, positive semide\ufb01nite matrices.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20258,
+          "text": "\u2022 H\u03beH\u03be = H\u03be (idempotent), while S\u03bbS\u03bb \u2aafS\u03bb, meaning that the right-\nhand side exceeds the left-hand side by a positive semide\ufb01nite matrix.\nThis is a consequence of the shrinking nature of S\u03bb, which we discuss\nfurther below.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20259,
+          "text": "\u2022 H\u03be has rank M, while S\u03bb has rank N.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20260,
+          "text": "The expression M = trace(H\u03be) gives the dimension of the projection space,\nwhich is also the number of basis functions, and hence the number of pa-\nrameters involved in the \ufb01t. By analogy we de\ufb01ne the e\ufb00ective degrees of",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20261,
+          "text": "154\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20262,
+          "text": "freedom of a smoothing spline to be",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20263,
+          "text": "df\u03bb = trace(S\u03bb),\n(5.16)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20264,
+          "text": "the sum of the diagonal elements of S\u03bb. This very useful de\ufb01nition allows\nus a more intuitive way to parameterize the smoothing spline, and indeed\nmany other smoothers as well, in a consistent fashion. For example, in Fig-\nure 5.6 we speci\ufb01ed df\u03bb = 12 for each of the curves, and the corresponding\n\u03bb \u22480.00022 was derived numerically by solving trace(S\u03bb) = 12. There are\nmany arguments supporting this de\ufb01nition of degrees of freedom, and we\ncover some of them here.\nSince S\u03bb is symmetric (and positive semide\ufb01nite), it has a real eigen-\ndecomposition. Before we proceed, it is convenient to rewrite S\u03bb in the\nReinsch form\nS\u03bb = (I + \u03bbK)\u22121,\n(5.17)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20265,
+          "text": "where K does not depend on \u03bb (Exercise 5.9). Since \u02c6f = S\u03bby solves",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20266,
+          "text": "min\nf (y \u2212f)T (y \u2212f) + \u03bbf T Kf,\n(5.18)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20267,
+          "text": "K is known as the penalty matrix, and indeed a quadratic form in K has\na representation in terms of a weighted sum of squared (divided) second\ndi\ufb00erences. The eigen-decomposition of S\u03bb is",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20268,
+          "text": "S\u03bb =",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20269,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20270,
+          "text": "k=1\n\u03c1k(\u03bb)ukuT\nk\n(5.19)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20271,
+          "text": "with\n\u03c1k(\u03bb) =\n1\n1 + \u03bbdk\n,\n(5.20)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20272,
+          "text": "and dk the corresponding eigenvalue of K. Figure 5.7 (top) shows the re-\nsults of applying a cubic smoothing spline to some air pollution data (128\nobservations). Two \ufb01ts are given: a smoother \ufb01t corresponding to a larger\npenalty \u03bb and a rougher \ufb01t for a smaller penalty. The lower panels repre-\nsent the eigenvalues (lower left) and some eigenvectors (lower right) of the\ncorresponding smoother matrices. Some of the highlights of the eigenrep-\nresentation are the following:",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20273,
+          "text": "\u2022 The eigenvectors are not a\ufb00ected by changes in \u03bb, and hence the whole\nfamily of smoothing splines (for a particular sequence x) indexed by\n\u03bb have the same eigenvectors.",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20274,
+          "text": "\u2022 S\u03bby = \tN\nk=1 uk\u03c1k(\u03bb)\u27e8uk, y\u27e9, and hence the smoothing spline oper-\nates by decomposing y w.r.t. the (complete) basis {uk}, and di\ufb00er-\nentially shrinking the contributions using \u03c1k(\u03bb). This is to be con-\ntrasted with a basis-regression method, where the components are",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20276,
+          "text": "Daggot Pressure Gradient",
+          "type": "narrative",
+          "page": 173
+        },
+        {
+          "id": 20277,
+          "text": "Ozone Concentration",
+          "type": "narrative",
+          "page": 173
+        },
+        {
+          "id": 20278,
+          "text": "-50\n0\n50\n100",
+          "type": "equation",
+          "page": 173
+        },
+        {
+          "id": 20279,
+          "text": "0\n10\n20\n30",
+          "type": "equation",
+          "page": 173
+        },
+        {
+          "id": 20280,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 173
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "penalty matrix",
+      "description": "K is known as the penalty matrix, and indeed a quadratic form in K has\na representation in terms of a weighted sum of squared (divided) second\ndi\ufb00erences. The eigen-decomposition of S\u03bb is",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "K is known as the penalty matrix, and indeed a quadratic form in K has a representation in terms of a weighted sum of squared (divided) second differences.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 20249,
+          "text": "summary reinforces the evidence in the data that the growth spurt for\nfemales precedes that for males by about two years. In both cases the\nsmoothing parameter \u03bb was approximately 0.00022; this choice is discussed\nin the next section.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20251,
+          "text": "We have not yet indicated how \u03bb is chosen for the smoothing spline. Later\nin this chapter we describe automatic methods using techniques such as\ncross-validation. In this section we discuss intuitive ways of prespecifying\nthe amount of smoothing.\nA smoothing spline with prechosen \u03bb is an example of a linear smoother\n(as in linear operator). This is because the estimated parameters in (5.12)\nare a linear combination of the yi. Denote by \u02c6f the N-vector of \ufb01tted values\n\u02c6f(xi) at the training predictors xi. Then",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20252,
+          "text": "\u02c6f\n=\nN(NT N + \u03bb\u03a9N)\u22121NT y",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20253,
+          "text": "=\nS\u03bby.\n(5.14)",
+          "type": "equation",
+          "page": 171
+        },
+        {
+          "id": 20254,
+          "text": "Again the \ufb01t is linear in y, and the \ufb01nite linear operator S\u03bb is known as\nthe smoother matrix. One consequence of this linearity is that the recipe\nfor producing \u02c6f from y does not depend on y itself; S\u03bb depends only on\nthe xi and \u03bb.\nLinear operators are familiar in more traditional least squares \ufb01tting as\nwell. Suppose B\u03be is a N \u00d7 M matrix of M cubic-spline basis functions\nevaluated at the N training points xi, with knot sequence \u03be, and M \u226aN.\nThen the vector of \ufb01tted spline values is given by",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20255,
+          "text": "\u02c6f\n=\nB\u03be(BT\n\u03be B\u03be)\u22121BT\n\u03be y\n=\nH\u03bey.\n(5.15)",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20256,
+          "text": "Here the linear operator H\u03be is a projection operator, also known as the hat\nmatrix in statistics. There are some important similarities and di\ufb00erences\nbetween H\u03be and S\u03bb:",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20257,
+          "text": "\u2022 Both are symmetric, positive semide\ufb01nite matrices.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20258,
+          "text": "\u2022 H\u03beH\u03be = H\u03be (idempotent), while S\u03bbS\u03bb \u2aafS\u03bb, meaning that the right-\nhand side exceeds the left-hand side by a positive semide\ufb01nite matrix.\nThis is a consequence of the shrinking nature of S\u03bb, which we discuss\nfurther below.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20259,
+          "text": "\u2022 H\u03be has rank M, while S\u03bb has rank N.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20260,
+          "text": "The expression M = trace(H\u03be) gives the dimension of the projection space,\nwhich is also the number of basis functions, and hence the number of pa-\nrameters involved in the \ufb01t. By analogy we de\ufb01ne the e\ufb00ective degrees of",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20261,
+          "text": "154\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20262,
+          "text": "freedom of a smoothing spline to be",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20263,
+          "text": "df\u03bb = trace(S\u03bb),\n(5.16)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20264,
+          "text": "the sum of the diagonal elements of S\u03bb. This very useful de\ufb01nition allows\nus a more intuitive way to parameterize the smoothing spline, and indeed\nmany other smoothers as well, in a consistent fashion. For example, in Fig-\nure 5.6 we speci\ufb01ed df\u03bb = 12 for each of the curves, and the corresponding\n\u03bb \u22480.00022 was derived numerically by solving trace(S\u03bb) = 12. There are\nmany arguments supporting this de\ufb01nition of degrees of freedom, and we\ncover some of them here.\nSince S\u03bb is symmetric (and positive semide\ufb01nite), it has a real eigen-\ndecomposition. Before we proceed, it is convenient to rewrite S\u03bb in the\nReinsch form\nS\u03bb = (I + \u03bbK)\u22121,\n(5.17)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20265,
+          "text": "where K does not depend on \u03bb (Exercise 5.9). Since \u02c6f = S\u03bby solves",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20266,
+          "text": "min\nf (y \u2212f)T (y \u2212f) + \u03bbf T Kf,\n(5.18)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20267,
+          "text": "K is known as the penalty matrix, and indeed a quadratic form in K has\na representation in terms of a weighted sum of squared (divided) second\ndi\ufb00erences. The eigen-decomposition of S\u03bb is",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20268,
+          "text": "S\u03bb =",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20269,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20270,
+          "text": "k=1\n\u03c1k(\u03bb)ukuT\nk\n(5.19)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20271,
+          "text": "with\n\u03c1k(\u03bb) =\n1\n1 + \u03bbdk\n,\n(5.20)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20272,
+          "text": "and dk the corresponding eigenvalue of K. Figure 5.7 (top) shows the re-\nsults of applying a cubic smoothing spline to some air pollution data (128\nobservations). Two \ufb01ts are given: a smoother \ufb01t corresponding to a larger\npenalty \u03bb and a rougher \ufb01t for a smaller penalty. The lower panels repre-\nsent the eigenvalues (lower left) and some eigenvectors (lower right) of the\ncorresponding smoother matrices. Some of the highlights of the eigenrep-\nresentation are the following:",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20273,
+          "text": "\u2022 The eigenvectors are not a\ufb00ected by changes in \u03bb, and hence the whole\nfamily of smoothing splines (for a particular sequence x) indexed by\n\u03bb have the same eigenvectors.",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20274,
+          "text": "\u2022 S\u03bby = \tN\nk=1 uk\u03c1k(\u03bb)\u27e8uk, y\u27e9, and hence the smoothing spline oper-\nates by decomposing y w.r.t. the (complete) basis {uk}, and di\ufb00er-\nentially shrinking the contributions using \u03c1k(\u03bb). This is to be con-\ntrasted with a basis-regression method, where the components are",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20276,
+          "text": "Daggot Pressure Gradient",
+          "type": "narrative",
+          "page": 173
+        },
+        {
+          "id": 20277,
+          "text": "Ozone Concentration",
+          "type": "narrative",
+          "page": 173
+        },
+        {
+          "id": 20278,
+          "text": "-50\n0\n50\n100",
+          "type": "equation",
+          "page": 173
+        },
+        {
+          "id": 20279,
+          "text": "0\n10\n20\n30",
+          "type": "equation",
+          "page": 173
+        },
+        {
+          "id": 20280,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 173
+        }
+      ]
+    },
+    {
+      "id": 124,
+      "name": "linear smoother",
+      "description": "A fitting method where fitted values are a linear function of responses, characterized by a smoother matrix independent of y.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "A smoothing spline with prechosen \u03bb is an example of a linear smoother (as in linear operator). This is because the estimated parameters in (5.12) are a linear combination of the y\u1d62.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 20249,
+          "text": "summary reinforces the evidence in the data that the growth spurt for\nfemales precedes that for males by about two years. In both cases the\nsmoothing parameter \u03bb was approximately 0.00022; this choice is discussed\nin the next section.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20251,
+          "text": "We have not yet indicated how \u03bb is chosen for the smoothing spline. Later\nin this chapter we describe automatic methods using techniques such as\ncross-validation. In this section we discuss intuitive ways of prespecifying\nthe amount of smoothing.\nA smoothing spline with prechosen \u03bb is an example of a linear smoother\n(as in linear operator). This is because the estimated parameters in (5.12)\nare a linear combination of the yi. Denote by \u02c6f the N-vector of \ufb01tted values\n\u02c6f(xi) at the training predictors xi. Then",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20252,
+          "text": "\u02c6f\n=\nN(NT N + \u03bb\u03a9N)\u22121NT y",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20253,
+          "text": "=\nS\u03bby.\n(5.14)",
+          "type": "equation",
+          "page": 171
+        },
+        {
+          "id": 20254,
+          "text": "Again the \ufb01t is linear in y, and the \ufb01nite linear operator S\u03bb is known as\nthe smoother matrix. One consequence of this linearity is that the recipe\nfor producing \u02c6f from y does not depend on y itself; S\u03bb depends only on\nthe xi and \u03bb.\nLinear operators are familiar in more traditional least squares \ufb01tting as\nwell. Suppose B\u03be is a N \u00d7 M matrix of M cubic-spline basis functions\nevaluated at the N training points xi, with knot sequence \u03be, and M \u226aN.\nThen the vector of \ufb01tted spline values is given by",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20255,
+          "text": "\u02c6f\n=\nB\u03be(BT\n\u03be B\u03be)\u22121BT\n\u03be y\n=\nH\u03bey.\n(5.15)",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20256,
+          "text": "Here the linear operator H\u03be is a projection operator, also known as the hat\nmatrix in statistics. There are some important similarities and di\ufb00erences\nbetween H\u03be and S\u03bb:",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20257,
+          "text": "\u2022 Both are symmetric, positive semide\ufb01nite matrices.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20258,
+          "text": "\u2022 H\u03beH\u03be = H\u03be (idempotent), while S\u03bbS\u03bb \u2aafS\u03bb, meaning that the right-\nhand side exceeds the left-hand side by a positive semide\ufb01nite matrix.\nThis is a consequence of the shrinking nature of S\u03bb, which we discuss\nfurther below.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20259,
+          "text": "\u2022 H\u03be has rank M, while S\u03bb has rank N.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20260,
+          "text": "The expression M = trace(H\u03be) gives the dimension of the projection space,\nwhich is also the number of basis functions, and hence the number of pa-\nrameters involved in the \ufb01t. By analogy we de\ufb01ne the e\ufb00ective degrees of",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20261,
+          "text": "154\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20262,
+          "text": "freedom of a smoothing spline to be",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20263,
+          "text": "df\u03bb = trace(S\u03bb),\n(5.16)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20264,
+          "text": "the sum of the diagonal elements of S\u03bb. This very useful de\ufb01nition allows\nus a more intuitive way to parameterize the smoothing spline, and indeed\nmany other smoothers as well, in a consistent fashion. For example, in Fig-\nure 5.6 we speci\ufb01ed df\u03bb = 12 for each of the curves, and the corresponding\n\u03bb \u22480.00022 was derived numerically by solving trace(S\u03bb) = 12. There are\nmany arguments supporting this de\ufb01nition of degrees of freedom, and we\ncover some of them here.\nSince S\u03bb is symmetric (and positive semide\ufb01nite), it has a real eigen-\ndecomposition. Before we proceed, it is convenient to rewrite S\u03bb in the\nReinsch form\nS\u03bb = (I + \u03bbK)\u22121,\n(5.17)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20265,
+          "text": "where K does not depend on \u03bb (Exercise 5.9). Since \u02c6f = S\u03bby solves",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20266,
+          "text": "min\nf (y \u2212f)T (y \u2212f) + \u03bbf T Kf,\n(5.18)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20267,
+          "text": "K is known as the penalty matrix, and indeed a quadratic form in K has\na representation in terms of a weighted sum of squared (divided) second\ndi\ufb00erences. The eigen-decomposition of S\u03bb is",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20268,
+          "text": "S\u03bb =",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20269,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20270,
+          "text": "k=1\n\u03c1k(\u03bb)ukuT\nk\n(5.19)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20271,
+          "text": "with\n\u03c1k(\u03bb) =\n1\n1 + \u03bbdk\n,\n(5.20)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20272,
+          "text": "and dk the corresponding eigenvalue of K. Figure 5.7 (top) shows the re-\nsults of applying a cubic smoothing spline to some air pollution data (128\nobservations). Two \ufb01ts are given: a smoother \ufb01t corresponding to a larger\npenalty \u03bb and a rougher \ufb01t for a smaller penalty. The lower panels repre-\nsent the eigenvalues (lower left) and some eigenvectors (lower right) of the\ncorresponding smoother matrices. Some of the highlights of the eigenrep-\nresentation are the following:",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20273,
+          "text": "\u2022 The eigenvectors are not a\ufb00ected by changes in \u03bb, and hence the whole\nfamily of smoothing splines (for a particular sequence x) indexed by\n\u03bb have the same eigenvectors.",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20274,
+          "text": "\u2022 S\u03bby = \tN\nk=1 uk\u03c1k(\u03bb)\u27e8uk, y\u27e9, and hence the smoothing spline oper-\nates by decomposing y w.r.t. the (complete) basis {uk}, and di\ufb00er-\nentially shrinking the contributions using \u03c1k(\u03bb). This is to be con-\ntrasted with a basis-regression method, where the components are",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20276,
+          "text": "Daggot Pressure Gradient",
+          "type": "narrative",
+          "page": 173
+        },
+        {
+          "id": 20277,
+          "text": "Ozone Concentration",
+          "type": "narrative",
+          "page": 173
+        },
+        {
+          "id": 20278,
+          "text": "-50\n0\n50\n100",
+          "type": "equation",
+          "page": 173
+        },
+        {
+          "id": 20279,
+          "text": "0\n10\n20\n30",
+          "type": "equation",
+          "page": 173
+        },
+        {
+          "id": 20280,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 173
+        }
+      ]
+    }
+  ]
+}

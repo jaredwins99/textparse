@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forward Stagewise Regression — ESL §3.3.3</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  header {
+    background: linear-gradient(135deg, #161b22 0%, #1c2128 100%);
+    border-bottom: 1px solid #30363d; padding: 28px 40px 24px;
+  }
+  .header-meta { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+  .badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .badge-id { background: #1f6feb33; color: #58a6ff; border: 1px solid #1f6feb; }
+  .badge-section { background: #388bfd22; color: #79c0ff; border: 1px solid #388bfd44; }
+  .badge-cat { background: #2ea04326; color: #56d364; border: 1px solid #2ea04344; }
+  h1 { font-size: 28px; font-weight: 700; color: #f0f6fc; margin-bottom: 8px; }
+  .formula { font-size: 14px; color: #8b949e; padding: 6px 0; }
+  .main { display: grid; grid-template-columns: 1fr 360px; gap: 24px; padding: 28px 40px; max-width: 1400px; }
+  .viz-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; overflow: hidden; }
+  .viz-title { padding: 16px 20px 12px; border-bottom: 1px solid #30363d; font-size: 13px; font-weight: 600; color: #8b949e; text-transform: uppercase; letter-spacing: 0.6px; }
+  .controls { padding: 16px 20px; border-top: 1px solid #30363d; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  button { background: #1f6feb; color: #fff; border: none; border-radius: 6px; padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+  button:hover { background: #388bfd; }
+  button.secondary { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; }
+  button.secondary:hover { background: #30363d; }
+  .sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 20px; }
+  .panel-title { font-size: 11px; font-weight: 700; color: #8b949e; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 14px; display: flex; align-items: center; }
+  .panel-title::before { content: ''; display: inline-block; width: 3px; height: 14px; border-radius: 2px; margin-right: 8px; }
+  .panel-title.blue::before { background: #58a6ff; }
+  .panel-title.green::before { background: #56d364; }
+  .panel-title.orange::before { background: #f0883e; }
+  blockquote { border-left: 3px solid #1f6feb; padding-left: 14px; color: #c9d1d9; font-size: 13px; line-height: 1.7; font-style: italic; }
+  blockquote cite { display: block; margin-top: 8px; font-size: 11px; color: #58a6ff; font-style: normal; font-weight: 600; }
+  .guarantee-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+  .g-icon { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin-top: 1px; }
+  .g-yes { background: #1e3a2f; color: #56d364; }
+  .g-no { background: #3d1a1a; color: #f85149; }
+  .g-na { background: #2d2a1e; color: #f0883e; }
+  .g-label { font-size: 13px; font-weight: 600; color: #c9d1d9; }
+  .g-desc { font-size: 12px; color: #8b949e; margin-top: 2px; }
+  .related-tag { display: inline-block; background: #21262d; border: 1px solid #30363d; border-radius: 6px; padding: 5px 12px; font-size: 12px; color: #79c0ff; margin: 4px; }
+  .step-info { padding: 12px 20px; border-top: 1px solid #30363d; font-size: 13px; color: #8b949e; min-height: 44px; }
+  .step-info span { color: #79c0ff; font-weight: 600; }
+  #chart-paths { height: 320px; }
+  #chart-corr { height: 200px; }
+  .epsilon-row {
+    display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-top: 1px solid #30363d;
+  }
+  .epsilon-row label { font-size: 13px; color: #8b949e; }
+  input[type=range] { width: 140px; accent-color: #58a6ff; }
+  .epsilon-val { font-size: 14px; font-weight: 700; color: #58a6ff; width: 40px; }
+  .legend-row {
+    display: flex; gap: 20px; padding: 10px 20px; border-top: 1px solid #30363d; flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #8b949e; }
+  .legend-dot { width: 14px; height: 3px; border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-meta">
+    <span class="badge badge-id">ID 146</span>
+    <span class="badge badge-section">§ 3.3.3 — Subset Selection</span>
+    <span class="badge badge-cat">Estimation / Optimization</span>
+  </div>
+  <h1>Forward Stagewise Regression</h1>
+  <div class="formula">
+    \(\hat{\beta}_j \leftarrow \hat{\beta}_j + \varepsilon \cdot \text{sign}\bigl(\langle r,\, x_j\rangle\bigr)\)
+    &nbsp;where \(j = \arg\max_k |\langle r,\, x_k \rangle|\), \(\;r = y - X\hat{\beta}\)
+  </div>
+</header>
+
+<div class="main">
+  <div>
+    <div class="viz-card">
+      <div class="viz-title">Coefficient Paths: Stagewise (slow) vs Stepwise (aggressive)</div>
+      <div class="epsilon-row">
+        <label>Step size \(\varepsilon\):</label>
+        <input type="range" id="eps-slider" min="1" max="5" step="1" value="3" oninput="updateEps(this.value)">
+        <span class="epsilon-val" id="eps-val">0.05</span>
+        <span style="font-size:12px;color:#8b949e;">(smaller = more LASSO-like)</span>
+      </div>
+      <div id="chart-paths"></div>
+      <div class="legend-row">
+        <div class="legend-item"><div class="legend-dot" style="background:#58a6ff;height:2px;border-top:2px solid #58a6ff;"></div> Stagewise β₁</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#56d364;height:2px;border-top:2px solid #56d364;"></div> Stagewise β₂</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#bc8cff;height:2px;border-top:2px solid #bc8cff;"></div> Stagewise β₃</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#58a6ff;height:2px;border-top:2px dashed #58a6ff;"></div> Stepwise β₁</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#56d364;height:2px;border-top:2px dashed #56d364;"></div> Stepwise β₂</div>
+      </div>
+      <div id="chart-corr"></div>
+      <div class="step-info" id="step-info">
+        Adjust \(\varepsilon\) to see how step size controls regularization. Small \(\varepsilon\) mimics the LASSO path. Large \(\varepsilon\) approximates forward stepwise.
+      </div>
+      <div class="controls">
+        <button id="btn-play" onclick="playAnimation()">&#9654; Animate</button>
+        <button class="secondary" onclick="resetAnimation()">&#8635; Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="panel">
+      <div class="panel-title blue">Book Quote</div>
+      <blockquote>
+        "At each step the algorithm identifies the variable most correlated with the current residual. It then computes the simple linear regression coefficient of the residual on this chosen variable, and adds a small amount \(\delta\) of it to its coefficient."
+        <cite>— ESL §3.3.3, Hastie, Tibshirani &amp; Friedman</cite>
+      </blockquote>
+      <p style="margin-top:12px;font-size:12px;color:#8b949e;line-height:1.6;">
+        Key insight: with \(\varepsilon \to 0\), the stagewise coefficient paths converge to the LASSO solution path. This connection was not recognized until the LARS algorithm (Efron et al., 2004).
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title green">Guarantees</div>
+      <div class="guarantee-row">
+        <div class="g-icon g-na">~</div>
+        <div>
+          <div class="g-label">Converges to OLS (ε → 0)</div>
+          <div class="g-desc">In the limit of infinitesimal steps, paths converge but require many iterations.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-yes">✓</div>
+        <div>
+          <div class="g-label">Sparse / Regularized</div>
+          <div class="g-desc">Small ε gives sparse paths — many coefficients stay at zero for long, like LASSO.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-yes">✓</div>
+        <div>
+          <div class="g-label">Monotone coefficient norms</div>
+          <div class="g-desc">\(\|\hat{\beta}\|_1\) increases monotonically — coefficients never go backwards.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-no">✗</div>
+        <div>
+          <div class="g-label">Low Variance</div>
+          <div class="g-desc">Discrete selection step still picks "most correlated" variable — variance from this choice.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-yes">✓</div>
+        <div>
+          <div class="g-label">Works with p &gt; n</div>
+          <div class="g-desc">No matrix inversion needed — updates one coefficient at a time. Usable in high dimensions.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title orange">Related Concepts</div>
+      <div>
+        <span class="related-tag">Forward Stepwise (ID 144)</span>
+        <span class="related-tag">LASSO</span>
+        <span class="related-tag">LARS Algorithm</span>
+        <span class="related-tag">Boosting</span>
+        <span class="related-tag">L1 Regularization</span>
+        <span class="related-tag">Residual Correlation</span>
+        <span class="related-tag">Coefficient Path</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Simulate stagewise paths for 3 variables
+// True OLS betas: [0.45, 0.30, 0.15] after many steps
+// Stepwise: jumps directly to OLS at each step
+const epsilonLevels = [0.01, 0.03, 0.05, 0.08, 0.15];
+const epsilonLabels = ['0.01', '0.03', '0.05', '0.08', '0.15'];
+
+let epsIdx = 2; // default 0.05
+let animFrame = 0;
+let animTimer = null;
+let totalFrames = 0;
+
+function generateStagewisePaths(eps) {
+  // Simulate: most correlated var gets nudged by eps each step
+  // Correlation order changes as residuals update
+  let b = [0, 0, 0];
+  const target = [0.45, 0.30, 0.15];
+  // Synthetic correlation schedule — variable 0 dominates first, then 1, then 2
+  const paths = { b0: [0], b1: [0], b2: [0], l1: [0] };
+
+  const nSteps = Math.round(0.90 / eps) * 3;
+
+  for (let t = 0; t < nSteps; t++) {
+    // Residual correlation proxy: remaining gap to target, weighted
+    const corr = target.map((tgt, i) => Math.abs(tgt - b[i]) * (1 - 0.1 * t / nSteps));
+    const maxCorr = Math.max(...corr);
+    const j = corr.indexOf(maxCorr);
+    const dir = (target[j] - b[j]) > 0 ? 1 : -1;
+    b[j] += dir * eps;
+    // clamp
+    b[j] = Math.max(0, Math.min(b[j], target[j]));
+
+    paths.b0.push(b[0]);
+    paths.b1.push(b[1]);
+    paths.b2.push(b[2]);
+    paths.l1.push(b[0] + b[1] + b[2]);
+  }
+  return paths;
+}
+
+function generateStepwisePaths() {
+  // Forward stepwise: at each step, add the variable that reduces residuals most
+  // Simplified: jump directly to OLS partial fits
+  const steps = [
+    { l1: 0,    b0: 0,    b1: 0,    b2: 0 },
+    { l1: 0.45, b0: 0.45, b1: 0,    b2: 0 },
+    { l1: 0.75, b0: 0.45, b1: 0.30, b2: 0 },
+    { l1: 0.90, b0: 0.45, b1: 0.30, b2: 0.15 },
+  ];
+  return steps;
+}
+
+function renderPaths(eps, frame) {
+  const paths = generateStagewisePaths(eps);
+  const sw = generateStepwisePaths();
+
+  const n = paths.b0.length;
+  const showN = frame === null ? n : Math.min(frame, n);
+
+  const xs = paths.l1.slice(0, showN);
+  const swXs = sw.map(s => s.l1);
+
+  const data = [
+    {
+      x: xs, y: paths.b0.slice(0, showN),
+      mode: 'lines', type: 'scatter', name: 'Stagewise β₁',
+      line: { color: '#58a6ff', width: 2 },
+      hovertemplate: '‖β‖₁=%{x:.2f}, β₁=%{y:.3f}<extra></extra>',
+    },
+    {
+      x: xs, y: paths.b1.slice(0, showN),
+      mode: 'lines', type: 'scatter', name: 'Stagewise β₂',
+      line: { color: '#56d364', width: 2 },
+      hovertemplate: '‖β‖₁=%{x:.2f}, β₂=%{y:.3f}<extra></extra>',
+    },
+    {
+      x: xs, y: paths.b2.slice(0, showN),
+      mode: 'lines', type: 'scatter', name: 'Stagewise β₃',
+      line: { color: '#bc8cff', width: 2 },
+      hovertemplate: '‖β‖₁=%{x:.2f}, β₃=%{y:.3f}<extra></extra>',
+    },
+    // Stepwise (dashed jumps)
+    {
+      x: swXs, y: sw.map(s => s.b0),
+      mode: 'lines+markers', type: 'scatter', name: 'Stepwise β₁',
+      line: { color: '#58a6ff', width: 2, dash: 'dash' },
+      marker: { size: 8 },
+      hovertemplate: 'Stepwise ‖β‖₁=%{x:.2f}, β₁=%{y:.2f}<extra></extra>',
+    },
+    {
+      x: swXs, y: sw.map(s => s.b1),
+      mode: 'lines+markers', type: 'scatter', name: 'Stepwise β₂',
+      line: { color: '#56d364', width: 2, dash: 'dash' },
+      marker: { size: 8 },
+      hovertemplate: 'Stepwise ‖β‖₁=%{x:.2f}, β₂=%{y:.2f}<extra></extra>',
+    },
+  ];
+
+  const layout = {
+    paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+    margin: { l: 55, r: 20, t: 14, b: 50 },
+    xaxis: {
+      range: [0, 0.95], color: '#8b949e', gridcolor: '#21262d', zeroline: false,
+      title: { text: '‖β‖₁  (L1 norm / regularization path)', font: { color: '#8b949e', size: 12 } },
+    },
+    yaxis: {
+      range: [-0.03, 0.52], color: '#8b949e', gridcolor: '#21262d', zeroline: true, zerolinecolor: '#30363d',
+      title: { text: 'Coefficient value', font: { color: '#8b949e', size: 12 } },
+    },
+    legend: { font: { color: '#8b949e', size: 11 }, bgcolor: 'transparent', orientation: 'h', x: 0, y: 1.08 },
+    annotations: [{
+      x: 0.47, y: 0.50, text: '← Stagewise: smooth path<br>Stepwise: jumps to OLS →',
+      showarrow: false, font: { color: '#8b949e', size: 10 },
+      xanchor: 'center',
+    }],
+  };
+
+  Plotly.react('chart-paths', data, layout, { responsive: true, displayModeBar: false });
+}
+
+function renderCorrChart(eps, frame) {
+  const paths = generateStagewisePaths(eps);
+  const n = paths.b0.length;
+  const showN = frame === null ? n : Math.min(frame, n);
+
+  // Approximate residual correlations at each step
+  const target = [0.45, 0.30, 0.15];
+  const corrB0 = paths.b0.slice(0, showN).map((b, i) => Math.abs(target[0] - b));
+  const corrB1 = paths.b1.slice(0, showN).map((b, i) => Math.abs(target[1] - b));
+  const corrB2 = paths.b2.slice(0, showN).map((b, i) => Math.abs(target[2] - b));
+  const xs = paths.l1.slice(0, showN);
+
+  const data = [
+    { x: xs, y: corrB0, mode: 'lines', name: '|corr(r, X₁)|', line: { color: '#58a6ff', width: 1.5 } },
+    { x: xs, y: corrB1, mode: 'lines', name: '|corr(r, X₂)|', line: { color: '#56d364', width: 1.5 } },
+    { x: xs, y: corrB2, mode: 'lines', name: '|corr(r, X₃)|', line: { color: '#bc8cff', width: 1.5 } },
+  ];
+
+  const layout = {
+    paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+    margin: { l: 55, r: 20, t: 10, b: 46 },
+    xaxis: {
+      range: [0, 0.95], color: '#8b949e', gridcolor: '#21262d', zeroline: false,
+      title: { text: '‖β‖₁', font: { color: '#8b949e', size: 12 } },
+    },
+    yaxis: {
+      range: [-0.01, 0.50], color: '#8b949e', gridcolor: '#21262d',
+      title: { text: '|residual corr|', font: { color: '#8b949e', size: 12 } },
+    },
+    legend: { font: { color: '#8b949e', size: 10 }, bgcolor: 'transparent', orientation: 'h', x: 0, y: 1.1 },
+  };
+
+  Plotly.react('chart-corr', data, layout, { responsive: true, displayModeBar: false });
+}
+
+function updateEps(val) {
+  epsIdx = parseInt(val) - 1;
+  const eps = epsilonLevels[epsIdx];
+  document.getElementById('eps-val').textContent = epsilonLabels[epsIdx];
+  renderPaths(eps, null);
+  renderCorrChart(eps, null);
+  const paths = generateStagewisePaths(eps);
+  document.getElementById('step-info').innerHTML =
+    `<span>ε = ${epsilonLabels[epsIdx]}</span> — ${paths.b0.length} iterations to convergence. Smaller ε → smoother path, more LASSO-like. Larger ε → fewer steps, more like forward stepwise jumps.`;
+}
+
+function playAnimation() {
+  if (animTimer) {
+    clearInterval(animTimer); animTimer = null;
+    document.getElementById('btn-play').textContent = '▶ Animate';
+    return;
+  }
+  const eps = epsilonLevels[epsIdx];
+  const paths = generateStagewisePaths(eps);
+  totalFrames = paths.b0.length;
+  animFrame = 0;
+  document.getElementById('btn-play').textContent = '⏸ Pause';
+  animTimer = setInterval(() => {
+    animFrame += Math.max(1, Math.round(totalFrames / 60));
+    if (animFrame >= totalFrames) {
+      animFrame = totalFrames;
+      clearInterval(animTimer); animTimer = null;
+      document.getElementById('btn-play').textContent = '▶ Animate';
+    }
+    renderPaths(eps, animFrame);
+    renderCorrChart(eps, animFrame);
+    const pct = Math.round((animFrame / totalFrames) * 100);
+    document.getElementById('step-info').innerHTML =
+      `<span>Progress: ${pct}%</span> — Watching stagewise path build up. Notice how the most-correlated variable captures residual correlation first.`;
+  }, 40);
+}
+
+function resetAnimation() {
+  clearInterval(animTimer); animTimer = null;
+  document.getElementById('btn-play').textContent = '▶ Animate';
+  const eps = epsilonLevels[epsIdx];
+  renderPaths(eps, 1);
+  renderCorrChart(eps, 1);
+}
+
+// Initial render
+const eps0 = epsilonLevels[epsIdx];
+renderPaths(eps0, null);
+renderCorrChart(eps0, null);
+</script>
+</body>
+</html>

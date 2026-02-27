@@ -1,0 +1,752 @@
+{
+  "chapter": "11",
+  "sections": [
+    {
+      "number": "11.1",
+      "title": "Introduction",
+      "page_start": 407
+    },
+    {
+      "number": "11.10",
+      "title": "Computational Considerations",
+      "page_start": 432
+    },
+    {
+      "number": "11.2",
+      "title": "Projection Pursuit Regression",
+      "page_start": 407
+    },
+    {
+      "number": "11.3",
+      "title": "Neural Networks",
+      "page_start": 410
+    },
+    {
+      "number": "11.4",
+      "title": "Fitting Neural Networks",
+      "page_start": 413
+    },
+    {
+      "number": "11.5",
+      "title": "Some Issues in Training Neural Networks",
+      "page_start": 415
+    },
+    {
+      "number": "11.5.1",
+      "title": "Starting Values",
+      "page_start": 415
+    },
+    {
+      "number": "11.5.2",
+      "title": "Over\ufb01tting",
+      "page_start": 416
+    },
+    {
+      "number": "11.5.3",
+      "title": "Scaling of the Inputs",
+      "page_start": 416
+    },
+    {
+      "number": "11.5.4",
+      "title": "Number of Hidden Units and Layers",
+      "page_start": 418
+    },
+    {
+      "number": "11.5.5",
+      "title": "Multiple Minima",
+      "page_start": 418
+    },
+    {
+      "number": "11.6",
+      "title": "Example: Simulated Data",
+      "page_start": 419
+    },
+    {
+      "number": "11.7",
+      "title": "Example: ZIP Code Data",
+      "page_start": 422
+    },
+    {
+      "number": "11.8",
+      "title": "Discussion",
+      "page_start": 426
+    },
+    {
+      "number": "11.9",
+      "title": "Bayesian Neural Nets and the NIPS 2003 Challenge",
+      "page_start": 427
+    },
+    {
+      "number": "11.9.1",
+      "title": "Bayes, Boosting and Bagging",
+      "page_start": 428
+    },
+    {
+      "number": "11.9.2",
+      "title": "Performance Comparisons",
+      "page_start": 430
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": 30526,
+      "page": 407,
+      "seq": 0,
+      "text": "This is page 389\nPrinter: Opaque this\n11\nNeural Networks"
+    },
+    {
+      "id": 30528,
+      "page": 407,
+      "seq": 2,
+      "text": "In this chapter we describe a class of learning methods that was developed\nseparately in di\ufb00erent \ufb01elds\u2014statistics and arti\ufb01cial intelligence\u2014based\non essentially identical models. The central idea is to extract linear com-\nbinations of the inputs as derived features, and then model the target as\na nonlinear function of these features. The result is a powerful learning\nmethod, with widespread applications in many \ufb01elds. We \ufb01rst discuss the\nprojection pursuit model, which evolved in the domain of semiparamet-\nric statistics and smoothing. The rest of the chapter is devoted to neural\nnetwork models."
+    },
+    {
+      "id": 30530,
+      "page": 407,
+      "seq": 4,
+      "text": "As in our generic supervised learning problem, assume we have an input\nvector X with p components, and a target Y . Let \u03c9m, m = 1, 2, . . . , M, be\nunit p-vectors of unknown parameters. The projection pursuit regression\n(PPR) model has the form"
+    },
+    {
+      "id": 30534,
+      "page": 407,
+      "seq": 8,
+      "text": "This is an additive model, but in the derived features Vm = \u03c9T\nmX rather\nthan the inputs themselves. The functions gm are unspeci\ufb01ed and are esti-"
+    },
+    {
+      "id": 30541,
+      "page": 408,
+      "seq": 6,
+      "text": "2.\n(Right:) g(V ) = (V + 0.1) sin(1/(V/3 + 0.1)), where V = X1."
+    },
+    {
+      "id": 30542,
+      "page": 408,
+      "seq": 7,
+      "text": "mated along with the directions \u03c9m using some \ufb02exible smoothing method\n(see below).\nThe function gm(\u03c9T\nmX) is called a ridge function in IRp. It varies only\nin the direction de\ufb01ned by the vector \u03c9m. The scalar variable Vm = \u03c9T\nmX\nis the projection of X onto the unit vector \u03c9m, and we seek \u03c9m so that\nthe model \ufb01ts well, hence the name \u201cprojection pursuit.\u201d Figure 11.1 shows\nsome examples of ridge functions. In the example on the left \u03c9 = (1/\n\u221a"
+    },
+    {
+      "id": 30543,
+      "page": 408,
+      "seq": 8,
+      "text": "2)(1, 1)T ,\nso that the function only varies in the direction X1 + X2. In the example\non the right, \u03c9 = (1, 0).\nThe PPR model (11.1) is very general, since the operation of forming\nnonlinear functions of linear combinations generates a surprisingly large\nclass of models. For example, the product X1 \u00b7X2 can be written as [(X1 +\nX2)2 \u2212(X1 \u2212X2)2]/4, and higher-order products can be represented simi-\nlarly.\nIn fact, if M is taken arbitrarily large, for appropriate choice of gm the\nPPR model can approximate any continuous function in IRp arbitrarily\nwell. Such a class of models is called a universal approximator. However\nthis generality comes at a price. Interpretation of the \ufb01tted model is usually\ndi\ufb03cult, because each input enters into the model in a complex and multi-\nfaceted way. As a result, the PPR model is most useful for prediction, and\nnot very useful for producing an understandable model for the data. The\nM = 1 model, known as the single index model in econometrics, is an\nexception. It is slightly more general than the linear regression model, and\no\ufb00ers a similar interpretation.\nHow do we \ufb01t a PPR model, given training data (xi, yi), i = 1, 2, . . . , N?\nWe seek the approximate minimizers of the error function"
+    },
+    {
+      "id": 30553,
+      "page": 409,
+      "seq": 1,
+      "text": "over functions gm and direction vectors \u03c9m, m = 1, 2, . . . , M. As in other\nsmoothing problems, we need either explicitly or implicitly to impose com-\nplexity constraints on the gm, to avoid over\ufb01t solutions.\nConsider just one term (M = 1, and drop the subscript). Given the\ndirection vector \u03c9, we form the derived variables vi = \u03c9T xi. Then we have\na one-dimensional smoothing problem, and we can apply any scatterplot\nsmoother, such as a smoothing spline, to obtain an estimate of g.\nOn the other hand, given g, we want to minimize (11.2) over \u03c9. A Gauss\u2013\nNewton search is convenient for this task. This is a quasi-Newton method,\nin which the part of the Hessian involving the second derivative of g is\ndiscarded. It can be simply derived as follows. Let \u03c9old be the current\nestimate for \u03c9. We write"
+    },
+    {
+      "id": 30554,
+      "page": 409,
+      "seq": 2,
+      "text": "g(\u03c9T xi) \u2248g(\u03c9T\noldxi) + g\u2032(\u03c9T\noldxi)(\u03c9 \u2212\u03c9old)T xi\n(11.3)"
+    },
+    {
+      "id": 30560,
+      "page": 409,
+      "seq": 8,
+      "text": "i=1\ng\u2032(\u03c9T\noldxi)2\n\n\u001a\n\u03c9T\noldxi + yi \u2212g(\u03c9T\noldxi)\ng\u2032(\u03c9T\noldxi)"
+    },
+    {
+      "id": 30563,
+      "page": 409,
+      "seq": 11,
+      "text": "(11.4)\nTo minimize the right-hand side, we carry out a least squares regression\nwith target \u03c9T\noldxi+(yi\u2212g(\u03c9T\noldxi))/g\u2032(\u03c9T\noldxi) on the input xi, with weights\ng\u2032(\u03c9T\noldxi)2 and no intercept (bias) term. This produces the updated coef-\n\ufb01cient vector \u03c9new.\nThese two steps, estimation of g and \u03c9, are iterated until convergence.\nWith more than one term in the PPR model, the model is built in a forward\nstage-wise manner, adding a pair (\u03c9m, gm) at each stage.\nThere are a number of implementation details."
+    },
+    {
+      "id": 30564,
+      "page": 409,
+      "seq": 12,
+      "text": "\u2022 Although any smoothing method can in principle be used, it is conve-\nnient if the method provides derivatives. Local regression and smooth-\ning splines are convenient."
+    },
+    {
+      "id": 30565,
+      "page": 409,
+      "seq": 13,
+      "text": "\u2022 After each step the gm\u2019s from previous steps can be readjusted using\nthe back\ufb01tting procedure described in Chapter 9. While this may\nlead ultimately to fewer terms, it is not clear whether it improves\nprediction performance."
+    },
+    {
+      "id": 30566,
+      "page": 409,
+      "seq": 14,
+      "text": "\u2022 Usually the \u03c9m are not readjusted (partly to avoid excessive compu-\ntation), although in principle they could be as well."
+    },
+    {
+      "id": 30567,
+      "page": 409,
+      "seq": 15,
+      "text": "\u2022 The number of terms M is usually estimated as part of the forward\nstage-wise strategy. The model building stops when the next term\ndoes not appreciably improve the \ufb01t of the model. Cross-validation\ncan also be used to determine M."
+    },
+    {
+      "id": 30569,
+      "page": 410,
+      "seq": 1,
+      "text": "There are many other applications, such as density estimation (Friedman\net al., 1984; Friedman, 1987), where the projection pursuit idea can be used.\nIn particular, see the discussion of ICA in Section 14.7 and its relationship\nwith exploratory projection pursuit. However the projection pursuit re-\ngression model has not been widely used in the \ufb01eld of statistics, perhaps\nbecause at the time of its introduction (1981), its computational demands\nexceeded the capabilities of most readily available computers. But it does\nrepresent an important intellectual advance, one that has blossomed in its\nreincarnation in the \ufb01eld of neural networks, the topic of the rest of this\nchapter."
+    },
+    {
+      "id": 30571,
+      "page": 410,
+      "seq": 3,
+      "text": "The term neural network has evolved to encompass a large class of models\nand learning methods. Here we describe the most widely used \u201cvanilla\u201d neu-\nral net, sometimes called the single hidden layer back-propagation network,\nor single layer perceptron. There has been a great deal of hype surrounding\nneural networks, making them seem magical and mysterious. As we make\nclear in this section, they are just nonlinear statistical models, much like\nthe projection pursuit regression model discussed above.\nA neural network is a two-stage regression or classi\ufb01cation model, typ-\nically represented by a network diagram as in Figure 11.2. This network\napplies both to regression or classi\ufb01cation. For regression, typically K = 1\nand there is only one output unit Y1 at the top. However, these networks\ncan handle multiple quantitative responses in a seamless fashion, so we will\ndeal with the general case.\nFor K-class classi\ufb01cation, there are K units at the top, with the kth\nunit modeling the probability of class k. There are K target measurements\nYk, k = 1, . . . , K, each being coded as a 0 \u22121 variable for the kth class.\nDerived features Zm are created from linear combinations of the inputs,\nand then the target Yk is modeled as a function of linear combinations of\nthe Zm,\nZm = \u03c3(\u03b10m + \u03b1T\nmX), m = 1, . . . , M,"
+    },
+    {
+      "id": 30575,
+      "page": 410,
+      "seq": 7,
+      "text": "where Z = (Z1, Z2, . . . , ZM), and T = (T1, T2, . . . , TK).\nThe activation function \u03c3(v) is usually chosen to be the sigmoid \u03c3(v) =\n1/(1 + e\u2212v); see Figure 11.3 for a plot of 1/(1 + e\u2212v). Sometimes Gaussian\nradial basis functions (Chapter 6) are used for the \u03c3(v), producing what is\nknown as a radial basis function network.\nNeural network diagrams like Figure 11.2 are sometimes drawn with an\nadditional bias unit feeding into every unit in the hidden and output layers."
+    },
+    {
+      "id": 30590,
+      "page": 411,
+      "seq": 14,
+      "text": "Thinking of the constant \u201c1\u201d as an additional input feature, this bias unit\ncaptures the intercepts \u03b10m and \u03b20k in model (11.5).\nThe output function gk(T) allows a \ufb01nal transformation of the vector of\noutputs T. For regression we typically choose the identity function gk(T) =\nTk. Early work in K-class classi\ufb01cation also used the identity function, but\nthis was later abandoned in favor of the softmax function"
+    },
+    {
+      "id": 30592,
+      "page": 411,
+      "seq": 16,
+      "text": "This is of course exactly the transformation used in the multilogit model\n(Section 4.4), and produces positive estimates that sum to one. In Sec-\ntion 4.2 we discuss other problems with linear activation functions, in par-\nticular potentially severe masking e\ufb00ects.\nThe units in the middle of the network, computing the derived features\nZm, are called hidden units because the values Zm are not directly ob-\nserved. In general there can be more than one hidden layer, as illustrated\nin the example at the end of this chapter. We can think of the Zm as a\nbasis expansion of the original inputs X; the neural network is then a stan-\ndard linear model, or linear multilogit model, using these transformations\nas inputs. There is, however, an important enhancement over the basis-\nexpansion techniques discussed in Chapter 5; here the parameters of the\nbasis functions are learned from the data."
+    },
+    {
+      "id": 30599,
+      "page": 412,
+      "seq": 6,
+      "text": "Notice that if \u03c3 is the identity function, then the entire model collapses\nto a linear model in the inputs. Hence a neural network can be thought of\nas a nonlinear generalization of the linear model, both for regression and\nclassi\ufb01cation. By introducing the nonlinear transformation \u03c3, it greatly\nenlarges the class of linear models. In Figure 11.3 we see that the rate of\nactivation of the sigmoid depends on the norm of \u03b1m, and if \u2225\u03b1m\u2225is very\nsmall, the unit will indeed be operating in the linear part of its activation\nfunction.\nNotice also that the neural network model with one hidden layer has\nexactly the same form as the projection pursuit model described above.\nThe di\ufb00erence is that the PPR model uses nonparametric functions gm(v),\nwhile the neural network uses a far simpler function based on \u03c3(v), with\nthree free parameters in its argument. In detail, viewing the neural network\nmodel as a PPR model, we identify"
+    },
+    {
+      "id": 30602,
+      "page": 412,
+      "seq": 9,
+      "text": "where \u03c9m = \u03b1m/\u2225\u03b1m\u2225is the mth unit-vector. Since \u03c3\u03b2,\u03b10,s(v) = \u03b2\u03c3(\u03b10 +\nsv) has lower complexity than a more general nonparametric g(v), it is not\nsurprising that a neural network might use 20 or 100 such functions, while\nthe PPR model typically uses fewer terms (M = 5 or 10, for example).\nFinally, we note that the name \u201cneural networks\u201d derives from the fact\nthat they were \ufb01rst developed as models for the human brain. Each unit\nrepresents a neuron, and the connections (links in Figure 11.2) represent\nsynapses. In early models, the neurons \ufb01red when the total signal passed to\nthat unit exceeded a certain threshold. In the model above, this corresponds"
+    },
+    {
+      "id": 30604,
+      "page": 413,
+      "seq": 1,
+      "text": "to use of a step function for \u03c3(Z) and gm(T). Later the neural network was\nrecognized as a useful tool for nonlinear statistical modeling, and for this\npurpose the step function is not smooth enough for optimization. Hence the\nstep function was replaced by a smoother threshold function, the sigmoid\nin Figure 11.3."
+    },
+    {
+      "id": 30606,
+      "page": 413,
+      "seq": 3,
+      "text": "The neural network model has unknown parameters, often called weights,\nand we seek values for them that make the model \ufb01t the training data well.\nWe denote the complete set of weights by \u03b8, which consists of"
+    },
+    {
+      "id": 30607,
+      "page": 413,
+      "seq": 4,
+      "text": "{\u03b10m, \u03b1m; m = 1, 2, . . . , M} M(p + 1) weights,\n{\u03b20k, \u03b2k; k = 1, 2, . . . , K} K(M + 1) weights.\n(11.8)"
+    },
+    {
+      "id": 30608,
+      "page": 413,
+      "seq": 5,
+      "text": "For regression, we use sum-of-squared errors as our measure of \ufb01t (error\nfunction)"
+    },
+    {
+      "id": 30614,
+      "page": 413,
+      "seq": 11,
+      "text": "For classi\ufb01cation we use either squared error or cross-entropy (deviance):"
+    },
+    {
+      "id": 30620,
+      "page": 413,
+      "seq": 17,
+      "text": "and the corresponding classi\ufb01er is G(x) = argmaxkfk(x). With the softmax\nactivation function and the cross-entropy error function, the neural network\nmodel is exactly a linear logistic regression model in the hidden units, and\nall the parameters are estimated by maximum likelihood.\nTypically we don\u2019t want the global minimizer of R(\u03b8), as this is likely\nto be an over\ufb01t solution. Instead some regularization is needed: this is\nachieved directly through a penalty term, or indirectly by early stopping.\nDetails are given in the next section.\nThe generic approach to minimizing R(\u03b8) is by gradient descent, called\nback-propagation in this setting. Because of the compositional form of the\nmodel, the gradient can be easily derived using the chain rule for di\ufb00eren-\ntiation. This can be computed by a forward and backward sweep over the\nnetwork, keeping track only of quantities local to each unit."
+    },
+    {
+      "id": 30622,
+      "page": 414,
+      "seq": 1,
+      "text": "Here is back-propagation in detail for squared error loss. Let zmi =\n\u03c3(\u03b10m + \u03b1T\nmxi), from (11.5) and let zi = (z1i, z2i, . . . , zMi). Then we have"
+    },
+    {
+      "id": 30635,
+      "page": 414,
+      "seq": 14,
+      "text": "k=1\n2(yik \u2212fk(xi))g\u2032\nk(\u03b2T\nk zi)\u03b2km\u03c3\u2032(\u03b1T\nmxi)xi\u2113.\n(11.12)"
+    },
+    {
+      "id": 30636,
+      "page": 414,
+      "seq": 15,
+      "text": "Given these derivatives, a gradient descent update at the (r + 1)st iter-\nation has the form"
+    },
+    {
+      "id": 30646,
+      "page": 414,
+      "seq": 25,
+      "text": "where \u03b3r is the learning rate, discussed below.\nNow write (11.12) as\n\u2202Ri\n\u2202\u03b2km\n= \u03b4kizmi,"
+    },
+    {
+      "id": 30648,
+      "page": 414,
+      "seq": 27,
+      "text": "The quantities \u03b4ki and smi are \u201cerrors\u201d from the current model at the\noutput and hidden layer units, respectively. From their de\ufb01nitions, these\nerrors satisfy"
+    },
+    {
+      "id": 30652,
+      "page": 414,
+      "seq": 31,
+      "text": "known as the back-propagation equations. Using this, the updates in (11.13)\ncan be implemented with a two-pass algorithm. In the forward pass, the\ncurrent weights are \ufb01xed and the predicted values \u02c6fk(xi) are computed\nfrom formula (11.5). In the backward pass, the errors \u03b4ki are computed,\nand then back-propagated via (11.15) to give the errors smi. Both sets of\nerrors are then used to compute the gradients for the updates in (11.13),\nvia (11.14)."
+    },
+    {
+      "id": 30654,
+      "page": 415,
+      "seq": 1,
+      "text": "This two-pass procedure is what is known as back-propagation. It has\nalso been called the delta rule (Widrow and Ho\ufb00, 1960). The computational\ncomponents for cross-entropy have the same form as those for the sum of\nsquares error function, and are derived in Exercise 11.3.\nThe advantages of back-propagation are its simple, local nature. In the\nback propagation algorithm, each hidden unit passes and receives infor-\nmation only to and from units that share a connection. Hence it can be\nimplemented e\ufb03ciently on a parallel architecture computer.\nThe updates in (11.13) are a kind of batch learning, with the parame-\nter updates being a sum over all of the training cases. Learning can also\nbe carried out online\u2014processing each observation one at a time, updat-\ning the gradient after each training case, and cycling through the training\ncases many times. In this case, the sums in equations (11.13) are replaced\nby a single summand. A training epoch refers to one sweep through the\nentire training set. Online training allows the network to handle very large\ntraining sets, and also to update the weights as new observations come in.\nThe learning rate \u03b3r for batch learning is usually taken to be a con-\nstant, and can also be optimized by a line search that minimizes the error\nfunction at each update. With online learning \u03b3r should decrease to zero\nas the iteration r \u2192\u221e. This learning is a form of stochastic approxima-\ntion (Robbins and Munro, 1951); results in this \ufb01eld ensure convergence if\n\u03b3r \u21920, \t\nr \u03b3r = \u221e, and \t\nr \u03b32\nr < \u221e(satis\ufb01ed, for example, by \u03b3r = 1/r).\nBack-propagation can be very slow, and for that reason is usually not\nthe method of choice. Second-order techniques such as Newton\u2019s method\nare not attractive here, because the second derivative matrix of R (the\nHessian) can be very large. Better approaches to \ufb01tting include conjugate\ngradients and variable metric methods. These avoid explicit computation\nof the second derivative matrix while still providing faster convergence."
+    },
+    {
+      "id": 30656,
+      "page": 415,
+      "seq": 3,
+      "text": "There is quite an art in training neural networks. The model is generally\noverparametrized, and the optimization problem is nonconvex and unstable\nunless certain guidelines are followed. In this section we summarize some\nof the important issues."
+    },
+    {
+      "id": 30658,
+      "page": 415,
+      "seq": 5,
+      "text": "Note that if the weights are near zero, then the operative part of the sigmoid\n(Figure 11.3) is roughly linear, and hence the neural network collapses into\nan approximately linear model (Exercise 11.2). Usually starting values for\nweights are chosen to be random values near zero. Hence the model starts\nout nearly linear, and becomes nonlinear as the weights increase. Individual"
+    },
+    {
+      "id": 30660,
+      "page": 416,
+      "seq": 1,
+      "text": "units localize to directions and introduce nonlinearities where needed. Use\nof exact zero weights leads to zero derivatives and perfect symmetry, and\nthe algorithm never moves. Starting instead with large weights often leads\nto poor solutions."
+    },
+    {
+      "id": 30662,
+      "page": 416,
+      "seq": 3,
+      "text": "Often neural networks have too many weights and will over\ufb01t the data at\nthe global minimum of R. In early developments of neural networks, either\nby design or by accident, an early stopping rule was used to avoid over-\n\ufb01tting. Here we train the model only for a while, and stop well before we\napproach the global minimum. Since the weights start at a highly regular-\nized (linear) solution, this has the e\ufb00ect of shrinking the \ufb01nal model toward\na linear model. A validation dataset is useful for determining when to stop,\nsince we expect the validation error to start increasing.\nA more explicit method for regularization is weight decay, which is anal-\nogous to ridge regression used for linear models (Section 3.4.1). We add a\npenalty to the error function R(\u03b8) + \u03bbJ(\u03b8), where"
+    },
+    {
+      "id": 30666,
+      "page": 416,
+      "seq": 7,
+      "text": "and \u03bb \u22650 is a tuning parameter. Larger values of \u03bb will tend to shrink\nthe weights toward zero: typically cross-validation is used to estimate \u03bb.\nThe e\ufb00ect of the penalty is to simply add terms 2\u03b2km and 2\u03b1m\u2113to the\nrespective gradient expressions (11.13). Other forms for the penalty have\nbeen proposed, for example,"
+    },
+    {
+      "id": 30672,
+      "page": 416,
+      "seq": 13,
+      "text": "known as the weight elimination penalty. This has the e\ufb00ect of shrinking\nsmaller weights more than (11.16) does.\nFigure 11.4 shows the result of training a neural network with ten hidden\nunits, without weight decay (upper panel) and with weight decay (lower\npanel), to the mixture example of Chapter 2. Weight decay has clearly\nimproved the prediction. Figure 11.5 shows heat maps of the estimated\nweights from the training (grayscale versions of these are called Hinton\ndiagrams.) We see that weight decay has dampened the weights in both\nlayers: the resulting weights are spread fairly evenly over the ten hidden\nunits."
+    },
+    {
+      "id": 30674,
+      "page": 416,
+      "seq": 15,
+      "text": "Since the scaling of the inputs determines the e\ufb00ective scaling of the weights\nin the bottom layer, it can have a large e\ufb00ect on the quality of the \ufb01nal"
+    },
+    {
+      "id": 30677,
+      "page": 417,
+      "seq": 2,
+      "text": ". . .\n. . . .\n.\n. . . . . . .\n. . . . . . .\n. . .\n. . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n.\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."
+    },
+    {
+      "id": 30678,
+      "page": 417,
+      "seq": 3,
+      "text": ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . .\n. . . . . . . . . . . . . . . .\n. . . . . .\n. . . .\n. . . . . . . . . . . . . . .\n. . . . . . . .\n. . . .\n. . . . . . . . . . . . . .\n. . . . . . . .\n. . . .\n. . . . . . . . . . . . . . .\n. . . . . . . .\n. . . .\n. . . . . . . . . . . . . . .\n. . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . .\n. . . . . . .\n. . . . . . . . .\n. . . . . . . . .\n. . . . .\n. . . .\n. . . . . . . . .\n. . . . . . . . .\n. . . . .\n. . .\n. . . . . . . . . .\n. . . . . . . . . .\n. . . . .\n. . . . . . . . . .\n. . . . . . . . . .\n. . . . .\n. . . . . . . . . . .\n. . . . . . . . . .\n. . . . .\n. . . . . . . . . . .\n. . . . . . . . . . .\n. . . . .\n. . . . . . . . . . .\n. . . . . . . . . . .\n. . . . .\n. . . . . . . . . .\n. . . . . . . . . . .\n. . . . .\n. . . . . . . . .\n. . . . . . . . . . .\n. . . . .\n. . . . . . . .\n. . . . . . . . . . . .\n. . . . .\n.\n. . . . . . .\n. . . . . . . . . . . . .\n. . . . .\n.\n. . . . . .\n. . . . . . . . . . . . .\n. . . . .\n.\n. . .\n. . . . . . . . . . . . .\n. . . . .\n. .\n. . . . . . . . . . . . .\n. .\n. .\n. . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . .\n. . .\n. . . . . . . . . . .\n. . . .\n. . . . . . . . .\n. . .\n. . . . .\n. . .\n. . .\n. . .\n. . .\n. . .\n. . . .\n. . . .\n. . . .\n. . . .\n. . . .\n. . . .\n. . . .\n. . . . .\n. . . . .\n. . . . .\n. . . . .\n. . . . .\n. . . . .\n. . . .\n. . ."
+    },
+    {
+      "id": 30840,
+      "page": 417,
+      "seq": 165,
+      "text": "Training Error: 0.100\nTest Error:       0.259\nBayes Error:    0.210"
+    },
+    {
+      "id": 30842,
+      "page": 417,
+      "seq": 167,
+      "text": ". .\n. .\n. .\n. .\n. . .\n. . .\n. . .\n. . .\n. . . .\n. . . .\n. . . .\n. . . .\n. . . . .\n. . . . .\n. . . . .\n. . . . . .\n. . . . . .\n. . . . . .\n. . . . . . .\n. . . . . . .\n. . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . . .\n. . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . .\n.\n. . . . . . . . . . .\n. .\n. . . . . . . . . . .\n. . .\n. . . . . . . . . . .\n. . . .\n. . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . .\n. .\n. . . . . . . .\n. . . . . . . . . . . . . .\n. . . .\n. . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n.\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n.\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."
+    },
+    {
+      "id": 30843,
+      "page": 417,
+      "seq": 168,
+      "text": ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . .\n. . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . .\n. . . . . .\n. . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . .\n. .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . ."
+    },
+    {
+      "id": 31005,
+      "page": 417,
+      "seq": 330,
+      "text": "Training Error: 0.160\nTest Error:       0.223\nBayes Error:    0.210"
+    },
+    {
+      "id": 31057,
+      "page": 418,
+      "seq": 50,
+      "text": "solution. At the outset it is best to standardize all inputs to have mean zero\nand standard deviation one. This ensures all inputs are treated equally in\nthe regularization process, and allows one to choose a meaningful range for\nthe random starting weights. With standardized inputs, it is typical to take\nrandom uniform weights over the range [\u22120.7, +0.7]."
+    },
+    {
+      "id": 31059,
+      "page": 418,
+      "seq": 52,
+      "text": "Generally speaking it is better to have too many hidden units than too few.\nWith too few hidden units, the model might not have enough \ufb02exibility to\ncapture the nonlinearities in the data; with too many hidden units, the\nextra weights can be shrunk toward zero if appropriate regularization is\nused. Typically the number of hidden units is somewhere in the range of\n5 to 100, with the number increasing with the number of inputs and num-\nber of training cases. It is most common to put down a reasonably large\nnumber of units and train them with regularization. Some researchers use\ncross-validation to estimate the optimal number, but this seems unneces-\nsary if cross-validation is used to estimate the regularization parameter.\nChoice of the number of hidden layers is guided by background knowledge\nand experimentation. Each layer extracts features of the input for regres-\nsion or classi\ufb01cation. Use of multiple hidden layers allows construction of\nhierarchical features at di\ufb00erent levels of resolution. An example of the\ne\ufb00ective use of multiple layers is given in Section 11.6."
+    },
+    {
+      "id": 31061,
+      "page": 418,
+      "seq": 54,
+      "text": "The error function R(\u03b8) is nonconvex, possessing many local minima. As a\nresult, the \ufb01nal solution obtained is quite dependent on the choice of start-"
+    },
+    {
+      "id": 31063,
+      "page": 419,
+      "seq": 1,
+      "text": "ing weights. One must at least try a number of random starting con\ufb01gura-\ntions, and choose the solution giving lowest (penalized) error. Probably a\nbetter approach is to use the average predictions over the collection of net-\nworks as the \ufb01nal prediction (Ripley, 1996). This is preferable to averaging\nthe weights, since the nonlinearity of the model implies that this averaged\nsolution could be quite poor. Another approach is via bagging, which aver-\nages the predictions of networks training from randomly perturbed versions\nof the training data. This is described in Section 8.7."
+    },
+    {
+      "id": 31065,
+      "page": 419,
+      "seq": 3,
+      "text": "We generated data from two additive error models Y = f(X) + \u03b5:"
+    },
+    {
+      "id": 31070,
+      "page": 419,
+      "seq": 8,
+      "text": "Here XT = (X1, X2, . . . , Xp), each Xj being a standard Gaussian variate,\nwith p = 2 in the \ufb01rst model, and p = 10 in the second.\nFor the sigmoid model, a1 = (3, 3), a2 = (3, \u22123); for the radial model,\n\u03c6(t) = (1/2\u03c0)1/2 exp(\u2212t2/2). Both \u03b51 and \u03b52 are Gaussian errors, with\nvariance chosen so that the signal-to-noise ratio"
+    },
+    {
+      "id": 31073,
+      "page": 419,
+      "seq": 11,
+      "text": "is 4 in both models. We took a training sample of size 100 and a test sample\nof size 10, 000. We \ufb01t neural networks with weight decay and various num-\nbers of hidden units, and recorded the average test error ETest(Y \u2212\u02c6f(X))2"
+    },
+    {
+      "id": 31074,
+      "page": 419,
+      "seq": 12,
+      "text": "for each of 10 random starting weights. Only one training set was gen-\nerated, but the results are typical for an \u201caverage\u201d training set. The test\nerrors are shown in Figure 11.6. Note that the zero hidden unit model refers\nto linear least squares regression. The neural network is perfectly suited to\nthe sum of sigmoids model, and the two-unit model does perform the best,\nachieving an error close to the Bayes rate. (Recall that the Bayes rate for\nregression with squared error is the error variance; in the \ufb01gures, we report\ntest error relative to the Bayes error). Notice, however, that with more hid-\nden units, over\ufb01tting quickly creeps in, and with some starting weights the\nmodel does worse than the linear model (zero hidden unit) model. Even\nwith two hidden units, two of the ten starting weight con\ufb01gurations pro-\nduced results no better than the linear model, con\ufb01rming the importance\nof multiple starting values.\nA radial function is in a sense the most di\ufb03cult for the neural net, as it is\nspherically symmetric and with no preferred directions. We see in the right"
+    },
+    {
+      "id": 31087,
+      "page": 420,
+      "seq": 12,
+      "text": "panel of Figure 11.6 that it does poorly in this case, with the test error\nstaying well above the Bayes error (note the di\ufb00erent vertical scale from\nthe left panel). In fact, since a constant \ufb01t (such as the sample average)\nachieves a relative error of 5 (when the SNR is 4), we see that the neural\nnetworks perform increasingly worse than the mean.\nIn this example we used a \ufb01xed weight decay parameter of 0.0005, rep-\nresenting a mild amount of regularization. The results in the left panel of\nFigure 11.6 suggest that more regularization is needed with greater num-\nbers of hidden units.\nIn Figure 11.7 we repeated the experiment for the sum of sigmoids model,\nwith no weight decay in the left panel, and stronger weight decay (\u03bb = 0.1)\nin the right panel. With no weight decay, over\ufb01tting becomes even more\nsevere for larger numbers of hidden units. The weight decay value \u03bb = 0.1\nproduces good results for all numbers of hidden units, and there does not\nappear to be over\ufb01tting as the number of units increase. Finally, Figure 11.8\nshows the test error for a ten hidden unit network, varying the weight decay\nparameter over a wide range. The value 0.1 is approximately optimal.\nIn summary, there are two free parameters to select: the weight decay \u03bb\nand number of hidden units M. As a learning strategy, one could \ufb01x either\nparameter at the value corresponding to the least constrained model, to\nensure that the model is rich enough, and use cross-validation to choose\nthe other parameter. Here the least constrained values are zero weight decay\nand ten hidden units. Comparing the left panel of Figure 11.7 to Figure\n11.8, we see that the test error is less sensitive to the value of the weight"
+    },
+    {
+      "id": 31108,
+      "page": 422,
+      "seq": 2,
+      "text": "decay parameter, and hence cross-validation of this parameter would be\npreferred."
+    },
+    {
+      "id": 31110,
+      "page": 422,
+      "seq": 4,
+      "text": "This example is a character recognition task: classi\ufb01cation of handwritten\nnumerals. This problem captured the attention of the machine learning and\nneural network community for many years, and has remained a benchmark\nproblem in the \ufb01eld. Figure 11.9 shows some examples of normalized hand-\nwritten digits, automatically scanned from envelopes by the U.S. Postal\nService. The original scanned digits are binary and of di\ufb00erent sizes and\norientations; the images shown here have been deslanted and size normal-\nized, resulting in 16 \u00d7 16 grayscale images (Le Cun et al., 1990). These 256\npixel values are used as inputs to the neural network classi\ufb01er.\nA black box neural network is not ideally suited to this pattern recogni-\ntion task, partly because the pixel representation of the images lack certain\ninvariances (such as small rotations of the image). Consequently early at-\ntempts with neural networks yielded misclassi\ufb01cation rates around 4.5%\non various examples of the problem. In this section we show some of the\npioneering e\ufb00orts to handcraft the neural network to overcome some these\nde\ufb01ciencies (Le Cun, 1989), which ultimately led to the state of the art in\nneural network performance(Le Cun et al., 1998)1.\nAlthough current digit datasets have tens of thousands of training and\ntest examples, the sample size here is deliberately modest in order to em-"
+    },
+    {
+      "id": 31111,
+      "page": 422,
+      "seq": 5,
+      "text": "1The \ufb01gures and tables in this example were recreated from Le Cun (1989)."
+    },
+    {
+      "id": 31131,
+      "page": 423,
+      "seq": 19,
+      "text": "phasize the e\ufb00ects. The examples were obtained by scanning some actual\nhand-drawn digits, and then generating additional images by random hor-\nizontal shifts. Details may be found in Le Cun (1989). There are 320 digits\nin the training set, and 160 in the test set.\nFive di\ufb00erent networks were \ufb01t to the data:"
+    },
+    {
+      "id": 31132,
+      "page": 423,
+      "seq": 20,
+      "text": "Net-1: No hidden layer, equivalent to multinomial logistic regression."
+    },
+    {
+      "id": 31133,
+      "page": 423,
+      "seq": 21,
+      "text": "Net-2: One hidden layer, 12 hidden units fully connected."
+    },
+    {
+      "id": 31135,
+      "page": 423,
+      "seq": 23,
+      "text": "Net-4: Two hidden layers, locally connected with weight sharing."
+    },
+    {
+      "id": 31136,
+      "page": 423,
+      "seq": 24,
+      "text": "Net-5: Two hidden layers, locally connected, two levels of weight sharing."
+    },
+    {
+      "id": 31137,
+      "page": 423,
+      "seq": 25,
+      "text": "These are depicted in Figure 11.10. Net-1 for example has 256 inputs, one\neach for the 16\u00d716 input pixels, and ten output units for each of the digits\n0\u20139. The predicted value \u02c6fk(x) represents the estimated probability that\nan image x has digit class k, for k = 0, 1, 2, . . . , 9."
+    },
+    {
+      "id": 31152,
+      "page": 424,
+      "seq": 14,
+      "text": "The networks all have sigmoidal output units, and were all \ufb01t with the\nsum-of-squares error function. The \ufb01rst network has no hidden layer, and\nhence is nearly equivalent to a linear multinomial regression model (Exer-\ncise 11.4). Net-2 is a single hidden layer network with 12 hidden units, of\nthe kind described above.\nThe training set error for all of the networks was 0%, since in all cases\nthere are more parameters than training observations. The evolution of the\ntest error during the training epochs is shown in Figure 11.11. The linear\nnetwork (Net-1) starts to over\ufb01t fairly quickly, while test performance of\nthe others level o\ufb00at successively superior values.\nThe other three networks have additional features which demonstrate\nthe power and \ufb02exibility of the neural network paradigm. They introduce\nconstraints on the network, natural for the problem at hand, which allow\nfor more complex connectivity but fewer parameters.\nNet-3 uses local connectivity: this means that each hidden unit is con-\nnected to only a small patch of units in the layer below. In the \ufb01rst hidden\nlayer (an 8\u00d78 array), each unit takes inputs from a 3\u00d73 patch of the input\nlayer; for units in the \ufb01rst hidden layer that are one unit apart, their recep-\ntive \ufb01elds overlap by one row or column, and hence are two pixels apart.\nIn the second hidden layer, inputs are from a 5 \u00d7 5 patch, and again units\nthat are one unit apart have receptive \ufb01elds that are two units apart. The\nweights for all other connections are set to zero. Local connectivity makes\neach unit responsible for extracting local features from the layer below, and"
+    },
+    {
+      "id": 31155,
+      "page": 425,
+      "seq": 2,
+      "text": "Network Architecture\nLinks\nWeights\n% Correct\nNet-1:\nSingle layer network\n2570\n2570\n80.0%\nNet-2:\nTwo layer network\n3214\n3214\n87.0%\nNet-3:\nLocally connected\n1226\n1226\n88.5%\nNet-4:\nConstrained network 1\n2266\n1132\n94.0%\nNet-5:\nConstrained network 2\n5194\n1060\n98.4%"
+    },
+    {
+      "id": 31156,
+      "page": 425,
+      "seq": 3,
+      "text": "reduces considerably the total number of weights. With many more hidden\nunits than Net-2, Net-3 has fewer links and hence weights (1226 vs. 3214),\nand achieves similar performance.\nNet-4 and Net-5 have local connectivity with shared weights. All units\nin a local feature map perform the same operation on di\ufb00erent parts of the\nimage, achieved by sharing the same weights. The \ufb01rst hidden layer of Net-\n4 has two 8\u00d78 arrays, and each unit takes input from a 3\u00d73 patch just like\nin Net-3. However, each of the units in a single 8\u00d78 feature map share the\nsame set of nine weights (but have their own bias parameter). This forces\nthe extracted features in di\ufb00erent parts of the image to be computed by\nthe same linear functional, and consequently these networks are sometimes\nknown as convolutional networks. The second hidden layer of Net-4 has\nno weight sharing, and is the same as in Net-3. The gradient of the error\nfunction R with respect to a shared weight is the sum of the gradients of\nR with respect to each connection controlled by the weights in question.\nTable 11.1 gives the number of links, the number of weights and the\noptimal test performance for each of the networks. We see that Net-4 has\nmore links but fewer weights than Net-3, and superior test performance.\nNet-5 has four 4 \u00d7 4 feature maps in the second hidden layer, each unit\nconnected to a 5 \u00d7 5 local patch in the layer below. Weights are shared\nin each of these feature maps. We see that Net-5 does the best, having\nerrors of only 1.6%, compared to 13% for the \u201cvanilla\u201d network Net-2.\nThe clever design of network Net-5, motivated by the fact that features of\nhandwriting style should appear in more than one part of a digit, was the\nresult of many person years of experimentation. This and similar networks\ngave better performance on ZIP code problems than any other learning\nmethod at that time (early 1990s). This example also shows that neural\nnetworks are not a fully automatic tool, as they are sometimes advertised.\nAs with all statistical models, subject matter knowledge can and should be\nused to improve their performance.\nThis network was later outperformed by the tangent distance approach\n(Simard et al., 1993) described in Section 13.3.3, which explicitly incorpo-\nrates natural a\ufb03ne invariances. At this point the digit recognition datasets\nbecome test beds for every new learning procedure, and researchers worked"
+    },
+    {
+      "id": 31158,
+      "page": 426,
+      "seq": 1,
+      "text": "hard to drive down the error rates. As of this writing, the best error rates on\na large database (60, 000 training, 10, 000 test observations), derived from\nstandard NIST2 databases, were reported to be the following: (Le Cun et\nal., 1998):"
+    },
+    {
+      "id": 31159,
+      "page": 426,
+      "seq": 2,
+      "text": "\u2022 1.1% for tangent distance with a 1-nearest neighbor classi\ufb01er (Sec-\ntion 13.3.3);"
+    },
+    {
+      "id": 31160,
+      "page": 426,
+      "seq": 3,
+      "text": "\u2022 0.8% for a degree-9 polynomial SVM (Section 12.3);"
+    },
+    {
+      "id": 31161,
+      "page": 426,
+      "seq": 4,
+      "text": "\u2022 0.8% for LeNet-5, a more complex version of the convolutional net-\nwork described here;"
+    },
+    {
+      "id": 31162,
+      "page": 426,
+      "seq": 5,
+      "text": "\u2022 0.7% for boosted LeNet-4. Boosting is described in Chapter 8. LeNet-\n4 is a predecessor of LeNet-5."
+    },
+    {
+      "id": 31163,
+      "page": 426,
+      "seq": 6,
+      "text": "Le Cun et al. (1998) report a much larger table of performance results, and\nit is evident that many groups have been working very hard to bring these\ntest error rates down. They report a standard error of 0.1% on the error\nestimates, which is based on a binomial average with N = 10, 000 and\np \u22480.01. This implies that error rates within 0.1\u20140.2% of one another\nare statistically equivalent. Realistically the standard error is even higher,\nsince the test data has been implicitly used in the tuning of the various\nprocedures."
+    },
+    {
+      "id": 31165,
+      "page": 426,
+      "seq": 8,
+      "text": "Both projection pursuit regression and neural networks take nonlinear func-\ntions of linear combinations (\u201cderived features\u201d) of the inputs. This is a\npowerful and very general approach for regression and classi\ufb01cation, and\nhas been shown to compete well with the best learning methods on many\nproblems.\nThese tools are especially e\ufb00ective in problems with a high signal-to-noise\nratio and settings where prediction without interpretation is the goal. They\nare less e\ufb00ective for problems where the goal is to describe the physical pro-\ncess that generated the data and the roles of individual inputs. Each input\nenters into the model in many places, in a nonlinear fashion. Some authors\n(Hinton, 1989) plot a diagram of the estimated weights into each hidden\nunit, to try to understand the feature that each unit is extracting. This\nis limited however by the lack of identi\ufb01ability of the parameter vectors\n\u03b1m, m = 1, . . . , M. Often there are solutions with \u03b1m spanning the same\nlinear space as the ones found during training, giving predicted values that"
+    },
+    {
+      "id": 31166,
+      "page": 426,
+      "seq": 9,
+      "text": "2The National Institute of Standards and Technology maintain large databases, in-\ncluding handwritten character databases; http://www.nist.gov/srd/."
+    },
+    {
+      "id": 31168,
+      "page": 427,
+      "seq": 1,
+      "text": "are roughly the same. Some authors suggest carrying out a principal com-\nponent analysis of these weights, to try to \ufb01nd an interpretable solution. In\ngeneral, the di\ufb03culty of interpreting these models has limited their use in\n\ufb01elds like medicine, where interpretation of the model is very important.\nThere has been a great deal of research on the training of neural net-\nworks. Unlike methods like CART and MARS, neural networks are smooth\nfunctions of real-valued parameters. This facilitates the development of\nBayesian inference for these models. The next sections discusses a success-\nful Bayesian implementation of neural networks."
+    },
+    {
+      "id": 31170,
+      "page": 427,
+      "seq": 3,
+      "text": "A classi\ufb01cation competition was held in 2003, in which \ufb01ve labeled train-\ning datasets were provided to participants. It was organized for a Neural\nInformation Processing Systems (NIPS) workshop. Each of the data sets\nconstituted a two-class classi\ufb01cation problems, with di\ufb00erent sizes and from\na variety of domains (see Table 11.2). Feature measurements for a valida-\ntion dataset were also available.\nParticipants developed and applied statistical learning procedures to\nmake predictions on the datasets, and could submit predictions to a web-\nsite on the validation set for a period of 12 weeks. With this feedback,\nparticipants were then asked to submit predictions for a separate test set\nand they received their results. Finally, the class labels for the validation\nset were released and participants had one week to train their algorithms\non the combined training and validation sets, and submit their \ufb01nal pre-\ndictions to the competition website. A total of 75 groups participated, with\n20 and 16 eventually making submissions on the validation and test sets,\nrespectively.\nThere was an emphasis on feature extraction in the competition. Arti-\n\ufb01cial \u201cprobes\u201d were added to the data: these are noise features with dis-\ntributions resembling the real features but independent of the class labels.\nThe percentage of probes that were added to each dataset, relative to the\ntotal set of features, is shown on Table 11.2. Thus each learning algorithm\nhad to \ufb01gure out a way of identifying the probes and downweighting or\neliminating them.\nA number of metrics were used to evaluate the entries, including the\npercentage correct on the test set, the area under the ROC curve, and a\ncombined score that compared each pair of classi\ufb01ers head-to-head. The\nresults of the competition are very interesting and are detailed in Guyon et\nal. (2006). The most notable result: the entries of Neal and Zhang (2006)\nwere the clear overall winners. In the \ufb01nal competition they \ufb01nished \ufb01rst"
+    },
+    {
+      "id": 31173,
+      "page": 428,
+      "seq": 2,
+      "text": "Dataset\nDomain\nFeature\np\nPercent\nNtr\nNval\nNte\nType\nProbes\nArcene\nMass spectrometry\nDense\n10,000\n30\n100\n100\n700\nDexter\nText classi\ufb01cation\nSparse\n20,000\n50\n300\n300\n2000\nDorothea\nDrug discovery\nSparse\n100,000\n50\n800\n350\n800\nGisette\nDigit recognition\nDense\n5000\n30\n6000\n1000\n6500\nMadelon\nArti\ufb01cial\nDense\n500\n96\n2000\n600\n1800"
+    },
+    {
+      "id": 31174,
+      "page": 428,
+      "seq": 3,
+      "text": "in three of the \ufb01ve datasets, and were 5th and 7th on the remaining two\ndatasets.\nIn their winning entries, Neal and Zhang (2006) used a series of pre-\nprocessing feature-selection steps, followed by Bayesian neural networks,\nDirichlet di\ufb00usion trees, and combinations of these methods. Here we focus\nonly on the Bayesian neural network approach, and try to discern which\naspects of their approach were important for its success. We rerun their\nprograms and compare the results to boosted neural networks and boosted\ntrees, and other related methods."
+    },
+    {
+      "id": 31176,
+      "page": 428,
+      "seq": 5,
+      "text": "Let us \ufb01rst review brie\ufb02y the Bayesian approach to inference and its appli-\ncation to neural networks. Given training data Xtr, ytr, we assume a sam-\npling model with parameters \u03b8; Neal and Zhang (2006) use a two-hidden-\nlayer neural network, with output nodes the class probabilities Pr(Y |X, \u03b8)\nfor the binary outcomes. Given a prior distribution Pr(\u03b8), the posterior\ndistribution for the parameters is"
+    },
+    {
+      "id": 31177,
+      "page": 428,
+      "seq": 6,
+      "text": "Pr(\u03b8|Xtr, ytr) =\nPr(\u03b8)Pr(ytr|Xtr, \u03b8)\n#\nPr(\u03b8)Pr(ytr|Xtr, \u03b8)d\u03b8\n(11.19)"
+    },
+    {
+      "id": 31178,
+      "page": 428,
+      "seq": 7,
+      "text": "For a test case with features Xnew, the predictive distribution for the\nlabel Ynew is"
+    },
+    {
+      "id": 31179,
+      "page": 428,
+      "seq": 8,
+      "text": "Pr(Ynew|Xnew, Xtr, ytr) =\n\u0004\nPr(Ynew|Xnew, \u03b8)Pr(\u03b8|Xtr, ytr)d\u03b8 (11.20)"
+    },
+    {
+      "id": 31180,
+      "page": 428,
+      "seq": 9,
+      "text": "(c.f. equation 8.24). Since the integral in (11.20) is intractable, sophisticated\nMarkov Chain Monte Carlo (MCMC) methods are used to sample from the\nposterior distribution Pr(Ynew|Xnew, Xtr, ytr). A few hundred values \u03b8 are\ngenerated and then a simple average of these values estimates the integral.\nNeal and Zhang (2006) use di\ufb00use Gaussian priors for all of the parame-\nters. The particular MCMC approach that was used is called hybrid Monte\nCarlo, and may be important for the success of the method. It includes\nan auxiliary momentum vector and implements Hamiltonian dynamics in\nwhich the potential function is the target density. This is done to avoid"
+    },
+    {
+      "id": 31182,
+      "page": 429,
+      "seq": 1,
+      "text": "random walk behavior; the successive candidates move across the sample\nspace in larger steps. They tend to be less correlated and hence converge\nto the target distribution more rapidly.\nNeal and Zhang (2006) also tried di\ufb00erent forms of pre-processing of the\nfeatures:"
+    },
+    {
+      "id": 31185,
+      "page": 429,
+      "seq": 4,
+      "text": "In the latter method (ARD), the weights (coe\ufb03cients) for the jth feature\nto each of the \ufb01rst hidden layer units all share a common prior variance\n\u03c32\nj , and prior mean zero. The posterior distributions for each variance \u03c32\nj\nare computed, and the features whose posterior variance concentrates on\nsmall values are discarded.\nThere are thus three main features of this approach that could be im-\nportant for its success:"
+    },
+    {
+      "id": 31188,
+      "page": 429,
+      "seq": 7,
+      "text": "(c) the Bayesian inference for the model using MCMC."
+    },
+    {
+      "id": 31189,
+      "page": 429,
+      "seq": 8,
+      "text": "According to Neal and Zhang (2006), feature screening in (a) is carried\nout purely for computational e\ufb03ciency; the MCMC procedure is slow with\na large number of features. There is no need to use feature selection to avoid\nover\ufb01tting. The posterior average (11.20) takes care of this automatically.\nWe would like to understand the reasons for the success of the Bayesian\nmethod. In our view, power of modern Bayesian methods does not lie in\ntheir use as a formal inference procedure; most people would not believe\nthat the priors in a high-dimensional, complex neural network model are\nactually correct. Rather the Bayesian/MCMC approach gives an e\ufb03cient\nway of sampling the relevant parts of model space, and then averaging the\npredictions for the high-probability models.\nBagging and boosting are non-Bayesian procedures that have some simi-\nlarity to MCMC in a Bayesian model. The Bayesian approach \ufb01xes the data\nand perturbs the parameters, according to current estimate of the poste-\nrior distribution. Bagging perturbs the data in an i.i.d fashion and then\nre-estimates the model to give a new set of model parameters. At the end,\na simple average of the model predictions from di\ufb00erent bagged samples is\ncomputed. Boosting is similar to bagging, but \ufb01ts a model that is additive\nin the models of each individual base learner, which are learned using non\ni.i.d. samples. We can write all of these models in the form"
+    },
+    {
+      "id": 31194,
+      "page": 430,
+      "seq": 1,
+      "text": "In all cases the \u02c6\u03b8\u2113are a large collection of model parameters. For the\nBayesian model the w\u2113= 1/L, and the average estimates the posterior\nmean (11.21) by sampling \u03b8\u2113from the posterior distribution. For bagging,\nw\u2113= 1/L as well, and the \u02c6\u03b8\u2113are the parameters re\ufb01t to bootstrap re-\nsamples of the training data. For boosting, the weights are all equal to\n1, but the \u02c6\u03b8\u2113are typically chosen in a nonrandom sequential fashion to\nconstantly improve the \ufb01t."
+    },
+    {
+      "id": 31196,
+      "page": 430,
+      "seq": 3,
+      "text": "Based on the similarities above, we decided to compare Bayesian neural\nnetworks to boosted trees, boosted neural networks, random forests and\nbagged neural networks on the \ufb01ve datasets in Table 11.2. Bagging and\nboosting of neural networks are not methods that we have previously used\nin our work. We decided to try them here, because of the success of Bayesian\nneural networks in this competition, and the good performance of bagging\nand boosting with trees. We also felt that by bagging and boosting neural\nnets, we could assess both the choice of model as well as the model search\nstrategy.\nHere are the details of the learning methods that were compared:"
+    },
+    {
+      "id": 31197,
+      "page": 430,
+      "seq": 4,
+      "text": "Bayesian neural nets. The results here are taken from Neal and Zhang\n(2006), using their Bayesian approach to \ufb01tting neural networks. The\nmodels had two hidden layers of 20 and 8 units. We re-ran some\nnetworks for timing purposes only."
+    },
+    {
+      "id": 31198,
+      "page": 430,
+      "seq": 5,
+      "text": "Boosted trees. We used the gbm package (version 1.5-7) in the R language.\nTree depth and shrinkage factors varied from dataset to dataset. We\nconsistently bagged 80% of the data at each boosting iteration (the\ndefault is 50%). Shrinkage was between 0.001 and 0.1. Tree depth was\nbetween 2 and 9."
+    },
+    {
+      "id": 31199,
+      "page": 430,
+      "seq": 6,
+      "text": "Boosted neural networks. Since boosting is typically most e\ufb00ective with\n\u201cweak\u201d learners, we boosted a single hidden layer neural network with\ntwo or four units, \ufb01t with the nnet package (version 7.2-36) in R."
+    },
+    {
+      "id": 31200,
+      "page": 430,
+      "seq": 7,
+      "text": "Random forests. We used the R package randomForest (version 4.5-16)\nwith default settings for the parameters."
+    },
+    {
+      "id": 31201,
+      "page": 430,
+      "seq": 8,
+      "text": "Bagged neural networks. We used the same architecture as in the Bayesian\nneural network above (two hidden layers of 20 and 8 units), \ufb01t using\nboth Neal\u2019s C language package \u201cFlexible Bayesian Modeling\u201d (2004-\n11-10 release), and Matlab neural-net toolbox (version 5.1)."
+    },
+    {
+      "id": 31207,
+      "page": 431,
+      "seq": 5,
+      "text": "Bayesian neural nets\nboosted trees \nboosted neural nets\nrandom forests\nbagged neural networks"
+    },
+    {
+      "id": 31213,
+      "page": 431,
+      "seq": 11,
+      "text": "This analysis was carried out by Nicholas Johnson, and full details may\nbe found in Johnson (2008)3. The results are shown in Figure 11.12 and\nTable 11.3.\nThe \ufb01gure and table show Bayesian, boosted and bagged neural networks,\nboosted trees, and random forests, using both the screened and reduced\nfeatures sets. The error bars at the top of each plot indicate one standard\nerror of the di\ufb00erence between two error rates. Bayesian neural networks\nagain emerge as the winner, although for some datasets the di\ufb00erences\nbetween the test error rates is not statistically signi\ufb01cant. Random forests\nperforms the best among the competitors using the selected feature set,\nwhile the boosted neural networks perform best with the reduced feature\nset, and nearly match the Bayesian neural net.\nThe superiority of boosted neural networks over boosted trees suggest\nthat the neural network model is better suited to these particular prob-\nlems. Speci\ufb01cally, individual features might not be good predictors here"
+    },
+    {
+      "id": 31214,
+      "page": 431,
+      "seq": 12,
+      "text": "3We also thank Isabelle Guyon for help in preparing the results of this section."
+    },
+    {
+      "id": 31217,
+      "page": 432,
+      "seq": 2,
+      "text": "Screened Features\nARD Reduced Features\nMethod\nAverage\nAverage\nAverage\nAverage\nRank\nTime\nRank\nTime\nBayesian neural networks\n1.5\n384(138)\n1.6\n600(186)\nBoosted trees\n3.4\n3.03(2.5)\n4.0\n34.1(32.4)\nBoosted neural networks\n3.8\n9.4(8.6)\n2.2\n35.6(33.5)\nRandom forests\n2.7\n1.9(1.7)\n3.2\n11.2(9.3)\nBagged neural networks\n3.6\n3.5(1.1)\n4.0\n6.4(4.4)"
+    },
+    {
+      "id": 31218,
+      "page": 432,
+      "seq": 3,
+      "text": "and linear combinations of features work better. However the impressive\nperformance of random forests is at odds with this explanation, and came\nas a surprise to us.\nSince the reduced feature sets come from the Bayesian neural network\napproach, only the methods that use the screened features are legitimate,\nself-contained procedures. However, this does suggest that better methods\nfor internal feature selection might help the overall performance of boosted\nneural networks.\nThe table also shows the approximate training time required for each\nmethod. Here the non-Bayesian methods show a clear advantage.\nOverall, the superior performance of Bayesian neural networks here may\nbe due to the fact that"
+    },
+    {
+      "id": 31219,
+      "page": 432,
+      "seq": 4,
+      "text": "(a) the neural network model is well suited to these \ufb01ve problems, and"
+    },
+    {
+      "id": 31220,
+      "page": 432,
+      "seq": 5,
+      "text": "(b) the MCMC approach provides an e\ufb03cient way of exploring the im-\nportant part of the parameter space, and then averaging the resulting\nmodels according to their quality."
+    },
+    {
+      "id": 31221,
+      "page": 432,
+      "seq": 6,
+      "text": "The Bayesian approach works well for smoothly parametrized models like\nneural nets; it is not yet clear that it works as well for non-smooth models\nlike trees."
+    },
+    {
+      "id": 31223,
+      "page": 432,
+      "seq": 8,
+      "text": "With N observations, p predictors, M hidden units and L training epochs, a\nneural network \ufb01t typically requires O(NpML) operations. There are many\npackages available for \ufb01tting neural networks, probably many more than\nexist for mainstream statistical methods. Because the available software\nvaries widely in quality, and the learning problem for neural networks is\nsensitive to issues such as input scaling, such software should be carefully\nchosen and tested."
+    },
+    {
+      "id": 31226,
+      "page": 433,
+      "seq": 2,
+      "text": "Projection pursuit was proposed by Friedman and Tukey (1974), and spe-\ncialized to regression by Friedman and Stuetzle (1981). Huber (1985) gives\na scholarly overview, and Roosen and Hastie (1994) present a formulation\nusing smoothing splines. The motivation for neural networks dates back\nto McCulloch and Pitts (1943), Widrow and Ho\ufb00(1960) (reprinted in An-\nderson and Rosenfeld (1988)) and Rosenblatt (1962). Hebb (1949) heavily\nin\ufb02uenced the development of learning algorithms. The resurgence of neural\nnetworks in the mid 1980s was due to Werbos (1974), Parker (1985) and\nRumelhart et al. (1986), who proposed the back-propagation algorithm.\nToday there are many books written on the topic, for a broad range of\naudiences. For readers of this book, Hertz et al. (1991), Bishop (1995) and\nRipley (1996) may be the most informative. Bayesian learning for neural\nnetworks is described in Neal (1996). The ZIP code example was taken from\nLe Cun (1989); see also Le Cun et al. (1990) and Le Cun et al. (1998).\nWe do not discuss theoretical topics such as approximation properties of\nneural networks, such as the work of Barron (1993), Girosi et al. (1995)\nand Jones (1992). Some of these results are summarized by Ripley (1996)."
+    },
+    {
+      "id": 31233,
+      "page": 433,
+      "seq": 9,
+      "text": "(a) Write a program to \ufb01t a single hidden layer neural network (ten hidden\nunits) via back-propagation and weight decay."
+    },
+    {
+      "id": 31237,
+      "page": 434,
+      "seq": 3,
+      "text": "where \u03c3 is the sigmoid function, Z is standard normal, XT = (X1, X2),\neach Xj being independent standard normal, and a1 = (3, 3), a2 =\n(3, \u22123). Generate a test sample of size 1000, and plot the training and\ntest error curves as a function of the number of training epochs, for\ndi\ufb00erent values of the weight decay parameter. Discuss the over\ufb01tting\nbehavior in each case."
+    },
+    {
+      "id": 31238,
+      "page": 434,
+      "seq": 4,
+      "text": "(c) Vary the number of hidden units in the network, from 1 up to 10, and\ndetermine the minimum number needed to perform well for this task."
+    }
+  ]
+}

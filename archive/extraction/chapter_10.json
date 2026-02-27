@@ -1,0 +1,1194 @@
+{
+  "chapter": "10",
+  "sections": [
+    {
+      "number": "10.1",
+      "title": "Boosting Methods",
+      "page_start": 355
+    },
+    {
+      "number": "10.1.1",
+      "title": "Outline of This Chapter",
+      "page_start": 358
+    },
+    {
+      "number": "10.10",
+      "title": "Numerical Optimization via Gradient",
+      "page_start": 376
+    },
+    {
+      "number": "10.10.1",
+      "title": "Steepest Descent",
+      "page_start": 376
+    },
+    {
+      "number": "10.10.2",
+      "title": "Gradient Boosting",
+      "page_start": 377
+    },
+    {
+      "number": "10.10.3",
+      "title": "Implementations of Gradient Boosting",
+      "page_start": 378
+    },
+    {
+      "number": "10.11",
+      "title": "Right-Sized Trees for Boosting",
+      "page_start": 379
+    },
+    {
+      "number": "10.12",
+      "title": "Regularization",
+      "page_start": 382
+    },
+    {
+      "number": "10.12.1",
+      "title": "Shrinkage",
+      "page_start": 382
+    },
+    {
+      "number": "10.12.2",
+      "title": "Subsampling",
+      "page_start": 383
+    },
+    {
+      "number": "10.13",
+      "title": "Interpretation",
+      "page_start": 385
+    },
+    {
+      "number": "10.13.1",
+      "title": "Relative Importance of Predictor Variables",
+      "page_start": 385
+    },
+    {
+      "number": "10.13.2",
+      "title": "Partial Dependence Plots",
+      "page_start": 387
+    },
+    {
+      "number": "10.14",
+      "title": "Illustrations",
+      "page_start": 389
+    },
+    {
+      "number": "10.14.1",
+      "title": "California Housing",
+      "page_start": 389
+    },
+    {
+      "number": "10.14.2",
+      "title": "New Zealand Fish",
+      "page_start": 393
+    },
+    {
+      "number": "10.14.3",
+      "title": "Demographics Data",
+      "page_start": 397
+    },
+    {
+      "number": "10.2",
+      "title": "Boosting Fits an Additive Model",
+      "page_start": 359
+    },
+    {
+      "number": "10.3",
+      "title": "Forward Stagewise Additive Modeling",
+      "page_start": 360
+    },
+    {
+      "number": "10.4",
+      "title": "Exponential Loss and AdaBoost",
+      "page_start": 361
+    },
+    {
+      "number": "10.5",
+      "title": "Why Exponential Loss?",
+      "page_start": 363
+    },
+    {
+      "number": "10.6",
+      "title": "Loss Functions and Robustness",
+      "page_start": 364
+    },
+    {
+      "number": "10.7",
+      "title": "\u201cO\ufb00-the-Shelf\u201d Procedures for Data Mining",
+      "page_start": 368
+    },
+    {
+      "number": "10.8",
+      "title": "Example: Spam Data",
+      "page_start": 370
+    },
+    {
+      "number": "10.9",
+      "title": "Boosting Trees",
+      "page_start": 371
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": 29738,
+      "page": 355,
+      "seq": 0,
+      "text": "This is page 337\nPrinter: Opaque this\n10\nBoosting and Additive Trees"
+    },
+    {
+      "id": 29740,
+      "page": 355,
+      "seq": 2,
+      "text": "Boosting is one of the most powerful learning ideas introduced in the last\ntwenty years. It was originally designed for classi\ufb01cation problems, but as\nwill be seen in this chapter, it can pro\ufb01tably be extended to regression\nas well. The motivation for boosting was a procedure that combines the\noutputs of many \u201cweak\u201d classi\ufb01ers to produce a powerful \u201ccommittee.\u201d\nFrom this perspective boosting bears a resemblance to bagging and other\ncommittee-based approaches (Section 8.8). However we shall see that the\nconnection is at best super\ufb01cial and that boosting is fundamentally di\ufb00er-\nent.\nWe begin by describing the most popular boosting algorithm due to\nFreund and Schapire (1997) called \u201cAdaBoost.M1.\u201d Consider a two-class\nproblem, with the output variable coded as Y \u2208{\u22121, 1}. Given a vector of\npredictor variables X, a classi\ufb01er G(X) produces a prediction taking one\nof the two values {\u22121, 1}. The error rate on the training sample is"
+    },
+    {
+      "id": 29745,
+      "page": 355,
+      "seq": 7,
+      "text": "and the expected error rate on future predictions is EXY I(Y \u0338= G(X)).\nA weak classi\ufb01er is one whose error rate is only slightly better than\nrandom guessing. The purpose of boosting is to sequentially apply the\nweak classi\ufb01cation algorithm to repeatedly modi\ufb01ed versions of the data,\nthereby producing a sequence of weak classi\ufb01ers Gm(x), m = 1, 2, . . . , M."
+    },
+    {
+      "id": 29772,
+      "page": 356,
+      "seq": 26,
+      "text": "The predictions from all of them are then combined through a weighted\nmajority vote to produce the \ufb01nal prediction:"
+    },
+    {
+      "id": 29778,
+      "page": 356,
+      "seq": 32,
+      "text": "Here \u03b11, \u03b12, . . . , \u03b1M are computed by the boosting algorithm, and weight\nthe contribution of each respective Gm(x). Their e\ufb00ect is to give higher\nin\ufb02uence to the more accurate classi\ufb01ers in the sequence. Figure 10.1 shows\na schematic of the AdaBoost procedure.\nThe data modi\ufb01cations at each boosting step consist of applying weights\nw1, w2, . . . , wN to each of the training observations (xi, yi), i = 1, 2, . . . , N.\nInitially all of the weights are set to wi = 1/N, so that the \ufb01rst step simply\ntrains the classi\ufb01er on the data in the usual manner. For each successive\niteration m = 2, 3, . . . , M the observation weights are individually modi-\n\ufb01ed and the classi\ufb01cation algorithm is reapplied to the weighted observa-\ntions. At step m, those observations that were misclassi\ufb01ed by the classi\ufb01er\nGm\u22121(x) induced at the previous step have their weights increased, whereas\nthe weights are decreased for those that were classi\ufb01ed correctly. Thus as\niterations proceed, observations that are di\ufb03cult to classify correctly re-\nceive ever-increasing in\ufb02uence. Each successive classi\ufb01er is thereby forced"
+    },
+    {
+      "id": 29781,
+      "page": 357,
+      "seq": 2,
+      "text": "1. Initialize the observation weights wi = 1/N, i = 1, 2, . . . , N."
+    },
+    {
+      "id": 29783,
+      "page": 357,
+      "seq": 4,
+      "text": "(a) Fit a classi\ufb01er Gm(x) to the training data using weights wi."
+    },
+    {
+      "id": 29788,
+      "page": 357,
+      "seq": 9,
+      "text": "(d) Set wi \u2190wi \u00b7 exp[\u03b1m \u00b7 I(yi \u0338= Gm(xi))], i = 1, 2, . . . , N."
+    },
+    {
+      "id": 29790,
+      "page": 357,
+      "seq": 11,
+      "text": "to concentrate on those training observations that are missed by previous\nones in the sequence.\nAlgorithm 10.1 shows the details of the AdaBoost.M1 algorithm. The\ncurrent classi\ufb01er Gm(x) is induced on the weighted observations at line 2a.\nThe resulting weighted error rate is computed at line 2b. Line 2c calculates\nthe weight \u03b1m given to Gm(x) in producing the \ufb01nal classi\ufb01er G(x) (line\n3). The individual weights of each of the observations are updated for the\nnext iteration at line 2d. Observations misclassi\ufb01ed by Gm(x) have their\nweights scaled by a factor exp(\u03b1m), increasing their relative in\ufb02uence for\ninducing the next classi\ufb01er Gm+1(x) in the sequence.\nThe AdaBoost.M1 algorithm is known as \u201cDiscrete AdaBoost\u201d in Fried-\nman et al. (2000), because the base classi\ufb01er Gm(x) returns a discrete class\nlabel. If the base classi\ufb01er instead returns a real-valued prediction (e.g.,\na probability mapped to the interval [\u22121, 1]), AdaBoost can be modi\ufb01ed\nappropriately (see \u201cReal AdaBoost\u201d in Friedman et al. (2000)).\nThe power of AdaBoost to dramatically increase the performance of even\na very weak classi\ufb01er is illustrated in Figure 10.2. The features X1, . . . , X10\nare standard independent Gaussian, and the deterministic target Y is de-\n\ufb01ned by"
+    },
+    {
+      "id": 29791,
+      "page": 357,
+      "seq": 12,
+      "text": "Y =\n\u000e\n1\nif \t10\nj=1 X2\nj > \u03c72\n10(0.5),\n\u22121\notherwise.\n(10.2)"
+    },
+    {
+      "id": 29792,
+      "page": 357,
+      "seq": 13,
+      "text": "Here \u03c72\n10(0.5) = 9.34 is the median of a chi-squared random variable with\n10 degrees of freedom (sum of squares of 10 standard Gaussians). There are\n2000 training cases, with approximately 1000 cases in each class, and 10,000\ntest observations. Here the weak classi\ufb01er is just a \u201cstump\u201d: a two-terminal\nnode classi\ufb01cation tree. Applying this classi\ufb01er alone to the training data\nset yields a very poor test set error rate of 45.8%, compared to 50% for"
+    },
+    {
+      "id": 29801,
+      "page": 358,
+      "seq": 8,
+      "text": "random guessing. However, as boosting iterations proceed the error rate\nsteadily decreases, reaching 5.8% after 400 iterations. Thus, boosting this\nsimple very weak classi\ufb01er reduces its prediction error rate by almost a\nfactor of four. It also outperforms a single large classi\ufb01cation tree (error\nrate 24.7%). Since its introduction, much has been written to explain the\nsuccess of AdaBoost in producing accurate classi\ufb01ers. Most of this work\nhas centered on using classi\ufb01cation trees as the \u201cbase learner\u201d G(x), where\nimprovements are often most dramatic. In fact, Breiman (NIPS Workshop,\n1996) referred to AdaBoost with trees as the \u201cbest o\ufb00-the-shelf classi\ufb01er in\nthe world\u201d (see also Breiman (1998)). This is especially the case for data-\nmining applications, as discussed more fully in Section 10.7 later in this\nchapter."
+    },
+    {
+      "id": 29803,
+      "page": 358,
+      "seq": 10,
+      "text": "Here is an outline of the developments in this chapter:"
+    },
+    {
+      "id": 29804,
+      "page": 358,
+      "seq": 11,
+      "text": "\u2022 We show that AdaBoost \ufb01ts an additive model in a base learner,\noptimizing a novel exponential loss function. This loss function is"
+    },
+    {
+      "id": 29806,
+      "page": 359,
+      "seq": 1,
+      "text": "very similar to the (negative) binomial log-likelihood (Sections 10.2\u2013\n10.4)."
+    },
+    {
+      "id": 29807,
+      "page": 359,
+      "seq": 2,
+      "text": "\u2022 The population minimizer of the exponential loss function is shown\nto be the log-odds of the class probabilities (Section 10.5)."
+    },
+    {
+      "id": 29808,
+      "page": 359,
+      "seq": 3,
+      "text": "\u2022 We describe loss functions for regression and classi\ufb01cation that are\nmore robust than squared error or exponential loss (Section 10.6)."
+    },
+    {
+      "id": 29809,
+      "page": 359,
+      "seq": 4,
+      "text": "\u2022 It is argued that decision trees are an ideal base learner for data\nmining applications of boosting (Sections 10.7 and 10.9)."
+    },
+    {
+      "id": 29810,
+      "page": 359,
+      "seq": 5,
+      "text": "\u2022 We develop a class of gradient boosted models (GBMs), for boosting\ntrees with any loss function (Section 10.10)."
+    },
+    {
+      "id": 29811,
+      "page": 359,
+      "seq": 6,
+      "text": "\u2022 The importance of \u201cslow learning\u201d is emphasized, and implemented\nby shrinkage of each new term that enters the model (Section 10.12),\nas well as randomization (Section 10.12.2)."
+    },
+    {
+      "id": 29812,
+      "page": 359,
+      "seq": 7,
+      "text": "\u2022 Tools for interpretation of the \ufb01tted model are described (Section 10.13)."
+    },
+    {
+      "id": 29814,
+      "page": 359,
+      "seq": 9,
+      "text": "The success of boosting is really not very mysterious. The key lies in ex-\npression (10.1). Boosting is a way of \ufb01tting an additive expansion in a set\nof elementary \u201cbasis\u201d functions. Here the basis functions are the individual\nclassi\ufb01ers Gm(x) \u2208{\u22121, 1}. More generally, basis function expansions take\nthe form"
+    },
+    {
+      "id": 29818,
+      "page": 359,
+      "seq": 13,
+      "text": "where \u03b2m, m = 1, 2, . . . , M are the expansion coe\ufb03cients, and b(x; \u03b3) \u2208IR\nare usually simple functions of the multivariate argument x, characterized\nby a set of parameters \u03b3. We discuss basis expansions in some detail in\nChapter 5.\nAdditive expansions like this are at the heart of many of the learning\ntechniques covered in this book:"
+    },
+    {
+      "id": 29819,
+      "page": 359,
+      "seq": 14,
+      "text": "\u2022 In single-hidden-layer neural networks (Chapter 11), b(x; \u03b3) = \u03c3(\u03b30 +\n\u03b3T\n1 x), where \u03c3(t) = 1/(1+e\u2212t) is the sigmoid function, and \u03b3 param-\neterizes a linear combination of the input variables."
+    },
+    {
+      "id": 29820,
+      "page": 359,
+      "seq": 15,
+      "text": "\u2022 In signal processing, wavelets (Section 5.9.1) are a popular choice with\n\u03b3 parameterizing the location and scale shifts of a \u201cmother\u201d wavelet."
+    },
+    {
+      "id": 29821,
+      "page": 359,
+      "seq": 16,
+      "text": "\u2022 Multivariate adaptive regression splines (Section 9.4) uses truncated-\npower spline basis functions where \u03b3 parameterizes the variables and\nvalues for the knots."
+    },
+    {
+      "id": 29823,
+      "page": 360,
+      "seq": 1,
+      "text": "Algorithm 10.2 Forward Stagewise Additive Modeling."
+    },
+    {
+      "id": 29831,
+      "page": 360,
+      "seq": 9,
+      "text": "\u2022 For trees, \u03b3 parameterizes the split variables and split points at the\ninternal nodes, and the predictions at the terminal nodes."
+    },
+    {
+      "id": 29832,
+      "page": 360,
+      "seq": 10,
+      "text": "Typically these models are \ufb01t by minimizing a loss function averaged\nover the training data, such as the squared-error or a likelihood-based loss\nfunction,"
+    },
+    {
+      "id": 29842,
+      "page": 360,
+      "seq": 20,
+      "text": "For many loss functions L(y, f(x)) and/or basis functions b(x; \u03b3), this re-\nquires computationally intensive numerical optimization techniques. How-\never, a simple alternative often can be found when it is feasible to rapidly\nsolve the subproblem of \ufb01tting just a single basis function,"
+    },
+    {
+      "id": 29847,
+      "page": 360,
+      "seq": 25,
+      "text": "Forward stagewise modeling approximates the solution to (10.4) by sequen-\ntially adding new basis functions to the expansion without adjusting the\nparameters and coe\ufb03cients of those that have already been added. This is\noutlined in Algorithm 10.2. At each iteration m, one solves for the optimal\nbasis function b(x; \u03b3m) and corresponding coe\ufb03cient \u03b2m to add to the cur-\nrent expansion fm\u22121(x). This produces fm(x), and the process is repeated.\nPreviously added terms are not modi\ufb01ed.\nFor squared-error loss"
+    },
+    {
+      "id": 29851,
+      "page": 361,
+      "seq": 2,
+      "text": "L(yi, fm\u22121(xi) + \u03b2b(xi; \u03b3))\n=\n(yi \u2212fm\u22121(xi) \u2212\u03b2b(xi; \u03b3))2"
+    },
+    {
+      "id": 29853,
+      "page": 361,
+      "seq": 4,
+      "text": "where rim = yi \u2212fm\u22121(xi) is simply the residual of the current model\non the ith observation. Thus, for squared-error loss, the term \u03b2mb(x; \u03b3m)\nthat best \ufb01ts the current residuals is added to the expansion at each step.\nThis idea is the basis for \u201cleast squares\u201d regression boosting discussed in\nSection 10.10.2. However, as we show near the end of the next section,\nsquared-error loss is generally not a good choice for classi\ufb01cation; hence\nthe need to consider other loss criteria."
+    },
+    {
+      "id": 29855,
+      "page": 361,
+      "seq": 6,
+      "text": "We now show that AdaBoost.M1 (Algorithm 10.1) is equivalent to forward\nstagewise additive modeling (Algorithm 10.2) using the loss function"
+    },
+    {
+      "id": 29857,
+      "page": 361,
+      "seq": 8,
+      "text": "The appropriateness of this criterion is addressed in the next section.\nFor AdaBoost the basis functions are the individual classi\ufb01ers Gm(x) \u2208\n{\u22121, 1}. Using the exponential loss function, one must solve"
+    },
+    {
+      "id": 29861,
+      "page": 361,
+      "seq": 12,
+      "text": "for the classi\ufb01er Gm and corresponding coe\ufb03cient \u03b2m to be added at each\nstep. This can be expressed as"
+    },
+    {
+      "id": 29865,
+      "page": 361,
+      "seq": 16,
+      "text": "with w(m)\ni\n= exp(\u2212yi fm\u22121(xi)). Since each w(m)\ni\ndepends neither on \u03b2\nnor G(x), it can be regarded as a weight that is applied to each observa-\ntion. This weight depends on fm\u22121(xi), and so the individual weight values\nchange with each iteration m.\nThe solution to (10.9) can be obtained in two steps. First, for any value\nof \u03b2 > 0, the solution to (10.9) for Gm(x) is"
+    },
+    {
+      "id": 29870,
+      "page": 362,
+      "seq": 1,
+      "text": "which is the classi\ufb01er that minimizes the weighted error rate in predicting\ny. This can be easily seen by expressing the criterion in (10.9) as"
+    },
+    {
+      "id": 29880,
+      "page": 362,
+      "seq": 11,
+      "text": "Plugging this Gm into (10.9) and solving for \u03b2 one obtains"
+    },
+    {
+      "id": 29885,
+      "page": 362,
+      "seq": 16,
+      "text": "errm =\n\tN\ni=1 w(m)\ni\nI(yi \u0338= Gm(xi))\n\tN\ni=1 w(m)\ni\n.\n(10.13)"
+    },
+    {
+      "id": 29888,
+      "page": 362,
+      "seq": 19,
+      "text": "which causes the weights for the next iteration to be"
+    },
+    {
+      "id": 29890,
+      "page": 362,
+      "seq": 21,
+      "text": "Using the fact that \u2212yiGm(xi) = 2 \u00b7 I(yi \u0338= Gm(xi)) \u22121, (10.14) becomes"
+    },
+    {
+      "id": 29891,
+      "page": 362,
+      "seq": 22,
+      "text": "w(m+1)\ni\n= w(m)\ni\n\u00b7 e\u03b1mI(yi\u0338=Gm(xi)) \u00b7 e\u2212\u03b2m,\n(10.15)"
+    },
+    {
+      "id": 29892,
+      "page": 362,
+      "seq": 23,
+      "text": "where \u03b1m = 2\u03b2m is the quantity de\ufb01ned at line 2c of AdaBoost.M1 (Al-\ngorithm 10.1). The factor e\u2212\u03b2m in (10.15) multiplies all weights by the\nsame value, so it has no e\ufb00ect. Thus (10.15) is equivalent to line 2(d) of\nAlgorithm 10.1.\nOne can view line 2(a) of the Adaboost.M1 algorithm as a method for\napproximately solving the minimization in (10.11) and hence (10.10). Hence\nwe conclude that AdaBoost.M1 minimizes the exponential loss criterion\n(10.8) via a forward-stagewise additive modeling approach.\nFigure 10.3 shows the training-set misclassi\ufb01cation error rate and aver-\nage exponential loss for the simulated data problem (10.2) of Figure 10.2.\nThe training-set misclassi\ufb01cation error decreases to zero at around 250 it-\nerations (and remains there), but the exponential loss keeps decreasing.\nNotice also in Figure 10.2 that the test-set misclassi\ufb01cation error continues\nto improve after iteration 250. Clearly Adaboost is not optimizing training-\nset misclassi\ufb01cation error; the exponential loss is more sensitive to changes\nin the estimated class probabilities."
+    },
+    {
+      "id": 29902,
+      "page": 363,
+      "seq": 9,
+      "text": "The AdaBoost.M1 algorithm was originally motivated from a very di\ufb00er-\nent perspective than presented in the previous section. Its equivalence to\nforward stagewise additive modeling based on exponential loss was only\ndiscovered \ufb01ve years after its inception. By studying the properties of the\nexponential loss criterion, one can gain insight into the procedure and dis-\ncover ways it might be improved.\nThe principal attraction of exponential loss in the context of additive\nmodeling is computational; it leads to the simple modular reweighting Ad-\naBoost algorithm. However, it is of interest to inquire about its statistical\nproperties. What does it estimate and how well is it being estimated? The\n\ufb01rst question is answered by seeking its population minimizer.\nIt is easy to show (Friedman et al., 2000) that"
+    },
+    {
+      "id": 29909,
+      "page": 364,
+      "seq": 3,
+      "text": "Thus, the additive expansion produced by AdaBoost is estimating one-\nhalf the log-odds of P(Y = 1|x). This justi\ufb01es using its sign as the classi\ufb01-\ncation rule in (10.1).\nAnother loss criterion with the same population minimizer is the bi-\nnomial negative log-likelihood or deviance (also known as cross-entropy),\ninterpreting f as the logit transform. Let"
+    },
+    {
+      "id": 29912,
+      "page": 364,
+      "seq": 6,
+      "text": "and de\ufb01ne Y \u2032 = (Y + 1)/2 \u2208{0, 1}. Then the binomial log-likelihood loss\nfunction is"
+    },
+    {
+      "id": 29916,
+      "page": 364,
+      "seq": 10,
+      "text": "Since the population maximizer of log-likelihood is at the true probabilities\np(x) = Pr(Y = 1 | x), we see from (10.17) that the population minimizers of\nthe deviance EY |x[\u2212l(Y, f(x))] and EY |x[e\u2212Y f(x)] are the same. Thus, using\neither criterion leads to the same solution at the population level. Note that\ne\u2212Y f itself is not a proper log-likelihood, since it is not the logarithm of\nany probability mass function for a binary random variable Y \u2208{\u22121, 1}."
+    },
+    {
+      "id": 29918,
+      "page": 364,
+      "seq": 12,
+      "text": "In this section we examine the di\ufb00erent loss functions for classi\ufb01cation and\nregression more closely, and characterize them in terms of their robustness\nto extreme data."
+    },
+    {
+      "id": 29920,
+      "page": 364,
+      "seq": 14,
+      "text": "Although both the exponential (10.8) and binomial deviance (10.18) yield\nthe same solution when applied to the population joint distribution, the\nsame is not true for \ufb01nite data sets. Both criteria are monotone decreasing\nfunctions of the \u201cmargin\u201d yf(x). In classi\ufb01cation (with a \u22121/1 response)\nthe margin plays a role analogous to the residuals y\u2212f(x) in regression. The\nclassi\ufb01cation rule G(x) = sign[f(x)] implies that observations with positive\nmargin yif(xi) > 0 are classi\ufb01ed correctly whereas those with negative\nmargin yif(xi) < 0 are misclassi\ufb01ed. The decision boundary is de\ufb01ned by"
+    },
+    {
+      "id": 29924,
+      "page": 365,
+      "seq": 3,
+      "text": "Misclassification\nExponential\nBinomial Deviance\nSquared Error\nSupport Vector"
+    },
+    {
+      "id": 29928,
+      "page": 365,
+      "seq": 7,
+      "text": "f(x) = 0. The goal of the classi\ufb01cation algorithm is to produce positive\nmargins as frequently as possible. Any loss criterion used for classi\ufb01cation\nshould penalize negative margins more heavily than positive ones since\npositive margin observations are already correctly classi\ufb01ed.\nFigure 10.4 shows both the exponential (10.8) and binomial deviance\ncriteria as a function of the margin y \u00b7 f(x). Also shown is misclassi\ufb01cation\nloss L(y, f(x)) = I(y\u00b7f(x) < 0), which gives unit penalty for negative mar-\ngin values, and no penalty at all for positive ones. Both the exponential\nand deviance loss can be viewed as monotone continuous approximations\nto misclassi\ufb01cation loss. They continuously penalize increasingly negative\nmargin values more heavily than they reward increasingly positive ones.\nThe di\ufb00erence between them is in degree. The penalty associated with bi-\nnomial deviance increases linearly for large increasingly negative margin,\nwhereas the exponential criterion increases the in\ufb02uence of such observa-\ntions exponentially.\nAt any point in the training process the exponential criterion concen-\ntrates much more in\ufb02uence on observations with large negative margins.\nBinomial deviance concentrates relatively less in\ufb02uence on such observa-"
+    },
+    {
+      "id": 29930,
+      "page": 366,
+      "seq": 1,
+      "text": "tions, more evenly spreading the in\ufb02uence among all of the data. It is\ntherefore far more robust in noisy settings where the Bayes error rate is\nnot close to zero, and especially in situations where there is misspeci\ufb01cation\nof the class labels in the training data. The performance of AdaBoost has\nbeen empirically observed to dramatically degrade in such situations.\nAlso shown in the \ufb01gure is squared-error loss. The minimizer of the cor-\nresponding risk on the population is"
+    },
+    {
+      "id": 29931,
+      "page": 366,
+      "seq": 2,
+      "text": "f \u2217(x) = arg min\nf(x) EY |x(Y \u2212f(x))2 = E(Y | x) = 2\u00b7Pr(Y = 1 | x)\u22121. (10.19)"
+    },
+    {
+      "id": 29932,
+      "page": 366,
+      "seq": 3,
+      "text": "As before the classi\ufb01cation rule is G(x) = sign[f(x)]. Squared-error loss\nis not a good surrogate for misclassi\ufb01cation error. As seen in Figure 10.4, it\nis not a monotone decreasing function of increasing margin yf(x). For mar-\ngin values yif(xi) > 1 it increases quadratically, thereby placing increasing\nin\ufb02uence (error) on observations that are correctly classi\ufb01ed with increas-\ning certainty, thereby reducing the relative in\ufb02uence of those incorrectly\nclassi\ufb01ed yif(xi) < 0. Thus, if class assignment is the goal, a monotone de-\ncreasing criterion serves as a better surrogate loss function. Figure 12.4 on\npage 426 in Chapter 12 includes a modi\ufb01cation of quadratic loss, the \u201cHu-\nberized\u201d square hinge loss (Rosset et al., 2004b), which enjoys the favorable\nproperties of the binomial deviance, quadratic loss and the SVM hinge loss.\nIt has the same population minimizer as the quadratic (10.19), is zero for\ny\u00b7f(x) > 1, and becomes linear for y\u00b7f(x) < \u22121. Since quadratic functions\nare easier to compute with than exponentials, our experience suggests this\nto be a useful alternative to the binomial deviance.\nWith K-class classi\ufb01cation, the response Y takes values in the unordered\nset G = {G1, . . . , Gk} (see Sections 2.4 and 4.4). We now seek a classi\ufb01er\nG(x) taking values in G. It is su\ufb03cient to know the class conditional proba-\nbilities pk(x) = Pr(Y = Gk|x), k = 1, 2, . . . , K, for then the Bayes classi\ufb01er\nis\nG(x) = Gk where k = arg max\n\u2113\np\u2113(x).\n(10.20)"
+    },
+    {
+      "id": 29933,
+      "page": 366,
+      "seq": 4,
+      "text": "In principal, though, we need not learn the pk(x), but simply which one is\nlargest. However, in data mining applications the interest is often more in\nthe class probabilities p\u2113(x), \u2113= 1, . . . , K themselves, rather than in per-\nforming a class assignment. As in Section 4.4, the logistic model generalizes\nnaturally to K classes,"
+    },
+    {
+      "id": 29935,
+      "page": 366,
+      "seq": 6,
+      "text": "which ensures that 0 \u2264pk(x) \u22641 and that they sum to one. Note that\nhere we have K di\ufb00erent functions, one per class. There is a redundancy\nin the functions fk(x), since adding an arbitrary h(x) to each leaves the\nmodel unchanged. Traditionally one of them is set to zero: for example,"
+    },
+    {
+      "id": 29937,
+      "page": 367,
+      "seq": 1,
+      "text": "fK(x) = 0, as in (4.17). Here we prefer to retain the symmetry, and impose\nthe constraint \tK\nk=1 fk(x) = 0. The binomial deviance extends naturally\nto the K-class multinomial deviance loss function:"
+    },
+    {
+      "id": 29947,
+      "page": 367,
+      "seq": 11,
+      "text": "As in the two-class case, the criterion (10.22) penalizes incorrect predictions\nonly linearly in their degree of incorrectness.\nZhu et al. (2005) generalize the exponential loss for K-class problems.\nSee Exercise 10.5 for details."
+    },
+    {
+      "id": 29949,
+      "page": 367,
+      "seq": 13,
+      "text": "In the regression setting, analogous to the relationship between exponential\nloss and binomial log-likelihood is the relationship between squared-error\nloss L(y, f(x)) = (y\u2212f(x))2 and absolute loss L(y, f(x)) = | y\u2212f(x) |. The\npopulation solutions are f(x) = E(Y |x) for squared-error loss, and f(x) =\nmedian(Y |x) for absolute loss; for symmetric error distributions these are\nthe same. However, on \ufb01nite samples squared-error loss places much more\nemphasis on observations with large absolute residuals | yi \u2212f(xi) | during\nthe \ufb01tting process. It is thus far less robust, and its performance severely\ndegrades for long-tailed error distributions and especially for grossly mis-\nmeasured y-values (\u201coutliers\u201d). Other more robust criteria, such as abso-\nlute loss, perform much better in these situations. In the statistical ro-\nbustness literature, a variety of regression loss criteria have been proposed\nthat provide strong resistance (if not absolute immunity) to gross outliers\nwhile being nearly as e\ufb03cient as least squares for Gaussian errors. They\nare often better than either for error distributions with moderately heavy\ntails. One such criterion is the Huber loss criterion used for M-regression\n(Huber, 1964)"
+    },
+    {
+      "id": 29950,
+      "page": 367,
+      "seq": 14,
+      "text": "L(y, f(x)) =\n\u000e\n[y \u2212f(x)]2\nfor | y \u2212f(x) | \u2264\u03b4,\n2\u03b4(| y \u2212f(x) | \u2212\u03b42)\notherwise.\n(10.23)"
+    },
+    {
+      "id": 29959,
+      "page": 368,
+      "seq": 7,
+      "text": "exponential loss one performs a weighted \ufb01t of the base learner to the\noutput values yi, with weights wi = exp(\u2212yifm\u22121(xi)). Using other more\nrobust criteria directly in their place does not give rise to such simple\nfeasible boosting algorithms. However, in Section 10.10.2 we show how one\ncan derive simple elegant boosting algorithms based on any di\ufb00erentiable\nloss criterion, thereby producing highly robust boosting procedures for data\nmining."
+    },
+    {
+      "id": 29961,
+      "page": 368,
+      "seq": 9,
+      "text": "Predictive learning is an important aspect of data mining. As can be seen\nfrom this book, a wide variety of methods have been developed for predic-\ntive learning from data. For each particular method there are situations\nfor which it is particularly well suited, and others where it performs badly\ncompared to the best that can be done with that data. We have attempted\nto characterize appropriate situations in our discussions of each of the re-\nspective methods. However, it is seldom known in advance which procedure\nwill perform best or even well for any given problem. Table 10.1 summarizes\nsome of the characteristics of a number of learning methods.\nIndustrial and commercial data mining applications tend to be especially\nchallenging in terms of the requirements placed on learning procedures.\nData sets are often very large in terms of number of observations and\nnumber of variables measured on each of them. Thus, computational con-"
+    },
+    {
+      "id": 29981,
+      "page": 369,
+      "seq": 19,
+      "text": "siderations play an important role. Also, the data are usually messy: the\ninputs tend to be mixtures of quantitative, binary, and categorical vari-\nables, the latter often with many levels. There are generally many missing\nvalues, complete observations being rare. Distributions of numeric predic-\ntor and response variables are often long-tailed and highly skewed. This\nis the case for the spam data (Section 9.1.2); when \ufb01tting a generalized\nadditive model, we \ufb01rst log-transformed each of the predictors in order to\nget a reasonable \ufb01t. In addition they usually contain a substantial fraction\nof gross mis-measurements (outliers). The predictor variables are generally\nmeasured on very di\ufb00erent scales.\nIn data mining applications, usually only a small fraction of the large\nnumber of predictor variables that have been included in the analysis are\nactually relevant to prediction. Also, unlike many applications such as pat-\ntern recognition, there is seldom reliable domain knowledge to help create\nespecially relevant features and/or \ufb01lter out the irrelevant ones, the inclu-\nsion of which dramatically degrades the performance of many methods.\nIn addition, data mining applications generally require interpretable mod-\nels. It is not enough to simply produce predictions. It is also desirable to\nhave information providing qualitative understanding of the relationship"
+    },
+    {
+      "id": 29983,
+      "page": 370,
+      "seq": 1,
+      "text": "between joint values of the input variables and the resulting predicted re-\nsponse value. Thus, black box methods such as neural networks, which can\nbe quite useful in purely predictive settings such as pattern recognition,\nare far less useful for data mining.\nThese requirements of speed, interpretability and the messy nature of\nthe data sharply limit the usefulness of most learning procedures as o\ufb00-\nthe-shelf methods for data mining. An \u201co\ufb00-the-shelf\u201d method is one that\ncan be directly applied to the data without requiring a great deal of time-\nconsuming data preprocessing or careful tuning of the learning procedure.\nOf all the well-known learning methods, decision trees come closest to\nmeeting the requirements for serving as an o\ufb00-the-shelf procedure for data\nmining. They are relatively fast to construct and they produce interpretable\nmodels (if the trees are small). As discussed in Section 9.2, they naturally\nincorporate mixtures of numeric and categorical predictor variables and\nmissing values. They are invariant under (strictly monotone) transforma-\ntions of the individual predictors. As a result, scaling and/or more general\ntransformations are not an issue, and they are immune to the e\ufb00ects of pre-\ndictor outliers. They perform internal feature selection as an integral part\nof the procedure. They are thereby resistant, if not completely immune,\nto the inclusion of many irrelevant predictor variables. These properties of\ndecision trees are largely the reason that they have emerged as the most\npopular learning method for data mining.\nTrees have one aspect that prevents them from being the ideal tool for\npredictive learning, namely inaccuracy. They seldom provide predictive ac-\ncuracy comparable to the best that can be achieved with the data at hand.\nAs seen in Section 10.1, boosting decision trees improves their accuracy,\noften dramatically. At the same time it maintains most of their desirable\nproperties for data mining. Some advantages of trees that are sacri\ufb01ced by\nboosting are speed, interpretability, and, for AdaBoost, robustness against\noverlapping class distributions and especially mislabeling of the training\ndata. A gradient boosted model (GBM) is a generalization of tree boosting\nthat attempts to mitigate these problems, so as to produce an accurate and\ne\ufb00ective o\ufb00-the-shelf procedure for data mining."
+    },
+    {
+      "id": 29985,
+      "page": 370,
+      "seq": 3,
+      "text": "Before we go into the details of gradient boosting, we demonstrate its abili-\nties on a two-class classi\ufb01cation problem. The spam data are introduced in\nChapter 1, and used as an example for many of the procedures in Chapter 9\n(Sections 9.1.2, 9.2.5, 9.3.1 and 9.4.1).\nApplying gradient boosting to these data resulted in a test error rate of\n4.5%, using the same test set as was used in Section 9.1.2. By comparison,\nan additive logistic regression achieved 5.5%, a CART tree fully grown and"
+    },
+    {
+      "id": 29987,
+      "page": 371,
+      "seq": 1,
+      "text": "pruned by cross-validation 8.7%, and MARS 5.5%. The standard error of\nthese estimates is around 0.6%, although gradient boosting is signi\ufb01cantly\nbetter than all of them using the McNemar test (Exercise 10.6).\nIn Section 10.13 below we develop a relative importance measure for\neach predictor, as well as a partial dependence plot describing a predictor\u2019s\ncontribution to the \ufb01tted model. We now illustrate these for the spam data.\nFigure 10.6 displays the relative importance spectrum for all 57 predictor\nvariables. Clearly some predictors are more important than others in sep-\narating spam from email. The frequencies of the character strings !, $, hp,\nand remove are estimated to be the four most relevant predictor variables.\nAt the other end of the spectrum, the character strings 857, 415, table, and\n3d have virtually no relevance.\nThe quantity being modeled here is the log-odds of spam versus email"
+    },
+    {
+      "id": 29990,
+      "page": 371,
+      "seq": 4,
+      "text": "(see Section 10.13 below). Figure 10.7 shows the partial dependence of the\nlog-odds on selected important predictors, two positively associated with\nspam (! and remove), and two negatively associated (edu and hp). These\nparticular dependencies are seen to be essentially monotonic.There is a\ngeneral agreement with the corresponding functions found by the additive\nlogistic regression model; see Figure 9.1 on page 303.\nRunning a gradient boosted model on these data with J = 2 terminal-\nnode trees produces a purely additive (main e\ufb00ects) model for the log-\nodds, with a corresponding error rate of 4.7%, as compared to 4.5% for the\nfull gradient boosted model (with J = 5 terminal-node trees). Although\nnot signi\ufb01cant, this slightly higher error rate suggests that there may be\ninteractions among some of the important predictor variables. This can\nbe diagnosed through two-variable partial dependence plots. Figure 10.8\nshows one of the several such plots displaying strong interaction e\ufb00ects.\nOne sees that for very low frequencies of hp, the log-odds of spam are\ngreatly increased. For high frequencies of hp, the log-odds of spam tend to\nbe much lower and roughly constant as a function of !. As the frequency\nof hp decreases, the functional relationship with ! strengthens."
+    },
+    {
+      "id": 29992,
+      "page": 371,
+      "seq": 6,
+      "text": "Regression and classi\ufb01cation trees are discussed in detail in Section 9.2.\nThey partition the space of all joint predictor variable values into disjoint\nregions Rj, j = 1, 2, . . . , J, as represented by the terminal nodes of the tree.\nA constant \u03b3j is assigned to each such region and the predictive rule is"
+    },
+    {
+      "id": 29995,
+      "page": 372,
+      "seq": 1,
+      "text": "!\n$\nhp\nremove\nfree\nCAPAVE\nyour\nCAPMAX\ngeorge\nCAPTOT\nedu\nyou\nour\nmoney\nwill\n1999\nbusiness\nre\n(\nreceive\ninternet\n000\nemail\nmeeting\n;\n650\nover\nmail\npm\npeople\ntechnology\nhpl\nall\norder\naddress\nmake\nfont\nproject\ndata\noriginal\nreport\nconference\nlab\n[\ncredit\nparts\n#\n85\ntable\ncs\ndirect\n415\n857\ntelnet\nlabs\naddresses\n3d"
+    },
+    {
+      "id": 30036,
+      "page": 374,
+      "seq": 5,
+      "text": "with parameters \u0398 = {Rj, \u03b3j}J\n1 . J is usually treated as a meta-parameter.\nThe parameters are found by minimizing the empirical risk"
+    },
+    {
+      "id": 30042,
+      "page": 374,
+      "seq": 11,
+      "text": "This is a formidable combinatorial optimization problem, and we usually\nsettle for approximate suboptimal solutions. It is useful to divide the opti-\nmization problem into two parts:"
+    },
+    {
+      "id": 30043,
+      "page": 374,
+      "seq": 12,
+      "text": "Finding \u03b3j given Rj: Given the Rj, estimating the \u03b3j is typically trivial,\nand often \u02c6\u03b3j = \u00afyj, the mean of the yi falling in region Rj. For mis-\nclassi\ufb01cation loss, \u02c6\u03b3j is the modal class of the observations falling in\nregion Rj."
+    },
+    {
+      "id": 30044,
+      "page": 374,
+      "seq": 13,
+      "text": "Finding Rj: This is the di\ufb03cult part, for which approximate solutions are\nfound. Note also that \ufb01nding the Rj entails estimating the \u03b3j as well.\nA typical strategy is to use a greedy, top-down recursive partitioning\nalgorithm to \ufb01nd the Rj. In addition, it is sometimes necessary to\napproximate (10.26) by a smoother and more convenient criterion for\noptimizing the Rj:"
+    },
+    {
+      "id": 30048,
+      "page": 374,
+      "seq": 17,
+      "text": "Then given the \u02c6Rj = \u02dcRj, the \u03b3j can be estimated more precisely\nusing the original criterion."
+    },
+    {
+      "id": 30049,
+      "page": 374,
+      "seq": 18,
+      "text": "In Section 9.2 we described such a strategy for classi\ufb01cation trees. The Gini\nindex replaced misclassi\ufb01cation loss in the growing of the tree (identifying\nthe Rj).\nThe boosted tree model is a sum of such trees,"
+    },
+    {
+      "id": 30053,
+      "page": 374,
+      "seq": 22,
+      "text": "induced in a forward stagewise manner (Algorithm 10.2). At each step in\nthe forward stagewise procedure one must solve"
+    },
+    {
+      "id": 30058,
+      "page": 375,
+      "seq": 1,
+      "text": "for the region set and constants \u0398m = {Rjm, \u03b3jm}Jm\n1\nof the next tree, given\nthe current model fm\u22121(x).\nGiven the regions Rjm, \ufb01nding the optimal constants \u03b3jm in each region\nis typically straightforward:"
+    },
+    {
+      "id": 30062,
+      "page": 375,
+      "seq": 5,
+      "text": "Finding the regions is di\ufb03cult, and even more di\ufb03cult than for a single\ntree. For a few special cases, the problem simpli\ufb01es.\nFor squared-error loss, the solution to (10.29) is no harder than for a\nsingle tree. It is simply the regression tree that best predicts the current\nresiduals yi \u2212fm\u22121(xi), and \u02c6\u03b3jm is the mean of these residuals in each\ncorresponding region.\nFor two-class classi\ufb01cation and exponential loss, this stagewise approach\ngives rise to the AdaBoost method for boosting classi\ufb01cation trees (Algo-\nrithm 10.1). In particular, if the trees T(x; \u0398m) are restricted to be scaled\nclassi\ufb01cation trees, then we showed in Section 10.4 that the solution to\n(10.29) is the tree that minimizes the weighted error rate \tN\ni=1 w(m)\ni\nI(yi \u0338=\nT(xi; \u0398m)) with weights w(m)\ni\n= e\u2212yifm\u22121(xi). By a scaled classi\ufb01cation\ntree, we mean \u03b2mT(x; \u0398m), with the restriction that \u03b3jm \u2208{\u22121, 1}).\nWithout this restriction, (10.29) still simpli\ufb01es for exponential loss to a\nweighted exponential criterion for the new tree:"
+    },
+    {
+      "id": 30066,
+      "page": 375,
+      "seq": 9,
+      "text": "It is straightforward to implement a greedy recursive-partitioning algorithm\nusing this weighted exponential loss as a splitting criterion. Given the Rjm,\none can show (Exercise 10.7) that the solution to (10.30) is the weighted\nlog-odds in each corresponding region"
+    },
+    {
+      "id": 30068,
+      "page": 375,
+      "seq": 11,
+      "text": "xi\u2208Rjm w(m)\ni\nI(yi = 1)\n\t\nxi\u2208Rjm w(m)\ni\nI(yi = \u22121)\n.\n(10.32)"
+    },
+    {
+      "id": 30069,
+      "page": 375,
+      "seq": 12,
+      "text": "This requires a specialized tree-growing algorithm; in practice, we prefer\nthe approximation presented below that uses a weighted least squares re-\ngression tree.\nUsing loss criteria such as the absolute error or the Huber loss (10.23) in\nplace of squared-error loss for regression, and the deviance (10.22) in place\nof exponential loss for classi\ufb01cation, will serve to robustify boosting trees.\nUnfortunately, unlike their nonrobust counterparts, these robust criteria\ndo not give rise to simple fast boosting algorithms.\nFor more general loss criteria the solution to (10.30), given the Rjm,\nis typically straightforward since it is a simple \u201clocation\u201d estimate. For"
+    },
+    {
+      "id": 30071,
+      "page": 376,
+      "seq": 1,
+      "text": "absolute loss it is just the median of the residuals in each respective region.\nFor the other criteria fast iterative algorithms exist for solving (10.30),\nand usually their faster \u201csingle-step\u201d approximations are adequate. The\nproblem is tree induction. Simple fast algorithms do not exist for solving\n(10.29) for these more general loss criteria, and approximations like (10.27)\nbecome essential."
+    },
+    {
+      "id": 30073,
+      "page": 376,
+      "seq": 3,
+      "text": "Fast approximate algorithms for solving (10.29) with any di\ufb00erentiable loss\ncriterion can be derived by analogy to numerical optimization. The loss in\nusing f(x) to predict y on the training data is"
+    },
+    {
+      "id": 30077,
+      "page": 376,
+      "seq": 7,
+      "text": "The goal is to minimize L(f) with respect to f, where here f(x) is con-\nstrained to be a sum of trees (10.28). Ignoring this constraint, minimizing\n(10.33) can be viewed as a numerical optimization"
+    },
+    {
+      "id": 30079,
+      "page": 376,
+      "seq": 9,
+      "text": "where the \u201cparameters\u201d f \u2208IRN are the values of the approximating func-\ntion f(xi) at each of the N data points xi:"
+    },
+    {
+      "id": 30081,
+      "page": 376,
+      "seq": 11,
+      "text": "Numerical optimization procedures solve (10.34) as a sum of component\nvectors"
+    },
+    {
+      "id": 30085,
+      "page": 376,
+      "seq": 15,
+      "text": "where f0 = h0 is an initial guess, and each successive fm is induced based\non the current parameter vector fm\u22121, which is the sum of the previously\ninduced updates. Numerical optimization methods di\ufb00er in their prescrip-\ntions for computing each increment vector hm (\u201cstep\u201d)."
+    },
+    {
+      "id": 30087,
+      "page": 376,
+      "seq": 17,
+      "text": "Steepest descent chooses hm = \u2212\u03c1mgm where \u03c1m is a scalar and gm \u2208IRN"
+    },
+    {
+      "id": 30088,
+      "page": 376,
+      "seq": 18,
+      "text": "is the gradient of L(f) evaluated at f = fm\u22121. The components of the\ngradient gm are"
+    },
+    {
+      "id": 30097,
+      "page": 377,
+      "seq": 5,
+      "text": "and the process repeated at the next iteration. Steepest descent can be\nviewed as a very greedy strategy, since \u2212gm is the local direction in IRN"
+    },
+    {
+      "id": 30098,
+      "page": 377,
+      "seq": 6,
+      "text": "for which L(f) is most rapidly decreasing at f = fm\u22121."
+    },
+    {
+      "id": 30100,
+      "page": 377,
+      "seq": 8,
+      "text": "Forward stagewise boosting (Algorithm 10.2) is also a very greedy strategy.\nAt each step the solution tree is the one that maximally reduces (10.29),\ngiven the current model fm\u22121 and its \ufb01ts fm\u22121(xi). Thus, the tree predic-\ntions T(xi; \u0398m) are analogous to the components of the negative gradient\n(10.35). The principal di\ufb00erence between them is that the tree compo-\nnents tm = (T(x1; \u0398m), . . . , T(xN; \u0398m) are not independent. They are con-\nstrained to be the predictions of a Jm-terminal node decision tree, whereas\nthe negative gradient is the unconstrained maximal descent direction.\nThe solution to (10.30) in the stagewise approach is analogous to the line\nsearch (10.36) in steepest descent. The di\ufb00erence is that (10.30) performs\na separate line search for those components of tm that correspond to each\nseparate terminal region {T(xi; \u0398m)}xi\u2208Rjm.\nIf minimizing loss on the training data (10.33) were the only goal, steep-\nest descent would be the preferred strategy. The gradient (10.35) is trivial\nto calculate for any di\ufb00erentiable loss function L(y, f(x)), whereas solving\n(10.29) is di\ufb03cult for the robust criteria discussed in Section 10.6. Unfor-\ntunately the gradient (10.35) is de\ufb01ned only at the training data points xi,\nwhereas the ultimate goal is to generalize fM(x) to new data not repre-\nsented in the training set.\nA possible resolution to this dilemma is to induce a tree T(x; \u0398m) at the\nmth iteration whose predictions tm are as close as possible to the negative\ngradient. Using squared error to measure closeness, this leads us to"
+    },
+    {
+      "id": 30104,
+      "page": 377,
+      "seq": 12,
+      "text": "That is, one \ufb01ts the tree T to the negative gradient values (10.35) by least\nsquares. As noted in Section 10.9 fast algorithms exist for least squares\ndecision tree induction. Although the solution regions \u02dcRjm to (10.37) will\nnot be identical to the regions Rjm that solve (10.29), it is generally sim-\nilar enough to serve the same purpose. In any case, the forward stagewise"
+    },
+    {
+      "id": 30110,
+      "page": 378,
+      "seq": 5,
+      "text": "Regression\nHuber\nyi \u2212f(xi) for |yi \u2212f(xi)| \u2264\u03b4m\n\u03b4msign[yi \u2212f(xi)] for |yi \u2212f(xi)| > \u03b4m\nwhere \u03b4m = \u03b1th-quantile{|yi \u2212f(xi)|}"
+    },
+    {
+      "id": 30111,
+      "page": 378,
+      "seq": 6,
+      "text": "Classi\ufb01cation\nDeviance\nkth component: I(yi = Gk) \u2212pk(xi)"
+    },
+    {
+      "id": 30112,
+      "page": 378,
+      "seq": 7,
+      "text": "boosting procedure, and top-down decision tree induction, are themselves\napproximation procedures. After constructing the tree (10.37), the corre-\nsponding constants in each region are given by (10.30).\nTable 10.2 summarizes the gradients for commonly used loss functions.\nFor squared error loss, the negative gradient is just the ordinary residual\n\u2212gim = yi \u2212fm\u22121(xi), so that (10.37) on its own is equivalent standard\nleast squares boosting. With absolute error loss, the negative gradient is\nthe sign of the residual, so at each iteration (10.37) \ufb01ts the tree to the\nsign of the current residuals by least squares. For Huber M-regression, the\nnegative gradient is a compromise between these two (see the table).\nFor classi\ufb01cation the loss function is the multinomial deviance (10.22),\nand K least squares trees are constructed at each iteration. Each tree Tkm\nis \ufb01t to its respective negative gradient vector gkm,"
+    },
+    {
+      "id": 30115,
+      "page": 378,
+      "seq": 10,
+      "text": "with pk(x) given by (10.21). Although K separate trees are built at each\niteration, they are related through (10.21). For binary classi\ufb01cation (K =\n2), only one tree is needed (exercise 10.10)."
+    },
+    {
+      "id": 30117,
+      "page": 378,
+      "seq": 12,
+      "text": "Algorithm 10.3 presents the generic gradient tree-boosting algorithm for\nregression. Speci\ufb01c algorithms are obtained by inserting di\ufb00erent loss cri-\nteria L(y, f(x)). The \ufb01rst line of the algorithm initializes to the optimal\nconstant model, which is just a single terminal node tree. The components\nof the negative gradient computed at line 2(a) are referred to as general-\nized or pseudo residuals, r. Gradients for commonly used loss functions are\nsummarized in Table 10.2."
+    },
+    {
+      "id": 30126,
+      "page": 379,
+      "seq": 8,
+      "text": "(b) Fit a regression tree to the targets rim giving terminal regions\nRjm, j = 1, 2, . . . , Jm."
+    },
+    {
+      "id": 30133,
+      "page": 379,
+      "seq": 15,
+      "text": "The algorithm for classi\ufb01cation is similar. Lines 2(a)\u2013(d) are repeated\nK times at each iteration m, once for each class using (10.38). The result\nat line 3 is K di\ufb00erent (coupled) tree expansions fkM(x), k = 1, 2, . . . , K.\nThese produce probabilities via (10.21) or do classi\ufb01cation as in (10.20).\nDetails are given in Exercise 10.9. Two basic tuning parameters are the\nnumber of iterations M and the sizes of each of the constituent trees\nJm, m = 1, 2, . . . , M.\nThe original implementation of this algorithm was called MART for\n\u201cmultiple additive regression trees,\u201d and was referred to in the \ufb01rst edi-\ntion of this book. Many of the \ufb01gures in this chapter were produced by\nMART. Gradient boosting as described here is implemented in the R gbm\npackage (Ridgeway, 1999, \u201cGradient Boosted Models\u201d), and is freely avail-\nable. The gbm package is used in Section 10.14.2, and extensively in Chap-\nters 16 and 15. Another R implementation of boosting is mboost (Hothorn\nand B\u00a8uhlmann, 2006). A commercial implementation of gradient boost-\ning/MART called TreeNet\u00ae is available from Salford Systems, Inc."
+    },
+    {
+      "id": 30135,
+      "page": 379,
+      "seq": 17,
+      "text": "Historically, boosting was considered to be a technique for combining mod-\nels, here trees. As such, the tree building algorithm was regarded as a"
+    },
+    {
+      "id": 30137,
+      "page": 380,
+      "seq": 1,
+      "text": "primitive that produced models to be combined by the boosting proce-\ndure. In this scenario, the optimal size of each tree is estimated separately\nin the usual manner when it is built (Section 9.2). A very large (oversized)\ntree is \ufb01rst induced, and then a bottom-up procedure is employed to prune\nit to the estimated optimal number of terminal nodes. This approach as-\nsumes implicitly that each tree is the last one in the expansion (10.28).\nExcept perhaps for the very last tree, this is clearly a very poor assump-\ntion. The result is that trees tend to be much too large, especially during\nthe early iterations. This substantially degrades performance and increases\ncomputation.\nThe simplest strategy for avoiding this problem is to restrict all trees\nto be the same size, Jm = J \u2200m. At each iteration a J-terminal node\nregression tree is induced. Thus J becomes a meta-parameter of the entire\nboosting procedure, to be adjusted to maximize estimated performance for\nthe data at hand.\nOne can get an idea of useful values for J by considering the properties\nof the \u201ctarget\u201d function"
+    },
+    {
+      "id": 30139,
+      "page": 380,
+      "seq": 3,
+      "text": "Here the expected value is over the population joint distribution of (X, Y ).\nThe target function \u03b7(x) is the one with minimum prediction risk on future\ndata. This is the function we are trying to approximate.\nOne relevant property of \u03b7(X) is the degree to which the coordinate vari-\nables XT = (X1, X2, . . . , Xp) interact with one another. This is captured\nby its ANOVA (analysis of variance) expansion"
+    },
+    {
+      "id": 30144,
+      "page": 380,
+      "seq": 8,
+      "text": "The \ufb01rst sum in (10.40) is over functions of only a single predictor variable\nXj. The particular functions \u03b7j(Xj) are those that jointly best approximate\n\u03b7(X) under the loss criterion being used. Each such \u03b7j(Xj) is called the\n\u201cmain e\ufb00ect\u201d of Xj. The second sum is over those two-variable functions\nthat when added to the main e\ufb00ects best \ufb01t \u03b7(X). These are called the\nsecond-order interactions of each respective variable pair (Xj, Xk). The\nthird sum represents third-order interactions, and so on. For many problems\nencountered in practice, low-order interaction e\ufb00ects tend to dominate.\nWhen this is the case, models that produce strong higher-order interaction\ne\ufb00ects, such as large decision trees, su\ufb00er in accuracy.\nThe interaction level of tree-based approximations is limited by the tree\nsize J. Namely, no interaction e\ufb00ects of level greater that J \u22121 are pos-\nsible. Since boosted models are additive in the trees (10.28), this limit\nextends to them as well. Setting\nJ = 2 (single split \u201cdecision stump\u201d)\nproduces boosted models with only main e\ufb00ects; no interactions are per-\nmitted. With J = 3, two-variable interaction e\ufb00ects are also allowed, and"
+    },
+    {
+      "id": 30152,
+      "page": 381,
+      "seq": 7,
+      "text": "so on. This suggests that the value chosen for J should re\ufb02ect the level\nof dominant interactions of \u03b7(x). This is of course generally unknown, but\nin most situations it will tend to be low. Figure 10.9 illustrates the e\ufb00ect\nof interaction order (choice of J) on the simulation example (10.2). The\ngenerative function is additive (sum of quadratic monomials), so boosting\nmodels with J > 2 incurs unnecessary variance and hence the higher test\nerror. Figure 10.10 compares the coordinate functions found by boosted\nstumps with the true functions.\nAlthough in many applications J = 2 will be insu\ufb03cient, it is unlikely\nthat J > 10 will be required. Experience so far indicates that 4 \u2264J \u22648\nworks well in the context of boosting, with results being fairly insensitive\nto particular choices in this range. One can \ufb01ne-tune the value for J by\ntrying several di\ufb00erent values and choosing the one that produces the low-\nest risk on a validation sample. However, this seldom provides signi\ufb01cant\nimprovement over using J \u22436."
+    },
+    {
+      "id": 30159,
+      "page": 382,
+      "seq": 6,
+      "text": "Besides the size of the constituent trees, J, the other meta-parameter of\ngradient boosting is the number of boosting iterations M. Each iteration\nusually reduces the training risk L(fM), so that for M large enough this risk\ncan be made arbitrarily small. However, \ufb01tting the training data too well\ncan lead to over\ufb01tting, which degrades the risk on future predictions. Thus,\nthere is an optimal number M \u2217minimizing future risk that is application\ndependent. A convenient way to estimate M \u2217is to monitor prediction risk\nas a function of M on a validation sample. The value of M that minimizes\nthis risk is taken to be an estimate of M \u2217. This is analogous to the early\nstopping strategy often used with neural networks (Section 11.4)."
+    },
+    {
+      "id": 30161,
+      "page": 382,
+      "seq": 8,
+      "text": "Controlling the value of M is not the only possible regularization strategy.\nAs with ridge regression and neural networks, shrinkage techniques can be\nemployed as well (see Sections 3.4.1 and 11.5). The simplest implementation\nof shrinkage in the context of boosting is to scale the contribution of each\ntree by a factor 0 < \u03bd < 1 when it is added to the current approximation.\nThat is, line 2(d) of Algorithm 10.3 is replaced by"
+    },
+    {
+      "id": 30165,
+      "page": 382,
+      "seq": 12,
+      "text": "The parameter \u03bd can be regarded as controlling the learning rate of the\nboosting procedure. Smaller values of \u03bd (more shrinkage) result in larger\ntraining risk for the same number of iterations M. Thus, both \u03bd and M\ncontrol prediction risk on the training data. However, these parameters do"
+    },
+    {
+      "id": 30167,
+      "page": 383,
+      "seq": 1,
+      "text": "not operate independently. Smaller values of \u03bd lead to larger values of M\nfor the same training risk, so that there is a tradeo\ufb00between them.\nEmpirically it has been found (Friedman, 2001) that smaller values of \u03bd\nfavor better test error, and require correspondingly larger values of M. In\nfact, the best strategy appears to be to set \u03bd to be very small (\u03bd < 0.1)\nand then choose M by early stopping. This yields dramatic improvements\n(over no shrinkage \u03bd = 1) for regression and for probability estimation. The\ncorresponding improvements in misclassi\ufb01cation risk via (10.20) are less,\nbut still substantial. The price paid for these improvements is computa-\ntional: smaller values of \u03bd give rise to larger values of M, and computation\nis proportional to the latter. However, as seen below, many iterations are\ngenerally computationally feasible even on very large data sets. This is\npartly due to the fact that small trees are induced at each step with no\npruning.\nFigure 10.11 shows test error curves for the simulated example (10.2) of\nFigure 10.2. A gradient boosted model (MART) was trained using binomial\ndeviance, using either stumps or six terminal-node trees, and with or with-\nout shrinkage. The bene\ufb01ts of shrinkage are evident, especially when the\nbinomial deviance is tracked. With shrinkage, each test error curve reaches\na lower value, and stays there for many iterations.\nSection 16.2.1 draws a connection between forward stagewise shrinkage\nin boosting and the use of an L1 penalty for regularizing model parame-\nters (the \u201classo\u201d). We argue that L1 penalties may be superior to the L2\npenalties used by methods such as the support vector machine."
+    },
+    {
+      "id": 30169,
+      "page": 383,
+      "seq": 3,
+      "text": "We saw in Section 8.7 that bootstrap averaging (bagging) improves the\nperformance of a noisy classi\ufb01er through averaging. Chapter 15 discusses\nin some detail the variance-reduction mechanism of this sampling followed\nby averaging. We can exploit the same device in gradient boosting, both\nto improve performance and computational e\ufb03ciency.\nWith stochastic gradient boosting (Friedman, 1999), at each iteration we\nsample a fraction \u03b7 of the training observations (without replacement),\nand grow the next tree using that subsample. The rest of the algorithm is\nidentical. A typical value for \u03b7 can be 1"
+    },
+    {
+      "id": 30170,
+      "page": 383,
+      "seq": 4,
+      "text": "2, although for large N, \u03b7 can be\nsubstantially smaller than 1"
+    },
+    {
+      "id": 30171,
+      "page": 383,
+      "seq": 5,
+      "text": "2.\nNot only does the sampling reduce the computing time by the same\nfraction \u03b7, but in many cases it actually produces a more accurate model.\nFigure 10.12 illustrates the e\ufb00ect of subsampling using the simulated\nexample (10.2), both as a classi\ufb01cation and as a regression example. We\nsee in both cases that sampling along with shrinkage slightly outperformed\nthe rest. It appears here that subsampling without shrinkage does poorly."
+    },
+    {
+      "id": 30209,
+      "page": 385,
+      "seq": 11,
+      "text": "No shrinkage\nShrink=0.1\nSample=0.5\nShrink=0.1 Sample=0.5"
+    },
+    {
+      "id": 30212,
+      "page": 385,
+      "seq": 14,
+      "text": "The downside is that we now have four parameters to set: J, M, \u03bd and\n\u03b7. Typically some early explorations determine suitable values for J, \u03bd and\n\u03b7, leaving M as the primary parameter."
+    },
+    {
+      "id": 30214,
+      "page": 385,
+      "seq": 16,
+      "text": "Single decision trees are highly interpretable. The entire model can be com-\npletely represented by a simple two-dimensional graphic (binary tree) that\nis easily visualized. Linear combinations of trees (10.28) lose this important\nfeature, and must therefore be interpreted in a di\ufb00erent way."
+    },
+    {
+      "id": 30216,
+      "page": 385,
+      "seq": 18,
+      "text": "In data mining applications the input predictor variables are seldom equally\nrelevant. Often only a few of them have substantial in\ufb02uence on the re-\nsponse; the vast majority are irrelevant and could just as well have not\nbeen included. It is often useful to learn the relative importance or contri-\nbution of each input variable in predicting the response."
+    },
+    {
+      "id": 30218,
+      "page": 386,
+      "seq": 1,
+      "text": "For a single decision tree T, Breiman et al. (1984) proposed"
+    },
+    {
+      "id": 30222,
+      "page": 386,
+      "seq": 5,
+      "text": "as a measure of relevance for each predictor variable X\u2113. The sum is over\nthe J \u22121 internal nodes of the tree. At each such node t, one of the input\nvariables Xv(t) is used to partition the region associated with that node into\ntwo subregions; within each a separate constant is \ufb01t to the response values.\nThe particular variable chosen is the one that gives maximal estimated\nimprovement \u02c6\u01312\nt in squared error risk over that for a constant \ufb01t over the\nentire region. The squared relative importance of variable X\u2113is the sum of\nsuch squared improvements over all internal nodes for which it was chosen\nas the splitting variable.\nThis importance measure is easily generalized to additive tree expansions\n(10.28); it is simply averaged over the trees"
+    },
+    {
+      "id": 30227,
+      "page": 386,
+      "seq": 10,
+      "text": "Due to the stabilizing e\ufb00ect of averaging, this measure turns out to be more\nreliable than is its counterpart (10.42) for a single tree. Also, because of\nshrinkage (Section 10.12.1) the masking of important variables by others\nwith which they are highly correlated is much less of a problem. Note\nthat (10.42) and (10.43) refer to squared relevance; the actual relevances\nare their respective square roots. Since these measures are relative, it is\ncustomary to assign the largest a value of 100 and then scale the others\naccordingly. Figure 10.6 shows the relevant importance of the 57 inputs in\npredicting spam versus email.\nFor K-class classi\ufb01cation, K separate models fk(x), k = 1, 2, . . . , K are\ninduced, each consisting of a sum of trees"
+    },
+    {
+      "id": 30236,
+      "page": 386,
+      "seq": 19,
+      "text": "Here I\u2113k is the relevance of X\u2113in separating the class k observations from\nthe other classes. The overall relevance of X\u2113is obtained by averaging over\nall of the classes"
+    },
+    {
+      "id": 30242,
+      "page": 387,
+      "seq": 1,
+      "text": "Figures 10.23 and 10.24 illustrate the use of these averaged and separate\nrelative importances."
+    },
+    {
+      "id": 30244,
+      "page": 387,
+      "seq": 3,
+      "text": "After the most relevant variables have been identi\ufb01ed, the next step is to\nattempt to understand the nature of the dependence of the approximation\nf(X) on their joint values. Graphical renderings of the f(X) as a function\nof its arguments provides a comprehensive summary of its dependence on\nthe joint values of the input variables.\nUnfortunately, such visualization is limited to low-dimensional views.\nWe can easily display functions of one or two arguments, either continuous\nor discrete (or mixed), in a variety of di\ufb00erent ways; this book is \ufb01lled\nwith such displays. Functions of slightly higher dimensions can be plotted\nby conditioning on particular sets of values of all but one or two of the\narguments, producing a trellis of plots (Becker et al., 1996).1"
+    },
+    {
+      "id": 30245,
+      "page": 387,
+      "seq": 4,
+      "text": "For more than two or three variables, viewing functions of the corre-\nsponding higher-dimensional arguments is more di\ufb03cult. A useful alterna-\ntive can sometimes be to view a collection of plots, each one of which shows\nthe partial dependence of the approximation f(X) on a selected small sub-\nset of the input variables. Although such a collection can seldom provide a\ncomprehensive depiction of the approximation, it can often produce helpful\nclues, especially when f(x) is dominated by low-order interactions (10.40).\nConsider the subvector XS of \u2113< p of the input predictor variables XT =\n(X1, X2, . . . , Xp), indexed by S \u2282{1, 2, . . . , p}. Let C be the complement\nset, with S \u222aC = {1, 2, . . . , p}. A general function f(X) will in principle\ndepend on all of the input variables: f(X) = f(XS, XC). One way to de\ufb01ne\nthe average or partial dependence of f(X) on XS is"
+    },
+    {
+      "id": 30247,
+      "page": 387,
+      "seq": 6,
+      "text": "This is a marginal average of f, and can serve as a useful description of the\ne\ufb00ect of the chosen subset on f(X) when, for example, the variables in XS\ndo not have strong interactions with those in XC.\nPartial dependence functions can be used to interpret the results of any\n\u201cblack box\u201d learning method. They can be estimated by"
+    },
+    {
+      "id": 30252,
+      "page": 387,
+      "seq": 11,
+      "text": "where {x1C, x2C, . . . , xNC} are the values of XC occurring in the training\ndata. This requires a pass over the data for each set of joint values of XS for\nwhich \u00affS(XS) is to be evaluated. This can be computationally intensive,"
+    },
+    {
+      "id": 30255,
+      "page": 388,
+      "seq": 1,
+      "text": "even for moderately sized data sets. Fortunately with decision trees, \u00affS(XS)\n(10.48) can be rapidly computed from the tree itself without reference to\nthe data (Exercise 10.11).\nIt is important to note that partial dependence functions de\ufb01ned in\n(10.47) represent the e\ufb00ect of XS on f(X) after accounting for the (av-\nerage) e\ufb00ects of the other variables XC on f(X). They are not the e\ufb00ect\nof XS on f(X) ignoring the e\ufb00ects of XC. The latter is given by the con-\nditional expectation"
+    },
+    {
+      "id": 30257,
+      "page": 388,
+      "seq": 3,
+      "text": "and is the best least squares approximation to f(X) by a function of XS\nalone. The quantities \u02dcfS(XS) and \u00affS(XS) will be the same only in the\nunlikely event that XS and XC are independent. For example, if the e\ufb00ect\nof the chosen variable subset happens to be purely additive,"
+    },
+    {
+      "id": 30259,
+      "page": 388,
+      "seq": 5,
+      "text": "Then (10.47) produces the h1(XS) up to an additive constant. If the e\ufb00ect\nis purely multiplicative,"
+    },
+    {
+      "id": 30261,
+      "page": 388,
+      "seq": 7,
+      "text": "then (10.47) produces h1(XS) up to a multiplicative constant factor. On\nthe other hand, (10.49) will not produce h1(XS) in either case. In fact,\n(10.49) can produce strong e\ufb00ects on variable subsets for which f(X) has\nno dependence at all.\nViewing plots of the partial dependence of the boosted-tree approxima-\ntion (10.28) on selected variables subsets can help to provide a qualitative\ndescription of its properties. Illustrations are shown in Sections 10.8 and\n10.14. Owing to the limitations of computer graphics, and human percep-\ntion, the size of the subsets XS must be small (l \u22481, 2, 3). There are of\ncourse a large number of such subsets, but only those chosen from among\nthe usually much smaller set of highly relevant predictors are likely to be\ninformative. Also, those subsets whose e\ufb00ect on f(X) is approximately\nadditive (10.50) or multiplicative (10.51) will be most revealing.\nFor K-class classi\ufb01cation, there are K separate models (10.44), one for\neach class. Each one is related to the respective probabilities (10.21) through"
+    },
+    {
+      "id": 30266,
+      "page": 388,
+      "seq": 12,
+      "text": "Thus each fk(X) is a monotone increasing function of its respective prob-\nability on a logarithmic scale. Partial dependence plots of each respective\nfk(X) (10.44) on its most relevant predictors (10.45) can help reveal how\nthe log-odds of realizing that class depend on the respective input variables."
+    },
+    {
+      "id": 30269,
+      "page": 389,
+      "seq": 2,
+      "text": "In this section we illustrate gradient boosting on a number of larger datasets,\nusing di\ufb00erent loss functions as appropriate."
+    },
+    {
+      "id": 30271,
+      "page": 389,
+      "seq": 4,
+      "text": "This data set (Pace and Barry, 1997) is available from the Carnegie-Mellon\nStatLib repository2. It consists of aggregated data from each of 20,460\nneighborhoods (1990 census block groups) in California. The response vari-\nable Y is the median house value in each neighborhood measured in units of\n$100,000. The predictor variables are demographics such as median income\nMedInc, housing density as re\ufb02ected by the number of houses House, and the\naverage occupancy in each house AveOccup. Also included as predictors are\nthe location of each neighborhood (longitude and latitude), and several\nquantities re\ufb02ecting the properties of the houses in the neighborhood: av-\nerage number of rooms AveRooms and bedrooms AveBedrms. There are thus\na total of eight predictors, all numeric.\nWe \ufb01t a gradient boosting model using the MART procedure, with J = 6\nterminal nodes, a learning rate (10.41) of \u03bd = 0.1, and the Huber loss\ncriterion for predicting the numeric response. We randomly divided the\ndataset into a training set (80%) and a test set (20%).\nFigure 10.13 shows the average absolute error"
+    },
+    {
+      "id": 30273,
+      "page": 389,
+      "seq": 6,
+      "text": "as a function for number of iterations M on both the training data and test\ndata. The test error is seen to decrease monotonically with increasing M,\nmore rapidly during the early stages and then leveling o\ufb00to being nearly\nconstant as iterations increase. Thus, the choice of a particular value of M\nis not critical, as long as it is not too small. This tends to be the case in\nmany applications. The shrinkage strategy (10.41) tends to eliminate the\nproblem of over\ufb01tting, especially for larger data sets.\nThe value of AAE after 800 iterations is 0.31. This can be compared to\nthat of the optimal constant predictor median{yi} which is 0.89. In terms of\nmore familiar quantities, the squared multiple correlation coe\ufb03cient of this\nmodel is R2 = 0.84. Pace and Barry (1997) use a sophisticated spatial auto-\nregression procedure, where prediction for each neighborhood is based on\nmedian house values in nearby neighborhoods, using the other predictors as\ncovariates. Experimenting with transformations they achieved R2 = 0.85,\npredicting log Y . Using log Y as the response the corresponding value for\ngradient boosting was R2 = 0.86."
+    },
+    {
+      "id": 30296,
+      "page": 391,
+      "seq": 12,
+      "text": "value has a nonmonotonic partial dependence on average number of rooms.\nIt has a minimum at approximately three rooms and is increasing both for\nsmaller and larger values.\nMedian house value is seen to have a very weak partial dependence on\nhouse age that is inconsistent with its importance ranking (Figure 10.14).\nThis suggests that this weak main e\ufb00ect may be masking stronger interac-\ntion e\ufb00ects with other variables. Figure 10.16 shows the two-variable partial\ndependence of housing value on joint values of median age and average oc-\ncupancy. An interaction between these two variables is apparent. For values\nof average occupancy greater than two, house value is nearly independent\nof median age, whereas for values less than two there is a strong dependence\non age.\nFigure 10.17 shows the two-variable partial dependence of the \ufb01tted\nmodel on joint values of longitude and latitude, displayed as a shaded\ncontour plot. There is clearly a very strong dependence of median house\nvalue on the neighborhood location in California. Note that Figure 10.17 is\nnot a plot of house value versus location ignoring the e\ufb00ects of the other\npredictors (10.49). Like all partial dependence plots, it represents the e\ufb00ect\nof location after accounting for the e\ufb00ects of the other neighborhood and\nhouse attributes (10.47). It can be viewed as representing an extra premium\none pays for location. This premium is seen to be relatively large near the\nPaci\ufb01c coast especially in the Bay Area and Los Angeles\u2013San Diego re-"
+    },
+    {
+      "id": 30340,
+      "page": 393,
+      "seq": 11,
+      "text": "gions. In the northern, central valley, and southeastern desert regions of\nCalifornia, location costs considerably less."
+    },
+    {
+      "id": 30342,
+      "page": 393,
+      "seq": 13,
+      "text": "Plant and animal ecologists use regression models to predict species pres-\nence, abundance and richness as a function of environmental variables.\nAlthough for many years simple linear and parametric models were popu-\nlar, recent literature shows increasing interest in more sophisticated mod-\nels such as generalized additive models (Section 9.1, GAM), multivariate\nadaptive regression splines (Section 9.4, MARS) and boosted regression\ntrees (Leathwick et al., 2005; Leathwick et al., 2006). Here we model the"
+    },
+    {
+      "id": 30344,
+      "page": 394,
+      "seq": 1,
+      "text": "presence and abundance of the Black Oreo Dory, a marine \ufb01sh found in the\noceanic waters around New Zealand.3"
+    },
+    {
+      "id": 30347,
+      "page": 394,
+      "seq": 4,
+      "text": "The second term is estimated by the logistic regression, and the \ufb01rst term\ncan be estimated using only the 2353 trawls with a positive catch.\nFor the logistic regression the authors used a gradient boosted model\n(GBM)4 with binomial deviance loss function, depth-10 trees, and a shrink-\nage factor \u03bd = 0.025. For the positive-catch regression, they modeled\nlog(Y ) using a GBM with squared-error loss (also depth-10 trees, but\n\u03bd = 0.01), and un-logged the predictions. In both cases they used 10-fold\ncross-validation for selecting the number of terms, as well as the shrinkage\nfactor."
+    },
+    {
+      "id": 30348,
+      "page": 394,
+      "seq": 5,
+      "text": "3The models, data, and maps shown here were kindly provided by Dr John Leathwick\nof the National Institute of Water and Atmospheric Research in New Zealand, and Dr\nJane Elith, School of Botany, University of Melbourne. The collection of the research\ntrawl data took place from 1979\u20132005, and was funded by the New Zealand Ministry of\nFisheries.\n4Version 1.5-7 of package gbm in R, ver. 2.2.0."
+    },
+    {
+      "id": 30366,
+      "page": 397,
+      "seq": 1,
+      "text": "OrbVel\nSpeed\nDistance\nDisOrgMatter\nCodendSize\nPentade\nTidalCurr\nSlope\nChlaCase2\nSSTGrad\nSalResid\nSusPartMatter\nAvgDepth\nTempResid"
+    },
+    {
+      "id": 30389,
+      "page": 397,
+      "seq": 24,
+      "text": "Because of their ability to model interactions and automatically select\nvariables, as well as robustness to outliers and missing data, GBM models\nare rapidly gaining popularity in this data-rich and enthusiastic community."
+    },
+    {
+      "id": 30391,
+      "page": 397,
+      "seq": 26,
+      "text": "In this section we illustrate gradient boosting on a multiclass classi\ufb01ca-\ntion problem, using MART. The data come from 9243 questionnaires \ufb01lled\nout by shopping mall customers in the San Francisco Bay Area (Impact\nResources, Inc., Columbus, OH). Among the questions are 14 concerning\ndemographics. For this illustration the goal is to predict occupation us-\ning the other 13 variables as predictors, and hence identify demographic\nvariables that discriminate between di\ufb00erent occupational categories. We\nrandomly divided the data into a training set (80%) and test set (20%),\nand used J = 6 node trees with a learning rate \u03bd = 0.1.\nFigure 10.22 shows the K = 9 occupation class values along with their\ncorresponding error rates. The overall error rate is 42.5%, which can be\ncompared to the null rate of 69% obtained by predicting the most numerous"
+    },
+    {
+      "id": 30394,
+      "page": 398,
+      "seq": 2,
+      "text": "class Prof/Man (Professional/Managerial). The four best predicted classes\nare seen to be Retired, Student, Prof/Man, and Homemaker.\nFigure 10.23 shows the relative predictor variable importances as aver-\naged over all classes (10.46). Figure 10.24 displays the individual relative\nimportance distributions (10.45) for each of the four best predicted classes.\nOne sees that the most relevant predictors are generally di\ufb00erent for each\nrespective class. An exception is age which is among the three most relevant\nfor predicting Retired, Student, and Prof/Man.\nFigure 10.25 shows the partial dependence of the log-odds (10.52) on age\nfor these three classes. The abscissa values are ordered codes for respective\nequally spaced age intervals. One sees that after accounting for the contri-\nbutions of the other variables, the odds of being retired are higher for older\npeople, whereas the opposite is the case for being a student. The odds of\nbeing professional/managerial are highest for middle-aged people. These\nresults are of course not surprising. They illustrate that inspecting partial\ndependences separately for each class can lead to sensible results."
+    },
+    {
+      "id": 30396,
+      "page": 398,
+      "seq": 4,
+      "text": "Schapire (1990) developed the \ufb01rst simple boosting procedure in the PAC\nlearning framework (Valiant, 1984; Kearns and Vazirani, 1994). Schapire"
+    },
+    {
+      "id": 30428,
+      "page": 400,
+      "seq": 1,
+      "text": "age\nmar-dlinc\nsex\nethnic\nincome\nhsld-stat\nmar-stat\nlang\ntyp-home\nchildren\nedu\nnum-hsld\nyrs-BA"
+    },
+    {
+      "id": 30432,
+      "page": 400,
+      "seq": 5,
+      "text": "hsld-stat\nage\nincome\nmar-stat\nedu\nethnic\nnum-hsld\ntyp-home\nsex\nmar-dlinc\nlang\nyrs-BA\nchildren"
+    },
+    {
+      "id": 30436,
+      "page": 400,
+      "seq": 9,
+      "text": "edu\nincome\nage\nmar-dlinc\nethnic\nhsld-stat\ntyp-home\nsex\nnum-hsld\nlang\nmar-stat\nyrs-BA\nchildren"
+    },
+    {
+      "id": 30440,
+      "page": 400,
+      "seq": 13,
+      "text": "sex\nmar-dlinc\nchildren\nethnic\nnum-hsld\nedu\nmar-stat\nlang\ntyp-home\nincome\nage\nhsld-stat\nyrs-BA"
+    },
+    {
+      "id": 30462,
+      "page": 401,
+      "seq": 17,
+      "text": "showed that a weak learner could always improve its performance by train-\ning two additional classi\ufb01ers on \ufb01ltered versions of the input data stream.\nA weak learner is an algorithm for producing a two-class classi\ufb01er with\nperformance guaranteed (with high probability) to be signi\ufb01cantly better\nthan a coin-\ufb02ip. After learning an initial classi\ufb01er G1 on the \ufb01rst N training\npoints,"
+    },
+    {
+      "id": 30463,
+      "page": 401,
+      "seq": 18,
+      "text": "\u2022 G2 is learned on a new sample of N points, half of which are misclas-\nsi\ufb01ed by G1;"
+    },
+    {
+      "id": 30464,
+      "page": 401,
+      "seq": 19,
+      "text": "\u2022 G3 is learned on N points for which G1 and G2 disagree;"
+    },
+    {
+      "id": 30465,
+      "page": 401,
+      "seq": 20,
+      "text": "\u2022 the boosted classi\ufb01er is GB = majority vote(G1, G2, G3)."
+    },
+    {
+      "id": 30466,
+      "page": 401,
+      "seq": 21,
+      "text": "Schapire\u2019s \u201cStrength of Weak Learnability\u201d theorem proves that GB has\nimproved performance over G1.\nFreund (1995) proposed a \u201cboost by majority\u201d variation which combined\nmany weak learners simultaneously and improved the performance of the\nsimple boosting algorithm of Schapire. The theory supporting both of these"
+    },
+    {
+      "id": 30468,
+      "page": 402,
+      "seq": 1,
+      "text": "algorithms requires the weak learner to produce a classi\ufb01er with a \ufb01xed\nerror rate. This led to the more adaptive and realistic AdaBoost (Freund\nand Schapire, 1996a) and its o\ufb00spring, where this assumption was dropped.\nFreund and Schapire (1996a) and Schapire and Singer (1999) provide\nsome theory to support their algorithms, in the form of upper bounds on\ngeneralization error. This theory has evolved in the computational learning\ncommunity, initially based on the concepts of PAC learning. Other theo-\nries attempting to explain boosting come from game theory (Freund and\nSchapire, 1996b; Breiman, 1999; Breiman, 1998), and VC theory (Schapire\net al., 1998). The bounds and the theory associated with the AdaBoost\nalgorithms are interesting, but tend to be too loose to be of practical im-\nportance. In practice, boosting achieves results far more impressive than\nthe bounds would imply. Schapire (2002) and Meir and R\u00a8atsch (2003) give\nuseful overviews more recent than the \ufb01rst edition of this book.\nFriedman et al. (2000) and Friedman (2001) form the basis for our expo-\nsition in this chapter. Friedman et al. (2000) analyze AdaBoost statistically,\nderive the exponential criterion, and show that it estimates the log-odds\nof the class probability. They propose additive tree models, the right-sized\ntrees and ANOVA representation of Section 10.11, and the multiclass logit\nformulation. Friedman (2001) developed gradient boosting and shrinkage\nfor classi\ufb01cation and regression, while Friedman (1999) explored stochastic\nvariants of boosting. Mason et al. (2000) also embraced a gradient approach\nto boosting. As the published discussions of Friedman et al. (2000) shows,\nthere is some controversy about how and why boosting works.\nSince the publication of the \ufb01rst edition of this book, these debates have\ncontinued, and spread into the statistical community with a series of papers\non consistency of boosting (Jiang, 2004; Logosi and Vayatis, 2004; Zhang\nand Yu, 2005; Bartlett and Traskin, 2007). Mease and Wyner (2008),\nthrough a series of simulation examples, challenge some of our interpre-\ntations of boosting; our response (Friedman et al., 2008b) puts most of\nthese objections to rest. A recent survey by B\u00a8uhlmann and Hothorn (2008)\nsupports our approach to boosting."
+    },
+    {
+      "id": 30475,
+      "page": 403,
+      "seq": 2,
+      "text": "(a) Write a program implementing AdaBoost with trees."
+    },
+    {
+      "id": 30476,
+      "page": 403,
+      "seq": 3,
+      "text": "(b) Redo the computations for the example of Figure 10.2. Plot the train-\ning error as well as test error, and discuss its behavior."
+    },
+    {
+      "id": 30477,
+      "page": 403,
+      "seq": 4,
+      "text": "(c) Investigate the number of iterations needed to make the test error\n\ufb01nally start to rise."
+    },
+    {
+      "id": 30478,
+      "page": 403,
+      "seq": 5,
+      "text": "(d) Change the setup of this example as follows: de\ufb01ne two classes, with\nthe features in Class 1 being X1, X2, . . . , X10, standard indepen-\ndent Gaussian variates. In Class 2, the features X1, X2, . . . , X10 are\nalso standard independent Gaussian, but conditioned on the event"
+    },
+    {
+      "id": 30479,
+      "page": 403,
+      "seq": 6,
+      "text": "j X2\nj > 12. Now the classes have signi\ufb01cant overlap in feature space.\nRepeat the AdaBoost experiments as in Figure 10.2 and discuss the\nresults."
+    },
+    {
+      "id": 30482,
+      "page": 403,
+      "seq": 9,
+      "text": "Let f = (f1, . . . , fK)T with \tK\nk=1 fk = 0, and de\ufb01ne"
+    },
+    {
+      "id": 30485,
+      "page": 403,
+      "seq": 12,
+      "text": "(a) Using Lagrange multipliers, derive the population minimizer f \u2217of\nE(Y, f), subject to the zero-sum constraint, and relate these to the\nclass probabilities."
+    },
+    {
+      "id": 30486,
+      "page": 403,
+      "seq": 13,
+      "text": "(b) Show that a multiclass boosting using this loss function leads to a\nreweighting algorithm similar to Adaboost, as in Section 10.4."
+    },
+    {
+      "id": 30488,
+      "page": 403,
+      "seq": 15,
+      "text": "(a) Show that the standard error of these estimates is about 0.6%."
+    },
+    {
+      "id": 30489,
+      "page": 403,
+      "seq": 16,
+      "text": "Since the same test data are used for both methods, the error rates are\ncorrelated, and we cannot perform a two-sample t-test. We can compare\nthe methods directly on each test observation, leading to the summary"
+    },
+    {
+      "id": 30492,
+      "page": 404,
+      "seq": 1,
+      "text": "The McNemar test focuses on the discordant errors, 33 vs. 18."
+    },
+    {
+      "id": 30493,
+      "page": 404,
+      "seq": 2,
+      "text": "(b) Conduct a test to show that GAM makes signi\ufb01cantly more errors\nthan gradient boosting, with a two-sided p-value of 0.036."
+    },
+    {
+      "id": 30496,
+      "page": 404,
+      "seq": 5,
+      "text": "(a) Write down the multinomial log-likelihood for this problem, and its\n\ufb01rst and second derivatives."
+    },
+    {
+      "id": 30497,
+      "page": 404,
+      "seq": 6,
+      "text": "(b) Using only the diagonal of the Hessian matrix in (1), and starting\nfrom \u03b3k = 0 \u2200k, show that a one-step approximate Newton update\nfor \u03b3k is"
+    },
+    {
+      "id": 30499,
+      "page": 404,
+      "seq": 8,
+      "text": "xi\u2208R(yik \u2212pik)\n\t\nxi\u2208R pik(1 \u2212pik), k = 1, . . . , K \u22121,\n(10.57)"
+    },
+    {
+      "id": 30501,
+      "page": 404,
+      "seq": 10,
+      "text": "(c) We prefer our update to sum to zero, as the current model does. Using\nsymmetry arguments, show that"
+    },
+    {
+      "id": 30507,
+      "page": 404,
+      "seq": 16,
+      "text": "is an appropriate update, where \u03b31\nk is de\ufb01ned as in (10.57) for all\nk = 1, . . . , K."
+    },
+    {
+      "id": 30513,
+      "page": 405,
+      "seq": 1,
+      "text": "Algorithm 10.4 Gradient Boosting for K-class Classi\ufb01cation."
+    },
+    {
+      "id": 30517,
+      "page": 405,
+      "seq": 5,
+      "text": "pk(x) =\nefk(x)\n\tK\n\u2113=1 ef\u2113(x) , k = 1, 2, . . . , K."
+    },
+    {
+      "id": 30519,
+      "page": 405,
+      "seq": 7,
+      "text": "i. Compute rikm = yik \u2212pk(xi), i = 1, 2, . . . , N.\nii. Fit a regression tree to the targets rikm, i = 1, 2, . . . , N,\ngiving terminal regions Rjkm, j = 1, 2, . . . , Jm.\niii. Compute"
+    },
+    {
+      "id": 30522,
+      "page": 405,
+      "seq": 10,
+      "text": "xi\u2208Rjkm rikm\n\t\nxi\u2208Rjkm |rikm|(1 \u2212|rikm|), j = 1, 2, . . . , Jm."
+    },
+    {
+      "id": 30523,
+      "page": 405,
+      "seq": 11,
+      "text": "iv. Update fkm(x) = fk,m\u22121(x) + \tJm\nj=1 \u03b3jkmI(x \u2208Rjkm)."
+    }
+  ]
+}

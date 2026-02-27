@@ -1,0 +1,825 @@
+{
+  "batch_number": 2,
+  "concepts": [
+    {
+      "id": 92,
+      "name": "linear combination model",
+      "description": "Model where f(X) = g(\u03b1\u1d40X), applying a function to a linear combination of inputs.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "linear combination model",
+      "existing_formula": "f(X) = g(\\alpha^T X)",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 93,
+      "name": "interaction term",
+      "description": "Product or other combination of predictors, allowing departure from pure additivity.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "We can include interaction terms and other derived features",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 96,
+      "name": "smoothing parameter",
+      "description": "Parameter \u03bb controlling tradeoff between fit to data and roughness penalty.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "The smoothing parameter \u03bb establishes the tradeoff between the residual sum of squares and the penalty",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 98,
+      "name": "kernel width",
+      "description": "Parameter controlling the size of the neighborhood in kernel methods, analogous to k in k-NN.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "The width of the kernel function is a smoothing parameter",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 99,
+      "name": "nadaraya-watson estimator",
+      "description": "Kernel-weighted average for regression: f\u0302(x) = \u03a3 K\u03bb(x, x\u1d62)y\u1d62 / \u03a3 K\u03bb(x, x\u1d62).",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "The Nadaraya-Watson weighted average",
+      "existing_formula": "\\hat{f}(x) = \\frac{\\sum_{i=1}^N K_\\lambda(x, x_i)y_i}{\\sum_{i=1}^N K_\\lambda(x, x_i)}",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "name": "basis function expansion",
+      "description": "Representing f(X) = \u03a3 h\u2098(X)\u03b2\u2098 as linear combination of fixed basis functions h\u2098.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "represent f as a linear expansion of basis functions",
+      "existing_formula": "f(X) = \\sum_{m=1}^M h_m(X)\\beta_m",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "name": "sigmoid basis function",
+      "description": "Basis function h\u2098(x) = \u03c3(\u03b1\u2098\u1d40x + b\u2098) using sigmoid activation, as in neural networks.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "sigmoid basis functions",
+      "existing_formula": "h_m(x) = \\sigma(\\alpha_m^T x + b_m)",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "name": "dictionary",
+      "description": "Collection D of candidate basis functions from which to build a model.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "dictionary D of candidate basis functions",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "name": "model complexity",
+      "description": "Measure of flexibility of a model class, affecting bias-variance tradeoff.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "As we increase the model complexity, the variance tends to increase and the squared bias tends to decrease",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "name": "degrees of freedom",
+      "description": "Effective number of parameters in a model, measuring model complexity.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "degrees of freedom",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 109,
+      "name": "irreducible error",
+      "description": "Error due to intrinsic variability in Y that cannot be reduced by any prediction method.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "irreducible error",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 110,
+      "name": "optimism of training error",
+      "description": "Tendency of training error to underestimate true test error, increasing with model complexity.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "Training error tends to decrease as model complexity increases, but test error does not",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 112,
+      "name": "out-of-sample error",
+      "description": "Error measured on data not used for training.",
+      "category": "validation",
+      "subcategory": "validation",
+      "existing_quote": "out-of-sample error",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 113,
+      "name": "expected test error",
+      "description": "The expected value of test error over all possible training sets of fixed size.",
+      "category": "validation",
+      "subcategory": "validation",
+      "existing_quote": "the expected test error (also known as EPE)",
+      "existing_formula": "\\text{EPE} = E[L(Y, \\hat{f}(X))]",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 114,
+      "name": "pointwise prediction error",
+      "description": "Prediction error at a specific point x\u2080 in the input space.",
+      "category": "validation",
+      "subcategory": "validation",
+      "existing_quote": "error at a specific point x_0",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 115,
+      "name": "misclassification error",
+      "description": "Probability of incorrect classification, equivalent to expected 0-1 loss.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "the probability of misclassification",
+      "existing_formula": "\\text{Err}(x) = 1 - \\max_{k} Pr(G=k|X=x)",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 116,
+      "name": "posterior probability",
+      "description": "Pr(G=k|X=x), probability of class k given input x.",
+      "category": "model",
+      "subcategory": "dgp",
+      "existing_quote": "Pr(G=k|X=x) is the conditional probability of class k",
+      "existing_formula": "Pr(G=k|X=x)",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 117,
+      "name": "nearest neighbor region",
+      "description": "Set of points closer to a given training point than to any other training point, forming Voronoi tessellation.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "the nearest neighbor region",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 119,
+      "name": "k-nearest neighbor boundary",
+      "description": "Decision boundary formed by k-NN classifier, which becomes smoother as k increases.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "The decision boundary is irregular with k=1 but becomes smoother as k increases",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": 120,
+      "name": "dimension reduction",
+      "description": "Techniques to reduce the dimensionality of the input space before applying prediction methods.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "dimension reduction techniques",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 3400,
+          "text": "This is page 9\nPrinter: Opaque this\n2\nOverview of Supervised Learning",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3402,
+          "text": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3404,
+          "text": "The outputs vary in nature among the examples. In the glucose prediction\nexample, the output is a quantitative measurement, where some measure-\nments are bigger than others, and measurements close in value are close\nin nature. In the famous Iris discrimination example due to R. A. Fisher,\nthe output is qualitative (species of Iris) and assumes values in a \ufb01nite set\nG = {Virginica, Setosa and Versicolor}. In the handwritten digit example\nthe output is one of 10 di\ufb00erent digit classes: G = {0, 1, . . . , 9}. In both of",
+          "type": "narrative",
+          "page": 27
+        },
+        {
+          "id": 3405,
+          "text": "10\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 28
+        },
+        {
+          "id": 3406,
+          "text": "these there is no explicit ordering in the classes, and in fact often descrip-\ntive labels rather than numbers are used to denote the classes. Qualitative\nvariables are also referred to as categorical or discrete variables as well as\nfactors.\nFor both types of outputs it makes sense to think of using the inputs to\npredict the output. Given some speci\ufb01c atmospheric measurements today\nand yesterday, we want to predict the ozone level tomorrow. Given the\ngrayscale values for the pixels of the digitized image of the handwritten\ndigit, we want to predict its class label.\nThis distinction in output type has led to a naming convention for the\nprediction tasks: regression when we predict quantitative outputs, and clas-\nsi\ufb01cation when we predict qualitative outputs. We will see that these two\ntasks have a lot in common, and in particular both can be viewed as a task\nin function approximation.\nInputs also vary in measurement type; we can have some of each of qual-\nitative and quantitative input variables. These have also led to distinctions\nin the types of methods that are used for prediction: some methods are\nde\ufb01ned most naturally for quantitative inputs, some most naturally for\nqualitative and some for both.\nA third variable type is ordered categorical, such as small, medium and\nlarge, where there is an ordering between the values, but no metric notion\nis appropriate (the di\ufb00erence between medium and small need not be the\nsame as that between large and medium). These are discussed further in\nChapter 4.\nQualitative variables are typically represented numerically by codes. The\neasiest case is when there are only two classes or categories, such as \u201csuc-\ncess\u201d or \u201cfailure,\u201d \u201csurvived\u201d or \u201cdied.\u201d These are often represented by a\nsingle binary digit or bit as 0 or 1, or else by \u22121 and 1. For reasons that will\nbecome apparent, such numeric codes are sometimes referred to as targets.\nWhen there are more than two categories, several alternatives are available.\nThe most useful and commonly used coding is via dummy variables. Here a\nK-level qualitative variable is represented by a vector of K binary variables\nor bits, only one of which is \u201con\u201d at a time. Although more compact coding\nschemes are possible, dummy variables are symmetric in the levels of the\nfactor.\nWe will typically denote an input variable by the symbol X. If X is\na vector, its components can be accessed by subscripts Xj. Quantitative\noutputs will be denoted by Y , and qualitative outputs by G (for group).\nWe use uppercase letters such as X, Y or G when referring to the generic\naspects of a variable. Observed values are written in lowercase; hence the\nith observed value of X is written as xi (where xi is again a scalar or\nvector). Matrices are represented by bold uppercase letters; for example, a\nset of N input p-vectors xi, i = 1, . . . , N would be represented by the N \u00d7p\nmatrix X. In general, vectors will not be bold, except when they have N\ncomponents; this convention distinguishes a p-vector of inputs xi for the",
+          "type": "narrative",
+          "page": 28
+        }
+      ]
+    }
+  ]
+}

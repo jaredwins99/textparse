@@ -1,0 +1,630 @@
+{
+  "concepts": [
+    {
+      "name": "soft-thresholding operator",
+      "type": "technique",
+      "description": "An operator S(t, λ) = sign(t)(|t|−λ)+ used in coordinate descent for lasso, which shrinks coefficients toward zero by the amount λ and sets them to zero if below the threshold.",
+      "quote": "Here S(t, λ) = sign(t)(|t|−λ)+ is the soft-thresholding operator in Table 3.4 on page 71.",
+      "paragraph_ids": [5476]
+    },
+    {
+      "name": "warm start",
+      "type": "technique",
+      "description": "An initialization technique where the solution from a previous optimization problem is used as the starting point for a new similar problem, commonly used in pathwise optimization algorithms.",
+      "quote": "Then λ is decreased again and the process is repeated, using the previous solution as a 'warm start' for the new value of λ.",
+      "paragraph_ids": [5476]
+    },
+    {
+      "name": "cholesky decomposition",
+      "type": "algorithm",
+      "description": "A matrix decomposition that factors a positive-definite matrix into the product of a lower triangular matrix and its transpose, used in least squares fitting.",
+      "quote": "Least squares fitting is usually done via the Cholesky decomposition of the matrix XT X or a QR decomposition of X. With N observations and p features, the Cholesky decomposition requires p3+Np2/2 operations",
+      "paragraph_ids": [5478]
+    },
+    {
+      "name": "qr decomposition",
+      "type": "algorithm",
+      "description": "A matrix factorization that decomposes a matrix into an orthogonal matrix Q and an upper triangular matrix R, used as a numerically stable method for least squares.",
+      "quote": "the QR decomposition requires Np2 operations. Depending on the relative size of N and p, the Cholesky can sometimes be faster; on the other hand, it can be less numerically stable",
+      "paragraph_ids": [5478]
+    },
+    {
+      "name": "indicator response matrix",
+      "type": "technique",
+      "description": "A matrix representation of categorical responses where each class is coded as a separate binary indicator variable, forming an N × K matrix for K classes.",
+      "quote": "Here each of the response categories are coded via an indicator variable. Thus if G has K classes, there will be K such indicators Yk, k = 1, . . . , K, with Yk = 1 if G = k else 0.",
+      "paragraph_ids": [6538]
+    },
+    {
+      "name": "masking in classification",
+      "type": "property",
+      "description": "A phenomenon in linear regression for classification where one class becomes dominated by others and is never predicted, especially when K ≥ 3 classes are arranged in certain configurations.",
+      "quote": "The three regression lines (left panel) are included, and we see that the line corresponding to the middle class is horizontal and its fitted values are never dominant! Thus, observations from class 2 are classified either as class 1 or class 3.",
+      "paragraph_ids": [8776]
+    },
+    {
+      "name": "class-conditional density",
+      "type": "property",
+      "description": "The probability density function of the input features X conditional on belonging to a specific class k, denoted fk(x).",
+      "quote": "Suppose fk(x) is the class-conditional density of X in class G = k, and let πk be the prior probability of class k",
+      "paragraph_ids": [9187]
+    },
+    {
+      "name": "linear discriminant function",
+      "type": "method",
+      "description": "A linear function δk(x) = x^T Σ^(-1)μk - (1/2)μk^T Σ^(-1)μk + log πk used in LDA to classify observations by finding the maximum discriminant value.",
+      "quote": "From (4.9) we see that the linear discriminant functions δk(x) = x^T Σ^(-1)μk - (1/2)μk^T Σ^(-1)μk + log πk are an equivalent description of the decision rule",
+      "paragraph_ids": [9421]
+    },
+    {
+      "name": "pooled covariance matrix",
+      "type": "estimator",
+      "description": "A weighted average of the within-class covariance matrices used in LDA when assuming a common covariance across all classes.",
+      "quote": "where Σ̂ is the pooled covariance matrix as used in LDA.",
+      "paragraph_ids": [10393]
+    },
+    {
+      "name": "quadratic discriminant function",
+      "type": "method",
+      "description": "A discriminant function that includes quadratic terms in x, arising when different classes have different covariance matrices in Gaussian classification.",
+      "quote": "if the Σk are not assumed to be equal, then the convenient cancellations in (4.9) do not occur; in particular the pieces quadratic in x remain. We then get quadratic discriminant functions (QDA)",
+      "paragraph_ids": [9431]
+    },
+    {
+      "name": "regularized discriminant analysis",
+      "type": "method",
+      "description": "A compromise between LDA and QDA that shrinks the separate covariances of QDA toward a common covariance, controlled by parameter α ∈ [0,1].",
+      "quote": "Friedman (1989) proposed a compromise between LDA and QDA, which allows one to shrink the separate covariances of QDA toward a common covariance as in LDA.",
+      "paragraph_ids": [10391]
+    },
+    {
+      "name": "sphering the data",
+      "type": "technique",
+      "description": "A transformation that rescales data so that its covariance matrix becomes the identity matrix, often done using X* ← D^(-1/2) U^T X where Σ = UDU^T.",
+      "quote": "Sphere the data with respect to the common covariance estimate Σ̂: X* ← D^(-1/2) U^T X, where Σ̂ = UDU^T. The common covariance estimate of X* will now be the identity.",
+      "paragraph_ids": [10402, 10403]
+    },
+    {
+      "name": "reduced-rank lda",
+      "type": "method",
+      "description": "A dimension reduction technique in LDA that projects data onto a lower-dimensional subspace spanned by the class centroids, preserving classification information while enabling visualization.",
+      "quote": "The K centroids in p-dimensional input space lie in an affine subspace of dimension ≤ K − 1, and if p is much larger than K, this will be a considerable drop in dimension.",
+      "paragraph_ids": [10406]
+    },
+    {
+      "name": "fisher's linear discriminant",
+      "type": "method",
+      "description": "A method that finds linear combinations of features that maximize the ratio of between-class variance to within-class variance, providing optimal low-dimensional projections for classification.",
+      "quote": "Find the linear combination Z = a^T X such that the between-class variance is maximized relative to the within-class variance.",
+      "paragraph_ids": [10414]
+    },
+    {
+      "name": "rayleigh quotient",
+      "type": "property",
+      "description": "The ratio a^T Ba / a^T Wa used in Fisher's discriminant analysis, measuring the between-class to within-class variance ratio for a linear combination.",
+      "quote": "Fisher's problem therefore amounts to maximizing the Rayleigh quotient, max_a a^T Ba / a^T Wa",
+      "paragraph_ids": [11141]
+    },
+    {
+      "name": "discriminant coordinates",
+      "type": "property",
+      "description": "The vectors aℓ that maximize the Rayleigh quotient successively, providing optimal directions for discriminating between classes.",
+      "quote": "The aℓ are referred to as discriminant coordinates, not to be confused with discriminant functions.",
+      "paragraph_ids": [11144]
+    },
+    {
+      "name": "between-class covariance",
+      "type": "metric",
+      "description": "The covariance matrix B measuring the spread of class means around the overall mean, used in Fisher's discriminant analysis.",
+      "quote": "compute B*, the covariance matrix of M* (B for between-class covariance)",
+      "paragraph_ids": [10411]
+    },
+    {
+      "name": "within-class covariance",
+      "type": "metric",
+      "description": "The pooled covariance matrix W measuring the variation of observations within each class around their class means.",
+      "quote": "compute the K × p matrix of class centroids M and the common covariance matrix W (for within-class covariance)",
+      "paragraph_ids": [10409]
+    },
+    {
+      "name": "logit transformation",
+      "type": "technique",
+      "description": "A monotone transformation log[p/(1−p)] that maps probabilities from [0,1] to the real line, used in logistic regression to model posterior probabilities.",
+      "quote": "Here the monotone transformation is the logit transformation: log[p/(1−p)]",
+      "paragraph_ids": [5592]
+    },
+    {
+      "name": "log-odds",
+      "type": "property",
+      "description": "The logarithm of the odds ratio, equal to the logit transformation, representing the linear component in logistic regression models.",
+      "quote": "The model is specified in terms of K − 1 log-odds or logit transformations (reflecting the constraint that the probabilities sum to one).",
+      "paragraph_ids": [11654]
+    },
+    {
+      "name": "score equations",
+      "type": "property",
+      "description": "The system of equations formed by setting the derivatives of the log-likelihood to zero, solved to find maximum likelihood estimates.",
+      "quote": "To maximize the log-likelihood, we set its derivatives to zero. These score equations are ∂ℓ(β)/∂β = X^T(y − p(x;β)) = 0",
+      "paragraph_ids": [11675]
+    },
+    {
+      "name": "hessian matrix",
+      "type": "property",
+      "description": "The matrix of second derivatives of a function, used in Newton-Raphson optimization to determine the curvature and update direction.",
+      "quote": "To solve the score equations (4.21), we use the Newton–Raphson algorithm, which requires the second-derivative or Hessian matrix",
+      "paragraph_ids": [11679]
+    },
+    {
+      "name": "iteratively reweighted least squares",
+      "type": "algorithm",
+      "description": "An iterative algorithm (IRLS) for fitting generalized linear models like logistic regression, where each iteration solves a weighted least squares problem with data-dependent weights.",
+      "quote": "These equations get solved repeatedly, since at each iteration p changes, and hence so does W and z. This algorithm is referred to as iteratively reweighted least squares or IRLS",
+      "paragraph_ids": [11699]
+    },
+    {
+      "name": "adjusted response in logistic regression",
+      "type": "property",
+      "description": "The linearized response z = Xβ + W^(-1)(y − p) used in the IRLS algorithm for logistic regression, representing a working response.",
+      "quote": "In the second and third line we have re-expressed the Newton step as a weighted least squares step, with the response z = Xβ^old + W^(-1)(y − p) sometimes known as the adjusted response.",
+      "paragraph_ids": [11697, 11699]
+    },
+    {
+      "name": "wald test",
+      "type": "method",
+      "description": "A hypothesis test for whether a coefficient is zero based on the ratio of the estimate to its standard error (Z score), used for variable selection in logistic regression.",
+      "quote": "Each of these correspond formally to a test of the null hypothesis that the coefficient in question is zero, while all the others are not (also known as the Wald test).",
+      "paragraph_ids": [11707]
+    },
+    {
+      "name": "residual deviance",
+      "type": "metric",
+      "description": "Minus twice the log-likelihood of a fitted model, used to measure model fit and compare nested models in generalized linear models.",
+      "quote": "The residual deviance of a fitted model is minus twice its log-likelihood, and the deviance between two models is the difference of their individual residual deviances",
+      "paragraph_ids": [19195]
+    },
+    {
+      "name": "pearson chi-square statistic",
+      "type": "metric",
+      "description": "A goodness-of-fit statistic equal to the weighted residual sum-of-squares in logistic regression, measuring the discrepancy between observed and fitted values.",
+      "quote": "The weighted residual sum-of-squares is the familiar Pearson chi-square statistic",
+      "paragraph_ids": [19202]
+    },
+    {
+      "name": "rao score test",
+      "type": "method",
+      "description": "A hypothesis test for including a term in a model based on the score function at the current parameter estimates, not requiring iterative fitting.",
+      "quote": "Popular shortcuts are the Rao score test which tests for inclusion of a term, and the Wald test which can be used to test for exclusion of a term.",
+      "paragraph_ids": [19209]
+    },
+    {
+      "name": "l1 regularized logistic regression",
+      "type": "method",
+      "description": "Logistic regression with an L1 penalty on the coefficients, promoting sparsity and automatic variable selection.",
+      "quote": "The L1 penalty used in the lasso (Section 3.4.2) can be used for variable selection and shrinkage with any linear regression model. For logistic regression, we would maximize a penalized version",
+      "paragraph_ids": [19212]
+    },
+    {
+      "name": "conditional likelihood",
+      "type": "property",
+      "description": "The likelihood of the response given the predictors, Pr(G|X), used in logistic regression which ignores the marginal distribution of X.",
+      "quote": "The logistic regression model leaves the marginal density of X as an arbitrary density function Pr(X), and fits the parameters of Pr(G|X) by maximizing the conditional likelihood",
+      "paragraph_ids": [19265]
+    },
+    {
+      "name": "joint likelihood in lda",
+      "type": "property",
+      "description": "The full likelihood Pr(X,G) = Pr(X)Pr(G|X) used in LDA, incorporating both the marginal distribution of X and the class posteriors.",
+      "quote": "With LDA we fit the parameters by maximizing the full log-likelihood, based on the joint density Pr(X, G) = Pr(X)Pr(G|X) = φ(X;μk,Σ)πk",
+      "paragraph_ids": [19268]
+    },
+    {
+      "name": "separating hyperplane",
+      "type": "method",
+      "description": "A hyperplane that perfectly separates two classes in feature space, with all points of one class on one side and all points of the other class on the opposite side.",
+      "quote": "We have seen that linear discriminant analysis and logistic regression both estimate linear decision boundaries in similar but slightly different ways. For the rest of this chapter we describe separating hyperplane classifiers.",
+      "paragraph_ids": [19276]
+    },
+    {
+      "name": "perceptron",
+      "type": "algorithm",
+      "description": "A linear classifier that computes a linear combination of input features and returns the sign, developed by Rosenblatt in the 1950s as a foundation for neural networks.",
+      "quote": "Classifiers such as (4.39), that compute a linear combination of the input features and return the sign, were called perceptrons in the engineering literature in the late 1950s (Rosenblatt, 1958).",
+      "paragraph_ids": [19278]
+    },
+    {
+      "name": "affine set",
+      "type": "property",
+      "description": "A set defined by a linear equation f(x) = β₀ + β^T x = 0, generalizing hyperplanes to not necessarily pass through the origin.",
+      "quote": "Figure 4.15 depicts a hyperplane or affine set L defined by the equation f(x) = β₀ + β^T x = 0",
+      "paragraph_ids": [19283]
+    },
+    {
+      "name": "signed distance to hyperplane",
+      "type": "metric",
+      "description": "The perpendicular distance from a point to a hyperplane, with sign indicating which side of the hyperplane the point lies on, given by f(x)/||β||.",
+      "quote": "The signed distance of any point x to L is given by β^T(x − x₀)/||β|| = f(x)/||β||",
+      "paragraph_ids": [19286, 19289]
+    },
+    {
+      "name": "perceptron learning algorithm",
+      "type": "algorithm",
+      "description": "An algorithm that finds a separating hyperplane by minimizing the distance of misclassified points to the decision boundary using stochastic gradient descent.",
+      "quote": "The perceptron learning algorithm tries to find a separating hyperplane by minimizing the distance of misclassified points to the decision boundary.",
+      "paragraph_ids": [19291]
+    },
+    {
+      "name": "stochastic gradient descent",
+      "type": "algorithm",
+      "description": "An optimization method that updates parameters after each observation rather than computing gradients over the entire dataset, used in the perceptron algorithm.",
+      "quote": "The algorithm in fact uses stochastic gradient descent to minimize this piecewise linear criterion. This means that rather than computing the sum of the gradient contributions of each observation followed by a step in the negative gradient direction, a step is taken after each observation is visited.",
+      "paragraph_ids": [19303]
+    },
+    {
+      "name": "optimal separating hyperplane",
+      "type": "method",
+      "description": "The hyperplane that separates two classes while maximizing the margin (minimum distance) to the closest point from either class, providing a unique solution.",
+      "quote": "The optimal separating hyperplane separates the two classes and maximizes the distance to the closest point from either class (Vapnik, 1996).",
+      "paragraph_ids": [19315]
+    },
+    {
+      "name": "margin in classification",
+      "type": "metric",
+      "description": "The width of the empty slab around a decision boundary, equal to 2/||β|| for the optimal separating hyperplane, measuring the separation between classes.",
+      "quote": "In light of (4.40), the constraints define an empty slab or margin around the linear decision boundary of thickness 1/||β||.",
+      "paragraph_ids": [19325]
+    },
+    {
+      "name": "lagrange primal function",
+      "type": "property",
+      "description": "The objective function augmented with Lagrange multipliers for constraints, minimized to solve constrained optimization problems.",
+      "quote": "The Lagrange (primal) function, to be minimized w.r.t. β and β₀, is LP(β,β₀) = (1/2)||β||² − Σᵢαᵢ[yᵢ(xᵢᵀβ + β₀) − 1]",
+      "paragraph_ids": [19327]
+    },
+    {
+      "name": "wolfe dual",
+      "type": "property",
+      "description": "The dual formulation of a constrained optimization problem, obtained by substituting optimality conditions into the Lagrangian, often simpler to solve.",
+      "quote": "and substituting these in (4.49) we obtain the so-called Wolfe dual",
+      "paragraph_ids": [19338]
+    },
+    {
+      "name": "karush-kuhn-tucker conditions",
+      "type": "property",
+      "description": "Necessary conditions for optimality in constrained optimization, relating primal and dual variables and specifying complementary slackness.",
+      "quote": "In addition the solution must satisfy the Karush–Kuhn–Tucker conditions, which include (4.50), (4.51), (4.52)",
+      "paragraph_ids": [19348]
+    },
+    {
+      "name": "support points in separating hyperplanes",
+      "type": "property",
+      "description": "Training points that lie exactly on the margin boundary (where αᵢ > 0), which define the solution vector β in the optimal separating hyperplane.",
+      "quote": "From (4.50) we see that the solution vector β is defined in terms of a linear combination of the support points xᵢ—those points defined to be on the boundary of the slab via αᵢ > 0.",
+      "paragraph_ids": [19353]
+    },
+    {
+      "name": "basis expansion",
+      "type": "technique",
+      "description": "A technique of augmenting or replacing input variables X with transformations hm(X) to create a richer feature space, then fitting linear models in this expanded space.",
+      "quote": "The core idea in this chapter is to augment/replace the vector of inputs X with additional variables, which are transformations of X, and then use linear models in this new space of derived input features.",
+      "paragraph_ids": [19407]
+    },
+    {
+      "name": "piecewise polynomial",
+      "type": "method",
+      "description": "A function obtained by dividing the domain into contiguous intervals and representing the function by a separate polynomial in each interval.",
+      "quote": "A piecewise polynomial function f(X) is obtained by dividing the domain of X into contiguous intervals, and representing f by a separate polynomial in each interval.",
+      "paragraph_ids": [19433]
+    },
+    {
+      "name": "knots in splines",
+      "type": "property",
+      "description": "The boundary points ξ₁, ξ₂, ... where the piecewise polynomial segments join, defining the intervals in piecewise polynomial regression.",
+      "quote": "A piecewise polynomial function f(X) is obtained by dividing the domain of X into contiguous intervals, and representing f by a separate polynomial in each interval.",
+      "paragraph_ids": [19433]
+    },
+    {
+      "name": "continuity constraints in splines",
+      "type": "property",
+      "description": "Linear constraints on parameters ensuring that piecewise polynomial segments connect smoothly at knots, reducing the effective number of parameters.",
+      "quote": "Except in special cases, we would typically prefer the third panel, which is also piecewise linear, but restricted to be continuous at the two knots. These continuity restrictions lead to linear constraints on the parameters",
+      "paragraph_ids": [19435]
+    },
+    {
+      "name": "truncated power basis",
+      "type": "method",
+      "description": "A basis for representing continuous piecewise linear functions using terms like (x − ξ)₊ that are zero below the knot and linear above.",
+      "quote": "A more direct way to proceed in this case is to use a basis that incorporates the constraints: h₁(X) = 1, h₂(X) = X, h₃(X) = (X − ξ₁)₊, h₄(X) = (X − ξ₂)₊",
+      "paragraph_ids": [19437]
+    }
+  ],
+  "relationships": [
+    {
+      "source": "soft-thresholding operator",
+      "target": "lasso",
+      "type": "uses",
+      "quote": "This can be viewed as a univariate lasso problem with response variable the partial residual... This has an explicit solution, resulting in the update... Here S(t, λ) = sign(t)(|t|−λ)+ is the soft-thresholding operator"
+    },
+    {
+      "source": "warm start",
+      "target": "pathwise coordinate descent",
+      "type": "uses",
+      "quote": "Then λ is decreased again and the process is repeated, using the previous solution as a 'warm start' for the new value of λ."
+    },
+    {
+      "source": "cholesky decomposition",
+      "target": "least squares",
+      "type": "uses",
+      "quote": "Least squares fitting is usually done via the Cholesky decomposition of the matrix XT X or a QR decomposition of X."
+    },
+    {
+      "source": "qr decomposition",
+      "target": "cholesky decomposition",
+      "type": "contrasts_with",
+      "quote": "the Cholesky can sometimes be faster; on the other hand, it can be less numerically stable"
+    },
+    {
+      "source": "indicator response matrix",
+      "target": "linear regression of an indicator matrix",
+      "type": "uses",
+      "quote": "Here each of the response categories are coded via an indicator variable... These are collected together in a vector Y = (Y1, . . . , YK), and the N training instances of these form an N × K indicator response matrix Y."
+    },
+    {
+      "source": "masking in classification",
+      "target": "linear regression of an indicator matrix",
+      "type": "property",
+      "quote": "There is a serious problem with the regression approach when the number of classes K ≥ 3, especially prevalent when K is large. Because of the rigid nature of the regression model, classes can be masked by others."
+    },
+    {
+      "source": "linear discriminant analysis",
+      "target": "masking in classification",
+      "type": "contrasts_with",
+      "quote": "With more than two classes, LDA is not the same as linear regression of the class indicator matrix, and it avoids the masking problems associated with that approach"
+    },
+    {
+      "source": "class-conditional density",
+      "target": "bayes theorem",
+      "type": "uses",
+      "quote": "Suppose fk(x) is the class-conditional density of X in class G = k, and let πk be the prior probability of class k, with ΣKk=1 πk = 1. A simple application of Bayes theorem gives us Pr(G = k|X = x) = fk(x)πk / Σℓfℓ(x)πℓ"
+    },
+    {
+      "source": "linear discriminant function",
+      "target": "linear discriminant analysis",
+      "type": "uses",
+      "quote": "From (4.9) we see that the linear discriminant functions δk(x) = x^T Σ^(-1)μk - (1/2)μk^T Σ^(-1)μk + log πk are an equivalent description of the decision rule"
+    },
+    {
+      "source": "quadratic discriminant function",
+      "target": "quadratic discriminant analysis",
+      "type": "uses",
+      "quote": "if the Σk are not assumed to be equal... We then get quadratic discriminant functions (QDA)"
+    },
+    {
+      "source": "regularized discriminant analysis",
+      "target": "linear discriminant analysis",
+      "type": "generalizes",
+      "quote": "Friedman (1989) proposed a compromise between LDA and QDA, which allows one to shrink the separate covariances of QDA toward a common covariance as in LDA."
+    },
+    {
+      "source": "regularized discriminant analysis",
+      "target": "quadratic discriminant analysis",
+      "type": "generalizes",
+      "quote": "These methods are very similar in flavor to ridge regression. The regularized covariance matrices have the form Σ̂k(α) = αΣ̂k + (1 − α)Σ̂ where Σ̂ is the pooled covariance matrix as used in LDA. Here α ∈ [0, 1] allows a continuum of models between LDA and QDA"
+    },
+    {
+      "source": "sphering the data",
+      "target": "linear discriminant analysis",
+      "type": "uses",
+      "quote": "In light of the computational steps outlined above, the LDA classifier can be implemented by the following pair of steps: Sphere the data with respect to the common covariance estimate Σ̂"
+    },
+    {
+      "source": "reduced-rank lda",
+      "target": "linear discriminant analysis",
+      "type": "special_case_of",
+      "quote": "The K centroids in p-dimensional input space lie in an affine subspace of dimension ≤ K − 1, and if p is much larger than K, this will be a considerable drop in dimension."
+    },
+    {
+      "source": "fisher's linear discriminant",
+      "target": "reduced-rank lda",
+      "type": "equivalent_to",
+      "quote": "This decomposition is identical to the decomposition due to Fisher."
+    },
+    {
+      "source": "rayleigh quotient",
+      "target": "fisher's linear discriminant",
+      "type": "uses",
+      "quote": "Fisher's problem therefore amounts to maximizing the Rayleigh quotient, max_a a^T Ba / a^T Wa"
+    },
+    {
+      "source": "discriminant coordinates",
+      "target": "canonical variates",
+      "type": "equivalent_to",
+      "quote": "The aℓ are referred to as discriminant coordinates, not to be confused with discriminant functions. They are also referred to as canonical variates"
+    },
+    {
+      "source": "between-class covariance",
+      "target": "fisher's linear discriminant",
+      "type": "uses",
+      "quote": "The between-class variance is the variance of the class means of Z, and the within-class variance is the pooled variance about the means."
+    },
+    {
+      "source": "within-class covariance",
+      "target": "fisher's linear discriminant",
+      "type": "uses",
+      "quote": "The between-class variance of Z is a^T Ba and the within-class variance a^T Wa, where W is defined earlier"
+    },
+    {
+      "source": "logit transformation",
+      "target": "logistic regression",
+      "type": "uses",
+      "quote": "Here the monotone transformation is the logit transformation: log[p/(1−p)], and in fact we see that log[Pr(G = 1|X = x)/Pr(G = 2|X = x)] = β₀ + β^T x"
+    },
+    {
+      "source": "log-odds",
+      "target": "logit transformation",
+      "type": "equivalent_to",
+      "quote": "The model is specified in terms of K − 1 log-odds or logit transformations"
+    },
+    {
+      "source": "score equations",
+      "target": "maximum likelihood",
+      "type": "uses",
+      "quote": "To maximize the log-likelihood, we set its derivatives to zero. These score equations are ∂ℓ(β)/∂β = X^T(y − p(x;β)) = 0"
+    },
+    {
+      "source": "hessian matrix",
+      "target": "newton-raphson algorithm",
+      "type": "uses",
+      "quote": "To solve the score equations (4.21), we use the Newton–Raphson algorithm, which requires the second-derivative or Hessian matrix"
+    },
+    {
+      "source": "iteratively reweighted least squares",
+      "target": "logistic regression",
+      "type": "uses",
+      "quote": "This algorithm is referred to as iteratively reweighted least squares or IRLS, since each iteration solves the weighted least squares problem"
+    },
+    {
+      "source": "adjusted response in logistic regression",
+      "target": "iteratively reweighted least squares",
+      "type": "uses",
+      "quote": "In the second and third line we have re-expressed the Newton step as a weighted least squares step, with the response z = Xβ^old + W^(-1)(y − p) sometimes known as the adjusted response."
+    },
+    {
+      "source": "wald test",
+      "target": "hypothesis testing",
+      "type": "example_of",
+      "quote": "Each of these correspond formally to a test of the null hypothesis that the coefficient in question is zero, while all the others are not (also known as the Wald test)."
+    },
+    {
+      "source": "residual deviance",
+      "target": "analysis of deviance",
+      "type": "uses",
+      "quote": "The residual deviance of a fitted model is minus twice its log-likelihood, and the deviance between two models is the difference of their individual residual deviances"
+    },
+    {
+      "source": "pearson chi-square statistic",
+      "target": "goodness-of-fit",
+      "type": "uses",
+      "quote": "The weighted residual sum-of-squares is the familiar Pearson chi-square statistic"
+    },
+    {
+      "source": "rao score test",
+      "target": "model building",
+      "type": "uses",
+      "quote": "Popular shortcuts are the Rao score test which tests for inclusion of a term, and the Wald test which can be used to test for exclusion of a term. Neither of these require iterative fitting"
+    },
+    {
+      "source": "l1 regularized logistic regression",
+      "target": "lasso",
+      "type": "generalizes",
+      "quote": "The L1 penalty used in the lasso (Section 3.4.2) can be used for variable selection and shrinkage with any linear regression model. For logistic regression, we would maximize a penalized version"
+    },
+    {
+      "source": "conditional likelihood",
+      "target": "logistic regression",
+      "type": "uses",
+      "quote": "The logistic regression model leaves the marginal density of X as an arbitrary density function Pr(X), and fits the parameters of Pr(G|X) by maximizing the conditional likelihood"
+    },
+    {
+      "source": "joint likelihood in lda",
+      "target": "linear discriminant analysis",
+      "type": "uses",
+      "quote": "With LDA we fit the parameters by maximizing the full log-likelihood, based on the joint density Pr(X, G)"
+    },
+    {
+      "source": "linear discriminant analysis",
+      "target": "logistic regression",
+      "type": "contrasts_with",
+      "quote": "It seems that the models are the same. Although they have exactly the same form, the difference lies in the way the linear coefficients are estimated. The logistic regression model is more general, in that it makes less assumptions."
+    },
+    {
+      "source": "separating hyperplane",
+      "target": "linear discriminant analysis",
+      "type": "contrasts_with",
+      "quote": "We have seen that linear discriminant analysis and logistic regression both estimate linear decision boundaries in similar but slightly different ways. For the rest of this chapter we describe separating hyperplane classifiers."
+    },
+    {
+      "source": "perceptron",
+      "target": "neural networks",
+      "type": "prerequisite",
+      "quote": "Perceptrons set the foundations for the neural network models of the 1980s and 1990s."
+    },
+    {
+      "source": "perceptron learning algorithm",
+      "target": "separating hyperplane",
+      "type": "uses",
+      "quote": "The perceptron learning algorithm tries to find a separating hyperplane by minimizing the distance of misclassified points to the decision boundary."
+    },
+    {
+      "source": "stochastic gradient descent",
+      "target": "perceptron learning algorithm",
+      "type": "uses",
+      "quote": "The algorithm in fact uses stochastic gradient descent to minimize this piecewise linear criterion."
+    },
+    {
+      "source": "optimal separating hyperplane",
+      "target": "support vector machine",
+      "type": "prerequisite",
+      "quote": "These procedures construct linear decision boundaries that explicitly try to separate the data into different classes as well as possible. They provide the basis for support vector classifiers, discussed in Chapter 12."
+    },
+    {
+      "source": "margin in classification",
+      "target": "optimal separating hyperplane",
+      "type": "uses",
+      "quote": "the optimal separating hyperplane separates the two classes and maximizes the distance to the closest point from either class... by maximizing the margin between the two classes on the training data"
+    },
+    {
+      "source": "lagrange primal function",
+      "target": "constrained optimization",
+      "type": "uses",
+      "quote": "The Lagrange (primal) function, to be minimized w.r.t. β and β₀, is LP(β,β₀) = (1/2)||β||² − Σᵢαᵢ[yᵢ(xᵢᵀβ + β₀) − 1]"
+    },
+    {
+      "source": "wolfe dual",
+      "target": "optimal separating hyperplane",
+      "type": "uses",
+      "quote": "and substituting these in (4.49) we obtain the so-called Wolfe dual... The solution is obtained by maximizing LD in the positive orthant"
+    },
+    {
+      "source": "karush-kuhn-tucker conditions",
+      "target": "optimal separating hyperplane",
+      "type": "uses",
+      "quote": "In addition the solution must satisfy the Karush–Kuhn–Tucker conditions"
+    },
+    {
+      "source": "support points in separating hyperplanes",
+      "target": "optimal separating hyperplane",
+      "type": "uses",
+      "quote": "From (4.50) we see that the solution vector β is defined in terms of a linear combination of the support points xᵢ—those points defined to be on the boundary of the slab via αᵢ > 0."
+    },
+    {
+      "source": "optimal separating hyperplane",
+      "target": "logistic regression",
+      "type": "contrasts_with",
+      "quote": "Included in Figure 4.16 is the logistic regression solution to this problem, fit by maximum likelihood. Both solutions are similar in this case."
+    },
+    {
+      "source": "basis expansion",
+      "target": "linear regression",
+      "type": "generalizes",
+      "quote": "The core idea in this chapter is to augment/replace the vector of inputs X with additional variables, which are transformations of X, and then use linear models in this new space of derived input features."
+    },
+    {
+      "source": "piecewise polynomial",
+      "target": "splines",
+      "type": "prerequisite",
+      "quote": "A piecewise polynomial function f(X) is obtained by dividing the domain of X into contiguous intervals, and representing f by a separate polynomial in each interval."
+    },
+    {
+      "source": "continuity constraints in splines",
+      "target": "piecewise polynomial",
+      "type": "uses",
+      "quote": "we would typically prefer the third panel, which is also piecewise linear, but restricted to be continuous at the two knots. These continuity restrictions lead to linear constraints on the parameters"
+    },
+    {
+      "source": "truncated power basis",
+      "target": "piecewise polynomial",
+      "type": "uses",
+      "quote": "A more direct way to proceed in this case is to use a basis that incorporates the constraints: h₁(X) = 1, h₂(X) = X, h₃(X) = (X − ξ₁)₊, h₄(X) = (X − ξ₂)₊"
+    }
+  ]
+}

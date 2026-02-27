@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ridge Regression — ESL 3.4.1</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #0d1117;
+      --surface: #161b22;
+      --surf2:   #1f2937;
+      --border:  #30363d;
+      --text:    #e6edf3;
+      --muted:   #8b949e;
+      --accent:  #58a6ff;
+      --accent2: #bc8cff;
+      --green:   #3fb950;
+      --red:     #f85149;
+      --yellow:  #d29922;
+      --radius:  10px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    /* ── Header ── */
+    .page-header {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 60%, #1a1f2e 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 40px 22px;
+    }
+    .breadcrumb { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .breadcrumb span { color: var(--accent); }
+    .concept-title {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #58a6ff, #bc8cff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .badges { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 8px; }
+    .badge {
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .badge.cat { border-color: var(--accent); color: var(--accent); }
+    .concept-desc { font-size: 14px; color: var(--muted); max-width: 700px; }
+    /* ── Layout ── */
+    .content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 30px 40px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+    .card-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+    .card-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    /* ── Benefits / Tradeoffs two-col ── */
+    .bt-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 700px) { .bt-grid { grid-template-columns: 1fr; } }
+    .bt-col { }
+    .bt-col-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .bt-col-title.ben { color: var(--green); }
+    .bt-col-title.tra { color: var(--red); }
+    .bt-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .bt-list li {
+      display: flex; gap: 10px; font-size: 13px; color: var(--muted); align-items: flex-start;
+    }
+    .bt-list li .dot {
+      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 6px;
+    }
+    .bt-list li .dot.g { background: var(--green); }
+    .bt-list li .dot.r { background: var(--red); }
+    .book-quote {
+      margin-top: 20px;
+      padding: 14px 18px;
+      background: var(--surf2);
+      border-left: 3px solid var(--accent2);
+      border-radius: 6px;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .book-quote cite { display: block; margin-top: 6px; font-style: normal; font-size: 12px; color: var(--accent2); }
+    /* ── Controls ── */
+    .ctrl-row {
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px;
+    }
+    .ctrl-lbl { font-size: 13px; color: var(--muted); min-width: 100px; }
+    input[type=range] {
+      -webkit-appearance: none; appearance: none;
+      width: 240px; height: 4px; border-radius: 2px;
+      background: var(--border); outline: none; cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 15px; height: 15px; border-radius: 50%;
+      background: var(--accent); cursor: pointer;
+      box-shadow: 0 0 6px rgba(88,166,255,0.5);
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 15px; height: 15px; border-radius: 50%;
+      background: var(--accent); cursor: pointer; border: none;
+    }
+    .vbadge {
+      background: var(--surf2); border: 1px solid var(--accent);
+      border-radius: 6px; padding: 3px 12px;
+      font-size: 13px; font-family: monospace; color: var(--accent);
+      min-width: 70px; text-align: center;
+    }
+    /* ── Stats row ── */
+    .stats-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+    .stat-chip {
+      background: var(--surf2); border: 1px solid var(--border);
+      border-radius: 7px; padding: 6px 14px; font-size: 13px; color: var(--muted);
+    }
+    .stat-chip strong { color: var(--text); font-family: monospace; }
+    /* ── Two-col ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } }
+    @media (max-width: 700px) { .prior-triptych { grid-template-columns: 1fr !important; } }
+    /* ── Plot ── */
+    .plot-wrap { border-radius: 7px; overflow: hidden; background: var(--bg); }
+    /* ── Toggle buttons ── */
+    .btn {
+      background: var(--surf2); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); cursor: pointer;
+      font-size: 13px; padding: 6px 14px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .btn:hover { border-color: var(--accent); background: rgba(88,166,255,0.08); }
+    .btn.active { border-color: var(--accent); background: rgba(88,166,255,0.14); color: var(--accent); }
+    /* ── Guarantees panel ── */
+    .guar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 16px; }
+    .guar-card {
+      background: var(--surf2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px 18px;
+    }
+    .guar-head { display: flex; align-items: center; margin-bottom: 8px; }
+    .guar-dot { width: 9px; height: 9px; border-radius: 50%; margin-right: 9px; flex-shrink: 0; }
+    .guar-dot.g { background: var(--green); box-shadow: 0 0 5px var(--green); }
+    .guar-dot.r { background: var(--red);   box-shadow: 0 0 5px var(--red); }
+    .guar-name { font-weight: 600; font-size: 14px; }
+    .guar-verdict { margin-left: auto; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+    .guar-verdict.g { color: var(--green); }
+    .guar-verdict.r { color: var(--red); }
+    .guar-body { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    /* ── Formula section ── */
+    .formula-block {
+      background: var(--surf2); border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius); padding: 20px 24px;
+      overflow-x: auto;
+    }
+    .formula-block p { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.7; }
+    /* ── Section label ── */
+    .slbl {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
+    }
+    .slbl::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="page-header">
+  <div class="breadcrumb">ESL &nbsp;/&nbsp; <span>Chapter 3</span> &nbsp;/&nbsp; Section 3.4.1 &nbsp;&nbsp;|&nbsp;&nbsp; Concept 147</div>
+  <h1 class="concept-title">Ridge Regression</h1>
+  <div class="badges">
+    <span class="badge cat">comparison / selection</span>
+    <span class="badge">Section 3.4.1</span>
+    <span class="badge">L2 Regularization</span>
+  </div>
+  <p class="concept-desc">Shrinks coefficients toward zero via L2 penalty, trading bias for lower variance.</p>
+</header>
+
+<!-- ═══ MAIN ═══ -->
+<main class="content">
+
+  <!-- ─── 1. BENEFITS & TRADEOFFS ─── -->
+  <div class="card">
+    <div class="card-title">Benefits &amp; Tradeoffs</div>
+    <div class="bt-grid">
+      <div class="bt-col">
+        <div class="bt-col-title ben">Benefits</div>
+        <ul class="bt-list">
+          <li><span class="dot g"></span><span>"Ridge regression shrinks the regression coefficients by imposing a penalty on their size" — trades bias for substantially lower variance <em>(ESL §3.4.1)</em></span></li>
+          <li><span class="dot g"></span><span>Shrinks principal components with small eigenvalues most aggressively — "directions in which the data have low variance are shrunk the most" <em>(ESL §3.4.1)</em></span></li>
+          <li><span class="dot g"></span><span>Equivalent to Bayesian posterior mode with Gaussian prior: "the ridge estimate is the mode of the posterior distribution" <em>(ESL §3.4.1)</em></span></li>
+          <li><span class="dot g"></span><span>Always has a unique closed-form solution: β̂ = (XᵀX + λI)⁻¹Xᵀy</span></li>
+          <li><span class="dot g"></span><span>Handles collinearity (rank deficiency) — λI regularizes XᵀX, ensuring invertibility</span></li>
+        </ul>
+      </div>
+      <div class="bt-col">
+        <div class="bt-col-title tra">Tradeoffs</div>
+        <ul class="bt-list">
+          <li><span class="dot r"></span><span>"The restriction to unbiased estimates is not necessarily a wise one" — biased but can have lower MSE <em>(ESL §3.2.2)</em></span></li>
+          <li><span class="dot r"></span><span>Never zeros out coefficients — "ridge regression doesn't set coefficients exactly to zero" <em>(ESL §3.4.2)</em></span></li>
+          <li><span class="dot r"></span><span>All predictors remain in the model, reducing interpretability</span></li>
+          <li><span class="dot r"></span><span>Requires choosing λ via cross-validation or analytical criterion</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="book-quote">
+      "Ridge regression shrinks the regression coefficients by imposing a penalty on their size.
+      The ridge coefficients minimize a penalized residual sum of squares."
+      <cite>— The Elements of Statistical Learning, Hastie, Tibshirani &amp; Friedman</cite>
+    </div>
+  </div>
+
+  <!-- ─── 2. VIZ 1: Simple 2D Regression ─── -->
+  <div class="card">
+    <div class="card-title">Viz 1: Coefficient Shrinkage — 2D Regression</div>
+    <div class="card-sub">
+      Adjust λ. The Ridge line (blue, solid) shrinks toward flat as λ increases. OLS line (green, dashed) stays fixed.
+    </div>
+
+    <div class="ctrl-row">
+      <span class="ctrl-lbl">λ:</span>
+      <input type="range" id="sl1" min="0" max="100" value="0" step="1" />
+      <span class="vbadge" id="sl1val">0.00</span>
+    </div>
+
+    <div class="plot-wrap" id="plot2d" style="height:340px;"></div>
+
+    <div class="stats-row">
+      <div class="stat-chip">β̂₁ = <strong id="b1disp">—</strong></div>
+      <div class="stat-chip">β̂₂ = <strong id="b2disp">—</strong></div>
+      <div class="stat-chip">‖β̂‖² = <strong id="normdisp">—</strong></div>
+      <div class="stat-chip">Train RSS = <strong id="rssdisp">—</strong></div>
+    </div>
+  </div>
+
+  <!-- ─── 3. VIZ 2: 3D Loss Landscape ─── -->
+  <div class="card">
+    <div class="card-title">Viz 2: 3D Loss Landscape</div>
+    <div class="card-sub">
+      The L2 penalty reshapes the RSS bowl, pulling the minimum (red dot) toward the origin as λ grows.
+    </div>
+
+    <div class="ctrl-row">
+      <span class="ctrl-lbl">λ:</span>
+      <input type="range" id="sl3d" min="0" max="80" value="20" step="1" />
+      <span class="vbadge" id="sl3dval">20</span>
+    </div>
+
+    <div class="plot-wrap" id="plot3d" style="height:460px;"></div>
+  </div>
+
+  <!-- ─── 4. VIZ 3: How the Prior Reshapes the Landscape ─── -->
+  <div class="card">
+    <div class="card-title">Viz 3: How the Prior Reshapes the Landscape</div>
+    <div class="card-sub">
+      When data is weak (noisy / collinear), the likelihood surface is <strong>flat</strong> — it cannot locate β.
+      The Gaussian prior N(0, 1/λ) acts like a gravity well at the origin, literally sucking the flat surface down into a bowl.
+      <br>
+      <strong>Likelihood</strong> (data) + <strong>Prior</strong> N(0, 1/λ) = <strong>Posterior</strong> (ridge solution).
+    </div>
+
+    <div class="ctrl-row">
+      <span class="ctrl-lbl">Data signal:</span>
+      <input type="range" id="slSignal" min="0" max="100" value="5" step="1" />
+      <span class="vbadge" id="slSignalVal">0.05</span>
+      <span style="font-size:12px; color:var(--muted); margin-left:4px;">← flat (no data) &nbsp;&nbsp; peaked (strong signal) →</span>
+    </div>
+
+    <div class="ctrl-row">
+      <span class="ctrl-lbl">λ (prior):</span>
+      <input type="range" id="slPrior" min="0" max="100" value="30" step="1" />
+      <span class="vbadge" id="slPriorVal">3.00</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+      <div style="text-align:center;">
+        <div class="slbl">Likelihood (data)</div>
+        <div class="plot-wrap" id="plotPriorL" style="height:400px;"></div>
+      </div>
+      <div style="text-align:center;">
+        <div class="slbl">Prior N(0, 1/λ)</div>
+        <div class="plot-wrap" id="plotPriorP" style="height:400px;"></div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-bottom:10px;">
+      <div class="slbl">= Posterior (sum)</div>
+      <div class="plot-wrap" id="plotPriorPost" style="height:420px; max-width:600px; margin:0 auto;"></div>
+    </div>
+
+    <p style="margin-top:12px; font-size:13px; color:var(--muted);">
+      At low data signal, the likelihood is nearly flat — any β is roughly equally good.
+      The prior $\lambda(\beta_1^2 + \beta_2^2)$ creates the <em>only</em> structure in the posterior, forming a bowl at the origin.
+      As data signal increases, the likelihood develops its own minimum, and the prior merely nudges it toward zero.
+      This is exactly why ridge regression = Bayesian MAP with Gaussian prior.
+    </p>
+  </div>
+
+  <!-- ─── 5. VIZ 4: Bayesian Contour ─── -->
+  <div class="card">
+    <div class="card-title">Viz 4: Constraint Geometry — ESL Fig 3.11 Style</div>
+    <div class="card-sub">
+      Elliptical RSS contours centered at OLS estimate. Circular L2 ball centered at origin. Ridge solution = tangent point.
+    </div>
+
+    <div class="ctrl-row">
+      <span class="ctrl-lbl">Radius t:</span>
+      <input type="range" id="slctr" min="5" max="95" value="40" step="1" />
+      <span class="vbadge" id="slctrval">t = 0.88</span>
+    </div>
+
+    <div class="plot-wrap" id="plotCtr" style="height:420px;"></div>
+
+    <p style="margin-top:12px; font-size:13px; color:var(--muted);">
+      The OLS estimate $\hat{\beta}^{OLS}$ sits at the unconstrained minimum.
+      Ridge constrains $\|\beta\|^2 \le t^2$. As λ → ∞ (t → 0) the solution collapses to the origin.
+    </p>
+  </div>
+
+  <!-- ─── 6. VIZ 5: Degrees of Freedom ─── -->
+  <div class="card">
+    <div class="card-title">Viz 5: Effective Degrees of Freedom df(λ)</div>
+    <div class="card-sub">
+      $$\text{df}(\lambda) = \sum_{j=1}^{p} \frac{d_j^2}{d_j^2 + \lambda}$$
+      Drag to trace the curve. df = p at λ = 0 (full OLS), df → 0 as λ → ∞.
+    </div>
+
+    <div class="ctrl-row">
+      <span class="ctrl-lbl">λ:</span>
+      <input type="range" id="sldf" min="0" max="100" value="0" step="1" />
+      <span class="vbadge" id="sldfval">0.00</span>
+    </div>
+
+    <div class="plot-wrap" id="plotDF" style="height:300px;"></div>
+
+    <div style="margin-top:10px; font-size:13px; color:var(--muted);">
+      At λ = <strong id="dflamval" style="color:var(--accent); font-family:monospace;">0.00</strong>,
+      effective df = <strong id="dfcurval" style="color:var(--accent); font-family:monospace;">—</strong>
+      out of <strong id="dfmaxval" style="color:var(--text);">p</strong> predictors.
+      Complexity retained: <strong id="dfpct" style="color:var(--accent); font-family:monospace;">—</strong>%
+    </div>
+  </div>
+
+  <!-- ─── 7. GUARANTEES PANEL ─── -->
+  <div class="card">
+    <div class="card-title">Statistical Guarantees</div>
+    <div class="card-sub" style="margin-bottom:16px;">Key theoretical properties from ESL Chapter 3.</div>
+    <div class="guar-grid">
+
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot r"></span>
+          <span class="guar-name">Unbiased?</span>
+          <span class="guar-verdict r">NO</span>
+        </div>
+        <div class="guar-body">
+          Introduces bias proportional to λ. "The restriction to unbiased estimates is not necessarily a wise one."
+        </div>
+      </div>
+
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Consistent?</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">
+          Under standard conditions, consistent as N → ∞ provided λ/N → 0. Bias vanishes asymptotically.
+        </div>
+      </div>
+
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Lower Prediction MSE?</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">
+          Trades bias for variance; often improves total MSE = Bias² + Var vs OLS, especially under collinearity.
+        </div>
+      </div>
+
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Low Variance?</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">
+          "Ridge regression shrinks the coefficients of the principal components, shrinking more depending on the size of the corresponding eigenvalue."
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── 8. FORMULA SECTION ─── -->
+  <div class="card">
+    <div class="card-title">Formulas</div>
+    <div class="formula-block">
+      <div>$$\hat{\beta}^{\text{ridge}} = \arg\min_{\beta} \left\{ \sum_{i=1}^{N}\!\left(y_i - \beta_0 - \sum_{j=1}^{p} x_{ij}\beta_j\right)^{\!2} + \lambda\sum_{j=1}^{p}\beta_j^2 \right\}$$</div>
+      <p><strong style="color:var(--text);">Closed form:</strong> $\hat{\beta} = (X^TX + \lambda I)^{-1}X^Ty$</p>
+      <p><strong style="color:var(--text);">SVD form:</strong> $X\hat{\beta}^{\text{ridge}} = \displaystyle\sum_{j} u_j \frac{d_j^2}{d_j^2+\lambda} u_j^T y$</p>
+      <p style="color:var(--muted);">Each principal component $u_j$ is shrunk by factor $d_j^2/(d_j^2+\lambda)$. Directions with small singular values $d_j$ are shrunk most aggressively.</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══ JAVASCRIPT ═══ -->
+<script>
+// ───────────────────────────────────────────────
+// PRNG — LCG + Box-Muller (exact spec pattern)
+// ───────────────────────────────────────────────
+function lcg(seed) {
+  let s = seed;
+  return function() { s = (s * 1664525 + 1013904223) & 0x7fffffff; return s / 0x7fffffff; };
+}
+function boxMuller(rng) {
+  return function() {
+    let u = rng(), v = rng();
+    while (u === 0) u = rng();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  };
+}
+const rand = boxMuller(lcg(42));
+
+// ───────────────────────────────────────────────
+// DATA GENERATION — seed=42, N=50
+// y = 2.5*x1 + 1.8*x2 + 0.3 + noise
+// ───────────────────────────────────────────────
+var N = 50;
+var X1 = [], X2 = [], Y = [];
+for (var i = 0; i < N; i++) {
+  var x1 = rand();
+  // x2 correlated with x1
+  var x2 = 0.7 * rand() + 0.3 * x1;
+  var noise = rand() * 0.5;
+  X1.push(x1);
+  X2.push(x2);
+  Y.push(2.5 * x1 + 1.8 * x2 + 0.3 + noise);
+}
+
+// Center predictors
+var mX1 = X1.reduce(function(a,b){return a+b;},0)/N;
+var mX2 = X2.reduce(function(a,b){return a+b;},0)/N;
+var mY  = Y.reduce(function(a,b){return a+b;},0)/N;
+var cx1 = X1.map(function(x){return x-mX1;});
+var cx2 = X2.map(function(x){return x-mX2;});
+var cy  = Y.map(function(y){return y-mY;});
+
+// ───────────────────────────────────────────────
+// RIDGE SOLVE (exact spec pattern)
+// ───────────────────────────────────────────────
+function ridgeSolve(X1arr, X2arr, Yarr, lambda) {
+  var a11=0, a12=0, a22=0, b1=0, b2=0;
+  for (var i=0; i<X1arr.length; i++) {
+    a11 += X1arr[i]*X1arr[i];
+    a12 += X1arr[i]*X2arr[i];
+    a22 += X2arr[i]*X2arr[i];
+    b1  += X1arr[i]*Yarr[i];
+    b2  += X2arr[i]*Yarr[i];
+  }
+  a11 += lambda; a22 += lambda;
+  var det = a11*a22 - a12*a12;
+  return [(a22*b1 - a12*b2)/det, (a11*b2 - a12*b1)/det];
+}
+
+// ───────────────────────────────────────────────
+// COMMON PLOTLY THEME
+// ───────────────────────────────────────────────
+var THEME = {
+  paper_bgcolor: '#0d1117',
+  plot_bgcolor:  '#161b22',
+  font: { color: '#e6edf3', family: 'Segoe UI, system-ui, sans-serif', size: 12 }
+};
+
+// ───────────────────────────────────────────────
+// SLIDER → λ mapping  (0–100 → 0–100 linear)
+// ───────────────────────────────────────────────
+function slToLam(v) { return v; }  // linear: slider value IS lambda
+
+// ───────────────────────────────────────────────
+// VIZ 1: SIMPLE 2D SCATTER + REGRESSION LINE
+// ───────────────────────────────────────────────
+var olsCoef = ridgeSolve(cx1, cx2, cy, 0);
+var olsB1   = olsCoef[0];
+var olsB2   = olsCoef[1];
+
+// Sort cx1 for line drawing
+var sortIdx = cx1.map(function(v,i){return [v,i];}).sort(function(a,b){return a[0]-b[0];}).map(function(x){return x[1];});
+var sortedCX1 = sortIdx.map(function(i){return cx1[i];});
+
+var layout2d = {
+  paper_bgcolor: '#0d1117',
+  plot_bgcolor:  '#161b22',
+  font: { color: '#e6edf3', family: 'Segoe UI, system-ui, sans-serif', size: 12 },
+  margin: { l:50, r:20, t:20, b:50 },
+  xaxis: { title: 'x₁ (centered)', gridcolor: '#30363d', zerolinecolor: '#484f58' },
+  yaxis: { title: 'y (centered)',   gridcolor: '#30363d', zerolinecolor: '#484f58' },
+  legend: { x:0.02, y:0.98, bgcolor: 'rgba(22,27,34,0.85)' },
+  showlegend: true
+};
+
+// OLS line y-values (static)
+var olsLine = sortedCX1.map(function(x){ return olsB1*x; });
+// Initial ridge line (same as OLS at λ=0)
+var ridgeLine = sortedCX1.map(function(x){ return olsB1*x; });
+
+Plotly.newPlot('plot2d', [
+  { x: cx1, y: cy, mode: 'markers',
+    marker: { color: 'rgba(255,255,255,0.5)', size: 5 }, name: 'Data', type: 'scatter' },
+  { x: sortedCX1, y: olsLine,   mode: 'lines',
+    line: { color: '#3fb950', width: 2, dash: 'dash' }, name: 'OLS', type: 'scatter' },
+  { x: sortedCX1, y: ridgeLine, mode: 'lines',
+    line: { color: '#58a6ff', width: 3 }, name: 'Ridge', type: 'scatter' }
+], layout2d, { responsive: true, displayModeBar: false });
+
+function update2d(lambda) {
+  var coef = ridgeSolve(cx1, cx2, cy, lambda);
+  var b1 = coef[0], b2 = coef[1];
+  var yRidge = sortedCX1.map(function(x){ return b1*x; });
+
+  Plotly.react('plot2d', [
+    { x: cx1, y: cy, mode: 'markers',
+      marker: { color: 'rgba(255,255,255,0.5)', size: 5 }, name: 'Data', type: 'scatter' },
+    { x: sortedCX1, y: olsLine, mode: 'lines',
+      line: { color: '#3fb950', width: 2, dash: 'dash' }, name: 'OLS', type: 'scatter' },
+    { x: sortedCX1, y: yRidge,  mode: 'lines',
+      line: { color: '#58a6ff', width: 3 }, name: 'Ridge', type: 'scatter' }
+  ], layout2d, { responsive: true });
+
+  // Stats
+  var norm2 = b1*b1 + b2*b2;
+  var rss = 0;
+  for (var i=0; i<N; i++) {
+    var resid = cy[i] - b1*cx1[i] - b2*cx2[i];
+    rss += resid*resid;
+  }
+  document.getElementById('b1disp').textContent   = b1.toFixed(4);
+  document.getElementById('b2disp').textContent   = b2.toFixed(4);
+  document.getElementById('normdisp').textContent = norm2.toFixed(4);
+  document.getElementById('rssdisp').textContent  = rss.toFixed(4);
+}
+
+document.getElementById('sl1').addEventListener('input', function() {
+  var lam = slToLam(+this.value);
+  document.getElementById('sl1val').textContent = lam.toFixed(2);
+  update2d(lam);
+});
+update2d(0);
+
+// ───────────────────────────────────────────────
+// VIZ 2: 3D LOSS LANDSCAPE (exact spec pattern)
+// ───────────────────────────────────────────────
+var GRID = 40;
+var B_RANGE = 4;
+
+// Build grid axes once
+var b1arr = [], b2arr = [];
+for (var gi=0; gi<GRID; gi++) {
+  b1arr.push(-B_RANGE + 2*B_RANGE*gi/(GRID-1));
+  b2arr.push(-B_RANGE + 2*B_RANGE*gi/(GRID-1));
+}
+
+function computeSurface(b1grid, b2grid, lambda, showPenalty) {
+  var z = [];
+  for (var i=0; i<b2grid.length; i++) {
+    var row = [];
+    for (var j=0; j<b1grid.length; j++) {
+      var rss = 0;
+      for (var k=0; k<N; k++) {
+        var resid = cy[k] - b1grid[j]*cx1[k] - b2grid[i]*cx2[k];
+        rss += resid*resid;
+      }
+      var penalty = showPenalty ? lambda*(b1grid[j]*b1grid[j]+b2grid[i]*b2grid[i]) : 0;
+      row.push((rss + penalty)/N);
+    }
+    z.push(row);
+  }
+  return z;
+}
+
+// Precompute max z across all lambda values so axes never change
+var maxZ2d = 0;
+for (var li2 = 0; li2 <= 80; li2 += 5) {
+  var tmpZ = computeSurface(b1arr, b2arr, li2, true);
+  for (var ri = 0; ri < tmpZ.length; ri++) {
+    for (var ci = 0; ci < tmpZ[ri].length; ci++) {
+      if (tmpZ[ri][ci] > maxZ2d) maxZ2d = tmpZ[ri][ci];
+    }
+  }
+}
+
+// Initial render
+var initLam2 = +document.getElementById('sl3d').value;
+var initZZ = computeSurface(b1arr, b2arr, initLam2, true);
+var initCoef2 = ridgeSolve(cx1, cx2, cy, initLam2);
+var initMB1 = initCoef2[0], initMB2 = initCoef2[1];
+var initMinRSS2 = 0;
+for (var k2=0; k2<N; k2++) { var r2 = cy[k2] - initMB1*cx1[k2] - initMB2*cx2[k2]; initMinRSS2 += r2*r2; }
+var initMinZ2 = (initMinRSS2 + initLam2*(initMB1*initMB1+initMB2*initMB2)) / N;
+
+Plotly.newPlot('plot3d', [
+  {
+    type: 'surface', x: b1arr, y: b2arr, z: initZZ,
+    colorscale: [[0,'#0d1b2a'],[0.25,'#0a3d6b'],[0.5,'#1a7a8a'],[0.75,'#58a6ff'],[1,'#e6edf3']],
+    opacity: 0.88, showscale: false,
+    contours: { z: { show: true, usecolormap: true, project: { z: false } } }
+  },
+  {
+    type: 'scatter3d', x: [initMB1], y: [initMB2], z: [initMinZ2],
+    mode: 'markers+text',
+    text: ['Ridge'],
+    textposition: 'top center',
+    marker: { color: '#f85149', size: 8 },
+    textfont: { color: '#f85149', size: 12 }
+  }
+], {
+  paper_bgcolor: '#0d1117',
+  plot_bgcolor:  '#0d1117',
+  font: { color: '#e6edf3', family: 'Segoe UI, system-ui, sans-serif', size: 11 },
+  margin: { l:0, r:0, t:20, b:0 },
+  scene: {
+    xaxis: { title: '\u03B2\u2081', gridcolor: '#30363d', backgroundcolor: '#161b22', color: '#8b949e', range: [-B_RANGE, B_RANGE], autorange: false },
+    yaxis: { title: '\u03B2\u2082', gridcolor: '#30363d', backgroundcolor: '#161b22', color: '#8b949e', range: [-B_RANGE, B_RANGE], autorange: false },
+    zaxis: { title: 'RSS + \u03BB\u2016\u03B2\u2016\u00B2', gridcolor: '#30363d', backgroundcolor: '#0d1117', color: '#8b949e', range: [0, maxZ2d], autorange: false },
+    bgcolor: '#0d1117',
+    camera: { eye: { x: 1.6, y: 1.6, z: 1.2 } }
+  }
+}, { responsive: true, displayModeBar: false });
+
+// Update: restyle only, never touch layout
+function update3d() {
+  var lam = +document.getElementById('sl3d').value;
+  document.getElementById('sl3dval').textContent = lam;
+  var zz = computeSurface(b1arr, b2arr, lam, true);
+
+  var minCoef = ridgeSolve(cx1, cx2, cy, lam);
+  var mB1 = minCoef[0], mB2 = minCoef[1];
+  var minRSS = 0;
+  for (var k=0; k<N; k++) { var r = cy[k] - mB1*cx1[k] - mB2*cx2[k]; minRSS += r*r; }
+  var minZ = (minRSS + lam*(mB1*mB1+mB2*mB2)) / N;
+
+  Plotly.restyle('plot3d', { z: [zz] }, [0]);
+  Plotly.restyle('plot3d', { x: [[mB1]], y: [[mB2]], z: [[minZ]] }, [1]);
+}
+
+document.getElementById('sl3d').addEventListener('input', update3d);
+
+// ───────────────────────────────────────────────
+// VIZ 3: HOW THE PRIOR RESHAPES THE LANDSCAPE
+// ───────────────────────────────────────────────
+(function() {
+  var PG = 35;  // grid resolution
+  var PR = 4;   // beta range
+
+  var pb1 = [], pb2 = [];
+  for (var i = 0; i < PG; i++) {
+    pb1.push(-PR + 2 * PR * i / (PG - 1));
+    pb2.push(-PR + 2 * PR * i / (PG - 1));
+  }
+
+  // Shared 3D layout factory — ALL axes fixed, aspect locked
+  function priorLayout(titleZ, zRange) {
+    return {
+      paper_bgcolor: '#0d1117',
+      plot_bgcolor:  '#0d1117',
+      font: { color: '#e6edf3', family: 'Segoe UI, system-ui, sans-serif', size: 10 },
+      margin: { l: 0, r: 0, t: 10, b: 0 },
+      scene: {
+        xaxis: { title: 'b1', gridcolor: '#30363d', backgroundcolor: '#161b22', color: '#8b949e', showticklabels: false, range: [-PR, PR], autorange: false },
+        yaxis: { title: 'b2', gridcolor: '#30363d', backgroundcolor: '#161b22', color: '#8b949e', showticklabels: false, range: [-PR, PR], autorange: false },
+        zaxis: { title: titleZ, gridcolor: '#30363d', backgroundcolor: '#0d1117', color: '#8b949e', range: zRange, autorange: false },
+        bgcolor: '#0d1117',
+        aspectmode: 'cube',
+        camera: { eye: { x: 1.5, y: 1.5, z: 1.1 } }
+      }
+    };
+  }
+
+  function computeLikelihood(signal) {
+    // signal: 0 to 1. Controls how much the RSS surface "cares" about beta.
+    // At signal=0: surface is flat. At signal=1: full RSS from the data.
+    var z = [];
+    for (var i = 0; i < PG; i++) {
+      var row = [];
+      for (var j = 0; j < PG; j++) {
+        var rss = 0;
+        for (var k = 0; k < N; k++) {
+          var resid = cy[k] - pb1[j] * cx1[k] - pb2[i] * cx2[k];
+          rss += resid * resid;
+        }
+        // Scale by signal: at 0 signal, everything becomes the same constant
+        row.push(signal * rss / N);
+      }
+      z.push(row);
+    }
+    return z;
+  }
+
+  function computePrior(lambda) {
+    var z = [];
+    for (var i = 0; i < PG; i++) {
+      var row = [];
+      for (var j = 0; j < PG; j++) {
+        row.push(lambda * (pb1[j] * pb1[j] + pb2[i] * pb2[i]) / N);
+      }
+      z.push(row);
+    }
+    return z;
+  }
+
+  function addSurfaces(z1, z2) {
+    var z = [];
+    for (var i = 0; i < z1.length; i++) {
+      var row = [];
+      for (var j = 0; j < z1[i].length; j++) {
+        row.push(z1[i][j] + z2[i][j]);
+      }
+      z.push(row);
+    }
+    return z;
+  }
+
+  function findMin(z) {
+    var minV = Infinity, minI = 0, minJ = 0;
+    for (var i = 0; i < z.length; i++) {
+      for (var j = 0; j < z[i].length; j++) {
+        if (z[i][j] < minV) { minV = z[i][j]; minI = i; minJ = j; }
+      }
+    }
+    return { b1: pb1[minJ], b2: pb2[minI], z: minV };
+  }
+
+  // Compute global zmax for normalization across panels
+  function getZMax(z) {
+    var mx = -Infinity;
+    for (var i = 0; i < z.length; i++)
+      for (var j = 0; j < z[i].length; j++)
+        if (z[i][j] > mx) mx = z[i][j];
+    return mx;
+  }
+
+  var likelihoodCS = [[0,'#1a1a2e'],[0.25,'#16213e'],[0.5,'#0f3460'],[0.75,'#58a6ff'],[1,'#e6edf3']];
+  var priorCS      = [[0,'#1a1a2e'],[0.25,'#2d1b4e'],[0.5,'#5b2c8a'],[0.75,'#bc8cff'],[1,'#e6edf3']];
+  var posteriorCS  = [[0,'#0d1b2a'],[0.25,'#0a3d6b'],[0.5,'#1a7a8a'],[0.75,'#58a6ff'],[1,'#e6edf3']];
+
+  // Precompute fixed z-max for likelihood at full signal (scale never changes with lambda)
+  var zLikFullSignal = computeLikelihood(1);
+  var zMaxLikFixed = getZMax(zLikFullSignal);
+  if (zMaxLikFixed < 0.01) zMaxLikFixed = 1;
+
+  // ── Precompute max z-ranges across ALL slider positions ──
+  var maxZLik = 0, maxZPri = 0, maxZPost = 0;
+  for (var si = 0; si <= 100; si += 10) {
+    for (var li = 0; li <= 100; li += 10) {
+      var sig = si / 100, lam = li / 10;
+      var tmpL = computeLikelihood(sig);
+      var tmpP = computePrior(lam);
+      var tmpPost = addSurfaces(tmpL, tmpP);
+      var zl = getZMax(tmpL); if (zl > maxZLik) maxZLik = zl;
+      var zp = getZMax(tmpP); if (zp > maxZPri) maxZPri = zp;
+      var zpo = getZMax(tmpPost); if (zpo > maxZPost) maxZPost = zpo;
+    }
+  }
+  if (maxZLik < 0.01) maxZLik = 1;
+  if (maxZPri < 0.01) maxZPri = 1;
+  if (maxZPost < 0.01) maxZPost = 1;
+
+  // ── Initial render with fully fixed axes ──
+  var initSignal = +document.getElementById('slSignal').value / 100;
+  var initLambda = +document.getElementById('slPrior').value / 10;
+  var initZLik = computeLikelihood(initSignal);
+  var initZPri = computePrior(initLambda);
+  var initZPost = addSurfaces(initZLik, initZPri);
+  var initMinPost = findMin(initZPost);
+
+  Plotly.newPlot('plotPriorL', [{
+    type: 'surface', x: pb1, y: pb2, z: initZLik,
+    colorscale: likelihoodCS, opacity: 0.9, showscale: false,
+    cmin: 0, cmax: maxZLik,
+    contours: { z: { show: true, usecolormap: true, project: { z: false } } }
+  }], priorLayout('-log L', [0, maxZLik]), { responsive: true, displayModeBar: false });
+
+  Plotly.newPlot('plotPriorP', [{
+    type: 'surface', x: pb1, y: pb2, z: initZPri,
+    colorscale: priorCS, opacity: 0.9, showscale: false,
+    cmin: 0, cmax: maxZPri,
+    contours: { z: { show: true, usecolormap: true, project: { z: false } } }
+  }], priorLayout('\u03bb\u00B7||\u03b2||\u00B2', [0, maxZPri]), { responsive: true, displayModeBar: false });
+
+  Plotly.newPlot('plotPriorPost', [
+    {
+      type: 'surface', x: pb1, y: pb2, z: initZPost,
+      colorscale: posteriorCS, opacity: 0.9, showscale: false,
+      cmin: 0, cmax: maxZPost,
+      contours: { z: { show: true, usecolormap: true, project: { z: false } } }
+    },
+    {
+      type: 'scatter3d', x: [initMinPost.b1], y: [initMinPost.b2], z: [initMinPost.z],
+      mode: 'markers+text', text: ['MAP'], textposition: 'top center',
+      marker: { color: '#f85149', size: 7 }, textfont: { color: '#f85149', size: 11 }
+    }
+  ], priorLayout('Posterior', [0, maxZPost]), { responsive: true, displayModeBar: false });
+
+  // ── Slider updates: Plotly.restyle ONLY — never touch layout/scene/camera ──
+  function updatePriorViz() {
+    var signal = +document.getElementById('slSignal').value / 100;
+    var lambda = +document.getElementById('slPrior').value / 10;
+
+    document.getElementById('slSignalVal').textContent = signal.toFixed(2);
+    document.getElementById('slPriorVal').textContent = lambda.toFixed(2);
+
+    var zLik  = computeLikelihood(signal);
+    var zPri  = computePrior(lambda);
+    var zPost = addSurfaces(zLik, zPri);
+    var minPost = findMin(zPost);
+
+    // ONLY restyle — no relayout, no scene.*, camera untouched
+    Plotly.restyle('plotPriorL', { z: [zLik] }, [0]);
+    Plotly.restyle('plotPriorP', { z: [zPri] }, [0]);
+    Plotly.restyle('plotPriorPost', { z: [zPost] }, [0]);
+    Plotly.restyle('plotPriorPost', {
+      x: [[minPost.b1]], y: [[minPost.b2]], z: [[minPost.z]]
+    }, [1]);
+  }
+
+  document.getElementById('slSignal').addEventListener('input', updatePriorViz);
+  document.getElementById('slPrior').addEventListener('input', updatePriorViz);
+})();
+
+// ───────────────────────────────────────────────
+// VIZ 4: CONSTRAINT GEOMETRY CONTOUR (ESL Fig 3.11 style)
+// ───────────────────────────────────────────────
+var CTR_GRID = 80;
+var CTR_RANGE = 2.5;
+
+var ctrB1 = [], ctrB2 = [];
+for (var ci=0; ci<CTR_GRID; ci++) {
+  ctrB1.push(-CTR_RANGE + 2*CTR_RANGE*ci/(CTR_GRID-1));
+  ctrB2.push(-CTR_RANGE + 2*CTR_RANGE*ci/(CTR_GRID-1));
+}
+
+function rssAt(b1, b2) {
+  var s = 0;
+  for (var i=0; i<N; i++) {
+    var r = cy[i] - b1*cx1[i] - b2*cx2[i];
+    s += r*r;
+  }
+  return s;
+}
+
+var rssGrid = ctrB2.map(function(b2) {
+  return ctrB1.map(function(b1) { return rssAt(b1, b2); });
+});
+var minRSSVal = rssAt(olsB1, olsB2);
+
+function drawContour(t) {
+  // Binary search for λ that gives ‖β‖ = t
+  var lo = 0, hi = 1000;
+  for (var iter=0; iter<50; iter++) {
+    var mid = (lo+hi)/2;
+    var coef = ridgeSolve(cx1, cx2, cy, mid);
+    var r2 = coef[0]*coef[0] + coef[1]*coef[1];
+    if (r2 > t*t) lo = mid; else hi = mid;
+  }
+  var lamT = (lo+hi)/2;
+  var rCoef = ridgeSolve(cx1, cx2, cy, lamT);
+  var rB1 = rCoef[0], rB2 = rCoef[1];
+
+  // Circle for L2 ball
+  var CN = 200;
+  var circX = [], circY = [];
+  for (var ci=0; ci<=CN; ci++) {
+    circX.push(t * Math.cos(2*Math.PI*ci/CN));
+    circY.push(t * Math.sin(2*Math.PI*ci/CN));
+  }
+
+  Plotly.react('plotCtr', [
+    {
+      type: 'contour', x: ctrB1, y: ctrB2, z: rssGrid,
+      contours: {
+        coloring: 'lines', showlabels: false,
+        start: minRSSVal + 0.5, end: minRSSVal + 30, size: 3
+      },
+      colorscale: [[0,'#58a6ff'],[1,'#bc8cff']],
+      showscale: false, line: { width: 1.5 },
+      name: 'RSS contours', opacity: 0.75
+    },
+    {
+      type: 'scatter', x: circX, y: circY, mode: 'lines',
+      name: 'L₂ ball (t=' + t.toFixed(2) + ')',
+      line: { color: '#3fb950', width: 2.5 }
+    },
+    {
+      type: 'scatter', x: [olsB1], y: [olsB2], mode: 'markers+text',
+      name: 'OLS β̂',
+      text: ['  β̂ᴼᴸˢ'], textposition: 'top right',
+      textfont: { color: '#58a6ff', size: 12 },
+      marker: { color: '#58a6ff', size: 12, symbol: 'star' }
+    },
+    {
+      type: 'scatter', x: [rB1], y: [rB2], mode: 'markers+text',
+      name: 'Ridge β̂',
+      text: ['  β̂ʳⁱᵈᵍᵉ'], textposition: 'bottom right',
+      textfont: { color: '#f85149', size: 12 },
+      marker: { color: '#f85149', size: 12, symbol: 'diamond' }
+    },
+    {
+      type: 'scatter', x: [0], y: [0], mode: 'markers',
+      marker: { color: '#8b949e', size: 7, symbol: 'cross' },
+      showlegend: false
+    }
+  ], {
+    paper_bgcolor: '#0d1117',
+    plot_bgcolor:  '#161b22',
+    font: { color: '#e6edf3', family: 'Segoe UI, system-ui, sans-serif', size: 12 },
+    margin: { l:55, r:20, t:20, b:55 },
+    xaxis: { title: 'β₁', gridcolor: '#30363d', zerolinecolor: '#484f58', range: [-CTR_RANGE, CTR_RANGE] },
+    yaxis: { title: 'β₂', gridcolor: '#30363d', zerolinecolor: '#484f58', range: [-CTR_RANGE, CTR_RANGE], scaleanchor: 'x', scaleratio: 1 },
+    legend: { x:0.01, y:0.99, bgcolor:'rgba(22,27,34,0.85)', bordercolor:'#30363d', borderwidth:1 }
+  }, { responsive: true, displayModeBar: false });
+}
+
+function ctrSliderToT(v) {
+  // slider 5–95 → t 0.1 to 2.1
+  return 0.1 + (v - 5) / 90 * 2.0;
+}
+
+document.getElementById('slctr').addEventListener('input', function() {
+  var t = ctrSliderToT(+this.value);
+  document.getElementById('slctrval').textContent = 't = ' + t.toFixed(2);
+  drawContour(t);
+});
+
+(function() {
+  var t0 = ctrSliderToT(40);
+  document.getElementById('slctrval').textContent = 't = ' + t0.toFixed(2);
+  drawContour(t0);
+})();
+
+// ───────────────────────────────────────────────
+// VIZ 4: DEGREES OF FREEDOM
+// ───────────────────────────────────────────────
+// Compute eigenvalues of XtX (2x2) for cx1, cx2
+var xt11 = cx1.reduce(function(s,x){return s+x*x;},0);
+var xt22 = cx2.reduce(function(s,x){return s+x*x;},0);
+var xt12 = cx1.reduce(function(s,x,i){return s+x*cx2[i];},0);
+var trXtX = xt11 + xt22;
+var detXtX = xt11*xt22 - xt12*xt12;
+var discXtX = Math.sqrt(Math.max(0, trXtX*trXtX/4 - detXtX));
+var ev1 = trXtX/2 + discXtX;
+var ev2 = trXtX/2 - discXtX;
+var singVals = [Math.sqrt(Math.max(0,ev1)), Math.sqrt(Math.max(0,ev2))];
+var pDim = singVals.length;
+
+document.getElementById('dfmaxval').textContent = pDim;
+
+function dfAtLam(lam) {
+  return singVals.reduce(function(s,d){ return s + d*d/(d*d+lam); }, 0);
+}
+
+// Build curve over λ = 0..500 (log spaced)
+var DF_LAMS = [], DF_VALS = [];
+var DF_N = 300;
+for (var di=0; di<=DF_N; di++) {
+  var lamDF = (di/DF_N) * 500;  // linear 0 to 500
+  DF_LAMS.push(lamDF);
+  DF_VALS.push(dfAtLam(lamDF));
+}
+
+var layoutDF = {
+  paper_bgcolor: '#0d1117',
+  plot_bgcolor:  '#161b22',
+  font: { color: '#e6edf3', family: 'Segoe UI, system-ui, sans-serif', size: 12 },
+  margin: { l:55, r:20, t:20, b:50 },
+  xaxis: { title: 'λ', gridcolor: '#30363d', zerolinecolor: '#30363d' },
+  yaxis: { title: 'df(λ)', gridcolor: '#30363d', zerolinecolor: '#30363d', range: [-0.1, pDim+0.3] },
+  legend: { x:0.7, y:0.98, bgcolor: 'rgba(22,27,34,0.8)' },
+  showlegend: true
+};
+
+Plotly.newPlot('plotDF', [
+  {
+    x: DF_LAMS, y: DF_VALS, mode: 'lines', name: 'df(λ)',
+    line: { color: '#d29922', width: 2.5 },
+    fill: 'tozeroy', fillcolor: 'rgba(210,153,34,0.07)'
+  },
+  { x: [DF_LAMS[0], DF_LAMS[DF_LAMS.length-1]], y: [pDim, pDim],
+    mode: 'lines', name: 'OLS df = ' + pDim,
+    line: { color: '#3fb950', width: 1.5, dash: 'dot' } },
+  {
+    x: [0], y: [pDim], mode: 'markers', name: 'current λ',
+    marker: { color: '#f85149', size: 10 }
+  }
+], layoutDF, { responsive: true, displayModeBar: false });
+
+function updateDF(lam) {
+  var df = dfAtLam(lam);
+  document.getElementById('sldfval').textContent   = lam.toFixed(2);
+  document.getElementById('dflamval').textContent  = lam.toFixed(2);
+  document.getElementById('dfcurval').textContent  = df.toFixed(3);
+  document.getElementById('dfpct').textContent     = (100*df/pDim).toFixed(1);
+
+  // Map slider (0–100) to λ range 0–500
+  Plotly.react('plotDF', [
+    {
+      x: DF_LAMS, y: DF_VALS, mode: 'lines', name: 'df(λ)',
+      line: { color: '#d29922', width: 2.5 },
+      fill: 'tozeroy', fillcolor: 'rgba(210,153,34,0.07)'
+    },
+    { x: [DF_LAMS[0], DF_LAMS[DF_LAMS.length-1]], y: [pDim, pDim],
+      mode: 'lines', name: 'OLS df = ' + pDim,
+      line: { color: '#3fb950', width: 1.5, dash: 'dot' } },
+    {
+      x: [lam], y: [df], mode: 'markers', name: 'current λ',
+      marker: { color: '#f85149', size: 10 }
+    }
+  ], layoutDF, { responsive: true });
+}
+
+document.getElementById('sldf').addEventListener('input', function() {
+  // slider 0–100 → λ 0–500
+  var lam = +this.value * 5;
+  updateDF(lam);
+});
+updateDF(0);
+
+// ───────────────────────────────────────────────
+// MathJax re-render after load
+// ───────────────────────────────────────────────
+window.addEventListener('load', function() {
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise();
+  }
+});
+</script>
+</body>
+</html>

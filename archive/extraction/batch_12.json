@@ -1,0 +1,1113 @@
+{
+  "batch_id": 12,
+  "page_range": "592-647",
+  "sections": [
+    {
+      "number": "14.10",
+      "title": "The Google PageRank Algorithm",
+      "page_start": 594
+    },
+    {
+      "number": "15.1",
+      "title": "Introduction",
+      "page_start": 605
+    },
+    {
+      "number": "15.2",
+      "title": "De\ufb01nition of Random Forests",
+      "page_start": 605
+    },
+    {
+      "number": "15.3",
+      "title": "Details of Random Forests",
+      "page_start": 610
+    },
+    {
+      "number": "15.3.1",
+      "title": "Out of Bag Samples",
+      "page_start": 610
+    },
+    {
+      "number": "15.3.2",
+      "title": "Variable Importance",
+      "page_start": 611
+    },
+    {
+      "number": "15.3.3",
+      "title": "Proximity Plots",
+      "page_start": 613
+    },
+    {
+      "number": "15.3.4",
+      "title": "Random Forests and Over\ufb01tting",
+      "page_start": 614
+    },
+    {
+      "number": "15.4",
+      "title": "Analysis of Random Forests",
+      "page_start": 615
+    },
+    {
+      "number": "15.4.1",
+      "title": "Variance and the De-Correlation E\ufb00ect",
+      "page_start": 615
+    },
+    {
+      "number": "15.4.3",
+      "title": "Adaptive Nearest Neighbors",
+      "page_start": 619
+    },
+    {
+      "number": "16.1",
+      "title": "Introduction",
+      "page_start": 623
+    },
+    {
+      "number": "16.2",
+      "title": "Boosting and Regularization Paths",
+      "page_start": 625
+    },
+    {
+      "number": "16.2.1",
+      "title": "Penalized Regression",
+      "page_start": 625
+    },
+    {
+      "number": "16.2.2",
+      "title": "The \u201cBet on Sparsity\u201d Principle",
+      "page_start": 628
+    },
+    {
+      "number": "16.2.3",
+      "title": "Regularization Paths, Over-\ufb01tting and Margins",
+      "page_start": 631
+    },
+    {
+      "number": "16.3",
+      "title": "Learning Ensembles",
+      "page_start": 634
+    },
+    {
+      "number": "16.3.1",
+      "title": "Learning a Good Ensemble",
+      "page_start": 635
+    },
+    {
+      "number": "16.3.2",
+      "title": "Rule Ensembles",
+      "page_start": 640
+    },
+    {
+      "number": "17.1",
+      "title": "Introduction",
+      "page_start": 643
+    },
+    {
+      "number": "17.2",
+      "title": "Markov Graphs and Their Properties",
+      "page_start": 645
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": 47078,
+      "page": 592,
+      "text": "2. We approximate each point by an a\ufb03ne mixture of the points in its\nneighborhood:\nmin\nWik ||xi \u2212\n\u0002"
+    },
+    {
+      "id": 47080,
+      "page": 592,
+      "text": "over weights wik satisfying wik = 0, k /\u2208N(i), \tN\nk=1 wik = 1. wik\nis the contribution of point k to the reconstruction of point i. Note\nthat for a hope of a unique solution, we must have K < p."
+    },
+    {
+      "id": 47081,
+      "page": 592,
+      "text": "3. Finally, we \ufb01nd points yi in a space of dimension d < p to minimize"
+    },
+    {
+      "id": 47088,
+      "page": 592,
+      "text": "tr[(Y \u2212WY)T (Y \u2212WY)] = tr[YT (I \u2212W)T (I \u2212W)Y]\n(14.104)"
+    },
+    {
+      "id": 47089,
+      "page": 592,
+      "text": "where W is N \u00d7 N; Y is N \u00d7 d, for some small d < p. The solutions \u02c6Y\nare the trailing eigenvectors of M = (I \u2212W)T (I \u2212W). Since 1 is a trivial\neigenvector with eigenvalue 0, we discard it and keep the next d. This has\nthe side e\ufb00ect that 1T Y = 0, and hence the embedding coordinates are\nmean centered."
+    },
+    {
+      "id": 47090,
+      "page": 592,
+      "text": "Local MDS (Chen and Buja, 2008) takes the simplest and arguably the\nmost direct approach. We de\ufb01ne N to be the symmetric set of nearby pairs\nof points; speci\ufb01cally a pair (i, i\u2032) is in N if point i is among the K-nearest\nneighbors of i\u2032, or vice-versa. Then we construct the stress function"
+    },
+    {
+      "id": 47095,
+      "page": 592,
+      "text": "Here D is some large constant and w is a weight. The idea is that points\nthat are not neighbors are considered to be very far apart; such pairs are\ngiven a small weight w so that they don\u2019t dominate the overall stress func-\ntion. To simplify the expression, we take w \u223c1/D, and let D \u2192\u221e.\nExpanding (14.105), this gives"
+    },
+    {
+      "id": 47102,
+      "page": 594,
+      "text": "(14.106)\nwhere \u03c4 = 2wD. The \ufb01rst term in (14.106) tries to preserve local structure\nin the data, while the second term encourages the representations zi, zi\u2032\nfor pairs (i, i\u2032) that are non-neighbors to be farther apart. Local MDS\nminimizes the stress function (14.106) over zi, for \ufb01xed values of the number\nof neighbors K and the tuning parameter \u03c4.\nThe right panel of Figure 14.44 shows the result of local MDS, using k = 2\nneighbors and \u03c4 = 0.01. We used coordinate descent with multiple starting\nvalues to \ufb01nd a good minimum of the (nonconvex) stress function (14.106).\nThe ordering of the points along the curve has been largely preserved,\nFigure 14.45 shows a more interesting application of one of these meth-\nods (LLE)15. The data consist of 1965 photographs, digitized as 20 \u00d7 28\ngrayscale images. The result of the \ufb01rst two-coordinates of LLE are shown\nand reveal some variability in pose and expression. Similar pictures were\nproduced by local MDS.\nIn experiments reported in Chen and Buja (2008), local MDS shows su-\nperior performance, as compared to ISOMAP and LLE. They also demon-\nstrate the usefulness of local MDS for graph layout. There are also close\nconnections between the methods discussed here, spectral clustering (Sec-\ntion 14.5.3) and kernel PCA (Section 14.5.4)."
+    },
+    {
+      "id": 47104,
+      "page": 594,
+      "text": "In this section we give a brief description of the original PageRank algo-\nrithm used by the Google search engine, an interesting recent application\nof unsupervised learning methods.\nWe suppose that we have N web pages and wish to rank them in terms\nof importance. For example, the N pages might all contain a string match\nto \u201cstatistical learning\u201d and we might wish to rank the pages in terms of\ntheir likely relevance to a websurfer.\nThe PageRank algorithm considers a webpage to be important if many\nother webpages point to it. However the linking webpages that point to a\ngiven page are not treated equally: the algorithm also takes into account\nboth the importance (PageRank) of the linking pages and the number of\noutgoing links that they have. Linking pages with higher PageRank are\ngiven more weight, while pages with more outgoing links are given less\nweight. These ideas lead to a recursive de\ufb01nition for PageRank, detailed\nnext."
+    },
+    {
+      "id": 47105,
+      "page": 594,
+      "text": "15Sam Roweis and Lawrence Saul kindly provided this \ufb01gure."
+    },
+    {
+      "id": 47107,
+      "page": 595,
+      "text": "Let Lij = 1 if page j points to page i, and zero otherwise. Let cj =\n\tN\ni=1 Lij equal the number of pages pointed to by page j (number of out-\nlinks). Then the Google PageRanks pi are de\ufb01ned by the recursive rela-\ntionship"
+    },
+    {
+      "id": 47114,
+      "page": 595,
+      "text": "where d is a positive constant (apparently set to 0.85).\nThe idea is that the importance of page i is the sum of the importances of\npages that point to that page. The sums are weighted by 1/cj, that is, each\npage distributes a total vote of 1 to other pages. The constant d ensures\nthat each page gets a PageRank of at least 1 \u2212d. In matrix notation"
+    },
+    {
+      "id": 47116,
+      "page": 595,
+      "text": "where e is a vector of N ones and Dc = diag(c) is a diagonal matrix with\ndiagonal elements cj. Introducing the normalization eT p = N (i.e., the\naverage PageRank is 1), we can write (14.108) as"
+    },
+    {
+      "id": 47118,
+      "page": 595,
+      "text": "where the matrix A is the expression in square braces.\nExploiting a connection with Markov chains (see below), it can be shown\nthat the matrix A has a real eigenvalue equal to one, and one is its largest\neigenvalue. This means that we can \ufb01nd \u02c6p by the power method: starting\nwith some p = p0 we iterate"
+    },
+    {
+      "id": 47120,
+      "page": 595,
+      "text": "The \ufb01xed points \u02c6p are the desired PageRanks.\nIn the original paper of Page et al. (1998), the authors considered PageR-\nank as a model of user behavior, where a random web surfer clicks on links\nat random, without regard to content. The surfer does a random walk on\nthe web, choosing among available outgoing links at random. The factor\n1 \u2212d is the probability that he does not click on a link, but jumps instead\nto a random webpage.\nSome descriptions of PageRank have (1 \u2212d)/N as the \ufb01rst term in def-\ninition (14.107), which would better coincide with the random surfer in-\nterpretation. Then the page rank solution (divided by N) is the stationary\ndistribution of an irreducible, aperiodic Markov chain over the N webpages.\nDe\ufb01nition (14.107) also corresponds to an irreducible, aperiodic Markov\nchain, with di\ufb00erent transition probabilities than those from he (1 \u2212d)/N\nversion. Viewing PageRank as a Markov chain makes clear why the matrix\nA has a maximal real eigenvalue of 1. Since A has positive entries with"
+    },
+    {
+      "id": 47127,
+      "page": 596,
+      "text": "each column summing to one, Markov chain theory tells us that it has a\nunique eigenvector with eigenvalue one, corresponding to the stationary\ndistribution of the chain (Bremaud, 1999).\nA small network is shown for illustration in Figure 14.46. The link matrix\nis"
+    },
+    {
+      "id": 47134,
+      "page": 596,
+      "text": "and the number of outlinks is c = (2, 1, 1, 1).\nThe PageRank solution is \u02c6p = (1.49, .78, 1.58, .15). Notice that page 4\nhas no incoming links, and hence gets the minimum PageRank of 0.15."
+    },
+    {
+      "id": 47136,
+      "page": 596,
+      "text": "There are many books on clustering, including Hartigan (1975), Gordon\n(1999) and Kaufman and Rousseeuw (1990). K-means clustering goes back\nat least to Lloyd (1957), Forgy (1965), Jancey (1966) and MacQueen (1967).\nApplications in engineering, especially in image compression via vector\nquantization, can be found in Gersho and Gray (1992). The k-medoid pro-\ncedure is described in Kaufman and Rousseeuw (1990). Association rules\nare outlined in Agrawal et al. (1995). The self-organizing map was proposed\nby Kohonen (1989) and Kohonen (1990); Kohonen et al. (2000) give a more\nrecent account. Principal components analysis and multidimensional scal-\ning are described in standard books on multivariate analysis, for example,\nMardia et al. (1979). Buja et al. (2008) have implemented a powerful en-\nvironment called Ggvis for multidimensional scaling, and the user manual"
+    },
+    {
+      "id": 47138,
+      "page": 597,
+      "text": "contains a lucid overview of the subject. Figures 14.17, 14.21 (left panel)\nand 14.28 (left panel) were produced in Xgobi, a multidimensional data\nvisualization package by the same authors. GGobi is a more recent im-\nplementation (Cook and Swayne, 2007). Goodall (1991) gives a technical\noverview of Procrustes methods in statistics, and Ramsay and Silverman\n(1997) discuss the shape registration problem. Principal curves and surfaces\nwere proposed in Hastie (1984) and Hastie and Stuetzle (1989). The idea of\nprincipal points was formulated in Flury (1990), Tarpey and Flury (1996)\ngive an exposition of the general concept of self-consistency. An excellent\ntutorial on spectral clustering can be found in von Luxburg (2007); this was\nthe main source for Section 14.5.3. Luxborg credits Donath and Ho\ufb00man\n(1973) and Fiedler (1973) with the earliest work on the subject. A history\nof spectral clustering my be found in Spielman and Teng (1996). Indepen-\ndent component analysis was proposed by Comon (1994), with subsequent\ndevelopments by Bell and Sejnowski (1995); our treatment in Section 14.7\nis based on (Hyv\u00a8arinen and Oja, 2000). Projection pursuit was proposed\nby (Friedman and Tukey, 1974), and is discussed in detail in (Huber, 1985).\nA dynamic projection pursuit algorithm is implemented in GGobi."
+    },
+    {
+      "id": 47150,
+      "page": 597,
+      "text": "Thus weighted Euclidean distance based on x is equivalent to unweighted\nEuclidean distance based on z."
+    },
+    {
+      "id": 47155,
+      "page": 597,
+      "text": "where gk = N(\u03bck, L\u00b7\u03c32) and \u03c0k \u22650 \u2200k with \t\nk \u03c0k = 1. Here {\u03bck, \u03c0k}, k =\n1, . . . , K and \u03c32 are unknown parameters."
+    },
+    {
+      "id": 47157,
+      "page": 598,
+      "text": "Suppose we have data x1, x2, . . . , xN \u223cg(x) and we wish to \ufb01t the mix-\nture model."
+    },
+    {
+      "id": 47159,
+      "page": 598,
+      "text": "2. Derive an EM algorithm for computing the maximum likelihood es-\ntimates (see Section 8.1)."
+    },
+    {
+      "id": 47160,
+      "page": 598,
+      "text": "3. Show that if \u03c3 has a known value in the mixture model and we take\n\u03c3 \u21920, then in a sense this EM algorithm coincides with K-means\nclustering."
+    },
+    {
+      "id": 47164,
+      "page": 598,
+      "text": "\u03b81\n=\nU(\u2212\u03c0/8, \u03c0/8)\n\u03c61\n=\nU(0, 2\u03c0)\nx1\n=\nsin(\u03b81) cos(\u03c61) + W11\ny1\n=\nsin(\u03b81) sin(\u03c61) + W12\nz1\n=\ncos(\u03b81) + W13"
+    },
+    {
+      "id": 47165,
+      "page": 598,
+      "text": "\u03b82\n=\nU(\u03c0/2 \u2212\u03c0/4, \u03c0/2 + \u03c0/4)\n\u03c62\n=\nU(\u2212\u03c0/4, \u03c0/4)\nx2\n=\nsin(\u03b82) cos(\u03c62) + W21\ny2\n=\nsin(\u03b82) sin(\u03c62) + W22\nz2\n=\ncos(\u03b82) + W23"
+    },
+    {
+      "id": 47166,
+      "page": 598,
+      "text": "\u03b83\n=\nU(\u03c0/2 \u2212\u03c0/4, \u03c0/2 + \u03c0/4)\n\u03c63\n=\nU(\u03c0/2 \u2212\u03c0/4, \u03c0/2 + \u03c0/4)\nx3\n=\nsin(\u03b83) cos(\u03c63) + W31\ny3\n=\nsin(\u03b83) sin(\u03c63) + W32\nz3\n=\ncos(\u03b83) + W33"
+    },
+    {
+      "id": 47167,
+      "page": 598,
+      "text": "Here U(a, b) indicates a uniform variate on the range [a, b] and Wjk are\nindependent normal variates with standard deviation 0.6. Hence the data"
+    },
+    {
+      "id": 47169,
+      "page": 599,
+      "text": "lie near the surface of a sphere in three clusters centered at (1, 0, 0), (0, 1, 0)\nand (0, 0, 1).\nWrite a program to \ufb01t a SOM to these data, using the learning rates\ngiven in the text. Carry out a K-means clustering of the same data, and\ncompare the results to those in the text."
+    },
+    {
+      "id": 47177,
+      "page": 599,
+      "text": "Apply it to the three S\u2019s, and compare the results to those shown in Fig-\nure 14.26."
+    },
+    {
+      "id": 47181,
+      "page": 599,
+      "text": "1. Show that with \u0398 \ufb01xed, solving for V amounts to K separate elastic-\nnet regression problems, with responses the K elements of \u0398T xi."
+    },
+    {
+      "id": 47182,
+      "page": 599,
+      "text": "2. Show that with V \ufb01xed, solving for \u0398 amounts to a reduced-rank\nversion of the Procrustes problem, which reduces to"
+    },
+    {
+      "id": 47184,
+      "page": 599,
+      "text": "where M and \u0398 are both p \u00d7 K with K \u2264p. If M = UDQT is the\nSVD of M, show that the optimal \u0398 = UQT ."
+    },
+    {
+      "id": 47187,
+      "page": 600,
+      "text": "(a) Fit a principal curve to the data and plot the estimated coordinate\nfunctions. Compare them to the underlying functions cos(s), sin(s)\nand s."
+    },
+    {
+      "id": 47188,
+      "page": 600,
+      "text": "(b) Fit a self-organizing map to the same data, and see if you can discover\nthe helical shape of the original point cloud."
+    },
+    {
+      "id": 47192,
+      "page": 600,
+      "text": "where Z1, Z2, Z3 are independent standard normal variates. Compute the\nleading principal component and factor analysis directions. Hence show\nthat the leading principal component aligns itself in the maximal variance\ndirection X3, while the leading factor essentially ignores the uncorrelated\ncomponent X3, and picks up the correlated component X2 + X1 (Geo\ufb00rey\nHinton, personal communication)."
+    },
+    {
+      "id": 47199,
+      "page": 601,
+      "text": "i=1\n[log \u03c6(si) + g(si)] \u2212\n\u0004\n\u03c6(t)eg(t)dt \u2212\u03bb\n\u0004\n{g\u2032\u2032\u2032(t)}2(t)dt.\n(14.118)"
+    },
+    {
+      "id": 47200,
+      "page": 601,
+      "text": "The solution \u02c6g is a quartic smoothing spline, and can be written as \u02c6g(s) =\n\u02c6q(s) + \u02c6q\u22a5(s), where q is a quadratic function (in the null space of the\npenalty). Let q(s) = \u03b80 + \u03b81s + \u03b82s2. By examining the stationarity condi-\ntions for \u02c6\u03b8k, k = 1, 2, 3, show that the solution \u02c6f = \u03c6e\u02c6g is a density, and\nhas mean zero and variance one. If we used a second-derivative penalty\n#\n{g\u2032\u2032(t)}2(t)dt instead, what simple modi\ufb01cation could we make to the\nproblem to maintain the three moment conditions?"
+    },
+    {
+      "id": 47208,
+      "page": 601,
+      "text": "to show that the Newton update can be written as the \ufb01xed-point update\n(14.96)."
+    },
+    {
+      "id": 47211,
+      "page": 601,
+      "text": "(a) Show that de\ufb01nition (14.108) implies that the sum of the PageRanks\npi is N, the number of web pages."
+    },
+    {
+      "id": 47212,
+      "page": 601,
+      "text": "(b) Write a program to compute the PageRank solutions by the power\nmethod using formulation (14.107). Apply it to the network of Fig-\nure 14.47."
+    },
+    {
+      "id": 47222,
+      "page": 602,
+      "text": "for all x, y in the domain. This is useful for maximizing f(x) since is easy\nto show that f(x) is nondecreasing under the update"
+    },
+    {
+      "id": 47224,
+      "page": 602,
+      "text": "There are analogous de\ufb01nitions for majorization, for minimizing a function\nf(x). The resulting algorithms are known as MM algorithms, for \u201cminorize-\nmaximize\u201d or \u201cmajorize-minimize\u201d (Lange, 2004).\nIt also can be shown\nthat the EM algorithm (8.5) is an example of an MM algorithm: see Sec-\ntion 8.5.3 and Exercise 8.2 for details."
+    },
+    {
+      "id": 47225,
+      "page": 602,
+      "text": "(a) Consider maximization of the function L(W, H) in (14.73), written\nhere without the matrix notation"
+    },
+    {
+      "id": 47241,
+      "page": 602,
+      "text": "Using the concavity of log(x), show that for any set of r values yk \u22650\nand 0 \u2264ck \u22641 with \tr\nk=1 ck = 1,"
+    },
+    {
+      "id": 47267,
+      "page": 603,
+      "text": "(b) Hence show that, ignoring constants, the function"
+    },
+    {
+      "id": 47284,
+      "page": 603,
+      "text": "(c) Set the partial derivatives of g(W, H | Ws, Hs) to zero and hence\nderive the updating steps (14.74)."
+    },
+    {
+      "id": 47292,
+      "page": 603,
+      "text": "where wi = wi1, hj = h1j. This is an example of the iterative pro-\nportional scaling procedure, applied to the independence model for a\ntwo-way contingency table (Fienberg, 1977, for example)."
+    },
+    {
+      "id": 47293,
+      "page": 603,
+      "text": "(b) Show that the \ufb01nal iterates have the explicit form"
+    },
+    {
+      "id": 47297,
+      "page": 603,
+      "text": "for any constant c > 0. These are equivalent to the usual row and\ncolumn estimates for a two-way independence model."
+    },
+    {
+      "id": 47300,
+      "page": 605,
+      "text": "This is page 587\nPrinter: Opaque this\n15\nRandom Forests"
+    },
+    {
+      "id": 47302,
+      "page": 605,
+      "text": "Bagging or bootstrap aggregation Section 8.7 is a technique for reducing\nthe variance of an estimated prediction function. Bagging seems to work\nespecially well for high-variance, low-bias procedures, such as trees. For\nregression, we simply \ufb01t the same regression tree many times to bootstrap-\nsampled versions of the training data, and average the result. For classi\ufb01-\ncation, a committee of trees each cast a vote for the predicted class.\nBoosting in Chapter 10 was initially proposed as a committee method as\nwell, although unlike bagging, the committee of weak learners evolves over\ntime, and the members cast a weighted vote. Boosting appears to dominate\nbagging on most problems, and became the preferred choice.\nRandom forests (Breiman, 2001) is a substantial modi\ufb01cation of bagging\nthat builds a large collection of de-correlated trees, and then averages them.\nOn many problems the performance of random forests is very similar to\nboosting, and they are simpler to train and tune. As a consequence, random\nforests are popular, and are implemented in a variety of packages."
+    },
+    {
+      "id": 47304,
+      "page": 605,
+      "text": "The essential idea in bagging (Section 8.7) is to average many noisy but\napproximately unbiased models, and hence reduce the variance. Trees are\nideal candidates for bagging, since they can capture complex interaction"
+    },
+    {
+      "id": 47306,
+      "page": 606,
+      "text": "Algorithm 15.1 Random Forest for Regression or Classi\ufb01cation."
+    },
+    {
+      "id": 47308,
+      "page": 606,
+      "text": "(a) Draw a bootstrap sample Z\u2217of size N from the training data."
+    },
+    {
+      "id": 47309,
+      "page": 606,
+      "text": "(b) Grow a random-forest tree Tb to the bootstrapped data, by re-\ncursively repeating the following steps for each terminal node of\nthe tree, until the minimum node size nmin is reached."
+    },
+    {
+      "id": 47310,
+      "page": 606,
+      "text": "i. Select m variables at random from the p variables.\nii. Pick the best variable/split-point among the m.\niii. Split the node into two daughter nodes."
+    },
+    {
+      "id": 47315,
+      "page": 606,
+      "text": "Classi\ufb01cation: Let \u02c6Cb(x) be the class prediction of the bth random-forest\ntree. Then \u02c6CB\nrf (x) = majority vote { \u02c6Cb(x)}B\n1 ."
+    },
+    {
+      "id": 47316,
+      "page": 606,
+      "text": "structures in the data, and if grown su\ufb03ciently deep, have relatively low\nbias. Since trees are notoriously noisy, they bene\ufb01t greatly from the averag-\ning. Moreover, since each tree generated in bagging is identically distributed\n(i.d.), the expectation of an average of B such trees is the same as the ex-\npectation of any one of them. This means the bias of bagged trees is the\nsame as that of the individual trees, and the only hope of improvement is\nthrough variance reduction. This is in contrast to boosting, where the trees\nare grown in an adaptive way to remove bias, and hence are not i.d.\nAn average of B i.i.d. random variables, each with variance \u03c32, has vari-\nance\n1\nB \u03c32. If the variables are simply i.d. (identically distributed, but not\nnecessarily independent) with positive pairwise correlation \u03c1, the variance\nof the average is (Exercise 15.1)"
+    },
+    {
+      "id": 47319,
+      "page": 606,
+      "text": "As B increases, the second term disappears, but the \ufb01rst remains, and\nhence the size of the correlation of pairs of bagged trees limits the bene\ufb01ts\nof averaging. The idea in random forests (algorithm\n15.1) is to improve\nthe variance reduction of bagging by reducing the correlation between the\ntrees, without increasing the variance too much. This is achieved in the\ntree-growing process through random selection of the input variables.\nSpeci\ufb01cally, when growing a tree on a bootstrapped dataset:"
+    },
+    {
+      "id": 47320,
+      "page": 606,
+      "text": "Before each split, select m \u2264p of the input variables at random\nas candidates for splitting."
+    },
+    {
+      "id": 47322,
+      "page": 607,
+      "text": "Typically values for m are \u221ap or even as low as 1.\nAfter B such trees {T(x; \u0398b)}B\n1 are grown, the random forest (regression)\npredictor is"
+    },
+    {
+      "id": 47327,
+      "page": 607,
+      "text": "As in Section 10.9 (page 356), \u0398b characterizes the bth random forest tree in\nterms of split variables, cutpoints at each node, and terminal-node values.\nIntuitively, reducing m will reduce the correlation between any pair of trees\nin the ensemble, and hence by (15.1) reduce the variance of the average."
+    },
+    {
+      "id": 47335,
+      "page": 607,
+      "text": "Not all estimators can be improved by shaking up the data like this.\nIt seems that highly nonlinear estimators, such as trees, bene\ufb01t the most.\nFor bootstrapped trees, \u03c1 is typically small (0.05 or lower is typical; see\nFigure 15.9), while \u03c32 is not much larger than the variance for the original\ntree. On the other hand, bagging does not change linear estimates, such\nas the sample mean (hence its variance either); the pairwise correlation\nbetween bootstrapped means is about 50% (Exercise 15.4)."
+    },
+    {
+      "id": 47337,
+      "page": 608,
+      "text": "Random forests are popular. Leo Breiman\u2019s1 collaborator Adele Cutler\nmaintains a random forest website2 where the software is freely available,\nwith more than 3000 downloads reported by 2002. There is a randomForest\npackage in R, maintained by Andy Liaw, available from the CRAN website.\nThe authors make grand claims about the success of random forests:\n\u201cmost accurate,\u201d \u201cmost interpretable,\u201d and the like. In our experience ran-\ndom forests do remarkably well, with very little tuning required. A ran-\ndom forest classi\ufb01er achieves 4.88% misclassi\ufb01cation error on the spam test\ndata, which compares well with all other methods, and is not signi\ufb01cantly\nworse than gradient boosting at 4.5%. Bagging achieves 5.4% which is\nsigni\ufb01cantly worse than either (using the McNemar test outlined in Ex-\nercise 10.6), so it appears on this example the additional randomization\nhelps."
+    },
+    {
+      "id": 47345,
+      "page": 608,
+      "text": "1Sadly, Leo Breiman died in July, 2005.\n2http://www.math.usu.edu/\u223cadele/forests/"
+    },
+    {
+      "id": 47355,
+      "page": 609,
+      "text": "\u2022 Random forests stabilize at about 200 trees, while at 1000 trees boost-\ning continues to improve. Boosting is slowed down by the shrinkage,\nas well as the fact that the trees are much smaller."
+    },
+    {
+      "id": 47356,
+      "page": 609,
+      "text": "\u2022 Boosting outperforms random forests here. At 1000 terms, the weaker\nboosting model (GBM depth 4) has a smaller error than the stronger"
+    },
+    {
+      "id": 47357,
+      "page": 609,
+      "text": "3Details: The random forests were \ufb01t using the R package randomForest 4.5-11,\nwith 500 trees. The gradient boosting models were \ufb01t using R package gbm 1.5, with\nshrinkage parameter set to 0.05, and 2000 trees."
+    },
+    {
+      "id": 47365,
+      "page": 610,
+      "text": "random forest (RF m = 6); a Wilcoxon test on the mean di\ufb00erences\nin absolute errors has a p-value of 0.007. For larger m the random\nforests performed no better."
+    },
+    {
+      "id": 47367,
+      "page": 610,
+      "text": "We have glossed over the distinction between random forests for classi\ufb01ca-\ntion versus regression. When used for classi\ufb01cation, a random forest obtains\na class vote from each tree, and then classi\ufb01es using majority vote (see Sec-\ntion 8.7 on bagging for a similar discussion). When used for regression, the\npredictions from each tree at a target point x are simply averaged, as in\n(15.2). In addition, the inventors make the following recommendations:"
+    },
+    {
+      "id": 47368,
+      "page": 610,
+      "text": "\u2022 For classi\ufb01cation, the default value for m is \u230a\u221ap\u230band the minimum\nnode size is one."
+    },
+    {
+      "id": 47369,
+      "page": 610,
+      "text": "\u2022 For regression, the default value for m is \u230ap/3\u230band the minimum\nnode size is \ufb01ve."
+    },
+    {
+      "id": 47370,
+      "page": 610,
+      "text": "In practice the best values for these parameters will depend on the problem,\nand they should be treated as tuning parameters. In Figure 15.3 the m = 6\nperforms much better than the default value \u230a8/3\u230b= 2."
+    },
+    {
+      "id": 47372,
+      "page": 610,
+      "text": "An important feature of random forests is its use of out-of-bag (oob) sam-\nples:"
+    },
+    {
+      "id": 47374,
+      "page": 611,
+      "text": "For each observation zi = (xi, yi), construct its random forest\npredictor by averaging only those trees corresponding to boot-\nstrap samples in which zi did not appear."
+    },
+    {
+      "id": 47375,
+      "page": 611,
+      "text": "An oob error estimate is almost identical to that obtained by N-fold cross-\nvalidation; see Exercise 15.2. Hence unlike many other nonlinear estimators,\nrandom forests can be \ufb01t in one sequence, with cross-validation being per-\nformed along the way. Once the oob error stabilizes, the training can be\nterminated.\nFigure 15.4 shows the oob misclassi\ufb01cation error for the spam data, com-\npared to the test error. Although 2500 trees are averaged here, it appears\nfrom the plot that about 200 would be su\ufb03cient."
+    },
+    {
+      "id": 47377,
+      "page": 611,
+      "text": "Variable importance plots can be constructed for random forests in exactly\nthe same way as they were for gradient-boosted models (Section 10.13).\nAt each split in each tree, the improvement in the split-criterion is the\nimportance measure attributed to the splitting variable, and is accumulated\nover all the trees in the forest separately for each variable. The left plot\nof Figure 15.5 shows the variable importances computed in this way for\nthe spam data; compare with the corresponding Figure 10.6 on page 354 for\ngradient boosting. Boosting ignores some variables completely, while the\nrandom forest does not. The candidate split-variable selection increases\nthe chance that any single variable gets included in a random forest, while\nno such selection occurs with boosting.\nRandom forests also use the oob samples to construct a di\ufb00erent variable-\nimportance measure, apparently to measure the prediction strength of each\nvariable. When the bth tree is grown, the oob samples are passed down\nthe tree, and the prediction accuracy is recorded. Then the values for the\njth variable are randomly permuted in the oob samples, and the accuracy\nis again computed. The decrease in accuracy as a result of this permuting\nis averaged over all trees, and is used as a measure of the importance of\nvariable j in the random forest. These are expressed as a percent of the\nmaximum in the right plot in Figure 15.5. Although the rankings of the\ntwo methods are similar, the importances in the right plot are more uni-\nform over the variables. The randomization e\ufb00ectively voids the e\ufb00ect of\na variable, much like setting a coe\ufb03cient to zero in a linear model (Exer-\ncise 15.7). This does not measure the e\ufb00ect on prediction were this variable\nnot available, because if the model was re\ufb01tted without the variable, other\nvariables could be used as surrogates."
+    },
+    {
+      "id": 47379,
+      "page": 612,
+      "text": "!\n$\nremove\nfree\nCAPAVE\nyour\nCAPMAX\nhp\nCAPTOT\nmoney\nour\nyou\ngeorge\n000\nedu\nhpl\nbusiness\n1999\ninternet\n(\nwill\nall\nemail\nre\nreceive\nover\nmail\n;\n650\nmeeting\nlabs\norder\naddress\npm\npeople\nmake\n#\ncredit\nfont\ndata\ntechnology\n85\n[\nlab\ntelnet\nreport\noriginal\nproject\nconference\ndirect\n415\n857\naddresses\n3d\ncs\nparts\ntable"
+    },
+    {
+      "id": 47383,
+      "page": 612,
+      "text": "!\nremove\n$\nCAPAVE\nhp\nfree\nCAPMAX\nedu\ngeorge\nCAPTOT\nyour\nour\n1999\nre\nyou\nhpl\nbusiness\n000\nmeeting\nmoney\n(\nwill\ninternet\n650\npm\nreceive\nover\nemail\n;\nfont\nmail\ntechnology\norder\nall\nlabs\n[\n85\naddress\noriginal\nlab\ntelnet\npeople\nproject\ndata\ncredit\nconference\n857\n#\n415\nmake\ncs\nreport\ndirect\naddresses\n3d\nparts\ntable"
+    },
+    {
+      "id": 47406,
+      "page": 613,
+      "text": "One of the advertised outputs of a random forest is a proximity plot. Fig-\nure 15.6 shows a proximity plot for the mixture data de\ufb01ned in Section 2.3.3\nin Chapter 2. In growing a random forest, an N \u00d7 N proximity matrix is\naccumulated for the training data. For every tree, any pair of oob obser-\nvations sharing a terminal node has their proximity increased by one. This\nproximity matrix is then represented in two dimensions using multidimen-\nsional scaling (Section 14.8). The idea is that even though the data may be\nhigh-dimensional, involving mixed variables, etc., the proximity plot gives\nan indication of which observations are e\ufb00ectively close together in the eyes\nof the random forest classi\ufb01er.\nProximity plots for random forests often look very similar, irrespective of\nthe data, which casts doubt on their utility. They tend to have a star shape,\none arm per class, which is more pronounced the better the classi\ufb01cation\nperformance.\nSince the mixture data are two-dimensional, we can map points from the\nproximity plot to the original coordinates, and get a better understanding of\nwhat they represent. It seems that points in pure regions class-wise map to\nthe extremities of the star, while points nearer the decision boundaries map\nnearer the center. This is not surprising when we consider the construction\nof the proximity matrices. Neighboring points in pure regions will often\nend up sharing a bucket, since when a terminal node is pure, it is no longer"
+    },
+    {
+      "id": 47408,
+      "page": 614,
+      "text": "split by a random forest tree-growing algorithm. On the other hand, pairs\nof points that are close but belong to di\ufb00erent classes will sometimes share\na terminal node, but not always."
+    },
+    {
+      "id": 47410,
+      "page": 614,
+      "text": "When the number of variables is large, but the fraction of relevant variables\nsmall, random forests are likely to perform poorly with small m. At each\nsplit the chance can be small that the relevant variables will be selected.\nFigure 15.7 shows the results of a simulation that supports this claim. De-\ntails are given in the \ufb01gure caption and Exercise 15.3. At the top of each\npair we see the hyper-geometric probability that a relevant variable will be\nselected at any split by a random forest tree (in this simulation, the relevant\nvariables are all equal in stature). As this probability gets small, the gap\nbetween boosting and random forests increases. When the number of rele-\nvant variables increases, the performance of random forests is surprisingly\nrobust to an increase in the number of noise variables. For example, with 6\nrelevant and 100 noise variables, the probability of a relevant variable being\nselected at any split is 0.46, assuming m =\n\""
+    },
+    {
+      "id": 47411,
+      "page": 614,
+      "text": "(6 + 100) \u224810. According to\nFigure 15.7, this does not hurt the performance of random forests compared\nwith boosting. This robustness is largely due to the relative insensitivity of\nmisclassi\ufb01cation cost to the bias and variance of the probability estimates\nin each tree. We consider random forests for regression in the next section."
+    },
+    {
+      "id": 47412,
+      "page": 614,
+      "text": "Another claim is that random forests \u201ccannot over\ufb01t\u201d the data. It is\ncertainly true that increasing B does not cause the random forest sequence\nto over\ufb01t; like bagging, the random forest estimate (15.2) approximates the\nexpectation"
+    },
+    {
+      "id": 47414,
+      "page": 614,
+      "text": "with an average over B realizations of \u0398. The distribution of \u0398 here is con-\nditional on the training data. However, this limit can over\ufb01t the data; the\naverage of fully grown trees can result in too rich a model, and incur unnec-\nessary variance. Segal (2004) demonstrates small gains in performance by\ncontrolling the depths of the individual trees grown in random forests. Our\nexperience is that using full-grown trees seldom costs much, and results in\none less tuning parameter.\nFigure 15.8 shows the modest e\ufb00ect of depth control in a simple regression\nexample. Classi\ufb01ers are less sensitive to variance, and this e\ufb00ect of over-\n\ufb01tting is seldom seen with random-forest classi\ufb01cation."
+    },
+    {
+      "id": 47425,
+      "page": 615,
+      "text": "In this section we analyze the mechanisms at play with the additional\nrandomization employed by random forests. For this discussion we focus\non regression and squared error loss, since this gets at the main points,\nand bias and variance are more complex with 0\u20131 loss (see Section 7.3.1).\nFurthermore, even in the case of a classi\ufb01cation problem, we can consider\nthe random-forest average as an estimate of the class posterior probabilities,\nfor which bias and variance are appropriate descriptors."
+    },
+    {
+      "id": 47427,
+      "page": 615,
+      "text": "The limiting form (B \u2192\u221e) of the random forest regression estimator is"
+    },
+    {
+      "id": 47429,
+      "page": 615,
+      "text": "where we have made explicit the dependence on the training data Z. Here\nwe consider estimation at a single target point x. From (15.1) we see that"
+    },
+    {
+      "id": 47439,
+      "page": 616,
+      "text": "\u2022 \u03c1(x) is the sampling correlation between any pair of trees used in the\naveraging:\n\u03c1(x) = corr[T(x; \u03981(Z)), T(x; \u03982(Z))],\n(15.6)"
+    },
+    {
+      "id": 47440,
+      "page": 616,
+      "text": "where \u03981(Z) and \u03982(Z) are a randomly drawn pair of random forest\ntrees grown to the randomly sampled Z;"
+    },
+    {
+      "id": 47441,
+      "page": 616,
+      "text": "\u2022 \u03c32(x) is the sampling variance of any single randomly drawn tree,"
+    },
+    {
+      "id": 47443,
+      "page": 616,
+      "text": "It is easy to confuse \u03c1(x) with the average correlation between \ufb01tted trees\nin a given random-forest ensemble; that is, think of the \ufb01tted trees as N-\nvectors, and compute the average pairwise correlation between these vec-\ntors, conditioned on the data. This is not the case; this conditional corre-\nlation is not directly relevant in the averaging process, and the dependence\non x in \u03c1(x) warns us of the distinction. Rather, \u03c1(x) is the theoretical\ncorrelation between a pair of random-forest trees evaluated at x, induced\nby repeatedly making training sample draws Z from the population, and\nthen drawing a pair of random forest trees. In statistical jargon, this is the\ncorrelation induced by the sampling distribution of Z and \u0398.\nMore precisely, the variability averaged over in the calculations in (15.6)\nand (15.7) is both"
+    },
+    {
+      "id": 47445,
+      "page": 617,
+      "text": "\u2022 conditional on Z: due to the bootstrap sampling and feature sampling\nat each split, and"
+    },
+    {
+      "id": 47446,
+      "page": 617,
+      "text": "\u2022 a result of the sampling variability of Z itself."
+    },
+    {
+      "id": 47447,
+      "page": 617,
+      "text": "In fact, the conditional covariance of a pair of tree \ufb01ts at x is zero, because\nthe bootstrap and feature sampling is i.i.d; see Exercise 15.5."
+    },
+    {
+      "id": 47453,
+      "page": 617,
+      "text": "The following demonstrations are based on a simulation model"
+    },
+    {
+      "id": 47458,
+      "page": 617,
+      "text": "with all the Xj and \u03b5 iid Gaussian. We use 500 training sets of size 100, and\na single set of test locations of size 600. Since regression trees are nonlinear\nin Z, the patterns we see below will di\ufb00er somewhat depending on the\nstructure of the model.\nFigure 15.9 shows how the correlation (15.6) between pairs of trees de-\ncreases as m decreases: pairs of tree predictions at x for di\ufb00erent training\nsets Z are likely to be less similar if they do not use the same splitting\nvariables.\nIn the left panel of Figure 15.10 we consider the variances of single tree\npredictors, VarT(x; \u0398(Z)) (averaged over 600 prediction points x drawn\nrandomly from our simulation model). This is the total variance, and can be"
+    },
+    {
+      "id": 47460,
+      "page": 618,
+      "text": "decomposed into two parts using standard conditional variance arguments\n(see Exercise 15.5):"
+    },
+    {
+      "id": 47461,
+      "page": 618,
+      "text": "Var\u0398,ZT(x; \u0398(Z))\n=\nVarZE\u0398|ZT(x; \u0398(Z))\n+\nEZVar\u0398|ZT(x; \u0398(Z))"
+    },
+    {
+      "id": 47462,
+      "page": 618,
+      "text": "Total Variance\n=\nVarZ \u02c6frf(x)\n+\nwithin-Z Variance\n(15.9)\nThe second term is the within-Z variance\u2014a result of the randomization,\nwhich increases as m decreases. The \ufb01rst term is in fact the sampling vari-\nance of the random forest ensemble (shown in the right panel), which de-\ncreases as m decreases. The variance of the individual trees does not change\nappreciably over much of the range of m, hence in light of (15.5), the vari-\nance of the ensemble is dramatically lower than this tree variance."
+    },
+    {
+      "id": 47479,
+      "page": 618,
+      "text": "As in bagging, the bias of a random forest is the same as the bias of any\nof the individual sampled trees T(x; \u0398(Z)):"
+    },
+    {
+      "id": 47481,
+      "page": 619,
+      "text": "Bias(x)\n=\n\u03bc(x) \u2212EZ \u02c6frf(x)\n=\n\u03bc(x) \u2212EZE\u0398|ZT(x; \u0398(Z)).\n(15.10)"
+    },
+    {
+      "id": 47482,
+      "page": 619,
+      "text": "This is also typically greater (in absolute terms) than the bias of an un-\npruned tree grown to Z, since the randomization and reduced sample space\nimpose restrictions. Hence the improvements in prediction obtained by bag-\nging or random forests are solely a result of variance reduction.\nAny discussion of bias depend on the unknown true function. Figure 15.10\n(right panel) shows the squared bias for our additive model simulation (es-\ntimated from the 500 realizations). Although for di\ufb00erent models the shape\nand rate of the bias curves may di\ufb00er, the general trend is that as m de-\ncreases, the bias increases. Shown in the \ufb01gure is the mean-squared error,\nand we see a classical bias-variance trade-o\ufb00in the choice of m. For all m\nthe squared bias of the random forest is greater than that for a single tree\n(horizontal line).\nThese patterns suggest a similarity with ridge regression (Section 3.4.1).\nRidge regression is useful (in linear models) when one has a large number\nof variables with similarly sized coe\ufb03cients; ridge shrinks their coe\ufb03cients\ntoward zero, and those of strongly correlated variables toward each other.\nAlthough the size of the training sample might not permit all the variables\nto be in the model, this regularization via ridge stabilizes the model and al-\nlows all the variables to have their say (albeit diminished). Random forests\nwith small m perform a similar averaging. Each of the relevant variables\nget their turn to be the primary split, and the ensemble averaging reduces\nthe contribution of any individual variable. Since this simulation exam-\nple (15.8) is based on a linear model in all the variables, ridge regression\nachieves a lower mean-squared error (about 0.45 with df(\u03bbopt) \u224829)."
+    },
+    {
+      "id": 47484,
+      "page": 619,
+      "text": "The random forest classi\ufb01er has much in common with the k-nearest neigh-\nbor classi\ufb01er (Section 13.3); in fact a weighted version thereof. Since each\ntree is grown to maximal size, for a particular \u0398\u2217, T(x; \u0398\u2217(Z)) is the re-\nsponse value for one of the training samples4. The tree-growing algorithm\n\ufb01nds an \u201coptimal\u201d path to that observation, choosing the most informative\npredictors from those at its disposal. The averaging process assigns weights\nto these training responses, which ultimately vote for the prediction. Hence\nvia the random-forest voting mechanism, those observations close to the\ntarget point get assigned weights\u2014an equivalent kernel\u2014which combine to\nform the classi\ufb01cation decision.\nFigure 15.11 demonstrates the similarity between the decision boundary\nof 3-nearest neighbors and random forests on the mixture data."
+    },
+    {
+      "id": 47485,
+      "page": 619,
+      "text": "4We gloss over the fact that pure nodes are not split further, and hence there can be\nmore than one observation in a terminal node"
+    },
+    {
+      "id": 47637,
+      "page": 620,
+      "text": "Training Error: 0.000\nTest Error:       0.238\nBayes Error:    0.210"
+    },
+    {
+      "id": 47788,
+      "page": 620,
+      "text": "Training Error: 0.130\nTest Error:       0.242\nBayes Error:    0.210"
+    },
+    {
+      "id": 47791,
+      "page": 620,
+      "text": "Random forests as described here were introduced by Breiman (2001), al-\nthough many of the ideas had cropped up earlier in the literature in dif-\nferent forms. Notably Ho (1995) introduced the term \u201crandom forest,\u201d and\nused a consensus of trees grown in random subspaces of the features. The\nidea of using stochastic perturbation and averaging to avoid over\ufb01tting was\nintroduced by Kleinberg (1990), and later in Kleinberg (1996). Amit and\nGeman (1997) used randomized trees grown on image features for image\nclassi\ufb01cation problems. Breiman (1996a) introduced bagging, a precursor\nto his version of random forests. Dietterich (2000b) also proposed an im-\nprovement on bagging using additional randomization. His approach was\nto rank the top 20 candidate splits at each node, and then select from the\nlist at random. He showed through simulations and real examples that this\nadditional randomization improved over the performance of bagging. Fried-\nman and Hall (2007) showed that sub-sampling (without replacement) is\nan e\ufb00ective alternative to bagging. They showed that growing and aver-\naging trees on samples of size N/2 is approximately equivalent (in terms\nbias/variance considerations) to bagging, while using smaller fractions of\nN reduces the variance even further (through decorrelation).\nThere are several free software implementations of random forests. In\nthis chapter we used the randomForest package in R, maintained by Andy\nLiaw, available from the CRAN website. This allows both split-variable se-\nlection, as well as sub-sampling. Adele Cutler maintains a random forest\nwebsite http://www.math.usu.edu/\u223cadele/forests/ where (as of Au-\ngust 2008) the software written by Leo Breiman and Adele Cutler is freely"
+    },
+    {
+      "id": 47793,
+      "page": 621,
+      "text": "available. Their code, and the name \u201crandom forests\u201d, is exclusively li-\ncensed to Salford Systems for commercial release. The Weka machine learn-\ning archive http://www.cs.waikato.ac.nz/ml/weka/ at Waikato Univer-\nsity, New Zealand, o\ufb00ers a free java implementation of random forests."
+    },
+    {
+      "id": 47804,
+      "page": 621,
+      "text": "where X \u223cU[0, 1]p, 0 \u2264q \u2264\n1\n2, and J \u2264p is some prede\ufb01ned (even)\nnumber. Describe this probability surface, and give the Bayes error rate."
+    },
+    {
+      "id": 47807,
+      "page": 621,
+      "text": "\u03c1(x) =\nVarZ[E\u0398|ZT(x; \u0398(Z))]\nVarZ[E\u0398|ZT(x; \u0398(Z))] + EZVar\u0398|Z[T(x, \u0398(Z)].\n(15.12)"
+    },
+    {
+      "id": 47808,
+      "page": 621,
+      "text": "The term in the numerator is VarZ[ \u02c6frf(x)], and the second term in the\ndenominator is the expected conditional variance due to the randomization\nin random forests."
+    },
+    {
+      "id": 47813,
+      "page": 622,
+      "text": "where EP denotes expectation with respect to the permutation distribution.\nArgue that this is approximately true when the evaluations are done using\nan independent test set."
+    },
+    {
+      "id": 47814,
+      "page": 623,
+      "text": "This is page 605\nPrinter: Opaque this\n16\nEnsemble Learning"
+    },
+    {
+      "id": 47816,
+      "page": 623,
+      "text": "The idea of ensemble learning is to build a prediction model by combining\nthe strengths of a collection of simpler base models. We have already seen\na number of examples that fall into this category.\nBagging in Section 8.7 and random forests in Chapter 15 are ensemble\nmethods for classi\ufb01cation, where a committee of trees each cast a vote for\nthe predicted class. Boosting in Chapter 10 was initially proposed as a\ncommittee method as well, although unlike random forests, the committee\nof weak learners evolves over time, and the members cast a weighted vote.\nStacking (Section 8.8) is a novel approach to combining the strengths of\na number of \ufb01tted models. In fact one could characterize any dictionary\nmethod, such as regression splines, as an ensemble method, with the basis\nfunctions serving the role of weak learners.\nBayesian methods for nonparametric regression can also be viewed as\nensemble methods: a large number of candidate models are averaged with\nrespect to the posterior distribution of their parameter settings (e.g. (Neal\nand Zhang, 2006)).\nEnsemble learning can be broken down into two tasks: developing a pop-\nulation of base learners from the training data, and then combining them\nto form the composite predictor. In this chapter we discuss boosting tech-\nnology that goes a step further; it builds an ensemble model by conducting\na regularized and supervised search in a high-dimensional space of weak\nlearners."
+    },
+    {
+      "id": 47818,
+      "page": 624,
+      "text": "An early example of a learning ensemble is a method designed for multi-\nclass classi\ufb01cation using error-correcting output codes (Dietterich and Bakiri,\n1995, ECOC). Consider the 10-class digit classi\ufb01cation problem, and the\ncoding matrix C given in Table 16.1."
+    },
+    {
+      "id": 47820,
+      "page": 624,
+      "text": "Digit\nC1\nC2\nC3\nC4\nC5\nC6\n\u00b7 \u00b7 \u00b7\nC15\n0\n1\n1\n0\n0\n0\n0\n\u00b7 \u00b7 \u00b7\n1\n1\n0\n0\n1\n1\n1\n1\n\u00b7 \u00b7 \u00b7\n0\n2\n1\n0\n0\n1\n0\n0\n\u00b7 \u00b7 \u00b7\n1\n..."
+    },
+    {
+      "id": 47822,
+      "page": 624,
+      "text": "Note that the \u2113th column of the coding matrix C\u2113de\ufb01nes a two-class\nvariable that merges all the original classes into two groups. The method\nworks as follows:"
+    },
+    {
+      "id": 47823,
+      "page": 624,
+      "text": "1. Learn a separate classi\ufb01er for each of the L = 15 two class problems\nde\ufb01ned by the columns of the coding matrix."
+    },
+    {
+      "id": 47824,
+      "page": 624,
+      "text": "2. At a test point x, let \u02c6p\u2113(x) be the predicted probability of a one for\nthe \u2113th response."
+    },
+    {
+      "id": 47825,
+      "page": 624,
+      "text": "3. De\ufb01ne \u03b4k(x) = \tL\n\u2113=1 |Ck\u2113\u2212\u02c6p\u2113(x)|, the discriminant function for the\nkth class, where Ck\u2113is the entry for row k and column \u2113in Table 16.1."
+    },
+    {
+      "id": 47826,
+      "page": 624,
+      "text": "Each row of C is a binary code for representing that class. The rows have\nmore bits than is necessary, and the idea is that the redundant \u201cerror-\ncorrecting\u201d bits allow for some inaccuracies, and can improve performance.\nIn fact, the full code matrix C above has a minimum Hamming distance1"
+    },
+    {
+      "id": 47827,
+      "page": 624,
+      "text": "of 7 between any pair of rows. Note that even the indicator response coding\n(Section 4.2) is redundant, since 10 classes require only \u2308log2 10 = 4 bits for\ntheir unique representation. Dietterich and Bakiri (1995) showed impressive\nimprovements in performance for a variety of multiclass problems when\nclassi\ufb01cation trees were used as the base classi\ufb01er.\nJames and Hastie (1998) analyzed the ECOC approach, and showed\nthat random code assignment worked as well as the optimally constructed\nerror-correcting codes. They also argued that the main bene\ufb01t of the coding\nwas in variance reduction (as in bagging and random forests), because the\ndi\ufb00erent coded problems resulted in di\ufb00erent trees, and the decoding step\n(3) above has a similar e\ufb00ect as averaging."
+    },
+    {
+      "id": 47828,
+      "page": 624,
+      "text": "1The Hamming distance between two vectors is the number mismatches between\ncorresponding entries."
+    },
+    {
+      "id": 47831,
+      "page": 625,
+      "text": "In Section 10.12.2 of the \ufb01rst edition of this book, we suggested an analogy\nbetween the sequence of models produced by a gradient boosting algorithm\nand regularized model \ufb01tting in high-dimensional feature spaces. This was\nprimarily motivated by observing the close connection between a boosted\nversion of linear regression and the lasso (Section 3.4.2). These connec-\ntions have been pursued by us and others, and here we present our current\nthinking in this area. We start with the original motivation, which \ufb01ts more\nnaturally in this chapter on ensemble learning."
+    },
+    {
+      "id": 47833,
+      "page": 625,
+      "text": "Intuition for the success of the shrinkage strategy (10.41) of gradient boost-\ning (page 364 in Chapter 10) can be obtained by drawing analogies with\npenalized linear regression with a large basis expansion. Consider the dic-\ntionary of all possible J-terminal node regression trees T = {Tk} that could\nbe realized on the training data as basis functions in IRp. The linear model\nis"
+    },
+    {
+      "id": 47837,
+      "page": 625,
+      "text": "where K = card(T ). Suppose the coe\ufb03cients are to be estimated by least\nsquares. Since the number of such trees is likely to be much larger than\neven the largest training data sets, some form of regularization is required.\nLet \u02c6\u03b1(\u03bb) solve"
+    },
+    {
+      "id": 47851,
+      "page": 625,
+      "text": "J(\u03b1) is a function of the coe\ufb03cients that generally penalizes larger values.\nExamples are"
+    },
+    {
+      "id": 47859,
+      "page": 625,
+      "text": "both covered in Section 3.4. As discussed there, the solution to the lasso\nproblem with moderate to large \u03bb tends to be sparse; many of the \u02c6\u03b1k(\u03bb) =\n0. That is, only a small fraction of all possible trees enter the model (16.1)."
+    },
+    {
+      "id": 47861,
+      "page": 626,
+      "text": "Algorithm 16.1 Forward Stagewise Linear Regression."
+    },
+    {
+      "id": 47862,
+      "page": 626,
+      "text": "1. Initialize \u02c7\u03b1k = 0, k = 1, . . . , K. Set \u03b5 > 0 to some small constant,\nand M large."
+    },
+    {
+      "id": 47864,
+      "page": 626,
+      "text": "(a) (\u03b2\u2217, k\u2217) = arg min\u03b2,k\n\tN\ni=1\n\u0007\nyi \u2212\tK\nl=1 \u03b1lTl(xi) \u2212\u03b2Tk(xi)\n\b2\n."
+    },
+    {
+      "id": 47867,
+      "page": 626,
+      "text": "This seems reasonable since it is likely that only a small fraction of all pos-\nsible trees will be relevant in approximating any particular target function.\nHowever, the relevant subset will be di\ufb00erent for di\ufb00erent targets. Those\ncoe\ufb03cients that are not set to zero are shrunk by the lasso in that their\nabsolute values are smaller than their corresponding least squares values2:\n| \u02c6\u03b1k(\u03bb) | < | \u02c6\u03b1k(0) |. As \u03bb increases, the coe\ufb03cients all shrink, each one\nultimately becoming zero.\nOwing to the very large number of basis functions Tk, directly solving\n(16.2) with the lasso penalty (16.4) is not possible. However, a feasible\nforward stagewise strategy exists that closely approximates the e\ufb00ect of\nthe lasso, and is very similar to boosting and the forward stagewise Algo-\nrithm 10.2. Algorithm 16.1 gives the details. Although phrased in terms\nof tree basis functions Tk, the algorithm can be used with any set of ba-\nsis functions. Initially all coe\ufb03cients are zero in line 1; this corresponds\nto \u03bb = \u221ein (16.2). At each successive step, the tree Tk\u2217is selected that\nbest \ufb01ts the current residuals in line 2(a). Its corresponding coe\ufb03cient \u02c7\u03b1k\u2217\nis then incremented or decremented by an in\ufb01nitesimal amount in 2(b),\nwhile all other coe\ufb03cients\u02c7\u03b1k, k \u0338= k\u2217are left unchanged. In principle, this\nprocess could be iterated until either all the residuals are zero, or \u03b2\u2217= 0.\nThe latter case can occur if K < N, and at that point the coe\ufb03cient values\nrepresent a least squares solution. This corresponds to \u03bb = 0 in (16.2).\nAfter applying Algorithm 16.1 with M < \u221eiterations, many of the coef-\n\ufb01cients will be zero, namely, those that have yet to be incremented. The oth-\ners will tend to have absolute values smaller than their corresponding least\nsquares solution values, | \u02c7\u03b1k(M) | < | \u02c6\u03b1k(0) |. Therefore this M-iteration\nsolution qualitatively resembles the lasso, with M inversely related to \u03bb.\nFigure 16.1 shows an example, using the prostate data studied in Chap-\nter 3. Here, instead of using trees Tk(X) as basis functions, we use the origi-"
+    },
+    {
+      "id": 47868,
+      "page": 626,
+      "text": "2If K > N, there is in general no unique \u201cleast squares value,\u201d since in\ufb01nitely many\nsolutions will exist that \ufb01t the data perfectly. We can pick the minimum L1-norm solution\namongst these, which is the unique lasso solution."
+    },
+    {
+      "id": 47897,
+      "page": 627,
+      "text": "k |\u03b1k|. The right panel shows\nthe results of the stagewise linear regression Algorithm 16.1, using M = 220\nconsecutive steps of size \u03b5 = .01."
+    },
+    {
+      "id": 47898,
+      "page": 627,
+      "text": "nal variables Xk themselves; that is, a multiple linear regression model. The\nleft panel displays the pro\ufb01les of estimated coe\ufb03cients from the lasso, for\ndi\ufb00erent values of the bound parameter t = \t\nk |\u03b1k|. The right panel shows\nthe results of the stagewise Algorithm 16.1, with M = 250 and \u03b5 = 0.01.\n[The left and right panels of Figure 16.1 are the same as Figure 3.10 and\nthe left panel of Figure 3.19, respectively.] The similarity between the two\ngraphs is striking.\nIn some situations the resemblance is more than qualitative. For example,\nif all of the basis functions Tk are mutually uncorrelated, then as \u03b5 \u21930, M \u2191\nsuch that M\u03f5 \u2192t, Algorithm 16.1 yields exactly the same solution as the\nlasso for bound parameter t = \t\nk |\u03b1k| (and likewise for all solutions along\nthe path). Of course, tree-based regressors are not uncorrelated. However,\nthe solution sets are also identical if the coe\ufb03cients \u02c6\u03b1k(\u03bb) are all monotone\nfunctions of \u03bb. This is often the case when the correlation between the\nvariables is low. When the \u02c6\u03b1k(\u03bb) are not monotone in \u03bb, then the solution\nsets are not identical. The solution sets for Algorithm 16.1 tend to change\nless rapidly with changing values of the regularization parameter than those\nof the lasso."
+    },
+    {
+      "id": 47900,
+      "page": 628,
+      "text": "Efron et al. (2004) make the connections more precise, by characterizing\nthe exact solution paths in the \u03b5-limiting case. They show that the coe\ufb03-\ncient paths are piece-wise linear functions, both for the lasso and forward\nstagewise. This facilitates e\ufb03cient algorithms which allow the entire paths\nto be computed with the same cost as a single least-squares \ufb01t. This least\nangle regression algorithm is described in more detail in Section 3.8.1.\nHastie et al. (2007) show that this in\ufb01nitesimal forward stagewise algo-\nrithm (FS0) \ufb01ts a monotone version of the lasso, which optimally reduces\nat each step the loss function for a given increase in the arc length of the\ncoe\ufb03cient path (see Sections 16.2.3 and 3.8.1). The arc-length for the \u03f5 > 0\ncase is M\u03f5, and hence proportional to the number of steps.\nTree boosting (Algorithm 10.3) with shrinkage (10.41) closely resembles\nAlgorithm 16.1, with the learning rate parameter \u03bd corresponding to \u03b5. For\nsquared error loss, the only di\ufb00erence is that the optimal tree to be selected\nat each iteration Tk\u2217is approximated by the standard top-down greedy\ntree-induction algorithm. For other loss functions, such as the exponential\nloss of AdaBoost and the binomial deviance, Rosset et al. (2004a) show\nsimilar results to what we see here. Thus, one can view tree boosting with\nshrinkage as a form of monotone ill-posed regression on all possible (J-\nterminal node) trees, with the lasso penalty (16.4) as a regularizer. We\nreturn to this topic in Section 16.2.3.\nThe choice of no shrinkage [\u03bd = 1 in equation (10.41)] is analogous to\nforward-stepwise regression, and its more aggressive cousin best-subset se-\nlection, which penalizes the number of non zero coe\ufb03cients J(\u03b1) = \t\nk |\u03b1k|0.\nWith a small fraction of dominant variables, best subset approaches often\nwork well. But with a moderate fraction of strong variables, it is well known\nthat subset selection can be excessively greedy (Copas, 1983), often yielding\npoor results when compared to less aggressive strategies such as the lasso\nor ridge regression. The dramatic improvements often seen when shrinkage\nis used with boosting are yet another con\ufb01rmation of this approach."
+    },
+    {
+      "id": 47902,
+      "page": 628,
+      "text": "As shown in the previous section, boosting\u2019s forward stagewise strategy\nwith shrinkage approximately minimizes the same loss function with a\nlasso-style L1 penalty. The model is built up slowly, searching through\n\u201cmodel space\u201d and adding shrunken basis functions derived from impor-\ntant predictors. In contrast, the L2 penalty is computationally much easier\nto deal with, as shown in Section 12.3.7. With the basis functions and L2\npenalty chosen to match a particular positive-de\ufb01nite kernel, one can solve\nthe corresponding optimization problem without explicitly searching over\nindividual basis functions.\nHowever, the sometimes superior performance of boosting over proce-\ndures such as the support vector machine may be largely due to the im-\nplicit use of the L1 versus L2 penalty. The shrinkage resulting from the"
+    },
+    {
+      "id": 47904,
+      "page": 629,
+      "text": "L1 penalty is better suited to sparse situations, where there are few basis\nfunctions with nonzero coe\ufb03cients (among all possible choices).\nWe can strengthen this argument through a simple example, taken from\nFriedman et al. (2004). Suppose we have 10, 000 data points and our model\nis a linear combination of a million trees. If the true population coe\ufb03cients\nof these trees arose from a Gaussian distribution, then we know that in a\nBayesian sense the best predictor is ridge regression (Exercise 3.6). That is,\nwe should use an L2 rather than an L1 penalty when \ufb01tting the coe\ufb03cients.\nOn the other hand, if there are only a small number (e.g., 1000) coe\ufb03cients\nthat are nonzero, the lasso (L1 penalty) will work better. We think of this\nas a sparse scenario, while the \ufb01rst case (Gaussian coe\ufb03cients) is dense.\nNote however that in the dense scenario, although the L2 penalty is best,\nneither method does very well since there is too little data from which to\nestimate such a large number of nonzero coe\ufb03cients. This is the curse of\ndimensionality taking its toll. In a sparse setting, we can potentially do\nwell with the L1 penalty, since the number of nonzero coe\ufb03cients is small.\nThe L2 penalty fails again.\nIn other words, use of the L1 penalty follows what we call the \u201cbet on\nsparsity\u201d principle for high-dimensional problems:"
+    },
+    {
+      "id": 47905,
+      "page": 629,
+      "text": "Use a procedure that does well in sparse problems, since no pro-\ncedure does well in dense problems."
+    },
+    {
+      "id": 47907,
+      "page": 629,
+      "text": "\u2022 For any given application, the degree of sparseness/denseness depends\non the unknown true target function, and the chosen dictionary T ."
+    },
+    {
+      "id": 47908,
+      "page": 629,
+      "text": "\u2022 The notion of sparse versus dense is relative to the size of the train-\ning data set and/or the noise-to-signal ratio (NSR). Larger training\nsets allow us to estimate coe\ufb03cients with smaller standard errors.\nLikewise in situations with small NSR, we can identify more nonzero\ncoe\ufb03cients with a given sample size than in situations where the NSR\nis larger."
+    },
+    {
+      "id": 47909,
+      "page": 629,
+      "text": "\u2022 The size of the dictionary plays a role as well. Increasing the size of the\ndictionary may lead to a sparser representation for our function, but\nthe search problem becomes more di\ufb03cult leading to higher variance."
+    },
+    {
+      "id": 47956,
+      "page": 631,
+      "text": "added to the linear predictor \u03b7(X) = XT \u03b2 to produce a continuous re-\nsponse. For classi\ufb01cation the linear predictor is transformed via the inverse-\nlogit to a probability, and a binary response is generated. Five di\ufb00er-\nent noise-to-signal ratios are presented, obtained by scaling \u03b7(X) prior\nto generating the response. In both cases this is de\ufb01ned to be NSR =\nVar(Y |\u03b7(X))/Var(\u03b7(X)). Both the ridge regression and lasso coe\ufb03cient\npaths were \ufb01t using a series of 50 values of \u03bb corresponding to a range of\ndf from 1 to 50 (see Chapter 3 for details). The models were evaluated on\na large test set (in\ufb01nite for Gaussian, 5000 for binary), and in each case the\nvalue for \u03bb was chosen to minimize the test-set error. We report percentage\nvariance explained for the regression problems, and percentage misclassi\ufb01-\ncation error explained for the classi\ufb01cation problems (relative to a baseline\nerror of 0.5). There are 20 simulation runs for each scenario.\nNote that for the classi\ufb01cation problems, we are using squared-error loss\nto \ufb01t the binary response. Note also that we do not using the training\ndata to select \u03bb, but rather are reporting the best possible behavior for\neach method in the di\ufb00erent scenarios. The L2 penalty performs poorly\neverywhere. The Lasso performs reasonably well in the only two situations\nwhere it can (sparse coe\ufb03cients). As expected the performance gets worse\nas the NSR increases (less so for classi\ufb01cation), and as the model becomes\ndenser. The di\ufb00erences are less marked for classi\ufb01cation than for regression.\nThese empirical results are supported by a large body of theoretical\nresults (Donoho and Johnstone, 1994; Donoho and Elad, 2003; Donoho,\n2006b; Candes and Tao, 2007) that support the superiority of L1 estimation\nin sparse settings."
+    },
+    {
+      "id": 47958,
+      "page": 631,
+      "text": "It has often been observed that boosting \u201cdoes not over\ufb01t,\u201d or more as-\ntutely is \u201cslow to over\ufb01t.\u201d Part of the explanation for this phenomenon was\nmade earlier for random forests \u2014 misclassi\ufb01cation error is less sensitive to\nvariance than is mean-squared error, and classi\ufb01cation is the major focus\nin the boosting community. In this section we show that the regulariza-\ntion paths of boosted models are \u201cwell behaved,\u201d and that for certain loss\nfunctions they have an appealing limiting form.\nFigure 16.3 shows the coe\ufb03cient paths for lasso and in\ufb01nitesimal forward\nstagewise (FS0) in a simulated regression setting. The data consists of a\ndictionary of 1000 Gaussian variables, strongly correlated (\u03c1 = 0.95) within\nblocks of 20, but uncorrelated between blocks. The generating model has\nnonzero coe\ufb03cients for 50 variables, one drawn from each block, and the\ncoe\ufb03cient values are drawn from a standard Gaussian. Finally, Gaussian\nnoise is added, with a noise-to-signal ratio of 0.72 (Exercise\n16.1.) The\nFS0 algorithm is a limiting form of algorithm 16.1, where the step size \u03b5\nis shrunk to zero (Section 3.8.1). The grouping of the variables is intended\nto mimic the correlations of nearby trees, and with the forward-stagewise"
+    },
+    {
+      "id": 47970,
+      "page": 632,
+      "text": "algorithm, this setup is intended as an idealized version of gradient boosting\nwith shrinkage. For both these algorithms, the coe\ufb03cient paths can be\ncomputed exactly, since they are piecewise linear (see the LARS algorithm\nin Section 3.8.1).\nHere the coe\ufb03cient pro\ufb01les are similar only in the early stages of the\npaths. For the later stages, the forward stagewise paths tend to be mono-\ntone and smoother, while those for the lasso \ufb02uctuate widely. This is due\nto the strong correlations among subsets of the variables \u2014lasso su\ufb00ers\nsomewhat from the multi-collinearity problem (Exercise 3.28).\nThe performance of the two models is rather similar (Figure 16.4), and\nthey achieve about the same minimum. In the later stages forward stagewise\ntakes longer to over\ufb01t, a likely consequence of the smoother paths.\nHastie et al. (2007) show that FS0 solves a monotone version of the lasso\nproblem for squared error loss. Let T a = T \u222a{\u2212T } be the augmented\ndictionary obtained by including a negative copy of every basis element\nin T . We consider models f(x) ="
+    },
+    {
+      "id": 47971,
+      "page": 632,
+      "text": "Tk\u2208T a \u03b1kTk(x) with non-negative co-\ne\ufb03cients \u03b1k \u22650. In this expanded space, the lasso coe\ufb03cient paths are\npositive, while those of FS0 are monotone nondecreasing.\nThe monotone lasso path is characterized by a di\ufb00erential equation"
+    },
+    {
+      "id": 47979,
+      "page": 633,
+      "text": "oooooooooooooo oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
+    },
+    {
+      "id": 47984,
+      "page": 633,
+      "text": "oooo ooooooooo\noooooooo ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
+    },
+    {
+      "id": 47991,
+      "page": 633,
+      "text": "with initial condition \u03b1(0) = 0, where \u2113is the L1 arc-length of the path\n\u03b1(\u2113) (Exercise 16.2). The monotone lasso move direction (velocity vector)\n\u03c1ml(\u03b1(\u2113)) decreases the loss at the optimal quadratic rate per unit increase\nin the L1 arc-length of the path. Since \u03c1ml\nk (\u03b1(\u2113)) \u22650 \u2200k, \u2113, the solution\npaths are monotone.\nThe lasso can similarly be characterized as the solution to a di\ufb00erential\nequation as in (16.6), except that the move directions decrease the loss\noptimally per unit increase in the L1 norm of the path. As a consequence,\nthey are not necessarily positive, and hence the lasso paths need not be\nmonotone.\nIn this augmented dictionary, restricting the coe\ufb03cients to be positive is\nnatural, since it avoids an obvious ambiguity. It also ties in more naturally\nwith tree boosting\u2014we always \ufb01nd trees positively correlated with the\ncurrent residual.\nThere have been suggestions that boosting performs well (for two-class\nclassi\ufb01cation) because it exhibits maximal-margin properties, much like the\nsupport-vector machines of Chapters 4.5.2 and 12. Schapire et al. (1998)\nde\ufb01ne the normalized L1 margin of a \ufb01tted model f(x) = \t\nk \u03b1kTk(x) as"
+    },
+    {
+      "id": 47993,
+      "page": 633,
+      "text": "Here the minimum is taken over the training sample, and yi \u2208{\u22121, +1}.\nUnlike the L2 margin (4.40) of support vector machines, the L1 margin\nm(f) measures the distance to the closest training point in L\u221eunits (max-\nimum coordinate distance)."
+    },
+    {
+      "id": 48004,
+      "page": 634,
+      "text": "Schapire et al. (1998) prove that with separable data, Adaboost in-\ncreases m(f) with each iteration, converging to a margin-symmetric so-\nlution. R\u00a8atsch and Warmuth (2002) prove the asymptotic convergence of\nAdaboost with shrinkage to a L1-margin-maximizing solution. Rosset et\nal. (2004a) consider regularized models of the form (16.2) for general loss\nfunctions. They show that as \u03bb \u21930, for particular loss functions the solution\nconverges to a margin-maximizing con\ufb01guration. In particular they show\nthis to be the case for the exponential loss of Adaboost, as well as binomial\ndeviance.\nCollecting together the results of this section, we reach the following\nsummary for boosted classi\ufb01ers:"
+    },
+    {
+      "id": 48005,
+      "page": 634,
+      "text": "The sequence of boosted classi\ufb01ers form an L1-regularized mono-\ntone path to a margin-maximizing solution."
+    },
+    {
+      "id": 48006,
+      "page": 634,
+      "text": "Of course the margin-maximizing end of the path can be a very poor, over\ufb01t\nsolution, as it is in the example in Figure 16.5. Early stopping amounts\nto picking a point along the path, and should be done with the aid of a\nvalidation dataset."
+    },
+    {
+      "id": 48008,
+      "page": 634,
+      "text": "The insights learned from the previous sections can be harnessed to produce\na more e\ufb00ective and e\ufb03cient ensemble model. Again we consider functions"
+    },
+    {
+      "id": 48012,
+      "page": 635,
+      "text": "where T is a dictionary of basis functions, typically trees. For gradient\nboosting and random forests, |T | is very large, and it is quite typical for the\n\ufb01nal model to involve many thousands of trees. In the previous section we\nargue that gradient boosting with shrinkage \ufb01ts an L1 regularized monotone\npath in this space of trees.\nFriedman and Popescu (2003) propose a hybrid approach which breaks\nthis process down into two stages:"
+    },
+    {
+      "id": 48013,
+      "page": 635,
+      "text": "\u2022 A \ufb01nite dictionary TL = {T1(x), T2(x), . . . , TM(x)} of basis functions\nis induced from the training data;"
+    },
+    {
+      "id": 48014,
+      "page": 635,
+      "text": "\u2022 A family of functions f\u03bb(x) is built by \ufb01tting a lasso path in this\ndictionary:"
+    },
+    {
+      "id": 48022,
+      "page": 635,
+      "text": "In its simplest form this model could be seen as a way of post-processing\nboosting or random forests, taking for TL the collection of trees produced\nby the gradient boosting or random forest algorithms. By \ufb01tting the lasso\npath to these trees, we would typically use a much reduced set, which would\nsave in computations and storage for future predictions. In the next section\nwe describe modi\ufb01cations of this prescription that reduce the correlations in\nthe ensemble TL, and improve the performance of the lasso post processor.\nAs an initial illustration, we apply this procedure to a random forest\nensemble grown on the spam data.\nFigure 16.6 shows that a lasso post-processing o\ufb00ers modest improve-\nment over the random forest (blue curve), and reduces the forest to about\n40 trees, rather than the original 1000. The post-processed performance\nmatches that of gradient boosting. The orange curves represent a modi\ufb01ed\nversion of random forests, designed to reduce the correlations between trees\neven more. Here a random sub-sample (without replacement) of 5% of the\ntraining sample is used to grow each tree, and the trees are restricted to be\nshallow (about six terminal nodes). The post-processing o\ufb00ers more dra-\nmatic improvements here, and the training costs are reduced by a factor\nof about 100. However, the performance of the post-processed model falls\nsomewhat short of the blue curves."
+    },
+    {
+      "id": 48024,
+      "page": 635,
+      "text": "Not all ensembles TL will perform well with post-processing. In terms of\nbasis functions, we want a collection that covers the space well in places"
+    },
+    {
+      "id": 48031,
+      "page": 636,
+      "text": "Random Forest\nRandom Forest (5%, 6)\nGradient Boost (5 node)"
+    },
+    {
+      "id": 48033,
+      "page": 636,
+      "text": "where they are needed, and are su\ufb03ciently di\ufb00erent from each other for\nthe post-processor to be e\ufb00ective.\nFriedman and Popescu (2003) gain insights from numerical quadrature\nand importance sampling. They view the unknown function as an integral"
+    },
+    {
+      "id": 48035,
+      "page": 636,
+      "text": "where \u03b3 \u2208\u0393 indexes the basis functions b(x; \u03b3). For example, if the basis\nfunctions are trees, then \u03b3 indexes the splitting variables, the split-points\nand the values in the terminal nodes. Numerical quadrature amounts to\n\ufb01nding a set of M evaluation points \u03b3m \u2208\u0393 and corresponding weights\n\u03b1m so that fm(x) = \u03b10 + \tM\nm=1 \u03b1mb(x; \u03b3m) approximates f(x) well over\nthe domain of x. Importance sampling amounts to sampling \u03b3 at random,\nbut giving more weight to relevant regions of the space \u0393. Friedman and\nPopescu (2003) suggest a measure of (lack of) relevance that uses the loss\nfunction (16.9):"
+    },
+    {
+      "id": 48040,
+      "page": 637,
+      "text": "evaluated on the training data.\nIf a single basis function were to be selected (e.g., a tree), it would be\nthe global minimizer \u03b3\u2217= arg min\u03b3\u2208\u0393 Q(\u03b3). Introducing randomness in the\nselection of \u03b3 would necessarily produce less optimal values with Q(\u03b3) \u2265\nQ(\u03b3\u2217). They propose a natural measure of the characteristic width \u03c3 of the\nsampling scheme S,\n\u03c3 = ES[Q(\u03b3) \u2212Q(\u03b3\u2217)].\n(16.12)"
+    },
+    {
+      "id": 48041,
+      "page": 637,
+      "text": "\u2022 \u03c3 too narrow suggests too many of the b(x; \u03b3m) look alike, and similar\nto b(x; \u03b3\u2217);"
+    },
+    {
+      "id": 48042,
+      "page": 637,
+      "text": "\u2022 \u03c3 too wide implies a large spread in the b(x; \u03b3m), but possibly con-\nsisting of many irrelevant cases."
+    },
+    {
+      "id": 48043,
+      "page": 637,
+      "text": "Friedman and Popescu (2003) use sub-sampling as a mechanism for intro-\nducing randomness, leading to their ensemble-generation algorithm 16.2."
+    },
+    {
+      "id": 48051,
+      "page": 637,
+      "text": "Sm(\u03b7) refers to a subsample of N \u00b7 \u03b7 (\u03b7 \u2208(0, 1]) of the training obser-\nvations, typically without replacement. Their simulations suggest picking\n\u03b7 \u2264\n1\n2, and for large N picking \u03b7 \u223c1/\n\u221a"
+    },
+    {
+      "id": 48052,
+      "page": 637,
+      "text": "N. Reducing \u03b7 increases the\nrandomness, and hence the width \u03c3. The parameter \u03bd \u2208[0, 1] introduces\nmemory into the randomization process; the larger \u03bd, the more the pro-\ncedure avoids b(x; \u03b3) similar to those found before. A number of familiar\nrandomization schemes are special cases of Algorithm 16.2:"
+    },
+    {
+      "id": 48053,
+      "page": 637,
+      "text": "Bagging has \u03b7 = 1, but samples with replacement, and has \u03bd = 0. Fried-\nman and Hall (2007) argue that sampling without replacement with\n\u03b7 = 1/2 is equivalent to sampling with replacement with \u03b7 = 1, and\nthe former is much more e\ufb03cient."
+    },
+    {
+      "id": 48055,
+      "page": 638,
+      "text": "Random forest sampling is similar, with more randomness introduced by\nthe selection of the splitting variable. Reducing \u03b7 < 1/2 in algo-\nrithm 16.2 has a similar e\ufb00ect to reducing m in random forests, but\ndoes not su\ufb00er from the potential biases discussed in Section 15.4.2."
+    },
+    {
+      "id": 48056,
+      "page": 638,
+      "text": "Gradient boosting with shrinkage (10.41) uses \u03b7 = 1, but typically does\nnot produce su\ufb03cient width \u03c3."
+    },
+    {
+      "id": 48057,
+      "page": 638,
+      "text": "Stochastic gradient boosting (Friedman, 1999) follows the recipe exactly."
+    },
+    {
+      "id": 48059,
+      "page": 638,
+      "text": "2, and call their combined\nprocedure (ensemble generation and post processing) Importance sampled\nlearning ensemble (ISLE).\nFigure 16.7 shows the performance of an ISLE on the spam data. It does"
+    },
+    {
+      "id": 48067,
+      "page": 638,
+      "text": "not improve the predictive performance, but is able to produce a more\nparsimonious model. Note that in practice the post-processing includes\nthe selection of the regularization parameter \u03bb in (16.9), which would be"
+    },
+    {
+      "id": 48069,
+      "page": 639,
+      "text": "chosen by cross-validation. Here we simply demonstrate the e\ufb00ects of post-\nprocessing by showing the entire path on the test data.\nFigure 16.8 shows various ISLEs on a regression example. The generating"
+    },
+    {
+      "id": 48074,
+      "page": 639,
+      "text": "GBM (1, 0.01)\nGBM (0.1, 0.01)\nISLE  GB\nISLE RF\nRandom Forest"
+    },
+    {
+      "id": 48082,
+      "page": 639,
+      "text": "where X \u223cU[0, 1]100 (the last 65 elements are noise variables). The re-\nsponse Y = f(X) + \u03b5 where \u03b5 \u223cN(0, \u03c32); we chose \u03c3 = 1.3 resulting in a\nsignal-to-noise ratio of approximately 2. We used a training sample of size\n1000, and estimated the mean squared error E( \u02c6f(X)\u2212f(X))2 by averaging\nover a test set of 500 samples. The sub-sampled GBM curve (light blue)\nis an instance of stochastic gradient boosting (Friedman, 1999) discussed in\nSection 10.12, and it outperforms gradient boosting on this example."
+    },
+    {
+      "id": 48085,
+      "page": 640,
+      "text": "Here we describe a modi\ufb01cation of the tree-ensemble method that focuses\non individual rules (Friedman and Popescu, 2003). We encountered rules\nin Section 9.3 in the discussion of the PRIM method. The idea is to enlarge\nan ensemble of trees by constructing a set of rules from each of the trees\nin the collection."
+    },
+    {
+      "id": 48096,
+      "page": 640,
+      "text": "R1(X)\n=\nI(X1 < 2.1)\nR2(X)\n=\nI(X1 \u22652.1)\nR3(X)\n=\nI(X1 \u22652.1) \u00b7 I(X3 \u2208{S})\nR4(X)\n=\nI(X1 \u22652.1) \u00b7 I(X3 \u2208{M, L})\nR5(X)\n=\nI(X1 \u22652.1) \u00b7 I(X3 \u2208{S}) \u00b7 I(X7 < 4.5)\nR6(X)\n=\nI(X1 \u22652.1) \u00b7 I(X3 \u2208{S}) \u00b7 I(X7 \u22654.5)"
+    },
+    {
+      "id": 48098,
+      "page": 640,
+      "text": "A linear expansion in rules 1, 4, 5 and 6 is equivalent to the tree itself\n(Exercise 16.3); hence (16.14) is an over-complete basis for the tree.\nFor each tree Tm in an ensemble T , we can construct its mini-ensemble\nof rules T m\nRULE, and then combine them all to form a larger ensemble"
+    },
+    {
+      "id": 48102,
+      "page": 640,
+      "text": "This is then treated like any other ensemble, and post-processed via the\nlasso or similar regularized procedure.\nThere are several advantages to this approach of deriving rules from the\nmore complex trees:"
+    },
+    {
+      "id": 48103,
+      "page": 640,
+      "text": "\u2022 The space of models is enlarged, and can lead to improved perfor-\nmance."
+    },
+    {
+      "id": 48109,
+      "page": 641,
+      "text": "\u2022 Rules are easier to interpret than trees, so there is the potential for\na simpli\ufb01ed model."
+    },
+    {
+      "id": 48110,
+      "page": 641,
+      "text": "\u2022 It is often natural to augment T RULE by including each variable Xj\nseparately as well, thus allowing the ensemble to model linear func-\ntions well."
+    },
+    {
+      "id": 48111,
+      "page": 641,
+      "text": "Friedman and Popescu (2008) demonstrate the power of this procedure on a\nnumber of illustrative examples, including the simulation example (16.13).\nFigure 16.10 shows boxplots of the mean-squared error from the true model\nfor twenty realizations from this model. The models were all \ufb01t using the\nRulefit software, available on the ESL homepage3, which runs in an auto-\nmatic mode.\nOn the same training set as used in Figure 16.8, the rule based model\nachieved a mean-squared error of 1.06. Although slightly worse than the\nbest achieved in that \ufb01gure, the results are not comparable because cross-\nvalidation was used here to select the \ufb01nal model."
+    },
+    {
+      "id": 48113,
+      "page": 641,
+      "text": "As noted in the introduction, many of the new methods in machine learning\nhave been dubbed \u201censemble\u201d methods. These include neural networks\nboosting, bagging and random forests; Dietterich (2000a) gives a survey of\ntree-based ensemble methods. Neural networks (Chapter 11) are perhaps\nmore deserving of the name, since they simultaneously learn the parameters"
+    },
+    {
+      "id": 48116,
+      "page": 642,
+      "text": "of the hidden units (basis functions), along with how to combine them.\nBishop (2006) discusses neural networks in some detail, along with the\nBayesian perspective (MacKay, 1992; Neal, 1996). Support vector machines\n(Chapter 12) can also be regarded as an ensemble method; they perform\nL2 regularized model \ufb01tting in high-dimensional feature spaces. Boosting\nand lasso exploit sparsity through L1 regularization to overcome the high-\ndimensionality, while SVMs rely on the \u201ckernel trick\u201d characteristic of L2\nregularization.\nC5.0 (Quinlan, 2004) is a commercial tree and rule generation package,\nwith some goals in common with Rulefit.\nThere is a vast and varied literature often referred to as \u201ccombining clas-\nsi\ufb01ers\u201d which abounds in ad-hoc schemes for mixing methods of di\ufb00erent\ntypes to achieve better performance. For a principled approach, see Kittler\net al. (1998)."
+    },
+    {
+      "id": 48122,
+      "page": 642,
+      "text": "Show that \u039b(t) \u2265|\u03b1(t)|1, with equality i\ufb00\u03b1(t) is monotone."
+    },
+    {
+      "id": 48125,
+      "page": 643,
+      "text": "This is page 625\nPrinter: Opaque this\n17\nUndirected Graphical Models"
+    },
+    {
+      "id": 48127,
+      "page": 643,
+      "text": "A graph consists of a set of vertices (nodes), along with a set of edges join-\ning some pairs of the vertices. In graphical models, each vertex represents\na random variable, and the graph gives a visual way of understanding the\njoint distribution of the entire set of random variables. They can be use-\nful for either unsupervised or supervised learning. In an undirected graph,\nthe edges have no directional arrows. We restrict our discussion to undi-\nrected graphical models, also known as Markov random \ufb01elds or Markov\nnetworks. In these graphs, the absence of an edge between two vertices has\na special meaning: the corresponding random variables are conditionally\nindependent, given the other variables.\nFigure 17.1 shows an example of a graphical model for a \ufb02ow-cytometry\ndataset with p = 11 proteins measured on N = 7466 cells, from Sachs\net al. (2003). Each vertex in the graph corresponds to the real-valued ex-\npression level of a protein. The network structure was estimated assuming\na multivariate Gaussian distribution, using the graphical lasso procedure\ndiscussed later in this chapter.\nSparse graphs have a relatively small number of edges, and are convenient\nfor interpretation. They are useful in a variety of domains, including ge-\nnomics and proteomics, where they provide rough models of cell pathways.\nMuch work has been done in de\ufb01ning and understanding the structure of\ngraphical models; see the Bibliographic Notes for references."
+    },
+    {
+      "id": 48140,
+      "page": 644,
+      "text": "As we will see, the edges in a graph are parametrized by values or po-\ntentials that encode the strength of the conditional dependence between\nthe random variables at the corresponding vertices. The main challenges in\nworking with graphical models are model selection (choosing the structure\nof the graph), estimation of the edge parameters from data, and compu-\ntation of marginal vertex probabilities and expectations, from their joint\ndistribution. The last two tasks are sometimes called learning and inference\nin the computer science literature.\nWe do not attempt a comprehensive treatment of this interesting area.\nInstead, we introduce some basic concepts, and then discuss a few sim-\nple methods for estimation of the parameters and structure of undirected\ngraphical models; methods that relate to the techniques already discussed\nin this book. The estimation approaches that we present for continuous\nand discrete-valued vertices are di\ufb00erent, so we treat them separately. Sec-\ntions 17.3.1 and 17.3.2 may be of particular interest, as they describe new,\nregression-based procedures for estimating graphical models.\nThere is a large and active literature on directed graphical models or\nBayesian networks; these are graphical models in which the edges have\ndirectional arrows (but no directed cycles). Directed graphical models rep-\nresent probability distributions that can be factored into products of condi-\ntional distributions, and have the potential for causal interpretations. We\nrefer the reader to Wasserman (2004) for a brief overview of both undi-\nrected and directed graphs; the next section follows closely his Chapter 18."
+    },
+    {
+      "id": 48158,
+      "page": 645,
+      "text": "A longer list of useful references is given in the Bibliographic Notes on\npage 645."
+    },
+    {
+      "id": 48160,
+      "page": 645,
+      "text": "In this section we discuss the basic properties of graphs as models for the\njoint distribution of a set of random variables. We defer discussion of (a)\nparametrization and estimation of the edge parameters from data, and (b)\nestimation of the topology of a graph, to later sections.\nFigure 17.2 shows four examples of undirected graphs. A graph G consists\nof a pair (V, E), where V is a set of vertices and E the set of edges (de\ufb01ned\nby pairs of vertices). Two vertices X and Y are called adjacent if there\nis a edge joining them; this is denoted by X \u223cY . A path X1, X2, . . . , Xn\nis a set of vertices that are joined, that is Xi\u22121 \u223cXi for i = 2, . . . , n. A\ncomplete graph is a graph with every pair of vertices joined by an edge.\nA subgraph U \u2208V is a subset of vertices together with their edges. For\nexample, (X, Y, Z) in Figure 17.2(a) form a path but not a complete graph.\nSuppose that we have a graph G whose vertex set V represents a set of\nrandom variables having joint distribution P. In a Markov graph G, the\nabsence of an edge implies that the corresponding random variables are\nconditionally independent given the variables at the other vertices. This is\nexpressed with the following notation:"
+    },
+    {
+      "id": 48163,
+      "page": 646,
+      "text": "where \u201crest\u201d refers to all of the other vertices in the graph. For example\nin Figure 17.2(a) X \u22a5Z|Y . These are known as the pairwise Markov\nindependencies of G.\nIf A, B and C are subgraphs, then C is said to separate A and B if every\npath between A and B intersects a node in C. For example, Y separates\nX and Z in Figures 17.2(a) and (d), and Z separates Y and W in (d). In\nFigure 17.2(b) Z is not connected to X, Y, W so we say that the two sets\nare separated by the empty set. In Figure 17.2(c), C = {X, Z} separates\nY and W.\nSeparators have the nice property that they break the graph into con-\nditionally independent pieces. Speci\ufb01cally, in a Markov graph G with sub-\ngraphs A, B and C,"
+    },
+    {
+      "id": 48165,
+      "page": 646,
+      "text": "These are known as the global Markov properties of G. It turns out that the\npairwise and global Markov properties of a graph are equivalent (for graphs\nwith positive distributions). That is, the set of graphs with associated prob-\nability distributions that satisfy the pairwise Markov independencies and\nglobal Markov assumptions are the same. This result is useful for inferring\nglobal independence relations from simple pairwise properties. For example\nin Figure 17.2(d) X \u22a5Z|{Y, W} since it is a Markov graph and there is no\nlink joining X and Z. But Y also separates X from Z and W and hence by\nthe global Markov assumption we conclude that X \u22a5Z|Y and X \u22a5W|Y .\nSimilarly we have Y \u22a5W|Z.\nThe global Markov property allows us to decompose graphs into smaller\nmore manageable pieces and thus leads to essential simpli\ufb01cations in com-\nputation and interpretation. For this purpose we separate the graph into\ncliques. A clique is a complete subgraph\u2014 a set of vertices that are all\nadjacent to one another; it is called maximal if it is a clique and no other\nvertices can be added to it and still yield a clique. The maximal cliques for\nthe graphs of Figure 17.2 are"
+    },
+    {
+      "id": 48170,
+      "page": 646,
+      "text": "Although the following applies to both continuous and discrete distri-\nbutions, much of the development has been for the latter. A probability\ndensity function f over a Markov graph G can be can represented as"
+    },
+    {
+      "id": 48176,
+      "page": 647,
+      "text": "where C is the set of maximal cliques, and the positive functions \u03c8C(\u00b7) are\ncalled clique potentials. These are not in general density functions1, but\nrather are a\ufb03nities that capture the dependence in XC by scoring certain\ninstances xC higher than others. The quantity"
+    },
+    {
+      "id": 48181,
+      "page": 647,
+      "text": "is the normalizing constant, also known as the partition function. Alterna-\ntively, the representation (17.3) implies a graph with independence prop-\nerties de\ufb01ned by the cliques in the product. This result holds for Markov\nnetworks G with positive distributions, and is known as the Hammersley-\nCli\ufb00ord theorem (Hammersley and Cli\ufb00ord, 1971; Cli\ufb00ord, 1990).\nMany of the methods for estimation and computation on graphs \ufb01rst de-\ncompose the graph into its maximal cliques. Relevant quantities are com-\nputed in the individual cliques and then accumulated across the entire\ngraph. A prominent example is the join tree or junction tree algorithm for\ncomputing marginal and low order probabilities from the joint distribution\non a graph. Details can be found in Pearl (1986), Lauritzen and Spiegel-\nhalter (1988), Pearl (1988), Shenoy and Shafer (1988), Jensen et al. (1990),\nor Koller and Friedman (2007)."
+    }
+  ]
+}

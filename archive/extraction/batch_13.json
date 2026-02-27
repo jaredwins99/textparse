@@ -1,0 +1,1138 @@
+{
+  "batch_id": 13,
+  "page_range": "647-698",
+  "sections": [
+    {
+      "number": "17.3",
+      "title": "Undirected Graphical Models for Continuous",
+      "page_start": 648
+    },
+    {
+      "number": "17.3.1",
+      "title": "Estimation of the Parameters when the Graph",
+      "page_start": 649
+    },
+    {
+      "number": "17.3.2",
+      "title": "Estimation of the Graph Structure",
+      "page_start": 653
+    },
+    {
+      "number": "17.4",
+      "title": "Undirected Graphical Models for Discrete",
+      "page_start": 656
+    },
+    {
+      "number": "17.4.1",
+      "title": "Estimation of the Parameters when the Graph",
+      "page_start": 657
+    },
+    {
+      "number": "17.4.2",
+      "title": "Hidden Nodes",
+      "page_start": 659
+    },
+    {
+      "number": "17.4.3",
+      "title": "Estimation of the Graph Structure",
+      "page_start": 660
+    },
+    {
+      "number": "17.4.4",
+      "title": "Restricted Boltzmann Machines",
+      "page_start": 661
+    },
+    {
+      "number": "18.1",
+      "title": "When p is Much Bigger than N",
+      "page_start": 667
+    },
+    {
+      "number": "18.2",
+      "title": "Nearest Shrunken Centroids",
+      "page_start": 669
+    },
+    {
+      "number": "18.3",
+      "title": "Linear Classi\ufb01ers with Quadratic",
+      "page_start": 672
+    },
+    {
+      "number": "18.3.1",
+      "title": "Regularized Discriminant Analysis",
+      "page_start": 674
+    },
+    {
+      "number": "18.3.2",
+      "title": "Logistic Regression with Quadratic Regularization",
+      "page_start": 675
+    },
+    {
+      "number": "18.3.3",
+      "title": "The Support Vector Classi\ufb01er",
+      "page_start": 675
+    },
+    {
+      "number": "18.3.4",
+      "title": "Feature Selection",
+      "page_start": 676
+    },
+    {
+      "number": "18.3.5",
+      "title": "Computational Shortcuts When p \u226bN",
+      "page_start": 677
+    },
+    {
+      "number": "18.4",
+      "title": "Linear Classi\ufb01ers with L1 Regularization",
+      "page_start": 679
+    },
+    {
+      "number": "18.4.1",
+      "title": "Application of Lasso to Protein Mass Spectroscopy",
+      "page_start": 682
+    },
+    {
+      "number": "18.4.2",
+      "title": "The Fused Lasso for Functional Data",
+      "page_start": 684
+    },
+    {
+      "number": "18.5",
+      "title": "Classi\ufb01cation When Features are Unavailable",
+      "page_start": 686
+    },
+    {
+      "number": "18.5.1",
+      "title": "Example: String Kernels and Protein Classi\ufb01cation",
+      "page_start": 686
+    },
+    {
+      "number": "18.5.2",
+      "title": "Classi\ufb01cation and Other Models Using Inner-Product",
+      "page_start": 688
+    },
+    {
+      "number": "18.5.3",
+      "title": "Example: Abstracts Classi\ufb01cation",
+      "page_start": 690
+    },
+    {
+      "number": "18.6",
+      "title": "High-Dimensional Regression: Supervised",
+      "page_start": 692
+    },
+    {
+      "number": "18.6.1",
+      "title": "Connection to Latent-Variable Modeling",
+      "page_start": 696
+    },
+    {
+      "number": "18.6.2",
+      "title": "Relationship with Partial Least Squares",
+      "page_start": 698
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": 48186,
+      "page": 647,
+      "text": "A graphical model does not always uniquely specify the higher-order\ndependence structure of a joint probability distribution. Consider the com-\nplete three-node graph in Figure 17.3. It could represent the dependence\nstructure of either of the following distributions:"
+    },
+    {
+      "id": 48189,
+      "page": 647,
+      "text": "The \ufb01rst speci\ufb01es only second order dependence (and can be represented\nwith fewer parameters). Graphical models for discrete data are a special"
+    },
+    {
+      "id": 48190,
+      "page": 647,
+      "text": "1If the cliques are separated, then the potentials can be densities, but this is in general\nnot the case."
+    },
+    {
+      "id": 48192,
+      "page": 648,
+      "text": "case of loglinear models for multiway contingency tables (Bishop et al.,\n1975, e.g.); in that language f (2) is referred to as the \u201cno second-order\ninteraction\u201d model.\nFor the remainder of this chapter we focus on pairwise Markov graphs\n(Koller and Friedman, 2007). Here there is a potential function for each\nedge (pair of variables as in f (2) above), and at most second\u2013order interac-\ntions are represented. These are more parsimonious in terms of parameters,\neasier to work with, and give the minimal complexity implied by the graph\nstructure. The models for both continuous and discrete data are functions\nof only the pairwise marginal distributions of the variables represented in\nthe edge set."
+    },
+    {
+      "id": 48194,
+      "page": 648,
+      "text": "Here we consider Markov networks where all the variables are continuous.\nThe Gaussian distribution is almost always used for such graphical models,\nbecause of its convenient analytical properties. We assume that the observa-\ntions have a multivariate Gaussian distribution with mean \u03bc and covariance\nmatrix \u03a3. Since the Gaussian distribution represents at most second-order\nrelationships, it automatically encodes a pairwise Markov graph. The graph\nin Figure 17.1 is an example of a Gaussian graphical model.\nThe Gaussian distribution has the property that all conditional distri-\nbutions are also Gaussian. The inverse covariance matrix \u03a3\u22121 contains\ninformation about the partial covariances between the variables; that is,\nthe covariances between pairs i and j, conditioned on all other variables.\nIn particular, if the ijth component of \u0398 = \u03a3\u22121 is zero, then variables i and\nj are conditionally independent, given the other variables (Exercise 17.3).\nIt is instructive to examine the conditional distribution of one variable\nversus the rest, where the role of \u0398 is explicit. Suppose we partition X =\n(Z, Y ) where Z = (X1, . . . , Xp\u22121) consists of the \ufb01rst p \u22121 variables and\nY = Xp is the last. Then we have the conditional distribution of Y give Z\n(Mardia et al., 1979, e.g.)"
+    },
+    {
+      "id": 48195,
+      "page": 648,
+      "text": "Y |Z = z \u223cN\n\u0005\n\u03bcY + (z \u2212\u03bcZ)T \u03a3\u22121\nZZ\u03c3ZY , \u03c3Y Y \u2212\u03c3T\nZY \u03a3\u22121\nZZ\u03c3ZY\n\u0006\n,\n(17.6)"
+    },
+    {
+      "id": 48199,
+      "page": 648,
+      "text": "The conditional mean in (17.6) has exactly the same form as the pop-\nulation multiple linear regression of Y on Z, with regression coe\ufb03cient\n\u03b2 = \u03a3\u22121\nZZ\u03c3ZY [see (2.16) on page 19]. If we partition \u0398 in the same way,\nsince \u03a3\u0398 = I standard formulas for partitioned inverses give"
+    },
+    {
+      "id": 48205,
+      "page": 649,
+      "text": "\u2022 The dependence of Y on Z in (17.6) is in the mean term alone. Here\nwe see explicitly that zero elements in \u03b2 and hence \u03b8ZY mean that\nthe corresponding elements of Z are conditionally independent of Y ,\ngiven the rest."
+    },
+    {
+      "id": 48206,
+      "page": 649,
+      "text": "\u2022 We can learn about this dependence structure through multiple linear\nregression."
+    },
+    {
+      "id": 48207,
+      "page": 649,
+      "text": "Thus \u0398 captures all the second-order information (both structural and\nquantitative) needed to describe the conditional distribution of each node\ngiven the rest, and is the so-called \u201cnatural\u201d parameter for the Gaussian\ngraphical model2.\nAnother (di\ufb00erent) kind of graphical model is the covariance graph or rel-\nevance network, in which vertices are connected by bidirectional edges if the\ncovariance (rather than the partial covariance) between the corresponding\nvariables is nonzero. These are popular in genomics, see especially Butte\net al. (2000). The negative log-likelihood from these models is not convex,\nmaking the computations more challenging (Chaudhuri et al., 2007)."
+    },
+    {
+      "id": 48209,
+      "page": 649,
+      "text": "Given some realizations of X, we would like to estimate the parameters\nof an undirected graph that approximates their joint distribution. Suppose\n\ufb01rst that the graph is complete (fully connected). We assume that we have\nN multivariate normal realizations xi, i = 1, . . . , N with population mean\n\u03bc and covariance \u03a3. Let"
+    },
+    {
+      "id": 48214,
+      "page": 649,
+      "text": "be the empirical covariance matrix, with \u00afx the sample mean vector. Ignoring\nconstants, the log-likelihood of the data can be written as"
+    },
+    {
+      "id": 48215,
+      "page": 649,
+      "text": "2The distribution arising from a Gaussian graphical model is a Wishart distribution.\nThis is a member of the exponential family, with canonical or \u201cnatural\u201d parameter\n\u0398 = \u03a3\u22121. Indeed, the partially maximized log-likelihood (17.11) is (up to constants)\nthe Wishart log-likelihood."
+    },
+    {
+      "id": 48218,
+      "page": 650,
+      "text": "In (17.11) we have partially maximized with respect to the mean parameter\n\u03bc. The quantity \u2212\u2113(\u0398) is a convex function of \u0398. It is easy to show that\nthe maximum likelihood estimate of \u03a3 is simply S.\nNow to make the graph more useful (especially in high-dimensional set-\ntings) let\u2019s assume that some of the edges are missing; for example, the\nedge between PIP3 and Erk is one of several missing in Figure 17.1. As we\nhave seen, for the Gaussian distribution this implies that the correspond-\ning entries of \u0398 = \u03a3\u22121 are zero. Hence we now would like to maximize\n(17.11) under the constraints that some pre-de\ufb01ned subset of the parame-\nters are zero. This is an equality-constrained convex optimization problem,\nand a number of methods have been proposed for solving it, in particular\nthe iterative proportional \ufb01tting procedure (Speed and Kiiveri, 1986). This\nand other methods are summarized for example in Whittaker (1990) and\nLauritzen (1996). These methods exploit the simpli\ufb01cations that arise from\ndecomposing the graph into its maximal cliques, as described in the previ-\nous section. Here we outline a simple alternate approach, that exploits the\nsparsity in a di\ufb00erent way. The fruits of this approach will become apparent\nlater when we discuss the problem of estimation of the graph structure.\nThe idea is based on linear regression, as inspired by (17.6) and (17.9).\nIn particular, suppose that we want to estimate the edge parameters \u03b8ij for\nthe vertices that are joined to a given vertex i, restricting those that are not\njoined to be zero. Then it would seem that the linear regression of the node\ni values on the other relevant vertices might provide a reasonable estimate.\nBut this ignores the dependence structure among the predictors in this\nregression. It turns out that if instead we use our current (model-based)\nestimate of the cross-product matrix of the predictors when we perform\nour regressions, this gives the correct solutions and solves the constrained\nmaximum-likelihood problem exactly. We now give details.\nTo constrain the log-likelihood (17.11), we add Lagrange constants for\nall missing edges"
+    },
+    {
+      "id": 48221,
+      "page": 650,
+      "text": "The gradient equation for maximizing (17.12) can be written as"
+    },
+    {
+      "id": 48223,
+      "page": 650,
+      "text": "using the fact that the derivative of log det \u0398 equals \u0398\u22121 (Boyd and Van-\ndenberghe, 2004, for example, page 641). \u0393 is a matrix of Lagrange param-\neters with nonzero values for all pairs with edges absent.\nWe will show how we can use regression to solve for \u0398 and its inverse\nW = \u0398\u22121 one row and column at a time. For simplicity let\u2019s focus on the\nlast row and column. Then the upper right block of equation (17.13) can\nbe written as"
+    },
+    {
+      "id": 48226,
+      "page": 651,
+      "text": "Here we have partitioned the matrices into two parts as in (17.7): part 1\nbeing the \ufb01rst p\u22121 rows and columns, and part 2 the pth row and column.\nWith W and its inverse \u0398 partitioned in a similar fashion, we have\n\u001aW11\nw12\nwT\n12\nw22"
+    },
+    {
+      "id": 48233,
+      "page": 651,
+      "text": "where \u03b2 = \u2212\u03b812/\u03b822 as in (17.9). Now substituting (17.17) into (17.14)\ngives\nW11\u03b2 \u2212s12 \u2212\u03b312 = 0.\n(17.18)"
+    },
+    {
+      "id": 48234,
+      "page": 651,
+      "text": "These can be interpreted as the p \u22121 estimating equations for the con-\nstrained regression of Xp on the other predictors, except that the observed\nmean cross-products matrix S11 is replaced by W11, the current estimated\ncovariance matrix from the model.\nNow we can solve (17.18) by simple subset regression. Suppose there are\np\u2212q nonzero elements in \u03b312\u2014i.e., p\u2212q edges constrained to be zero. These\np \u2212q rows carry no information and can be removed. Furthermore we can\nreduce \u03b2 to \u03b2\u2217by removing its p \u2212q zero elements, yielding the reduced\nq \u00d7 q system of equations"
+    },
+    {
+      "id": 48236,
+      "page": 651,
+      "text": "with solution \u02c6\u03b2\u2217= W\u2217\n11\n\u22121s\u2217\n12. This is padded with p \u2212q zeros to give \u02c6\u03b2.\nAlthough it appears from (17.16) that we only recover the elements \u03b812\nup to a scale factor 1/\u03b822, it is easy to show that"
+    },
+    {
+      "id": 48238,
+      "page": 651,
+      "text": "(using partitioned inverse formulas). Also w22 = s22, since the diagonal of\n\u0393 in (17.13) is zero.\nThis leads to the simple iterative procedure given in Algorithm 17.1 for\nestimating both\n\u02c6\nW and its inverse \u02c6\u0398, subject to the constraints of the\nmissing edges.\nNote that this algorithm makes conceptual sense. The graph estimation\nproblem is not p separate regression problems, but rather p coupled prob-\nlems. The use of the common W in step (b), in place of the observed\ncross-products matrix, couples the problems together in the appropriate\nfashion. Surprisingly, we were not able to \ufb01nd this procedure in the lit-\nerature. However it is related to the covariance selection procedures of"
+    },
+    {
+      "id": 48240,
+      "page": 652,
+      "text": "Algorithm 17.1 A Modi\ufb01ed Regression Algorithm for Estimation of an\nUndirected Gaussian Graphical Model with Known Structure."
+    },
+    {
+      "id": 48242,
+      "page": 652,
+      "text": "2. Repeat for j = 1, 2, . . . , p, 1, 2, . . . , p, . . . until convergence:"
+    },
+    {
+      "id": 48243,
+      "page": 652,
+      "text": "(a) Partition the matrix W into part 1: all but the jth row and\ncolumn, and part 2: the jth row and column."
+    },
+    {
+      "id": 48244,
+      "page": 652,
+      "text": "(b) Solve W\u2217\n11\u03b2\u2217\u2212s\u2217\n12 = 0 for the unconstrained edge parameters\n\u03b2\u2217, using the reduced system of equations as in (17.19). Obtain\n\u02c6\u03b2 by padding \u02c6\u03b2\u2217with zeros in the appropriate positions."
+    },
+    {
+      "id": 48246,
+      "page": 652,
+      "text": "3. In the \ufb01nal cycle (for each j) solve for \u02c6\u03b812 = \u2212\u02c6\u03b2 \u00b7 \u02c6\u03b822, with 1/\u02c6\u03b822 =\ns22 \u2212wT\n12 \u02c6\u03b2."
+    },
+    {
+      "id": 48257,
+      "page": 652,
+      "text": "Dempster (1972), and is similar in \ufb02avor to the iterative conditional \ufb01tting\nprocedure for covariance graphs, proposed by Chaudhuri et al. (2007).\nHere is a little example, borrowed from Whittaker (1990). Suppose that\nour model is as depicted in Figure 17.4, along with its empirical covariance\nmatrix S. We apply algorithm (17.1) to this problem; for example, in the\nmodi\ufb01ed regression for variable 1 in step (b), variable 3 is left out. The\nprocedure quickly converged to the solutions:"
+    },
+    {
+      "id": 48261,
+      "page": 652,
+      "text": "10.00\n1.00\n1.31\n4.00\n1.00\n10.00\n2.00\n0.87\n1.31\n2.00\n10.00\n3.00\n4.00\n0.87\n3.00\n10.00"
+    },
+    {
+      "id": 48266,
+      "page": 652,
+      "text": "0.12\n\u22120.01\n0.00\n\u22120.05\n\u22120.01\n0.11\n\u22120.02\n0.00\n0.00\n\u22120.02\n0.11\n\u22120.03\n\u22120.05\n0.00\n\u22120.03\n0.13"
+    },
+    {
+      "id": 48269,
+      "page": 652,
+      "text": "Note the zeroes in \u02c6\u03a3\u22121, corresponding to the missing edges (1,3) and (2,4).\nNote also that the corresponding elements in \u02c6\u03a3 are the only elements dif-\nferent from S. The estimation of \u02c6\u03a3 is an example of what is sometimes\ncalled the positive de\ufb01nite \u201ccompletion\u201d of S."
+    },
+    {
+      "id": 48272,
+      "page": 653,
+      "text": "In most cases we do not know which edges to omit from our graph, and\nso would like to try to discover this from the data itself. In recent years a\nnumber of authors have proposed the use of L1 (lasso) regularization for\nthis purpose.\nMeinshausen and B\u00a8uhlmann (2006) take a simple approach to the prob-\nlem: rather than trying to fully estimate \u03a3 or \u0398 = \u03a3\u22121, they only estimate\nwhich components of \u03b8ij are nonzero. To do this, they \ufb01t a lasso regression\nusing each variable as the response and the others as predictors. The com-\nponent \u03b8ij is then estimated to be nonzero if either the estimated coe\ufb03cient\nof variable i on j is nonzero, or the estimated coe\ufb03cient of variable j on\ni is nonzero (alternatively they use an and rule). They show that asymp-\ntotically this procedure consistently estimates the set of nonzero elements\nof \u0398.\nWe can take a more systematic approach with the lasso penalty, following\nthe development of the previous section. Consider maximizing the penalized\nlog-likelihood\nlog det \u0398 \u2212trace(S\u0398) \u2212\u03bb||\u0398||1,\n(17.21)"
+    },
+    {
+      "id": 48273,
+      "page": 653,
+      "text": "where ||\u0398||1 is the L1 norm\u2014the sum of the absolute values of the elements\nof \u03a3\u22121, and we have ignored constants. The negative of this penalized\nlikelihood is a convex function of \u0398.\nIt turns out that one can adapt the lasso to give the exact maximizer of\nthe penalized log-likelihood. In particular, we simply replace the modi\ufb01ed\nregression step (b) in Algorithm 17.1 by a modi\ufb01ed lasso step. Here are the\ndetails.\nThe analog of the gradient equation (17.13) is now"
+    },
+    {
+      "id": 48275,
+      "page": 653,
+      "text": "Here we use sub-gradient notation, with Sign(\u03b8jk) = sign(\u03b8jk) if \u03b8jk \u0338= 0,\nelse Sign(\u03b8jk) \u2208[\u22121, 1] if \u03b8jk = 0. Continuing the development in the\nprevious section, we reach the analog of (17.18)"
+    },
+    {
+      "id": 48277,
+      "page": 653,
+      "text": "(recall that \u03b2 and \u03b812 have opposite signs). We will now see that this system\nis exactly equivalent to the estimating equations for a lasso regression.\nConsider the usual regression setup with outcome variables y and pre-\ndictor matrix Z. There the lasso minimizes"
+    },
+    {
+      "id": 48279,
+      "page": 653,
+      "text": "[see (3.52) on page 68; here we have added a factor 1"
+    },
+    {
+      "id": 48280,
+      "page": 653,
+      "text": "2 for convenience]. The\ngradient of this expression is"
+    },
+    {
+      "id": 48283,
+      "page": 654,
+      "text": "1. Initialize W = S + \u03bbI. The diagonal of W remains unchanged in\nwhat follows."
+    },
+    {
+      "id": 48284,
+      "page": 654,
+      "text": "2. Repeat for j = 1, 2, . . . p, 1, 2, . . . p, . . . until convergence:"
+    },
+    {
+      "id": 48285,
+      "page": 654,
+      "text": "(a) Partition the matrix W into part 1: all but the jth row and\ncolumn, and part 2: the jth row and column."
+    },
+    {
+      "id": 48286,
+      "page": 654,
+      "text": "(b) Solve the estimating equations W11\u03b2 \u2212s12 + \u03bb \u00b7 Sign(\u03b2) = 0\nusing the cyclical coordinate-descent algorithm (17.26) for the\nmodi\ufb01ed lasso."
+    },
+    {
+      "id": 48288,
+      "page": 654,
+      "text": "3. In the \ufb01nal cycle (for each j) solve for \u02c6\u03b812 = \u2212\u02c6\u03b2 \u00b7 \u02c6\u03b822, with 1/\u02c6\u03b822 =\nw22 \u2212wT\n12 \u02c6\u03b2."
+    },
+    {
+      "id": 48290,
+      "page": 654,
+      "text": "So up to a factor 1/N, ZT y is the analog of s12, and we replace ZT Z by\nW11, the estimated cross-product matrix from our current model.\nThe resulting procedure is called the graphical lasso, proposed by Fried-\nman et al. (2007a) building on the work of Banerjee et al. (2008). It is\nsummarized in Algorithm 17.2.\nFriedman et al. (2007a) use the pathwise coordinate descent method\n(Section 3.8.6) to solve the modi\ufb01ed lasso problem at each stage. Here are\nthe details of pathwise coordinate descent for the graphical lasso algorithm.\nLetting V = W11, the update has the form"
+    },
+    {
+      "id": 48293,
+      "page": 654,
+      "text": "for j = 1, 2, . . . , p \u22121, 1, 2, . . . , p \u22121, . . ., where S is the soft-threshold\noperator:\nS(x, t) = sign(x)(|x| \u2212t)+.\n(17.27)"
+    },
+    {
+      "id": 48294,
+      "page": 654,
+      "text": "The procedure cycles through the predictors until convergence.\nIt is easy to show that the diagonal elements wjj of the solution matrix\nW are simply sjj + \u03bb, and these are \ufb01xed in step 1 of Algorithm 17.23.\nThe graphical lasso algorithm is extremely fast, and can solve a moder-\nately sparse problem with 1000 nodes in less than a minute. It is easy to\nmodify the algorithm to have edge-speci\ufb01c penalty parameters \u03bbjk; since"
+    },
+    {
+      "id": 48295,
+      "page": 654,
+      "text": "3An alternative formulation of the problem (17.21) can be posed, where we don\u2019t\npenalize the diagonal of \u0398. Then the diagonal elements wjj of the solution matrix are\nsjj, and the rest of the algorithm is unchanged."
+    },
+    {
+      "id": 48297,
+      "page": 655,
+      "text": "\u03bbjk = \u221ewill force \u02c6\u03b8jk to be zero, this algorithm subsumes Algorithm 17.1.\nBy casting the sparse inverse-covariance problem as a series of regressions,\none can also quickly compute and examine the solution paths as a function\nof the penalty parameter \u03bb. More details can be found in Friedman et al.\n(2007a)."
+    },
+    {
+      "id": 48339,
+      "page": 656,
+      "text": "(Exercise 17.9). However, sometimes the entire node is hidden or latent.\nIn the Gaussian model, if a node has all missing values, due to linearity\none can simply average over the missing nodes to yield another Gaussian\nmodel over the observed nodes. Hence the inclusion of hidden nodes does\nnot enrich the resulting model for the observed nodes; in fact, it imposes\nadditional structure on its covariance matrix. However in the discrete model\n(described next) the inherent nonlinearities make hidden units a powerful\nway of expanding the model."
+    },
+    {
+      "id": 48341,
+      "page": 656,
+      "text": "Undirected Markov networks with all discrete variables are popular, and\nin particular pairwise Markov networks with binary variables being the\nmost common. They are sometimes called Ising models in the statistical\nmechanics literature, and Boltzmann machines in the machine learning lit-\nerature, where the vertices are referred to as \u201cnodes\u201d or \u201cunits\u201d and are\nbinary-valued.\nIn addition, the values at each node can be observed (\u201cvisible\u201d) or un-\nobserved (\u201chidden\u201d). The nodes are often organized in layers, similar to a\nneural network. Boltzmann machines are useful both for unsupervised and\nsupervised learning, especially for structured input data such as images,\nbut have been hampered by computational di\ufb03culties. Figure 17.6 shows\na restricted Boltzmann machine (discussed later), in which some variables\nare hidden, and only some pairs of nodes are connected. We \ufb01rst consider\nthe simpler case in which all p nodes are visible with edge pairs (j, k) enu-\nmerated in E.\nDenoting the binary valued variable at node j by Xj, the Ising model\nfor their joint probabilities is given by"
+    },
+    {
+      "id": 48344,
+      "page": 656,
+      "text": "with X = {0, 1}p. As with the Gaussian model of the previous section,\nonly pairwise interactions are modeled. The Ising model was developed in\nstatistical mechanics, and is now used more generally to model the joint\ne\ufb00ects of pairwise interactions. \u03a6(\u0398) is the log of the partition function,\nand is de\ufb01ned by"
+    },
+    {
+      "id": 48349,
+      "page": 656,
+      "text": "The partition function ensures that the probabilities add to one over the\nsample space. The terms \u03b8jkXjXk represent a particular parametrization"
+    },
+    {
+      "id": 48351,
+      "page": 657,
+      "text": "of the (log) potential functions (17.5), and for technical reasons requires\na constant node X0 \u22611 to be included (Exercise 17.10), with \u201cedges\u201d to\nall the other nodes. In the statistics literature, this model is equivalent\nto a \ufb01rst-order-interaction Poisson log-linear model for multiway tables of\ncounts (Bishop et al., 1975; McCullagh and Nelder, 1989; Agresti, 2002).\nThe Ising model implies a logistic form for each node conditional on the\nothers (exercise 17.11):"
+    },
+    {
+      "id": 48352,
+      "page": 657,
+      "text": "Pr(Xj = 1|X\u2212j = x\u2212j) =\n1\n1 + exp(\u2212\u03b8j0 \u2212\t\n(j,k)\u2208E \u03b8jkxk),\n(17.30)"
+    },
+    {
+      "id": 48353,
+      "page": 657,
+      "text": "where X\u2212j denotes all of the nodes except j. Hence the parameter \u03b8jk\nmeasures the dependence of Xj on Xk, conditional on the other nodes."
+    },
+    {
+      "id": 48355,
+      "page": 657,
+      "text": "Given some data from this model, how can we estimate the parameters?\nSuppose we have observations xi = (xi1, xi2, . . . , xip) \u2208{0, 1}p, i = 1, . . . , N.\nThe log-likelihood is"
+    },
+    {
+      "id": 48386,
+      "page": 658,
+      "text": "the expectation taken with respect to the empirical distribution of the data.\nLooking at (17.34), we see that the maximum likelihood estimates simply\nmatch the estimated inner products between the nodes to their observed\ninner products. This is a standard form for the score (gradient) equation\nfor exponential family models, in which su\ufb03cient statistics are set equal to\ntheir expectations under the model.\nTo \ufb01nd the maximum likelihood estimates, we can use gradient search\nor Newton methods. However the computation of E\u0398(XjXk) involves enu-\nmeration of p(X, \u0398) over 2p\u22122 of the |X| = 2p possible values of X, and is\nnot generally feasible for large p (e.g., larger than about 30). For smaller\np, a number of standard statistical approaches are available:"
+    },
+    {
+      "id": 48387,
+      "page": 658,
+      "text": "Poisson log-linear modeling, where we treat the problem as a large regres-\nsion problem (Exercise 17.12). The response vector y is the vector of\n2p counts in each of the cells of the multiway tabulation of the data4.\nThe predictor matrix Z has 2p rows and up to 1+p+p2 columns that\ncharacterize each of the cells, although this number depends on the\nsparsity of the graph. The computational cost is essentially that of a\nregression problem of this size, which is O(p42p) and is manageable\nfor p < 20. The Newton updates are typically computed by iteratively\nreweighted least squares, and the number of steps is usually in the\nsingle digits. See Agresti (2002) and McCullagh and Nelder (1989) for\ndetails. Standard software (such as the R package glm) can be used\nto \ufb01t this model."
+    },
+    {
+      "id": 48388,
+      "page": 658,
+      "text": "Gradient descent requires at most O(p22p\u22122) computations to compute\nthe gradient, but may require many more gradient steps than the\nsecond\u2013order Newton methods. Nevertheless, it can handle slightly\nlarger problems with p \u226430. These computations can be reduced\nby exploiting the special clique structure in sparse graphs, using the\njunction-tree algorithm. Details are not given here."
+    },
+    {
+      "id": 48389,
+      "page": 658,
+      "text": "Iterative proportional \ufb01tting (IPF) performs cyclical coordinate descent on\nthe gradient equations (17.34). At each step a parameter is updated\nso that its gradient equation is exactly zero. This is done in a cyclical\nfashion until all the gradients are zero. One complete cycle costs the\nsame as a gradient evaluation, but may be more e\ufb03cient. Jirou\u00b4sek and\nP\u02c7reu\u02c7cil (1995) implement an e\ufb03cient version of IPF, using junction\ntrees."
+    },
+    {
+      "id": 48390,
+      "page": 658,
+      "text": "4Each of the cell counts is treated as an independent Poisson variable. We get the\nmultinomial model corresponding to (17.28) by conditioning on the total count N (which\nis also Poisson under this framework)."
+    },
+    {
+      "id": 48392,
+      "page": 659,
+      "text": "When p is large (> 30) other approaches have been used to approximate\nthe gradient."
+    },
+    {
+      "id": 48393,
+      "page": 659,
+      "text": "\u2022 The mean \ufb01eld approximation (Peterson and Anderson, 1987) esti-\nmates E\u0398(XjXk) by E\u0398(Xj)E\u0398(Xj), and replaces the input vari-\nables by their means, leading to a set of nonlinear equations for the\nparameters \u03b8jk."
+    },
+    {
+      "id": 48394,
+      "page": 659,
+      "text": "\u2022 To obtain near-exact solutions, Gibbs sampling (Section 8.6) is used\nto approximate E\u0398(XjXk) by successively sampling from the esti-\nmated model probabilities Pr\u0398(Xj|X\u2212j) (see e.g. Ripley (1996))."
+    },
+    {
+      "id": 48395,
+      "page": 659,
+      "text": "We have not discussed decomposable models, for which the maximum\nlikelihood estimates can be found in closed form without any iteration\nwhatsoever. These models arise, for example, in trees: special graphs with\ntree-structured topology. When computational tractability is a concern,\ntrees represent a useful class of models and they sidestep the computational\nconcerns raised in this section. For details, see for example Chapter 12 of\nWhittaker (1990)."
+    },
+    {
+      "id": 48397,
+      "page": 659,
+      "text": "We can increase the complexity of a discrete Markov network by including\nlatent or hidden nodes. Suppose that a subset of the variables XH are\nunobserved or \u201chidden\u201d, and the remainder XV are observed or \u201cvisible.\u201d\nThen the log-likelihood of the observed data is"
+    },
+    {
+      "id": 48407,
+      "page": 659,
+      "text": "The sum over xH means that we are summing over all possible {0, 1} values\nfor the hidden units. The gradient works out to be"
+    },
+    {
+      "id": 48410,
+      "page": 659,
+      "text": "The \ufb01rst term is an empirical average of XjXk if both are visible; if one\nor both are hidden, they are \ufb01rst imputed given the visible data, and then\naveraged over the hidden variables. The second term is the unconditional\nexpectation of XjXk.\nThe inner expectation in the \ufb01rst term can be evaluated using basic rules\nof conditional expectation and properties of Bernoulli random variables. In\ndetail, for observation i"
+    },
+    {
+      "id": 48412,
+      "page": 660,
+      "text": "E\u0398(XjXk|XV = xiV) =\n\u0016 xijxik\nif j, k \u2208V\nxijPr\u0398(Xk = 1|XV = xiV)\nif j \u2208V, k \u2208H\nPr\u0398(Xj = 1, Xk = 1|XV = xiV)\nif j, k \u2208H.\n(17.38)\nNow two separate runs of Gibbs sampling are required; the \ufb01rst to estimate\nE\u0398(XjXk) by sampling from the model as above, and the second to esti-\nmate E\u0398(XjXk|XV = xiV). In this latter run, the visible units are \ufb01xed\n(\u201cclamped\u201d) at their observed values and only the hidden variables are\nsampled. Gibbs sampling must be done for each observation in the training\nset, at each stage of the gradient search. As a result this procedure can be\nvery slow, even for moderate-sized models. In Section 17.4.4 we consider\nfurther model restrictions to make these computations manageable."
+    },
+    {
+      "id": 48414,
+      "page": 660,
+      "text": "The use of a lasso penalty with binary pairwise Markov networks has been\nsuggested by Lee et al. (2007) and Wainwright et al. (2007). The \ufb01rst au-\nthors investigate a conjugate gradient procedure for exact minimization of\na penalized log-likelihood. The bottleneck is the computation of E\u0398(XjXk)\nin the gradient; exact computation via the junction tree algorithm is man-\nageable for sparse graphs but becomes unwieldy for dense graphs.\nThe second authors propose an approximate solution, analogous to the\nMeinshausen and B\u00a8uhlmann (2006) approach for the Gaussian graphical\nmodel. They \ufb01t an L1-penalized logistic regression model to each node as\na function of the other nodes, and then symmetrize the edge parameter\nestimates in some fashion. For example if \u02dc\u03b8jk is the estimate of the j-k\nedge parameter from the logistic model for outcome node j, the \u201cmin\u201d\nsymmetrization sets \u02c6\u03b8jk to either \u02dc\u03b8jk or \u02dc\u03b8kj, whichever is smallest in abso-\nlute value. The \u201cmax\u201d criterion is de\ufb01ned similarly. They show that under\ncertain conditions either approximation estimates the nonzero edges cor-\nrectly as the sample size goes to in\ufb01nity. Hoe\ufb02ing and Tibshirani (2008)\nextend the graphical lasso to discrete Markov networks, obtaining a pro-\ncedure which is somewhat faster than conjugate gradients, but still must\ndeal with computation of E\u0398(XjXk). They also compare the exact and\napproximate solutions in an extensive simulation study and \ufb01nd the \u201cmin\u201d\nor \u201cmax\u201d approximations are only slightly less accurate than the exact pro-\ncedure, both for estimating the nonzero edges and for estimating the actual\nvalues of the edge parameters, and are much faster. Furthermore, they can\nhandle denser graphs because they never need to compute the quantities\nE\u0398(XjXk).\nFinally, we point out a key di\ufb00erence between the Gaussian and binary\nmodels. In the Gaussian case, both \u03a3 and its inverse will often be of interest,\nand the graphical lasso procedure delivers estimates for both of these quan-\ntities. However, the approximation of Meinshausen and B\u00a8uhlmann (2006)\nfor Gaussian graphical models, analogous to the Wainwright et al. (2007)"
+    },
+    {
+      "id": 48423,
+      "page": 661,
+      "text": "approximation for the binary case, only yields an estimate of \u03a3\u22121. In con-\ntrast, in the Markov model for binary data, \u0398 is the object of interest, and\nits inverse is not of interest. The approximate method of Wainwright et al.\n(2007) estimates \u0398 e\ufb03ciently and hence is an attractive solution for the\nbinary problem."
+    },
+    {
+      "id": 48425,
+      "page": 661,
+      "text": "In this section we consider a particular architecture for graphical models\ninspired by neural networks, where the units are organized in layers. A\nrestricted Boltzmann machine (RBM) consists of one layer of visible units\nand one layer of hidden units with no connections within each layer. It\nis much simpler to compute the conditional expectations (as in 17.37 and\n17.38) if the connections between hidden units are removed 5. Figure 17.6\nshows an example; the visible layer is divided into input variables V1 and\noutput variables V2, and there is a hidden layer H. We denote such a\nnetwork by\nV1 \u2194H \u2194V2.\n(17.39)"
+    },
+    {
+      "id": 48426,
+      "page": 661,
+      "text": "For example, V1 could be the binary pixels of an image of a handwritten\ndigit, and V2 could have 10 units, one for each of the observed class labels\n0-9.\nThe restricted form of this model simpli\ufb01es the Gibbs sampling for es-\ntimating the expectations in (17.37), since the variables in each layer are\nindependent of one another, given the variables in the other layers. Hence\nthey can be sampled together, using the conditional probabilities given by\nexpression (17.30).\nThe resulting model is less general than a Boltzmann machine, but is still\nuseful; for example it can learn to extract interesting features from images."
+    },
+    {
+      "id": 48427,
+      "page": 661,
+      "text": "5We thank Geo\ufb00rey Hinton for assistance in the preparation of the material on RBMs."
+    },
+    {
+      "id": 48429,
+      "page": 662,
+      "text": "By alternately sampling the variables in each layer of the RBM shown\nin Figure 17.6, it is possible to generate samples from the joint density\nmodel. If the V1 part of the visible layer is clamped at a particular feature\nvector during the alternating sampling, it is possible to sample from the\ndistribution over labels given V1. Alternatively classi\ufb01cation of test items\ncan also be achieved by comparing the unnormalized joint densities of each\nlabel category with the observed features. We do not need to compute the\npartition function as it is the same for all of these combinations.\nAs noted the restricted Boltzmann machine has the same generic form\nas a single hidden layer neural network (Section 11.3). The edges in the\nlatter model are directed, the hidden units are usually real-valued, and the\n\ufb01tting criterion is di\ufb00erent. The neural network minimizes the error (cross-\nentropy) between the targets and their model predictions, conditional on\nthe input features. In contrast, the restricted Boltzmann machine maxi-\nmizes the log-likelihood for the joint distribution of all visible units\u2014that\nis, the features and targets. It can extract information from the input fea-\ntures that is useful for predicting the labels, but, unlike supervised learning\nmethods, it may also use some of its hidden units to model structure in the\nfeature vectors that is not immediately relevant for predicting the labels.\nThese features may turn out to be useful, however, when combined with\nfeatures derived from other hidden layers.\nUnfortunately, Gibbs sampling in a restricted Boltzmann machine can\nbe very slow, as it can take a long time to reach stationarity. As the net-\nwork weights get larger, the chain mixes more slowly and we need to run\nmore steps to get the unconditional estimates. Hinton (2002) noticed em-\npirically that learning still works well if we estimate the second expectation\nin (17.37) by starting the Markov chain at the data and only running for a\nfew steps (instead of to convergence). He calls this contrastive divergence:\nwe sample H given V1, V2, then V1, V2 given H and \ufb01nally H given V1, V2\nagain. The idea is that when the parameters are far from the solution, it\nmay be wasteful to iterate the Gibbs sampler to stationarity, as just a single\niteration will reveal a good direction for moving the estimates.\nWe now give an example to illustrate the use of an RBM. Using con-\ntrastive divergence, it is possible to train an RBM to recognize hand-written\ndigits from the MNIST dataset (LeCun et al., 1998). With 2000 hidden\nunits, 784 visible units for representing binary pixel intensities and one\n10-way multinomial visible unit for representing labels, the RBM achieves\nan error rate of 1.9% on the test set. This is a little higher than the 1.4%\nachieved by a support vector machine and comparable to the error rate\nachieved by a neural network trained with backpropagation. The error rate\nof the RBM, however, can be reduced to 1.25% by replacing the 784 pixel\nintensities by 500 features that are produced from the images without using\nany label information. First, an RBM with 784 visible units and 500 hidden\nunits is trained, using contrastive divergence, to model the set of images.\nThen the hidden states of the \ufb01rst RBM are used as data for training a"
+    },
+    {
+      "id": 48432,
+      "page": 663,
+      "text": "second RBM that has 500 visible units and 500 hidden units. Finally, the\nhidden states of the second RBM are used as the features for training an\nRBM with 2000 hidden units as a joint density model. The details and\njusti\ufb01cation for learning features in this greedy, layer-by-layer way are de-\nscribed in Hinton et al. (2006). Figure 17.7 gives a representation of the\ncomposite model that is learned in this way and also shows some examples\nof the types of distortion that it can cope with."
+    },
+    {
+      "id": 48434,
+      "page": 663,
+      "text": "Much work has been done in de\ufb01ning and understanding the structure of\ngraphical models. Comprehensive treatments of graphical models can be\nfound in Whittaker (1990), Lauritzen (1996), Cox and Wermuth (1996),\nEdwards (2000), Pearl (2000), Anderson (2003), Jordan (2004), and Koller\nand Friedman (2007). Wasserman (2004) gives a brief introduction, and\nChapter 8 of Bishop (2006) gives a more detailed overview. Boltzmann\nmachines were proposed in Ackley et al. (1985). Ripley (1996) has a detailed\nchapter on topics in graphical models that relate to machine learning. We\nfound this particularly useful for its discussion of Boltzmann machines."
+    },
+    {
+      "id": 48447,
+      "page": 664,
+      "text": "(c) X1 \u22a5X4|X2, X3, X1 \u22a5X3|X2, X4 and X3 \u22a5X4|X1, X2."
+    },
+    {
+      "id": 48450,
+      "page": 664,
+      "text": "2. Show that if any o\ufb00-diagonal element of \u0398 is zero, then the partial\ncorrelation coe\ufb03cient between the corresponding variables is zero."
+    },
+    {
+      "id": 48451,
+      "page": 664,
+      "text": "3. Show that if we treat \u0398 as if it were a covariance matrix, and compute\nthe corresponding \u201ccorrelation\u201d matrix"
+    },
+    {
+      "id": 48453,
+      "page": 664,
+      "text": "then rjk = \u2212\u03c1jk|rest\nEx. 17.4 Denote by\nf(X1|X2, X3, . . . , Xp)"
+    },
+    {
+      "id": 48454,
+      "page": 664,
+      "text": "the conditional density of X1 given X2, . . . , Xp. If"
+    },
+    {
+      "id": 48459,
+      "page": 665,
+      "text": "are the estimating equations for the multiple regression coe\ufb03cients of the\nlast variable on the rest."
+    },
+    {
+      "id": 48463,
+      "page": 665,
+      "text": "Since \u02c6\u03b2 = W\u22121\n11 w12, show that \u02c6\u03b822 = 1/(w22 \u2212wT\n12 \u02c6\u03b2) and \u02c6\u03b812 = \u2212\u02c6\u03b2\u02c6\u03b822.\nThus \u02c6\u03b812 is a simply rescaling of \u02c6\u03b2 by \u2212\u02c6\u03b822."
+    },
+    {
+      "id": 48466,
+      "page": 665,
+      "text": "(a) Write a program to \ufb01t the lasso using the coordinate descent procedure\n(17.26). Compare its results to those from the lars program or some\nother convex optimizer, to check that it is working correctly."
+    },
+    {
+      "id": 48467,
+      "page": 665,
+      "text": "(b) Using the program from (a), write code to implement the graphical\nlasso algorithm (17.2). Apply it to the \ufb02ow cytometry data from the\nbook website. Vary the regularization parameter and examine the\nresulting networks."
+    },
+    {
+      "id": 48469,
+      "page": 665,
+      "text": "(a) Consider the EM algorithm for a dataset of N i.i.d. multivariate ob-\nservations xi \u2208IRp with mean \u03bc and covariance matrix \u03a3. For each\nsample i, let oi and mi index the predictors that are observed and\nmissing, respectively. Show that in the E step, the observations are\nimputed from the current estimates of \u03bc and \u03a3:"
+    },
+    {
+      "id": 48470,
+      "page": 665,
+      "text": "\u02c6xi,mi = E(xi,mi|xi,oi, \u03b8) = \u02c6\u03bcmi + \u02c6\u03a3mi,oi \u02c6\u03a3\u22121\noi,oi(xi,oi \u2212\u02c6\u03bcoi)\n(17.43)"
+    },
+    {
+      "id": 48471,
+      "page": 665,
+      "text": "while in the M step, \u03bc and \u03a3 are re-estimated from the empirical\nmean and (modi\ufb01ed) covariance of the imputed data:"
+    },
+    {
+      "id": 48479,
+      "page": 666,
+      "text": "where ci,jj\u2032 = \u02c6\u03a3jj\u2032 if j, j\u2032 \u2208mi and zero otherwise. Explain the reason\nfor the correction term ci,jj\u2032 (Little and Rubin, 2002)."
+    },
+    {
+      "id": 48480,
+      "page": 666,
+      "text": "(b) Implement the EM algorithm for the Gaussian graphical model using\nthe modi\ufb01ed regression procedure from Exercise 17.7 for the M-step."
+    },
+    {
+      "id": 48481,
+      "page": 666,
+      "text": "(c) For the \ufb02ow cytometry data on the book website, set the data for the\nlast protein Jnk in the \ufb01rst 1000 observations to missing, \ufb01t the model\nof Figure 17.1, and compare the predicted values to the actual values\nfor Jnk. Compare the results to those obtained from a regression of\nJnk on the other vertices with edges to Jnk in Figure 17.1, using only\nthe non-missing data."
+    },
+    {
+      "id": 48487,
+      "page": 666,
+      "text": "using the same notation as in Section 17.4.1 (including the constant variable\nxi0 = 1\u2200i). We assume the response is distributed as"
+    },
+    {
+      "id": 48490,
+      "page": 666,
+      "text": "Write down the conditional log-likelihood for the observed responses yi,\nand compute the gradient."
+    },
+    {
+      "id": 48491,
+      "page": 666,
+      "text": "(a) Show that the gradient equation for \u03b800 computes the partition func-\ntion (17.29)."
+    },
+    {
+      "id": 48492,
+      "page": 666,
+      "text": "(b) Show that the gradient equations for the remainder of the parameters\nare equivalent to the gradient (17.34)."
+    },
+    {
+      "id": 48493,
+      "page": 667,
+      "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN"
+    },
+    {
+      "id": 48495,
+      "page": 667,
+      "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model"
+    },
+    {
+      "id": 48499,
+      "page": 667,
+      "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant"
+    },
+    {
+      "id": 48513,
+      "page": 668,
+      "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with"
+    },
+    {
+      "id": 48514,
+      "page": 668,
+      "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations."
+    },
+    {
+      "id": 48516,
+      "page": 669,
+      "text": "low bias. When p = 100, we can identify some non-zero coe\ufb03cients using\nmoderate shrinkage. Finally, when p = 1000, even though there are many\nnonzero coe\ufb03cients, we don\u2019t have a hope for \ufb01nding them and we need\nto shrink all the way down. As evidence of this, let tj = 2\u03b2j/2sej, where \u02c6\u03b2j\nis the ridge regression estimate and 2sej its estimated standard error. Then\nusing the optimal ridge parameter in each of the three cases, the median\nvalue of |tj| was 2.0, 0.6 and 0.2, and the average number of |tj| values\nexceeding 2 was equal to 9.8, 1.2 and 0.0.\nRidge regression with \u03bb = 0.001 successfully exploits the correlation in\nthe features when p < N, but cannot do so when p \u226bN. In the latter case\nthere is not enough information in the relatively small number of samples\nto e\ufb03ciently estimate the high-dimensional covariance matrix. In that case,\nmore regularization leads to superior prediction performance.\nThus it is not surprising that the analysis of high-dimensional data re-\nquires either modi\ufb01cation of procedures designed for the N > p scenario, or\nentirely new procedures. In this chapter we discuss examples of both kinds\nof approaches for high dimensional classi\ufb01cation and regression; these meth-\nods tend to regularize quite heavily, using scienti\ufb01c contextual knowledge\nto suggest the appropriate form for this regularization. The chapter ends\nwith a discussion of feature selection and multiple testing."
+    },
+    {
+      "id": 48518,
+      "page": 669,
+      "text": "Gene expression arrays are an important new technology in biology, and\nare discussed in Chapters 1 and 14. The data in our next example form\na matrix of 2308 genes (columns) and 63 samples (rows), from a set of\nmicroarray experiments. Each expression value is a log-ratio log(R/G). R\nis the amount of gene-speci\ufb01c RNA in the target sample that hybridizes\nto a particular (gene-speci\ufb01c) spot on the microarray, and G is the corre-\nsponding amount of RNA from a reference sample. The samples arose from\nsmall, round blue-cell tumors (SRBCT) found in children, and are classi\ufb01ed\ninto four major types: BL (Burkitt lymphoma), EWS (Ewing\u2019s sarcoma),\nNB (neuroblastoma), and RMS (rhabdomyosarcoma). There is an addi-\ntional test data set of 20 observations. We will not go into the scienti\ufb01c\nbackground here.\nSince p \u226bN, we cannot \ufb01t a full linear discriminant analysis (LDA) to\nthe data; some sort of regularization is needed. The method we describe\nhere is similar to the methods of Section 4.3.1, but with important modi\ufb01-\ncations that achieve feature selection. The simplest form of regularization\nassumes that the features are independent within each class, that is, the\nwithin-class covariance matrix is diagonal. Despite the fact that features\nwill rarely be independent within a class, when p \u226bN we don\u2019t have"
+    },
+    {
+      "id": 48520,
+      "page": 670,
+      "text": "enough data to estimate their dependencies. The assumption of indepen-\ndence greatly reduces the number of parameters in the model and often\nresults in an e\ufb00ective and interpretable classi\ufb01er.\nThus we consider the diagonal-covariance LDA rule for classifying the\nclasses. The discriminant score [see (4.12 on page 110] for class k is"
+    },
+    {
+      "id": 48526,
+      "page": 670,
+      "text": "Here x\u2217= (x\u2217\n1, x\u2217\n2, . . . , x\u2217\np)T is a vector of expression values for a test ob-\nservation, sj is the pooled within-class standard deviation of the jth gene,\nand \u00afxkj = \t\ni\u2208Ck xij/Nk is the mean of the Nk values for gene j in class\nk, with Ck being the index set for class k. We call \u02dcxk = (\u00afxk1, \u00afxk2, . . . \u00afxkp)T"
+    },
+    {
+      "id": 48527,
+      "page": 670,
+      "text": "the centroid of class k. The \ufb01rst part of (18.2) is simply the (negative)\nstandardized squared distance of x\u2217to the kth centroid. The second part\nis a correction based on the class prior probability \u03c0k, where \tK\nk=1 \u03c0k = 1.\nThe classi\ufb01cation rule is then"
+    },
+    {
+      "id": 48529,
+      "page": 670,
+      "text": "We see that the diagonal LDA classi\ufb01er is equivalent to a nearest centroid\nclassi\ufb01er after appropriate standardization. It is also a special case of the\nnaive-Bayes classi\ufb01er, as described in Section 6.6.3. It assumes that the\nfeatures in each class have independent Gaussian distributions with the\nsame variance.\nThe diagonal LDA classi\ufb01er is often e\ufb00ective in high dimensional set-\ntings. It is also called the \u201cindependence rule\u201d in Bickel and Levina (2004),\nwho demonstrate theoretically that it will often outperform standard lin-\near discriminant analysis in high-dimensional problems. Here the diagonal\nLDA classi\ufb01er yielded \ufb01ve misclassi\ufb01cation errors for the 20 test samples.\nOne drawback of the diagonal LDA classi\ufb01er is that it uses all of the fea-\ntures (genes), and hence is not convenient for interpretation. With further\nregularization we can do better\u2014both in terms of test error and inter-\npretability.\nWe would like to regularize in a way that automatically drops out fea-\ntures that are not contributing to the class predictions. We can do this\nby shrinking the classwise mean toward the overall mean, for each feature\nseparately. The result is a regularized version of the nearest centroid clas-\nsi\ufb01er, or equivalently a regularized version of the diagonal-covariance form\nof LDA. We call the procedure nearest shrunken centroids (NSC).\nThe shrinkage procedure is de\ufb01ned as follows. Let"
+    },
+    {
+      "id": 48531,
+      "page": 670,
+      "text": "where \u00afxj is the overall mean for gene j, m2\nk = 1/Nk \u22121/N and s0 is a\nsmall positive constant, typically chosen to be the median of the sj values."
+    },
+    {
+      "id": 48536,
+      "page": 671,
+      "text": "This constant guards against large dkj values that arise from expression\nvalues near zero. With constant within-class variance \u03c32, the variance of\nthe contrast \u00afxkj \u2212\u00afxj in the numerator is m2\nk\u03c32, and hence the form of the\nstandardization in the denominator. We shrink the dkj toward zero using\nsoft thresholding\nd\u2032\nkj = sign(dkj)(|dkj| \u2212\u0394)+;\n(18.5)"
+    },
+    {
+      "id": 48537,
+      "page": 671,
+      "text": "see Figure 18.2. Here \u0394 is a parameter to be determined; we used 10-fold\ncross-validation in the example (see the top panel of Figure 18.4). Each\ndkj is reduced by an amount \u0394 in absolute value, and is set to zero if its\nabsolute value is less than zero. The soft-thresholding function is shown\nin Figure 18.2; the same thresholding is applied to wavelet coe\ufb03cients in\nSection 5.9. An alternative is to use hard thresholding"
+    },
+    {
+      "id": 48539,
+      "page": 671,
+      "text": "we prefer soft-thresholding, as it is a smoother operation and typically\nworks better. The shrunken versions of \u00afxkj are then obtained by reversing\nthe transformation in (18.4):"
+    },
+    {
+      "id": 48541,
+      "page": 671,
+      "text": "We then use the shrunken centroids \u00afx\u2032\nkj in place of the original \u00afxkj in the\ndiscriminant score (18.2). The estimator (18.5) can also be viewed as a\nlasso-style estimator for the class means (Exercise 18.2).\nNotice that only the genes that have a nonzero d\u2032\nkj for at least one of the\nclasses play a role in the classi\ufb01cation rule, and hence the vast majority\nof genes can often be discarded. In this example, all but 43 genes were\ndiscarded, leaving a small interpretable set of genes that characterize each\nclass. Figure 18.3 represents the genes in a heatmap.\nFigure 18.4 (top panel) demonstrates the e\ufb00ectiveness of the shrinkage.\nWith no shrinkage we make 5/20 errors on the test data, and several errors"
+    },
+    {
+      "id": 48543,
+      "page": 672,
+      "text": "on the training and CV data. The shrunken centroids achieve zero test er-\nrors for a fairly broad band of values for \u0394. The bottom panel of Figure 18.4\nshows the four centroids for the SRBCT data (gray), relative to the overall\ncentroid. The blue bars are shrunken versions of these centroids, obtained\nby soft-thresholding the gray bars, using \u0394 = 4.3. The discriminant scores\n(18.2) can be used to construct class probability estimates:"
+    },
+    {
+      "id": 48544,
+      "page": 672,
+      "text": "\u02c6pk(x\u2217) =\ne\n1\n2 \u03b4k(x\u2217)\n\tK\n\u2113=1 e\n1\n2 \u03b4\u2113(x\u2217) .\n(18.8)"
+    },
+    {
+      "id": 48545,
+      "page": 672,
+      "text": "These can be used to rate the classi\ufb01cations, or to decide not to classify a\nparticular sample at all.\nNote that other forms of feature selection can be used in this setting,\nincluding hard thresholding. Fan and Fan (2008) show theoretically the\nimportance of carrying out some kind of feature selection with diagonal\nlinear discriminant analysis in high-dimensional problems."
+    },
+    {
+      "id": 48547,
+      "page": 672,
+      "text": "Ramaswamy et al. (2001) present a more di\ufb03cult microarray classi\ufb01cation\nproblem, involving a training set of 144 patients with 14 di\ufb00erent types of\ncancer, and a test set of 54 patients. Gene expression measurements were\navailable for 16, 063 genes.\nTable 18.1 shows the prediction results from eight di\ufb00erent classi\ufb01cation\nmethods. The data from each patient was \ufb01rst standardized to have mean\n0 and variance 1; this seems to improve prediction accuracy overall this\nexample, suggesting that the \u201cshape\u201d of each gene-expression pro\ufb01le is\nimportant, rather than the absolute expression levels. In each case, the"
+    },
+    {
+      "id": 48568,
+      "page": 673,
+      "text": "Centroids: Average Expression Centered at Overall Centroid"
+    },
+    {
+      "id": 48572,
+      "page": 674,
+      "text": "Methods\nCV errors (SE)\nTest errors\nNumber of\nOut of 144\nOut of 54\nGenes Used"
+    },
+    {
+      "id": 48573,
+      "page": 674,
+      "text": "1. Nearest shrunken centroids\n35 (5.0)\n17\n6,520\n2. L2-penalized discriminant\n25 (4.1)\n12\n16,063\nanalysis\n3. Support vector classi\ufb01er\n26 (4.2)\n14\n16,063\n4. Lasso regression (one vs all)\n30.7 (1.8)\n12.5\n1,429\n5. k-nearest neighbors\n41 (4.6)\n26\n16,063\n6. L2-penalized multinomial\n26 (4.2)\n15\n16,063\n7. L1-penalized multinomial\n17 (2.8)\n13\n269\n8. Elastic-net penalized\n22 (3.7)\n11.8\n384\nmultinomial"
+    },
+    {
+      "id": 48574,
+      "page": 674,
+      "text": "regularization parameter has been chosen to minimize the cross-validation\nerror, and the test error at that value of the parameter is shown. When\nmore than one value of the regularization parameter yields the minimal\ncross-validation error, the average test error at these values is reported.\nRDA (regularized discriminant analysis), regularized multinomial logistic\nregression, and the support vector machine are more complex methods that\ntry to exploit multivariate information in the data. We describe each in\nturn, as well as a variety of regularization methods, including both L1 and\nL2 and some in between."
+    },
+    {
+      "id": 48576,
+      "page": 674,
+      "text": "Regularized discriminant analysis (RDA) is described in Section 4.3.1. Lin-\near discriminant analysis involves the inversion of a p\u00d7p within-covariance\nmatrix. When p \u226bN, this matrix can be huge, has rank at most N < p,\nand hence is singular. RDA overcomes the singularity issues by regulariz-\ning the within-covariance estimate \u02c6\u03a3. Here we use a version of RDA that\nshrinks \u02c6\u03a3 towards its diagonal:"
+    },
+    {
+      "id": 48577,
+      "page": 674,
+      "text": "\u02c6\u03a3(\u03b3) = \u03b3 \u02c6\u03a3 + (1 \u2212\u03b3)diag( \u02c6\u03a3), with \u03b3 \u2208[0, 1].\n(18.9)"
+    },
+    {
+      "id": 48578,
+      "page": 674,
+      "text": "Note that \u03b3 = 0 corresponds to diagonal LDA, which is the \u201cno shrinkage\u201d\nversion of nearest shrunken centroids. The form of shrinkage in (18.9) is"
+    },
+    {
+      "id": 48580,
+      "page": 675,
+      "text": "much like ridge regression (Section 3.4.1), which shrinks the total covariance\nmatrix of the features towards a diagonal (scalar) matrix. In fact, viewing\nlinear discriminant analysis as linear regression with optimal scoring of the\ncategorical response [see (12.58) in Section 12.6], the equivalence becomes\nmore precise.\nThe computational burden of inverting this large p\u00d7p matrix is overcome\nusing the methods discussed in Section 18.3.5. The value of \u03b3 was chosen\nby cross-validation in line 2 of Table 18.1; all values of \u03b3 \u2208(0.002, 0.550)\ngave the same CV and test error. Further development of RDA, including\nshrinkage of the centroids in addition to the covariance matrix, can be\nfound in Guo et al. (2006)."
+    },
+    {
+      "id": 48582,
+      "page": 675,
+      "text": "Logistic regression (Section 4.4) can be modi\ufb01ed in a similar way, to deal\nwith the p \u226bN case. With K classes, we use a symmetric version of the\nmulticlass logistic model (4.17) on page 119:"
+    },
+    {
+      "id": 48583,
+      "page": 675,
+      "text": "Pr(G = k|X = x) =\nexp(\u03b2k0 + xT \u03b2k)\n\tK\n\u2113=1 exp(\u03b2\u21130 + xT \u03b2\u2113)\n.\n(18.10)"
+    },
+    {
+      "id": 48584,
+      "page": 675,
+      "text": "This has K coe\ufb03cient vectors of log-odds parameters \u03b21, \u03b22, . . . , \u03b2K. We\nregularize the \ufb01tting by maximizing the penalized log-likelihood"
+    },
+    {
+      "id": 48593,
+      "page": 675,
+      "text": "This regularization automatically resolves the redundancy in the paramet-\nrization, and forces \tK\nk=1 \u02c6\u03b2\u2113j = 0, j = 1, . . . , p (Exercise 18.3). Note that\nthe constant terms \u03b2k0 are not regularized (and so one should be set to\nzero). The resulting optimization problem is convex, and can be solved by\na Newton algorithm or other numerical techniques. Details are given in Zhu\nand Hastie (2004). Friedman et al. (2008a) provide software for computing\nthe regularization path for the two- and multiclass logistic regression mod-\nels. Table 18.1, line 6 reports the results for the multiclass logistic regres-\nsion model, referred to there as \u201cmultinomial\u201d. It can be shown (Rosset\net al., 2004a) that for separable data, as \u03bb \u21920, the regularized (two-\nclass) logistic regression estimate (renormalized) converges to the maximal\nmargin classi\ufb01er (Section 12.2). This gives an attractive alternative to the\nsupport-vector machine, discussed next, especially in the multiclass case."
+    },
+    {
+      "id": 48595,
+      "page": 675,
+      "text": "The support vector classi\ufb01er is described for the two-class case in Sec-\ntion 12.2. When p > N, it is especially attractive because in general the"
+    },
+    {
+      "id": 48597,
+      "page": 676,
+      "text": "classes are perfectly separable by a hyperplane unless there are identical\nfeature vectors in di\ufb00erent classes. Without any regularization the support\nvector classi\ufb01er \ufb01nds the separating hyperplane with the largest margin;\nthat is, the hyperplane yielding the biggest gap between the classes in\nthe training data. Somewhat surprisingly, when p \u226bN the unregularized\nsupport vector classi\ufb01er often works about as well as the best regularized\nversion. Over\ufb01tting often does not seem to be a problem, partly because of\nthe insensitivity of misclassi\ufb01cation loss.\nThere are many di\ufb00erent methods for generalizing the two-class support-\nvector classi\ufb01er to K > 2 classes. In the \u201cone versus one\u201d (ovo) approach,\nwe compute all\n\u0005K\n2\n\u0006\npairwise classi\ufb01ers. For each test point, the predicted\nclass is the one that wins the most pairwise contests. In the \u201cone versus all\u201d\n(ova) approach, each class is compared to all of the others in K two-class\ncomparisons. To classify a test point, we compute the con\ufb01dences (signed\ndistance from the hyperplane) for each of the K classi\ufb01ers. The winner is the\nclass with the highest con\ufb01dence. Finally, Vapnik (1998) and Weston and\nWatkins (1999) suggested (somewhat complex) multiclass criteria which\ngeneralize the two-class criterion (12.6).\nTibshirani and Hastie (2007) propose the margin tree classi\ufb01er, in which\nsupport-vector classi\ufb01ers are used in a binary tree, much as in CART\n(Chapter 9). The classes are organized in a hierarchical manner, which can\nbe useful for classifying patients into di\ufb00erent cancer types, for example.\nLine 2 of Table 18.1 shows the results for the support vector classi\ufb01er\nusing the ova method; Ramaswamy et al. (2001) reported (and we con-\n\ufb01rmed) that this approach worked best for this problem. The errors are\nvery similar to those in line 6, as we might expect from the comments\nat the end of the previous section. The error rates are insensitive to the\nchoice of C [the regularization parameter in (12.8) on page 420], for values\nof C > 0.001. Since p > N, the support vector hyperplane can perfectly\nseparate the training data by setting C = \u221e."
+    },
+    {
+      "id": 48599,
+      "page": 676,
+      "text": "Feature selection is an important scienti\ufb01c requirement for a classi\ufb01er when\np is large. Neither discriminant analysis, logistic regression, nor the support-\nvector classi\ufb01er perform feature selection automatically, because all use\nquadratic regularization. All features have nonzero weights in both models.\nAd-hoc methods for feature selection have been proposed, for example,\nremoving genes with small coe\ufb03cients, and re\ufb01tting the classi\ufb01er. This is\ndone in a backward stepwise manner, starting with the smallest weights and\nmoving on to larger weights. This is known as recursive feature elimination\n(Guyon et al., 2002). It was not successful in this example; Ramaswamy\net al. (2001) report, for example, that the accuracy of the support-vector\nclassi\ufb01er starts to degrade as the number of genes is reduced from the full"
+    },
+    {
+      "id": 48601,
+      "page": 677,
+      "text": "set of 16, 063. This is rather remarkable, as the number of training samples\nis only 144. We do not have an explanation for this behavior.\nAll three methods discussed in this section (RDA, LR and SVM) can\nbe modi\ufb01ed to \ufb01t nonlinear decision boundaries using kernels. Usually the\nmotivation for such an approach is to increase the model complexity. With\np \u226bN the models are already su\ufb03ciently complex and over\ufb01tting is always\na danger. Yet despite the high dimensionality, radial kernels (Section 12.3.3)\nsometimes deliver superior results in these high dimensional problems. The\nradial kernel tends to dampen inner products between points far away from\neach other, which in turn leads to robustness to outliers. This occurs often\nin high dimensions, and may explain the positive results. We tried a radial\nkernel with the SVM in Table 18.1, but in this case the performance was\ninferior."
+    },
+    {
+      "id": 48603,
+      "page": 677,
+      "text": "The computational techniques discussed in this section apply to any method\nthat \ufb01ts a linear model with quadratic regularization on the coe\ufb03cients.\nThat includes all the methods discussed in this section, and many more.\nWhen p > N, the computations can be carried out in an N-dimensional\nspace, rather than p, via the singular value decomposition introduced in\nSection 14.5. Here is the geometric intuition: just like two points in three-\ndimensional space always lie on a line, N points in p-dimensional space lie\nin an (N \u22121)-dimensional a\ufb03ne subspace.\nGiven the N \u00d7 p data matrix X, let"
+    },
+    {
+      "id": 48606,
+      "page": 677,
+      "text": "be the singular-value decomposition (SVD) of X; that is, V is p \u00d7 N with\northonormal columns, U is N \u00d7 N orthogonal, and D a diagonal matrix\nwith elements d1 \u2265d2 \u2265dN \u22650. The matrix R is N \u00d7 N, with rows rT\ni .\nAs a simple example, let\u2019s \ufb01rst consider the estimates from a ridge re-\ngression:\n\u02c6\u03b2 = (XT X + \u03bbI)\u22121XT y.\n(18.14)"
+    },
+    {
+      "id": 48607,
+      "page": 677,
+      "text": "Replacing X by RVT and after some further manipulations, this can be\nshown to equal"
+    },
+    {
+      "id": 48609,
+      "page": 677,
+      "text": "(Exercise 18.4). Thus \u02c6\u03b2 = V\u02c6\u03b8, where \u02c6\u03b8 is the ridge-regression estimate\nusing the N observations (ri, yi), i = 1, 2, . . . , N. In other words, we can\nsimply reduce the data matrix from X to R, and work with the rows of\nR. This trick reduces the computational cost from O(p3) to O(pN 2) when\np > N."
+    },
+    {
+      "id": 48611,
+      "page": 678,
+      "text": "These results can be generalized to all models that are linear in the\nparameters and have quadratic penalties. Consider any supervised learning\nproblem where we use a linear function f(X) = \u03b20 + XT \u03b2 to model a\nparameter in the conditional distribution of Y |X. We \ufb01t the parameters \u03b2\nby minimizing some loss function \tN\ni=1 L(yi, f(xi)) over the data with a\nquadratic penalty on \u03b2. Logistic regression is a useful example to have in\nmind. Then we have the following simple theorem:"
+    },
+    {
+      "id": 48612,
+      "page": 678,
+      "text": "Let f \u2217(ri) = \u03b80 + rT\ni \u03b8 with ri de\ufb01ned in (18.13), and consider the pair of\noptimization problems:"
+    },
+    {
+      "id": 48620,
+      "page": 678,
+      "text": "The theorem says that we can simply replace the p vectors xi by the\nN-vectors ri, and perform our penalized \ufb01t as before, but with far fewer\npredictors. The N-vector solution \u02c6\u03b8 is then transformed back to the p-\nvector solution via a simple matrix multiplication. This result is part of\nthe statistics folklore, and deserves to be known more widely\u2014see Hastie\nand Tibshirani (2004) for further details.\nGeometrically, we are rotating the features to a coordinate system in\nwhich all but the \ufb01rst N coordinates are zero. Such rotations are allowed\nsince the quadratic penalty is invariant under rotations, and linear models\nare equivariant.\nThis result can be applied to many of the learning methods discussed\nin this chapter, such as regularized (multiclass) logistic regression, linear\ndiscriminant analysis (Exercise 18.6), and support vector machines. It also\napplies to neural networks with quadratic regularization (Section 11.5.2).\nNote, however, that it does not apply to methods such as the lasso, which\nuses nonquadratic (L1) penalties on the coe\ufb03cients.\nTypically we use cross-validation to select the parameter \u03bb. It can be\nseen (Exercise 18.12) that we only need to construct R once, on the original\ndata, and use it as the data for each of the CV folds.\nThe support vector \u201ckernel trick\u201d of Section 12.3.7 exploits the same re-\nduction used in this section, in a slightly di\ufb00erent context. Suppose we have\nat our disposal the N \u00d7 N gram (inner-product) matrix K = XXT . From\n(18.12) we have K = UD2UT , and so K captures the same information as\nR. Exercise 18.13 shows how we can exploit the ideas in this section to \ufb01t\na ridged logistic regression with K using its SVD."
+    },
+    {
+      "id": 48623,
+      "page": 679,
+      "text": "The methods of the previous chapter use an L2 penalty to regularize their\nparameters, just as in ridge regression. All of the estimated coe\ufb03cients\nare nonzero, and hence no feature selection is performed. In this section we\ndiscuss methods that use L1 penalties instead, and hence provide automatic\nfeature selection.\nRecall the lasso of Section 3.4.2,"
+    },
+    {
+      "id": 48632,
+      "page": 679,
+      "text": "which we have written in the Lagrange form (3.52). As discussed there, the\nuse of the L1 penalty causes a subset of the solution coe\ufb03cients \u02c6\u03b2j to be\nexactly zero, for a su\ufb03ciently large value of the tuning parameter \u03bb.\nIn Section 3.8.1 we discussed the LARS algorithm, an e\ufb03cient procedure\nfor computing the lasso solution for all \u03bb. When p > N (as in this chapter),\nas \u03bb approaches zero, the lasso \ufb01ts the training data exactly. In fact, by\nconvex duality one can show that when p > N the number of non-zero\ncoe\ufb03cients is at most N for all values of \u03bb (Rosset and Zhu, 2007, for\nexample). Thus the lasso provides a (severe) form of feature selection.\nLasso regression can be applied to a two-class classi\ufb01cation problem by\ncoding the outcome \u00b11, and applying a cuto\ufb00(usually 0) to the predictions.\nFor more than two classes, there are many possible approaches, including\nthe ova and ovo methods discussed in Section 18.3.3. We tried the ova-\napproach on the cancer data in Section 18.3. The results are shown in\nline (4) of Table 18.1. Its performance is among the best.\nA more natural approach for classi\ufb01cation problems is to use the lasso\npenalty to regularize logistic regression. Several implementations have been\nproposed in the literature, including path algorithms similar to LARS (Park\nand Hastie, 2007). Because the paths are piecewise smooth but nonlinear,\nexact methods are slower than the LARS algorithm, and are less feasible\nwhen p is large.\nFriedman et al. (2008a) provide very fast algorithms for \ufb01tting L1-pen-\nalized logistic and multinomial regression models. They use the symmetric\nmultinomial logistic regression model as in (18.10) in Section 18.3.2, and\nmaximize the penalized log-likelihood"
+    },
+    {
+      "id": 48643,
+      "page": 679,
+      "text": "compare with (18.11). Their algorithm computes the exact solution at a\npre-chosen sequence of values for \u03bb by cyclical coordinate descent (Sec-\ntion 3.8.6), and exploits the fact that solutions are sparse when p \u226bN,"
+    },
+    {
+      "id": 48645,
+      "page": 680,
+      "text": "as well as the fact that solutions for neighboring values of \u03bb tend to be\nvery similar. This method was used in line (7) of Table 18.1, with the over-\nall tuning parameter \u03bb chosen by cross-validation. The performance was\nsimilar to that of the best methods, except here the automatic feature se-\nlection chose 269 genes altogether. A similar approach is used in Genkin\net al. (2007); although they present their model from a Bayesian point of\nview, they in fact compute the posterior mode, which solves the penalized\nmaximum-likelihood problem."
+    },
+    {
+      "id": 48655,
+      "page": 680,
+      "text": "In genomic applications, there are often strong correlations among the\nvariables; genes tend to operate in molecular pathways. The lasso penalty\nis somewhat indi\ufb00erent to the choice among a set of strong but corre-\nlated variables (Exercise 3.28). The ridge penalty, on the other hand, tends\nto shrink the coe\ufb03cients of correlated variables toward each other (Exer-\ncise 3.29 on page 99). The elastic net penalty (Zou and Hastie, 2005) is a\ncompromise, and has the form"
+    },
+    {
+      "id": 48659,
+      "page": 680,
+      "text": "The second term encourages highly correlated features to be averaged, while\nthe \ufb01rst term encourages a sparse solution in the coe\ufb03cients of these aver-"
+    },
+    {
+      "id": 48661,
+      "page": 681,
+      "text": "aged features. The elastic net penalty can be used with any linear model,\nin particular for regression or classi\ufb01cation.\nHence the multinomial problem above with elastic-net penalty becomes"
+    },
+    {
+      "id": 48672,
+      "page": 681,
+      "text": "(18.21)\nThe parameter \u03b1 determines the mix of the penalties, and is often pre-\nchosen on qualitative grounds. The elastic net can yield more that N non-\nzero coe\ufb03cients when p > N, a potential advantage over the lasso. Line\n(8) in Table 18.1 uses this model, with \u03b1 and \u03bb chosen by cross-validation.\nWe used a sequence of 20 values of \u03b1 between 0.05 and 1.0, and a 100\nvalues of \u03bb uniform on the log scale covering the entire range. Values of\n\u03b1 \u2208[0.75, 0.80] gave the minimum CV error, with values of \u03bb < 0.001 for all\ntied solutions. Although it has the lowest test error among all methods, the\nmargin is small and not signi\ufb01cant. Interestingly, when CV is performed\nseparately for each value of \u03b1, a minimum test error of 8.8 is achieved at\n\u03b1 = 0.10, but this is not the value chosen in the two-dimensional CV."
+    },
+    {
+      "id": 48684,
+      "page": 682,
+      "text": "si\ufb01cation errors for the lasso logistic regression on the training and test\ndata, as well as for 10-fold cross-validation on the training data. The right\npanel uses binomial deviance to measure errors, and is much smoother. The\nsmall sample sizes lead to considerable sampling variance in these curves,\neven though individual curves are relatively smooth (see, for example, Fig-\nure 7.1 on page 220). Both of these plots suggest that the limiting solution\n\u03bb \u21930 is adequate, leading to 3/34 misclassi\ufb01cations in the test set. The\ncorresponding \ufb01gures for the elastic net are qualitatively similar and are\nnot shown.\nFor p \u226bN, the limiting coe\ufb03cients diverge for all regularized logistic\nregression models, so in practical software implementations a minimum\nvalue for \u03bb > 0 is either explicitly or implicitly set. However, renormalized\nversions of the coe\ufb03cients converge, and these limiting solutions can be\nthought of as interesting alternatives to the linear optimal separating hy-\nperplane (SVM). With \u03b1 = 0 the limiting solution coincides with the SVM\n(see end of Section 18.3.2), but all the 7129 genes are selected. With \u03b1 = 1,\nthe limiting solution coincides with an L1 separating hyperplane (Rosset\net al., 2004a), and includes at most 38 genes. As \u03b1 decreases from 1, the\nelastic-net solutions include more genes in the separating hyperplane."
+    },
+    {
+      "id": 48686,
+      "page": 682,
+      "text": "Protein mass spectrometry has become a popular technology for analyzing\nthe proteins in blood, and can be used to diagnose a disease or understand\nthe processes underlying it.\nFor each blood serum sample i, we observe the intensity xij for many\ntime of \ufb02ight values tj. This intensity is related to the number of particles\nobserved to take approximately tj time to pass from the emitter to the\ndetector during a cycle of operation of the machine. The time of \ufb02ight has\na known relationship to the mass over charge ratio (m/z) of the constituent\nproteins in the blood. Hence the identi\ufb01cation of a peak in the spectrum\nat a certain tj tells us that there is a protein with a corresponding mass\nand charge. The identity of this protein can then be determined by other\nmeans.\nFigure 18.7 shows an example taken from Adam et al. (2003). It shows\nthe average spectra for healthy patients and those with prostate cancer.\nThere are 16,898 m/z sites in total, ranging in value from 2000 to 40,000.\nThe full dataset consists of 157 healthy patients and 167 with cancer, and\nthe goal is to \ufb01nd m/z sites that discriminate between the two groups.\nThis is an example of functional data; the predictors can be viewed as a\nfunction of m/z. There has been much interest in this problem in the past\nfew years; see e.g. Petricoin et al. (2002).\nThe data were \ufb01rst standardized (baseline subtraction and normaliza-\ntion), and we restricted attention to m/z values between 2000 and 40,000\n(spectra outside of this range were not of interest). We then applied near-"
+    },
+    {
+      "id": 48694,
+      "page": 683,
+      "text": "est shrunken centroids and lasso regression to the data, with the results for\nboth methods shown in Table 18.2.\nBy \ufb01tting harder to the data, the lasso achieves a considerably lower\ntest error rate. However, it may not provide a scienti\ufb01cally useful solu-\ntion. Ideally, protein mass spectrometry resolves a biological sample into\nits constituent proteins, and these should appear as peaks in the spectra.\nThe lasso doesn\u2019t treat peaks in any special way, so not surprisingly only\nsome of the non-zero lasso weights were situated near peaks in the spectra.\nFurthermore, the same protein may yield a peak at slightly di\ufb00erent m/z\nvalues in di\ufb00erent spectra. In order to identify common peaks, some kind\nof m/z warping is needed from sample to sample.\nTo address this, we applied a standard peak-extraction algorithm to each\nspectrum, yielding a total of 5178 peaks in the 217 training spectra. Our\nidea was to pool the collection of peaks from all patients, and hence con-\nstruct a set of common peaks. For this purpose, we applied hierarchical\nclustering to the positions of these peaks along the log m/z axis. We cut\nthe resulting dendrogram horizontally at height log(0.005)3, and computed\naverages of the peak positions in each resulting cluster. This process yielded\n728 common clusters and their corresponding peak centers.\nGiven these 728 common peaks, we determined which of these were\npresent in each individual spectrum, and if present, the height of the peak.\nA peak height of zero was assigned if that peak was not found. This pro-\nduced a 217 \u00d7 728 matrix of peak heights as features, which was used in a\nlasso regression. We scored the test spectra for the same 728 peaks."
+    },
+    {
+      "id": 48695,
+      "page": 683,
+      "text": "3Use of the value 0.005 means that peaks with positions less than 0.5% apart are\nconsidered the same peak, a fairly common assumption."
+    },
+    {
+      "id": 48698,
+      "page": 684,
+      "text": "Method\nTest Errors/108\nNumber of Sites\n1. Nearest shrunken centroids\n34\n459\n2. Lasso\n22\n113\n3. Lasso on peaks\n28\n35"
+    },
+    {
+      "id": 48699,
+      "page": 684,
+      "text": "The prediction results for this application of the lasso to the peaks are\nshown in the last line of Table 18.2: it does fairly well, but not as well\nas the lasso on the raw spectra. However, the \ufb01tted model may be more\nuseful to the biologist as it yields 35 peak positions for further study. On\nthe other hand, the results suggest that there may be useful discriminatory\ninformation between the peaks of the spectra, and the positions of the lasso\nsites from line (2) of the table also deserve further examination."
+    },
+    {
+      "id": 48701,
+      "page": 684,
+      "text": "In the previous example, the features had a natural order, determined by\nthe mass-to-charge ratio m/z. More generally, we may have functional fea-\ntures xi(t) that are ordered according to some index variable t. We have\nalready discussed several approaches for exploiting such structure.\nWe can represent xi(t) by their coe\ufb03cients in a basis of functions in t,\nsuch as splines, wavelets or Fourier bases, and then apply a regression using\nthese coe\ufb03cients as predictors. Equivalently, one can instead represent the\ncoe\ufb03cients of the original features in these bases. These approaches are\ndescribed in Section 5.3.\nIn the classi\ufb01cation setting, we discuss the analogous approach of penal-\nized discriminant analysis in Section 12.6. This uses a penalty that explicitly\ncontrols the resulting smoothness of the coe\ufb03cient vector.\nThe above methods tend to smooth the coe\ufb03cients uniformly. Here we\npresent a more adaptive strategy that modi\ufb01es the lasso penalty to take\ninto account the ordering of the features. The fused lasso (Tibshirani et\nal., 2005) solves"
+    },
+    {
+      "id": 48713,
+      "page": 684,
+      "text": "This criterion is strictly convex in \u03b2, so a unique solution exists. The \ufb01rst\npenalty encourages the solution to be sparse, while the second encourages\nit to be smooth in the index j.\nThe di\ufb00erence penalty in (18.22) assumes an uniformly spaced index j. If\ninstead the underlying index variable t has nonuniform values tj, a natural\ngeneralization of (18.22) would be based on divided di\ufb00erences"
+    },
+    {
+      "id": 48725,
+      "page": 685,
+      "text": "This amounts to having a penalty modi\ufb01er for each of the terms in the\nseries.\nA particularly useful special case arises when the predictor matrix X =\nIN, the N \u00d7 N identity matrix. This is a special case of the fused lasso,\nused to approximate a sequence {yi}N\n1 . The fused lasso signal approximator\nsolves"
+    },
+    {
+      "id": 48737,
+      "page": 686,
+      "text": "\ufb01rst di\ufb00erences to the left, right, above and below the target pixel. This\ncan be useful for denoising or classifying images. Friedman et al. (2007b)\ndevelop fast generalized coordinate descent algorithms for the one- and\ntwo-dimensional fused lasso."
+    },
+    {
+      "id": 48739,
+      "page": 686,
+      "text": "In some applications the objects under study are more abstract in nature,\nand it is not obvious how to de\ufb01ne a feature vector. As long as we can \ufb01ll\nin an N \u00d7N proximity matrix of similarities between pairs of objects in our\ndatabase, it turns out we can put to use many of the classi\ufb01ers in our arsenal\nby interpreting the proximities as inner-products. Protein structures fall\ninto this category, and we explore an example in Section 18.5.1 below.\nIn other applications, such as document classi\ufb01cation, feature vectors are\navailable but can be extremely high-dimensional. Here we may not wish\nto compute with such high-dimensional data, but rather store the inner-\nproducts between pairs of documents. Often these inner-products can be\napproximated by sampling techniques.\nPairwise distances serve a similar purpose, because they can be turned\ninto centered inner-products. Proximity matrices are discussed in more de-\ntail in Chapter 14."
+    },
+    {
+      "id": 48741,
+      "page": 686,
+      "text": "An important problem in computational biology is to classify proteins into\nfunctional and structural classes based on their sequence similarities. Pro-\ntein molecules are strings of amino acids, di\ufb00ering in both length and com-\nposition. In the example we consider, the lengths vary between 75\u2013160\namino-acid molecules, each of which can be one of 20 di\ufb00erent types, labeled\nusing letters. Here are two examples, of length 110 and 153, respectively:"
+    },
+    {
+      "id": 48742,
+      "page": 686,
+      "text": "IPTSALVKETLALLSTHRTLLIANETLRIPVPVHKNHQLCTEEIFQGIGTLESQTVQGGTV"
+    },
+    {
+      "id": 48744,
+      "page": 686,
+      "text": "PHRRDLCSRSIWLARKIRSDLTALTESYVKHQGLWSELTEAERLQENLQAYRTFHVLLA"
+    },
+    {
+      "id": 48745,
+      "page": 686,
+      "text": "RLLEDQQVHFTPTEGDFHQAIHTLLLQVAAFAYQIEELMILLEYKIPRNEADGMLFEKK"
+    },
+    {
+      "id": 48747,
+      "page": 686,
+      "text": "There have been many proposals for measuring the similarity between a\npair of protein molecules. Here we focus on a measure based on the count\nof matching substrings (Leslie et al., 2003), such as the LQE above.\nTo construct our features, we count the number of times that a given\nsequence of length m occurs in our string, and we compute this number"
+    },
+    {
+      "id": 48749,
+      "page": 687,
+      "text": "for all possible sequences of length m. Formally, for a string x, we de\ufb01ne a\nfeature map"
+    },
+    {
+      "id": 48751,
+      "page": 687,
+      "text": "where Am is the set of subsequences of length m, and \u03c6a(x) is the number\nof times that \u201ca\u201d occurs in our string x. Using this, we de\ufb01ne the inner\nproduct"
+    },
+    {
+      "id": 48753,
+      "page": 687,
+      "text": "which measures the similarity between the two strings x1, x2. This can be\nused to drive, for example, a support vector classi\ufb01er for classifying strings\ninto di\ufb00erent protein classes.\nNow the number of possible sequences a is |Am| = 20m, which can be\nvery large for moderate m, and the vast majority of the subsequences do\nnot match the strings in our training set. It turns out that we can compute\nthe N \u00d7 N inner-product matrix or string kernel Km (18.26) e\ufb03ciently\nusing tree-structures, without actually computing the individual vectors.\nThis methodology, and the data to follow, come from Leslie et al. (2003).4"
+    },
+    {
+      "id": 48754,
+      "page": 687,
+      "text": "The data consist of 1708 proteins in two classes\u2014 negative (1663) and\npositive (45). The two examples above, which we will call \u201cx1\u201d and \u201cx2\u201d,\nare from this set. We have marked the occurrences of subsequence LQE,\nwhich appears in both proteins. There are 203 possible subsequences, so\n\u03a63(x) will be a vector of length 8000. For this example \u03c6LQE(x1) = 1 and\n\u03c6LQE(x2) = 2.\nUsing software from Leslie et al. (2003), we computed the string kernel\nfor m = 4, which was then used in a support vector classi\ufb01er to \ufb01nd the\nmaximal margin solution in this 204 = 160, 000-dimensional feature space.\nWe used 10-fold cross-validation to compute the SVM predictions on all of\nthe training data. The orange curve in Figure 18.9 shows the cross-validated\nROC curve for the support vector classi\ufb01er, computed by varying the cut-\npoint on the real-valued predictions from the cross-validated support vector\nclassi\ufb01er. The area under the curve is 0.84. Leslie et al. (2003) show that\nthe string kernel method is competitive with, but perhaps not as accurate\nas, more specialized methods for protein string matching.\nMany other classi\ufb01ers can be computed using only the information in the\nkernel matrix; some details are given in the next section. The results for\nthe nearest centroid classi\ufb01er (green), and distance-weighted one-nearest\nneighbors (blue) are shown in Figure 18.9. Their performance is similar to\nthat of the support vector classi\ufb01er."
+    },
+    {
+      "id": 48755,
+      "page": 687,
+      "text": "4We thank Christina Leslie for her help and for providing the data, which is available\non our book website."
+    },
+    {
+      "id": 48762,
+      "page": 688,
+      "text": "SVM  0.84\nNearest Centroid  0.84\nOne\u2212Nearest Neighbor 0.86"
+    },
+    {
+      "id": 48765,
+      "page": 688,
+      "text": "There are a number of other classi\ufb01ers, besides the support-vector ma-\nchine, that can be implemented using only inner-product matrices. This\nalso implies they can be \u201ckernelized\u201d like the SVM.\nAn obvious example is nearest-neighbor classi\ufb01cation, since we can trans-\nform pairwise inner-products to pairwise distances:"
+    },
+    {
+      "id": 48766,
+      "page": 688,
+      "text": "||xi \u2212xi\u2032||2 = \u27e8xi, xi\u27e9+ \u27e8xi\u2032, xi\u2032\u27e9\u22122\u27e8xi, xi\u2032\u27e9.\n(18.27)"
+    },
+    {
+      "id": 48767,
+      "page": 688,
+      "text": "A variation of 1-NN classi\ufb01cation is used in Figure 18.9, which produces\na continuous discriminant score needed to construct a ROC curve. This\ndistance-weighted 1-NN makes use of the distance of a test points to the\nclosest member of each class; see Exercise 18.14.\nNearest-centroid classi\ufb01cation follows easily as well. For training pairs\n(xi, gi), i = 1, . . . , N, a test point x0, and class centroids \u00afxk, k = 1, . . . , K\nwe can write"
+    },
+    {
+      "id": 48778,
+      "page": 689,
+      "text": "Hence we can compute the distance of the test point to each of the cen-\ntroids, and perform nearest centroid classi\ufb01cation. This also implies that\nmethods like K-means clustering can also be implemented, using only the\ninner products of the data points.\nLogistic and multinomial regression with quadratic regularization can\nalso be implemented with inner-product kernels; see Section 12.3.3 and\nExercise 18.13. Exercise 12.10 derives linear discriminant analysis using an\ninner-product kernel.\nPrincipal components can be computed using inner-product kernels as\nwell; since this is frequently useful, we give some details. Suppose \ufb01rst\nthat we have a centered data matrix X, and let X = UDVT be its SVD\n(18.12). Then Z = UD is the matrix of principal component variables (see\nSection 14.5.1). But if K = XXT , then it follows that K = UD2UT , and\nhence we can compute Z from the eigen decomposition of K. If X is not\ncentered, then we can center it using \u02dcX = (I \u2212M)X, where M =\n1\nN 11T"
+    },
+    {
+      "id": 48779,
+      "page": 689,
+      "text": "is the mean operator. Thus we compute the eigenvectors of the double-\ncentered kernel (I \u2212M)K(I \u2212M) for the principal components from an\nuncentered inner-product matrix. Exercise 18.15 explores this further, and\nSection 14.5.4 discusses in more detail kernel PCA for general kernels, such\nas the radial kernel used in SVMs.\nIf instead we had available only the pairwise (squared) Euclidean dis-\ntances between observations,"
+    },
+    {
+      "id": 48781,
+      "page": 689,
+      "text": "it turns out we can do all of the above as well. The trick is to convert the\npairwise distances to centered inner-products, and then proceed as before.\nWe write"
+    },
+    {
+      "id": 48785,
+      "page": 689,
+      "text": "it is easy to check that \u02dcKii\u2032 = \u27e8xi \u2212\u00afx, xi\u2032 \u2212\u00afx\u27e9, the centered inner-product\nmatrix.\nDistances and inner-products also allow us to compute the medoid in each\nclass\u2014the observation with smallest average distance to other observations\nin that class. This can be used for classi\ufb01cation (closest medoids), as well as\nto drive k-medoids clustering (Section 14.3.10). With abstract data objects\nlike proteins, medoids have a practical advantage over means. The medoid is\none of the training examples, and can be displayed. We tried closest medoids\nin the example in the next section (see Table 18.3), and its performance is\ndisappointing.\nIt is useful to consider what we cannot do with inner-product kernels and\ndistances:"
+    },
+    {
+      "id": 48788,
+      "page": 690,
+      "text": "Method\nCV Error (SE)\n1.\nNearest shrunken centroids\n0.17 (0.05)\n2.\nSVM\n0.23 (0.06)\n3.\nNearest medoids\n0.65 (0.07)\n4.\n1-NN\n0.44 (0.07)\n5.\nNearest centroids\n0.29 (0.07)"
+    },
+    {
+      "id": 48789,
+      "page": 690,
+      "text": "\u2022 We cannot standardize the variables; standardization signi\ufb01cantly im-\nproves performance in the example in the next section."
+    },
+    {
+      "id": 48790,
+      "page": 690,
+      "text": "\u2022 We cannot assess directly the contributions of individual variables.\nIn particular, we cannot perform individual t-tests, \ufb01t the nearest\nshrunken centroids model, or \ufb01t any model that uses the lasso penalty."
+    },
+    {
+      "id": 48791,
+      "page": 690,
+      "text": "\u2022 We cannot separate the good variables from the noise: all variables get\nan equal say. If, as is often the case, the ratio of relevant to irrelevant\nvariables is small, methods that use kernels are not likely to work as\nwell as methods that do feature selection."
+    },
+    {
+      "id": 48793,
+      "page": 690,
+      "text": "This somewhat whimsical example serves to illustrate a limitation of ker-\nnel approaches. We collected the abstracts from 48 papers, 16 each from\nBradley Efron (BE), Trevor Hastie and Rob Tibshirani (HT) (frequent co-\nauthors), and Jerome Friedman (JF). We extracted all unique words from\nthese abstracts, and de\ufb01ned features xij to be the number of times word\nj appears in abstract i. This is the so-called bag of words representation.\nQuotations, parentheses and special characters were \ufb01rst removed from the\nabstracts, and all characters were converted to lower case. We also removed\nthe word \u201cwe\u201d, which could unfairly discriminate HT abstracts from the\nothers.\nThere were 4492 total words, of which p = 1310 were unique. We sought\nto classify the documents into BE, HT or JF on the basis of the features\nxij. Although it is arti\ufb01cial, this example allows us to assess the possible\ndegradation in performance if information speci\ufb01c to the raw features is\nnot used.\nWe \ufb01rst applied the nearest shrunken centroid classi\ufb01er to the data, using\n10-fold cross-validation. It essentially chose no shrinkage, and so used all the\nfeatures; see the \ufb01rst line of Table 18.3. The error rate is 17%; the number\nof features can be reduced to about 500 without much loss in accuracy."
+    },
+    {
+      "id": 48795,
+      "page": 691,
+      "text": "Note that the nearest shrunken classi\ufb01er requires the raw feature matrix\nX in order to standardize the features individually. Figure 18.10 shows the"
+    },
+    {
+      "id": 48796,
+      "page": 691,
+      "text": "predictive\nbayes\nusing\nthan\nalgorithm\nare\nprocedure\ntechnology\nvalues\naccuracy\nvariables\nwhen\ninference\nthose\nbayesian\nfrequentist\npropose\npresented\nmethod\nproblems"
+    },
+    {
+      "id": 48799,
+      "page": 691,
+      "text": "top 20 discriminating words, with a positive score indicating that a word\nappears more in that class than in the other classes.\nSome of these terms make sense: for example \u201cfrequentist\u201d and \u201cBayesian\u201d\nre\ufb02ect Efron\u2019s greater emphasis on statistical inference. However, many oth-\ners are surprising, and re\ufb02ect personal writing styles: for example, Fried-\nman\u2019s use of \u201cpresented\u201d and HT\u2019s use of \u201cpropose\u201d.\nWe then applied the support vector classi\ufb01er with linear kernel and no\nregularization, using the \u201call pairs\u201d (ovo) method to handle the three\nclasses (regularization of the SVM did not improve its performance). The\nresult is shown in Table 18.3. It does somewhat worse than the nearest\nshrunken centroid classi\ufb01er.\nAs mentioned, the \ufb01rst line of Table 18.3 represents nearest shrunken cen-\ntroids (with no shrinkage). Denote by sj the pooled within-class standard\ndeviation for feature j, and s0 the median of the sj values. Then line (1)\nalso corresponds to nearest centroid classi\ufb01cation, after \ufb01rst standardizing\neach feature by sj + s0 [recall (18.4) on page 652].\nLine (3) shows that the performance of nearest medoids is very poor,\nsomething which surprised us. It is perhaps due to the small sample sizes"
+    },
+    {
+      "id": 48801,
+      "page": 692,
+      "text": "and high dimensions, with medoids having much higher variance than\nmeans. The performance of the one-nearest neighbor classi\ufb01er is also poor.\nThe performance of the nearest centroid classi\ufb01er is also shown in Ta-\nble 18.3 in line (5): it is better than nearest medoids, but worse than that\nof nearest shrunken centroids, even with no shrinkage. The di\ufb00erence seems\nto be the standardization of each feature that is done in nearest shrunken\ncentroids. This standardization is important here, and requires access to\nthe individual feature values. Nearest centroids uses a spherical metric, and\nrelies on the fact that the features are in similar units. The support vector\nmachine estimates a linear combination of the features and can better deal\nwith unstandardized features."
+    },
+    {
+      "id": 48803,
+      "page": 692,
+      "text": "In this section we describe a simple approach to regression and generalized\nregression that is especially useful when p \u226bN. We illustrate the method\non another microarray data example. The data is taken from Rosenwald\net al. (2002) and consists of 240 samples from patients with di\ufb00use large\nB-cell lymphoma (DLBCL), with gene expression measurements for 7399\ngenes. The outcome is survival time, either observed or right censored. We\nrandomly divided the lymphoma samples into a training set of size 160 and\na test set of size 80.\nAlthough supervised principal components is useful for linear regression,\nits most interesting applications may be in survival studies, which is the\nfocus of this example.\nWe have not yet discussed regression with censored survival data in this\nbook; it represents a generalized form of regression in which the outcome\nvariable (survival time) is only partly observed for some individuals. Sup-\npose for example we carry out a medical study that lasts for 365 days, and\nfor simplicity all subjects are recruited on day one. We might observe one\nindividual to die 200 days after the start of the study. Another individ-\nual might still be alive at 365 days when the study ends. This individual\nis said to be \u201cright censored\u201d at 365 days. We know only that he or she\nlived at least 365 days. Although we do not know how long past 365 days\nthe individual actually lived, the censored observation is still informative.\nThis is illustrated in Figure 18.11. Figure 18.12 shows the survival curve\nestimated by the Kaplan\u2013Meier method for the 80 patients in the test set.\nSee for example Kalb\ufb02eisch and Prentice (1980) for a description of the\nKaplan\u2013Meier method.\nOur objective in this example is to \ufb01nd a set of features (genes) that\ncan predict the survival of an independent set of patients. This could be"
+    },
+    {
+      "id": 48825,
+      "page": 694,
+      "text": "useful as a prognostic indicator to aid in choosing treatments, or to help\nunderstand the biological basis for the disease.\nThe underlying conceptual model for supervised principal components\nis shown in Figure 18.13. We imagine that there are two cell types, and\npatients with the good cell type live longer on the average. However there\nis considerable overlap in the two sets of survival times. We might think\nof survival time as a \u201cnoisy surrogate\u201d for cell type. A fully supervised\napproach would give the most weight to those genes having the strongest\nrelationship with survival. These genes are partially, but not perfectly, re-\nlated to cell type. If we could instead discover the underlying cell types of\nthe patients, often re\ufb02ected by a sizable signature of genes acting together\nin pathways, then we might do a better job of predicting patient survival.\nAlthough the cell type in Figure 18.13 is discrete, it is useful to imagine\na continuous cell type, de\ufb01ne by some linear combination of the features.\nWe will estimate the cell type as a continuous quantity, and then discretize\nit for display and interpretation.\nHow can we \ufb01nd the linear combination that de\ufb01nes the important under-\nlying cell types? Principal components analysis (Section 14.5) is an e\ufb00ective\nmethod for \ufb01nding linear combinations of features that exhibit large varia-\ntion in a dataset. But what we seek here are linear combinations with both\nhigh variance and signi\ufb01cant correlation with the outcome. The lower right\npanel of Figure 18.14 shows the result of applying standard principal com-\nponents in this example; the leading component does not correlate strongly\nwith survival (details are given in the \ufb01gure caption).\nHence we want to encourage principal component analysis to \ufb01nd linear\ncombinations of features that have high correlation with the outcome. To\ndo this, we restrict attention to features which by themselves have a siz-\nable correlation with the outcome. This is summarized in the supervised\nprincipal components Algorithm 18.1, and illustrated in Figure 18.14.\nThe details in steps (1) and (2b) will depend on the type of outcome\nvariable. For a standard regression problem, we use the univariate linear\nleast squares coe\ufb03cients in step (1) and a linear least squares model in"
+    },
+    {
+      "id": 48858,
+      "page": 696,
+      "text": "1. Compute the standardized univariate regression coe\ufb03cients for the\noutcome as a function of each feature separately."
+    },
+    {
+      "id": 48859,
+      "page": 696,
+      "text": "2. For each value of the threshold \u03b8 from the list 0 \u2264\u03b81 < \u03b82 < \u00b7 \u00b7 \u00b7 < \u03b8K:"
+    },
+    {
+      "id": 48860,
+      "page": 696,
+      "text": "(a) Form a reduced data matrix consisting of only those features\nwhose univariate coe\ufb03cient exceeds \u03b8 in absolute value, and\ncompute the \ufb01rst m principal components of this matrix."
+    },
+    {
+      "id": 48861,
+      "page": 696,
+      "text": "(b) Use these principal components in a regression model to predict\nthe outcome."
+    },
+    {
+      "id": 48863,
+      "page": 696,
+      "text": "step (2b). For survival problems, Cox\u2019s proportional hazards regression\nmodel is widely used; hence we use the score test from this model in step (1)\nand the multivariate Cox model in step (2b). The details are not essential\nfor understanding the basic method; they may be found in Bair et al. (2006).\nFigure 18.14 shows the results of supervised principal components in this\nexample. We used a Cox-score cuto\ufb00of 3.53, yielding 27 genes, where the\nvalue 3.53 was found through 10-fold cross-validation. We then computed\nthe \ufb01rst principal component (m = 1) using just this subset of the data,\nas well as its value for each of the test observations. We included this as\na quantitative predictor in a Cox regression model, and its likelihood-ratio\nsigni\ufb01cance was p = 0.005. When dichotomized (using the mean score on\nthe training data as a threshold), it clearly separates the patients in the\ntest set into low and high risk groups (middle-right panel of Figure 18.14,\np = 0.006).\nThe top-right panel of Figure 18.14 uses the top scoring gene (dichot-\nomized) alone as a predictor of survival. It is not signi\ufb01cant on the test set.\nLikewise, the lower-right panel shows the dichotomized principal compo-\nnent using all the training data, which is also not signi\ufb01cant.\nOur procedure allows m > 1 principal components in step (2a). However,\nthe supervision in step (1) encourages the principal components to align\nwith the outcome, and thus in most cases only the \ufb01rst or \ufb01rst few com-\nponents tend to be useful for prediction. In the mathematical development\nbelow, we consider only the \ufb01rst component, but extensions to more than\none component can be derived in a similar way."
+    },
+    {
+      "id": 48865,
+      "page": 696,
+      "text": "A formal connection between supervised principal components and the un-\nderlying cell type model (Figure 18.13) can be seen through a latent variable\nmodel for the data. Suppose we have a response variable Y which is related"
+    },
+    {
+      "id": 48867,
+      "page": 697,
+      "text": "to an underlying latent variable U by a linear model"
+    },
+    {
+      "id": 48869,
+      "page": 697,
+      "text": "In addition, we have measurements on a set of features Xj indexed by j \u2208P\n(for pathway), for which"
+    },
+    {
+      "id": 48871,
+      "page": 697,
+      "text": "The errors \u03b5 and \u03f5j are assumed to have mean zero and are independent of\nall other random variables in their respective models.\nWe also have many additional features Xk, k \u0338\u2208P which are independent\nof U. We would like to identify P, estimate U, and hence \ufb01t the predic-\ntion model (18.32). This is a special case of a latent-structure model, or\nsingle-component factor-analysis model (Mardia et al., 1979, see also Sec-\ntion 14.7). The latent factor U is a continuous version of the cell type\nconceptualized in Figure 18.13.\nThe supervised principal component algorithm can be seen as a method\nfor \ufb01tting this model:"
+    },
+    {
+      "id": 48873,
+      "page": 697,
+      "text": "\u2022 Given 2P, the largest principal component in step (2) estimates the\nlatent factor U."
+    },
+    {
+      "id": 48874,
+      "page": 697,
+      "text": "\u2022 Finally, the regression \ufb01t in step (3) estimates the coe\ufb03cient in model\n(18.32)."
+    },
+    {
+      "id": 48875,
+      "page": 697,
+      "text": "Step (1) is natural, since on average the regression coe\ufb03cient is nonzero\nonly if \u03b11j is non-zero. Hence this step should select the features j \u2208P.\nStep (2) is natural if we assume that the errors \u03f5j have a Gaussian dis-\ntribution, with the same variance. In this case the principal component is\nthe maximum likelihood estimate for the single factor model (Mardia et\nal., 1979). The regression in (3) is an obvious \ufb01nal step.\nSuppose there are a total of p features, with p1 features in the relevant set\nP. Then if p and p1 grow but p1 is small relative to p, one can show (under\nreasonable conditions) that the leading supervised principal component\nis consistent for the underlying latent factor. The usual leading principal\ncomponent may not be consistent, since it can be contaminated by the\npresence of a large number of \u201cnoise\u201d features.\nFinally, suppose that the threshold used in step (1) of the supervised\nprincipal component procedure yields a large number of features for com-\nputation of the principal component. Then for interpretational purposes, as\nwell as for practical uses, we would like some way of \ufb01nding a reduced a set\nof features that approximates the model. Pre-conditioning (Section 18.6.3)\nis one way of doing this."
+    },
+    {
+      "id": 48878,
+      "page": 698,
+      "text": "Supervised principal components is closely related to partial least squares\nregression (Section 3.5.2). Bair et al. (2006) found that the key to the good\nperformance of supervised principal components was the \ufb01ltering out of\nnoisy features in step (2a). Partial least squares (Section 3.5.2) downweights\nnoisy features, but does not throw them away; as a result a large number\nof noisy features can contaminate the predictions. However, a modi\ufb01cation\nof the partial least squares procedure has been proposed that has a similar\n\ufb02avor to supervised principal components [Brown et al. (1991),Nadler and\nCoifman (2005), for example]. We select the features as in steps (1) and\n(2a) of supervised principal components, but then apply PLS (rather than\nprincipal components) to these features. For our current discussion, we call\nthis \u201cthresholded PLS.\u201d\nThresholded PLS can be viewed as a noisy version of supervised principal\ncomponents, and hence we might not expect it to work as well in practice.\nAssume the variables are all standardized. The \ufb01rst PLS variate has the\nform"
+    },
+    {
+      "id": 48881,
+      "page": 698,
+      "text": "and can be thought of as an estimate of the latent factor U in model (18.33).\nIn contrast, the supervised principal components direction \u02c6u satis\ufb01es"
+    },
+    {
+      "id": 48885,
+      "page": 698,
+      "text": "where d is the leading singular value of XP. This follows from the de\ufb01nition\nof the leading principal component. Hence thresholded PLS uses weights\nwhich are the inner product of y with each of the features, while supervised\nprincipal components uses the features to derive a \u201cself-consistent\u201d estimate\n\u02c6u. Since many features contribute to the estimate \u02c6u, rather than just the\nsingle outcome y, we can expect \u02c6u to be less noisy than z. In fact, if there\nare p1 features in the set P, and N, p and p1 go to in\ufb01nity with p1/N \u21920,\nthen it can be shown using the techniques in Bair et al. (2006) that"
+    }
+  ]
+}

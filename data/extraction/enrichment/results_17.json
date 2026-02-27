@@ -1,0 +1,571 @@
+[
+  {
+    "concept_id": 374,
+    "concept_name": "gradient boosted models",
+    "facts": [
+      {
+        "fact_text": "A gradient boosted model (GBM) is a generalization of tree boosting that attempts to mitigate these problems, so as to produce an accurate and effective off-the-shelf procedure for data mining.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 29983,
+        "page_number": 370
+      },
+      {
+        "fact_text": "Applying gradient boosting to these data resulted in a test error rate of 4.5%, using the same test set as was used in Section 9.1.2. By comparison, an additive logistic regression achieved 5.5%, a CART tree fully grown and pruned by cross-validation 8.7%, and MARS 5.5%.",
+        "fact_type": "example",
+        "importance_rank": 2,
+        "paragraph_id": 29985,
+        "page_number": 370
+      },
+      {
+        "fact_text": "Some advantages of trees that are sacrificed by boosting are speed, interpretability, and, for AdaBoost, robustness against overlapping class distributions and especially mislabeling of the training data.",
+        "fact_type": "comparison",
+        "importance_rank": 3,
+        "paragraph_id": 29983,
+        "page_number": 370
+      },
+      {
+        "fact_text": "We develop a class of gradient boosted models (GBMs), for boosting trees with any loss function.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 29810,
+        "page_number": 359
+      },
+      {
+        "fact_text": "Two basic tuning parameters are the number of iterations M and the sizes of each of the constituent trees Jm, m = 1, 2, . . . , M.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 30133,
+        "page_number": 379
+      },
+      {
+        "fact_text": "Gradient boosting as described here is implemented in the R gbm package (Ridgeway, 1999, \"Gradient Boosted Models\"), and is freely available.",
+        "fact_type": "example",
+        "importance_rank": 6,
+        "paragraph_id": 30133,
+        "page_number": 379
+      }
+    ]
+  },
+  {
+    "concept_id": 375,
+    "concept_name": "partial dependence plot",
+    "facts": [
+      {
+        "fact_text": "In Section 10.13 below we develop a relative importance measure for each predictor, as well as a partial dependence plot describing a predictor's contribution to the fitted model.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 29987,
+        "page_number": 371
+      },
+      {
+        "fact_text": "Figure 10.7 shows the partial dependence of the log-odds on selected important predictors, two positively associated with spam (! and remove), and two negatively associated (edu and hp). These particular dependencies are seen to be essentially monotonic.",
+        "fact_type": "example",
+        "importance_rank": 2,
+        "paragraph_id": 29990,
+        "page_number": 371
+      },
+      {
+        "fact_text": "Running a gradient boosted model on these data with J = 2 terminal-node trees produces a purely additive (main effects) model for the log-odds, with a corresponding error rate of 4.7%, as compared to 4.5% for the full gradient boosted model (with J = 5 terminal-node trees). Although not significant, this slightly higher error rate suggests that there may be interactions among some of the important predictor variables. This can be diagnosed through two-variable partial dependence plots.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 29990,
+        "page_number": 371
+      },
+      {
+        "fact_text": "One sees that for very low frequencies of hp, the log-odds of spam are greatly increased. For high frequencies of hp, the log-odds of spam tend to be much lower and roughly constant as a function of !. As the frequency of hp decreases, the functional relationship with ! strengthens.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 29990,
+        "page_number": 371
+      },
+      {
+        "fact_text": "Regression and classification trees partition the space of all joint predictor variable values into disjoint regions Rj, j = 1, 2, . . . , J, as represented by the terminal nodes of the tree. A constant γj is assigned to each such region and the predictive rule is x ∈ Rj ⇒ f(x) = γj.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 29992,
+        "page_number": 371
+      }
+    ]
+  },
+  {
+    "concept_id": 376,
+    "concept_name": "steepest descent",
+    "facts": [
+      {
+        "fact_text": "Steepest descent chooses hm = −ρmgm where ρm is a scalar and gm ∈ IRN is the gradient of L(f) evaluated at f = fm−1.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 30087,
+        "page_number": 376
+      },
+      {
+        "fact_text": "The components of the gradient gm are gim = ∂L(yi, f(xi)) / ∂f(xi) |f(xi)=fm−1(xi)",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 30089,
+        "page_number": 376
+      },
+      {
+        "fact_text": "The step length ρm is the solution to ρm = arg min_ρ L(fm−1 − ρgm).",
+        "fact_type": "formula",
+        "importance_rank": 3,
+        "paragraph_id": 30094,
+        "page_number": 377
+      },
+      {
+        "fact_text": "Steepest descent can be viewed as a very greedy strategy, since −gm is the local direction in IRN for which L(f) is most rapidly decreasing at f = fm−1.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 30097,
+        "page_number": 377
+      },
+      {
+        "fact_text": "Numerical optimization procedures solve (10.34) as a sum of component vectors fM = sum_{m=0}^{M} hm, hm ∈ IRN, where f0 = h0 is an initial guess, and each successive fm is induced based on the current parameter vector fm−1, which is the sum of the previously induced updates.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 30085,
+        "page_number": 376
+      },
+      {
+        "fact_text": "If minimizing loss on the training data (10.33) were the only goal, steepest descent would be the preferred strategy. The gradient (10.35) is trivial to calculate for any differentiable loss function L(y, f(x)), whereas solving (10.29) is difficult for the robust criteria.",
+        "fact_type": "comparison",
+        "importance_rank": 6,
+        "paragraph_id": 30100,
+        "page_number": 377
+      }
+    ]
+  },
+  {
+    "concept_id": 377,
+    "concept_name": "gradient boosting",
+    "facts": [
+      {
+        "fact_text": "A possible resolution to this dilemma is to induce a tree T(x; Θm) at the mth iteration whose predictions tm are as close as possible to the negative gradient.",
+        "fact_type": "intuition",
+        "importance_rank": 1,
+        "paragraph_id": 30100,
+        "page_number": 377
+      },
+      {
+        "fact_text": "Using squared error to measure closeness, this leads us to θ̃m = arg min_Θ sum_{i=1}^{N} (−gim − T(xi; Θ))^2.",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 30103,
+        "page_number": 377
+      },
+      {
+        "fact_text": "That is, one fits the tree T to the negative gradient values (10.35) by least squares. As noted in Section 10.9 fast algorithms exist for least squares decision tree induction.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 30104,
+        "page_number": 377
+      },
+      {
+        "fact_text": "Forward stagewise boosting (Algorithm 10.2) is also a very greedy strategy. At each step the solution tree is the one that maximally reduces (10.29), given the current model fm−1 and its fits fm−1(xi). Thus, the tree predictions T(xi; Θm) are analogous to the components of the negative gradient.",
+        "fact_type": "comparison",
+        "importance_rank": 4,
+        "paragraph_id": 30100,
+        "page_number": 377
+      },
+      {
+        "fact_text": "The principal difference between them is that the tree components tm = (T(x1; Θm), . . . , T(xN; Θm) are not independent. They are constrained to be the predictions of a Jm-terminal node decision tree, whereas the negative gradient is the unconstrained maximal descent direction.",
+        "fact_type": "comparison",
+        "importance_rank": 5,
+        "paragraph_id": 30100,
+        "page_number": 377
+      },
+      {
+        "fact_text": "Unfortunately the gradient (10.35) is defined only at the training data points xi, whereas the ultimate goal is to generalize fM(x) to new data not represented in the training set.",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 30100,
+        "page_number": 377
+      }
+    ]
+  },
+  {
+    "concept_id": 379,
+    "concept_name": "right-sized trees for boosting",
+    "facts": [
+      {
+        "fact_text": "The simplest strategy for avoiding this problem is to restrict all trees to be the same size, Jm = J ∀m. At each iteration a J-terminal node regression tree is induced. Thus J becomes a meta-parameter of the entire boosting procedure, to be adjusted to maximize estimated performance for the data at hand.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 30137,
+        "page_number": 380
+      },
+      {
+        "fact_text": "A very large (oversized) tree is first induced, and then a bottom-up procedure is employed to prune it to the estimated optimal number of terminal nodes. This approach assumes implicitly that each tree is the last one in the expansion (10.28). Except perhaps for the very last tree, this is clearly a very poor assumption.",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 30137,
+        "page_number": 380
+      },
+      {
+        "fact_text": "The interaction level of tree-based approximations is limited by the tree size J. Namely, no interaction effects of level greater that J − 1 are possible. Since boosted models are additive in the trees (10.28), this limit extends to them as well.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 30144,
+        "page_number": 380
+      },
+      {
+        "fact_text": "Setting J = 2 (single split \"decision stump\") produces boosted models with only main effects; no interactions are permitted. With J = 3, two-variable interaction effects are also allowed.",
+        "fact_type": "example",
+        "importance_rank": 4,
+        "paragraph_id": 30144,
+        "page_number": 380
+      },
+      {
+        "fact_text": "For many problems encountered in practice, low-order interaction effects tend to dominate. When this is the case, models that produce strong higher-order interaction effects, such as large decision trees, suffer in accuracy.",
+        "fact_type": "intuition",
+        "importance_rank": 5,
+        "paragraph_id": 30144,
+        "page_number": 380
+      },
+      {
+        "fact_text": "Two basic tuning parameters are the number of iterations M and the sizes of each of the constituent trees Jm, m = 1, 2, . . . , M.",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 30133,
+        "page_number": 379
+      }
+    ]
+  },
+  {
+    "concept_id": 380,
+    "concept_name": "anova expansion",
+    "facts": [
+      {
+        "fact_text": "One relevant property of η(X) is the degree to which the coordinate variables XT = (X1, X2, . . . , Xp) interact with one another. This is captured by its ANOVA (analysis of variance) expansion.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 30139,
+        "page_number": 380
+      },
+      {
+        "fact_text": "η(X) = sum_j η_j(Xj) + sum_{jk} η_{jk}(Xj, Xk) + sum_{jkl} η_{jkl}(Xj, Xk, Xl) + ...",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 30143,
+        "page_number": 380
+      },
+      {
+        "fact_text": "The first sum in (10.40) is over functions of only a single predictor variable Xj. The particular functions ηj(Xj) are those that jointly best approximate η(X) under the loss criterion being used. Each such ηj(Xj) is called the \"main effect\" of Xj.",
+        "fact_type": "definition",
+        "importance_rank": 3,
+        "paragraph_id": 30144,
+        "page_number": 380
+      },
+      {
+        "fact_text": "The second sum is over those two-variable functions that when added to the main effects best fit η(X). These are called the second-order interactions of each respective variable pair (Xj, Xk). The third sum represents third-order interactions, and so on.",
+        "fact_type": "definition",
+        "importance_rank": 4,
+        "paragraph_id": 30144,
+        "page_number": 380
+      },
+      {
+        "fact_text": "The target function η(x) is the one with minimum prediction risk on future data. This is the function we are trying to approximate.",
+        "fact_type": "intuition",
+        "importance_rank": 5,
+        "paragraph_id": 30139,
+        "page_number": 380
+      },
+      {
+        "fact_text": "For many problems encountered in practice, low-order interaction effects tend to dominate. When this is the case, models that produce strong higher-order interaction effects, such as large decision trees, suffer in accuracy.",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 30144,
+        "page_number": 380
+      }
+    ]
+  },
+  {
+    "concept_id": 385,
+    "concept_name": "learning rate in boosting",
+    "facts": [
+      {
+        "fact_text": "The simplest implementation of shrinkage in the context of boosting is to scale the contribution of each tree by a factor 0 < ν < 1 when it is added to the current approximation. That is, line 2(d) of Algorithm 10.3 is replaced by fm(x) = fm−1(x) + ν · sum_{j=1}^{J} γjm I(x ∈ Rjm).",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 30161,
+        "page_number": 382
+      },
+      {
+        "fact_text": "The parameter ν can be regarded as controlling the learning rate of the boosting procedure. Smaller values of ν (more shrinkage) result in larger training risk for the same number of iterations M.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 30165,
+        "page_number": 382
+      },
+      {
+        "fact_text": "Empirically it has been found (Friedman, 2001) that smaller values of ν favor better test error, and require correspondingly larger values of M. In fact, the best strategy appears to be to set ν to be very small (ν < 0.1) and then choose M by early stopping.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 30167,
+        "page_number": 383
+      },
+      {
+        "fact_text": "Both ν and M control prediction risk on the training data. Smaller values of ν lead to larger values of M for the same training risk, so that there is a tradeoff between them.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 30167,
+        "page_number": 383
+      },
+      {
+        "fact_text": "This yields dramatic improvements (over no shrinkage ν = 1) for regression and for probability estimation. The corresponding improvements in misclassification risk via (10.20) are less, but still substantial.",
+        "fact_type": "comparison",
+        "importance_rank": 5,
+        "paragraph_id": 30167,
+        "page_number": 383
+      },
+      {
+        "fact_text": "Each iteration usually reduces the training risk L(fM), so that for M large enough this risk can be made arbitrarily small. However, fitting the training data too well can lead to overfitting, which degrades the risk on future predictions.",
+        "fact_type": "intuition",
+        "importance_rank": 6,
+        "paragraph_id": 30159,
+        "page_number": 382
+      }
+    ]
+  },
+  {
+    "concept_id": 387,
+    "concept_name": "subsampling in boosting",
+    "facts": [
+      {
+        "fact_text": "With stochastic gradient boosting (Friedman, 1999), at each iteration we sample a fraction η of the training observations (without replacement), and grow the next tree using that subsample. The rest of the algorithm is identical.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 30169,
+        "page_number": 383
+      },
+      {
+        "fact_text": "Not only does the sampling reduce the computing time by the same fraction η, but in many cases it actually produces a more accurate model.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 30171,
+        "page_number": 383
+      },
+      {
+        "fact_text": "A typical value for η can be 1/2, although for large N, η can be substantially smaller than 1/2.",
+        "fact_type": "example",
+        "importance_rank": 3,
+        "paragraph_id": 30169,
+        "page_number": 383
+      },
+      {
+        "fact_text": "We see in both cases that sampling along with shrinkage slightly outperformed the rest. It appears here that subsampling without shrinkage does poorly.",
+        "fact_type": "comparison",
+        "importance_rank": 4,
+        "paragraph_id": 30171,
+        "page_number": 383
+      },
+      {
+        "fact_text": "We can exploit the same device in gradient boosting, both to improve performance and computational efficiency.",
+        "fact_type": "intuition",
+        "importance_rank": 5,
+        "paragraph_id": 30169,
+        "page_number": 383
+      },
+      {
+        "fact_text": "The downside is that we now have four parameters to set: J, M, ν and η. Typically some early explorations determine suitable values for J, ν and η, leaving M as the primary parameter.",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 30212,
+        "page_number": 385
+      }
+    ]
+  },
+  {
+    "concept_id": 388,
+    "concept_name": "relative importance of predictor variables",
+    "facts": [
+      {
+        "fact_text": "For a single decision tree T, Breiman et al. (1984) proposed I^2_ℓ(T) = sum_{t=1}^{J-1} î^2_t I(v(t) = ℓ) as a measure of relevance for each predictor variable Xℓ.",
+        "fact_type": "formula",
+        "importance_rank": 1,
+        "paragraph_id": 30218,
+        "page_number": 386
+      },
+      {
+        "fact_text": "The sum is over the J − 1 internal nodes of the tree. At each such node t, one of the input variables Xv(t) is used to partition the region associated with that node into two subregions; within each a separate constant is fit to the response values. The particular variable chosen is the one that gives maximal estimated improvement î^2_t in squared error risk over that for a constant fit over the entire region.",
+        "fact_type": "definition",
+        "importance_rank": 2,
+        "paragraph_id": 30222,
+        "page_number": 386
+      },
+      {
+        "fact_text": "This importance measure is easily generalized to additive tree expansions (10.28); it is simply averaged over the trees: I^2_ℓ = (1/M) sum_{m=1}^{M} I^2_ℓ(Tm).",
+        "fact_type": "formula",
+        "importance_rank": 3,
+        "paragraph_id": 30222,
+        "page_number": 386
+      },
+      {
+        "fact_text": "In data mining applications the input predictor variables are seldom equally relevant. Often only a few of them have substantial influence on the response; the vast majority are irrelevant and could just as well have not been included.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 30216,
+        "page_number": 385
+      },
+      {
+        "fact_text": "Due to the stabilizing effect of averaging, this measure turns out to be more reliable than is its counterpart (10.42) for a single tree. Also, because of shrinkage the masking of important variables by others with which they are highly correlated is much less of a problem.",
+        "fact_type": "comparison",
+        "importance_rank": 5,
+        "paragraph_id": 30227,
+        "page_number": 386
+      },
+      {
+        "fact_text": "Since these measures are relative, it is customary to assign the largest a value of 100 and then scale the others accordingly.",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 30227,
+        "page_number": 386
+      },
+      {
+        "fact_text": "Single decision trees are highly interpretable. The entire model can be completely represented by a simple two-dimensional graphic (binary tree) that is easily visualized. Linear combinations of trees (10.28) lose this important feature, and must therefore be interpreted in a different way.",
+        "fact_type": "comparison",
+        "importance_rank": 7,
+        "paragraph_id": 30214,
+        "page_number": 385
+      }
+    ]
+  },
+  {
+    "concept_id": 390,
+    "concept_name": "weak learner",
+    "facts": [
+      {
+        "fact_text": "A weak learner is an algorithm for producing a two-class classifier with performance guaranteed (with high probability) to be significantly better than a coin-flip.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 30396,
+        "page_number": 398
+      },
+      {
+        "fact_text": "Because of their ability to model interactions and automatically select variables, as well as robustness to outliers and missing data, GBM models are rapidly gaining popularity in this data-rich and enthusiastic community.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 30389,
+        "page_number": 397
+      },
+      {
+        "fact_text": "Figure 10.22 shows the K = 9 occupation class values along with their corresponding error rates. The overall error rate is 42.5%, which can be compared to the null rate of 69% obtained by predicting the most numerous class.",
+        "fact_type": "example",
+        "importance_rank": 3,
+        "paragraph_id": 30391,
+        "page_number": 397
+      },
+      {
+        "fact_text": "One sees that the most relevant predictors are generally different for each respective class. An exception is age which is among the three most relevant for predicting Retired, Student, and Prof/Man.",
+        "fact_type": "example",
+        "importance_rank": 4,
+        "paragraph_id": 30394,
+        "page_number": 398
+      },
+      {
+        "fact_text": "Schapire (1990) developed the first simple boosting procedure in the PAC learning framework (Valiant, 1984; Kearns and Vazirani, 1994).",
+        "fact_type": "definition",
+        "importance_rank": 5,
+        "paragraph_id": 30396,
+        "page_number": 398
+      }
+    ]
+  },
+  {
+    "concept_id": 378,
+    "concept_name": "pseudo residuals",
+    "facts": [
+      {
+        "fact_text": "The components of the negative gradient computed at line 2(a) are referred to as generalized or pseudo residuals, r.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 30123,
+        "page_number": 379
+      },
+      {
+        "fact_text": "rim = − [∂L(yi, f(xi)) / ∂f(xi)] |f=fm−1",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 30123,
+        "page_number": 379
+      },
+      {
+        "fact_text": "(b) Fit a regression tree to the targets rim giving terminal regions Rjm, j = 1, 2, . . . , Jm.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 30126,
+        "page_number": 379
+      },
+      {
+        "fact_text": "Fast approximate algorithms for solving (10.29) with any differentiable loss criterion can be derived by analogy to numerical optimization.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 30073,
+        "page_number": 376
+      },
+      {
+        "fact_text": "For absolute loss it is just the median of the residuals in each respective region. For the other criteria fast iterative algorithms exist for solving (10.30), and usually their faster \"single-step\" approximations are adequate.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 30071,
+        "page_number": 376
+      },
+      {
+        "fact_text": "The central idea is to extract linear combinations of the inputs as derived features, and then model the target as a nonlinear function of these features.",
+        "fact_type": "intuition",
+        "importance_rank": 6,
+        "paragraph_id": 30528,
+        "page_number": 407
+      }
+    ]
+  },
+  {
+    "concept_id": 381,
+    "concept_name": "main effect",
+    "facts": [
+      {
+        "fact_text": "The first sum in (10.40) is over functions of only a single predictor variable Xj. The particular functions ηj(Xj) are those that jointly best approximate η(X) under the loss criterion being used. Each such ηj(Xj) is called the \"main effect\" of Xj.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 30144,
+        "page_number": 380
+      },
+      {
+        "fact_text": "The second sum is over those two-variable functions that when added to the main effects best fit η(X). These are called the second-order interactions of each respective variable pair (Xj, Xk).",
+        "fact_type": "comparison",
+        "importance_rank": 2,
+        "paragraph_id": 30144,
+        "page_number": 380
+      },
+      {
+        "fact_text": "Setting J = 2 (single split \"decision stump\") produces boosted models with only main effects; no interactions are permitted. With J = 3, two-variable interaction effects are also allowed.",
+        "fact_type": "example",
+        "importance_rank": 3,
+        "paragraph_id": 30144,
+        "page_number": 380
+      },
+      {
+        "fact_text": "For many problems encountered in practice, low-order interaction effects tend to dominate. When this is the case, models that produce strong higher-order interaction effects, such as large decision trees, suffer in accuracy.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 30144,
+        "page_number": 380
+      },
+      {
+        "fact_text": "Running a gradient boosted model on these data with J = 2 terminal-node trees produces a purely additive (main effects) model for the log-odds, with a corresponding error rate of 4.7%, as compared to 4.5% for the full gradient boosted model (with J = 5 terminal-node trees).",
+        "fact_type": "example",
+        "importance_rank": 5,
+        "paragraph_id": 29990,
+        "page_number": 371
+      },
+      {
+        "fact_text": "The interaction level of tree-based approximations is limited by the tree size J. Namely, no interaction effects of level greater that J − 1 are possible.",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 30144,
+        "page_number": 380
+      }
+    ]
+  }
+]

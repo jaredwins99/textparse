@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linear Regression — Assumption Explorer</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2129;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --text-muted: #484f58;
+    --green: #3fb950;
+    --green-dim: #238636;
+    --yellow: #d29922;
+    --orange: #db6d28;
+    --red: #f85149;
+    --red-dim: #da3633;
+    --blue: #58a6ff;
+    --purple: #bc8cff;
+    --cyan: #39d2c0;
+    --pink: #f778ba;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .header h1 span { color: var(--blue); }
+
+  /* ── Mode Toggle ── */
+  .mode-toggle {
+    display: inline-flex;
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 3px;
+    gap: 3px;
+    border: 1px solid var(--border);
+  }
+  .mode-btn {
+    padding: 7px 18px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mode-btn.active {
+    background: var(--blue);
+    color: #fff;
+  }
+  .mode-btn:hover:not(.active) {
+    color: var(--text);
+    background: var(--surface2);
+  }
+
+  /* ── Health Bars ── */
+  .health-section {
+    padding: 18px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .health-section h2 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  .health-bars {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .health-bar-item {
+    flex: 1 1 160px;
+    min-width: 150px;
+  }
+  .health-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 5px;
+  }
+  .health-label .name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .health-label .pct {
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    min-width: 36px;
+    text-align: right;
+  }
+  .health-track {
+    height: 10px;
+    background: var(--bg);
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .health-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                background-color 0.4s;
+  }
+  .health-label .status-icon {
+    font-size: 0.7rem;
+    margin-left: 4px;
+  }
+
+  /* ── Tree Grid ── */
+  .tree-container {
+    padding: 24px;
+  }
+  .tree-grid {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 16px;
+  }
+
+  /* ── Path Column ── */
+  .path-col {
+    flex: 0 0 auto;
+    width: 210px;
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .path-col:hover { border-color: var(--text-muted); }
+
+  .path-header {
+    padding: 14px 14px 10px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+  .path-header .path-icon {
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+  }
+  .path-header .path-name {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .path-header .path-sub {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .tier-list {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* ── Tier Button ── */
+  .tier-btn {
+    position: relative;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.73rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1.35;
+  }
+  .tier-btn:hover {
+    border-color: var(--text-muted);
+    background: var(--surface2);
+  }
+  .tier-btn.active {
+    border-color: var(--blue);
+    background: rgba(56, 139, 253, 0.08);
+  }
+  .tier-btn.locked {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  .tier-btn .tier-num {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .tier-btn .tier-name {
+    font-weight: 600;
+  }
+  .tier-btn .tier-desc {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.67rem;
+    color: var(--text-dim);
+    line-height: 1.3;
+  }
+  .cite-num {
+    display: inline;
+    font-size: 0.58rem;
+    font-weight: 700;
+    color: var(--blue);
+    cursor: default;
+    vertical-align: super;
+    margin-left: 2px;
+  }
+
+  /* Severity Colors */
+  .sev-0 .tier-num { background: var(--green-dim); color: #fff; }
+  .sev-1 .tier-num { background: #2ea04370; color: var(--green); }
+  .sev-2 .tier-num { background: #9e6a0350; color: var(--yellow); }
+  .sev-3 .tier-num { background: #bd561d40; color: var(--orange); }
+  .sev-4 .tier-num { background: var(--red-dim); color: #fff; }
+
+  .sev-0.active { border-color: var(--green); background: rgba(63, 185, 80, 0.08); }
+  .sev-1.active { border-color: var(--green); background: rgba(63, 185, 80, 0.06); }
+  .sev-2.active { border-color: var(--yellow); background: rgba(210, 153, 34, 0.08); }
+  .sev-3.active { border-color: var(--orange); background: rgba(219, 109, 40, 0.08); }
+  .sev-4.active { border-color: var(--red); background: rgba(248, 81, 73, 0.08); }
+
+  /* ── Connector line between tiers ── */
+  .tier-connector {
+    width: 2px;
+    height: 6px;
+    background: var(--border);
+    margin: 0 auto;
+  }
+
+  /* ── Status Panel ── */
+  .status-panel {
+    margin: 0 24px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .status-panel h2 {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+  .status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 900px) {
+    .status-grid { grid-template-columns: 1fr; }
+  }
+  .status-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .status-card h3 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .status-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  .status-card li {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    padding: 3px 0;
+    line-height: 1.4;
+    border-bottom: 1px solid var(--border);
+  }
+  .status-card li:last-child { border-bottom: none; }
+  .status-card li .tag {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .tag-ok { background: rgba(63,185,80,0.15); color: var(--green); }
+  .tag-warn { background: rgba(210,153,34,0.15); color: var(--yellow); }
+  .tag-broken { background: rgba(248,81,73,0.15); color: var(--red); }
+  .tag-fix { background: rgba(88,166,255,0.15); color: var(--blue); }
+
+  /* ── Reset Button ── */
+  .reset-btn {
+    display: block;
+    margin: 0 auto 24px;
+    padding: 8px 24px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { color: var(--text); border-color: var(--text-muted); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .hidden { display: none !important; }
+
+  /* responsive */
+  @media (max-width: 1200px) {
+    .tree-grid { flex-wrap: wrap; justify-content: center; }
+    .path-col { width: 190px; }
+  }
+
+  /* ── Citation Footer ── */
+  .citation-footer {
+    margin: 24px 24px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .citation-footer h3 {
+    font-size: 0.82rem;
+    color: var(--text);
+    margin-bottom: 8px;
+    margin-top: 16px;
+  }
+  .citation-footer h3:first-child { margin-top: 0; }
+  .citation-footer .cite-entry {
+    padding: 2px 0;
+  }
+  .cite-entry .cn {
+    display: inline-block;
+    min-width: 20px;
+    color: var(--blue);
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Linear Regression <span>— Assumption Explorer</span></h1>
+  <div class="mode-toggle">
+    <button class="mode-btn active" data-mode="individual" onclick="setMode('individual')">One Path Per Assumption</button>
+    <button class="mode-btn" data-mode="themed" onclick="setMode('themed')">Themed Paths</button>
+  </div>
+</div>
+
+<div class="health-section">
+  <h2>Guarantee Health</h2>
+  <div class="health-bars" id="healthBars"></div>
+</div>
+
+<div class="tree-container">
+  <div class="tree-grid" id="treeGrid"></div>
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset All to Tier 0</button>
+
+<div class="status-panel">
+  <h2>Diagnostic Panel</h2>
+  <div class="status-grid" id="statusGrid"></div>
+</div>
+
+<div class="citation-footer">
+  <h3>Linearity</h3>
+  <div class="cite-entry"><span class="cn">[1]</span> If the CEF is linear, the population regression is it &mdash; Angrist &amp; Pischke (2009) Thm 3.1.4</div>
+  <div class="cite-entry"><span class="cn">[2]</span> The population regression provides the best linear approximation to the CEF &mdash; Angrist &amp; Pischke (2009) Thm 3.1.5</div>
+  <div class="cite-entry"><span class="cn">[3]</span> &ldquo;Slope parameters become distribution-dependent functionals&rdquo; &mdash; Buja et al. (2019) Models as Approximations I, Stat. Sci. 34(4)</div>
+  <div class="cite-entry"><span class="cn">[4]</span> OLS converges to best LS approximation to unknown regression function &mdash; White (1980) Int. Econ. Rev. 21(1)</div>
+  <div class="cite-entry"><span class="cn">[5]</span> &ldquo;Well-specification fails: reweighting X changes estimates&rdquo; &mdash; Buja et al. (2019) Part II diagnostic, Stat. Sci. 34(4)</div>
+
+  <h3>Independence</h3>
+  <div class="cite-entry"><span class="cn">[6]</span> Classical Gauss-Markov assumptions &mdash; Greene (2012) Ch. 4</div>
+  <div class="cite-entry"><span class="cn">[7]</span> Newey &amp; West (1987) Econometrica 55(3), 703-708</div>
+  <div class="cite-entry"><span class="cn">[8]</span> GLS: Aitken (1935); Cochrane-Orcutt (1949) JASA 44(245)</div>
+  <div class="cite-entry"><span class="cn">[9]</span> Positive autocorrelation &rarr; OLS SEs biased downward &mdash; Durbin &amp; Watson (1950, 1951) Biometrika</div>
+  <div class="cite-entry"><span class="cn">[10]</span> Effective n = n/DEFF where DEFF = 1+(m&minus;1)&rho; &mdash; Kish (1965); Moulton (1990) Rev. Econ. Stat.</div>
+
+  <h3>Error Distribution</h3>
+  <div class="cite-entry"><span class="cn">[11]</span> Exact normality of &beta;&#x0302; follows from normality of &epsilon; &mdash; standard result, e.g. Greene (2012) Ch. 4</div>
+  <div class="cite-entry"><span class="cn">[12]</span> Berry-Esseen bound applies to regression t-statistics &mdash; Bentkus &amp; G&ouml;tze (1996) Ann. Prob.</div>
+  <div class="cite-entry"><span class="cn">[13]</span> CLT convergence slow when E|X|&sup3;/&sigma;&sup3; is large &mdash; Berry (1941), Esseen (1942)</div>
+  <div class="cite-entry"><span class="cn">[14]</span> OLS inherits heavy-tailed behavior from errors &mdash; Mikosch &amp; de Vries (2013) J. Econometrics</div>
+  <div class="cite-entry"><span class="cn">[15]</span> Blattberg &amp; Sargent (1971) Econometrica; Samorodnitsky et al. (2007)</div>
+
+  <h3>Homoscedasticity</h3>
+  <div class="cite-entry"><span class="cn">[16]</span> Gauss-Markov: E[&epsilon;]=0, Var(&epsilon;)=&sigma;&sup2;I, full rank X &rarr; OLS is BLUE &mdash; Aitken (1935)</div>
+  <div class="cite-entry"><span class="cn">[17]</span> Unbiasedness requires only E[&epsilon;|X]=0, unrelated to variance &mdash; Greene (2012) Ch. 4</div>
+  <div class="cite-entry"><span class="cn">[18]</span> HC robust SEs: White (1980) Econometrica 48(4); improved HC1-HC3: MacKinnon &amp; White (1985)</div>
+  <div class="cite-entry"><span class="cn">[19]</span> WLS is BLUE when &Omega; known &mdash; Aitken (1935) Proc. R. Soc. Edinburgh</div>
+  <div class="cite-entry"><span class="cn">[20]</span> If Var(&epsilon;|X) depends on Y, check for mean misspecification &mdash; Greene (2012) Ch. 9</div>
+
+  <h3>Collinearity</h3>
+  <div class="cite-entry"><span class="cn">[21]</span> Orthogonal design minimizes Var(&beta;&#x0302;) &mdash; standard result</div>
+  <div class="cite-entry"><span class="cn">[22]</span> &dagger;VIF thresholds are rules of thumb, not rigorous &mdash; O&rsquo;Brien (2007) Quality &amp; Quantity 41(5)</div>
+  <div class="cite-entry"><span class="cn">[23]</span> &dagger;VIF thresholds are rules of thumb, not rigorous &mdash; O&rsquo;Brien (2007) Quality &amp; Quantity 41(5)</div>
+  <div class="cite-entry"><span class="cn">[24]</span> High but imperfect collinearity: OLS is technically BLUE but &lsquo;best&rsquo; variance may be huge &mdash; Greene (2012) &sect;4.9</div>
+  <div class="cite-entry"><span class="cn">[25]</span> Rank deficiency: X&prime;X singular, normal equations have infinitely many solutions &mdash; standard linear algebra</div>
+
+  <h3>Themed: Error Quality</h3>
+  <div class="cite-entry"><span class="cn">[26]</span> iid Gaussian errors satisfy all Gauss-Markov conditions exactly &mdash; Greene (2012) Ch. 4</div>
+  <div class="cite-entry"><span class="cn">[27]</span> CLT applies to OLS under finite variance and independence &mdash; White (1980) Int. Econ. Rev.</div>
+  <div class="cite-entry"><span class="cn">[28]</span> HC robust SEs: White (1980) Econometrica 48(4); HC1-HC3: MacKinnon &amp; White (1985)</div>
+  <div class="cite-entry"><span class="cn">[29]</span> HAC estimation: Newey &amp; West (1987) Econometrica 55(3), 703-708</div>
+  <div class="cite-entry"><span class="cn">[30]</span> Heavy tails + dependence compound: Mikosch &amp; de Vries (2013); Blattberg &amp; Sargent (1971)</div>
+
+  <h3>Themed: Model Specification</h3>
+  <div class="cite-entry"><span class="cn">[31]</span> Correct specification: CEF linear in X, all relevant variables included &mdash; Greene (2012) Ch. 4</div>
+  <div class="cite-entry"><span class="cn">[32]</span> Uncorrelated omitted variable inflates &sigma;&sup2; but leaves &beta;&#x0302; unbiased &mdash; Angrist &amp; Pischke (2009) &sect;3.2</div>
+  <div class="cite-entry"><span class="cn">[33]</span> Angrist &amp; Pischke (2009) Thm 3.1.5; Buja et al. (2019) Stat. Sci. 34(4)</div>
+  <div class="cite-entry"><span class="cn">[34]</span> OVB formula: bias = &delta;&gamma; where &delta; = corr of omitted with included &mdash; Angrist &amp; Pischke (2009) &sect;3.2.2</div>
+  <div class="cite-entry"><span class="cn">[35]</span> Well-specification diagnostic: Buja et al. (2019) Models as Approximations II</div>
+
+  <h3>Themed: Design Quality</h3>
+  <div class="cite-entry"><span class="cn">[36]</span> Orthogonal, fixed regressors: textbook Gauss-Markov conditions &mdash; Aitken (1935)</div>
+  <div class="cite-entry"><span class="cn">[37]</span> Random regressors: condition on X or use law of iterated expectations &mdash; Greene (2012) &sect;4.4</div>
+  <div class="cite-entry"><span class="cn">[38]</span> Collinearity inflates Var(&beta;&#x0302;) without biasing it &mdash; Greene (2012) &sect;4.9</div>
+  <div class="cite-entry"><span class="cn">[39]</span> High leverage points: hat matrix H = X(X&prime;X)&sup1;X&prime;, h_ii &gt; 2p/n flagged &mdash; Cook &amp; Weisberg (1982)</div>
+  <div class="cite-entry"><span class="cn">[40]</span> p &gt; n: X&prime;X singular; solution requires regularization &mdash; Tibshirani (1996) LASSO; Hoerl &amp; Kennard (1970) Ridge</div>
+</div>
+
+<script>
+// ────────────────────────────────────────
+// DATA
+// ────────────────────────────────────────
+
+const GUARANTEES = [
+  { id: 'unbiased', name: 'Unbiased',        formula: 'E[beta hat] = beta' },
+  { id: 'blue',     name: 'BLUE',            formula: 'Gauss-Markov' },
+  { id: 'inference',name: 'Valid t/F tests',  formula: 'Inference correct' },
+  { id: 'consistent',name:'Consistent',       formula: 'beta hat -> beta' },
+  { id: 'prediction',name:'Prediction',       formula: 'Low MSE' },
+];
+
+// Individual mode paths
+const INDIVIDUAL_PATHS = [
+  {
+    id: 'linear', icon: '\u{1F4D0}', name: 'Linearity', sub: 'True functional form',
+    color: '--green',
+    tiers: [
+      { name: 'True linear CEF', desc: 'E[Y|X] is linear. \u03B2\u0302 estimates the true slope. All guarantees hold.',
+        effects: { unbiased:100, blue:100, inference:100, consistent:100, prediction:100 },
+        cite: 1 },
+      { name: 'Mild nonlinearity', desc: '\u03B2\u0302 still gives you a useful weighted average of local slopes (the Best Linear Projection). It\u2019s the MSE-optimal linear summary of a nonlinear CEF \u2014 not \u201Cbiased\u201D in the usual sense, just estimating a different target.',
+        effects: { unbiased:85, blue:95, inference:80, consistent:90, prediction:85 },
+        cite: 2 },
+      { name: 'Moderate nonlinearity', desc: 'BLP is still a valid average, but now sensitive to where you observe X. Shift the covariate support range and \u03B2\u0302 estimates a different weighted average. The BLP is a functional of the covariate distribution, not a fixed parameter.',
+        effects: { unbiased:60, blue:75, inference:50, consistent:75, prediction:60 },
+        cite: 3 },
+      { name: 'Strong nonlinearity', desc: 'Still a weighted average of local slopes, but the local slopes vary wildly \u2014 the average is dominated by wherever X is dense. Highly sensitive to support range. Predictions collapse outside data region.',
+        effects: { unbiased:30, blue:45, inference:20, consistent:50, prediction:25 },
+        cite: 4 },
+      { name: 'Wrong functional form entirely', desc: 'BLP exists mathematically but the weighted average is meaningless \u2014 like a line through a circle. Tiny shifts in covariate support flip the sign of \u03B2\u0302. Use nonparametric methods.',
+        effects: { unbiased:10, blue:10, inference:5, consistent:20, prediction:8 },
+        cite: 5 },
+    ]
+  },
+  {
+    id: 'indep', icon: '\u{1F517}', name: 'Independence', sub: 'Error independence',
+    color: '--blue',
+    tiers: [
+      { name: 'Independent errors', desc: 'No serial correlation. All guarantees hold.',
+        effects: { unbiased:100, blue:100, inference:100, consistent:100, prediction:100 },
+        cite: 6 },
+      { name: 'Weak serial corr.', desc: 'Not BLUE. SEs wrong. Newey-West fixes this.',
+        effects: { unbiased:100, blue:55, inference:65, consistent:100, prediction:90 },
+        cite: 7 },
+      { name: 'Moderate autocorr.', desc: 'Not BLUE. OLS very inefficient. Use GLS.',
+        effects: { unbiased:100, blue:30, inference:40, consistent:100, prediction:72 },
+        cite: 8 },
+      { name: 'Strong autocorrelation', desc: 'SEs completely wrong. Inference meaningless.',
+        effects: { unbiased:100, blue:15, inference:10, consistent:95, prediction:55 },
+        cite: 9 },
+      { name: 'Clustered/spatial dep.', desc: 'Need cluster-robust SEs. Effective n much smaller.',
+        effects: { unbiased:100, blue:10, inference:8, consistent:80, prediction:40 },
+        cite: 10 },
+    ]
+  },
+  {
+    id: 'dist', icon: '\u{1F3B2}', name: 'Error Distribution', sub: 'Shape of residuals',
+    color: '--purple',
+    tiers: [
+      { name: 'Gaussian N(0,\u03C3\u00B2)', desc: 'Exact t/F distributions. All guarantees hold.',
+        effects: { unbiased:100, blue:100, inference:100, consistent:100, prediction:100 },
+        cite: 11 },
+      { name: 'Symmetric, light tails', desc: 'CLT kicks in. t-tests approximate.',
+        effects: { unbiased:100, blue:100, inference:80, consistent:100, prediction:95 },
+        cite: 12 },
+      { name: 'Asymmetric, finite var', desc: 't-tests need large n to be reliable.',
+        effects: { unbiased:100, blue:100, inference:55, consistent:100, prediction:85 },
+        cite: 13 },
+      { name: 'Heavy tails (finite var)', desc: 'BLUE but high variance. t-tests unreliable.',
+        effects: { unbiased:100, blue:70, inference:30, consistent:100, prediction:65 },
+        cite: 14 },
+      { name: 'Infinite variance', desc: 'BLUE meaningless (infinite variance makes \u2018minimum variance\u2019 vacuous). OLS still consistent but at slower rate n^(1/\u03B1\u22121). Standard inference completely breaks.',
+        effects: { unbiased:60, blue:10, inference:5, consistent:50, prediction:25 },
+        cite: 15 },
+    ]
+  },
+  {
+    id: 'homo', icon: '\u{1F4CA}', name: 'Homoscedasticity', sub: 'Var(\u03B5) = \u03C3\u00B2I',
+    color: '--cyan',
+    tiers: [
+      { name: 'Var(\u03B5) = \u03C3\u00B2I', desc: 'Constant variance. All guarantees hold.',
+        effects: { unbiased:100, blue:100, inference:100, consistent:100, prediction:100 },
+        cite: 16 },
+      { name: 'Mild heteroscedasticity', desc: 'Not BLUE. t-tests slightly off. Use robust SEs.',
+        effects: { unbiased:100, blue:60, inference:75, consistent:100, prediction:90 },
+        cite: 17 },
+      { name: 'Moderate heterosced.', desc: 'Not BLUE. t-tests wrong. Use HC standard errors.',
+        effects: { unbiased:100, blue:35, inference:50, consistent:100, prediction:78 },
+        cite: 18 },
+      { name: 'Severe heterosced.', desc: 'OLS very inefficient. Use WLS instead.',
+        effects: { unbiased:100, blue:15, inference:25, consistent:100, prediction:55 },
+        cite: 19 },
+      { name: 'Variance depends on Y', desc: 'Var(\u03B5) scaling with Y implies possible mean-function misspecification (since Y = X\u03B2 + \u03B5). The real problem is usually the wrong functional form, not heteroscedasticity per se.',
+        effects: { unbiased:50, blue:5, inference:10, consistent:55, prediction:25 },
+        cite: 20 },
+    ]
+  },
+  {
+    id: 'collin', icon: '\u{1F9E9}', name: 'Collinearity', sub: 'Correlation & rank deficiency',
+    color: '--pink',
+    tiers: [
+      { name: 'Orthogonal predictors', desc: 'Minimum variance. All guarantees hold.',
+        effects: { unbiased:100, blue:100, inference:100, consistent:100, prediction:100 },
+        cite: 21 },
+      { name: 'Mild corr. (VIF < 5\u2020)', desc: 'Variance inflated but still OK.',
+        effects: { unbiased:100, blue:90, inference:85, consistent:100, prediction:90 },
+        cite: 22 },
+      { name: 'Moderate (VIF 5\u201310\u2020)', desc: 'Large SEs. Unstable estimates.',
+        effects: { unbiased:100, blue:70, inference:60, consistent:100, prediction:72 },
+        cite: 23 },
+      { name: 'High collinearity (VIF>10)', desc: 'Practically useless variance. Technically BLUE.',
+        effects: { unbiased:100, blue:45, inference:30, consistent:100, prediction:50 },
+        cite: 24 },
+      { name: 'Rank deficient (perfect collinearity)', desc: "(X'X) singular. \u03B2\u0302 not uniquely defined.",
+        effects: { unbiased:5, blue:0, inference:0, consistent:5, prediction:10 },
+        cite: 25 },
+    ]
+  },
+];
+
+// Themed mode paths
+const THEMED_PATHS = [
+  {
+    id: 'errqual', icon: '\u{1F300}', name: 'Error Quality', sub: 'Distribution + Variance + Independence',
+    color: '--purple',
+    tiers: [
+      { name: 'iid Gaussian N(0,\u03C3\u00B2)', desc: 'All classical guarantees hold perfectly.',
+        effects: { unbiased:100, blue:100, inference:100, consistent:100, prediction:100 },
+        cite: 26 },
+      { name: 'Non-Gaussian, symmetric', desc: 'Homoscedastic. t-tests approximate via CLT.',
+        effects: { unbiased:100, blue:100, inference:78, consistent:100, prediction:92 },
+        cite: 27 },
+      { name: 'Heteroscedastic', desc: 'Use robust standard errors (HC0-HC3).',
+        effects: { unbiased:100, blue:40, inference:50, consistent:100, prediction:75 },
+        cite: 28 },
+      { name: 'Autocorr. + heterosced.', desc: 'Use HAC standard errors (Newey-West).',
+        effects: { unbiased:100, blue:15, inference:25, consistent:95, prediction:55 },
+        cite: 29 },
+      { name: 'Heavy tails + dependence', desc: 'OLS struggles. Consider robust/quantile regression.',
+        effects: { unbiased:65, blue:5, inference:8, consistent:50, prediction:25 },
+        cite: 30 },
+    ]
+  },
+  {
+    id: 'modelspec', icon: '\u{1F3AF}', name: 'Model Specification', sub: 'Functional form + Variable selection',
+    color: '--green',
+    tiers: [
+      { name: 'True linear, correct vars', desc: 'Perfect specification. All guarantees hold.',
+        effects: { unbiased:100, blue:100, inference:100, consistent:100, prediction:100 },
+        cite: 31 },
+      { name: 'Omitted var (uncorr.)', desc: 'Unbiased but less precise. Larger SEs.',
+        effects: { unbiased:100, blue:80, inference:80, consistent:100, prediction:78 },
+        cite: 32 },
+      { name: 'Mild nonlinearity', desc: '\u03B2\u0302 is still a useful weighted average (BLP), but now it\u2019s a functional of the covariate distribution \u2014 shift the support and you estimate a different slope.',
+        effects: { unbiased:70, blue:70, inference:55, consistent:75, prediction:65 },
+        cite: 33 },
+      { name: 'Omitted var (correlated)', desc: 'BIASED. Confounding. \u03B2\u0302 wrong.',
+        effects: { unbiased:25, blue:40, inference:20, consistent:30, prediction:45 },
+        cite: 34 },
+      { name: 'Completely wrong model', desc: 'Everything breaks. All estimates meaningless.',
+        effects: { unbiased:5, blue:5, inference:3, consistent:5, prediction:8 },
+        cite: 35 },
+    ]
+  },
+  {
+    id: 'design', icon: '\u2699\uFE0F', name: 'Design Quality', sub: 'Predictors + Sample structure',
+    color: '--cyan',
+    tiers: [
+      { name: 'Orthogonal, fixed X', desc: 'Full rank, clean design. All guarantees hold.',
+        effects: { unbiased:100, blue:100, inference:100, consistent:100, prediction:100 },
+        cite: 36 },
+      { name: 'Random X, well-cond.', desc: 'Need conditional interpretation. Still fine.',
+        effects: { unbiased:100, blue:95, inference:90, consistent:100, prediction:92 },
+        cite: 37 },
+      { name: 'Moderate collinearity', desc: 'Inflated variance. Consider ridge regression.',
+        effects: { unbiased:100, blue:65, inference:55, consistent:100, prediction:68 },
+        cite: 38 },
+      { name: 'Near-singular, leverage', desc: 'High VIF. Estimates dominated by few points.',
+        effects: { unbiased:90, blue:30, inference:25, consistent:90, prediction:40 },
+        cite: 39 },
+      { name: 'Rank deficient (p > n)', desc: 'OLS undefined. Need regularization (lasso/ridge).',
+        effects: { unbiased:10, blue:0, inference:0, consistent:15, prediction:15 },
+        cite: 40 },
+    ]
+  },
+];
+
+// ────────────────────────────────────────
+// STATE
+// ────────────────────────────────────────
+let mode = 'individual'; // 'individual' | 'themed'
+let activeTiers = {}; // pathId -> tierIndex
+
+function getPaths() {
+  return mode === 'individual' ? INDIVIDUAL_PATHS : THEMED_PATHS;
+}
+
+function initState() {
+  activeTiers = {};
+  getPaths().forEach(p => activeTiers[p.id] = 0);
+}
+
+// ────────────────────────────────────────
+// HEALTH CALCULATION
+// ────────────────────────────────────────
+function computeHealth() {
+  const paths = getPaths();
+  const health = {};
+  GUARANTEES.forEach(g => {
+    // Start at 100, take weighted minimum across active paths
+    let vals = [];
+    paths.forEach(p => {
+      const tier = activeTiers[p.id] || 0;
+      vals.push(p.tiers[tier].effects[g.id]);
+    });
+    // Use geometric-ish mean biased toward the minimum
+    // This captures cross-effects: two moderate violations are worse than one
+    const min = Math.min(...vals);
+    const avg = vals.reduce((a,b) => a+b, 0) / vals.length;
+    // Weighted: 60% min, 40% average — min dominates
+    let base = 0.6 * min + 0.4 * avg;
+
+    // Cross-effect penalties
+    const tierOf = id => activeTiers[id] || 0;
+
+    if (mode === 'individual') {
+      // Nonlinearity + multicollinearity = extrapolation disaster
+      if (tierOf('linear') >= 2 && tierOf('collin') >= 2) {
+        if (g.id === 'prediction') base *= 0.7;
+        if (g.id === 'unbiased') base *= 0.8;
+      }
+      // Heteroscedasticity + autocorrelation = need HAC
+      if (tierOf('homo') >= 2 && tierOf('indep') >= 2) {
+        if (g.id === 'inference') base *= 0.65;
+        if (g.id === 'blue') base *= 0.7;
+      }
+      // Heavy tails + anything else bad on inference
+      if (tierOf('dist') >= 3) {
+        const otherBad = [tierOf('homo'), tierOf('indep'), tierOf('linear')].filter(t => t >= 2).length;
+        if (otherBad > 0 && g.id === 'inference') base *= (0.7 ** otherBad);
+      }
+    }
+
+    health[g.id] = Math.max(0, Math.min(100, Math.round(base)));
+  });
+  return health;
+}
+
+function healthColor(pct) {
+  if (pct >= 80) return 'var(--green)';
+  if (pct >= 60) return 'var(--yellow)';
+  if (pct >= 35) return 'var(--orange)';
+  return 'var(--red)';
+}
+
+function healthIcon(pct) {
+  if (pct >= 80) return '\u2713';
+  if (pct >= 50) return '\u25B3';
+  if (pct >= 20) return '\u2717';
+  return '\u2620';
+}
+
+// ────────────────────────────────────────
+// RENDER
+// ────────────────────────────────────────
+
+function renderHealthBars() {
+  const container = document.getElementById('healthBars');
+  const health = computeHealth();
+  container.innerHTML = GUARANTEES.map(g => {
+    const v = health[g.id];
+    const col = healthColor(v);
+    const ico = healthIcon(v);
+    return `
+      <div class="health-bar-item">
+        <div class="health-label">
+          <span class="name">${g.name}</span>
+          <span class="pct" style="color:${col}">
+            <span class="status-icon">${ico}</span>
+            ${v}%
+          </span>
+        </div>
+        <div class="health-track">
+          <div class="health-fill" style="width:${v}%;background:${col}"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderTree() {
+  const grid = document.getElementById('treeGrid');
+  const paths = getPaths();
+  grid.innerHTML = paths.map(path => {
+    const activeTier = activeTiers[path.id] || 0;
+    const tiersHTML = path.tiers.map((tier, i) => {
+      const isActive = i === activeTier;
+      const isLocked = i > activeTier + 1;
+      const isReachable = i <= activeTier + 1;
+      const sevClass = `sev-${i}`;
+      const activeClass = isActive ? 'active' : '';
+      const lockedClass = isLocked ? 'locked' : '';
+      const connector = i < path.tiers.length - 1 ? '<div class="tier-connector"></div>' : '';
+      return `
+        <button class="tier-btn ${sevClass} ${activeClass} ${lockedClass}"
+                onclick="selectTier('${path.id}', ${i})"
+                ${isLocked ? 'disabled' : ''}>
+          <span class="tier-num">${i}</span>
+          <span class="tier-name">${tier.name}</span>
+          <span class="tier-desc">${tier.desc}</span>
+          ${tier.cite ? '<sup class="cite-num">' + tier.cite + '</sup>' : ''}
+        </button>
+        ${connector}
+      `;
+    }).join('');
+
+    return `
+      <div class="path-col">
+        <div class="path-header">
+          <div class="path-icon">${path.icon}</div>
+          <div class="path-name">${path.name}</div>
+          <div class="path-sub">${path.sub}</div>
+        </div>
+        <div class="tier-list">
+          ${tiersHTML}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderStatusPanel() {
+  const container = document.getElementById('statusGrid');
+  const paths = getPaths();
+  const health = computeHealth();
+
+  // What survives
+  const surviving = GUARANTEES.filter(g => health[g.id] >= 60);
+  const broken = GUARANTEES.filter(g => health[g.id] < 35);
+  const shaky = GUARANTEES.filter(g => health[g.id] >= 35 && health[g.id] < 60);
+
+  // What to fix
+  const fixes = [];
+  const tierOf = id => activeTiers[id] || 0;
+
+  if (mode === 'individual') {
+    if (tierOf('homo') >= 2) fixes.push({ issue: 'Heteroscedasticity', fix: 'HC robust SEs (White)', tag: 'fix' });
+    if (tierOf('homo') >= 3) fixes.push({ issue: 'Severe heterosced.', fix: 'Weighted Least Squares (WLS)', tag: 'fix' });
+    if (tierOf('indep') >= 1) fixes.push({ issue: 'Serial correlation', fix: 'Newey-West (HAC) SEs', tag: 'fix' });
+    if (tierOf('indep') >= 2) fixes.push({ issue: 'Autocorrelation', fix: 'GLS / Cochrane-Orcutt', tag: 'fix' });
+    if (tierOf('indep') >= 4) fixes.push({ issue: 'Clustered errors', fix: 'Cluster-robust SEs', tag: 'fix' });
+    if (tierOf('dist') >= 3) fixes.push({ issue: 'Heavy tails', fix: 'Robust regression (M-estimator)', tag: 'fix' });
+    if (tierOf('dist') >= 4) fixes.push({ issue: 'Infinite variance', fix: 'Quantile regression / LAD', tag: 'fix' });
+    if (tierOf('linear') >= 2) fixes.push({ issue: 'Nonlinearity', fix: 'Polynomial terms / splines / GAM \u2014 or reinterpret \u03B2\u0302 as BLP', tag: 'fix' });
+    if (tierOf('linear') >= 3) fixes.push({ issue: 'Strong nonlinearity', fix: 'Nonparametric methods (kernel, RF, neural net) \u2014 OLS BLP may still be useful as a linear summary', tag: 'fix' });
+    if (tierOf('collin') >= 2) fixes.push({ issue: 'Collinearity', fix: 'Ridge regression / PCA', tag: 'fix' });
+    if (tierOf('collin') >= 4) fixes.push({ issue: 'Rank deficiency', fix: 'Drop variables / regularize', tag: 'fix' });
+    if (tierOf('homo') >= 2 && tierOf('indep') >= 2) fixes.push({ issue: 'Het. + autocorr.', fix: 'HAC estimator (both corrections)', tag: 'fix' });
+    if (tierOf('linear') >= 2 && tierOf('collin') >= 2) fixes.push({ issue: 'Nonlinear + collinear', fix: 'Regularized nonparametric (e.g. penalized splines)', tag: 'fix' });
+  } else {
+    if (tierOf('errqual') >= 2) fixes.push({ issue: 'Heteroscedastic errors', fix: 'HC robust standard errors', tag: 'fix' });
+    if (tierOf('errqual') >= 3) fixes.push({ issue: 'Het. + autocorr.', fix: 'HAC SEs (Newey-West)', tag: 'fix' });
+    if (tierOf('errqual') >= 4) fixes.push({ issue: 'Heavy tails + dep.', fix: 'Robust/quantile regression', tag: 'fix' });
+    if (tierOf('modelspec') >= 2) fixes.push({ issue: 'Nonlinearity', fix: 'Add polynomial/spline terms', tag: 'fix' });
+    if (tierOf('modelspec') >= 3) fixes.push({ issue: 'Omitted variable bias', fix: 'Include confounders / IV estimation', tag: 'fix' });
+    if (tierOf('modelspec') >= 4) fixes.push({ issue: 'Wrong model', fix: 'Fundamental rethink: GLM / nonparametric', tag: 'fix' });
+    if (tierOf('design') >= 2) fixes.push({ issue: 'Collinearity', fix: 'Ridge regression / drop predictors', tag: 'fix' });
+    if (tierOf('design') >= 4) fixes.push({ issue: 'p > n', fix: 'Lasso / elastic net / PCA regression', tag: 'fix' });
+  }
+
+  // What survives card
+  const survivesHTML = surviving.length > 0
+    ? surviving.map(g => `<li><span class="tag tag-ok">OK</span> ${g.name} (${health[g.id]}%)</li>`).join('')
+    : '<li style="color:var(--red)">No guarantees above 60%</li>';
+
+  const shakyHTML = shaky.length > 0
+    ? shaky.map(g => `<li><span class="tag tag-warn">WARN</span> ${g.name} (${health[g.id]}%)</li>`).join('')
+    : '<li style="color:var(--text-muted)">None</li>';
+
+  const brokenHTML = broken.length > 0
+    ? broken.map(g => `<li><span class="tag tag-broken">BROKEN</span> ${g.name} (${health[g.id]}%)</li>`).join('')
+    : '<li style="color:var(--green)">None broken!</li>';
+
+  const fixesHTML = fixes.length > 0
+    ? fixes.map(f => `<li><span class="tag tag-fix">FIX</span> <strong>${f.issue}:</strong> ${f.fix}</li>`).join('')
+    : '<li style="color:var(--green)">No fixes needed \u2014 all assumptions hold</li>';
+
+  container.innerHTML = `
+    <div class="status-card">
+      <h3 style="color:var(--green)">\u2713 What Survives</h3>
+      <ul>${survivesHTML}</ul>
+      <h3 style="color:var(--yellow);margin-top:10px">\u25B3 Shaky</h3>
+      <ul>${shakyHTML}</ul>
+    </div>
+    <div class="status-card">
+      <h3 style="color:var(--red)">\u2717 What's Broken</h3>
+      <ul>${brokenHTML}</ul>
+    </div>
+    <div class="status-card">
+      <h3 style="color:var(--blue)">\u{1F527} Suggested Fixes</h3>
+      <ul>${fixesHTML}</ul>
+    </div>
+  `;
+}
+
+function renderAll() {
+  renderHealthBars();
+  renderTree();
+  renderStatusPanel();
+}
+
+// ────────────────────────────────────────
+// INTERACTIONS
+// ────────────────────────────────────────
+
+function selectTier(pathId, tierIndex) {
+  const current = activeTiers[pathId] || 0;
+  // Allow jumping to any tier at or below current+1, or going back
+  if (tierIndex <= current + 1) {
+    activeTiers[pathId] = tierIndex;
+    renderAll();
+  }
+}
+
+function setMode(newMode) {
+  mode = newMode;
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === newMode);
+  });
+  initState();
+  renderAll();
+}
+
+function resetAll() {
+  initState();
+  renderAll();
+}
+
+// ────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────
+initState();
+renderAll();
+</script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homotopy Algorithm — ESL §3.4.4</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  header { background: #161b22; border-bottom: 1px solid #30363d; padding: 24px 32px; }
+  header .tag { font-size: 11px; color: #58a6ff; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+  header h1 { font-size: 26px; font-weight: 700; color: #e6edf3; margin-bottom: 6px; }
+  header .meta { font-size: 13px; color: #8b949e; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+  header .section-badge { background: #21262d; border: 1px solid #30363d; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
+  header .formula { margin-top: 10px; font-size: 15px; color: #a5d6ff; background: #0d1117; border-left: 3px solid #58a6ff; padding: 8px 14px; border-radius: 0 4px 4px 0; display: inline-block; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
+  .viz-area { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+  .viz-area h2 { font-size: 14px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+  .panels { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .panel { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; }
+  .panel h3 { font-size: 12px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; border-bottom: 1px solid #21262d; padding-bottom: 10px; }
+  .quote { font-style: italic; font-size: 13px; line-height: 1.7; color: #c9d1d9; border-left: 3px solid #f78166; padding-left: 12px; }
+  .quote cite { display: block; margin-top: 8px; font-style: normal; font-size: 11px; color: #8b949e; }
+  .guarantee-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #21262d; font-size: 13px; }
+  .guarantee-row:last-child { border-bottom: none; }
+  .badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+  .badge-yes { background: #1a4731; color: #56d364; }
+  .badge-no { background: #3d1c1c; color: #f85149; }
+  .badge-na { background: #1c2128; color: #8b949e; }
+  .related-list { list-style: none; }
+  .related-list li { padding: 6px 0; border-bottom: 1px solid #21262d; font-size: 13px; color: #79c0ff; }
+  .related-list li:last-child { border-bottom: none; }
+  .related-list li span { color: #8b949e; font-size: 11px; display: block; }
+  .note { font-size: 12px; color: #8b949e; margin-top: 12px; line-height: 1.6; }
+  .controls { display: flex; gap: 16px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+  label { font-size: 13px; color: #8b949e; }
+  button { background: #21262d; border: 1px solid #30363d; color: #c9d1d9; border-radius: 4px; padding: 5px 14px; font-size: 13px; cursor: pointer; }
+  button:hover { background: #30363d; }
+  button.active { background: #1f6feb; border-color: #58a6ff; color: #fff; }
+  .breakpoint-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 14px; }
+  .breakpoint-table th { color: #8b949e; font-weight: 600; text-align: left; padding: 6px 10px; border-bottom: 1px solid #30363d; }
+  .breakpoint-table td { padding: 6px 10px; border-bottom: 1px solid #21262d; color: #c9d1d9; }
+  .breakpoint-table tr.selected td { background: #1c2f4a; color: #a5d6ff; }
+  .enter-badge { background: #1a4731; color: #56d364; font-size: 11px; padding: 1px 6px; border-radius: 8px; }
+  .exit-badge { background: #3d1c1c; color: #f85149; font-size: 11px; padding: 1px 6px; border-radius: 8px; }
+  .two-col { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="tag">Concept ID 156 &nbsp;·&nbsp; Estimation / Optimization</div>
+  <h1>Homotopy Algorithm</h1>
+  <div class="meta">
+    <span class="section-badge">ESL §3.4.4</span>
+    <span>Osborne et al. 2000; Efron et al. 2004</span>
+    <span>Piecewise-linear lasso path</span>
+  </div>
+  <div class="formula">\(\hat\beta(\lambda) = \arg\min_\beta \tfrac{1}{2}\|y-X\beta\|^2 + \lambda\|\beta\|_1, \quad \lambda \downarrow 0\)</div>
+</header>
+<div class="container">
+  <div class="viz-area">
+    <h2>Piecewise-Linear Lasso Path with Active Set Breakpoints</h2>
+    <div class="controls">
+      <button id="btnPlay" onclick="toggleAnimation()">&#9654; Animate</button>
+      <button id="btnReset" onclick="resetAnimation()">&#8635; Reset</button>
+      <label style="margin-left:12px">Click a row in the table below to highlight a breakpoint</label>
+    </div>
+    <div class="two-col">
+      <div id="plot-homotopy"></div>
+      <div>
+        <table class="breakpoint-table" id="bpTable">
+          <thead><tr><th>#</th><th>λ</th><th>|Active|</th><th>Event</th></tr></thead>
+          <tbody id="bpBody"></tbody>
+        </table>
+        <p class="note" style="margin-top:10px">Between consecutive breakpoints the active set \(\mathcal{A}(\lambda)\) is constant and \(\hat\beta(\lambda)\) is a linear function of \(\lambda\). At each breakpoint one predictor enters or exits the active set, and a new linear segment begins.</p>
+      </div>
+    </div>
+    <p class="note" style="margin-top:14px">
+      The homotopy algorithm starts at \(\lambda_{\max} = \max_j |x_j^T y|\) where all coefficients are zero, then decreases \(\lambda\) tracking the active set. It exploits the KKT stationarity condition: \(x_j^T(y - X\hat\beta) = \lambda \cdot \text{sign}(\hat\beta_j)\) for active \(j\), and \(|x_j^T r| \le \lambda\) for inactive \(j\).
+    </p>
+  </div>
+
+  <div class="panels">
+    <div class="panel">
+      <h3>Book Quote</h3>
+      <p class="quote">
+        "Osborne et al. (2000a) also discovered a piecewise-linear path for computing the lasso, which they called a homotopy algorithm."
+        <cite>— ESL §3.4.4, p. 74</cite>
+      </p>
+      <p class="note" style="margin-top:12px">
+        Independently derived from the LAR connection. Both reveal that the lasso solution path is piecewise linear in \(\lambda\), allowing exact computation of all solutions simultaneously.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h3>Guarantees</h3>
+      <div class="guarantee-row"><span>Exact solution path</span><span class="badge badge-yes">Yes</span></div>
+      <div class="guarantee-row"><span>Unbiased estimator</span><span class="badge badge-no">No</span></div>
+      <div class="guarantee-row"><span>Consistent (n → ∞)</span><span class="badge badge-yes">Yes*</span></div>
+      <div class="guarantee-row"><span>Prediction consistent</span><span class="badge badge-yes">Yes</span></div>
+      <div class="guarantee-row"><span>Finite termination</span><span class="badge badge-yes">Yes</span></div>
+      <div class="guarantee-row"><span>Polynomial complexity</span><span class="badge badge-yes">O(p³+np²)</span></div>
+      <p class="note" style="margin-top:8px">*Under appropriate conditions; path is exact regardless of asymptotics.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Related Concepts</h3>
+      <ul class="related-list">
+        <li>LAR–Lasso Connection <span>ID 155 — §3.4.4 — equivalent algorithm</span></li>
+        <li>Piecewise-Linear Solution Path <span>ID 182 — §3.4.4 — structural property</span></li>
+        <li>Lasso <span>ID 143 — §3.4.2 — target problem</span></li>
+        <li>Pathwise Coordinate Descent <span>ID 171 — §3.1 — alternative solver</span></li>
+        <li>KKT Conditions <span>Optimization — subgradient stationarity</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+const COLORS = ['#58a6ff','#f78166','#56d364','#e3b341','#bc8cff','#ff7b72'];
+
+// Simulate a 5-predictor homotopy path
+// lambdas are the regularization values; breakpoints mark active set changes
+const lambdas = [1.0, 0.82, 0.65, 0.5, 0.38, 0.27, 0.18, 0.10, 0.04, 0.0];
+const coefData = [
+  // [β1, β2, β3, β4, β5] at each lambda step
+  [0,    0,    0,    0,    0],
+  [0.18, 0,    0,    0,    0],
+  [0.32, 0.12, 0,    0,    0],
+  [0.42, 0.25,-0.08, 0,    0],
+  [0.50, 0.35,-0.17, 0.07, 0],
+  [0.55, 0.42,-0.24, 0.14, 0],
+  [0.58, 0.48,-0.26, 0.21, 0.06],
+  [0.61, 0.52,-0.27, 0.27, 0.13],
+  [0.62, 0.54,-0.27, 0.30, 0.18],
+  [0.63, 0.55,-0.28, 0.32, 0.21],
+];
+
+const breakpoints = [
+  {lambda: 1.0,  active: 0, event: 'Start: all zero', type:'start'},
+  {lambda: 0.82, active: 1, event: 'X1 enters', type:'enter', var:0},
+  {lambda: 0.65, active: 2, event: 'X2 enters', type:'enter', var:1},
+  {lambda: 0.50, active: 3, event: 'X3 enters (neg)', type:'enter', var:2},
+  {lambda: 0.38, active: 4, event: 'X4 enters', type:'enter', var:3},
+  {lambda: 0.18, active: 5, event: 'X5 enters', type:'enter', var:4},
+];
+
+let animFrame = null;
+let currentStep = lambdas.length - 1;
+
+function buildTable(highlightIdx) {
+  const tbody = document.getElementById('bpBody');
+  tbody.innerHTML = '';
+  breakpoints.forEach((bp, i) => {
+    const tr = document.createElement('tr');
+    if (i === highlightIdx) tr.className = 'selected';
+    tr.innerHTML = `<td>${i+1}</td><td>${bp.lambda.toFixed(2)}</td><td>${bp.active}</td>
+      <td>${bp.type==='enter'?`<span class="enter-badge">+</span> `:''}${bp.event}</td>`;
+    tr.onclick = () => { highlightBreakpoint(i); buildTable(i); };
+    tbody.appendChild(tr);
+  });
+}
+
+function highlightBreakpoint(idx) {
+  const bp = breakpoints[idx];
+  const lambdaVal = bp.lambda;
+  drawPath(lambdas.length - 1, lambdaVal);
+}
+
+function drawPath(upToStep, highlightLambda) {
+  const traces = Array.from({length:5}, (_,j) => ({
+    x: lambdas.slice(0, upToStep+1).map(l => -l),
+    y: coefData.slice(0, upToStep+1).map(row => row[j]),
+    name: `X${j+1}`,
+    mode: 'lines+markers',
+    line: {color: COLORS[j], width: 2.5},
+    marker: {size: 4},
+    showlegend: true,
+  }));
+
+  const shapes = [];
+  const annotations = [];
+
+  // Breakpoint lines
+  breakpoints.slice(1).forEach(bp => {
+    const isHL = highlightLambda !== undefined && Math.abs(bp.lambda - highlightLambda) < 0.01;
+    shapes.push({
+      type:'line', x0:-bp.lambda, x1:-bp.lambda, y0:-0.4, y1:0.7,
+      line:{color: isHL ? '#e3b341' : '#30363d', width: isHL ? 2 : 1, dash: isHL ? 'solid' : 'dot'}
+    });
+    if (isHL) {
+      annotations.push({
+        x:-bp.lambda, y:0.72, xanchor:'center',
+        text:`λ=${bp.lambda}`, font:{color:'#e3b341', size:11},
+        showarrow:false
+      });
+    }
+  });
+
+  const layout = {
+    paper_bgcolor: '#161b22',
+    plot_bgcolor: '#0d1117',
+    font: {color:'#8b949e'},
+    xaxis: {title:'−λ  (left = large λ, right = λ→0)', gridcolor:'#21262d', zerolinecolor:'#30363d',
+            tickvals: lambdas.map(l => -l), ticktext: lambdas.map(l => l.toFixed(2))},
+    yaxis: {title:'Coefficient value', gridcolor:'#21262d', zerolinecolor:'#58a6ff', zerolinewidth:1},
+    shapes,
+    annotations,
+    legend: {bgcolor:'transparent', font:{size:11}},
+    margin: {t:20,l:60,r:20,b:70},
+    height: 370,
+  };
+
+  Plotly.react('plot-homotopy', traces, layout, {responsive:true, displayModeBar:false});
+}
+
+let animStep = 1;
+function toggleAnimation() {
+  const btn = document.getElementById('btnPlay');
+  if (animFrame) {
+    clearInterval(animFrame);
+    animFrame = null;
+    btn.innerHTML = '&#9654; Animate';
+    btn.className = '';
+  } else {
+    animStep = 1;
+    btn.innerHTML = '&#9646;&#9646; Pause';
+    btn.className = 'active';
+    animFrame = setInterval(() => {
+      drawPath(animStep, undefined);
+      animStep++;
+      if (animStep >= lambdas.length) {
+        clearInterval(animFrame);
+        animFrame = null;
+        btn.innerHTML = '&#9654; Animate';
+        btn.className = '';
+      }
+    }, 300);
+  }
+}
+
+function resetAnimation() {
+  if (animFrame) { clearInterval(animFrame); animFrame = null; }
+  document.getElementById('btnPlay').innerHTML = '&#9654; Animate';
+  document.getElementById('btnPlay').className = '';
+  animStep = 1;
+  drawPath(0, undefined);
+}
+
+drawPath(lambdas.length - 1, undefined);
+buildTable(-1);
+</script>
+</body>
+</html>

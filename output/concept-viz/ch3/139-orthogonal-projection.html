@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orthogonal Projection — ESL Ch 3.1</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #21262d;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --accent3: #43e97b;
+    --accent4: #fbbf24;
+    --accent5: #38bdf8;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --border: #30363d;
+    --badge-bg: #1c2d3f;
+    --badge-text: #58a6ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+  }
+  .badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    border: 1px solid #1f6feb44;
+  }
+  .section-tag {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: var(--surface2);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+  }
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+  .tagline {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .card-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── PLAIN ENGLISH ── */
+  .benefit-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .benefit-list li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    font-size: 0.95rem;
+  }
+  .benefit-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  /* ── VIZ SECTIONS ── */
+  .viz-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .viz-header {
+    padding: 0.75rem 1.25rem;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .viz-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .viz-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  .btn-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  button {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  button:hover { background: var(--surface2); border-color: #6c63ff88; }
+  button.active { background: #1e1b4b; border-color: var(--accent); color: #a5b4fc; }
+
+  /* ── LEGEND ── */
+  .legend {
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 4px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── ANIMATION STEP DISPLAY ── */
+  .anim-status {
+    font-size: 0.82rem;
+    color: var(--accent5);
+    padding: 0 1.25rem 0.75rem;
+    min-height: 1.4rem;
+  }
+
+  /* ── 2x2 GRID ── */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 860px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* ── KEY PROPERTIES ── */
+  .prop-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  @media (max-width: 600px) { .prop-grid { grid-template-columns: 1fr; } }
+  .prop-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+  }
+  .prop-name {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .prop-formula {
+    font-size: 0.95rem;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .prop-note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.3rem;
+  }
+
+  /* ── FORMULA BLOCK ── */
+  .formula-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+    font-size: 1rem;
+  }
+  .quote {
+    font-style: italic;
+    color: var(--text-muted);
+    border-left: 2px solid var(--accent);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.88rem;
+    background: var(--surface2);
+    border-radius: 0 6px 6px 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════════════════ -->
+<div class="header">
+  <div class="header-meta">
+    <span class="badge">Math / Geometry</span>
+    <span class="section-tag">ESL &sect; 3.1</span>
+  </div>
+  <h1>Orthogonal Projection</h1>
+  <p class="tagline">The OLS fitted values &#375; are the orthogonal projection of y onto the column space of X.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 2: PLAIN ENGLISH
+═══════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title">What This Means</div>
+  <ul class="benefit-list">
+    <li>
+      <span class="benefit-icon" style="color:#6c63ff;">&#9632;</span>
+      <span><strong>X defines a subspace</strong> — the column space col(X) is a plane (or higher-dimensional flat) sitting inside the full data space R<sup>n</sup>.</span>
+    </li>
+    <li>
+      <span class="benefit-icon" style="color:#ff6584;">&#9679;</span>
+      <span><strong>y lives outside this plane</strong> — the observed response vector generally cannot be expressed as a linear combination of the columns of X.</span>
+    </li>
+    <li>
+      <span class="benefit-icon" style="color:#43e97b;">&#9679;</span>
+      <span><strong>&#375; is the closest point in the plane to y</strong> — "closest" in the Euclidean sense, minimizing RSS = ||y − X&beta;||&sup2;.</span>
+    </li>
+    <li>
+      <span class="benefit-icon" style="color:#fbbf24;">&#9135;</span>
+      <span><strong>The residual (y − &#375;) is perpendicular to the plane</strong> — it points straight "up" from the plane, at a right angle to every column of X.</span>
+    </li>
+    <li>
+      <span class="benefit-icon" style="color:#38bdf8;">&#9733;</span>
+      <span><strong>Geometric view makes OLS properties intuitive</strong> — idempotency, the normal equations, and why more predictors always reduce RSS all follow immediately from the geometry.</span>
+    </li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 3: ANIMATED 3D PROJECTION
+═══════════════════════════════════════════════════════ -->
+<div class="viz-section">
+  <div class="viz-header">
+    <div>
+      <div class="viz-label">Viz 1 — Animated 3D Projection</div>
+      <div class="viz-desc">Watch y drop straight down onto the column space plane — like dropping a ball</div>
+    </div>
+    <div class="btn-row">
+      <button id="btn-play" onclick="togglePlay()">&#9654; Play</button>
+      <button id="btn-pause" onclick="togglePlay()" style="display:none;">&#9646;&#9646; Pause</button>
+      <button onclick="resetAnim()">&#8635; Reset</button>
+    </div>
+  </div>
+  <div id="anim-status" class="anim-status">Press Play to watch y drop perpendicular onto the column space.</div>
+  <div id="plot3d" style="height:520px;"></div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch" style="background:#6c63ff; height:10px; width:20px; border-radius:3px;"></div> col(X) plane</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ff6584;"></div> y (response)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#43e97b;"></div> &#375; = Hy (projection)</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#fbbf24;"></div> residual r = y − &#375;</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#38bdf8;"></div> basis vectors x&#8321;, x&#8322;</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#ffffff; opacity:0.6;"></div> right-angle marker</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e040fb;"></div> dropping dot</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 4: 2D CROSS-SECTION (INTERACTIVE)
+═══════════════════════════════════════════════════════ -->
+<div class="viz-section">
+  <div class="viz-header">
+    <div>
+      <div class="viz-label">Viz 2 — 2D Cross-Section (Interactive)</div>
+      <div class="viz-desc">Click anywhere on the plot to move y and see the projection update</div>
+    </div>
+    <button onclick="reset2D()">&#8635; Reset y</button>
+  </div>
+  <div id="plot2d" style="height:380px;"></div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch" style="background:#6c63ff;"></div> Column space (line)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ff6584;"></div> y (drag via click)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#43e97b;"></div> &#375; on line</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#fbbf24;"></div> residual r &#8869; line</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#ffffff; opacity:0.5;"></div> right angle at &#375;</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 5: MORE PREDICTORS → LOWER RSS
+═══════════════════════════════════════════════════════ -->
+<div class="viz-section">
+  <div class="viz-header">
+    <div>
+      <div class="viz-label">Viz 3 — Effect of Adding Predictors</div>
+      <div class="viz-desc">As p grows, col(X) expands and &#375; gets closer to y (RSS falls)</div>
+    </div>
+  </div>
+  <div id="plot-rss" style="height:300px;"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 6: KEY PROPERTIES
+═══════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title">Key Properties of the Hat Matrix H = X(X&#7488;X)&#8315;&#185;X&#7488;</div>
+  <div class="prop-grid">
+    <div class="prop-card">
+      <div class="prop-name">Definition</div>
+      <div class="prop-formula">&#375; = Hy</div>
+      <div class="prop-note">H "puts the hat on y" — maps the response to its projection</div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-name">Idempotent</div>
+      <div class="prop-formula">H&sup2; = H</div>
+      <div class="prop-note">Projecting twice gives the same result as projecting once</div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-name">Symmetric</div>
+      <div class="prop-formula">H&#7488; = H</div>
+      <div class="prop-note">H is a self-adjoint (orthogonal) projector</div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-name">Trace = rank</div>
+      <div class="prop-formula">trace(H) = p + 1</div>
+      <div class="prop-note">Equals the number of parameters fit (including intercept)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 7: FORMULA + QUOTE
+═══════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title">Formulas</div>
+  <div class="formula-block">
+    \( \hat{\mathbf{y}} = \mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{X}(\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y} = \mathbf{H}\mathbf{y} \)
+  </div>
+  <div class="formula-block">
+    \( \mathbf{y} - \hat{\mathbf{y}} \perp \operatorname{col}(\mathbf{X}) \quad \Longleftrightarrow \quad \mathbf{X}^\top(\mathbf{y} - \mathbf{X}\hat{\boldsymbol{\beta}}) = \mathbf{0} \)
+  </div>
+  <div style="margin-top:1rem;">
+    <div class="quote">
+      "We minimize RSS(&beta;) = ||y − X&beta;||&sup2; by choosing &beta;&#770; so that the residual vector y − &#375; is orthogonal to this subspace."
+      <div style="margin-top:0.3rem; font-style:normal; font-size:0.78rem;">— ESL, Chapter 3</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════ -->
+<script>
+/* ─────────────────────────────────────────────────────────
+   SHARED HELPERS
+───────────────────────────────────────────────────────── */
+const BG   = '#0d1117';
+const SURF = '#161b22';
+
+function linspace(a, b, n) {
+  const out = [];
+  for (let i = 0; i < n; i++) out.push(a + (b - a) * i / (n - 1));
+  return out;
+}
+
+/* ─────────────────────────────────────────────────────────
+   VIZ 1: ANIMATED 3D PROJECTION — "DROPPING BALL" STYLE
+   ──────────────────────────────────────────────────────
+   The plane is the xz-plane (y=0). y sits above it.
+   The animation shows a bright dot literally falling from
+   y straight down (along the perpendicular) to land on
+   the plane at yhat, leaving a dashed trail.
+
+   Animation phases:
+     Phase 0: Scene setup — plane, basis vectors, y point
+     Phase 1: Dot appears at y, begins dropping (smooth
+              interpolation from y to yhat, ~60 frames)
+     Phase 2: Dot lands — flash/pulse yhat, show right-angle marker
+     Phase 3: Residual vector highlighted, labels complete
+     Phase 4: Camera slowly rotates for full 3D understanding
+───────────────────────────────────────────────────────── */
+
+// Geometry — y is above the xz-plane, yhat is its projection onto y=0
+const Y_POS  = { x: 0.7, y: 2.4, z: 0.5 };
+const YH_POS = { x: 0.7, y: 0,   z: 0.5 };
+
+// Camera positioned to clearly see the vertical drop: looking from the side
+// (not top-down). Slight elevation so the plane reads as a surface.
+const SIDE_CAMERA = { eye: { x: 2.0, y: 1.0, z: 2.0 }, up: { x: 0, y: 1, z: 0 } };
+
+function makePlane() {
+  // Larger, more visible plane
+  const S = 2.5;
+  return {
+    type: 'mesh3d',
+    x: [-S, S, S, -S],
+    y: [0, 0, 0, 0],
+    z: [-S, -S, S, S],
+    i: [0, 0], j: [1, 2], k: [2, 3],
+    color: '#6c63ff',
+    opacity: 0.22,
+    showlegend: false,
+    hoverinfo: 'skip'
+  };
+}
+
+function makePlaneGrid() {
+  // Draw grid lines on the plane to make it feel solid
+  const S = 2.5;
+  const xs = [], ys = [], zs = [];
+  for (let v = -S; v <= S; v += 1.0) {
+    // lines parallel to x-axis
+    xs.push(-S, S, null);
+    ys.push(0, 0, null);
+    zs.push(v, v, null);
+    // lines parallel to z-axis
+    xs.push(v, v, null);
+    ys.push(0, 0, null);
+    zs.push(-S, S, null);
+  }
+  return {
+    type: 'scatter3d', mode: 'lines',
+    x: xs, y: ys, z: zs,
+    line: { color: 'rgba(108,99,255,0.18)', width: 1 },
+    showlegend: false, hoverinfo: 'skip'
+  };
+}
+
+function makePlaneEdge() {
+  const S = 2.5;
+  return {
+    type: 'scatter3d', mode: 'lines',
+    x: [-S, S, S, -S, -S],
+    y: [0, 0, 0, 0, 0],
+    z: [-S, -S, S, S, -S],
+    line: { color: '#6c63ff', width: 2 },
+    showlegend: false, hoverinfo: 'skip'
+  };
+}
+
+function makePoint(x, y, z, color, size) {
+  return {
+    type: 'scatter3d', mode: 'markers',
+    x: [x], y: [y], z: [z],
+    marker: { color, size, symbol: 'circle' },
+    showlegend: false, hoverinfo: 'skip'
+  };
+}
+
+function makeLine(x0,y0,z0,x1,y1,z1,color,width,dash) {
+  return {
+    type: 'scatter3d', mode: 'lines',
+    x: [x0, x1], y: [y0, y1], z: [z0, z1],
+    line: { color, width, dash: dash || 'solid' },
+    showlegend: false, hoverinfo: 'skip'
+  };
+}
+
+function makeCone(x, y, z, u, v, w, color) {
+  const L = Math.sqrt(u*u + v*v + w*w) || 1;
+  const s = 0.15 / L;
+  return {
+    type: 'cone',
+    x: [x], y: [y], z: [z],
+    u: [u * s], v: [v * s], w: [w * s],
+    sizemode: 'absolute', sizeref: 0.15,
+    colorscale: [[0, color], [1, color]],
+    showscale: false, showlegend: false,
+    opacity: 0.92, hoverinfo: 'skip'
+  };
+}
+
+// Right-angle marker at yhat: two short segments forming an L
+// One segment along the plane (x-direction), one along the perpendicular (y-direction)
+function makeRightAngle(alpha) {
+  const eps = 0.18;
+  const bx = YH_POS.x, bz = YH_POS.z;
+  return {
+    type: 'scatter3d', mode: 'lines',
+    x: [bx + eps, bx + eps, bx],
+    y: [0,         eps,      eps],
+    z: [bz,        bz,       bz],
+    line: { color: 'rgba(255,255,255,' + alpha + ')', width: 3 },
+    showlegend: false, hoverinfo: 'skip'
+  };
+}
+
+// Annotation helper
+function ann(x,y,z,text,color,size) {
+  return { x, y, z, text, showarrow: false, font: { color, size: size||13 } };
+}
+
+function make3DLayout(camera, annotations) {
+  return {
+    paper_bgcolor: BG,
+    margin: { l:0, r:0, t:0, b:0 },
+    scene: {
+      bgcolor: BG,
+      xaxis: { showgrid: true, gridcolor: '#21262d', zeroline: true, zerolinecolor: '#30363d', title: '', color: '#8b949e', range: [-2.8, 2.8], showticklabels: false },
+      yaxis: { showgrid: true, gridcolor: '#21262d', zeroline: true, zerolinecolor: '#30363d', title: '', color: '#8b949e', range: [-0.5, 3.5], showticklabels: false },
+      zaxis: { showgrid: true, gridcolor: '#21262d', zeroline: true, zerolinecolor: '#30363d', title: '', color: '#8b949e', range: [-2.8, 2.8], showticklabels: false },
+      annotations: annotations || [],
+      camera: camera || SIDE_CAMERA,
+      aspectratio: { x: 1, y: 0.7, z: 1 }
+    },
+    showlegend: false
+  };
+}
+
+/* ── Animation state ── */
+let animPhase = -1;       // -1=idle, 0=setup, 1=dropping, 2=landed, 3=residual, 4=rotate
+let isPlaying = false;
+let stepTimer = null;
+let rotateTimer = null;
+let rotateAngle = 0;
+let dropFrame = 0;
+let dropTimer = null;
+const DROP_FRAMES = 60;   // total frames for the drop
+const DROP_INTERVAL = 25; // ms per frame (~40fps)
+const PHASE_PAUSE = 1200; // ms pause between phases
+let flashCount = 0;
+let flashTimer = null;
+
+function getRotatedCamera(angle) {
+  const r = 2.6;
+  return {
+    eye: { x: r * Math.cos(angle), y: 0.9, z: r * Math.sin(angle) },
+    up: { x: 0, y: 1, z: 0 }
+  };
+}
+
+/* Easing: slow start, accelerate (like gravity) */
+function easeInQuad(t) { return t * t; }
+
+/* Build the full scene for a given drop progress (0..1) and phase */
+function buildScene(phase, dropT) {
+  const traces = [];
+
+  // Always: plane + grid + edge
+  traces.push(makePlane());
+  traces.push(makePlaneGrid());
+  traces.push(makePlaneEdge());
+
+  // Basis vectors (always visible for context)
+  traces.push(makeLine(0,0,0, 1.8,0,0, '#38bdf8', 3));
+  traces.push(makeCone(1.8,0,0, 1,0,0, '#38bdf8'));
+  traces.push(makeLine(0,0,0, 0,0,1.8, '#38bdf8', 3));
+  traces.push(makeCone(0,0,1.8, 0,0,1, '#38bdf8'));
+
+  // Origin
+  traces.push(makePoint(0,0,0, '#8b949e', 5));
+
+  // Vector from origin to y (always shown)
+  traces.push(makeLine(0,0,0, Y_POS.x, Y_POS.y, Y_POS.z, '#ff6584', 3));
+  traces.push(makeCone(Y_POS.x, Y_POS.y, Y_POS.z, Y_POS.x, Y_POS.y, Y_POS.z, '#ff6584'));
+  traces.push(makePoint(Y_POS.x, Y_POS.y, Y_POS.z, '#ff6584', 10));
+
+  if (phase >= 1) {
+    // The dropping dot + dashed trail
+    // dropT goes from 0 (at y) to 1 (at yhat)
+    var t = (dropT !== undefined) ? dropT : 1;
+    var easedT = easeInQuad(Math.min(t, 1));
+    var dotX = Y_POS.x;
+    var dotY = Y_POS.y + (YH_POS.y - Y_POS.y) * easedT;
+    var dotZ = Y_POS.z;
+
+    // Dashed trail from y down to current dot position
+    traces.push(makeLine(Y_POS.x, Y_POS.y, Y_POS.z, dotX, dotY, dotZ, '#fbbf24', 4, 'dash'));
+
+    // The dropping dot — bright magenta/pink, large
+    traces.push(makePoint(dotX, dotY, dotZ, '#e040fb', 14));
+
+    // Faint "shadow" on the plane showing where the dot will land
+    traces.push(makePoint(YH_POS.x, YH_POS.y, YH_POS.z, 'rgba(67,233,123,0.3)', 10));
+  }
+
+  if (phase >= 2) {
+    // yhat point (solid green) + vector from origin
+    traces.push(makeLine(0,0,0, YH_POS.x, YH_POS.y, YH_POS.z, '#43e97b', 3));
+    traces.push(makeCone(YH_POS.x, YH_POS.y, YH_POS.z, YH_POS.x, 0.01, YH_POS.z, '#43e97b'));
+    traces.push(makePoint(YH_POS.x, YH_POS.y, YH_POS.z, '#43e97b', 14));
+
+    // Full dashed perpendicular line y -> yhat
+    traces.push(makeLine(Y_POS.x, Y_POS.y, Y_POS.z, YH_POS.x, YH_POS.y, YH_POS.z, '#fbbf24', 4, 'dash'));
+
+    // Right-angle marker (prominent)
+    traces.push(makeRightAngle(0.95));
+
+    // Flash effect: pulsing ring around yhat
+    if (flashCount > 0 && flashCount % 2 === 1) {
+      traces.push(makePoint(YH_POS.x, YH_POS.y, YH_POS.z, 'rgba(67,233,123,0.5)', 28));
+    }
+  }
+
+  if (phase >= 3) {
+    // Residual vector: thick, bright
+    traces.push(makeLine(YH_POS.x, YH_POS.y, YH_POS.z, Y_POS.x, Y_POS.y, Y_POS.z, '#fbbf24', 6));
+    traces.push(makeCone(Y_POS.x, Y_POS.y, Y_POS.z, 0, 1, 0, '#fbbf24'));
+  }
+
+  return traces;
+}
+
+/* Annotation sets for each phase */
+function getAnnotations(phase) {
+  var anns = [
+    ann(0, -0.35, 0, '<b>col(X)</b>', '#6c63ff', 13),
+    ann(1.95, 0.1, 0, 'x&#8321;', '#38bdf8', 11),
+    ann(0, 0.1, 1.95, 'x&#8322;', '#38bdf8', 11),
+    ann(Y_POS.x, Y_POS.y + 0.22, Y_POS.z, '<b>y</b>', '#ff6584', 15)
+  ];
+
+  if (phase === 1) {
+    anns.push(ann(Y_POS.x + 0.2, Y_POS.y * 0.5, Y_POS.z, '<b>&#8595; dropping &#8869;</b>', '#fbbf24', 13));
+  }
+
+  if (phase >= 2) {
+    anns.push(ann(YH_POS.x, YH_POS.y - 0.3, YH_POS.z, '<b>&#375; = Hy</b>', '#43e97b', 14));
+    anns.push(ann(Y_POS.x + 0.22, Y_POS.y * 0.5, Y_POS.z, '&#8869;', '#fbbf24', 14));
+  }
+
+  if (phase >= 3) {
+    anns.push(ann(Y_POS.x + 0.28, Y_POS.y * 0.5, Y_POS.z, '<b>r = y &#8722; &#375;</b>', '#fbbf24', 14));
+    // Remove the simpler perp label if residual label is shown
+    anns = anns.filter(function(a) { return a.text !== '&#8869;'; });
+  }
+
+  return anns;
+}
+
+const phaseMessages = [
+  'Step 1/4 &#8212; The column space col(X) is a plane. The response y floats above it.',
+  'Step 2/4 &#8212; Dropping y straight down perpendicular to the plane...',
+  'Step 3/4 &#8212; It lands! &#375; = Hy is the closest point on the plane. Note the right angle.',
+  'Step 4/4 &#8212; The residual r = y &#8722; &#375; is the perpendicular distance. RSS = ||r||&#178;.',
+  'Rotating &#8212; Observe from all angles: the residual is always perpendicular to col(X).'
+];
+
+function setStatus(msg) {
+  document.getElementById('anim-status').innerHTML = msg;
+}
+
+function renderScene(phase, dropT, camera) {
+  var traces = buildScene(phase, dropT);
+  var anns = getAnnotations(phase);
+  var cam = camera || SIDE_CAMERA;
+  var layout = make3DLayout(cam, anns);
+  Plotly.react('plot3d', traces, layout, { responsive: true, displayModeBar: false });
+}
+
+/* ── Phase transitions ── */
+
+function runPhase0() {
+  animPhase = 0;
+  setStatus(phaseMessages[0]);
+  renderScene(0);
+  stepTimer = setTimeout(runPhase1, PHASE_PAUSE);
+}
+
+function runPhase1() {
+  animPhase = 1;
+  dropFrame = 0;
+  setStatus(phaseMessages[1]);
+  dropTimer = setInterval(function() {
+    if (!isPlaying) return;
+    dropFrame++;
+    var t = dropFrame / DROP_FRAMES;
+    renderScene(1, t);
+    if (dropFrame >= DROP_FRAMES) {
+      clearInterval(dropTimer);
+      dropTimer = null;
+      // Brief pause then phase 2
+      stepTimer = setTimeout(runPhase2, 300);
+    }
+  }, DROP_INTERVAL);
+}
+
+function runPhase2() {
+  animPhase = 2;
+  setStatus(phaseMessages[2]);
+  // Flash the yhat point
+  flashCount = 0;
+  flashTimer = setInterval(function() {
+    flashCount++;
+    renderScene(2, 1);
+    if (flashCount >= 6) {
+      clearInterval(flashTimer);
+      flashTimer = null;
+      flashCount = 0;
+      renderScene(2, 1);
+      stepTimer = setTimeout(runPhase3, PHASE_PAUSE);
+    }
+  }, 150);
+}
+
+function runPhase3() {
+  animPhase = 3;
+  setStatus(phaseMessages[3]);
+  renderScene(3, 1);
+  stepTimer = setTimeout(runPhase4, PHASE_PAUSE * 1.5);
+}
+
+function runPhase4() {
+  animPhase = 4;
+  setStatus(phaseMessages[4]);
+  rotateAngle = Math.atan2(SIDE_CAMERA.eye.z, SIDE_CAMERA.eye.x);
+  startRotation();
+  // Mark animation done
+  isPlaying = false;
+  showPlayBtn();
+}
+
+function startRotation() {
+  if (rotateTimer) return;
+  rotateTimer = setInterval(function() {
+    rotateAngle += 0.008;
+    var cam = getRotatedCamera(rotateAngle);
+    Plotly.relayout('plot3d', { 'scene.camera': cam });
+  }, 50);
+}
+function stopRotation() {
+  if (rotateTimer) { clearInterval(rotateTimer); rotateTimer = null; }
+}
+
+function showPlayBtn() {
+  document.getElementById('btn-play').style.display = '';
+  document.getElementById('btn-pause').style.display = 'none';
+  document.getElementById('btn-play').classList.remove('active');
+}
+function showPauseBtn() {
+  document.getElementById('btn-play').style.display = 'none';
+  document.getElementById('btn-pause').style.display = '';
+  document.getElementById('btn-pause').classList.add('active');
+}
+
+function clearAllTimers() {
+  if (stepTimer) { clearTimeout(stepTimer); stepTimer = null; }
+  if (dropTimer) { clearInterval(dropTimer); dropTimer = null; }
+  if (flashTimer) { clearInterval(flashTimer); flashTimer = null; }
+  stopRotation();
+}
+
+function togglePlay() {
+  if (isPlaying) {
+    // Pause
+    isPlaying = false;
+    clearAllTimers();
+    showPlayBtn();
+  } else {
+    // Play
+    isPlaying = true;
+    showPauseBtn();
+    if (animPhase >= 4) {
+      // Restart rotation
+      startRotation();
+    } else if (animPhase < 0) {
+      // Start from beginning
+      runPhase0();
+    } else {
+      // Resume current phase
+      if (animPhase === 0) {
+        stepTimer = setTimeout(runPhase1, PHASE_PAUSE);
+      } else if (animPhase === 1) {
+        // Resume drop
+        dropTimer = setInterval(function() {
+          if (!isPlaying) return;
+          dropFrame++;
+          var t = dropFrame / DROP_FRAMES;
+          renderScene(1, t);
+          if (dropFrame >= DROP_FRAMES) {
+            clearInterval(dropTimer);
+            dropTimer = null;
+            stepTimer = setTimeout(runPhase2, 300);
+          }
+        }, DROP_INTERVAL);
+      } else if (animPhase === 2) {
+        stepTimer = setTimeout(runPhase3, PHASE_PAUSE);
+      } else if (animPhase === 3) {
+        stepTimer = setTimeout(runPhase4, PHASE_PAUSE);
+      }
+    }
+  }
+}
+
+function resetAnim() {
+  isPlaying = false;
+  clearAllTimers();
+  animPhase = -1;
+  dropFrame = 0;
+  rotateAngle = 0;
+  flashCount = 0;
+  showPlayBtn();
+  setStatus('Press Play to watch y drop perpendicular onto the column space.');
+  renderScene(0);
+}
+
+/* ─────────────────────────────────────────────────────────
+   VIZ 2: 2D CROSS-SECTION (INTERACTIVE)
+   Click to move y; projection onto line
+───────────────────────────────────────────────────────── */
+const DIR = [1, 0.5];
+const DIRLEN = Math.sqrt(DIR[0]*DIR[0] + DIR[1]*DIR[1]);
+const DIRN = [DIR[0]/DIRLEN, DIR[1]/DIRLEN];
+
+var pt2D = { x: 1.0, y: 2.5 };
+
+function project2D(px, py) {
+  var dot = px * DIRN[0] + py * DIRN[1];
+  return { x: dot * DIRN[0], y: dot * DIRN[1] };
+}
+
+function rightAngle2D(px, py, phx, phy) {
+  var eps = 0.12;
+  var tx = DIRN[0] * eps, ty = DIRN[1] * eps;
+  var rx = px - phx, ry = py - phy;
+  var rlen = Math.sqrt(rx*rx + ry*ry) || 1;
+  var rnx = rx/rlen * eps, rny = ry/rlen * eps;
+  return {
+    x: [phx + tx, phx + tx + rnx, phx + rnx],
+    y: [phy + ty, phy + ty + rny, phy + rny]
+  };
+}
+
+function build2D(px, py) {
+  var ph = project2D(px, py);
+  var phx = ph.x, phy = ph.y;
+  var ra = rightAngle2D(px, py, phx, phy);
+  var rx = px - phx, ry = py - phy;
+  var rss = (rx*rx + ry*ry).toFixed(3);
+  var LINE_RANGE = 3.5;
+
+  var traces = [
+    {
+      type: 'scatter', mode: 'lines',
+      x: [-LINE_RANGE * DIRN[0], LINE_RANGE * DIRN[0]],
+      y: [-LINE_RANGE * DIRN[1], LINE_RANGE * DIRN[1]],
+      line: { color: '#6c63ff', width: 3 },
+      hoverinfo: 'skip', showlegend: false
+    },
+    {
+      type: 'scatter', mode: 'lines',
+      x: [0, phx], y: [0, phy],
+      line: { color: '#43e97b', width: 3 },
+      hoverinfo: 'skip', showlegend: false
+    },
+    {
+      type: 'scatter', mode: 'lines',
+      x: [phx, px], y: [phy, py],
+      line: { color: '#fbbf24', width: 3, dash: 'dash' },
+      hoverinfo: 'skip', showlegend: false
+    },
+    {
+      type: 'scatter', mode: 'lines',
+      x: ra.x, y: ra.y,
+      line: { color: 'rgba(255,255,255,0.7)', width: 2 },
+      hoverinfo: 'skip', showlegend: false
+    },
+    {
+      type: 'scatter', mode: 'markers+text',
+      x: [px], y: [py],
+      marker: { color: '#ff6584', size: 14, symbol: 'circle' },
+      text: ['  y'], textposition: 'middle right',
+      textfont: { color: '#ff6584', size: 14 },
+      hoverinfo: 'skip', showlegend: false
+    },
+    {
+      type: 'scatter', mode: 'markers+text',
+      x: [phx], y: [phy],
+      marker: { color: '#43e97b', size: 12, symbol: 'circle' },
+      text: ['  &#375;'], textposition: 'middle right',
+      textfont: { color: '#43e97b', size: 13 },
+      hoverinfo: 'skip', showlegend: false
+    },
+    {
+      type: 'scatter', mode: 'markers+text',
+      x: [0], y: [0],
+      marker: { color: '#8b949e', size: 8 },
+      text: ['  O'], textposition: 'middle right',
+      textfont: { color: '#8b949e', size: 12 },
+      hoverinfo: 'skip', showlegend: false
+    }
+  ];
+
+  var layout2d = {
+    paper_bgcolor: BG,
+    plot_bgcolor: SURF,
+    margin: { l: 50, r: 40, t: 20, b: 50 },
+    xaxis: {
+      range: [-3.5, 3.5], zeroline: true, zerolinecolor: '#30363d',
+      gridcolor: '#21262d', color: '#8b949e', title: '',
+      scaleanchor: 'y', scaleratio: 1
+    },
+    yaxis: {
+      range: [-1.5, 3.5], zeroline: true, zerolinecolor: '#30363d',
+      gridcolor: '#21262d', color: '#8b949e', title: ''
+    },
+    showlegend: false,
+    annotations: [
+      {
+        x: LINE_RANGE * DIRN[0] * 0.85, y: LINE_RANGE * DIRN[1] * 0.85,
+        text: 'col(X)', showarrow: false,
+        font: { color: '#6c63ff', size: 12 }
+      },
+      {
+        x: (px + phx) / 2 - 0.25, y: (py + phy) / 2,
+        text: 'r (RSS=' + rss + ')', showarrow: false,
+        font: { color: '#fbbf24', size: 11 }
+      }
+    ]
+  };
+
+  return { traces: traces, layout: layout2d };
+}
+
+function render2D() {
+  var d = build2D(pt2D.x, pt2D.y);
+  Plotly.react('plot2d', d.traces, d.layout, { responsive: true, displayModeBar: false });
+}
+
+function reset2D() {
+  pt2D = { x: 1.0, y: 2.5 };
+  render2D();
+}
+
+document.getElementById('plot2d').addEventListener('plotly_click', function(data) {
+  if (data && data.points && data.points.length > 0) {
+    pt2D.x = data.points[0].x;
+    pt2D.y = data.points[0].y;
+    render2D();
+  }
+});
+
+/* ─────────────────────────────────────────────────────────
+   VIZ 3: RSS vs NUMBER OF PREDICTORS
+───────────────────────────────────────────────────────── */
+function buildRSSPlot() {
+  var n = 10;
+  var ps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  var rss = ps.map(function(p) { return Math.max(0, 1 - p / n); });
+  var colors = ps.map(function(p) {
+    if (p === n) return '#ff6584';
+    var t = p / n;
+    return 'rgba(108, 99, 255, ' + (0.4 + 0.6 * (1 - t)) + ')';
+  });
+
+  var barTrace = {
+    type: 'bar',
+    x: ps.map(String),
+    y: rss,
+    marker: { color: colors, line: { color: '#30363d', width: 1 } },
+    hovertemplate: 'p=%{x} predictors<br>RSS=%{y:.3f}<extra></extra>',
+    showlegend: false
+  };
+
+  var annotations = [
+    {
+      x: '1', y: rss[0] + 0.04, text: 'Line<br>in R\u00b9\u2070', showarrow: false,
+      font: { color: '#8b949e', size: 10 }
+    },
+    {
+      x: '2', y: rss[1] + 0.04, text: 'Plane<br>in R\u00b9\u2070', showarrow: false,
+      font: { color: '#8b949e', size: 10 }
+    },
+    {
+      x: '10', y: 0.08, text: '\u0177 = y<br>RSS = 0', showarrow: false,
+      font: { color: '#ff6584', size: 11 }
+    }
+  ];
+
+  var layoutRSS = {
+    paper_bgcolor: BG,
+    plot_bgcolor: SURF,
+    margin: { l: 55, r: 20, t: 20, b: 65 },
+    xaxis: {
+      title: { text: 'Number of predictors (p)', font: { color: '#8b949e', size: 12 } },
+      color: '#8b949e', gridcolor: '#21262d',
+      tickfont: { color: '#8b949e' }
+    },
+    yaxis: {
+      title: { text: 'Residual Sum of Squares (RSS)', font: { color: '#8b949e', size: 12 } },
+      range: [0, 1.1],
+      color: '#8b949e', gridcolor: '#21262d',
+      tickfont: { color: '#8b949e' }
+    },
+    annotations: annotations,
+    shapes: [
+      {
+        type: 'line', xref: 'paper', x0: 0, x1: 1,
+        y0: 0, y1: 0,
+        line: { color: '#ff6584', width: 1, dash: 'dot' }
+      }
+    ],
+    showlegend: false
+  };
+
+  Plotly.react('plot-rss', [barTrace], layoutRSS, { responsive: true, displayModeBar: false });
+}
+
+/* ─────────────────────────────────────────────────────────
+   INIT
+───────────────────────────────────────────────────────── */
+window.addEventListener('load', function() {
+  // Init 3D with phase 0 (static scene)
+  renderScene(0);
+
+  // Init 2D
+  render2D();
+
+  // Init RSS bar chart
+  buildRSSPlot();
+});
+</script>
+</body>
+</html>

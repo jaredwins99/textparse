@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Principal Components Regression — ESL Ch3</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #21262d;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #f78166;
+    --accent4: #d2a8ff;
+    --badge-model: #1f6feb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+  .header { border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+  .badge { display: inline-block; background: var(--badge-model); color: #fff; font-size: 0.72rem; font-weight: 600; padding: 0.2em 0.7em; border-radius: 2em; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+  .section-tag { display: inline-block; color: var(--text-muted); font-size: 0.8rem; margin-left: 0.8rem; }
+  h1 { font-size: 2rem; font-weight: 700; color: var(--text); margin: 0.3rem 0; }
+  .formula-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.5rem; margin-top: 1rem; font-size: 1.05rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+  .card h2 { font-size: 0.95rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 1rem; }
+  .card ul { list-style: none; }
+  .card ul li { padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; color: var(--text-muted); }
+  .card ul li:last-child { border-bottom: none; }
+  blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: var(--text-muted); font-style: italic; font-size: 0.88rem; margin: 0.8rem 0; }
+  .viz-section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; margin-top: 1.5rem; }
+  .viz-section h2 { font-size: 0.95rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 1rem; }
+  .controls { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .slider-wrap { display: flex; align-items: center; gap: 0.7rem; }
+  label { font-size: 0.85rem; color: var(--text-muted); }
+  input[type=range] { accent-color: var(--accent); width: 160px; cursor: pointer; }
+  .val-display { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.15em 0.6em; font-size: 0.85rem; min-width: 2.5rem; text-align: center; }
+  .prop-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+  .prop-row:last-child { border-bottom: none; }
+  .pill { display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 0.15em 0.6em; border-radius: 1em; }
+  .pill-yes { background: #1a3a22; color: var(--accent2); }
+  .pill-no { background: #3a1a1a; color: var(--accent3); }
+  .pill-cond { background: #2a2210; color: #e3b341; }
+  .prop-label { font-size: 0.88rem; color: var(--text); min-width: 140px; }
+  .prop-note { font-size: 0.8rem; color: var(--text-muted); }
+  .tab-row { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+  .tab-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 0.4em 1em; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+  .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .related-tag { display: inline-block; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.2em 0.7em; font-size: 0.82rem; color: var(--accent4); margin: 0.2rem; }
+  .info-text { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; }
+  @media(max-width:700px){.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <span class="badge">model / proxy</span>
+    <span class="section-tag">§ 3.5.1 — Principal Components Regression</span>
+    <h1>Principal Components Regression</h1>
+    <div class="formula-box">
+      \[ \hat{y}^{\text{pcr}}_M = \bar{y}\mathbf{1} + \sum_{m=1}^{M} \hat{\theta}_m z_m \]
+      <div class="info-text">where \(z_m = Xv_m\) are the derived principal component columns, \(\hat{\theta}_m = \langle z_m, y \rangle / \langle z_m, z_m \rangle\)</div>
+    </div>
+  </div>
+
+  <div class="viz-section">
+    <h2>Interactive Visualization</h2>
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="showTab('eigenval')">Eigenvalue Spectrum</button>
+      <button class="tab-btn" onclick="showTab('shrinkage')">PCR vs Ridge Shrinkage</button>
+      <button class="tab-btn" onclick="showTab('bvtradeoff')">Bias-Variance Tradeoff</button>
+    </div>
+
+    <div id="tab-eigenval">
+      <div class="controls">
+        <div class="slider-wrap">
+          <label>Components M:</label>
+          <input type="range" id="mSlider" min="1" max="10" value="5" oninput="updateEigenPlot()">
+          <span class="val-display" id="mVal">5</span>
+        </div>
+        <div class="slider-wrap">
+          <label>Condition number:</label>
+          <input type="range" id="condSlider" min="1" max="50" value="20" oninput="updateEigenPlot()">
+          <span class="val-display" id="condVal">20</span>
+        </div>
+      </div>
+      <div id="eigenPlot" style="height:380px;"></div>
+      <p class="info-text">PCR hard-thresholds: components with index &gt; M are completely dropped. Contrast with ridge, which applies continuous shrinkage based on eigenvalue magnitude.</p>
+    </div>
+
+    <div id="tab-shrinkage" style="display:none;">
+      <div class="controls">
+        <div class="slider-wrap">
+          <label>Ridge λ:</label>
+          <input type="range" id="lambdaSlider" min="0" max="100" value="20" oninput="updateShrinkPlot()">
+          <span class="val-display" id="lambdaVal">20</span>
+        </div>
+        <div class="slider-wrap">
+          <label>PCR M:</label>
+          <input type="range" id="mSlider2" min="1" max="10" value="5" oninput="updateShrinkPlot()">
+          <span class="val-display" id="mVal2">5</span>
+        </div>
+      </div>
+      <div id="shrinkPlot" style="height:380px;"></div>
+      <p class="info-text">Both methods shrink via eigenvalues of XᵀX. Ridge: factor \(d_j^2/(d_j^2+\lambda)\). PCR: 1 if kept, 0 if dropped.</p>
+    </div>
+
+    <div id="tab-bvtradeoff" style="display:none;">
+      <div id="bvPlot" style="height:380px;"></div>
+      <p class="info-text">As M increases, bias decreases (more signal captured) but variance increases (more directions, potentially noisy). Optimal M balances these.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Key Facts</h2>
+      <blockquote>"Principal component regression forms the derived input columns z_m = Xv_m, and then regresses y on z_1, z_2, ..., z_M for some M ≤ p."</blockquote>
+      <ul>
+        <li>Uses SVD of X: X = UDVᵀ, principal components are columns of UD</li>
+        <li>Discards low-variance directions (small eigenvalues of XᵀX)</li>
+        <li>M is a tuning parameter chosen by cross-validation</li>
+        <li>Shrinkage is discrete (hard thresholding), not continuous</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Guarantees / Properties</h2>
+      <div class="prop-row">
+        <span class="pill pill-cond">Biased</span>
+        <span class="prop-label">Unbiased</span>
+        <span class="prop-note">Biased when M &lt; p; unbiased only if M = p (= OLS)</span>
+      </div>
+      <div class="prop-row">
+        <span class="pill pill-yes">Lower Var</span>
+        <span class="prop-label">Variance Reduction</span>
+        <span class="prop-note">Drops high-variance directions from low-eigenvalue components</span>
+      </div>
+      <div class="prop-row">
+        <span class="pill pill-cond">Conditional</span>
+        <span class="prop-label">Consistent</span>
+        <span class="prop-note">Consistent when M grows with n appropriately</span>
+      </div>
+      <div class="prop-row">
+        <span class="pill pill-no">Hard</span>
+        <span class="prop-label">Smooth Shrinkage</span>
+        <span class="prop-note">Hard 0/1 threshold — not smooth like ridge</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Related Concepts</h2>
+      <span class="related-tag">Ridge Regression</span>
+      <span class="related-tag">Partial Least Squares</span>
+      <span class="related-tag">SVD</span>
+      <span class="related-tag">OLS</span>
+      <span class="related-tag">Subset Selection</span>
+      <span class="related-tag">Dimensionality Reduction</span>
+    </div>
+    <div class="card">
+      <h2>Algorithm Steps</h2>
+      <ul>
+        <li>1. Compute SVD of centered X: X = UDVᵀ</li>
+        <li>2. Form principal components z_m = Xv_m (columns of UD)</li>
+        <li>3. Choose M via cross-validation</li>
+        <li>4. OLS regression of y on z_1, ..., z_M</li>
+        <li>5. Map coefficients back to original space</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+// Generate eigenvalues with given condition number
+function makeEigenvalues(p, condNum) {
+  const ev = [];
+  for (let i = 0; i < p; i++) {
+    ev.push(Math.max(0.01, condNum * Math.exp(-i * Math.log(condNum) / (p - 1))));
+  }
+  return ev;
+}
+
+function updateEigenPlot() {
+  const M = parseInt(document.getElementById('mSlider').value);
+  const cond = parseInt(document.getElementById('condSlider').value);
+  document.getElementById('mVal').textContent = M;
+  document.getElementById('condVal').textContent = cond;
+
+  const p = 10;
+  const ev = makeEigenvalues(p, cond);
+  const colors = ev.map((_, i) => i < M ? '#58a6ff' : '#30363d');
+  const textColors = ev.map((_, i) => i < M ? '#e6edf3' : '#8b949e');
+
+  const data = [{
+    type: 'bar',
+    x: ev.map((_, i) => `PC${i+1}`),
+    y: ev,
+    marker: { color: colors },
+    textfont: { color: textColors },
+    hovertemplate: 'PC%{x}<br>Eigenvalue: %{y:.2f}<extra></extra>'
+  }];
+
+  const layout = {
+    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
+    font: { color: '#e6edf3', size: 12 },
+    xaxis: { title: 'Principal Component', gridcolor: '#21262d', color: '#8b949e' },
+    yaxis: { title: 'Eigenvalue (variance)', gridcolor: '#21262d', color: '#8b949e' },
+    shapes: [{
+      type: 'line', x0: M - 0.5, x1: M - 0.5, y0: 0, y1: 1, yref: 'paper',
+      line: { color: '#f78166', dash: 'dash', width: 2 }
+    }],
+    annotations: [{
+      x: M - 0.5, y: 1, yref: 'paper', text: 'Cutoff', showarrow: false,
+      font: { color: '#f78166', size: 11 }, xanchor: 'left', yanchor: 'top'
+    }, {
+      x: (M-1)/2, y: 1.05, yref: 'paper', text: 'Kept', showarrow: false,
+      font: { color: '#58a6ff', size: 11 }, xanchor: 'center'
+    }, {
+      x: (M + p - 1)/2, y: 1.05, yref: 'paper', text: 'Dropped', showarrow: false,
+      font: { color: '#8b949e', size: 11 }, xanchor: 'center'
+    }],
+    margin: { t: 30, r: 20, b: 60, l: 70 }
+  };
+  Plotly.react('eigenPlot', data, layout, {responsive: true, displayModeBar: false});
+}
+
+function updateShrinkPlot() {
+  const lambda = parseInt(document.getElementById('lambdaSlider').value);
+  const M = parseInt(document.getElementById('mSlider2').value);
+  document.getElementById('lambdaVal').textContent = lambda;
+  document.getElementById('mVal2').textContent = M;
+
+  const p = 10;
+  const ev = makeEigenvalues(p, 30);
+  const ridgeShrink = ev.map(d2 => d2 / (d2 + lambda));
+  const pcrShrink = ev.map((_, i) => i < M ? 1 : 0);
+  const labels = ev.map((_, i) => `PC${i+1}`);
+
+  const data = [
+    {
+      type: 'scatter', mode: 'lines+markers', name: 'Ridge',
+      x: labels, y: ridgeShrink,
+      line: { color: '#3fb950', width: 2 }, marker: { size: 8 }
+    },
+    {
+      type: 'scatter', mode: 'lines+markers', name: 'PCR',
+      x: labels, y: pcrShrink,
+      line: { color: '#58a6ff', width: 2, shape: 'hv' }, marker: { size: 8 }
+    }
+  ];
+
+  const layout = {
+    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
+    font: { color: '#e6edf3', size: 12 },
+    xaxis: { title: 'Principal Component (decreasing eigenvalue)', gridcolor: '#21262d', color: '#8b949e' },
+    yaxis: { title: 'Shrinkage Factor', range: [-0.05, 1.1], gridcolor: '#21262d', color: '#8b949e' },
+    legend: { bgcolor: '#21262d', bordercolor: '#30363d', borderwidth: 1 },
+    margin: { t: 30, r: 20, b: 60, l: 70 }
+  };
+  Plotly.react('shrinkPlot', data, layout, {responsive: true, displayModeBar: false});
+}
+
+function drawBVPlot() {
+  const Ms = Array.from({length: 10}, (_, i) => i + 1);
+  // Simulated bias and variance curves
+  const bias2 = Ms.map(m => 2.0 * Math.exp(-0.5 * m));
+  const variance = Ms.map(m => 0.05 * m);
+  const mse = Ms.map((m, i) => bias2[i] + variance[i]);
+
+  const data = [
+    { type: 'scatter', mode: 'lines+markers', name: 'Bias²', x: Ms, y: bias2, line: { color: '#f78166', width: 2 }, marker: { size: 7 } },
+    { type: 'scatter', mode: 'lines+markers', name: 'Variance', x: Ms, y: variance, line: { color: '#d2a8ff', width: 2 }, marker: { size: 7 } },
+    { type: 'scatter', mode: 'lines+markers', name: 'MSE (Bias²+Var)', x: Ms, y: mse, line: { color: '#58a6ff', width: 3 }, marker: { size: 9 } }
+  ];
+
+  const optM = Ms[mse.indexOf(Math.min(...mse))];
+  const layout = {
+    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
+    font: { color: '#e6edf3', size: 12 },
+    xaxis: { title: 'Number of Components M', gridcolor: '#21262d', color: '#8b949e', dtick: 1 },
+    yaxis: { title: 'Error', gridcolor: '#21262d', color: '#8b949e' },
+    shapes: [{ type: 'line', x0: optM, x1: optM, y0: 0, y1: 1, yref: 'paper', line: { color: '#e3b341', dash: 'dot', width: 2 } }],
+    annotations: [{ x: optM, y: 0.95, yref: 'paper', text: 'Optimal M', showarrow: false, font: { color: '#e3b341', size: 11 } }],
+    legend: { bgcolor: '#21262d', bordercolor: '#30363d', borderwidth: 1 },
+    margin: { t: 30, r: 20, b: 60, l: 70 }
+  };
+  Plotly.newPlot('bvPlot', data, layout, {responsive: true, displayModeBar: false});
+}
+
+function showTab(name) {
+  document.getElementById('tab-eigenval').style.display = name === 'eigenval' ? '' : 'none';
+  document.getElementById('tab-shrinkage').style.display = name === 'shrinkage' ? '' : 'none';
+  document.getElementById('tab-bvtradeoff').style.display = name === 'bvtradeoff' ? '' : 'none';
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['eigenval','shrinkage','bvtradeoff'][i] === name);
+  });
+  if (name === 'shrinkage') updateShrinkPlot();
+  if (name === 'bvtradeoff') drawBVPlot();
+}
+
+updateEigenPlot();
+</script>
+</body>
+</html>

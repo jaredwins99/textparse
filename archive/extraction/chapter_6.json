@@ -1,0 +1,687 @@
+{
+  "chapter": "6",
+  "sections": [
+    {
+      "number": "6.1",
+      "title": "One-Dimensional Kernel Smoothers",
+      "page_start": 210
+    },
+    {
+      "number": "6.1.1",
+      "title": "Local Linear Regression",
+      "page_start": 212
+    },
+    {
+      "number": "6.1.2",
+      "title": "Local Polynomial Regression",
+      "page_start": 215
+    },
+    {
+      "number": "6.2",
+      "title": "Selecting the Width of the Kernel",
+      "page_start": 216
+    },
+    {
+      "number": "6.3",
+      "title": "Local Regression in IRp",
+      "page_start": 218
+    },
+    {
+      "number": "6.4",
+      "title": "Structured Local Regression Models in IRp",
+      "page_start": 219
+    },
+    {
+      "number": "6.4.1",
+      "title": "Structured Kernels",
+      "page_start": 221
+    },
+    {
+      "number": "6.4.2",
+      "title": "Structured Regression Functions",
+      "page_start": 221
+    },
+    {
+      "number": "6.5",
+      "title": "Local Likelihood and Other Models",
+      "page_start": 223
+    },
+    {
+      "number": "6.6",
+      "title": "Kernel Density Estimation and Classi\ufb01cation",
+      "page_start": 226
+    },
+    {
+      "number": "6.6.1",
+      "title": "Kernel Density Estimation",
+      "page_start": 226
+    },
+    {
+      "number": "6.6.2",
+      "title": "Kernel Density Classi\ufb01cation",
+      "page_start": 228
+    },
+    {
+      "number": "6.6.3",
+      "title": "The Naive Bayes Classi\ufb01er",
+      "page_start": 228
+    },
+    {
+      "number": "6.7",
+      "title": "Radial Basis Functions and Kernels",
+      "page_start": 230
+    },
+    {
+      "number": "6.8",
+      "title": "Mixture Models for Density Estimation and",
+      "page_start": 232
+    },
+    {
+      "number": "6.9",
+      "title": "Computational Considerations",
+      "page_start": 234
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": 24004,
+      "page": 210,
+      "seq": 244,
+      "text": "In Chapter 2, we motivated the k\u2013nearest-neighbor average"
+    },
+    {
+      "id": 24006,
+      "page": 210,
+      "seq": 246,
+      "text": "as an estimate of the regression function E(Y |X = x). Here Nk(x) is the set\nof k points nearest to x in squared distance, and Ave denotes the average\n(mean). The idea is to relax the de\ufb01nition of conditional expectation, as\nillustrated in the left panel of Figure 6.1, and compute an average in a\nneighborhood of the target point. In this case we have used the 30-nearest\nneighborhood\u2014the \ufb01t at x0 is the average of the 30 pairs whose xi values\nare closest to x0. The green curve is traced out as we apply this de\ufb01nition\nat di\ufb00erent values x0. The green curve is bumpy, since \u02c6f(x) is discontinuous\nin x. As we move x0 from left to right, the k-nearest neighborhood remains\nconstant, until a point xi to the right of x0 becomes closer than the furthest\npoint xi\u2032 in the neighborhood to the left of x0, at which time xi replaces xi\u2032.\nThe average in (6.1) changes in a discrete way, leading to a discontinuous\n\u02c6f(x).\nThis discontinuity is ugly and unnecessary. Rather than give all the\npoints in the neighborhood equal weight, we can assign weights that die\no\ufb00smoothly with distance from the target point. The right panel shows\nan example of this, using the so-called Nadaraya\u2013Watson kernel-weighted"
+    },
+    {
+      "id": 24009,
+      "page": 211,
+      "seq": 2,
+      "text": "\u02c6f(x0) =\n\tN\ni=1 K\u03bb(x0, xi)yi\n\tN\ni=1 K\u03bb(x0, xi)\n,\n(6.2)"
+    },
+    {
+      "id": 24016,
+      "page": 211,
+      "seq": 9,
+      "text": "The \ufb01tted function is now continuous, and quite smooth in the right panel\nof Figure 6.1. As we move the target from left to right, points enter the\nneighborhood initially with weight zero, and then their contribution slowly\nincreases (see Exercise 6.1).\nIn the right panel we used a metric window size \u03bb = 0.2 for the kernel\n\ufb01t, which does not change as we move the target point x0, while the size\nof the 30-nearest-neighbor smoothing window adapts to the local density\nof the xi. One can, however, also use such adaptive neighborhoods with\nkernels, but we need to use a more general notation. Let h\u03bb(x0) be a width\nfunction (indexed by \u03bb) that determines the width of the neighborhood at\nx0. Then more generally we have"
+    },
+    {
+      "id": 24020,
+      "page": 211,
+      "seq": 13,
+      "text": "In (6.3), h\u03bb(x0) = \u03bb is constant. For k-nearest neighborhoods, the neigh-\nborhood size k replaces \u03bb, and we have hk(x0) = |x0 \u2212x[k]| where x[k] is\nthe kth closest xi to x0.\nThere are a number of details that one has to attend to in practice:"
+    },
+    {
+      "id": 24021,
+      "page": 211,
+      "seq": 14,
+      "text": "\u2022 The smoothing parameter \u03bb, which determines the width of the local\nneighborhood, has to be determined. Large \u03bb implies lower variance\n(averages over more observations) but higher bias (we essentially as-\nsume the true function is constant within the window)."
+    },
+    {
+      "id": 24022,
+      "page": 211,
+      "seq": 15,
+      "text": "\u2022 Metric window widths (constant h\u03bb(x)) tend to keep the bias of the\nestimate constant, but the variance is inversely proportional to the\nlocal density. Nearest-neighbor window widths exhibit the opposite\nbehavior; the variance stays constant and the absolute bias varies\ninversely with local density."
+    },
+    {
+      "id": 24023,
+      "page": 211,
+      "seq": 16,
+      "text": "\u2022 Issues arise with nearest-neighbors when there are ties in the xi. With\nmost smoothing techniques one can simply reduce the data set by\naveraging the yi at tied values of X, and supplementing these new\nobservations at the unique values of xi with an additional weight wi\n(which multiples the kernel weight)."
+    },
+    {
+      "id": 24030,
+      "page": 212,
+      "seq": 6,
+      "text": "\u2022 This leaves a more general problem to deal with: observation weights\nwi. Operationally we simply multiply them by the kernel weights be-\nfore computing the weighted average. With nearest neighborhoods, it\nis now natural to insist on neighborhoods with a total weight content\nk (relative to \t wi). In the event of over\ufb02ow (the last observation\nneeded in a neighborhood has a weight wj which causes the sum of\nweights to exceed the budget k), then fractional parts can be used."
+    },
+    {
+      "id": 24031,
+      "page": 212,
+      "seq": 7,
+      "text": "\u2022 Boundary issues arise. The metric neighborhoods tend to contain less\npoints on the boundaries, while the nearest-neighborhoods get wider."
+    },
+    {
+      "id": 24032,
+      "page": 212,
+      "seq": 8,
+      "text": "\u2022 The Epanechnikov kernel has compact support (needed when used\nwith nearest-neighbor window size). Another popular compact kernel\nis based on the tri-cube function"
+    },
+    {
+      "id": 24034,
+      "page": 212,
+      "seq": 10,
+      "text": "This is \ufb02atter on the top (like the nearest-neighbor box) and is di\ufb00er-\nentiable at the boundary of its support. The Gaussian density func-\ntion D(t) = \u03c6(t) is a popular noncompact kernel, with the standard-\ndeviation playing the role of the window size. Figure 6.2 compares\nthe three."
+    },
+    {
+      "id": 24036,
+      "page": 212,
+      "seq": 12,
+      "text": "We have progressed from the raw moving average to a smoothly varying\nlocally weighted average by using kernel weighting. The smooth kernel \ufb01t\nstill has problems, however, as exhibited in Figure 6.3 (left panel). Locally-\nweighted averages can be badly biased on the boundaries of the domain,"
+    },
+    {
+      "id": 24245,
+      "page": 213,
+      "seq": 208,
+      "text": "because of the asymmetry of the kernel in that region. By \ufb01tting straight\nlines rather than constants locally, we can remove this bias exactly to \ufb01rst\norder; see Figure 6.3 (right panel). Actually, this bias can be present in the\ninterior of the domain as well, if the X values are not equally spaced (for\nthe same reasons, but usually less severe). Again locally weighted linear\nregression will make a \ufb01rst-order correction.\nLocally weighted regression solves a separate weighted least squares prob-\nlem at each target point x0:"
+    },
+    {
+      "id": 24249,
+      "page": 213,
+      "seq": 212,
+      "text": "The estimate is then \u02c6f(x0) = \u02c6\u03b1(x0) + \u02c6\u03b2(x0)x0. Notice that although we \ufb01t\nan entire linear model to the data in the region, we only use it to evaluate\nthe \ufb01t at the single point x0.\nDe\ufb01ne the vector-valued function b(x)T = (1, x). Let B be the N \u00d7 2\nregression matrix with ith row b(xi)T , and W(x0) the N \u00d7 N diagonal\nmatrix with ith diagonal element K\u03bb(x0, xi). Then"
+    },
+    {
+      "id": 24254,
+      "page": 213,
+      "seq": 217,
+      "text": "Equation (6.8) gives an explicit expression for the local linear regression\nestimate, and (6.9) highlights the fact that the estimate is linear in the"
+    },
+    {
+      "id": 24479,
+      "page": 214,
+      "seq": 224,
+      "text": "yi (the li(x0) do not involve y). These weights li(x0) combine the weight-\ning kernel K\u03bb(x0, \u00b7) and the least squares operations, and are sometimes\nreferred to as the equivalent kernel. Figure 6.4 illustrates the e\ufb00ect of lo-\ncal linear regression on the equivalent kernel. Historically, the bias in the\nNadaraya\u2013Watson and other local average kernel methods were corrected\nby modifying the kernel. These modi\ufb01cations were based on theoretical\nasymptotic mean-square-error considerations, and besides being tedious to\nimplement, are only approximate for \ufb01nite sample sizes. Local linear re-\ngression automatically modi\ufb01es the kernel to correct the bias exactly to\n\ufb01rst order, a phenomenon dubbed as automatic kernel carpentry. Consider\nthe following expansion for E \u02c6f(x0), using the linearity of local regression\nand a series expansion of the true function f around x0,"
+    },
+    {
+      "id": 24492,
+      "page": 214,
+      "seq": 237,
+      "text": "where the remainder term R involves third- and higher-order derivatives of\nf, and is typically small under suitable smoothness assumptions. It can be"
+    },
+    {
+      "id": 24730,
+      "page": 215,
+      "seq": 237,
+      "text": "shown (Exercise 6.2) that for local linear regression, \tN\ni=1 li(x0) = 1 and\n\tN\ni=1(xi \u2212x0)li(x0) = 0. Hence the middle term equals f(x0), and since\nthe bias is E \u02c6f(x0) \u2212f(x0), we see that it depends only on quadratic and\nhigher\u2013order terms in the expansion of f."
+    },
+    {
+      "id": 24732,
+      "page": 215,
+      "seq": 239,
+      "text": "Why stop at local linear \ufb01ts? We can \ufb01t local polynomial \ufb01ts of any de-\ngree d,"
+    },
+    {
+      "id": 24744,
+      "page": 215,
+      "seq": 251,
+      "text": "with solution \u02c6f(x0) = \u02c6\u03b1(x0)+\td\nj=1 \u02c6\u03b2j(x0)xj\n0. In fact, an expansion such as\n(6.10) will tell us that the bias will only have components of degree d+1 and\nhigher (Exercise 6.2). Figure 6.5 illustrates local quadratic regression. Local\nlinear \ufb01ts tend to be biased in regions of curvature of the true function, a\nphenomenon referred to as trimming the hills and \ufb01lling the valleys. Local\nquadratic regression is generally able to correct this bias.\nThere is of course a price to be paid for this bias reduction, and that is\nincreased variance. The \ufb01t in the right panel of Figure 6.5 is slightly more\nwiggly, especially in the tails. Assuming the model yi = f(xi) + \u03b5i, with\n\u03b5i independent and identically distributed with mean zero and variance\n\u03c32, Var( \u02c6f(x0)) = \u03c32||l(x0)||2, where l(x0) is the vector of equivalent kernel\nweights at x0. It can be shown (Exercise 6.3) that ||l(x0)|| increases with d,\nand so there is a bias\u2013variance tradeo\ufb00in selecting the polynomial degree.\nFigure 6.6 illustrates these variance curves for degree zero, one and two"
+    },
+    {
+      "id": 24751,
+      "page": 216,
+      "seq": 6,
+      "text": "local polynomials. To summarize some collected wisdom on this issue:"
+    },
+    {
+      "id": 24752,
+      "page": 216,
+      "seq": 7,
+      "text": "\u2022 Local linear \ufb01ts can help bias dramatically at the boundaries at a\nmodest cost in variance. Local quadratic \ufb01ts do little at the bound-\naries for bias, but increase the variance a lot."
+    },
+    {
+      "id": 24753,
+      "page": 216,
+      "seq": 8,
+      "text": "\u2022 Local quadratic \ufb01ts tend to be most helpful in reducing bias due to\ncurvature in the interior of the domain."
+    },
+    {
+      "id": 24754,
+      "page": 216,
+      "seq": 9,
+      "text": "\u2022 Asymptotic analysis suggest that local polynomials of odd degree\ndominate those of even degree. This is largely due to the fact that\nasymptotically the MSE is dominated by boundary e\ufb00ects."
+    },
+    {
+      "id": 24755,
+      "page": 216,
+      "seq": 10,
+      "text": "While it may be helpful to tinker, and move from local linear \ufb01ts at the\nboundary to local quadratic \ufb01ts in the interior, we do not recommend such\nstrategies. Usually the application will dictate the degree of the \ufb01t. For\nexample, if we are interested in extrapolation, then the boundary is of\nmore interest, and local linear \ufb01ts are probably more reliable."
+    },
+    {
+      "id": 24757,
+      "page": 216,
+      "seq": 12,
+      "text": "In each of the kernels K\u03bb, \u03bb is a parameter that controls its width:"
+    },
+    {
+      "id": 24758,
+      "page": 216,
+      "seq": 13,
+      "text": "\u2022 For the Epanechnikov or tri-cube kernel with metric width, \u03bb is the\nradius of the support region."
+    },
+    {
+      "id": 24759,
+      "page": 216,
+      "seq": 14,
+      "text": "\u2022 For the Gaussian kernel, \u03bb is the standard deviation."
+    },
+    {
+      "id": 24760,
+      "page": 216,
+      "seq": 15,
+      "text": "\u2022 \u03bb is the number k of nearest neighbors in k-nearest neighborhoods,\noften expressed as a fraction or span k/N of the total training sample."
+    },
+    {
+      "id": 24766,
+      "page": 217,
+      "seq": 5,
+      "text": "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022\u2022\n\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022"
+    },
+    {
+      "id": 24767,
+      "page": 217,
+      "seq": 6,
+      "text": "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+    },
+    {
+      "id": 24769,
+      "page": 217,
+      "seq": 8,
+      "text": "There is a natural bias\u2013variance tradeo\ufb00as we change the width of the\naveraging window, which is most explicit for local averages:"
+    },
+    {
+      "id": 24770,
+      "page": 217,
+      "seq": 9,
+      "text": "\u2022 If the window is narrow, \u02c6f(x0) is an average of a small number of yi\nclose to x0, and its variance will be relatively large\u2014close to that of\nan individual yi. The bias will tend to be small, again because each\nof the E(yi) = f(xi) should be close to f(x0)."
+    },
+    {
+      "id": 24771,
+      "page": 217,
+      "seq": 10,
+      "text": "\u2022 If the window is wide, the variance of \u02c6f(x0) will be small relative to\nthe variance of any yi, because of the e\ufb00ects of averaging. The bias\nwill be higher, because we are now using observations xi further from\nx0, and there is no guarantee that f(xi) will be close to f(x0)."
+    },
+    {
+      "id": 24772,
+      "page": 217,
+      "seq": 11,
+      "text": "Similar arguments apply to local regression estimates, say local linear: as\nthe width goes to zero, the estimates approach a piecewise-linear function\nthat interpolates the training data1; as the width gets in\ufb01nitely large, the\n\ufb01t approaches the global linear least-squares \ufb01t to the data.\nThe discussion in Chapter 5 on selecting the regularization parameter for\nsmoothing splines applies here, and will not be repeated. Local regression\nsmoothers are linear estimators; the smoother matrix in \u02c6f = S\u03bby is built up\nfrom the equivalent kernels (6.8), and has ijth entry {S\u03bb}ij = li(xj). Leave-\none-out cross-validation is particularly simple (Exercise 6.7), as is general-\nized cross-validation, Cp (Exercise 6.10), and k-fold cross-validation. The\ne\ufb00ective degrees of freedom is again de\ufb01ned as trace(S\u03bb), and can be used\nto calibrate the amount of smoothing. Figure 6.7 compares the equivalent\nkernels for a smoothing spline and local linear regression. The local regres-\nsion smoother has a span of 40%, which results in df = trace(S\u03bb) = 5.86.\nThe smoothing spline was calibrated to have the same df, and their equiv-\nalent kernels are qualitatively quite similar."
+    },
+    {
+      "id": 24773,
+      "page": 217,
+      "seq": 12,
+      "text": "1With uniformly spaced xi; with irregularly spaced xi, the behavior can deteriorate."
+    },
+    {
+      "id": 24776,
+      "page": 218,
+      "seq": 2,
+      "text": "Kernel smoothing and local regression generalize very naturally to two or\nmore dimensions. The Nadaraya\u2013Watson kernel smoother \ufb01ts a constant\nlocally with weights supplied by a p-dimensional kernel. Local linear re-\ngression will \ufb01t a hyperplane locally in X, by weighted least squares, with\nweights supplied by a p-dimensional kernel. It is simple to implement and\nis generally preferred to the local constant \ufb01t for its superior performance\non the boundaries.\nLet b(X) be a vector of polynomial terms in X of maximum degree d.\nFor example, with d = 1 and p = 2 we get b(X) = (1, X1, X2); with d = 2\nwe get b(X) = (1, X1, X2, X2\n1, X2\n2, X1X2); and trivially with d = 0 we get\nb(X) = 1. At each x0 \u2208IRp solve"
+    },
+    {
+      "id": 24780,
+      "page": 218,
+      "seq": 6,
+      "text": "to produce the \ufb01t \u02c6f(x0) = b(x0)T \u02c6\u03b2(x0). Typically the kernel will be a radial\nfunction, such as the radial Epanechnikov or tri-cube kernel"
+    },
+    {
+      "id": 24784,
+      "page": 218,
+      "seq": 10,
+      "text": "where ||\u00b7|| is the Euclidean norm. Since the Euclidean norm depends on the\nunits in each coordinate, it makes most sense to standardize each predictor,\nfor example, to unit standard deviation, prior to smoothing.\nWhile boundary e\ufb00ects are a problem in one-dimensional smoothing,\nthey are a much bigger problem in two or higher dimensions, since the\nfraction of points on the boundary is larger. In fact, one of the manifesta-\ntions of the curse of dimensionality is that the fraction of points close to the\nboundary increases to one as the dimension grows. Directly modifying the\nkernel to accommodate two-dimensional boundaries becomes very messy,\nespecially for irregular boundaries. Local polynomial regression seamlessly\nperforms boundary correction to the desired order in any dimensions. Fig-\nure 6.8 illustrates local linear regression on some measurements from an\nastronomical study with an unusual predictor design (star-shaped). Here\nthe boundary is extremely irregular, and the \ufb01tted surface must also inter-\npolate over regions of increasing data sparsity as we approach the boundary.\nLocal regression becomes less useful in dimensions much higher than two\nor three. We have discussed in some detail the problems of dimensional-\nity, for example, in Chapter 2. It is impossible to simultaneously main-\ntain localness (\u21d2low bias) and a sizable sample in the neighborhood (\u21d2\nlow variance) as the dimension increases, without the total sample size in-\ncreasing exponentially in p. Visualization of \u02c6f(X) also becomes di\ufb03cult in\nhigher dimensions, and this is often one of the primary goals of smoothing."
+    },
+    {
+      "id": 24793,
+      "page": 219,
+      "seq": 8,
+      "text": "Although the scatter-cloud and wire-frame pictures in Figure 6.8 look at-\ntractive, it is quite di\ufb03cult to interpret the results except at a gross level.\nFrom a data analysis perspective, conditional plots are far more useful.\nFigure 6.9 shows an analysis of some environmental data with three pre-\ndictors. The trellis display here shows ozone as a function of radiation,\nconditioned on the other two variables, temperature and wind speed. How-\never, conditioning on the value of a variable really implies local to that\nvalue (as in local regression). Above each of the panels in Figure 6.9 is an\nindication of the range of values present in that panel for each of the condi-\ntioning values. In the panel itself the data subsets are displayed (response\nversus remaining variable), and a one-dimensional local linear regression is\n\ufb01t to the data. Although this is not quite the same as looking at slices of\na \ufb01tted three-dimensional surface, it is probably more useful in terms of\nunderstanding the joint behavior of the data."
+    },
+    {
+      "id": 24795,
+      "page": 219,
+      "seq": 10,
+      "text": "When the dimension to sample-size ratio is unfavorable, local regression\ndoes not help us much, unless we are willing to make some structural as-\nsumptions about the model. Much of this book is about structured regres-\nsion and classi\ufb01cation models. Here we focus on some approaches directly\nrelated to kernel methods."
+    },
+    {
+      "id": 24857,
+      "page": 221,
+      "seq": 2,
+      "text": "One line of approach is to modify the kernel. The default spherical ker-\nnel (6.13) gives equal weight to each coordinate, and so a natural default\nstrategy is to standardize each variable to unit standard deviation. A more\ngeneral approach is to use a positive semide\ufb01nite matrix A to weigh the\ndi\ufb00erent coordinates:"
+    },
+    {
+      "id": 24861,
+      "page": 221,
+      "seq": 6,
+      "text": "Entire coordinates or directions can be downgraded or omitted by imposing\nappropriate restrictions on A. For example, if A is diagonal, then we can\nincrease or decrease the in\ufb02uence of individual predictors Xj by increasing\nor decreasing Ajj. Often the predictors are many and highly correlated,\nsuch as those arising from digitized analog signals or images. The covariance\nfunction of the predictors can be used to tailor a metric A that focuses less,\nsay, on high-frequency contrasts (Exercise 6.4). Proposals have been made\nfor learning the parameters for multidimensional kernels. For example, the\nprojection-pursuit regression model discussed in Chapter 11 is of this \ufb02avor,\nwhere low-rank versions of A imply ridge functions for \u02c6f(X). More general\nmodels for A are cumbersome, and we favor instead the structured forms\nfor the regression function discussed next."
+    },
+    {
+      "id": 24863,
+      "page": 221,
+      "seq": 8,
+      "text": "We are trying to \ufb01t a regression function E(Y |X) = f(X1, X2, . . . , Xp) in\nIRp, in which every level of interaction is potentially present. It is natural\nto consider analysis-of-variance (ANOVA) decompositions of the form"
+    },
+    {
+      "id": 24867,
+      "page": 221,
+      "seq": 12,
+      "text": "and then introduce structure by eliminating some of the higher-order terms.\nAdditive models assume only main e\ufb00ect terms: f(X) = \u03b1 + \tp\nj=1 gj(Xj);\nsecond-order models will have terms with interactions of order at most\ntwo, and so on. In Chapter 9, we describe iterative back\ufb01tting algorithms\nfor \ufb01tting such low-order interaction models. In the additive model, for\nexample, if all but the kth term is assumed known, then we can estimate gk\nby local regression of Y \u2212\t\nj\u0338=k gj(Xj) on Xk. This is done for each function\nin turn, repeatedly, until convergence. The important detail is that at any\nstage, one-dimensional local regression is all that is needed. The same ideas\ncan be used to \ufb01t low-dimensional ANOVA decompositions.\nAn important special case of these structured models are the class of\nvarying coe\ufb03cient models. Suppose, for example, that we divide the p pre-\ndictors in X into a set (X1, X2, . . . , Xq) with q < p, and the remainder of"
+    },
+    {
+      "id": 24912,
+      "page": 222,
+      "seq": 44,
+      "text": "the variables we collect in the vector Z. We then assume the conditionally\nlinear model"
+    },
+    {
+      "id": 24914,
+      "page": 222,
+      "seq": 46,
+      "text": "For given Z, this is a linear model, but each of the coe\ufb03cients can vary\nwith Z. It is natural to \ufb01t such a model by locally weighted least squares:"
+    },
+    {
+      "id": 24917,
+      "page": 222,
+      "seq": 49,
+      "text": "i=1\nK\u03bb(z0, zi) (yi \u2212\u03b1(z0) \u2212x1i\u03b21(z0) \u2212\u00b7 \u00b7 \u00b7 \u2212xqi\u03b2q(z0))2 ."
+    },
+    {
+      "id": 24918,
+      "page": 222,
+      "seq": 50,
+      "text": "(6.17)\nFigure 6.10 illustrates the idea on measurements of the human aorta.\nA longstanding claim has been that the aorta thickens with age. Here we\nmodel the diameter of the aorta as a linear function of age, but allow the\ncoe\ufb03cients to vary with gender and depth down the aorta. We used a local\nregression model separately for males and females. While the aorta clearly\ndoes thicken with age at the higher regions of the aorta, the relationship\nfades with distance down the aorta. Figure 6.11 shows the intercept and\nslope as a function of depth."
+    },
+    {
+      "id": 24932,
+      "page": 223,
+      "seq": 13,
+      "text": "The concept of local regression and varying coe\ufb03cient models is extremely\nbroad: any parametric model can be made local if the \ufb01tting method ac-\ncommodates observation weights. Here are some examples:"
+    },
+    {
+      "id": 24933,
+      "page": 223,
+      "seq": 14,
+      "text": "\u2022 Associated with each observation yi is a parameter \u03b8i = \u03b8(xi) = xT\ni \u03b2\nlinear in the covariate(s) xi, and inference for \u03b2 is based on the log-\nlikelihood l(\u03b2) = \tN\ni=1 l(yi, xT\ni \u03b2). We can model \u03b8(X) more \ufb02exibly\nby using the likelihood local to x0 for inference of \u03b8(x0) = xT\n0 \u03b2(x0):"
+    },
+    {
+      "id": 24937,
+      "page": 223,
+      "seq": 18,
+      "text": "Many likelihood models, in particular the family of generalized linear\nmodels including logistic and log-linear models, involve the covariates\nin a linear fashion. Local likelihood allows a relaxation from a globally\nlinear model to one that is locally linear."
+    },
+    {
+      "id": 24939,
+      "page": 224,
+      "seq": 1,
+      "text": "\u2022 As above, except di\ufb00erent variables are associated with \u03b8 from those\nused for de\ufb01ning the local likelihood:"
+    },
+    {
+      "id": 24943,
+      "page": 224,
+      "seq": 5,
+      "text": "For example, \u03b7(x, \u03b8) = xT \u03b8 could be a linear model in x. This will \ufb01t\na varying coe\ufb03cient model \u03b8(z) by maximizing the local likelihood."
+    },
+    {
+      "id": 24944,
+      "page": 224,
+      "seq": 6,
+      "text": "\u2022 Autoregressive time series models of order k have the form yt =\n\u03b20 + \u03b21yt\u22121 + \u03b22yt\u22122 + \u00b7 \u00b7 \u00b7 + \u03b2kyt\u2212k + \u03b5t. Denoting the lag set by\nzt = (yt\u22121, yt\u22122, . . . , yt\u2212k), the model looks like a standard linear\nmodel yt = zT\nt \u03b2 + \u03b5t, and is typically \ufb01t by least squares. Fitting\nby local least squares with a kernel K(z0, zt) allows the model to\nvary according to the short-term history of the series. This is to be\ndistinguished from the more traditional dynamic linear models that\nvary by windowing time."
+    },
+    {
+      "id": 24945,
+      "page": 224,
+      "seq": 7,
+      "text": "As an illustration of local likelihood, we consider the local version of the\nmulticlass linear logistic regression model (4.36) of Chapter 4. The data\nconsist of features xi and an associated categorical response gi \u2208{1, 2, . . . , J},\nand the linear model has the form"
+    },
+    {
+      "id": 24948,
+      "page": 224,
+      "seq": 10,
+      "text": "The local log-likelihood for this J class model can be written"
+    },
+    {
+      "id": 24961,
+      "page": 224,
+      "seq": 23,
+      "text": "\u2022 we have used gi as a subscript in the \ufb01rst line to pick out the appro-\npriate numerator;"
+    },
+    {
+      "id": 24962,
+      "page": 224,
+      "seq": 24,
+      "text": "\u2022 \u03b2J0 = 0 and \u03b2J = 0 by the de\ufb01nition of the model;"
+    },
+    {
+      "id": 24963,
+      "page": 224,
+      "seq": 25,
+      "text": "\u2022 we have centered the local regressions at x0, so that the \ufb01tted poste-\nrior probabilities at x0 are simply"
+    },
+    {
+      "id": 24976,
+      "page": 225,
+      "seq": 10,
+      "text": "This model can be used for \ufb02exible multiclass classi\ufb01cation in moderately\nlow dimensions, although successes have been reported with the high-\ndimensional ZIP-code classi\ufb01cation problem. Generalized additive models\n(Chapter 9) using kernel smoothing methods are closely related, and avoid\ndimensionality problems by assuming an additive structure for the regres-\nsion function.\nAs a simple illustration we \ufb01t a two-class local linear logistic model to\nthe heart disease data of Chapter 4. Figure 6.12 shows the univariate local\nlogistic models \ufb01t to two of the risk factors (separately). This is a useful\nscreening device for detecting nonlinearities, when the data themselves have\nlittle visual information to o\ufb00er. In this case an unexpected anomaly is\nuncovered in the data, which may have gone unnoticed with traditional\nmethods.\nSince CHD is a binary indicator, we could estimate the conditional preva-\nlence Pr(G = j|x0) by simply smoothing this binary response directly with-\nout resorting to a likelihood formulation. This amounts to \ufb01tting a locally\nconstant logistic regression model (Exercise 6.5). In order to enjoy the bias-\ncorrection of local-linear smoothing, it is more natural to operate on the\nunrestricted logit scale.\nTypically with logistic regression, we compute parameter estimates as\nwell as their standard errors. This can be done locally as well, and so"
+    },
+    {
+      "id": 24983,
+      "page": 226,
+      "seq": 6,
+      "text": "we can produce, as shown in the plot, estimated pointwise standard-error\nbands about our \ufb01tted prevalence."
+    },
+    {
+      "id": 24985,
+      "page": 226,
+      "seq": 8,
+      "text": "Kernel density estimation is an unsupervised learning procedure, which\nhistorically precedes kernel regression. It also leads naturally to a simple\nfamily of procedures for nonparametric classi\ufb01cation."
+    },
+    {
+      "id": 24987,
+      "page": 226,
+      "seq": 10,
+      "text": "Suppose we have a random sample x1, . . . , xN drawn from a probability\ndensity fX(x), and we wish to estimate fX at a point x0. For simplicity we\nassume for now that X \u2208IR. Arguing as before, a natural local estimate\nhas the form\n\u02c6fX(x0) = #xi \u2208N(x0)"
+    },
+    {
+      "id": 24989,
+      "page": 226,
+      "seq": 12,
+      "text": "where N(x0) is a small metric neighborhood around x0 of width \u03bb. This\nestimate is bumpy, and the smooth Parzen estimate is preferred"
+    },
+    {
+      "id": 25004,
+      "page": 227,
+      "seq": 11,
+      "text": "because it counts observations close to x0 with weights that decrease with\ndistance from x0. In this case a popular choice for K\u03bb is the Gaussian kernel\nK\u03bb(x0, x) = \u03c6(|x \u2212x0|/\u03bb). Figure 6.13 shows a Gaussian kernel density \ufb01t\nto the sample values for systolic blood pressure for the CHD group. Letting\n\u03c6\u03bb denote the Gaussian density with mean zero and standard-deviation \u03bb,\nthen (6.22) has the form"
+    },
+    {
+      "id": 25009,
+      "page": 227,
+      "seq": 16,
+      "text": "the convolution of the sample empirical distribution \u02c6F with \u03c6\u03bb. The dis-\ntribution \u02c6F(x) puts mass 1/N at each of the observed xi, and is jumpy; in\n\u02c6fX(x) we have smoothed \u02c6F by adding independent Gaussian noise to each\nobservation xi.\nThe Parzen density estimate is the equivalent of the local average, and\nimprovements have been proposed along the lines of local regression [on the\nlog scale for densities; see Loader (1999)]. We will not pursue these here.\nIn IRp the natural generalization of the Gaussian density estimate amounts\nto using the Gaussian product kernel in (6.23),"
+    },
+    {
+      "id": 25020,
+      "page": 228,
+      "seq": 6,
+      "text": "One can use nonparametric density estimates for classi\ufb01cation in a straight-\nforward fashion using Bayes\u2019 theorem. Suppose for a J class problem we \ufb01t\nnonparametric density estimates \u02c6fj(X), j = 1, . . . , J separately in each of\nthe classes, and we also have estimates of the class priors \u02c6\u03c0j (usually the\nsample proportions). Then"
+    },
+    {
+      "id": 25021,
+      "page": 228,
+      "seq": 7,
+      "text": "\u02c6Pr(G = j|X = x0) =\n\u02c6\u03c0j \u02c6fj(x0)\n\tJ\nk=1 \u02c6\u03c0k \u02c6fk(x0)\n.\n(6.25)"
+    },
+    {
+      "id": 25025,
+      "page": 228,
+      "seq": 11,
+      "text": "This is a technique that has remained popular over the years, despite its\nname (also known as \u201cIdiot\u2019s Bayes\u201d!) It is especially appropriate when"
+    },
+    {
+      "id": 25027,
+      "page": 229,
+      "seq": 1,
+      "text": "the dimension p of the feature space is high, making density estimation\nunattractive. The naive Bayes model assumes that given a class G = j, the\nfeatures Xk are independent:"
+    },
+    {
+      "id": 25031,
+      "page": 229,
+      "seq": 5,
+      "text": "While this assumption is generally not true, it does simplify the estimation\ndramatically:"
+    },
+    {
+      "id": 25032,
+      "page": 229,
+      "seq": 6,
+      "text": "\u2022 The individual class-conditional marginal densities fjk can each be\nestimated separately using one-dimensional kernel density estimates.\nThis is in fact a generalization of the original naive Bayes procedures,\nwhich used univariate Gaussians to represent these marginals."
+    },
+    {
+      "id": 25033,
+      "page": 229,
+      "seq": 7,
+      "text": "\u2022 If a component Xj of X is discrete, then an appropriate histogram\nestimate can be used. This provides a seamless way of mixing variable\ntypes in a feature vector."
+    },
+    {
+      "id": 25034,
+      "page": 229,
+      "seq": 8,
+      "text": "Despite these rather optimistic assumptions, naive Bayes classi\ufb01ers often\noutperform far more sophisticated alternatives. The reasons are related to\nFigure 6.15: although the individual class density estimates may be biased,\nthis bias might not hurt the posterior probabilities as much, especially\nnear the decision regions. In fact, the problem may be able to withstand\nconsiderable bias for the savings in variance such a \u201cnaive\u201d assumption\nearns.\nStarting from (6.26) we can derive the logit-transform (using class J as\nthe base):"
+    },
+    {
+      "id": 25048,
+      "page": 229,
+      "seq": 22,
+      "text": "This has the form of a generalized additive model, which is described in more\ndetail in Chapter 9. The models are \ufb01t in quite di\ufb00erent ways though; their\ndi\ufb00erences are explored in Exercise 6.9. The relationship between naive\nBayes and generalized additive models is analogous to that between linear\ndiscriminant analysis and logistic regression (Section 4.4.5)."
+    },
+    {
+      "id": 25051,
+      "page": 230,
+      "seq": 2,
+      "text": "In Chapter 5, functions are represented as expansions in basis functions:\nf(x) = \tM\nj=1 \u03b2jhj(x). The art of \ufb02exible modeling using basis expansions\nconsists of picking an appropriate family of basis functions, and then con-\ntrolling the complexity of the representation by selection, regularization, or\nboth. Some of the families of basis functions have elements that are de\ufb01ned\nlocally; for example, B-splines are de\ufb01ned locally in IR. If more \ufb02exibility\nis desired in a particular region, then that region needs to be represented\nby more basis functions (which in the case of B-splines translates to more\nknots). Tensor products of IR-local basis functions deliver basis functions\nlocal in IRp. Not all basis functions are local\u2014for example, the truncated\npower bases for splines, or the sigmoidal basis functions \u03c3(\u03b10 + \u03b1x) used\nin neural-networks (see Chapter 11). The composed function f(x) can nev-\nertheless show local behavior, because of the particular signs and values\nof the coe\ufb03cients causing cancellations of global e\ufb00ects. For example, the\ntruncated power basis has an equivalent B-spline basis for the same space\nof functions; the cancellation is exact in this case.\nKernel methods achieve \ufb02exibility by \ufb01tting simple models in a region\nlocal to the target point x0. Localization is achieved via a weighting kernel\nK\u03bb, and individual observations receive weights K\u03bb(x0, xi).\nRadial basis functions combine these ideas, by treating the kernel func-\ntions K\u03bb(\u03be, x) as basis functions. This leads to the model"
+    },
+    {
+      "id": 25060,
+      "page": 230,
+      "seq": 11,
+      "text": "where each basis element is indexed by a location or prototype parameter \u03bej\nand a scale parameter \u03bbj. A popular choice for D is the standard Gaussian\ndensity function. There are several approaches to learning the parameters\n{\u03bbj, \u03bej, \u03b2j}, j = 1, . . . , M. For simplicity we will focus on least squares\nmethods for regression, and use the Gaussian kernel."
+    },
+    {
+      "id": 25061,
+      "page": 230,
+      "seq": 12,
+      "text": "\u2022 Optimize the sum-of-squares with respect to all the parameters:"
+    },
+    {
+      "id": 25076,
+      "page": 230,
+      "seq": 27,
+      "text": "(6.29)\nThis model is commonly referred to as an RBF network, an alterna-\ntive to the sigmoidal neural network discussed in Chapter 11; the \u03bej\nand \u03bbj playing the role of the weights. This criterion is nonconvex"
+    },
+    {
+      "id": 25080,
+      "page": 231,
+      "seq": 3,
+      "text": "with multiple local minima, and the algorithms for optimization are\nsimilar to those used for neural networks."
+    },
+    {
+      "id": 25081,
+      "page": 231,
+      "seq": 4,
+      "text": "\u2022 Estimate the {\u03bbj, \u03bej} separately from the \u03b2j. Given the former, the\nestimation of the latter is a simple least squares problem. Often the\nkernel parameters \u03bbj and \u03bej are chosen in an unsupervised way using\nthe X distribution alone. One of the methods is to \ufb01t a Gaussian\nmixture density model to the training xi, which provides both the\ncenters \u03bej and the scales \u03bbj. Other even more adhoc approaches use\nclustering methods to locate the prototypes \u03bej, and treat \u03bbj = \u03bb\nas a hyper-parameter. The obvious drawback of these approaches is\nthat the conditional distribution Pr(Y |X) and in particular E(Y |X)\nis having no say in where the action is concentrated. On the positive\nside, they are much simpler to implement."
+    },
+    {
+      "id": 25082,
+      "page": 231,
+      "seq": 5,
+      "text": "While it would seem attractive to reduce the parameter set and assume\na constant value for \u03bbj = \u03bb, this can have an undesirable side e\ufb00ect of\ncreating holes\u2014regions of IRp where none of the kernels has appreciable\nsupport, as illustrated in Figure 6.16 (upper panel). Renormalized radial\nbasis functions,"
+    },
+    {
+      "id": 25083,
+      "page": 231,
+      "seq": 6,
+      "text": "hj(x) =\nD(||x \u2212\u03bej||/\u03bb)\n\tM\nk=1 D(||x \u2212\u03bek||/\u03bb)\n,\n(6.30)"
+    },
+    {
+      "id": 25084,
+      "page": 231,
+      "seq": 7,
+      "text": "avoid this problem (lower panel).\nThe Nadaraya\u2013Watson kernel regression estimator (6.2) in IRp can be\nviewed as an expansion in renormalized radial basis functions,"
+    },
+    {
+      "id": 25088,
+      "page": 232,
+      "seq": 1,
+      "text": "with a basis function hi located at every observation and coe\ufb03cients yi;\nthat is, \u03bei = xi, \u02c6\u03b2i = yi, i = 1, . . . , N.\nNote the similarity between the expansion (6.31) and the solution (5.50)\non page 169 to the regularization problem induced by the kernel K. Radial\nbasis functions form the bridge between the modern \u201ckernel methods\u201d and\nlocal \ufb01tting technology."
+    },
+    {
+      "id": 25090,
+      "page": 232,
+      "seq": 3,
+      "text": "The mixture model is a useful tool for density estimation, and can be viewed\nas a kind of kernel method. The Gaussian mixture model has the form"
+    },
+    {
+      "id": 25094,
+      "page": 232,
+      "seq": 7,
+      "text": "with mixing proportions \u03b1m, \t\nm \u03b1m = 1, and each Gaussian density has\na mean \u03bcm and covariance matrix \u03a3m. In general, mixture models can use\nany component densities in place of the Gaussian in (6.32): the Gaussian\nmixture model is by far the most popular.\nThe parameters are usually \ufb01t by maximum likelihood, using the EM\nalgorithm as described in Chapter 8. Some special cases arise:"
+    },
+    {
+      "id": 25095,
+      "page": 232,
+      "seq": 8,
+      "text": "\u2022 If the covariance matrices are constrained to be scalar: \u03a3m = \u03c3mI,\nthen (6.32) has the form of a radial basis expansion."
+    },
+    {
+      "id": 25096,
+      "page": 232,
+      "seq": 9,
+      "text": "\u2022 If in addition \u03c3m = \u03c3 > 0 is \ufb01xed, and M \u2191N, then the max-\nimum likelihood estimate for (6.32) approaches the kernel density\nestimate (6.22) where \u02c6\u03b1m = 1/N and \u02c6\u03bcm = xm."
+    },
+    {
+      "id": 25097,
+      "page": 232,
+      "seq": 10,
+      "text": "Using Bayes\u2019 theorem, separate mixture densities in each class lead to \ufb02ex-\nible models for Pr(G|X); this is taken up in some detail in Chapter 12.\nFigure 6.17 shows an application of mixtures to the heart disease risk-\nfactor study. In the top row are histograms of Age for the no CHD and CHD\ngroups separately, and then combined on the right. Using the combined\ndata, we \ufb01t a two-component mixture of the form (6.32) with the (scalars)\n\u03a31 and \u03a32 not constrained to be equal. Fitting was done via the EM\nalgorithm (Chapter 8): note that the procedure does not use knowledge of\nthe CHD labels. The resulting estimates were"
+    },
+    {
+      "id": 25099,
+      "page": 232,
+      "seq": 12,
+      "text": "The component densities \u03c6(\u02c6\u03bc1, \u02c6\u03a31) and \u03c6(\u02c6\u03bc2, \u02c6\u03a32) are shown in the lower-\nleft and middle panels. The lower right panel shows these component den-\nsities (green and red) along with the estimated mixture density (blue)."
+    },
+    {
+      "id": 25129,
+      "page": 233,
+      "seq": 29,
+      "text": "The mixture model also provides an estimate of the probability that\nobservation i belongs to component m,"
+    },
+    {
+      "id": 25130,
+      "page": 233,
+      "seq": 30,
+      "text": "\u02c6rim =\n\u02c6\u03b1m\u03c6(xi; \u02c6\u03bcm, \u02c6\u03a3m)\n\tM\nk=1 \u02c6\u03b1k\u03c6(xi; \u02c6\u03bck, \u02c6\u03a3k)\n,\n(6.33)"
+    },
+    {
+      "id": 25131,
+      "page": 233,
+      "seq": 31,
+      "text": "where xi is Age in our example. Suppose we threshold each value \u02c6ri2 and\nhence de\ufb01ne \u02c6\u03b4i = I(\u02c6ri2 > 0.5). Then we can compare the classi\ufb01cation of\neach observation by CHD and the mixture model:"
+    },
+    {
+      "id": 25134,
+      "page": 233,
+      "seq": 34,
+      "text": "Although the mixture model did not use the CHD labels, it has done a fair\njob in discovering the two CHD subpopulations. Linear logistic regression,\nusing the CHD as a response, achieves the same error rate (32%) when \ufb01t to\nthese data using maximum-likelihood (Section 4.4)."
+    },
+    {
+      "id": 25137,
+      "page": 234,
+      "seq": 2,
+      "text": "Kernel and local regression and density estimation are memory-based meth-\nods: the model is the entire training data set, and the \ufb01tting is done at\nevaluation or prediction time. For many real-time applications, this can\nmake this class of methods infeasible.\nThe computational cost to \ufb01t at a single observation x0 is O(N) \ufb02ops,\nexcept in oversimpli\ufb01ed cases (such as square kernels). By comparison,\nan expansion in M basis functions costs O(M) for one evaluation, and\ntypically M \u223cO(log N). Basis function methods have an initial cost of at\nleast O(NM 2 + M 3).\nThe smoothing parameter(s) \u03bb for kernel methods are typically deter-\nmined o\ufb00-line, for example using cross-validation, at a cost of O(N 2) \ufb02ops.\nPopular implementations of local regression, such as the loess function in\nS-PLUS and R and the locfit procedure (Loader, 1999), use triangulation\nschemes to reduce the computations. They compute the \ufb01t exactly at M\ncarefully chosen locations (O(NM)), and then use blending techniques to\ninterpolate the \ufb01t elsewhere (O(M) per evaluation)."
+    },
+    {
+      "id": 25139,
+      "page": 234,
+      "seq": 4,
+      "text": "There is a vast literature on kernel methods which we will not attempt to\nsummarize. Rather we will point to a few good references that themselves\nhave extensive bibliographies. Loader (1999) gives excellent coverage of lo-\ncal regression and likelihood, and also describes state-of-the-art software\nfor \ufb01tting these models. Fan and Gijbels (1996) cover these models from\na more theoretical aspect. Hastie and Tibshirani (1990) discuss local re-\ngression in the context of additive modeling. Silverman (1986) gives a good\noverview of density estimation, as does Scott (1992)."
+    },
+    {
+      "id": 25157,
+      "page": 236,
+      "seq": 1,
+      "text": "for predicting new responses at the N input values. Show that the aver-\nage squared residual on the training data, ASR(\u03bb), is a biased estimate\n(optimistic) for PE(\u03bb), while"
+    }
+  ]
+}

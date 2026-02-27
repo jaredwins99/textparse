@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central Limit Theorem — Assumption Explorer</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2129;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --text-muted: #484f58;
+    --green: #3fb950;
+    --green-dim: #238636;
+    --yellow: #d29922;
+    --orange: #db6d28;
+    --red: #f85149;
+    --red-dim: #da3633;
+    --blue: #58a6ff;
+    --purple: #bc8cff;
+    --cyan: #39d2c0;
+    --pink: #f778ba;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .header h1 span { color: var(--blue); }
+
+  /* ── Mode Toggle ── */
+  .mode-toggle {
+    display: inline-flex;
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 3px;
+    gap: 3px;
+    border: 1px solid var(--border);
+  }
+  .mode-btn {
+    padding: 7px 18px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mode-btn.active {
+    background: var(--blue);
+    color: #fff;
+  }
+  .mode-btn:hover:not(.active) {
+    color: var(--text);
+    background: var(--surface2);
+  }
+
+  /* ── Health Bars ── */
+  .health-section {
+    padding: 18px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .health-section h2 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  .health-bars {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .health-bar-item {
+    flex: 1 1 160px;
+    min-width: 150px;
+  }
+  .health-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 5px;
+  }
+  .health-label .name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .health-label .pct {
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    min-width: 36px;
+    text-align: right;
+  }
+  .health-track {
+    height: 10px;
+    background: var(--bg);
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .health-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                background-color 0.4s;
+  }
+  .health-label .status-icon {
+    font-size: 0.7rem;
+    margin-left: 4px;
+  }
+
+  /* ── Tree Grid ── */
+  .tree-container {
+    padding: 24px;
+  }
+  .tree-grid {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 16px;
+  }
+
+  /* ── Path Column ── */
+  .path-col {
+    flex: 0 0 auto;
+    width: 210px;
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .path-col:hover { border-color: var(--text-muted); }
+
+  .path-header {
+    padding: 14px 14px 10px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+  .path-header .path-icon {
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+  }
+  .path-header .path-name {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .path-header .path-sub {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .tier-list {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* ── Tier Button ── */
+  .tier-btn {
+    position: relative;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.73rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1.35;
+  }
+  .tier-btn:hover {
+    border-color: var(--text-muted);
+    background: var(--surface2);
+  }
+  .tier-btn.active {
+    border-color: var(--blue);
+    background: rgba(56, 139, 253, 0.08);
+  }
+  .tier-btn.locked {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  .tier-btn .tier-num {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .tier-btn .tier-name {
+    font-weight: 600;
+  }
+  .tier-btn .tier-desc {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.67rem;
+    color: var(--text-dim);
+    line-height: 1.3;
+  }
+  .cite-num {
+    display: inline;
+    font-size: 0.58rem;
+    font-weight: 700;
+    color: var(--blue);
+    cursor: default;
+    vertical-align: super;
+    margin-left: 2px;
+  }
+
+  /* Severity Colors */
+  .sev-0 .tier-num { background: var(--green-dim); color: #fff; }
+  .sev-1 .tier-num { background: #2ea04370; color: var(--green); }
+  .sev-2 .tier-num { background: #9e6a0350; color: var(--yellow); }
+  .sev-3 .tier-num { background: #bd561d40; color: var(--orange); }
+  .sev-4 .tier-num { background: var(--red-dim); color: #fff; }
+
+  .sev-0.active { border-color: var(--green); background: rgba(63, 185, 80, 0.08); }
+  .sev-1.active { border-color: var(--green); background: rgba(63, 185, 80, 0.06); }
+  .sev-2.active { border-color: var(--yellow); background: rgba(210, 153, 34, 0.08); }
+  .sev-3.active { border-color: var(--orange); background: rgba(219, 109, 40, 0.08); }
+  .sev-4.active { border-color: var(--red); background: rgba(248, 81, 73, 0.08); }
+
+  /* ── Connector line between tiers ── */
+  .tier-connector {
+    width: 2px;
+    height: 6px;
+    background: var(--border);
+    margin: 0 auto;
+  }
+
+  /* ── Status Panel ── */
+  .status-panel {
+    margin: 0 24px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .status-panel h2 {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+  .status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 900px) {
+    .status-grid { grid-template-columns: 1fr; }
+  }
+  .status-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .status-card h3 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .status-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  .status-card li {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    padding: 3px 0;
+    line-height: 1.4;
+    border-bottom: 1px solid var(--border);
+  }
+  .status-card li:last-child { border-bottom: none; }
+  .status-card li .tag {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .tag-ok { background: rgba(63,185,80,0.15); color: var(--green); }
+  .tag-warn { background: rgba(210,153,34,0.15); color: var(--yellow); }
+  .tag-broken { background: rgba(248,81,73,0.15); color: var(--red); }
+  .tag-fix { background: rgba(88,166,255,0.15); color: var(--blue); }
+
+  /* ── Reset Button ── */
+  .reset-btn {
+    display: block;
+    margin: 0 auto 24px;
+    padding: 8px 24px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { color: var(--text); border-color: var(--text-muted); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .hidden { display: none !important; }
+
+  /* responsive */
+  @media (max-width: 1200px) {
+    .tree-grid { flex-wrap: wrap; justify-content: center; }
+    .path-col { width: 190px; }
+  }
+
+  .citation-footer {
+    margin: 0 24px 24px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .citation-footer h3 {
+    font-size: 0.82rem;
+    color: var(--text);
+    margin-bottom: 8px;
+    margin-top: 16px;
+  }
+  .citation-footer h3:first-child { margin-top: 0; }
+  .cite-entry {
+    padding: 2px 0;
+  }
+  .cite-entry .cn {
+    display: inline-block;
+    min-width: 20px;
+    color: var(--blue);
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Central Limit Theorem <span>— Assumption Explorer</span></h1>
+  <div class="mode-toggle">
+    <button class="mode-btn active" data-mode="individual" onclick="setMode('individual')">One Path Per Assumption</button>
+    <button class="mode-btn" data-mode="themed" onclick="setMode('themed')">Themed Paths</button>
+  </div>
+</div>
+
+<div class="health-section">
+  <h2>Guarantee Health</h2>
+  <div class="health-bars" id="healthBars"></div>
+</div>
+
+<div class="tree-container">
+  <div class="tree-grid" id="treeGrid"></div>
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset All to Tier 0</button>
+
+<div class="status-panel">
+  <h2>Diagnostic Panel</h2>
+  <div class="status-grid" id="statusGrid"></div>
+</div>
+
+<div class="citation-footer">
+  <h3>Independence</h3>
+  <div class="cite-entry"><span class="cn">[1]</span> Lindeberg-L&eacute;vy CLT &mdash; Lindeberg (1922) Math. Zeitschrift 15, 211-225</div>
+  <div class="cite-entry"><span class="cn">[2]</span> Lindeberg (1922) Math. Zeitschrift; necessity: Feller (1935)</div>
+  <div class="cite-entry"><span class="cn">[3]</span> Hoeffding &amp; Robbins (1948) Duke Math. J. 15, 773-780</div>
+  <div class="cite-entry"><span class="cn">[4]</span> Ibragimov (1962) Theory Prob. Appl.; survey: Bradley (2005) Prob. Surveys</div>
+  <div class="cite-entry"><span class="cn">[5]</span> Fractional Gaussian noise, Hurst (1951); Rosenblatt (1961)</div>
+
+  <h3>Moment Conditions</h3>
+  <div class="cite-entry"><span class="cn">[6]</span> Stability of Gaussian family under convolution &mdash; elementary</div>
+  <div class="cite-entry"><span class="cn">[7]</span> Berry (1941) Trans. AMS; Esseen (1942); best constant C &lt; 0.4748: Shevtsova (2011)</div>
+  <div class="cite-entry"><span class="cn">[8]</span> Berry-Esseen: error &le; C&middot;&rho;/(&sigma;&sup3;&radic;n) where &rho; = E|X|&sup3; &mdash; Berry (1941)</div>
+  <div class="cite-entry"><span class="cn">[9]</span> Gnedenko &amp; Kolmogorov (1954) Limit Distributions for Sums of Independent RVs</div>
+  <div class="cite-entry"><span class="cn">[10]</span> Cauchy distribution: X&#772;&#8345; ~&#7496; X&#8321; &mdash; standard result; median-based methods: Rousselet, Pernet &amp; Wilcox (2021) Adv. Methods Pract. Psych. Sci.</div>
+
+  <h3>Sample Size</h3>
+  <div class="cite-entry"><span class="cn">[11]</span> Asymptotic theory &mdash; all CLT variants are statements about n &rarr; &infin;</div>
+  <div class="cite-entry"><span class="cn">[12]</span> Berry-Esseen: max CDF error &le; 0.4748&middot;&rho;/(&sigma;&sup3;&middot;10) &asymp; 0.047 for symmetric</div>
+  <div class="cite-entry"><span class="cn">[13]</span> Rule of thumb; formal backing: Berry-Esseen + skewness correction</div>
+  <div class="cite-entry"><span class="cn">[14]</span> Student (1908) Biometrika &mdash; t-distribution for small-sample Gaussian case</div>
+  <div class="cite-entry"><span class="cn">[15]</span> Exact methods preferred: Fisher exact, Wilcoxon &mdash; see Rousselet, Pernet &amp; Wilcox (2021) Adv. Methods Pract. Psych. Sci.</div>
+
+  <h3>Identical Distribution</h3>
+  <div class="cite-entry"><span class="cn">[16]</span> Classical CLT requires iid &mdash; Lindeberg (1922) Math. Zeitschrift 15, 211-225</div>
+  <div class="cite-entry"><span class="cn">[17]</span> Lindeberg (1922); Feller (1935) showed condition is also necessary</div>
+  <div class="cite-entry"><span class="cn">[18]</span> Lyapunov (1901) M&eacute;m. Acad. Imp. Sci. St.-P&eacute;tersbourg</div>
+  <div class="cite-entry"><span class="cn">[19]</span> Feller (1935) &mdash; Lindeberg condition is necessary for CLT with non-identical vars</div>
+  <div class="cite-entry"><span class="cn">[20]</span> Lindeberg condition must be verified case-by-case &mdash; Billingsley (1995) Probability and Measure</div>
+
+  <h3>Themed: Distribution Quality</h3>
+  <div class="cite-entry"><span class="cn">[21]</span> Exact normality by stability under convolution</div>
+  <div class="cite-entry"><span class="cn">[22]</span> Berry-Esseen (1941/42)</div>
+  <div class="cite-entry"><span class="cn">[23]</span> Lindeberg (1922); Lyapunov (1901)</div>
+  <div class="cite-entry"><span class="cn">[24]</span> Slow Berry-Esseen convergence &mdash; need n &gt;&gt; 1000 for good approximation</div>
+  <div class="cite-entry"><span class="cn">[25]</span> Generalized CLT: &alpha;-stable limit &mdash; Gnedenko &amp; Kolmogorov (1954)</div>
+
+  <h3>Themed: Dependence Structure</h3>
+  <div class="cite-entry"><span class="cn">[26]</span> Classical CLT &mdash; independence is sufficient</div>
+  <div class="cite-entry"><span class="cn">[27]</span> Hoeffding &amp; Robbins (1948)</div>
+  <div class="cite-entry"><span class="cn">[28]</span> Ibragimov (1962); HAC: Newey &amp; West (1987)</div>
+  <div class="cite-entry"><span class="cn">[29]</span> Rate degrades to n^(1&minus;H); Taqqu (1975)</div>
+  <div class="cite-entry"><span class="cn">[30]</span> n copies of same X: sum is just nX, never Gaussian</div>
+
+  <h3>Themed: Sample Regime</h3>
+  <div class="cite-entry"><span class="cn">[31]</span> Asymptotic theory &mdash; all CLT variants are statements about n &rarr; &infin;</div>
+  <div class="cite-entry"><span class="cn">[32]</span> Berry-Esseen: max CDF error &le; 0.4748&middot;&rho;/(&sigma;&sup3;&middot;10) &asymp; 0.047 for symmetric</div>
+  <div class="cite-entry"><span class="cn">[33]</span> Rule of thumb; formal backing: Berry-Esseen + skewness correction</div>
+  <div class="cite-entry"><span class="cn">[34]</span> Student (1908) Biometrika &mdash; t-distribution for small-sample Gaussian case</div>
+  <div class="cite-entry"><span class="cn">[35]</span> Exact methods preferred: Fisher exact, Wilcoxon &mdash; Rousselet, Pernet &amp; Wilcox (2021) Adv. Methods Pract. Psych. Sci.</div>
+</div>
+
+<script>
+// ────────────────────────────────────────
+// DATA
+// ────────────────────────────────────────
+
+const GUARANTEES = [
+  { id: 'normality',     name: 'Normal Limit',       formula: 'S\u2099 \u2192\u1D48 N(0,1)' },
+  { id: 'rate',          name: 'Convergence Rate',    formula: 'O(1/\u221An) Berry-Esseen' },
+  { id: 'variance_est',  name: 'Variance Estimation', formula: '\u03C3\u0302\u00B2 \u2192 \u03C3\u00B2' },
+  { id: 'ci_coverage',   name: 'CI Coverage',         formula: 'P(\u03BC \u2208 CI) \u2248 1\u2212\u03B1' },
+  { id: 'test_validity', name: 'Test Validity',       formula: 'Size \u2248 \u03B1' },
+];
+
+// Individual mode paths
+const INDIVIDUAL_PATHS = [
+  {
+    id: 'independence', icon: '\uD83D\uDD17', name: 'Independence', sub: 'Structure of dependence',
+    color: '--blue',
+    tiers: [
+      {
+        name: 'iid',
+        desc: 'Independent and identically distributed. Classical CLT holds in full.',
+        effects: { normality:100, rate:100, variance_est:100, ci_coverage:100, test_validity:100 },
+        cite: 1
+      },
+      {
+        name: 'Independent, not identical',
+        desc: 'Lindeberg CLT applies if no single variable dominates the sum. Identical distribution not required.',
+        effects: { normality:100, rate:90, variance_est:80, ci_coverage:85, test_validity:85 },
+        cite: 2
+      },
+      {
+        name: 'm-dependent',
+        desc: 'Each X\u1D62 depends only on its m nearest neighbors. CLT holds with adjusted (long-run) variance.',
+        effects: { normality:100, rate:85, variance_est:60, ci_coverage:70, test_validity:70 },
+        cite: 3
+      },
+      {
+        name: 'Weakly dependent (\u03B1-mixing)',
+        desc: 'Dependence decays with lag. CLT holds if mixing coefficients decay fast enough. Need HAC variance estimators.',
+        effects: { normality:90, rate:65, variance_est:45, ci_coverage:55, test_validity:55 },
+        cite: 4
+      },
+      {
+        name: 'Long-range / strong dependence',
+        desc: 'Autocovariances not summable. Convergence rate degrades to n^(1\u2212H). Limit may be non-Gaussian (Rosenblatt distribution).',
+        effects: { normality:25, rate:15, variance_est:10, ci_coverage:12, test_validity:10 },
+        cite: 5
+      },
+    ]
+  },
+  {
+    id: 'moments', icon: '\uD83D\uDCCA', name: 'Moment Conditions', sub: 'Tail behavior & variance',
+    color: '--purple',
+    tiers: [
+      {
+        name: 'Gaussian',
+        desc: 'X\u1D62 are Gaussian. Sum is exactly normal for any n \u2014 no approximation needed.',
+        effects: { normality:100, rate:100, variance_est:100, ci_coverage:100, test_validity:100 },
+        cite: 6
+      },
+      {
+        name: 'Finite variance, light tails',
+        desc: 'Classical CLT. Berry-Esseen gives O(1/\u221An) convergence. Fast and reliable.',
+        effects: { normality:100, rate:100, variance_est:95, ci_coverage:95, test_validity:95 },
+        cite: 7
+      },
+      {
+        name: 'Finite variance, heavy tails',
+        desc: 'CLT holds but convergence is SLOW. E|X|\u00B3/\u03C3\u00B3 is large \u2192 Berry-Esseen bound is loose. Need much larger n.',
+        effects: { normality:100, rate:60, variance_est:75, ci_coverage:60, test_validity:55 },
+        cite: 8
+      },
+      {
+        name: 'Infinite variance, finite mean (1 < \u03B1 < 2)',
+        desc: 'Classical CLT FAILS. Generalized CLT: sum converges to \u03B1-stable distribution, NOT Gaussian. Scaling is n^(1/\u03B1), not n^(1/2).',
+        effects: { normality:10, rate:15, variance_est:5, ci_coverage:8, test_validity:5 },
+        cite: 9
+      },
+      {
+        name: 'No finite mean (Cauchy-like, \u03B1 \u2264 1)',
+        desc: 'CLT completely fails. Sample mean does not converge. For Cauchy, X\u0304\u2099 has the SAME distribution as a single X.',
+        effects: { normality:0, rate:0, variance_est:0, ci_coverage:0, test_validity:0 },
+        cite: 10
+      },
+    ]
+  },
+  {
+    id: 'sample-size', icon: '\uD83D\uDCD0', name: 'Sample Size', sub: 'Finite-n quality',
+    color: '--green',
+    tiers: [
+      {
+        name: 'n \u2192 \u221E (asymptotic)',
+        desc: 'Guaranteed by theory. CLT is a limit statement.',
+        effects: { normality:100, rate:100, variance_est:100, ci_coverage:100, test_validity:100 },
+        cite: 11
+      },
+      {
+        name: 'n > 100',
+        desc: 'Excellent normal approximation for virtually all finite-variance distributions.',
+        effects: { normality:100, rate:95, variance_est:95, ci_coverage:95, test_validity:95 },
+        cite: 12
+      },
+      {
+        name: '30 < n < 100',
+        desc: 'Good for symmetric distributions. Skewed distributions may need larger n. The classic \u2018n \u2265 30\u2019 rule of thumb.',
+        effects: { normality:95, rate:80, variance_est:80, ci_coverage:78, test_validity:75 },
+        cite: 13
+      },
+      {
+        name: '10 < n < 30',
+        desc: 'Rough approximation. Quality depends heavily on underlying distribution shape. Consider t-distribution or bootstrap.',
+        effects: { normality:80, rate:55, variance_est:60, ci_coverage:55, test_validity:50 },
+        cite: 14
+      },
+      {
+        name: 'n < 10',
+        desc: 'Normal approximation poor for non-Gaussian data. Use exact tests, permutation tests, or bootstrap.',
+        effects: { normality:60, rate:30, variance_est:40, ci_coverage:35, test_validity:30 },
+        cite: 15
+      },
+    ]
+  },
+  {
+    id: 'identical', icon: '\uD83C\uDFB2', name: 'Identical Distribution', sub: 'Homogeneity of summands',
+    color: '--cyan',
+    tiers: [
+      {
+        name: 'Identically distributed',
+        desc: 'All X\u1D62 from same distribution. Classical CLT.',
+        effects: { normality:100, rate:100, variance_est:100, ci_coverage:100, test_validity:100 },
+        cite: 16
+      },
+      {
+        name: 'Same mean & variance, different shape',
+        desc: 'Lindeberg CLT works. Distribution shapes don\u2019t matter if Lindeberg condition holds.',
+        effects: { normality:100, rate:90, variance_est:85, ci_coverage:88, test_validity:88 },
+        cite: 17
+      },
+      {
+        name: 'Different variances (bounded)',
+        desc: 'Lyapunov CLT. Must normalize by total variance s\u00B2\u2099 = \u03A3\u03C3\u00B2\u1D62, not n\u00B7\u03C3\u00B2.',
+        effects: { normality:100, rate:80, variance_est:65, ci_coverage:70, test_validity:70 },
+        cite: 18
+      },
+      {
+        name: 'Variances growing unboundedly',
+        desc: 'Lindeberg condition may fail if one variable\u2019s variance dominates. CLT requires careful case-by-case verification.',
+        effects: { normality:70, rate:45, variance_est:35, ci_coverage:40, test_validity:35 },
+        cite: 19
+      },
+      {
+        name: 'Arbitrarily different distributions',
+        desc: 'No general guarantee. Must verify Lindeberg condition for the specific sequence. Meta-analysis nightmare.',
+        effects: { normality:40, rate:20, variance_est:20, ci_coverage:25, test_validity:20 },
+        cite: 20
+      },
+    ]
+  },
+];
+
+// Themed mode paths
+const THEMED_PATHS = [
+  {
+    id: 'dist-quality', icon: '\uD83C\uDF00', name: 'Distribution Quality', sub: 'Tails, variance & identicalness',
+    color: '--purple',
+    tiers: [
+      {
+        name: 'iid Gaussian',
+        desc: 'All guarantees hold exactly by convolution stability.',
+        effects: { normality:100, rate:100, variance_est:100, ci_coverage:100, test_validity:100 },
+        cite: 21
+      },
+      {
+        name: 'iid, finite variance, light tails',
+        desc: 'Classical CLT. Berry-Esseen gives fast convergence.',
+        effects: { normality:100, rate:100, variance_est:95, ci_coverage:95, test_validity:95 },
+        cite: 22
+      },
+      {
+        name: 'Independent, non-identical, finite var',
+        desc: 'Lindeberg / Lyapunov CLT applies. Need correct normalization.',
+        effects: { normality:100, rate:85, variance_est:75, ci_coverage:78, test_validity:78 },
+        cite: 23
+      },
+      {
+        name: 'Heavy tails, finite variance',
+        desc: 'CLT holds but convergence extremely slow. n >> 1000 may be needed.',
+        effects: { normality:100, rate:55, variance_est:65, ci_coverage:55, test_validity:50 },
+        cite: 24
+      },
+      {
+        name: 'Infinite variance (\u03B1-stable domain)',
+        desc: 'Classical CLT fails entirely. Limit is \u03B1-stable, not Gaussian.',
+        effects: { normality:5, rate:5, variance_est:0, ci_coverage:3, test_validity:3 },
+        cite: 25
+      },
+    ]
+  },
+  {
+    id: 'dep-structure', icon: '\uD83D\uDD17', name: 'Dependence Structure', sub: 'Correlation & mixing',
+    color: '--blue',
+    tiers: [
+      {
+        name: 'Independent',
+        desc: 'Classical CLT in full. No correction needed.',
+        effects: { normality:100, rate:100, variance_est:100, ci_coverage:100, test_validity:100 },
+        cite: 26
+      },
+      {
+        name: 'm-dependent',
+        desc: 'CLT holds. Must estimate long-run variance, not just sample variance.',
+        effects: { normality:100, rate:88, variance_est:60, ci_coverage:68, test_validity:68 },
+        cite: 27
+      },
+      {
+        name: '\u03B1-mixing (weak dependence)',
+        desc: 'CLT holds under sufficient mixing rate. HAC variance estimation required.',
+        effects: { normality:95, rate:70, variance_est:45, ci_coverage:55, test_validity:55 },
+        cite: 28
+      },
+      {
+        name: 'Long-range dependent',
+        desc: 'Convergence rate degrades to n^(1\u2212H). Limit may be Rosenblatt, not Gaussian.',
+        effects: { normality:50, rate:25, variance_est:15, ci_coverage:20, test_validity:18 },
+        cite: 29
+      },
+      {
+        name: 'Adversarial / perfect dependence',
+        desc: 'n copies of same X: sum is just nX, never Gaussian. CLT fails completely.',
+        effects: { normality:5, rate:0, variance_est:0, ci_coverage:3, test_validity:3 },
+        cite: 30
+      },
+    ]
+  },
+  {
+    id: 'sample-regime', icon: '\u2699\uFE0F', name: 'Sample Regime', sub: 'Finite-n approximation quality',
+    color: '--green',
+    tiers: [
+      {
+        name: 'n \u2192 \u221E (asymptotic)',
+        desc: 'Guaranteed by theory. CLT is a limit statement.',
+        effects: { normality:100, rate:100, variance_est:100, ci_coverage:100, test_validity:100 },
+        cite: 31
+      },
+      {
+        name: 'n > 100',
+        desc: 'Excellent normal approximation for virtually all finite-variance distributions.',
+        effects: { normality:100, rate:95, variance_est:95, ci_coverage:95, test_validity:95 },
+        cite: 32
+      },
+      {
+        name: '30 < n < 100',
+        desc: 'Good for symmetric distributions. Skewed distributions may need larger n.',
+        effects: { normality:95, rate:80, variance_est:80, ci_coverage:78, test_validity:75 },
+        cite: 33
+      },
+      {
+        name: '10 < n < 30',
+        desc: 'Rough approximation. Consider t-distribution or bootstrap.',
+        effects: { normality:80, rate:55, variance_est:60, ci_coverage:55, test_validity:50 },
+        cite: 34
+      },
+      {
+        name: 'n < 10',
+        desc: 'Normal approximation poor for non-Gaussian data. Use exact or permutation tests.',
+        effects: { normality:60, rate:30, variance_est:40, ci_coverage:35, test_validity:30 },
+        cite: 35
+      },
+    ]
+  },
+];
+
+// ────────────────────────────────────────
+// STATE
+// ────────────────────────────────────────
+let mode = 'individual'; // 'individual' | 'themed'
+let activeTiers = {}; // pathId -> tierIndex
+
+function getPaths() {
+  return mode === 'individual' ? INDIVIDUAL_PATHS : THEMED_PATHS;
+}
+
+function initState() {
+  activeTiers = {};
+  getPaths().forEach(p => activeTiers[p.id] = 0);
+}
+
+// ────────────────────────────────────────
+// HEALTH CALCULATION
+// ────────────────────────────────────────
+function computeHealth() {
+  const paths = getPaths();
+  const health = {};
+  GUARANTEES.forEach(g => {
+    let vals = [];
+    paths.forEach(p => {
+      const tier = activeTiers[p.id] || 0;
+      vals.push(p.tiers[tier].effects[g.id]);
+    });
+    const min = Math.min(...vals);
+    const avg = vals.reduce((a,b) => a+b, 0) / vals.length;
+    let base = 0.6 * min + 0.4 * avg;
+
+    // Cross-effect penalties
+    const tierOf = id => activeTiers[id] || 0;
+
+    if (mode === 'individual') {
+      // Heavy tails + small n: rate and ci_coverage penalty
+      if (tierOf('moments') >= 2 && tierOf('sample-size') >= 3) {
+        if (g.id === 'rate') base *= 0.6;
+        if (g.id === 'ci_coverage') base *= 0.6;
+      }
+      // Dependence + non-identical: variance estimation penalty
+      if (tierOf('independence') >= 2 && tierOf('identical') >= 2) {
+        if (g.id === 'variance_est') base *= 0.65;
+      }
+      // Strong dependence + infinite variance: fatal
+      if (tierOf('independence') >= 4 && tierOf('moments') >= 3) {
+        base = 0;
+      }
+    }
+
+    health[g.id] = Math.max(0, Math.min(100, Math.round(base)));
+  });
+  return health;
+}
+
+function healthColor(pct) {
+  if (pct >= 80) return 'var(--green)';
+  if (pct >= 60) return 'var(--yellow)';
+  if (pct >= 35) return 'var(--orange)';
+  return 'var(--red)';
+}
+
+function healthIcon(pct) {
+  if (pct >= 80) return '\u2713';
+  if (pct >= 50) return '\u25B3';
+  if (pct >= 20) return '\u2717';
+  return '\u2620';
+}
+
+// ────────────────────────────────────────
+// RENDER
+// ────────────────────────────────────────
+
+function renderHealthBars() {
+  const container = document.getElementById('healthBars');
+  const health = computeHealth();
+  container.innerHTML = GUARANTEES.map(g => {
+    const v = health[g.id];
+    const col = healthColor(v);
+    const ico = healthIcon(v);
+    return `
+      <div class="health-bar-item">
+        <div class="health-label">
+          <span class="name">${g.name}</span>
+          <span class="pct" style="color:${col}">
+            <span class="status-icon">${ico}</span>
+            ${v}%
+          </span>
+        </div>
+        <div class="health-track">
+          <div class="health-fill" style="width:${v}%;background:${col}"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderTree() {
+  const grid = document.getElementById('treeGrid');
+  const paths = getPaths();
+  grid.innerHTML = paths.map(path => {
+    const activeTier = activeTiers[path.id] || 0;
+    const tiersHTML = path.tiers.map((tier, i) => {
+      const isActive = i === activeTier;
+      const isLocked = i > activeTier + 1;
+      const sevClass = `sev-${i}`;
+      const activeClass = isActive ? 'active' : '';
+      const lockedClass = isLocked ? 'locked' : '';
+      const connector = i < path.tiers.length - 1 ? '<div class="tier-connector"></div>' : '';
+      return `
+        <button class="tier-btn ${sevClass} ${activeClass} ${lockedClass}"
+                onclick="selectTier('${path.id}', ${i})"
+                ${isLocked ? 'disabled' : ''}>
+          <span class="tier-num">${i}</span>
+          <span class="tier-name">${tier.name}</span>${tier.cite ? '<sup class="cite-num">' + tier.cite + '</sup>' : ''}
+          <span class="tier-desc">${tier.desc}</span>
+        </button>
+        ${connector}
+      `;
+    }).join('');
+
+    return `
+      <div class="path-col">
+        <div class="path-header">
+          <div class="path-icon">${path.icon}</div>
+          <div class="path-name">${path.name}</div>
+          <div class="path-sub">${path.sub}</div>
+        </div>
+        <div class="tier-list">
+          ${tiersHTML}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderStatusPanel() {
+  const container = document.getElementById('statusGrid');
+  const health = computeHealth();
+
+  const surviving = GUARANTEES.filter(g => health[g.id] >= 60);
+  const broken    = GUARANTEES.filter(g => health[g.id] < 35);
+  const shaky     = GUARANTEES.filter(g => health[g.id] >= 35 && health[g.id] < 60);
+
+  const fixes = [];
+  const tierOf = id => activeTiers[id] || 0;
+
+  if (mode === 'individual') {
+    if (tierOf('moments') >= 2) fixes.push({ issue: 'Slow convergence', fix: 'Increase sample size; use bootstrap CIs' });
+    if (tierOf('moments') >= 3) fixes.push({ issue: 'Infinite variance', fix: 'Use median-based methods or \u03B1-stable inference' });
+    if (tierOf('moments') >= 4) fixes.push({ issue: 'No finite mean', fix: 'Abandon CLT entirely. Use median, MAD, or nonparametric methods' });
+    if (tierOf('independence') >= 2) fixes.push({ issue: 'm-dependence', fix: 'Estimate long-run variance (HAC / Newey-West)' });
+    if (tierOf('independence') >= 3) fixes.push({ issue: 'Weak dependence', fix: 'Block bootstrap; HAC variance estimation' });
+    if (tierOf('independence') >= 4) fixes.push({ issue: 'Strong dependence', fix: 'Subsampling; specialized long-memory inference' });
+    if (tierOf('sample-size') >= 2) fixes.push({ issue: 'Moderate n', fix: 'Use t-distribution instead of z; consider bootstrap' });
+    if (tierOf('sample-size') >= 3) fixes.push({ issue: 'Small n', fix: 'Exact tests (permutation, Fisher exact); bootstrap' });
+    if (tierOf('sample-size') >= 4) fixes.push({ issue: 'Tiny n', fix: 'Nonparametric methods: Wilcoxon, sign test, exact binomial' });
+    if (tierOf('identical') >= 2) fixes.push({ issue: 'Heterogeneous variances', fix: 'Normalize by total variance s\u00B2\u2099 = \u03A3\u03C3\u00B2\u1D62' });
+    if (tierOf('identical') >= 3) fixes.push({ issue: 'Growing variances', fix: 'Check Lindeberg condition; consider truncation' });
+    if (tierOf('moments') >= 2 && tierOf('sample-size') >= 3) fixes.push({ issue: 'Heavy tails + small n', fix: 'Bootstrap with many resamples (\u226510,000)' });
+    if (tierOf('independence') >= 3 && tierOf('moments') >= 2) fixes.push({ issue: 'Dependence + heavy tails', fix: 'Dependent wild bootstrap' });
+  } else {
+    if (tierOf('dist-quality') >= 2) fixes.push({ issue: 'Non-identical distributions', fix: 'Verify Lindeberg condition; use Lyapunov normalization' });
+    if (tierOf('dist-quality') >= 3) fixes.push({ issue: 'Heavy tails', fix: 'Very large n required; use bootstrap CIs' });
+    if (tierOf('dist-quality') >= 4) fixes.push({ issue: 'Infinite variance', fix: 'Use \u03B1-stable inference or median-based methods' });
+    if (tierOf('dep-structure') >= 1) fixes.push({ issue: 'm-dependence', fix: 'Long-run variance estimation (HAC / Newey-West)' });
+    if (tierOf('dep-structure') >= 2) fixes.push({ issue: 'Weak dependence', fix: 'Block bootstrap; HAC variance estimation' });
+    if (tierOf('dep-structure') >= 3) fixes.push({ issue: 'Long-range dependence', fix: 'Subsampling; specialized long-memory inference' });
+    if (tierOf('dep-structure') >= 4) fixes.push({ issue: 'Perfect dependence', fix: 'CLT inapplicable; rethink data collection' });
+    if (tierOf('sample-regime') >= 2) fixes.push({ issue: 'Moderate n', fix: 'Use t-distribution instead of z; consider bootstrap' });
+    if (tierOf('sample-regime') >= 3) fixes.push({ issue: 'Small n', fix: 'Exact tests (permutation, Fisher exact); bootstrap' });
+    if (tierOf('sample-regime') >= 4) fixes.push({ issue: 'Tiny n', fix: 'Nonparametric: Wilcoxon, sign test, exact binomial' });
+  }
+
+  const survivesHTML = surviving.length > 0
+    ? surviving.map(g => `<li><span class="tag tag-ok">OK</span> ${g.name} (${health[g.id]}%)</li>`).join('')
+    : '<li style="color:var(--red)">No guarantees above 60%</li>';
+
+  const shakyHTML = shaky.length > 0
+    ? shaky.map(g => `<li><span class="tag tag-warn">WARN</span> ${g.name} (${health[g.id]}%)</li>`).join('')
+    : '<li style="color:var(--text-muted)">None</li>';
+
+  const brokenHTML = broken.length > 0
+    ? broken.map(g => `<li><span class="tag tag-broken">BROKEN</span> ${g.name} (${health[g.id]}%)</li>`).join('')
+    : '<li style="color:var(--green)">None broken!</li>';
+
+  const fixesHTML = fixes.length > 0
+    ? fixes.map(f => `<li><span class="tag tag-fix">FIX</span> <strong>${f.issue}:</strong> ${f.fix}</li>`).join('')
+    : '<li style="color:var(--green)">No fixes needed \u2014 all assumptions hold</li>';
+
+  container.innerHTML = `
+    <div class="status-card">
+      <h3 style="color:var(--green)">\u2713 What Survives</h3>
+      <ul>${survivesHTML}</ul>
+      <h3 style="color:var(--yellow);margin-top:10px">\u25B3 Shaky</h3>
+      <ul>${shakyHTML}</ul>
+    </div>
+    <div class="status-card">
+      <h3 style="color:var(--red)">\u2717 What's Broken</h3>
+      <ul>${brokenHTML}</ul>
+    </div>
+    <div class="status-card">
+      <h3 style="color:var(--blue)">\uD83D\uDD27 Suggested Fixes</h3>
+      <ul>${fixesHTML}</ul>
+    </div>
+  `;
+}
+
+function renderAll() {
+  renderHealthBars();
+  renderTree();
+  renderStatusPanel();
+}
+
+// ────────────────────────────────────────
+// INTERACTIONS
+// ────────────────────────────────────────
+
+function selectTier(pathId, tierIndex) {
+  const current = activeTiers[pathId] || 0;
+  if (tierIndex <= current + 1) {
+    activeTiers[pathId] = tierIndex;
+    renderAll();
+  }
+}
+
+function setMode(newMode) {
+  mode = newMode;
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === newMode);
+  });
+  initState();
+  renderAll();
+}
+
+function resetAll() {
+  initState();
+  renderAll();
+}
+
+// ────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────
+initState();
+renderAll();
+</script>
+</body>
+</html>

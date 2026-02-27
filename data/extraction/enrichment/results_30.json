@@ -1,0 +1,934 @@
+[
+  {
+    "concept_id": 597,
+    "concept_name": "bet on sparsity principle",
+    "facts": [
+      {
+        "fact_text": "Use a procedure that does well in sparse problems, since no procedure does well in dense problems.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47905,
+        "page_number": 629
+      },
+      {
+        "fact_text": "In other words, use of the L1 penalty follows what we call the \u201cbet on sparsity\u201d principle for high-dimensional problems:",
+        "fact_type": "definition",
+        "importance_rank": 2,
+        "paragraph_id": 47904,
+        "page_number": 629
+      },
+      {
+        "fact_text": "L1 penalty is better suited to sparse situations, where there are few basis functions with nonzero coefficients (among all possible choices).",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 47904,
+        "page_number": 629
+      },
+      {
+        "fact_text": "Note however that in the dense scenario, although the L2 penalty is best, neither method does very well since there is too little data from which to estimate such a large number of nonzero coefficients. This is the curse of dimensionality taking its toll. In a sparse setting, we can potentially do well with the L1 penalty, since the number of nonzero coefficients is small. The L2 penalty fails again.",
+        "fact_type": "comparison",
+        "importance_rank": 4,
+        "paragraph_id": 47904,
+        "page_number": 629
+      },
+      {
+        "fact_text": "\u2022 The notion of sparse versus dense is relative to the size of the training data set and/or the noise-to-signal ratio (NSR). Larger training sets allow us to estimate coefficients with smaller standard errors. Likewise in situations with small NSR, we can identify more nonzero coefficients with a given sample size than in situations where the NSR is larger.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 47908,
+        "page_number": 629
+      },
+      {
+        "fact_text": "\u2022 For any given application, the degree of sparseness/denseness depends on the unknown true target function, and the chosen dictionary T .",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 47907,
+        "page_number": 629
+      },
+      {
+        "fact_text": "\u2022 The size of the dictionary plays a role as well. Increasing the size of the dictionary may lead to a sparser representation for our function, but the search problem becomes more difficult leading to higher variance.",
+        "fact_type": "property",
+        "importance_rank": 7,
+        "paragraph_id": 47909,
+        "page_number": 629
+      }
+    ]
+  },
+  {
+    "concept_id": 598,
+    "concept_name": "monotone lasso",
+    "facts": [
+      {
+        "fact_text": "Hastie et al. (2007) show that this infinitesimal forward stagewise algorithm (FS0) fits a monotone version of the lasso, which optimally reduces at each step the loss function for a given increase in the arc length of the coefficient path (see Sections 16.2.3 and 3.8.1).",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 47900,
+        "page_number": 628
+      },
+      {
+        "fact_text": "Efron et al. (2004) make the connections more precise, by characterizing the exact solution paths in the \u03b5-limiting case. They show that the coefficient paths are piece-wise linear functions, both for the lasso and forward stagewise. This facilitates efficient algorithms which allow the entire paths to be computed with the same cost as a single least-squares fit.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 47900,
+        "page_number": 628
+      },
+      {
+        "fact_text": "Thus, one can view tree boosting with shrinkage as a form of monotone ill-posed regression on all possible (J-terminal node) trees, with the lasso penalty (16.4) as a regularizer.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 47900,
+        "page_number": 628
+      },
+      {
+        "fact_text": "As shown in the previous section, boosting\u2019s forward stagewise strategy with shrinkage approximately minimizes the same loss function with a lasso-style L1 penalty. The model is built up slowly, searching through \u201cmodel space\u201d and adding shrunken basis functions derived from important predictors.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 47902,
+        "page_number": 628
+      },
+      {
+        "fact_text": "The choice of no shrinkage [\u03bd = 1 in equation (10.41)] is analogous to forward-stepwise regression, and its more aggressive cousin best-subset selection, which penalizes the number of non zero coefficients J(\u03b1) = \u03a3k |\u03b1k|0. With a small fraction of dominant variables, best subset approaches often work well. But with a moderate fraction of strong variables, it is well known that subset selection can be excessively greedy (Copas, 1983), often yielding poor results when compared to less aggressive strategies such as the lasso or ridge regression.",
+        "fact_type": "comparison",
+        "importance_rank": 5,
+        "paragraph_id": 47900,
+        "page_number": 628
+      },
+      {
+        "fact_text": "However, the sometimes superior performance of boosting over procedures such as the support vector machine may be largely due to the implicit use of the L1 versus L2 penalty.",
+        "fact_type": "comparison",
+        "importance_rank": 6,
+        "paragraph_id": 47902,
+        "page_number": 628
+      }
+    ]
+  },
+  {
+    "concept_id": 386,
+    "concept_name": "stochastic gradient boosting",
+    "facts": [
+      {
+        "fact_text": "Here a random sub-sample (without replacement) of 5% of the training sample is used to grow each tree, and the trees are restricted to be shallow (about six terminal nodes). The post-processing offers more dramatic improvements here, and the training costs are reduced by a factor of about 100.",
+        "fact_type": "example",
+        "importance_rank": 1,
+        "paragraph_id": 48022,
+        "page_number": 635
+      },
+      {
+        "fact_text": "In its simplest form this model could be seen as a way of post-processing boosting or random forests, taking for TL the collection of trees produced by the gradient boosting or random forest algorithms. By fitting the lasso path to these trees, we would typically use a much reduced set, which would save in computations and storage for future predictions.",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 48022,
+        "page_number": 635
+      },
+      {
+        "fact_text": "where T is a dictionary of basis functions, typically trees. For gradient boosting and random forests, |T | is very large, and it is quite typical for the final model to involve many thousands of trees.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 48012,
+        "page_number": 635
+      },
+      {
+        "fact_text": "Not all ensembles TL will perform well with post-processing. In terms of basis functions, we want a collection that covers the space well in places where they are needed, and are sufficiently different from each other for the post-processor to be effective.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 48024,
+        "page_number": 635
+      },
+      {
+        "fact_text": "Figure 16.6 shows that a lasso post-processing offers modest improvement over the random forest (blue curve), and reduces the forest to about 40 trees, rather than the original 1000. The post-processed performance matches that of gradient boosting.",
+        "fact_type": "example",
+        "importance_rank": 5,
+        "paragraph_id": 48022,
+        "page_number": 635
+      }
+    ]
+  },
+  {
+    "concept_id": 600,
+    "concept_name": "importance sampled learning ensemble",
+    "facts": [
+      {
+        "fact_text": "Friedman and Popescu (2003) propose a hybrid approach which breaks this process down into two stages: \u2022 A finite dictionary TL = {T1(x), T2(x), . . . , TM(x)} of basis functions is induced from the training data; \u2022 A family of functions f\u03bb(x) is built by fitting a lasso path in this dictionary:",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48012,
+        "page_number": 635
+      },
+      {
+        "fact_text": "Friedman and Popescu (2003) gain insights from numerical quadrature and importance sampling. They view the unknown function as an integral f(x) = \u222b\u03b2(\u03b3)b(x; \u03b3)d\u03b3,",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 48033,
+        "page_number": 636
+      },
+      {
+        "fact_text": "where \u03b3 \u2208\u0393 indexes the basis functions b(x; \u03b3). For example, if the basis functions are trees, then \u03b3 indexes the splitting variables, the split-points and the values in the terminal nodes. Numerical quadrature amounts to finding a set of M evaluation points \u03b3m \u2208\u0393 and corresponding weights \u03b1m so that fm(x) = \u03b10 + \u03a3Mm=1 \u03b1mb(x; \u03b3m) approximates f(x) well over the domain of x. Importance sampling amounts to sampling \u03b3 at random, but giving more weight to relevant regions of the space \u0393.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 48035,
+        "page_number": 636
+      },
+      {
+        "fact_text": "In its simplest form this model could be seen as a way of post-processing boosting or random forests, taking for TL the collection of trees produced by the gradient boosting or random forest algorithms. By fitting the lasso path to these trees, we would typically use a much reduced set, which would save in computations and storage for future predictions.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 48022,
+        "page_number": 635
+      },
+      {
+        "fact_text": "Not all ensembles TL will perform well with post-processing. In terms of basis functions, we want a collection that covers the space well in places where they are needed, and are sufficiently different from each other for the post-processor to be effective.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 48024,
+        "page_number": 635
+      },
+      {
+        "fact_text": "\u2022 A family of functions f\u03bb(x) is built by fitting a lasso path in this dictionary:",
+        "fact_type": "formula",
+        "importance_rank": 6,
+        "paragraph_id": 48014,
+        "page_number": 635
+      }
+    ]
+  },
+  {
+    "concept_id": 601,
+    "concept_name": "characteristic width of sampling scheme",
+    "facts": [
+      {
+        "fact_text": "They propose a natural measure of the characteristic width \u03c3 of the sampling scheme S, \u03c3 = ES[Q(\u03b3) \u2212Q(\u03b3\u2217)].",
+        "fact_type": "formula",
+        "importance_rank": 1,
+        "paragraph_id": 48040,
+        "page_number": 637
+      },
+      {
+        "fact_text": "If a single basis function were to be selected (e.g., a tree), it would be the global minimizer \u03b3\u2217= arg min\u03b3\u2208\u0393 Q(\u03b3). Introducing randomness in the selection of \u03b3 would necessarily produce less optimal values with Q(\u03b3) \u2265 Q(\u03b3\u2217).",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 48040,
+        "page_number": 637
+      },
+      {
+        "fact_text": "\u2022 \u03c3 too narrow suggests too many of the b(x; \u03b3m) look alike, and similar to b(x; \u03b3\u2217);",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 48041,
+        "page_number": 637
+      },
+      {
+        "fact_text": "\u2022 \u03c3 too wide implies a large spread in the b(x; \u03b3m), but possibly consisting of many irrelevant cases.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 48042,
+        "page_number": 637
+      },
+      {
+        "fact_text": "Friedman and Popescu (2003) suggest a measure of (lack of) relevance that uses the loss function (16.9):",
+        "fact_type": "definition",
+        "importance_rank": 5,
+        "paragraph_id": 48035,
+        "page_number": 636
+      }
+    ]
+  },
+  {
+    "concept_id": 602,
+    "concept_name": "rule ensemble",
+    "facts": [
+      {
+        "fact_text": "Here we describe a modification of the tree-ensemble method that focuses on individual rules (Friedman and Popescu, 2003). We encountered rules in Section 9.3 in the discussion of the PRIM method. The idea is to enlarge an ensemble of trees by constructing a set of rules from each of the trees in the collection.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48085,
+        "page_number": 640
+      },
+      {
+        "fact_text": "A linear expansion in rules 1, 4, 5 and 6 is equivalent to the tree itself (Exercise 16.3); hence (16.14) is an over-complete basis for the tree. For each tree Tm in an ensemble T , we can construct its mini-ensemble of rules T m RULE, and then combine them all to form a larger ensemble",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 48098,
+        "page_number": 640
+      },
+      {
+        "fact_text": "This is then treated like any other ensemble, and post-processed via the lasso or similar regularized procedure.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 48102,
+        "page_number": 640
+      },
+      {
+        "fact_text": "\u2022 The space of models is enlarged, and can lead to improved performance.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 48103,
+        "page_number": 640
+      },
+      {
+        "fact_text": "\u2022 Rules are easier to interpret than trees, so there is the potential for a simplified model.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 48109,
+        "page_number": 641
+      },
+      {
+        "fact_text": "\u2022 It is often natural to augment T RULE by including each variable Xj separately as well, thus allowing the ensemble to model linear functions well.",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 48110,
+        "page_number": 641
+      },
+      {
+        "fact_text": "Boosting and lasso exploit sparsity through L1 regularization to overcome the high-dimensionality, while SVMs rely on the \u201ckernel trick\u201d characteristic of L2 regularization.",
+        "fact_type": "comparison",
+        "importance_rank": 7,
+        "paragraph_id": 48116,
+        "page_number": 642
+      }
+    ]
+  },
+  {
+    "concept_id": 63,
+    "concept_name": "pairwise Markov",
+    "facts": [
+      {
+        "fact_text": "In a Markov graph G, the absence of an edge implies that the corresponding random variables are conditionally independent given the variables at the other vertices. This is expressed with the following notation:",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48160,
+        "page_number": 645
+      },
+      {
+        "fact_text": "No edge joining X and Y \u21d0\u21d2 X \u22a5 Y |rest",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 48162,
+        "page_number": 646
+      },
+      {
+        "fact_text": "where \u201crest\u201d refers to all of the other vertices in the graph. For example in Figure 17.2(a) X \u22a5Z|Y . These are known as the pairwise Markov independencies of G.",
+        "fact_type": "definition",
+        "importance_rank": 3,
+        "paragraph_id": 48163,
+        "page_number": 646
+      },
+      {
+        "fact_text": "If A, B and C are subgraphs, then C is said to separate A and B if every path between A and B intersects a node in C.",
+        "fact_type": "definition",
+        "importance_rank": 4,
+        "paragraph_id": 48163,
+        "page_number": 646
+      },
+      {
+        "fact_text": "Separators have the nice property that they break the graph into conditionally independent pieces. Specifically, in a Markov graph G with subgraphs A, B and C,",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 48163,
+        "page_number": 646
+      },
+      {
+        "fact_text": "It turns out that the pairwise and global Markov properties of a graph are equivalent (for graphs with positive distributions). That is, the set of graphs with associated probability distributions that satisfy the pairwise Markov independencies and global Markov assumptions are the same.",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 48165,
+        "page_number": 646
+      },
+      {
+        "fact_text": "A graph G consists of a pair (V, E), where V is a set of vertices and E the set of edges (defined by pairs of vertices). Two vertices X and Y are called adjacent if there is a edge joining them; this is denoted by X \u223cY .",
+        "fact_type": "definition",
+        "importance_rank": 7,
+        "paragraph_id": 48160,
+        "page_number": 645
+      }
+    ]
+  },
+  {
+    "concept_id": 64,
+    "concept_name": "clique potentials",
+    "facts": [
+      {
+        "fact_text": "Although the following applies to both continuous and discrete distributions, much of the development has been for the latter. A probability density function f over a Markov graph G can be can represented as",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48170,
+        "page_number": 646
+      },
+      {
+        "fact_text": "A clique is a complete subgraph\u2014 a set of vertices that are all adjacent to one another; it is called maximal if it is a clique and no other vertices can be added to it and still yield a clique.",
+        "fact_type": "definition",
+        "importance_rank": 2,
+        "paragraph_id": 48165,
+        "page_number": 646
+      },
+      {
+        "fact_text": "The global Markov property allows us to decompose graphs into smaller more manageable pieces and thus leads to essential simplifications in computation and interpretation. For this purpose we separate the graph into cliques.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 48165,
+        "page_number": 646
+      },
+      {
+        "fact_text": "Separators have the nice property that they break the graph into conditionally independent pieces. Specifically, in a Markov graph G with subgraphs A, B and C,",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 48163,
+        "page_number": 646
+      },
+      {
+        "fact_text": "In a Markov graph G, the absence of an edge implies that the corresponding random variables are conditionally independent given the variables at the other vertices.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 48160,
+        "page_number": 645
+      }
+    ]
+  },
+  {
+    "concept_id": 65,
+    "concept_name": "partition function",
+    "facts": [
+      {
+        "fact_text": "A probability density function f over a Markov graph G can be can represented as [product over cliques C] where C is the set of maximal cliques, and the positive functions \u03c8C(\u00b7) are called clique potentials. These are not in general density functions, but rather are affinities that capture the dependence in XC by scoring certain instances xC higher than others.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48170,
+        "page_number": 646
+      },
+      {
+        "fact_text": "It turns out that the pairwise and global Markov properties of a graph are equivalent (for graphs with positive distributions). That is, the set of graphs with associated probability distributions that satisfy the pairwise Markov independencies and global Markov assumptions are the same. This result is useful for inferring global independence relations from simple pairwise properties.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 48165,
+        "page_number": 646
+      },
+      {
+        "fact_text": "The global Markov property allows us to decompose graphs into smaller more manageable pieces and thus leads to essential simplifications in computation and interpretation. For this purpose we separate the graph into cliques.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 48165,
+        "page_number": 646
+      },
+      {
+        "fact_text": "if C separates A and B then A \u22a5B|C.",
+        "fact_type": "formula",
+        "importance_rank": 4,
+        "paragraph_id": 48164,
+        "page_number": 646
+      },
+      {
+        "fact_text": "In a Markov graph G, the absence of an edge implies that the corresponding random variables are conditionally independent given the variables at the other vertices.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 48160,
+        "page_number": 645
+      }
+    ]
+  },
+  {
+    "concept_id": 605,
+    "concept_name": "global markov property",
+    "facts": [
+      {
+        "fact_text": "if C separates A and B then A \u22a5B|C.",
+        "fact_type": "formula",
+        "importance_rank": 1,
+        "paragraph_id": 48164,
+        "page_number": 646
+      },
+      {
+        "fact_text": "These are known as the global Markov properties of G. It turns out that the pairwise and global Markov properties of a graph are equivalent (for graphs with positive distributions). That is, the set of graphs with associated probability distributions that satisfy the pairwise Markov independencies and global Markov assumptions are the same.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 48165,
+        "page_number": 646
+      },
+      {
+        "fact_text": "This result is useful for inferring global independence relations from simple pairwise properties. For example in Figure 17.2(d) X \u22a5Z|{Y, W} since it is a Markov graph and there is no link joining X and Z. But Y also separates X from Z and W and hence by the global Markov assumption we conclude that X \u22a5Z|Y and X \u22a5W|Y . Similarly we have Y \u22a5W|Z.",
+        "fact_type": "example",
+        "importance_rank": 3,
+        "paragraph_id": 48165,
+        "page_number": 646
+      },
+      {
+        "fact_text": "Separators have the nice property that they break the graph into conditionally independent pieces. Specifically, in a Markov graph G with subgraphs A, B and C,",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 48163,
+        "page_number": 646
+      },
+      {
+        "fact_text": "The global Markov property allows us to decompose graphs into smaller more manageable pieces and thus leads to essential simplifications in computation and interpretation. For this purpose we separate the graph into cliques.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 48165,
+        "page_number": 646
+      },
+      {
+        "fact_text": "If A, B and C are subgraphs, then C is said to separate A and B if every path between A and B intersects a node in C.",
+        "fact_type": "definition",
+        "importance_rank": 6,
+        "paragraph_id": 48163,
+        "page_number": 646
+      }
+    ]
+  },
+  {
+    "concept_id": 606,
+    "concept_name": "clique in graph theory",
+    "facts": [
+      {
+        "fact_text": "A clique is a complete subgraph\u2014 a set of vertices that are all adjacent to one another; it is called maximal if it is a clique and no other vertices can be added to it and still yield a clique.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48165,
+        "page_number": 646
+      },
+      {
+        "fact_text": "The global Markov property allows us to decompose graphs into smaller more manageable pieces and thus leads to essential simplifications in computation and interpretation. For this purpose we separate the graph into cliques.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 48165,
+        "page_number": 646
+      },
+      {
+        "fact_text": "A complete graph is a graph with every pair of vertices joined by an edge. A subgraph U \u2208V is a subset of vertices together with their edges.",
+        "fact_type": "definition",
+        "importance_rank": 3,
+        "paragraph_id": 48160,
+        "page_number": 645
+      },
+      {
+        "fact_text": "Although the following applies to both continuous and discrete distributions, much of the development has been for the latter. A probability density function f over a Markov graph G can be can represented as [product over maximal cliques]",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 48170,
+        "page_number": 646
+      },
+      {
+        "fact_text": "Two vertices X and Y are called adjacent if there is a edge joining them; this is denoted by X \u223cY . A path X1, X2, . . . , Xn is a set of vertices that are joined, that is Xi\u22121 \u223cXi for i = 2, . . . , n.",
+        "fact_type": "definition",
+        "importance_rank": 5,
+        "paragraph_id": 48160,
+        "page_number": 645
+      }
+    ]
+  },
+  {
+    "concept_id": 611,
+    "concept_name": "gaussian graphical model",
+    "facts": [
+      {
+        "fact_text": "Here we consider Markov networks where all the variables are continuous. The Gaussian distribution is almost always used for such graphical models, because of its convenient analytical properties. We assume that the observations have a multivariate Gaussian distribution with mean \u03bc and covariance",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48194,
+        "page_number": 648
+      },
+      {
+        "fact_text": "Thus \u0398 captures all the second-order information (both structural and quantitative) needed to describe the conditional distribution of each node given the rest, and is the so-called \u201cnatural\u201d parameter for the Gaussian graphical model.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 48207,
+        "page_number": 649
+      },
+      {
+        "fact_text": "\u2022 The dependence of Y on Z in (17.6) is in the mean term alone. Here we see explicitly that zero elements in \u03b2 and hence \u03b8ZY mean that the corresponding elements of Z are conditionally independent of Y , given the rest.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 48205,
+        "page_number": 649
+      },
+      {
+        "fact_text": "The conditional mean in (17.6) has exactly the same form as the population multiple linear regression of Y on Z, with regression coefficient \u03b2 = \u03a3\u22121ZZ\u03c3ZY [see (2.16) on page 19].",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 48199,
+        "page_number": 648
+      },
+      {
+        "fact_text": "\u2022 We can learn about this dependence structure through multiple linear regression.",
+        "fact_type": "intuition",
+        "importance_rank": 5,
+        "paragraph_id": 48206,
+        "page_number": 649
+      },
+      {
+        "fact_text": "The distribution arising from a Gaussian graphical model is a Wishart distribution. This is a member of the exponential family, with canonical or \u201cnatural\u201d parameter \u0398 = \u03a3\u22121. Indeed, the partially maximized log-likelihood (17.11) is (up to constants) the Wishart log-likelihood.",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 48215,
+        "page_number": 649
+      },
+      {
+        "fact_text": "In (17.11) we have partially maximized with respect to the mean parameter \u03bc. The quantity \u2212\u2113(\u0398) is a convex function of \u0398. It is easy to show that the maximum likelihood estimate of \u03a3 is simply S.",
+        "fact_type": "property",
+        "importance_rank": 7,
+        "paragraph_id": 48218,
+        "page_number": 650
+      }
+    ]
+  },
+  {
+    "concept_id": 613,
+    "concept_name": "natural parameter for gaussian graphical model",
+    "facts": [
+      {
+        "fact_text": "Thus \u0398 captures all the second-order information (both structural and quantitative) needed to describe the conditional distribution of each node given the rest, and is the so-called \u201cnatural\u201d parameter for the Gaussian graphical model.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48207,
+        "page_number": 649
+      },
+      {
+        "fact_text": "The distribution arising from a Gaussian graphical model is a Wishart distribution. This is a member of the exponential family, with canonical or \u201cnatural\u201d parameter \u0398 = \u03a3\u22121. Indeed, the partially maximized log-likelihood (17.11) is (up to constants) the Wishart log-likelihood.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 48215,
+        "page_number": 649
+      },
+      {
+        "fact_text": "\u2022 The dependence of Y on Z in (17.6) is in the mean term alone. Here we see explicitly that zero elements in \u03b2 and hence \u03b8ZY mean that the corresponding elements of Z are conditionally independent of Y , given the rest.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 48205,
+        "page_number": 649
+      },
+      {
+        "fact_text": "In (17.11) we have partially maximized with respect to the mean parameter \u03bc. The quantity \u2212\u2113(\u0398) is a convex function of \u0398. It is easy to show that the maximum likelihood estimate of \u03a3 is simply S.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 48218,
+        "page_number": 650
+      },
+      {
+        "fact_text": "using the fact that the derivative of log det \u0398 equals \u0398\u22121 (Boyd and Vandenberghe, 2004, for example, page 641). \u0393 is a matrix of Lagrange parameters with nonzero values for all pairs with edges absent.",
+        "fact_type": "formula",
+        "importance_rank": 5,
+        "paragraph_id": 48223,
+        "page_number": 650
+      }
+    ]
+  },
+  {
+    "concept_id": 614,
+    "concept_name": "covariance graph",
+    "facts": [
+      {
+        "fact_text": "Thus \u0398 captures all the second-order information (both structural and quantitative) needed to describe the conditional distribution of each node given the rest, and is the so-called \u201cnatural\u201d parameter for the Gaussian graphical model. Another (different) kind of graphical model is the covariance graph or relevance network, in which vertices are connected by bidirectional edges if the covariance (rather than the partial covariance) between variables is nonzero.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48207,
+        "page_number": 649
+      },
+      {
+        "fact_text": "In a Markov graph G, the absence of an edge implies that the corresponding random variables are conditionally independent given the variables at the other vertices.",
+        "fact_type": "comparison",
+        "importance_rank": 2,
+        "paragraph_id": 48160,
+        "page_number": 645
+      },
+      {
+        "fact_text": "\u2022 The dependence of Y on Z in (17.6) is in the mean term alone. Here we see explicitly that zero elements in \u03b2 and hence \u03b8ZY mean that the corresponding elements of Z are conditionally independent of Y , given the rest.",
+        "fact_type": "comparison",
+        "importance_rank": 3,
+        "paragraph_id": 48205,
+        "page_number": 649
+      },
+      {
+        "fact_text": "The distribution arising from a Gaussian graphical model is a Wishart distribution. This is a member of the exponential family, with canonical or \u201cnatural\u201d parameter \u0398 = \u03a3\u22121.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 48215,
+        "page_number": 649
+      },
+      {
+        "fact_text": "In (17.11) we have partially maximized with respect to the mean parameter \u03bc. The quantity \u2212\u2113(\u0398) is a convex function of \u0398. It is easy to show that the maximum likelihood estimate of \u03a3 is simply S.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 48218,
+        "page_number": 650
+      }
+    ]
+  },
+  {
+    "concept_id": 615,
+    "concept_name": "relevance network",
+    "facts": [
+      {
+        "fact_text": "Thus \u0398 captures all the second-order information (both structural and quantitative) needed to describe the conditional distribution of each node given the rest, and is the so-called \u201cnatural\u201d parameter for the Gaussian graphical model. Another (different) kind of graphical model is the covariance graph or relevance network, in which vertices are connected by bidirectional edges if the covariance (rather than the partial covariance) between variables is nonzero.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48207,
+        "page_number": 649
+      },
+      {
+        "fact_text": "In a Markov graph G, the absence of an edge implies that the corresponding random variables are conditionally independent given the variables at the other vertices.",
+        "fact_type": "comparison",
+        "importance_rank": 2,
+        "paragraph_id": 48160,
+        "page_number": 645
+      },
+      {
+        "fact_text": "\u2022 The dependence of Y on Z in (17.6) is in the mean term alone. Here we see explicitly that zero elements in \u03b2 and hence \u03b8ZY mean that the corresponding elements of Z are conditionally independent of Y , given the rest.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 48205,
+        "page_number": 649
+      },
+      {
+        "fact_text": "The distribution arising from a Gaussian graphical model is a Wishart distribution. This is a member of the exponential family, with canonical or \u201cnatural\u201d parameter \u0398 = \u03a3\u22121. Indeed, the partially maximized log-likelihood (17.11) is (up to constants) the Wishart log-likelihood.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 48215,
+        "page_number": 649
+      }
+    ]
+  },
+  {
+    "concept_id": 617,
+    "concept_name": "iterative proportional fitting procedure",
+    "facts": [
+      {
+        "fact_text": "Now to make the graph more useful (especially in high-dimensional settings) let\u2019s assume that some of the off-diagonal entries of \u0398 are zero, corresponding to missing edges in the graph. This is an equality-constrained convex optimization problem, and a number of methods have been proposed for solving it.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48218,
+        "page_number": 650
+      },
+      {
+        "fact_text": "The gradient equation for maximizing (17.12) can be written as",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 48221,
+        "page_number": 650
+      },
+      {
+        "fact_text": "using the fact that the derivative of log det \u0398 equals \u0398\u22121 (Boyd and Vandenberghe, 2004, for example, page 641). \u0393 is a matrix of Lagrange parameters with nonzero values for all pairs with edges absent.",
+        "fact_type": "formula",
+        "importance_rank": 3,
+        "paragraph_id": 48223,
+        "page_number": 650
+      },
+      {
+        "fact_text": "In (17.11) we have partially maximized with respect to the mean parameter \u03bc. The quantity \u2212\u2113(\u0398) is a convex function of \u0398. It is easy to show that the maximum likelihood estimate of \u03a3 is simply S.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 48218,
+        "page_number": 650
+      },
+      {
+        "fact_text": "We will show how we can use regression to solve for \u0398 and its inverse W = \u0398\u22121 one row and column at a time.",
+        "fact_type": "intuition",
+        "importance_rank": 5,
+        "paragraph_id": 48223,
+        "page_number": 650
+      }
+    ]
+  },
+  {
+    "concept_id": 67,
+    "concept_name": "graphical lasso",
+    "facts": [
+      {
+        "fact_text": "The resulting procedure is called the graphical lasso, proposed by Friedman et al. (2007a) building on the work of Banerjee et al. (2008).",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48290,
+        "page_number": 654
+      },
+      {
+        "fact_text": "In most cases we do not know which edges to omit from our graph, and so would like to try to discover this from the data itself. In recent years a number of authors have proposed the use of L1 (lasso) regularization for this purpose.",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 48272,
+        "page_number": 653
+      },
+      {
+        "fact_text": "where ||Θ||1 is the L1 norm\u2014the sum of the absolute values of the elements of \u03a3\u22121, and we have ignored constants. The negative of this penalized likelihood is a convex function of \u0398.",
+        "fact_type": "formula",
+        "importance_rank": 3,
+        "paragraph_id": 48273,
+        "page_number": 653
+      },
+      {
+        "fact_text": "It turns out that one can adapt the lasso to give the exact maximizer of the penalized log-likelihood.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 48273,
+        "page_number": 653
+      },
+      {
+        "fact_text": "The graphical lasso algorithm is extremely fast, and can solve a moderately sparse problem",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 48294,
+        "page_number": 654
+      },
+      {
+        "fact_text": "The procedure cycles through the predictors until convergence. It is easy to show that the diagonal elements wjj of the solution matrix W are simply sjj + \u03bb, and these are fixed in step 1 of Algorithm 17.23.",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 48294,
+        "page_number": 654
+      },
+      {
+        "fact_text": "By casting the sparse inverse-covariance problem as a series of regressions, one can also quickly compute and examine the solution paths as a function of the penalty parameter \u03bb.",
+        "fact_type": "property",
+        "importance_rank": 7,
+        "paragraph_id": 48297,
+        "page_number": 655
+      }
+    ]
+  },
+  {
+    "concept_id": 619,
+    "concept_name": "meinshausen-b\u00fchlmann approach",
+    "facts": [
+      {
+        "fact_text": "Meinshausen and B\u00fchlmann (2006) take a simple approach to the problem: rather than trying to fully estimate \u03a3 or \u0398 = \u03a3\u22121, they only estimate which components of \u03b8ij are nonzero. To do this, they fit a lasso regression using each variable as a response, with the others as predictors.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48272,
+        "page_number": 653
+      },
+      {
+        "fact_text": "In most cases we do not know which edges to omit from our graph, and so would like to try to discover this from the data itself. In recent years a number of authors have proposed the use of L1 (lasso) regularization for this purpose.",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 48272,
+        "page_number": 653
+      },
+      {
+        "fact_text": "where ||Θ||1 is the L1 norm\u2014the sum of the absolute values of the elements of \u03a3\u22121, and we have ignored constants. The negative of this penalized likelihood is a convex function of \u0398.",
+        "fact_type": "formula",
+        "importance_rank": 3,
+        "paragraph_id": 48273,
+        "page_number": 653
+      },
+      {
+        "fact_text": "Here we use sub-gradient notation, with Sign(\u03b8jk) = sign(\u03b8jk) if \u03b8jk \u2260 0, else Sign(\u03b8jk) \u2208[\u22121, 1] if \u03b8jk = 0.",
+        "fact_type": "formula",
+        "importance_rank": 4,
+        "paragraph_id": 48275,
+        "page_number": 653
+      },
+      {
+        "fact_text": "(recall that \u03b2 and \u03b812 have opposite signs). We will now see that this system is exactly equivalent to the estimating equations for a lasso regression.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 48277,
+        "page_number": 653
+      }
+    ]
+  },
+  {
+    "concept_id": 621,
+    "concept_name": "pathwise coordinate descent for graphical lasso",
+    "facts": [
+      {
+        "fact_text": "The procedure cycles through the predictors until convergence. It is easy to show that the diagonal elements wjj of the solution matrix W are simply sjj + \u03bb, and these are fixed in step 1 of Algorithm 17.23.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48294,
+        "page_number": 654
+      },
+      {
+        "fact_text": "for j = 1, 2, . . . , p \u22121, 1, 2, . . . , p \u22121, . . ., where S is the soft-threshold operator: S(x, t) = sign(x)(|x| \u2212t)+.",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 48293,
+        "page_number": 654
+      },
+      {
+        "fact_text": "1. Initialize W = S + \u03bbI. The diagonal of W remains unchanged in what follows.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 48283,
+        "page_number": 654
+      },
+      {
+        "fact_text": "(b) Solve the estimating equations W11\u03b2 \u2212s12 + \u03bb \u00b7 Sign(\u03b2) = 0 using the cyclical coordinate-descent algorithm (17.26) for the modified lasso.",
+        "fact_type": "formula",
+        "importance_rank": 4,
+        "paragraph_id": 48286,
+        "page_number": 654
+      },
+      {
+        "fact_text": "3. In the final cycle (for each j) solve for \u03b812 = \u2212\u03b2\u0302 \u00b7 \u03b822, with 1/\u03b822 = w22 \u2212wT12\u03b2\u0302.",
+        "fact_type": "formula",
+        "importance_rank": 5,
+        "paragraph_id": 48288,
+        "page_number": 654
+      },
+      {
+        "fact_text": "By casting the sparse inverse-covariance problem as a series of regressions, one can also quickly compute and examine the solution paths as a function of the penalty parameter \u03bb.",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 48297,
+        "page_number": 655
+      },
+      {
+        "fact_text": "The graphical lasso algorithm is extremely fast, and can solve a moderately sparse problem",
+        "fact_type": "property",
+        "importance_rank": 7,
+        "paragraph_id": 48294,
+        "page_number": 654
+      }
+    ]
+  },
+  {
+    "concept_id": 622,
+    "concept_name": "ising model",
+    "facts": [
+      {
+        "fact_text": "Undirected Markov networks with all discrete variables are popular, and in particular pairwise Markov networks with binary variables being the most common. They are sometimes called Ising models in the statistical mechanics literature, and Boltzmann machines in the machine learning literature.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 48341,
+        "page_number": 656
+      },
+      {
+        "fact_text": "with X = {0, 1}p. As with the Gaussian model of the previous section, only pairwise interactions are modeled. The Ising model was developed in statistical mechanics, and is now used more generally to model the joint effects of pairwise interactions. \u03a6(\u0398) is the log of the partition function,",
+        "fact_type": "definition",
+        "importance_rank": 2,
+        "paragraph_id": 48344,
+        "page_number": 656
+      },
+      {
+        "fact_text": "The partition function ensures that the probabilities add to one over the sample space. The terms \u03b8jkXjXk represent a particular parametrization",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 48349,
+        "page_number": 656
+      },
+      {
+        "fact_text": "Pr(Xj = 1|X\u2212j = x\u2212j) = 1 / (1 + exp(\u2212\u03b8j0 \u2212 \u03a3(j,k)\u2208E \u03b8jkxk)),",
+        "fact_type": "formula",
+        "importance_rank": 4,
+        "paragraph_id": 48352,
+        "page_number": 657
+      },
+      {
+        "fact_text": "where X\u2212j denotes all of the nodes except j. Hence the parameter \u03b8jk measures the dependence of Xj on Xk, conditional on the other nodes.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 48353,
+        "page_number": 657
+      },
+      {
+        "fact_text": "In the Gaussian model, if a node has all missing values, due to linearity one can simply average over the missing nodes to yield another Gaussian model over the observed nodes. Hence the inclusion of hidden nodes does not enrich the Gaussian graphical model.",
+        "fact_type": "comparison",
+        "importance_rank": 6,
+        "paragraph_id": 48339,
+        "page_number": 656
+      },
+      {
+        "fact_text": "Given some data from this model, how can we estimate the parameters? Suppose we have observations xi = (xi1, xi2, . . . , xip) \u2208{0, 1}p, i = 1, . . . , N.",
+        "fact_type": "example",
+        "importance_rank": 7,
+        "paragraph_id": 48355,
+        "page_number": 657
+      }
+    ]
+  }
+]

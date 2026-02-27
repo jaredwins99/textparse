@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lasso — ESL Chapter 3.4</title>
+
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d1117;
+      --surface:   #161b22;
+      --surface2:  #1f2937;
+      --border:    #30363d;
+      --text:      #e6edf3;
+      --muted:     #8b949e;
+      --accent:    #f77c6a;
+      --accent2:   #ffa07a;
+      --green:     #3fb950;
+      --red:       #f85149;
+      --yellow:    #d29922;
+      --orange:    #e3b341;
+      --blue:      #58a6ff;
+      --radius:    10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .page-header {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 40%, #1a1a1f 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 40px 22px;
+    }
+
+    .breadcrumb {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+    .breadcrumb span { color: var(--accent); }
+
+    .concept-title {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+      background: linear-gradient(90deg, #f77c6a, #ffa07a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .concept-meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .tag {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .tag.category { border-color: var(--accent); color: var(--accent); }
+
+    .concept-desc {
+      margin-top: 10px;
+      color: var(--muted);
+      max-width: 780px;
+      font-size: 14px;
+    }
+
+    .content {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 28px 40px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } }
+
+    .bt-panel {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 20px;
+    }
+    .bt-panel h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: 0.3px;
+    }
+    .bt-panel.benefits h4 { color: var(--green); }
+    .bt-panel.tradeoffs h4 { color: var(--red); }
+    .bt-panel ul { list-style: none; padding: 0; }
+    .bt-panel ul li {
+      font-size: 13px;
+      color: var(--muted);
+      padding: 5px 0 5px 16px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .bt-panel ul li:last-child { border-bottom: none; }
+    .bt-panel.benefits ul li::before { content: '+'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+    .bt-panel.tradeoffs ul li::before { content: '\2212'; position: absolute; left: 0; color: var(--red); font-weight: 700; }
+
+    .quote-block {
+      margin-top: 18px;
+      border-left: 3px solid var(--accent);
+      padding: 12px 16px;
+      background: var(--surface2);
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .quote-block cite {
+      display: block;
+      margin-top: 6px;
+      font-style: normal;
+      font-size: 12px;
+      color: var(--accent);
+    }
+
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .control-label {
+      font-size: 13px;
+      color: var(--muted);
+      min-width: 100px;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 240px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border);
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 15px; height: 15px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(247,124,106,0.5);
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 15px; height: 15px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      border: none;
+    }
+
+    .value-badge {
+      background: var(--surface2);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      padding: 3px 12px;
+      font-size: 13px;
+      font-family: 'Courier New', monospace;
+      color: var(--accent);
+      min-width: 70px;
+      text-align: center;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .stat-chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .stat-chip strong { color: var(--text); font-family: 'Courier New', monospace; }
+    .stat-chip.zero strong { color: var(--accent); }
+
+    .btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 6px 14px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn:hover { border-color: var(--accent); background: rgba(247,124,106,0.1); }
+    .btn.active { border-color: var(--accent); background: rgba(247,124,106,0.15); color: var(--accent); }
+
+    .properties-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .prop-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+
+    .prop-indicator {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    .prop-indicator.green  { background: var(--green);  box-shadow: 0 0 6px var(--green); }
+    .prop-indicator.red    { background: var(--red);    box-shadow: 0 0 6px var(--red); }
+    .prop-indicator.yellow { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+
+    .prop-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .prop-name {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .prop-verdict {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .prop-verdict.green  { color: var(--green); }
+    .prop-verdict.red    { color: var(--red); }
+    .prop-verdict.yellow { color: var(--yellow); }
+
+    .prop-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    .formula-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      overflow-x: auto;
+      font-size: 15px;
+    }
+
+    .formula-note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    .plot-container {
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .path-legend {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .legend-line {
+      width: 24px;
+      height: 3px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="breadcrumb">ESL &rsaquo; Chapter 3 &rsaquo; <span>3.4 Shrinkage Methods</span></div>
+  <h1 class="concept-title">Lasso</h1>
+  <div class="concept-meta">
+    <span class="tag">Section 3.4</span>
+    <span class="tag category">comparison / selection</span>
+    <span class="tag category">L1 Regularization</span>
+  </div>
+  <p class="concept-desc">
+    Shrinks coefficients toward zero via L1 penalty &mdash; some hit exactly zero, performing automatic variable selection.
+  </p>
+</header>
+
+<main class="content">
+
+  <!-- 1. Benefits & Tradeoffs -->
+  <section class="card">
+    <div class="card-title">Benefits &amp; Tradeoffs</div>
+    <div class="card-subtitle">Why use Lasso, and what does it cost you?</div>
+
+    <div class="two-col">
+      <div class="bt-panel benefits">
+        <h4>Benefits</h4>
+        <ul>
+          <li>"Making t sufficiently small will cause some of the coefficients to be exactly zero" &mdash; automatic variable selection <em>(ESL &sect;3.4.2)</em></li>
+          <li>"The lasso does a kind of continuous subset selection" &mdash; produces sparse, interpretable models <em>(ESL &sect;3.4.2)</em></li>
+          <li>Convex objective &mdash; global optimum guaranteed</li>
+          <li>Equivalent to Bayesian MAP with Laplace (double-exponential) prior</li>
+        </ul>
+      </div>
+      <div class="bt-panel tradeoffs">
+        <h4>Tradeoffs</h4>
+        <ul>
+          <li>Biased estimator &mdash; shrinks all coefficients toward zero <em>(ESL &sect;3.4.2)</em></li>
+          <li>"The lasso solution is not equivariant under re-scaling of the inputs" &mdash; must standardize predictors <em>(ESL &sect;3.4.2)</em></li>
+          <li>Selects at most N variables when p &gt; N</li>
+          <li>No closed-form solution (requires iterative algorithms like LARS or coordinate descent)</li>
+        </ul>
+      </div>
+    </div>
+
+    <blockquote class="quote-block">
+      "Because of the nature of the constraint, making t sufficiently small will cause some of the coefficients
+      to be exactly zero. Thus the lasso does a kind of continuous subset selection."
+      <cite>&mdash; Hastie, Tibshirani &amp; Friedman, ESL Section 3.4.2</cite>
+    </blockquote>
+  </section>
+
+  <!-- 2. Limitations -->
+  <section class="card">
+    <div class="card-title">Limitations</div>
+    <div class="card-subtitle">When Lasso may not be the right choice</div>
+    <ul style="list-style:none; padding:0;">
+      <li style="font-size:13px; color:var(--muted); padding:6px 0 6px 16px; border-bottom:1px solid var(--border); position:relative;">
+        <span style="position:absolute; left:0; color:var(--yellow); font-weight:700;">!</span>
+        When p &gt; N, selects at most N variables &mdash; use elastic net for grouped selection
+      </li>
+      <li style="font-size:13px; color:var(--muted); padding:6px 0 6px 16px; border-bottom:1px solid var(--border); position:relative;">
+        <span style="position:absolute; left:0; color:var(--yellow); font-weight:700;">!</span>
+        Among a group of highly correlated predictors, tends to pick one arbitrarily
+      </li>
+      <li style="font-size:13px; color:var(--muted); padding:6px 0 6px 16px; border-bottom:1px solid var(--border); position:relative;">
+        <span style="position:absolute; left:0; color:var(--yellow); font-weight:700;">!</span>
+        Coefficient estimates are biased &mdash; post-selection OLS (debiased lasso) can fix this
+      </li>
+      <li style="font-size:13px; color:var(--muted); padding:6px 0 6px 16px; position:relative;">
+        <span style="position:absolute; left:0; color:var(--yellow); font-weight:700;">!</span>
+        Standard inference (p-values, CIs) not directly available without special methods
+      </li>
+    </ul>
+  </section>
+
+  <!-- 3. VIZ 1: 2D Regression -->
+  <section class="card">
+    <div class="card-title">Visualization 1: Shrinkage &amp; Variable Selection</div>
+    <div class="card-subtitle">
+      Scatter of x&#x2081; vs y with OLS (dashed green) and Lasso (solid orange-red).
+      As &lambda; grows, the Lasso line shrinks and eventually collapses to zero.
+    </div>
+
+    <div class="control-row">
+      <span class="control-label">&lambda; penalty</span>
+      <input type="range" id="v1-lambda" min="0" max="8" step="0.05" value="0.5" />
+      <span class="value-badge" id="v1-lambda-val">0.50</span>
+    </div>
+
+    <div class="plot-container">
+      <div id="viz1" style="width:100%;height:420px;"></div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-chip" id="v1-b1-chip">
+        &beta;&#x0302;&#x2081;&nbsp;=&nbsp;<strong id="v1-b1">--</strong>
+      </div>
+      <div class="stat-chip" id="v1-b2-chip">
+        &beta;&#x0302;&#x2082;&nbsp;=&nbsp;<strong id="v1-b2">--</strong>
+      </div>
+      <div class="stat-chip">
+        L1 norm&nbsp;=&nbsp;<strong id="v1-l1">--</strong>
+      </div>
+      <div class="stat-chip">
+        Active predictors:&nbsp;<strong id="v1-active">--</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. VIZ 2: 3D Loss Landscape -->
+  <section class="card">
+    <div class="card-title">Visualization 2: 3D Loss Landscape &amp; L1 Pyramid Penalty</div>
+    <div class="card-subtitle">
+      The RSS surface (elliptical bowl) plus the L1 pyramid penalty |&beta;&#x2081;| + |&beta;&#x2082;|.
+      The pyramid's sharp edges along the axes push the minimum to sparse solutions.
+    </div>
+
+    <div class="control-row">
+      <span class="control-label">&lambda; penalty</span>
+      <input type="range" id="v2-lambda" min="0" max="6" step="0.1" value="1.5" />
+      <span class="value-badge" id="v2-lambda-val">1.50</span>
+      <button class="btn" id="v2-rss-btn">RSS Only</button>
+      <button class="btn active" id="v2-pen-btn">RSS + L1 Pyramid</button>
+      <button class="btn" id="v2-pyr-btn">L1 Pyramid Only</button>
+    </div>
+
+    <div class="plot-container">
+      <div id="viz2" style="width:100%;height:500px;"></div>
+    </div>
+  </section>
+
+  <!-- 5. VIZ 3: Diamond vs Ellipse -->
+  <section class="card">
+    <div class="card-title">Visualization 3: Diamond Constraint vs. Elliptical Contours</div>
+    <div class="card-subtitle">
+      ESL's classic geometric interpretation. The L1 constraint region is a diamond &mdash; RSS ellipses
+      meeting a corner force one coefficient to exactly zero. Ridge's circular constraint is shown faded.
+    </div>
+
+    <div class="control-row">
+      <span class="control-label">Constraint t</span>
+      <input type="range" id="v3-t" min="0.05" max="3" step="0.05" value="0.8" />
+      <span class="value-badge" id="v3-t-val">0.80</span>
+    </div>
+
+    <div class="plot-container">
+      <div id="viz3" style="width:100%;height:480px;"></div>
+    </div>
+  </section>
+
+  <!-- 6. VIZ 4: Coefficient Paths -->
+  <section class="card">
+    <div class="card-title">Visualization 4: Lasso Coefficient Paths</div>
+    <div class="card-subtitle">
+      Each coefficient as a function of &lambda;, from OLS (left) to full shrinkage (right).
+      Coefficients hit exactly zero at different &lambda; &mdash; this is automatic variable selection.
+    </div>
+
+    <div class="control-row">
+      <span class="control-label">&lambda; (current)</span>
+      <input type="range" id="v4-lambda" min="0" max="8" step="0.05" value="1" />
+      <span class="value-badge" id="v4-lambda-val">1.00</span>
+    </div>
+
+    <div class="path-legend">
+      <div class="legend-item">
+        <div class="legend-line" style="background:#f77c6a;"></div>
+        <span>&beta;&#x0302;&#x2081; path</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-line" style="background:#58a6ff;"></div>
+        <span>&beta;&#x0302;&#x2082; path</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-line" style="background:#555; height:1px; margin-top:1px;"></div>
+        <span>current &lambda;</span>
+      </div>
+    </div>
+
+    <div class="plot-container">
+      <div id="viz4" style="width:100%;height:380px;"></div>
+    </div>
+
+    <div class="stats-row" style="margin-top:12px;">
+      <div class="stat-chip">
+        At current &lambda;: &beta;&#x0302;&#x2081; = <strong id="v4-b1">--</strong>
+      </div>
+      <div class="stat-chip">
+        &beta;&#x0302;&#x2082; = <strong id="v4-b2">--</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Guarantees -->
+  <section class="card">
+    <div class="card-title">Statistical Guarantees</div>
+    <div class="card-subtitle">Formal properties of the Lasso estimator</div>
+
+    <div class="properties-grid">
+      <div class="prop-card">
+        <div class="prop-header">
+          <span class="prop-indicator red"></span>
+          <span class="prop-name">Unbiased?</span>
+          <span class="prop-verdict red">NO</span>
+        </div>
+        <div class="prop-desc">
+          Lasso shrinks all coefficients toward zero, introducing bias.
+          The bias-variance tradeoff is favorable for prediction, but estimates
+          are systematically biased away from the truth.
+        </div>
+      </div>
+
+      <div class="prop-card">
+        <div class="prop-header">
+          <span class="prop-indicator yellow"></span>
+          <span class="prop-name">Consistent (Sign Recovery)?</span>
+          <span class="prop-verdict yellow">CONDITIONAL</span>
+        </div>
+        <div class="prop-desc">
+          Under the <em>irrepresentability condition</em> (non-zero predictors
+          not too correlated with zero-coefficient predictors), Lasso recovers
+          the true support as n &rarr; &infin;. Otherwise sign recovery fails.
+        </div>
+      </div>
+
+      <div class="prop-card">
+        <div class="prop-header">
+          <span class="prop-indicator green"></span>
+          <span class="prop-name">Prediction Consistent?</span>
+          <span class="prop-verdict green">YES</span>
+        </div>
+        <div class="prop-desc">
+          Under sparsity assumptions and appropriate &lambda; choice
+          (&lambda; ~ &radic;(log p / n)), Lasso achieves minimax-optimal
+          prediction risk among sparse models.
+        </div>
+      </div>
+
+      <div class="prop-card">
+        <div class="prop-header">
+          <span class="prop-indicator green"></span>
+          <span class="prop-name">Low Variance?</span>
+          <span class="prop-verdict green">YES</span>
+        </div>
+        <div class="prop-desc">
+          By regularizing and setting small coefficients to exactly zero,
+          Lasso substantially reduces variance compared to OLS,
+          especially in high-dimensional settings (p &approx; n or p &gg; n).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Formula -->
+  <section class="card">
+    <div class="card-title">The Lasso Objective</div>
+    <div class="card-subtitle">Lagrangian (penalized) and constraint forms are equivalent via the Lagrange multiplier relationship</div>
+
+    <div class="formula-box">
+      $$\hat{\beta}^{\text{lasso}} = \arg\min_{\beta} \left\{ \sum_{i=1}^{N}\!\left(y_i - \beta_0 - \sum_{j=1}^{p} x_{ij}\beta_j\right)^{\!2} + \lambda \sum_{j=1}^{p}|\beta_j| \right\}$$
+    </div>
+    <div class="formula-note" style="margin-top:12px;">
+      Equivalent constraint form: minimize RSS subject to $\displaystyle\sum_{j=1}^{p}|\beta_j| \leq t$
+    </div>
+    <div class="formula-note" style="margin-top:8px;">
+      Coordinate-wise update (soft-thresholding): $\hat{\beta}_j \leftarrow S\!\left(\frac{\langle x_j, r_{-j}\rangle}{\langle x_j, x_j\rangle},\; \frac{\lambda}{2\langle x_j,x_j\rangle}\right)$ where $S(z,\gamma) = \text{sign}(z)(|z|-\gamma)_+$
+    </div>
+  </section>
+
+</main>
+
+<script>
+'use strict';
+
+/* ===================================================================
+   PRNG — LCG + Box-Muller (seed=42, identical to ridge regression)
+   =================================================================== */
+function lcg(seed) {
+  var s = seed;
+  return function() {
+    s = (s * 1664525 + 1013904223) & 0x7fffffff;
+    return s / 0x7fffffff;
+  };
+}
+
+function boxMuller(rng) {
+  return function() {
+    var u = rng(), v = rng();
+    while (u === 0) u = rng();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  };
+}
+
+var rand = boxMuller(lcg(42));
+
+/* ===================================================================
+   DATA GENERATION — matches ridge regression exactly
+   y = 2.5*x1 + 1.8*x2 + 0.3 + noise, x2 correlated with x1
+   =================================================================== */
+var N = 50;
+var rawX1 = [], rawX2 = [], rawY = [];
+
+for (var i = 0; i < N; i++) {
+  var x1 = rand();
+  var x2 = 0.7 * rand() + 0.3 * x1;
+  var noise = rand() * 0.5;
+  rawX1.push(x1);
+  rawX2.push(x2);
+  rawY.push(2.5 * x1 + 1.8 * x2 + 0.3 + noise);
+}
+
+/* Center predictors */
+function arrMean(arr) {
+  var s = 0;
+  for (var k = 0; k < arr.length; k++) s += arr[k];
+  return s / arr.length;
+}
+
+var mx1 = arrMean(rawX1);
+var mx2 = arrMean(rawX2);
+var my  = arrMean(rawY);
+
+var cx1 = rawX1.map(function(x) { return x - mx1; });
+var cx2 = rawX2.map(function(x) { return x - mx2; });
+var cy  = rawY.map(function(y)  { return y - my;  });
+
+/* ===================================================================
+   LASSO SOLVER — coordinate descent with soft-thresholding
+   =================================================================== */
+function softThreshold(z, gamma) {
+  if (z > gamma) return z - gamma;
+  if (z < -gamma) return z + gamma;
+  return 0;
+}
+
+function lassoSolve(X1, X2, Y, lambda, maxIter) {
+  if (maxIter === undefined) maxIter = 500;
+  var n = X1.length;
+  var b1 = 0, b2 = 0;
+
+  /* Precompute x'x */
+  var x1sq = 0, x2sq = 0;
+  for (var k = 0; k < n; k++) {
+    x1sq += X1[k] * X1[k];
+    x2sq += X2[k] * X2[k];
+  }
+
+  for (var iter = 0; iter < maxIter; iter++) {
+    /* Update b1: partial residual excluding b1 contribution */
+    var z1 = 0;
+    for (var k = 0; k < n; k++) {
+      z1 += X1[k] * (Y[k] - b2 * X2[k]);
+    }
+    b1 = (x1sq > 1e-12) ? softThreshold(z1, lambda / 2) / x1sq : 0;
+
+    /* Update b2: partial residual excluding b2 contribution */
+    var z2 = 0;
+    for (var k = 0; k < n; k++) {
+      z2 += X2[k] * (Y[k] - b1 * X1[k]);
+    }
+    b2 = (x2sq > 1e-12) ? softThreshold(z2, lambda / 2) / x2sq : 0;
+  }
+  return [b1, b2];
+}
+
+/* OLS solution (lambda=0) */
+var olsSolution = lassoSolve(cx1, cx2, cy, 0, 500);
+var olsB1 = olsSolution[0];
+var olsB2 = olsSolution[1];
+
+/* ===================================================================
+   PLOTLY THEME
+   =================================================================== */
+var DARK_LAYOUT = {
+  paper_bgcolor: '#0d1117',
+  plot_bgcolor:  '#161b22',
+  font: { color: '#e6edf3', family: 'Segoe UI, system-ui, sans-serif', size: 12 },
+  margin: { l: 55, r: 20, t: 30, b: 50 }
+};
+
+var GRID_COLOR   = '#30363d';
+var ACCENT_COLOR = '#f77c6a';
+var BLUE_COLOR   = '#58a6ff';
+var GREEN_COLOR  = '#3fb950';
+
+/* ===================================================================
+   VIZ 1 — 2D scatter + regression lines
+   =================================================================== */
+(function() {
+  var slider  = document.getElementById('v1-lambda');
+  var valSpan = document.getElementById('v1-lambda-val');
+
+  /* Sort cx1 indices for smooth line drawing */
+  var sortIdx = [];
+  for (var i = 0; i < cx1.length; i++) sortIdx.push(i);
+  sortIdx.sort(function(a, b) { return cx1[a] - cx1[b]; });
+  var sortedX1 = sortIdx.map(function(i) { return cx1[i]; });
+
+  var olsLineY = sortedX1.map(function(x) { return olsB1 * x; });
+
+  function update(lambda) {
+    valSpan.textContent = lambda.toFixed(2);
+    var sol = lassoSolve(cx1, cx2, cy, lambda);
+    var b1 = sol[0], b2 = sol[1];
+
+    document.getElementById('v1-b1').textContent = b1.toFixed(3);
+    document.getElementById('v1-b2').textContent = b2.toFixed(3);
+    document.getElementById('v1-l1').textContent = (Math.abs(b1) + Math.abs(b2)).toFixed(3);
+
+    var active = (Math.abs(b1) > 1e-6 ? 1 : 0) + (Math.abs(b2) > 1e-6 ? 1 : 0);
+    document.getElementById('v1-active').textContent = active + ' / 2';
+
+    document.getElementById('v1-b1-chip').className = 'stat-chip' + (Math.abs(b1) < 1e-6 ? ' zero' : '');
+    document.getElementById('v1-b2-chip').className = 'stat-chip' + (Math.abs(b2) < 1e-6 ? ' zero' : '');
+
+    var lassoLineY = sortedX1.map(function(x) { return b1 * x; });
+
+    var annotations = [];
+    if (Math.abs(b1) < 1e-6 && Math.abs(b2) < 1e-6) {
+      annotations.push({
+        x: 0, y: 0, xref: 'x', yref: 'y',
+        text: 'All coefficients zeroed',
+        showarrow: false,
+        font: { color: ACCENT_COLOR, size: 13 },
+        bgcolor: 'rgba(247,124,106,0.12)',
+        bordercolor: ACCENT_COLOR,
+        borderwidth: 1,
+        borderpad: 6
+      });
+    }
+
+    var traces = [
+      {
+        x: cx1, y: cy,
+        mode: 'markers', type: 'scatter', name: 'Data',
+        marker: { color: 'rgba(255,255,255,0.5)', size: 5 }
+      },
+      {
+        x: sortedX1, y: olsLineY,
+        mode: 'lines', type: 'scatter', name: 'OLS (\u03bb=0)',
+        line: { color: GREEN_COLOR, width: 2, dash: 'dash' }
+      },
+      {
+        x: sortedX1, y: lassoLineY,
+        mode: 'lines', type: 'scatter', name: 'Lasso',
+        line: { color: ACCENT_COLOR, width: 3 }
+      }
+    ];
+
+    var layout = {
+      paper_bgcolor: '#0d1117',
+      plot_bgcolor:  '#161b22',
+      font: { color: '#e6edf3', family: 'Segoe UI, system-ui, sans-serif', size: 12 },
+      margin: { l: 55, r: 20, t: 30, b: 50 },
+      annotations: annotations,
+      xaxis: { title: 'x\u2081 (centered)', gridcolor: GRID_COLOR, zerolinecolor: '#484f58' },
+      yaxis: { title: 'y (centered)',  gridcolor: GRID_COLOR, zerolinecolor: '#484f58' },
+      legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(22,27,34,0.85)', bordercolor: '#30363d', borderwidth: 1 },
+      showlegend: true
+    };
+
+    Plotly.react('viz1', traces, layout, { responsive: true, displayModeBar: false });
+  }
+
+  slider.addEventListener('input', function() { update(parseFloat(slider.value)); });
+  update(parseFloat(slider.value));
+})();
+
+/* ===================================================================
+   VIZ 2 — 3D Loss Landscape with L1 PYRAMID
+   =================================================================== */
+(function() {
+  var slider  = document.getElementById('v2-lambda');
+  var valSpan = document.getElementById('v2-lambda-val');
+  var btnRSS  = document.getElementById('v2-rss-btn');
+  var btnPen  = document.getElementById('v2-pen-btn');
+  var btnPyr  = document.getElementById('v2-pyr-btn');
+
+  var viewMode = 'penalized'; /* 'rss', 'penalized', 'pyramid' */
+
+  var GRID_N = 40;
+  var B_RANGE = 4.0;
+
+  /* Build grid axes */
+  var b1arr = [], b2arr = [];
+  for (var g = 0; g < GRID_N; g++) {
+    var val = -B_RANGE + (2 * B_RANGE * g) / (GRID_N - 1);
+    b1arr.push(val);
+    b2arr.push(val);
+  }
+
+  function computeRSS(b1, b2) {
+    var rss = 0;
+    for (var k = 0; k < N; k++) {
+      var r = cy[k] - b1 * cx1[k] - b2 * cx2[k];
+      rss += r * r;
+    }
+    return rss / N;
+  }
+
+  function buildSurface(lambda, mode) {
+    var z = [];
+    for (var i = 0; i < b2arr.length; i++) {
+      var row = [];
+      for (var j = 0; j < b1arr.length; j++) {
+        var val;
+        if (mode === 'pyramid') {
+          val = lambda * (Math.abs(b1arr[j]) + Math.abs(b2arr[i]));
+        } else if (mode === 'penalized') {
+          val = computeRSS(b1arr[j], b2arr[i]) + lambda * (Math.abs(b1arr[j]) + Math.abs(b2arr[i]));
+        } else {
+          val = computeRSS(b1arr[j], b2arr[i]);
+        }
+        row.push(val);
+      }
+      z.push(row);
+    }
+    return z;
+  }
+
+  function setActiveBtn(mode) {
+    btnRSS.className = (mode === 'rss') ? 'btn active' : 'btn';
+    btnPen.className = (mode === 'penalized') ? 'btn active' : 'btn';
+    btnPyr.className = (mode === 'pyramid') ? 'btn active' : 'btn';
+  }
+
+  function draw(lambda) {
+    valSpan.textContent = lambda.toFixed(2);
+
+    var z = buildSurface(lambda, viewMode);
+
+    /* Find the lasso minimum */
+    var effectiveLambda = (viewMode === 'rss') ? 0 : lambda;
+    var sol = lassoSolve(cx1, cx2, cy, effectiveLambda);
+    var b1hat = sol[0], b2hat = sol[1];
+
+    /* Compute z at exact solution */
+    var zMin;
+    if (viewMode === 'pyramid') {
+      zMin = lambda * (Math.abs(b1hat) + Math.abs(b2hat));
+    } else if (viewMode === 'penalized') {
+      zMin = computeRSS(b1hat, b2hat) + lambda * (Math.abs(b1hat) + Math.abs(b2hat));
+    } else {
+      zMin = computeRSS(b1hat, b2hat);
+    }
+
+    /* Colorscale: warm for penalty views, cool for RSS-only */
+    var colorscale;
+    if (viewMode === 'pyramid') {
+      colorscale = [
+        [0,    '#f77c6a'],
+        [0.3,  '#c45040'],
+        [0.6,  '#7a2828'],
+        [1,    '#161b22']
+      ];
+    } else if (viewMode === 'penalized') {
+      colorscale = [
+        [0,    '#f77c6a'],
+        [0.18, '#c45040'],
+        [0.4,  '#7a2828'],
+        [0.65, '#2d1515'],
+        [1,    '#161b22']
+      ];
+    } else {
+      colorscale = [
+        [0,    '#0d1b2a'],
+        [0.25, '#0a3d6b'],
+        [0.5,  '#1a7a8a'],
+        [0.75, '#58a6ff'],
+        [1,    '#e6edf3']
+      ];
+    }
+
+    var zTitle;
+    if (viewMode === 'pyramid') zTitle = '\u03bb(|\u03b2\u2081|+|\u03b2\u2082|)';
+    else if (viewMode === 'penalized') zTitle = 'RSS + \u03bb\u2211|\u03b2|';
+    else zTitle = 'RSS / N';
+
+    var traces = [
+      {
+        type: 'surface',
+        x: b1arr, y: b2arr, z: z,
+        colorscale: colorscale,
+        opacity: 0.88,
+        showscale: false,
+        hovertemplate: '\u03b2\u2081: %{x:.2f}<br>\u03b2\u2082: %{y:.2f}<br>Loss: %{z:.3f}<extra></extra>'
+      }
+    ];
+
+    /* Only show minimum marker for rss and penalized modes */
+    if (viewMode !== 'pyramid') {
+      traces.push({
+        type: 'scatter3d',
+        x: [b1hat], y: [b2hat], z: [zMin],
+        mode: 'markers+text',
+        text: [viewMode === 'penalized' ? 'Lasso' : 'OLS'],
+        textposition: 'top center',
+        marker: { size: 7, color: '#ffd700', symbol: 'diamond' },
+        textfont: { color: '#ffd700', size: 12 },
+        name: 'Minimum',
+        showlegend: false,
+        hovertemplate: 'Minimum<br>\u03b2\u2081=%{x:.3f}<br>\u03b2\u2082=%{y:.3f}<extra></extra>'
+      });
+    }
+
+    var layout = {
+      paper_bgcolor: '#0d1117',
+      plot_bgcolor:  '#161b22',
+      font: { color: '#e6edf3', family: 'Segoe UI, system-ui, sans-serif', size: 11 },
+      margin: { l: 0, r: 0, t: 10, b: 0 },
+      scene: {
+        xaxis: { title: '\u03b2\u2081', gridcolor: GRID_COLOR, backgroundcolor: '#0d1117', showbackground: true, zerolinecolor: '#555' },
+        yaxis: { title: '\u03b2\u2082', gridcolor: GRID_COLOR, backgroundcolor: '#0d1117', showbackground: true, zerolinecolor: '#555' },
+        zaxis: { title: zTitle, gridcolor: GRID_COLOR, backgroundcolor: '#0d1117', showbackground: true },
+        camera: { eye: { x: 1.5, y: 1.7, z: 1.0 } },
+        bgcolor: '#0d1117'
+      }
+    };
+
+    Plotly.react('viz2', traces, layout, { responsive: true, displayModeBar: false });
+  }
+
+  btnRSS.addEventListener('click', function() { viewMode = 'rss'; setActiveBtn('rss'); draw(parseFloat(slider.value)); });
+  btnPen.addEventListener('click', function() { viewMode = 'penalized'; setActiveBtn('penalized'); draw(parseFloat(slider.value)); });
+  btnPyr.addEventListener('click', function() { viewMode = 'pyramid'; setActiveBtn('pyramid'); draw(parseFloat(slider.value)); });
+  slider.addEventListener('input', function() { draw(parseFloat(slider.value)); });
+
+  draw(parseFloat(slider.value));
+})();
+
+/* ===================================================================
+   VIZ 3 — Diamond vs Ellipse (ESL Fig 3.11)
+   =================================================================== */
+(function() {
+  var slider  = document.getElementById('v3-t');
+  var valSpan = document.getElementById('v3-t-val');
+
+  /* Precompute X'X/N for ellipse orientation */
+  var xx11 = 0, xx12 = 0, xx22 = 0;
+  for (var k = 0; k < N; k++) {
+    xx11 += cx1[k] * cx1[k];
+    xx12 += cx1[k] * cx2[k];
+    xx22 += cx2[k] * cx2[k];
+  }
+  xx11 /= N; xx12 /= N; xx22 /= N;
+
+  /* Eigenvalues of X'X/N */
+  var traceA = xx11 + xx22;
+  var detA   = xx11 * xx22 - xx12 * xx12;
+  var disc   = Math.sqrt(Math.max(0, traceA * traceA / 4 - detA));
+  var lam1   = traceA / 2 + disc;
+  var lam2   = traceA / 2 - disc;
+
+  /* Ensure eigenvalues are positive and bounded away from zero */
+  if (lam1 < 1e-8) lam1 = 1e-8;
+  if (lam2 < 1e-8) lam2 = 1e-8;
+
+  /* Eigenvectors */
+  var ev1x, ev1y, ev2x, ev2y;
+  if (Math.abs(xx12) > 1e-10) {
+    ev1x = lam1 - xx22; ev1y = xx12;
+    ev2x = lam2 - xx22; ev2y = xx12;
+  } else {
+    ev1x = 1; ev1y = 0;
+    ev2x = 0; ev2y = 1;
+  }
+  var n1 = Math.sqrt(ev1x * ev1x + ev1y * ev1y);
+  var n2 = Math.sqrt(ev2x * ev2x + ev2y * ev2y);
+  if (n1 > 0) { ev1x /= n1; ev1y /= n1; }
+  if (n2 > 0) { ev2x /= n2; ev2y /= n2; }
+
+  function makeEllipse(level, centerX, centerY, nPts) {
+    if (!nPts) nPts = 200;
+    var a = Math.sqrt(Math.max(0, level / lam1));
+    var b = Math.sqrt(Math.max(0, level / lam2));
+    /* Clamp to avoid enormous ellipses */
+    a = Math.min(a, 20);
+    b = Math.min(b, 20);
+    var xs = [], ys = [];
+    for (var i = 0; i <= nPts; i++) {
+      var th = (2 * Math.PI * i) / nPts;
+      var u = a * Math.cos(th);
+      var v = b * Math.sin(th);
+      xs.push(centerX + u * ev1x + v * ev2x);
+      ys.push(centerY + u * ev1y + v * ev2y);
+    }
+    return [xs, ys];
+  }
+
+  function makeDiamond(t) {
+    return { x: [t, 0, -t, 0, t], y: [0, t, 0, -t, 0] };
+  }
+
+  function makeCircle(r, nPts) {
+    if (!nPts) nPts = 120;
+    var xs = [], ys = [];
+    for (var i = 0; i <= nPts; i++) {
+      var th = (2 * Math.PI * i) / nPts;
+      xs.push(r * Math.cos(th));
+      ys.push(r * Math.sin(th));
+    }
+    return [xs, ys];
+  }
+
+  /* Lasso from constraint t (binary search on lambda) */
+  function lassoFromT(t) {
+    var l1Ols = Math.abs(olsB1) + Math.abs(olsB2);
+    if (t >= l1Ols) return [olsB1, olsB2];
+    if (t <= 0.001) return [0, 0];
+    var lo = 0, hi = 200;
+    for (var it = 0; it < 70; it++) {
+      var mid = (lo + hi) / 2;
+      var sol = lassoSolve(cx1, cx2, cy, mid, 200);
+      var norm = Math.abs(sol[0]) + Math.abs(sol[1]);
+      if (norm > t) lo = mid; else hi = mid;
+    }
+    return lassoSolve(cx1, cx2, cy, (lo + hi) / 2, 200);
+  }
+
+  function update(t) {
+    valSpan.textContent = t.toFixed(2);
+
+    var lsol = lassoFromT(t);
+    var bL1 = lsol[0], bL2 = lsol[1];
+
+    /* RSS at lasso solution for contour level */
+    var rssLasso = 0;
+    for (var k = 0; k < N; k++) {
+      var r = cy[k] - bL1 * cx1[k] - bL2 * cx2[k];
+      rssLasso += r * r;
+    }
+    var rssLevel = rssLasso / N;
+
+    /* Generate contour ellipses at various levels */
+    var levels = [];
+    var minLevel = rssLevel * 0.15;
+    for (var li = 0; li < 6; li++) {
+      levels.push(minLevel + (rssLevel * 3.5 - minLevel) * li / 5);
+    }
+
+    var traces = [];
+
+    /* Ridge circle (faded) */
+    var circXY = makeCircle(t);
+    traces.push({
+      x: circXY[0], y: circXY[1],
+      mode: 'lines', type: 'scatter', name: 'Ridge (L2 ball)',
+      line: { color: BLUE_COLOR, width: 1.5, dash: 'dot' },
+      opacity: 0.35, hoverinfo: 'skip'
+    });
+
+    /* RSS contour ellipses around OLS */
+    for (var idx = 0; idx < levels.length; idx++) {
+      var lev = levels[idx];
+      var isAtSol = (idx === 3);
+      var ell = makeEllipse(lev, olsB1, olsB2);
+      /* Validate: skip if any NaN */
+      var valid = true;
+      for (var ci = 0; ci < ell[0].length; ci++) {
+        if (isNaN(ell[0][ci]) || isNaN(ell[1][ci]) || !isFinite(ell[0][ci]) || !isFinite(ell[1][ci])) {
+          valid = false;
+          break;
+        }
+      }
+      if (!valid) continue;
+
+      traces.push({
+        x: ell[0], y: ell[1],
+        mode: 'lines', type: 'scatter',
+        name: isAtSol ? 'RSS contour at Lasso' : '',
+        showlegend: isAtSol,
+        line: { color: isAtSol ? 'rgba(88,166,255,0.95)' : 'rgba(88,166,255,0.28)', width: isAtSol ? 2 : 1 },
+        hoverinfo: 'skip'
+      });
+    }
+
+    /* Diamond (L1 constraint) */
+    var diamond = makeDiamond(t);
+    traces.push({
+      x: diamond.x, y: diamond.y,
+      mode: 'lines', type: 'scatter', name: 'L1 diamond (|\u03b2|\u2264t)',
+      fill: 'toself', fillcolor: 'rgba(247,124,106,0.07)',
+      line: { color: ACCENT_COLOR, width: 2 }
+    });
+
+    /* OLS point */
+    traces.push({
+      x: [olsB1], y: [olsB2],
+      mode: 'markers', type: 'scatter', name: 'OLS',
+      marker: { size: 9, color: GREEN_COLOR, symbol: 'circle', line: { color: '#fff', width: 1.5 } }
+    });
+
+    /* Lasso point */
+    traces.push({
+      x: [bL1], y: [bL2],
+      mode: 'markers', type: 'scatter', name: 'Lasso',
+      marker: { size: 9, color: ACCENT_COLOR, symbol: 'diamond', line: { color: '#fff', width: 1.5 } }
+    });
+
+    var bRange = Math.max(Math.abs(olsB1), Math.abs(olsB2)) + 0.8;
+    var halfRange = Math.max(bRange, t + 0.4);
+    var axRange = [-halfRange, halfRange];
+
+    var axOffset = Math.abs(bL1) < 0.01 ? -70 : 60;
+    var layout = {
+      paper_bgcolor: '#0d1117',
+      plot_bgcolor:  '#161b22',
+      font: { color: '#e6edf3', family: 'Segoe UI, system-ui, sans-serif', size: 12 },
+      margin: { l: 55, r: 20, t: 30, b: 50 },
+      xaxis: { title: '\u03b2\u2081', range: axRange, gridcolor: GRID_COLOR, zerolinecolor: '#555', zeroline: true },
+      yaxis: { title: '\u03b2\u2082', range: axRange, gridcolor: GRID_COLOR, zerolinecolor: '#555', zeroline: true, scaleanchor: 'x', scaleratio: 1 },
+      legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(22,27,34,0.85)', bordercolor: '#30363d', borderwidth: 1 },
+      annotations: [{
+        x: bL1, y: bL2, xref: 'x', yref: 'y',
+        ax: axOffset, ay: -40,
+        text: '(' + bL1.toFixed(2) + ', ' + bL2.toFixed(2) + ')',
+        showarrow: true, arrowhead: 2, arrowcolor: ACCENT_COLOR,
+        font: { color: ACCENT_COLOR, size: 11 },
+        bgcolor: 'rgba(22,27,34,0.9)',
+        bordercolor: ACCENT_COLOR, borderwidth: 1
+      }]
+    };
+
+    Plotly.react('viz3', traces, layout, { responsive: true, displayModeBar: false });
+  }
+
+  slider.addEventListener('input', function() { update(parseFloat(slider.value)); });
+  update(parseFloat(slider.value));
+})();
+
+/* ===================================================================
+   VIZ 4 — Coefficient Paths
+   =================================================================== */
+(function() {
+  var slider  = document.getElementById('v4-lambda');
+  var valSpan = document.getElementById('v4-lambda-val');
+
+  /* Pre-compute paths */
+  var NLAM    = 160;
+  var LAM_MAX = 8;
+  var lambdas = [];
+  for (var i = 0; i < NLAM; i++) {
+    lambdas.push((LAM_MAX * i) / (NLAM - 1));
+  }
+
+  var path1 = [], path2 = [];
+  for (var i = 0; i < NLAM; i++) {
+    var sol = lassoSolve(cx1, cx2, cy, lambdas[i], 500);
+    path1.push(sol[0]);
+    path2.push(sol[1]);
+  }
+
+  var yMaxPath = -Infinity, yMinPath = Infinity;
+  for (var i = 0; i < NLAM; i++) {
+    if (path1[i] > yMaxPath) yMaxPath = path1[i];
+    if (path2[i] > yMaxPath) yMaxPath = path2[i];
+    if (path1[i] < yMinPath) yMinPath = path1[i];
+    if (path2[i] < yMinPath) yMinPath = path2[i];
+  }
+
+  function update(lambda) {
+    valSpan.textContent = lambda.toFixed(2);
+    var sol = lassoSolve(cx1, cx2, cy, lambda, 500);
+    var b1cur = sol[0], b2cur = sol[1];
+
+    document.getElementById('v4-b1').textContent = b1cur.toFixed(3);
+    document.getElementById('v4-b2').textContent = b2cur.toFixed(3);
+
+    var yPad = (yMaxPath - yMinPath) * 0.1 + 0.05;
+
+    var traces = [
+      {
+        x: lambdas, y: path1,
+        mode: 'lines', type: 'scatter', name: '\u03b2\u0302\u2081',
+        line: { color: ACCENT_COLOR, width: 2.5 }
+      },
+      {
+        x: lambdas, y: path2,
+        mode: 'lines', type: 'scatter', name: '\u03b2\u0302\u2082',
+        line: { color: BLUE_COLOR, width: 2.5 }
+      },
+      /* Zero line */
+      {
+        x: [0, LAM_MAX], y: [0, 0],
+        mode: 'lines', type: 'scatter', showlegend: false,
+        line: { color: '#30363d', width: 1 }, hoverinfo: 'skip'
+      },
+      /* Vertical marker for current lambda */
+      {
+        x: [lambda, lambda], y: [yMinPath - yPad, yMaxPath + yPad],
+        mode: 'lines', type: 'scatter', name: 'Current \u03bb',
+        line: { color: '#666', width: 1.5, dash: 'dot' }, hoverinfo: 'skip'
+      },
+      /* Current value markers */
+      {
+        x: [lambda], y: [b1cur],
+        mode: 'markers', type: 'scatter', showlegend: false,
+        marker: { size: 8, color: ACCENT_COLOR, line: { color: '#fff', width: 1.5 } }
+      },
+      {
+        x: [lambda], y: [b2cur],
+        mode: 'markers', type: 'scatter', showlegend: false,
+        marker: { size: 8, color: BLUE_COLOR, line: { color: '#fff', width: 1.5 } }
+      }
+    ];
+
+    var layout = {
+      paper_bgcolor: '#0d1117',
+      plot_bgcolor:  '#161b22',
+      font: { color: '#e6edf3', family: 'Segoe UI, system-ui, sans-serif', size: 12 },
+      margin: { l: 55, r: 20, t: 30, b: 50 },
+      xaxis: { title: '\u03bb (penalty)', range: [0, LAM_MAX], gridcolor: GRID_COLOR, zerolinecolor: '#555' },
+      yaxis: { title: 'Coefficient value', range: [yMinPath - yPad, yMaxPath + yPad], gridcolor: GRID_COLOR, zerolinecolor: '#555' },
+      legend: { x: 0.98, y: 0.98, xanchor: 'right', bgcolor: 'rgba(22,27,34,0.85)', bordercolor: '#30363d', borderwidth: 1 }
+    };
+
+    Plotly.react('viz4', traces, layout, { responsive: true, displayModeBar: false });
+  }
+
+  slider.addEventListener('input', function() { update(parseFloat(slider.value)); });
+  update(parseFloat(slider.value));
+})();
+
+/* ===================================================================
+   MathJax re-render after load
+   =================================================================== */
+window.addEventListener('load', function() {
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise();
+  }
+});
+</script>
+</body>
+</html>

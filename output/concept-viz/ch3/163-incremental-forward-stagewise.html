@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Incremental Forward Stagewise Regression — ESL §3.8</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  header { background: #161b22; border-bottom: 1px solid #30363d; padding: 24px 32px; }
+  header .tag { font-size: 11px; color: #58a6ff; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+  header h1 { font-size: 26px; font-weight: 700; color: #e6edf3; margin-bottom: 6px; }
+  header .meta { font-size: 13px; color: #8b949e; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+  header .section-badge { background: #21262d; border: 1px solid #30363d; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
+  header .formula { margin-top: 10px; font-size: 15px; color: #a5d6ff; background: #0d1117; border-left: 3px solid #58a6ff; padding: 8px 14px; border-radius: 0 4px 4px 0; display: inline-block; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
+  .viz-area { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+  .viz-area h2 { font-size: 14px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+  .panels { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .panel { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; }
+  .panel h3 { font-size: 12px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; border-bottom: 1px solid #21262d; padding-bottom: 10px; }
+  .quote { font-style: italic; font-size: 13px; line-height: 1.7; color: #c9d1d9; border-left: 3px solid #f78166; padding-left: 12px; }
+  .quote cite { display: block; margin-top: 8px; font-style: normal; font-size: 11px; color: #8b949e; }
+  .guarantee-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #21262d; font-size: 13px; }
+  .guarantee-row:last-child { border-bottom: none; }
+  .badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+  .badge-yes { background: #1a4731; color: #56d364; }
+  .badge-no { background: #3d1c1c; color: #f85149; }
+  .badge-na { background: #1c2128; color: #8b949e; }
+  .related-list { list-style: none; }
+  .related-list li { padding: 6px 0; border-bottom: 1px solid #21262d; font-size: 13px; color: #79c0ff; }
+  .related-list li:last-child { border-bottom: none; }
+  .related-list li span { color: #8b949e; font-size: 11px; display: block; }
+  .note { font-size: 12px; color: #8b949e; margin-top: 12px; line-height: 1.6; }
+  .controls { display: flex; gap: 20px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+  label { font-size: 13px; color: #8b949e; }
+  input[type=range] { width: 160px; accent-color: #58a6ff; }
+  .slider-val { font-size: 13px; color: #58a6ff; font-weight: 600; min-width: 60px; }
+  button { background: #21262d; border: 1px solid #30363d; color: #c9d1d9; border-radius: 4px; padding: 5px 14px; font-size: 13px; cursor: pointer; }
+  button:hover { background: #30363d; }
+  button.active { background: #1f6feb; border-color: #58a6ff; color: #fff; }
+  .info-box { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 12px 16px; font-size: 13px; color: #a5d6ff; margin-top: 14px; }
+  .two-col { display: grid; grid-template-columns: 3fr 2fr; gap: 20px; }
+  .stat-row { display: flex; gap: 24px; margin-top: 10px; font-size: 12px; color: #8b949e; }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat strong { color: #e6edf3; font-size: 16px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="tag">Concept ID 163 &nbsp;·&nbsp; Estimation / Optimization</div>
+  <h1>Incremental Forward Stagewise Regression</h1>
+  <div class="meta">
+    <span class="section-badge">ESL §3.8</span>
+    <span>Slow greedy fitting with step-size ε</span>
+    <span>Forward stagewise / FS<sub>ε</sub></span>
+  </div>
+  <div class="formula">\(\hat\beta_j \leftarrow \hat\beta_j + \varepsilon \cdot \mathrm{sign}\bigl(\langle x_j, r \rangle\bigr), \quad j^* = \arg\max_j |\langle x_j, r \rangle|\)</div>
+</header>
+<div class="container">
+  <div class="viz-area">
+    <h2>Animated Coefficient Paths — Vary ε to See Convergence Behavior</h2>
+    <div class="controls">
+      <label>Step size ε:</label>
+      <input type="range" id="epsilonSlider" min="1" max="10" value="5" oninput="onEpsilonChange(this.value)">
+      <span class="slider-val" id="epsilonVal">0.05</span>
+      <button id="btnPlay" onclick="toggleAnimation()">&#9654; Animate</button>
+      <button onclick="resetAnimation()">&#8635; Reset</button>
+      <label style="margin-left:8px">Show lasso limit:</label>
+      <input type="checkbox" id="showLasso" onchange="redraw()" checked>
+    </div>
+    <div class="two-col">
+      <div id="plot-stagewise"></div>
+      <div>
+        <div id="plot-residual"></div>
+        <div class="stat-row">
+          <div class="stat"><strong id="statSteps">—</strong><span>Total steps</span></div>
+          <div class="stat"><strong id="statActive">—</strong><span>Active vars</span></div>
+          <div class="stat"><strong id="statResid">—</strong><span>Final ‖r‖</span></div>
+        </div>
+        <p class="note" style="margin-top:8px">Large ε = few aggressive steps, rough paths. Small ε = many smooth micro-steps, paths converge to the lasso (ε → 0 gives FS₀ = infinitesimal stagewise).</p>
+      </div>
+    </div>
+    <div class="info-box" id="infoBox">
+      Adjust ε to see how step size controls the trade-off: large ε fits quickly but overshoots; small ε produces smooth monotone paths closely tracking the lasso solution. At ε → 0 this becomes FS₀.
+    </div>
+  </div>
+
+  <div class="panels">
+    <div class="panel">
+      <h3>Book Quote</h3>
+      <p class="quote">
+        "repeatedly updating (by a small amount ε) the coefficient of the variable most correlated with the current residuals"
+        <cite>— ESL §3.8, p. 86</cite>
+      </p>
+      <p class="note" style="margin-top:12px">
+        FS<sub>ε</sub> is slow and deliberate: it never adjusts a coefficient by more than ε at one time. This conservative updating is what makes paths smooth and regularization-like.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h3>Guarantees</h3>
+      <div class="guarantee-row"><span>Unbiased (at convergence)</span><span class="badge badge-na">OLS</span></div>
+      <div class="guarantee-row"><span>Monotone shrinkage</span><span class="badge badge-yes">Yes</span></div>
+      <div class="guarantee-row"><span>Sparse solutions</span><span class="badge badge-yes">Yes</span></div>
+      <div class="guarantee-row"><span>Path → lasso (ε → 0)</span><span class="badge badge-yes">Yes</span></div>
+      <div class="guarantee-row"><span>Prediction consistent</span><span class="badge badge-yes">Yes</span></div>
+      <div class="guarantee-row"><span>Fast convergence</span><span class="badge badge-no">No</span></div>
+      <p class="note" style="margin-top:8px">Convergence requires O(1/ε) steps; slow but practically useful for high-dimensional noisy problems.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Related Concepts</h3>
+      <ul class="related-list">
+        <li>Infinitesimal Forward Stagewise (FS₀) <span>ID 164 — §3.8 — ε → 0 limit</span></li>
+        <li>Lasso <span>ID 143 — §3.4.2 — FS₀ path matches lasso</span></li>
+        <li>L2boost <span>ID 165 — §3.8 — same procedure, boosting view</span></li>
+        <li>LAR <span>ID 151 — §3.4.4 — similar monotone path structure</span></li>
+        <li>Forward Stepwise Selection <span>ID 108 — §3.3 — discrete analog</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+const COLORS = ['#58a6ff','#f78166','#56d364','#e3b341','#bc8cff'];
+const P = 5; // predictors
+
+// True coefficients (OLS target)
+const trueBeta = [0.7, -0.4, 0.55, -0.2, 0.3];
+
+// Simulate FS_epsilon path
+function simulateStagewise(eps, maxIter) {
+  let beta = new Array(P).fill(0);
+  const path = [[...beta]];
+  const residNorm = [];
+
+  // Precompute X^T y and X^T X for a synthetic dataset
+  // We use a simplified simulation: correlations diminish as betas approach true values
+  function getCorr(b) {
+    return trueBeta.map((tb, j) => tb - b[j]);
+  }
+
+  for (let it = 0; it < maxIter; it++) {
+    const corr = getCorr(beta);
+    const absCorr = corr.map(Math.abs);
+    const best = absCorr.indexOf(Math.max(...absCorr));
+    const rNorm = Math.sqrt(corr.reduce((s,c) => s + c*c, 0));
+    residNorm.push(rNorm);
+    if (rNorm < 0.01) break;
+    beta = beta.map((b,j) => j === best ? b + eps * Math.sign(corr[j]) : b);
+    path.push([...beta]);
+  }
+  return {path, residNorm};
+}
+
+// Lasso path approximation (ε → 0 limit, just linearly interpolating to true betas)
+function lassoPath(nSteps) {
+  return Array.from({length: nSteps}, (_, i) => {
+    const t = i / (nSteps - 1);
+    return trueBeta.map(b => b * Math.pow(t, 0.7));
+  });
+}
+
+let animTimer = null;
+let animStep = 0;
+let currentPath = [];
+let currentResid = [];
+let epsilonVal = 0.05;
+
+function getEpsilon(sliderVal) {
+  const levels = [0.005, 0.01, 0.02, 0.05, 0.08, 0.1, 0.15, 0.2, 0.3, 0.5];
+  return levels[parseInt(sliderVal) - 1];
+}
+
+function onEpsilonChange(val) {
+  epsilonVal = getEpsilon(val);
+  document.getElementById('epsilonVal').textContent = epsilonVal.toFixed(3);
+  resetAnimation();
+  redraw();
+}
+
+function redraw(upTo) {
+  const {path, residNorm} = simulateStagewise(epsilonVal, 800);
+  currentPath = path;
+  currentResid = residNorm;
+  const nSteps = path.length;
+  const showAll = upTo === undefined;
+  const end = showAll ? nSteps : Math.min(upTo+1, nSteps);
+  const showLasso = document.getElementById('showLasso').checked;
+
+  const tSteps = Array.from({length: end}, (_, i) => i);
+
+  const traces = Array.from({length: P}, (_, j) => ({
+    x: tSteps,
+    y: path.slice(0, end).map(r => r[j]),
+    name: `X${j+1}`,
+    mode: 'lines',
+    line: {color: COLORS[j], width: 2},
+    showlegend: true,
+  }));
+
+  if (showLasso) {
+    const lp = lassoPath(Math.min(end, 60));
+    const scale = (end - 1) / (lp.length - 1);
+    Array.from({length: P}, (_, j) => {
+      traces.push({
+        x: lp.map((_, i) => i * scale),
+        y: lp.map(r => r[j]),
+        name: j === 0 ? 'Lasso limit' : '',
+        mode: 'lines',
+        line: {color: COLORS[j], width: 1.5, dash: 'dot'},
+        opacity: 0.45,
+        showlegend: j === 0,
+        legendgroup: 'lasso',
+      });
+    });
+  }
+
+  Plotly.react('plot-stagewise', traces, {
+    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
+    font: {color: '#8b949e'},
+    xaxis: {title: 'Iteration', gridcolor: '#21262d', zerolinecolor: '#30363d'},
+    yaxis: {title: 'Coefficient', gridcolor: '#21262d', zerolinecolor: '#58a6ff', zerolinewidth: 1},
+    legend: {bgcolor: 'transparent', font: {size: 11}},
+    margin: {t: 10, l: 55, r: 20, b: 50},
+    height: 300,
+  }, {responsive: true, displayModeBar: false});
+
+  // Residual plot
+  Plotly.react('plot-residual', [{
+    x: Array.from({length: residNorm.slice(0,end).length}, (_,i)=>i),
+    y: residNorm.slice(0, end),
+    mode: 'lines', line: {color: '#e3b341', width: 2},
+    fill: 'tozeroy', fillcolor: 'rgba(227,179,65,0.08)',
+    showlegend: false,
+  }], {
+    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
+    font: {color: '#8b949e'},
+    xaxis: {title: 'Iteration', gridcolor: '#21262d'},
+    yaxis: {title: '‖residuals‖₂', gridcolor: '#21262d'},
+    margin: {t: 10, l: 55, r: 20, b: 50},
+    height: 160,
+    title: {text: 'Residual Norm', font: {color:'#8b949e', size:12}},
+  }, {responsive: true, displayModeBar: false});
+
+  // Stats
+  const active = path[end-1].filter(b => Math.abs(b) > 1e-6).length;
+  const rn = residNorm[end-1] || 0;
+  document.getElementById('statSteps').textContent = end;
+  document.getElementById('statActive').textContent = active;
+  document.getElementById('statResid').textContent = rn.toFixed(3);
+
+  const infoMap = {
+    0.005: 'ε = 0.005: Extremely fine steps. Paths are nearly identical to the lasso (FS₀ limit). Requires hundreds of iterations.',
+    0.01:  'ε = 0.010: Very smooth paths, closely tracking lasso. High iteration count.',
+    0.02:  'ε = 0.020: Smooth paths, modest deviation from lasso.',
+    0.05:  'ε = 0.050: Balanced — practical default. Visible staircase effect on short paths.',
+    0.08:  'ε = 0.080: Noticeable staircase. Some over/undershooting.',
+    0.1:   'ε = 0.100: Aggressive steps. Paths are coarse.',
+    0.15:  'ε = 0.150: Large jumps between predictors. Path diverges from lasso.',
+    0.2:   'ε = 0.200: Very coarse. Coefficients overshoot and correct.',
+    0.3:   'ε = 0.300: Near-forward-stepwise behavior. Unstable corrections.',
+    0.5:   'ε = 0.500: Nearly equivalent to forward stepwise. Lasso limit not visible.',
+  };
+  document.getElementById('infoBox').textContent = infoMap[epsilonVal] || '';
+}
+
+function toggleAnimation() {
+  const btn = document.getElementById('btnPlay');
+  const {path} = simulateStagewise(epsilonVal, 800);
+  if (animTimer) {
+    clearInterval(animTimer);
+    animTimer = null;
+    btn.innerHTML = '&#9654; Animate';
+    btn.className = '';
+    return;
+  }
+  animStep = 0;
+  btn.innerHTML = '&#9646;&#9646; Pause';
+  btn.className = 'active';
+  animTimer = setInterval(() => {
+    redraw(animStep);
+    animStep += Math.max(1, Math.floor(path.length / 80));
+    if (animStep >= path.length) {
+      clearInterval(animTimer);
+      animTimer = null;
+      btn.innerHTML = '&#9654; Animate';
+      btn.className = '';
+      redraw();
+    }
+  }, 60);
+}
+
+function resetAnimation() {
+  if (animTimer) { clearInterval(animTimer); animTimer = null; }
+  animStep = 0;
+  document.getElementById('btnPlay').innerHTML = '&#9654; Animate';
+  document.getElementById('btnPlay').className = '';
+}
+
+// Init
+document.getElementById('epsilonVal').textContent = epsilonVal.toFixed(3);
+document.getElementById('epsilonSlider').value = 4;
+redraw();
+</script>
+</body>
+</html>

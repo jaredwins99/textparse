@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forward Stepwise Selection — ESL §3.3.2</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  header {
+    background: linear-gradient(135deg, #161b22 0%, #1c2128 100%);
+    border-bottom: 1px solid #30363d; padding: 28px 40px 24px;
+  }
+  .header-meta { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+  .badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .badge-id { background: #1f6feb33; color: #58a6ff; border: 1px solid #1f6feb; }
+  .badge-section { background: #388bfd22; color: #79c0ff; border: 1px solid #388bfd44; }
+  .badge-cat { background: #2ea04326; color: #56d364; border: 1px solid #2ea04344; }
+  h1 { font-size: 28px; font-weight: 700; color: #f0f6fc; margin-bottom: 8px; }
+  .formula { font-size: 14px; color: #8b949e; padding: 6px 0; }
+  .main { display: grid; grid-template-columns: 1fr 360px; gap: 24px; padding: 28px 40px; max-width: 1400px; }
+  .viz-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; overflow: hidden; }
+  .viz-title { padding: 16px 20px 12px; border-bottom: 1px solid #30363d; font-size: 13px; font-weight: 600; color: #8b949e; text-transform: uppercase; letter-spacing: 0.6px; }
+  .controls { padding: 16px 20px; border-top: 1px solid #30363d; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  button { background: #1f6feb; color: #fff; border: none; border-radius: 6px; padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+  button:hover { background: #388bfd; }
+  button.secondary { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; }
+  button.secondary:hover { background: #30363d; }
+  button.active { background: #388bfd; }
+  .sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 20px; }
+  .panel-title { font-size: 11px; font-weight: 700; color: #8b949e; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 14px; display: flex; align-items: center; }
+  .panel-title::before { content: ''; display: inline-block; width: 3px; height: 14px; border-radius: 2px; margin-right: 8px; }
+  .panel-title.blue::before { background: #58a6ff; }
+  .panel-title.green::before { background: #56d364; }
+  .panel-title.orange::before { background: #f0883e; }
+  blockquote { border-left: 3px solid #1f6feb; padding-left: 14px; color: #c9d1d9; font-size: 13px; line-height: 1.7; font-style: italic; }
+  blockquote cite { display: block; margin-top: 8px; font-size: 11px; color: #58a6ff; font-style: normal; font-weight: 600; }
+  .guarantee-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+  .g-icon { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin-top: 1px; }
+  .g-yes { background: #1e3a2f; color: #56d364; }
+  .g-no { background: #3d1a1a; color: #f85149; }
+  .g-na { background: #2d2a1e; color: #f0883e; }
+  .g-label { font-size: 13px; font-weight: 600; color: #c9d1d9; }
+  .g-desc { font-size: 12px; color: #8b949e; margin-top: 2px; }
+  .related-tag { display: inline-block; background: #21262d; border: 1px solid #30363d; border-radius: 6px; padding: 5px 12px; font-size: 12px; color: #79c0ff; margin: 4px; }
+  .related-tag:hover { border-color: #58a6ff; }
+  .step-info { padding: 12px 20px; border-top: 1px solid #30363d; font-size: 13px; color: #8b949e; min-height: 44px; }
+  .step-info span { color: #79c0ff; font-weight: 600; }
+  #chart-rss { height: 280px; }
+  #chart-coef { height: 260px; }
+  .step-vars {
+    display: flex; gap: 8px; padding: 12px 20px; border-top: 1px solid #30363d; flex-wrap: wrap;
+  }
+  .var-chip {
+    padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    transition: all 0.3s;
+  }
+  .var-in  { background: #0d2d1a; color: #56d364; border: 1px solid #2ea043; }
+  .var-out { background: #21262d; color: #8b949e; border: 1px solid #30363d; }
+  .var-new { background: #1f6feb; color: #fff; border: 1px solid #388bfd; animation: pulse 0.6s ease; }
+  @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.15)} 100%{transform:scale(1)} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-meta">
+    <span class="badge badge-id">ID 144</span>
+    <span class="badge badge-section">§ 3.3.2 — Subset Selection</span>
+    <span class="badge badge-cat">Comparison / Selection</span>
+  </div>
+  <h1>Forward Stepwise Selection</h1>
+  <div class="formula">
+    At each step: add \(\hat{j} = \arg\min_{j \notin S} \text{RSS}(S \cup \{j\})\) &nbsp;|&nbsp; Start from intercept, greedily grow the model
+  </div>
+</header>
+
+<div class="main">
+  <div>
+    <div class="viz-card">
+      <div class="viz-title">Step-by-Step: Variables Added &amp; RSS Decreasing</div>
+      <div class="step-vars" id="step-vars">
+        <!-- chips rendered by JS -->
+      </div>
+      <div id="chart-rss"></div>
+      <div id="chart-coef"></div>
+      <div class="step-info" id="step-info">
+        Press <strong>Play</strong> to watch variables enter the model one at a time, and see RSS drop at each step.
+      </div>
+      <div class="controls">
+        <button id="btn-play" onclick="playAnimation()">&#9654; Play</button>
+        <button class="secondary" onclick="resetAnimation()">&#8635; Reset</button>
+        <button class="secondary" id="btn-step" onclick="stepOnce()">&#9658; Step</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="panel">
+      <div class="panel-title blue">Book Quote</div>
+      <blockquote>
+        "Forward-stepwise selection starts with the intercept, and then sequentially adds into the model the predictor that most improves the fit."
+        <cite>— ESL §3.3.2, Hastie, Tibshirani &amp; Friedman</cite>
+      </blockquote>
+      <p style="margin-top:12px;font-size:12px;color:#8b949e;line-height:1.6;">
+        Computationally cheaper than best-subset: only \(1 + p + (p-1) + \cdots = O(p^2)\) models fit, vs \(2^p\). Greedy — may miss the globally optimal subset, but in practice performs comparably.
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title green">Guarantees</div>
+      <div class="guarantee-row">
+        <div class="g-icon g-no">✗</div>
+        <div>
+          <div class="g-label">Globally Optimal</div>
+          <div class="g-desc">Not guaranteed — greedy. May miss the best subset for a given size.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-na">~</div>
+        <div>
+          <div class="g-label">Unbiased</div>
+          <div class="g-desc">OLS within chosen subset is unbiased conditional on selection, but selection itself is adaptive.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-no">✗</div>
+        <div>
+          <div class="g-label">Low Variance</div>
+          <div class="g-desc">Discrete nature causes high variance — small data perturbations can change which variables enter.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-yes">✓</div>
+        <div>
+          <div class="g-label">Monotone Fit Improvement</div>
+          <div class="g-desc">Training RSS cannot increase — each added variable can only help (or not change) the fit.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-yes">✓</div>
+        <div>
+          <div class="g-label">Scales to Large p</div>
+          <div class="g-desc">Works for p &gt; 40 where best-subset and leaps-and-bounds are infeasible.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title orange">Related Concepts</div>
+      <div>
+        <span class="related-tag">Best Subset Selection</span>
+        <span class="related-tag">Leaps &amp; Bounds (ID 143)</span>
+        <span class="related-tag">Backward Stepwise (ID 145)</span>
+        <span class="related-tag">Forward Stagewise (ID 146)</span>
+        <span class="related-tag">AIC / BIC (ID 179)</span>
+        <span class="related-tag">Cross-Validation</span>
+        <span class="related-tag">F-statistic / Z-score</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── Data ────────────────────────────────────────────────────────────────────
+const variables = ['X₁ (Age)', 'X₂ (Income)', 'X₃ (Education)', 'X₄ (Region)', 'X₅ (Occupation)', 'X₆ (Experience)'];
+const varShort  = ['X₁', 'X₂', 'X₃', 'X₄', 'X₅', 'X₆'];
+
+// Simulated RSS values after each step, and RSS contribution of each candidate
+// Step 0 = intercept only
+const steps = [
+  { added: null,  rss: 1.000, addedIdx: -1,   candidates: [0.68, 0.55, 0.72, 0.81, 0.89, 0.77],
+    coefs: [0, 0, 0, 0, 0, 0], msg: 'Step 0: Intercept-only model. RSS = 1.000 (normalized).' },
+  { added: 'X₃',  rss: 0.550, addedIdx: 2,   candidates: [0.38, null, 0.51, 0.63, 0.71, 0.60],
+    coefs: [0, 0, 0.48, 0, 0, 0], msg: 'Step 1: X₃ (Education) enters — biggest RSS drop. Δ = −0.450.' },
+  { added: 'X₂',  rss: 0.380, addedIdx: 1,   candidates: [0.29, null, null, 0.37, 0.45, 0.40],
+    coefs: [0, 0.31, 0.41, 0, 0, 0], msg: 'Step 2: X₂ (Income) enters — next best improvement. Δ = −0.170.' },
+  { added: 'X₁',  rss: 0.290, addedIdx: 0,   candidates: [null, null, null, 0.26, 0.31, 0.28],
+    coefs: [0.19, 0.27, 0.35, 0, 0, 0], msg: 'Step 3: X₁ (Age) enters. Δ = −0.090.' },
+  { added: 'X₄',  rss: 0.260, addedIdx: 3,   candidates: [null, null, null, null, 0.24, 0.24],
+    coefs: [0.17, 0.24, 0.32, 0.12, 0, 0], msg: 'Step 4: X₄ (Region) enters. Δ = −0.030. Smaller gains now.' },
+  { added: 'X₅',  rss: 0.240, addedIdx: 4,   candidates: [null, null, null, null, null, 0.235],
+    coefs: [0.16, 0.22, 0.30, 0.11, 0.08, 0], msg: 'Step 5: X₅ (Occupation). Δ = −0.020. Diminishing returns.' },
+  { added: 'X₆',  rss: 0.235, addedIdx: 5,   candidates: [null, null, null, null, null, null],
+    coefs: [0.15, 0.21, 0.29, 0.10, 0.07, 0.04], msg: 'Step 6: X₆ (Experience) enters last. Δ = −0.005. Nearly flat — may overfit.' },
+];
+
+let currentStep = 0;
+let animTimer = null;
+
+function renderChips(step) {
+  const el = document.getElementById('step-vars');
+  el.innerHTML = '';
+  const inSet = new Set();
+  for (let i = 1; i <= step; i++) inSet.add(steps[i].addedIdx);
+
+  variables.forEach((v, i) => {
+    const chip = document.createElement('span');
+    chip.className = 'var-chip';
+    chip.textContent = varShort[i];
+
+    if (step > 0 && steps[step].addedIdx === i) {
+      chip.className = 'var-chip var-new';
+      chip.textContent = varShort[i] + ' ← added';
+    } else if (inSet.has(i)) {
+      chip.className = 'var-chip var-in';
+    } else {
+      chip.className = 'var-chip var-out';
+    }
+    el.appendChild(chip);
+  });
+}
+
+function renderRSSChart(step) {
+  const xs = steps.slice(0, step + 1).map((_, i) => i);
+  const ys = steps.slice(0, step + 1).map(s => s.rss);
+  const labels = steps.slice(0, step + 1).map((s, i) => i === 0 ? 'Intercept' : s.added);
+
+  // Future steps dimmed
+  const xsFuture = steps.slice(step + 1).map((_, i) => step + 1 + i);
+  const ysFuture = steps.slice(step + 1).map(s => s.rss);
+
+  const data = [
+    {
+      x: xs, y: ys, mode: 'lines+markers+text', type: 'scatter',
+      line: { color: '#58a6ff', width: 2.5 },
+      marker: { color: ys.map((_, i) => i === step ? '#56d364' : '#58a6ff'), size: 9 },
+      text: labels, textposition: 'top center',
+      textfont: { color: '#79c0ff', size: 11 },
+      hovertemplate: 'Step %{x}<br>RSS = %{y:.3f}<extra></extra>',
+      name: 'RSS (so far)',
+    },
+    {
+      x: xsFuture, y: ysFuture, mode: 'lines+markers', type: 'scatter',
+      line: { color: '#30363d', width: 1.5, dash: 'dot' },
+      marker: { color: '#30363d', size: 6 },
+      hoverinfo: 'skip',
+      name: 'Future steps',
+      showlegend: false,
+    }
+  ];
+
+  // Shade the drop at current step
+  const shapes = [];
+  if (step > 0) {
+    shapes.push({
+      type: 'rect', x0: step - 1, x1: step,
+      y0: steps[step].rss, y1: steps[step - 1].rss,
+      fillcolor: '#56d36418', line: { width: 0 },
+      layer: 'below',
+    });
+  }
+
+  const layout = {
+    paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+    margin: { l: 52, r: 20, t: 18, b: 50 },
+    xaxis: {
+      tickvals: steps.map((_, i) => i),
+      ticktext: steps.map((s, i) => i === 0 ? 'k=0' : `k=${i}`),
+      color: '#8b949e', gridcolor: '#21262d', zeroline: false,
+      title: { text: 'Model size (variables in model)', font: { color: '#8b949e', size: 12 } },
+    },
+    yaxis: {
+      range: [0.18, 1.08],
+      color: '#8b949e', gridcolor: '#21262d', zeroline: false,
+      title: { text: 'RSS (normalized)', font: { color: '#8b949e', size: 12 } },
+    },
+    shapes,
+    legend: { font: { color: '#8b949e', size: 11 }, bgcolor: 'transparent' },
+    annotations: step > 0 ? [{
+      x: step - 0.5, y: (steps[step - 1].rss + steps[step].rss) / 2,
+      text: `Δ = ${(steps[step].rss - steps[step - 1].rss).toFixed(3)}`,
+      showarrow: false, font: { color: '#56d364', size: 11 },
+      bgcolor: '#0d2d1a', bordercolor: '#2ea043', borderwidth: 1, borderpad: 3,
+    }] : [],
+  };
+
+  Plotly.react('chart-rss', data, layout, { responsive: true, displayModeBar: false });
+}
+
+function renderCoefChart(step) {
+  const coefs = steps[step].coefs;
+
+  const colors = variables.map((_, i) => {
+    if (step > 0 && steps[step].addedIdx === i) return '#56d364';
+    if (coefs[i] > 0) return '#58a6ff';
+    return '#30363d';
+  });
+
+  const data = [{
+    x: coefs, y: varShort, type: 'bar', orientation: 'h',
+    marker: { color: colors },
+    hovertemplate: '%{y}: β = %{x:.2f}<extra></extra>',
+  }];
+
+  const layout = {
+    paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+    margin: { l: 50, r: 20, t: 14, b: 40 },
+    xaxis: {
+      range: [0, 0.55], color: '#8b949e', gridcolor: '#21262d', zeroline: true, zerolinecolor: '#30363d',
+      title: { text: 'Coefficient magnitude', font: { color: '#8b949e', size: 12 } },
+    },
+    yaxis: { color: '#8b949e', gridcolor: 'transparent', autorange: 'reversed' },
+    bargap: 0.3,
+  };
+
+  Plotly.react('chart-coef', data, layout, { responsive: true, displayModeBar: false });
+}
+
+function update(step) {
+  currentStep = step;
+  renderChips(step);
+  renderRSSChart(step);
+  renderCoefChart(step);
+  document.getElementById('step-info').innerHTML =
+    `<span>Step ${step}/${steps.length - 1}</span> — ${steps[step].msg}`;
+}
+
+function stepOnce() {
+  if (currentStep < steps.length - 1) update(currentStep + 1);
+}
+
+function playAnimation() {
+  if (animTimer) {
+    clearInterval(animTimer);
+    animTimer = null;
+    document.getElementById('btn-play').textContent = '▶ Play';
+    return;
+  }
+  document.getElementById('btn-play').textContent = '⏸ Pause';
+  animTimer = setInterval(() => {
+    if (currentStep >= steps.length - 1) {
+      clearInterval(animTimer); animTimer = null;
+      document.getElementById('btn-play').textContent = '▶ Play';
+      return;
+    }
+    update(currentStep + 1);
+  }, 900);
+}
+
+function resetAnimation() {
+  clearInterval(animTimer); animTimer = null;
+  document.getElementById('btn-play').textContent = '▶ Play';
+  update(0);
+}
+
+update(0);
+</script>
+</body>
+</html>

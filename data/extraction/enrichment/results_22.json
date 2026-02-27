@@ -1,0 +1,801 @@
+[
+  {
+    "concept_id": 440,
+    "concept_name": "inner product representation",
+    "facts": [
+      {
+        "fact_text": "We can represent the optimization problem (12.9) and its solution in a special way that only involves the input features via inner products. We do this directly for the transformed feature vectors h(xi). We then see that for particular choices of h, these inner products can be computed very cheaply.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 31695,
+        "page_number": 441
+      },
+      {
+        "fact_text": "So both (12.19) and (12.20) involve h(x) only through inner products. In fact, we need not specify the transformation h(x) at all, but require only knowledge of the kernel function",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 31711,
+        "page_number": 442
+      },
+      {
+        "fact_text": "K(x, x\u2032) = \u27e8h(x), h(x\u2032)\u27e9\n(12.21)",
+        "fact_type": "formula",
+        "importance_rank": 3,
+        "paragraph_id": 31712,
+        "page_number": 442
+      },
+      {
+        "fact_text": "that computes inner products in the transformed space. K should be a symmetric positive (semi-) definite function; see Section 5.8.1.\nThree popular choices for K in the SVM literature are",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 31713,
+        "page_number": 442
+      },
+      {
+        "fact_text": "dth-Degree polynomial: K(x, x\u2032) = (1 + \u27e8x, x\u2032\u27e9)d,",
+        "fact_type": "formula",
+        "importance_rank": 5,
+        "paragraph_id": 31714,
+        "page_number": 442
+      },
+      {
+        "fact_text": "Radial basis: K(x, x\u2032) = exp(\u2212\u03b3\u2225x \u2212x\u2032\u22252),\nNeural network: K(x, x\u2032) = tanh(\u03ba1\u27e8x, x\u2032\u27e9+ \u03ba2).",
+        "fact_type": "example",
+        "importance_rank": 6,
+        "paragraph_id": 31715,
+        "page_number": 442
+      },
+      {
+        "fact_text": "As before, given \u03b1i, \u03b20 can be determined by solving yif(xi) = 1 in (12.20) for any (or all) xi for which 0 < \u03b1i < C.",
+        "fact_type": "property",
+        "importance_rank": 7,
+        "paragraph_id": 31709,
+        "page_number": 441
+      }
+    ]
+  },
+  {
+    "concept_id": 44,
+    "concept_name": "FDA",
+    "facts": [
+      {
+        "fact_text": "In the remainder of this chapter we describe a class of techniques that attend to all these issues by generalizing the LDA model. This is achieved largely by three different ideas.\nThe first idea is to recast the LDA problem as a linear regression problem. Many techniques exist for generalizing linear regression to more flexible, nonparametric forms of regression. This in turn leads to more flexible forms of discriminant analysis, which we call FDA.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 32665,
+        "page_number": 457
+      },
+      {
+        "fact_text": "In Section 4.3 we discussed linear discriminant analysis (LDA), a fundamental tool for classification. For the remainder of this chapter we discuss a class of techniques that produce better classifiers than LDA by directly generalizing LDA.",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 32654,
+        "page_number": 456
+      },
+      {
+        "fact_text": "\u2022 It is a simple prototype classifier. A new observation is classified to the class with closest centroid. A slight twist is that distance is measured in the Mahalanobis metric, using a pooled covariance estimate.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 32655,
+        "page_number": 456
+      },
+      {
+        "fact_text": "\u2022 LDA is the estimated Bayes classifier if the observations are multivariate Gaussian in each class, with a common covariance matrix. Since this assumption is unlikely to be true, this might not seem to be much of a virtue.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 32657,
+        "page_number": 457
+      },
+      {
+        "fact_text": "\u2022 Often linear decision boundaries do not adequately separate the classes. When N is large, it is possible to estimate more complex decision boundaries. Quadratic discriminant analysis (QDA) is often useful here, and allows for quadratic decision boundaries. More generally we would like to be able to model irregular decision boundaries.",
+        "fact_type": "comparison",
+        "importance_rank": 5,
+        "paragraph_id": 32662,
+        "page_number": 457
+      },
+      {
+        "fact_text": "\u2022 Often LDA produces the best classification results, because of its simplicity and low variance. LDA was among the top three classifiers for 11 of the 22 datasets studied in the STATLOG project (Michie et al., 1994).",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 32660,
+        "page_number": 457
+      }
+    ]
+  },
+  {
+    "concept_id": 447,
+    "concept_name": "multiclass svm",
+    "facts": [
+      {
+        "fact_text": "The support vector machine can be extended to multiclass problems, essentially by solving many two-class problems. A classifier is built for each pair of classes, and the final classifier is the one that dominates the most (Kressel, 1999; Friedman, 1996; Hastie and Tibshirani, 1998). Alternatively, one could use the multinomial loss function along with a suitable kernel, as in Section 12.3.3.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 32647,
+        "page_number": 456
+      },
+      {
+        "fact_text": "The regularization parameter C controls an upper bound on the VC dimension of the classifier. Following the SRM paradigm, we could choose C by minimizing the upper bound on the test error, given in (12.51). However, it is not clear that this has any advantage over the use of cross-validation for choice of C.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 32652,
+        "page_number": 456
+      },
+      {
+        "fact_text": "The support vector classifier was one of the first practical learning procedures for which useful bounds on the VC dimension could be obtained, and hence the SRM program could be carried out. However in the derivation, balls are put around the data points\u2014a process that depends on the observed values of the features. Hence in a strict sense, the VC complexity of the class is not fixed a priori, before seeing the features.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 32652,
+        "page_number": 456
+      },
+      {
+        "fact_text": "If f(x) separates the training data, optimally for \u2225\u03b2\u2225\u2264A, then with probability at least 1 \u2212\u03b7 over training sets (Vapnik, 1996, page 139):",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 32649,
+        "page_number": 456
+      },
+      {
+        "fact_text": "SVMs have applications in many other supervised and unsupervised learning problems. At the time of this writing, empirical evidence suggests that it performs well in many real learning problems.",
+        "fact_type": "intuition",
+        "importance_rank": 5,
+        "paragraph_id": 32647,
+        "page_number": 456
+      }
+    ]
+  },
+  {
+    "concept_id": 45,
+    "concept_name": "penalized discriminant analysis",
+    "facts": [
+      {
+        "fact_text": "The steps in FDA can then be viewed as a generalized form of LDA, which we call penalized discriminant analysis, or PDA:",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 33040,
+        "page_number": 464
+      },
+      {
+        "fact_text": "Although FDA is motivated by generalizing optimal scoring, it can also be viewed directly as a form of regularized discriminant analysis. Suppose the regression procedure used in FDA amounts to a linear regression onto a basis expansion h(X), with a quadratic penalty on the coefficients:",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 33031,
+        "page_number": 464
+      },
+      {
+        "fact_text": "D(x, \u03bc) = (h(x) \u2212h(\u03bc))T (\u03a3W + \u03bb\u03a9)\u22121(h(x) \u2212h(\u03bc)),\n(12.58)",
+        "fact_type": "formula",
+        "importance_rank": 3,
+        "paragraph_id": 33043,
+        "page_number": 464
+      },
+      {
+        "fact_text": "where \u03a3W is the within-class covariance matrix of the derived variables h(xi).",
+        "fact_type": "definition",
+        "importance_rank": 4,
+        "paragraph_id": 33044,
+        "page_number": 464
+      },
+      {
+        "fact_text": "Loosely speaking, the penalized Mahalanobis distance tends to give less weight to \u201crough\u201d coordinates, and more weight to \u201csmooth\u201d ones; since the penalty is not diagonal, the same applies to linear combinations that are rough or smooth.",
+        "fact_type": "intuition",
+        "importance_rank": 5,
+        "paragraph_id": 33047,
+        "page_number": 464
+      },
+      {
+        "fact_text": "\u2022 Enlarge the set of predictors X via a basis expansion h(X).",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 33041,
+        "page_number": 464
+      },
+      {
+        "fact_text": "\u2022 Use (penalized) LDA in the enlarged space, where the penalized Mahalanobis distance is given by",
+        "fact_type": "property",
+        "importance_rank": 7,
+        "paragraph_id": 33042,
+        "page_number": 464
+      }
+    ]
+  },
+  {
+    "concept_id": 464,
+    "concept_name": "model-free methods",
+    "facts": [
+      {
+        "fact_text": "In this chapter we discuss some simple and essentially model-free methods for classification and pattern recognition. Because they are highly unstructured, they typically are not useful for understanding the nature of the relationship between the features and class outcome. However, as black box prediction engines, they can be very effective, and are often among the best performers in real data problems.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 35997,
+        "page_number": 477
+      },
+      {
+        "fact_text": "The nearest-neighbor technique can also be used in regression; this was touched on in Chapter 2 and works reasonably well for low-dimensional problems. However, with high-dimensional features, the bias\u2013variance tradeoff does not work as favorably for nearest-neighbor regression as it does for classification.",
+        "fact_type": "comparison",
+        "importance_rank": 2,
+        "paragraph_id": 35997,
+        "page_number": 477
+      },
+      {
+        "fact_text": "Throughout this chapter, our training data consists of the N pairs (x1, g1), . . . , (xn, gN) where gi is a class label taking values in {1, 2, . . . , K}. Prototype methods represent the training data by a set of points in feature space. These prototypes are typically not examples from the training sample, except in the case of 1-nearest-neighbor classification discussed later. Each prototype has an associated class label, and classification of a query point x is made to the class of the closest prototype.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 35999,
+        "page_number": 477
+      },
+      {
+        "fact_text": "These methods can be very effective if the prototypes are well positioned to capture the distribution of each class. Irregular class boundaries can be represented, with enough prototypes in the right places in feature space. The main challenge is to figure out how many prototypes to use and where to put them.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 36001,
+        "page_number": 478
+      }
+    ]
+  },
+  {
+    "concept_id": 467,
+    "concept_name": "learning vector quantization",
+    "facts": [
+      {
+        "fact_text": "In this technique due to Kohonen (1989), prototypes are placed strategically with respect to the decision boundaries in an ad-hoc way. LVQ is an online algorithm\u2014observations are processed one at a time.\nThe idea is that the training points attract prototypes of the correct class, and repel other prototypes. When the iterations settle down, prototypes should be close to the training points in their class.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 36497,
+        "page_number": 480
+      },
+      {
+        "fact_text": "1. Choose R initial prototypes for each class: m1(k), m2(k), . . . , mR(k), k = 1, 2, . . . , K, for example, by sampling R training points at random from each class.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 36487,
+        "page_number": 480
+      },
+      {
+        "fact_text": "(a) If gi = k (i.e., they are in the same class), move the prototype towards the training point:\nmj(k) \u2190mj(k) + \u03f5(xi \u2212mj(k)),",
+        "fact_type": "formula",
+        "importance_rank": 3,
+        "paragraph_id": 36490,
+        "page_number": 480
+      },
+      {
+        "fact_text": "(b) If gi \u0338= k (i.e., they are in different classes), move the prototype away from the training point:\nmj(k) \u2190mj(k) \u2212\u03f5(xi \u2212mj(k)).",
+        "fact_type": "formula",
+        "importance_rank": 4,
+        "paragraph_id": 36493,
+        "page_number": 480
+      },
+      {
+        "fact_text": "3. Repeat step 2, decreasing the learning rate \u03f5 with each iteration towards zero.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 36494,
+        "page_number": 480
+      },
+      {
+        "fact_text": "prototypes are near the class boundaries, leading to potential misclassification errors for points near these boundaries. This results from an obvious shortcoming with this method: for each class, the other classes do not have a say in the positioning of the prototypes for that class. A better approach, discussed next, uses all of the data to position all prototypes.",
+        "fact_type": "comparison",
+        "importance_rank": 6,
+        "paragraph_id": 36495,
+        "page_number": 480
+      },
+      {
+        "fact_text": "The learning rate \u03f5 is decreased to zero with each iteration, following the guidelines for stochastic approximation learning rates (Section 11.4.)",
+        "fact_type": "property",
+        "importance_rank": 7,
+        "paragraph_id": 36497,
+        "page_number": 480
+      }
+    ]
+  },
+  {
+    "concept_id": 321,
+    "concept_name": "responsibility",
+    "facts": [
+      {
+        "fact_text": "\u2022 In the E-step, each observation is assigned a responsibility or weight for each cluster, based on the likelihood of each of the corresponding Gaussians. Observations close to the center of a cluster will most likely get weight 1 for that cluster, and weight 0 for every other cluster. Observations half-way between two clusters divide their weight accordingly.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 36502,
+        "page_number": 481
+      },
+      {
+        "fact_text": "\u2022 In the M-step, each observation contributes to the weighted means (and covariances) for every cluster.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 36503,
+        "page_number": 481
+      },
+      {
+        "fact_text": "The Gaussian mixture model can also be thought of as a prototype method, similar in spirit to K-means and LVQ. We discuss Gaussian mixtures in some detail in Sections 6.8, 8.5 and 12.7. Each cluster is described in terms of a Gaussian density, which has a centroid (as in K-means), and a covariance matrix.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 36501,
+        "page_number": 481
+      },
+      {
+        "fact_text": "As a consequence, the Gaussian mixture model is often referred to as a soft clustering method, while K-means is hard.",
+        "fact_type": "comparison",
+        "importance_rank": 4,
+        "paragraph_id": 36504,
+        "page_number": 481
+      },
+      {
+        "fact_text": "that they are defined by algorithms, rather than optimization of some fixed criteria; this makes it difficult to understand their properties.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 36499,
+        "page_number": 481
+      }
+    ]
+  },
+  {
+    "concept_id": 473,
+    "concept_name": "soft clustering",
+    "facts": [
+      {
+        "fact_text": "As a consequence, the Gaussian mixture model is often referred to as a soft clustering method, while K-means is hard.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 36504,
+        "page_number": 481
+      },
+      {
+        "fact_text": "\u2022 In the E-step, each observation is assigned a responsibility or weight for each cluster, based on the likelihood of each of the corresponding Gaussians. Observations close to the center of a cluster will most likely get weight 1 for that cluster, and weight 0 for every other cluster. Observations half-way between two clusters divide their weight accordingly.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 36502,
+        "page_number": 481
+      },
+      {
+        "fact_text": "\u2022 In the M-step, each observation contributes to the weighted means (and covariances) for every cluster.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 36503,
+        "page_number": 481
+      },
+      {
+        "fact_text": "The Gaussian mixture model can also be thought of as a prototype method, similar in spirit to K-means and LVQ. We discuss Gaussian mixtures in some detail in Sections 6.8, 8.5 and 12.7. Each cluster is described in terms of a Gaussian density, which has a centroid (as in K-means), and a covariance matrix. The comparison becomes crisper if we restrict the component Gaussians to have a scalar covariance matrix (Exercise 13.1).",
+        "fact_type": "comparison",
+        "importance_rank": 4,
+        "paragraph_id": 36501,
+        "page_number": 481
+      },
+      {
+        "fact_text": "Similarly, when Gaussian mixture models are used to represent the feature density in each class, it produces smooth posterior probabilities \u02c6p(x) = {\u02c6p1(x), . . . , \u02c6pK(x)} for classifying x (see (12.60) on page 449.) Often this is interpreted as a soft classification, while in fact the classification rule is \u02c6G(x) = arg maxk \u02c6pk(x).",
+        "fact_type": "intuition",
+        "importance_rank": 5,
+        "paragraph_id": 36504,
+        "page_number": 481
+      }
+    ]
+  },
+  {
+    "concept_id": 474,
+    "concept_name": "hard clustering",
+    "facts": [
+      {
+        "fact_text": "As a consequence, the Gaussian mixture model is often referred to as a soft clustering method, while K-means is hard.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 36504,
+        "page_number": 481
+      },
+      {
+        "fact_text": "The two steps of the alternating EM algorithm are very similar to the two steps in K-means:",
+        "fact_type": "comparison",
+        "importance_rank": 2,
+        "paragraph_id": 36501,
+        "page_number": 481
+      },
+      {
+        "fact_text": "We see that although the decision boundaries are roughly similar, those for the mixture model are smoother (although the prototypes are in approximately the same positions.) We also see that while both procedures devote a blue prototype (incorrectly) to a region in the northwest, the Gaussian mixture classifier can ultimately ignore this region, while K-means cannot.",
+        "fact_type": "comparison",
+        "importance_rank": 3,
+        "paragraph_id": 36504,
+        "page_number": 481
+      },
+      {
+        "fact_text": "\u2022 In the E-step, each observation is assigned a responsibility or weight for each cluster, based on the likelihood of each of the corresponding Gaussians. Observations close to the center of a cluster will most likely get weight 1 for that cluster, and weight 0 for every other cluster.",
+        "fact_type": "comparison",
+        "importance_rank": 4,
+        "paragraph_id": 36502,
+        "page_number": 481
+      }
+    ]
+  },
+  {
+    "concept_id": 475,
+    "concept_name": "soft classification",
+    "facts": [
+      {
+        "fact_text": "Similarly, when Gaussian mixture models are used to represent the feature density in each class, it produces smooth posterior probabilities \u02c6p(x) = {\u02c6p1(x), . . . , \u02c6pK(x)} for classifying x (see (12.60) on page 449.) Often this is interpreted as a soft classification, while in fact the classification rule is \u02c6G(x) = arg maxk \u02c6pk(x).",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 36504,
+        "page_number": 481
+      },
+      {
+        "fact_text": "As a consequence, the Gaussian mixture model is often referred to as a soft clustering method, while K-means is hard.",
+        "fact_type": "comparison",
+        "importance_rank": 2,
+        "paragraph_id": 36504,
+        "page_number": 481
+      },
+      {
+        "fact_text": "\u2022 In the E-step, each observation is assigned a responsibility or weight for each cluster, based on the likelihood of each of the corresponding Gaussians. Observations close to the center of a cluster will most likely get weight 1 for that cluster, and weight 0 for every other cluster. Observations half-way between two clusters divide their weight accordingly.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 36502,
+        "page_number": 481
+      },
+      {
+        "fact_text": "These classifiers are memory-based, and require no model to be fit. Given a query point x0, we find the k training points x(r), r = 1, . . . , k closest in distance to x0, and then classify using majority vote among the k neighbors.",
+        "fact_type": "comparison",
+        "importance_rank": 4,
+        "paragraph_id": 36506,
+        "page_number": 481
+      }
+    ]
+  },
+  {
+    "concept_id": 479,
+    "concept_name": "Cover and Hart result",
+    "facts": [
+      {
+        "fact_text": "These classifiers are memory-based, and require no model to be fit. Given a query point x0, we find the k training points x(r), r = 1, . . . , k closest in distance to x0, and then classify using majority vote among the k neighbors.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 36506,
+        "page_number": 481
+      },
+      {
+        "fact_text": "For K = 2 the 1-nearest-neighbor error rate is 2pk\u2217(x)(1 \u2212pk\u2217(x)) \u22642(1 \u2212pk\u2217(x)) (twice the Bayes error rate).",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 37488,
+        "page_number": 486
+      },
+      {
+        "fact_text": "Many additional results of this kind have been derived; Ripley (1996) summarizes a number of them.\nThis result can provide a rough idea about the best performance that is possible in a given problem. For example, if the 1-nearest-neighbor rule has a 10% error rate, then asymptotically the Bayes error rate is at least 5%.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 37491,
+        "page_number": 486
+      },
+      {
+        "fact_text": "Hence in the first problem the two classes are separated by the hyperplane X1 = 1/2; in the second problem, the two classes form a checkerboard pattern in the hypercube defined by the first three features. The Bayes error rate is zero in both problems.",
+        "fact_type": "example",
+        "importance_rank": 4,
+        "paragraph_id": 37510,
+        "page_number": 486
+      },
+      {
+        "fact_text": "[This statement of the theorem of Cover and Hart (1967) is taken from Chapter 6 of Ripley (1996), where a short proof is also given].",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 37991,
+        "page_number": 499
+      }
+    ]
+  },
+  {
+    "concept_id": 481,
+    "concept_name": "adaptive nearest-neighbor",
+    "facts": [
+      {
+        "fact_text": "Many additional results of this kind have been derived; Ripley (1996) summarizes a number of them.\nThis result can provide a rough idea about the best performance that is possible in a given problem. For example, if the 1-nearest-neighbor rule has a 10% error rate, then asymptotically the Bayes error rate is at least 5%.",
+        "fact_type": "intuition",
+        "importance_rank": 1,
+        "paragraph_id": 37491,
+        "page_number": 486
+      },
+      {
+        "fact_text": "We tested the nearest-neighbors, K-means and LVQ classifiers on two simulated problems. There are 10 independent features Xj, each uniformly distributed on [0, 1]. The two-class 0-1 target variable is defined as follows:",
+        "fact_type": "example",
+        "importance_rank": 2,
+        "paragraph_id": 37493,
+        "page_number": 486
+      },
+      {
+        "fact_text": "Hence in the first problem the two classes are separated by the hyperplane X1 = 1/2; in the second problem, the two classes form a checkerboard pattern in the hypercube defined by the first three features. The Bayes error rate is zero in both problems. There were 100 training and 1000 test observations",
+        "fact_type": "example",
+        "importance_rank": 3,
+        "paragraph_id": 37510,
+        "page_number": 486
+      },
+      {
+        "fact_text": "For K = 2 the 1-nearest-neighbor error rate is 2pk\u2217(x)(1 \u2212pk\u2217(x)) \u22642(1 \u2212pk\u2217(x)) (twice the Bayes error rate).",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 37488,
+        "page_number": 486
+      }
+    ]
+  },
+  {
+    "concept_id": 118,
+    "concept_name": "euclidean distance",
+    "facts": [
+      {
+        "fact_text": "One drawback of nearest-neighbor rules in general is the computational load, both in finding the neighbors and storing the entire training set. With N observations and p predictors, nearest-neighbor classification requires Np operations to find the neighbors per query point. There are fast algorithms for finding nearest-neighbors in IR^p",
+        "fact_type": "property",
+        "importance_rank": 1,
+        "paragraph_id": 37977,
+        "page_number": 498
+      },
+      {
+        "fact_text": "The nearest-neighbor method goes back at least to Fix and Hodges (1951). The extensive literature on the topic is reviewed by Dasarathy (1991); Chapter 6 of Ripley (1996) contains a good summary. K-means clustering is due to Lloyd (1957) and MacQueen (1967). Kohonen (1989) introduced learning vector quantization.",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 37981,
+        "page_number": 499
+      },
+      {
+        "fact_text": "where k\u2217= arg maxk pk(x). Hence argue that the error rate of the 1-nearest-neighbor rule converges in L1, as the size of the training set increases, to a value E1, bounded above by",
+        "fact_type": "formula",
+        "importance_rank": 3,
+        "paragraph_id": 37988,
+        "page_number": 499
+      },
+      {
+        "fact_text": "as a way of finding the best approximating subspace of dimension L to a series of N subspaces by weighted least squares (Exercise 13.5.)\nIn the four-dimensional sphere example mentioned above and examined in Hastie and Tibshirani (1996a), four of the eigenvalues \u03b8\u2113 turn out to be large (having eigenvalues close to 1)",
+        "fact_type": "example",
+        "importance_rank": 4,
+        "paragraph_id": 37975,
+        "page_number": 498
+      },
+      {
+        "fact_text": "neighbors. While such methods are sometimes useful, we have not had much practical experience with them, nor have we found any systematic comparison of their performance in the literature.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 37979,
+        "page_number": 499
+      }
+    ]
+  },
+  {
+    "concept_id": 148,
+    "concept_name": "singular value decomposition",
+    "facts": [
+      {
+        "fact_text": "This is a standard decomposition in numerical analysis, and many algorithms exist for its computation (Golub and Van Loan, 1983, for example). Here U is an N \u00d7 p orthogonal matrix (UT U = Ip) whose columns uj are called the left singular vectors; V is a p\u00d7p orthogonal matrix (VT V = Ip) with columns called the right singular vectors",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 37975,
+        "page_number": 498
+      },
+      {
+        "fact_text": "The previous chapters have been concerned with predicting the values of one or more outputs or response variables Y = (Y1, . . . , Ym) for a given set of input or predictor variables XT = (X1, . . . , Xp).",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 38028,
+        "page_number": 503
+      },
+      {
+        "fact_text": "where Pr(X) is the joint marginal density of the X values alone. In supervised learning Pr(X) is typically of no direct concern. One is interested mainly in the properties of the conditional density Pr(Y |X). Since Y is often of low dimension (usually one), and only its location \u03bc(x) is of interest, the problem is greatly simplified.",
+        "fact_type": "comparison",
+        "importance_rank": 3,
+        "paragraph_id": 38033,
+        "page_number": 504
+      }
+    ]
+  },
+  {
+    "concept_id": 463,
+    "concept_name": "prototype methods",
+    "facts": [
+      {
+        "fact_text": "Throughout this chapter, our training data consists of the N pairs (x1, g1), . . . , (xn, gN) where gi is a class label taking values in {1, 2, . . . , K}. Prototype methods represent the training data by a set of points in feature space. These prototypes are typically not examples from the training sample, except in the case of 1-nearest-neighbor classification discussed later. Each prototype has an associated class label, and classification of a query point x is made to the class of the closest prototype.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 35999,
+        "page_number": 477
+      },
+      {
+        "fact_text": "\u201cClosest\u201d is usually defined by Euclidean distance in the feature space, after each feature has been standardized to have overall mean 0 and variance 1 in the training sample. Euclidean distance is appropriate for quantitative features.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 36001,
+        "page_number": 478
+      },
+      {
+        "fact_text": "These methods can be very effective if the prototypes are well positioned to capture the distribution of each class. Irregular class boundaries can be represented, with enough prototypes in the right places in feature space. The main challenge is to figure out how many prototypes to use and where to put them.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 36001,
+        "page_number": 478
+      },
+      {
+        "fact_text": "In this chapter we discuss some simple and essentially model-free methods for classification and pattern recognition. Because they are highly unstructured, they typically are not useful for understanding the nature of the relationship between the features and class outcome. However, as black box prediction engines, they can be very effective, and are often among the best performers in real data problems.",
+        "fact_type": "comparison",
+        "importance_rank": 4,
+        "paragraph_id": 35997,
+        "page_number": 477
+      }
+    ]
+  },
+  {
+    "concept_id": 465,
+    "concept_name": "k-means clustering for classification",
+    "facts": [
+      {
+        "fact_text": "K-means clustering is a method for finding clusters and cluster centers in a set of unlabeled data. One chooses the desired number of cluster centers, say R, and the K-means procedure iteratively moves the centers to minimize the total within cluster variance.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 36003,
+        "page_number": 478
+      },
+      {
+        "fact_text": "\u2022 for each center we identify the subset of training points (its cluster) that is closer to it than any other center;",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 36004,
+        "page_number": 478
+      },
+      {
+        "fact_text": "\u2022 the means of each feature for the data points in each cluster are computed, and this mean vector becomes the new center for that cluster.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 36005,
+        "page_number": 478
+      },
+      {
+        "fact_text": "These two steps are iterated until convergence. Typically the initial centers are R randomly chosen observations from the training data.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 36006,
+        "page_number": 478
+      },
+      {
+        "fact_text": "\u2022 apply K-means clustering to the training data in each class separately, using R prototypes per class;",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 36007,
+        "page_number": 478
+      },
+      {
+        "fact_text": "\u2022 assign a class label to each of the K \u00d7 R prototypes;",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 36008,
+        "page_number": 478
+      },
+      {
+        "fact_text": "\u2022 classify a new feature x to the class of the closest prototype.",
+        "fact_type": "property",
+        "importance_rank": 7,
+        "paragraph_id": 36009,
+        "page_number": 478
+      }
+    ]
+  },
+  {
+    "concept_id": 466,
+    "concept_name": "within cluster variance",
+    "facts": [
+      {
+        "fact_text": "K-means clustering is a method for finding clusters and cluster centers in a set of unlabeled data. One chooses the desired number of cluster centers, say R, and the K-means procedure iteratively moves the centers to minimize the total within cluster variance.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 36003,
+        "page_number": 478
+      },
+      {
+        "fact_text": "\u2022 for each center we identify the subset of training points (its cluster) that is closer to it than any other center;",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 36004,
+        "page_number": 478
+      },
+      {
+        "fact_text": "\u2022 the means of each feature for the data points in each cluster are computed, and this mean vector becomes the new center for that cluster.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 36005,
+        "page_number": 478
+      },
+      {
+        "fact_text": "These two steps are iterated until convergence. Typically the initial centers are R randomly chosen observations from the training data.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 36006,
+        "page_number": 478
+      }
+    ]
+  },
+  {
+    "concept_id": 468,
+    "concept_name": "LVQ1",
+    "facts": [
+      {
+        "fact_text": "In this technique due to Kohonen (1989), prototypes are placed strategically with respect to the decision boundaries in an ad-hoc way. LVQ is an online algorithm\u2014observations are processed one at a time.\nThe idea is that the training points attract prototypes of the correct class, and repel other prototypes.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 36497,
+        "page_number": 480
+      },
+      {
+        "fact_text": "(a) If gi = k (i.e., they are in the same class), move the prototype towards the training point:\nmj(k) \u2190mj(k) + \u03f5(xi \u2212mj(k)),",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 36490,
+        "page_number": 480
+      },
+      {
+        "fact_text": "(b) If gi \u0338= k (i.e., they are in different classes), move the prototype away from the training point:\nmj(k) \u2190mj(k) \u2212\u03f5(xi \u2212mj(k)).",
+        "fact_type": "formula",
+        "importance_rank": 3,
+        "paragraph_id": 36493,
+        "page_number": 480
+      },
+      {
+        "fact_text": "The procedure just described is actually called LVQ1. Modifications (LVQ2, LVQ3, etc.) have been proposed, that can sometimes improve performance. A drawback of learning vector quantization methods is the fact",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 36497,
+        "page_number": 480
+      },
+      {
+        "fact_text": "that they are defined by algorithms, rather than optimization of some fixed criteria; this makes it difficult to understand their properties.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 36499,
+        "page_number": 481
+      }
+    ]
+  },
+  {
+    "concept_id": 469,
+    "concept_name": "LVQ2",
+    "facts": [
+      {
+        "fact_text": "The procedure just described is actually called LVQ1. Modifications (LVQ2, LVQ3, etc.) have been proposed, that can sometimes improve performance. A drawback of learning vector quantization methods is the fact",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 36497,
+        "page_number": 480
+      },
+      {
+        "fact_text": "In this technique due to Kohonen (1989), prototypes are placed strategically with respect to the decision boundaries in an ad-hoc way. LVQ is an online algorithm\u2014observations are processed one at a time.\nThe idea is that the training points attract prototypes of the correct class, and repel other prototypes.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 36497,
+        "page_number": 480
+      },
+      {
+        "fact_text": "that they are defined by algorithms, rather than optimization of some fixed criteria; this makes it difficult to understand their properties.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 36499,
+        "page_number": 481
+      }
+    ]
+  },
+  {
+    "concept_id": 470,
+    "concept_name": "LVQ3",
+    "facts": [
+      {
+        "fact_text": "The procedure just described is actually called LVQ1. Modifications (LVQ2, LVQ3, etc.) have been proposed, that can sometimes improve performance. A drawback of learning vector quantization methods is the fact",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 36497,
+        "page_number": 480
+      },
+      {
+        "fact_text": "In this technique due to Kohonen (1989), prototypes are placed strategically with respect to the decision boundaries in an ad-hoc way. LVQ is an online algorithm\u2014observations are processed one at a time.\nThe idea is that the training points attract prototypes of the correct class, and repel other prototypes.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 36497,
+        "page_number": 480
+      },
+      {
+        "fact_text": "that they are defined by algorithms, rather than optimization of some fixed criteria; this makes it difficult to understand their properties.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 36499,
+        "page_number": 481
+      }
+    ]
+  }
+]

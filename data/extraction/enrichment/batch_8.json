@@ -1,0 +1,3105 @@
+{
+  "batch_number": 8,
+  "concepts": [
+    {
+      "id": 210,
+      "name": "l1 regularized logistic regression",
+      "description": "Logistic regression with an L1 penalty on the coefficients, promoting sparsity and automatic variable selection.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "The L1 penalty used in the lasso (Section 3.4.2) can be used for variable selection and shrinkage with any linear regression model. For logistic regression, we would maximize a penalized version",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19201,
+          "text": "and the weights are wi = \u02c6pi(1\u2212\u02c6pi), both depending on \u02c6\u03b2 itself. Apart from\nproviding a convenient algorithm, this connection with least squares has\nmore to o\ufb00er:",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19202,
+          "text": "\u2022 The weighted residual sum-of-squares is the familiar Pearson chi-\nsquare statistic\nN\n\u0002",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19203,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19204,
+          "text": "(yi \u2212\u02c6pi)2",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19205,
+          "text": "\u02c6pi(1 \u2212\u02c6pi),\n(4.30)",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19206,
+          "text": "a quadratic approximation to the deviance.",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19207,
+          "text": "\u2022 Asymptotic likelihood theory says that if the model is correct, then\n\u02c6\u03b2 is consistent (i.e., converges to the true \u03b2).",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19208,
+          "text": "\u2022 A central limit theorem then shows that the distribution of \u02c6\u03b2 con-\nverges to N(\u03b2, (XT WX)\u22121). This and other asymptotics can be de-\nrived directly from the weighted least squares \ufb01t by mimicking normal\ntheory inference.",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19209,
+          "text": "\u2022 Model building can be costly for logistic regression models, because\neach model \ufb01tted requires iteration. Popular shortcuts are the Rao\nscore test which tests for inclusion of a term, and the Wald test which\ncan be used to test for exclusion of a term. Neither of these require\niterative \ufb01tting, and are based on the maximum-likelihood \ufb01t of the\ncurrent model. It turns out that both of these amount to adding\nor dropping a term from the weighted least squares \ufb01t, using the\nsame weights. Such computations can be done e\ufb03ciently, without\nrecomputing the entire weighted least squares \ufb01t.",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19210,
+          "text": "Software implementations can take advantage of these connections. For\nexample, the generalized linear modeling software in R (which includes lo-\ngistic regression as part of the binomial family of models) exploits them\nfully. GLM (generalized linear model) objects can be treated as linear model\nobjects, and all the tools available for linear models can be applied auto-\nmatically.",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19212,
+          "text": "The L1 penalty used in the lasso (Section 3.4.2) can be used for variable\nselection and shrinkage with any linear regression model. For logistic re-\ngression, we would maximize a penalized version of (4.20):",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19213,
+          "text": "max\n\u03b20,\u03b2",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19214,
+          "text": "\u23a7\n\u23a8",
+          "type": "equation",
+          "page": 143
+        },
+        {
+          "id": 19215,
+          "text": "\u23a9",
+          "type": "equation",
+          "page": 143
+        },
+        {
+          "id": 19216,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19217,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19218,
+          "text": "yi(\u03b20 + \u03b2T xi) \u2212log(1 + e\u03b20+\u03b2T xi)\n\r\n\u2212\u03bb",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19219,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19220,
+          "text": "j=1\n|\u03b2j|",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19221,
+          "text": "\u23ab\n\u23ac",
+          "type": "equation",
+          "page": 143
+        },
+        {
+          "id": 19222,
+          "text": "\u23ad.\n(4.31)",
+          "type": "equation",
+          "page": 143
+        },
+        {
+          "id": 19223,
+          "text": "As with the lasso, we typically do not penalize the intercept term, and stan-\ndardize the predictors for the penalty to be meaningful. Criterion (4.31) is",
+          "type": "narrative",
+          "page": 143
+        },
+        {
+          "id": 19224,
+          "text": "126\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 144
+        },
+        {
+          "id": 19225,
+          "text": "concave, and a solution can be found using nonlinear programming meth-\nods (Koh et al., 2007, for example). Alternatively, using the same quadratic\napproximations that were used in the Newton algorithm in Section 4.4.1,\nwe can solve (4.31) by repeated application of a weighted lasso algorithm.\nInterestingly, the score equations [see (4.24)] for the variables with non-zero\ncoe\ufb03cients have the form",
+          "type": "narrative",
+          "page": 144
+        },
+        {
+          "id": 19226,
+          "text": "xT\nj (y \u2212p) = \u03bb \u00b7 sign(\u03b2j),\n(4.32)",
+          "type": "narrative",
+          "page": 144
+        },
+        {
+          "id": 19227,
+          "text": "which generalizes (3.58) in Section 3.4.4; the active variables are tied in\ntheir generalized correlation with the residuals.\nPath algorithms such as LAR for lasso are more di\ufb03cult, because the\ncoe\ufb03cient pro\ufb01les are piecewise smooth rather than linear. Nevertheless,\nprogress can be made using quadratic approximations.",
+          "type": "narrative",
+          "page": 144
+        },
+        {
+          "id": 19228,
+          "text": "****************************************************************************************************************************************************************************************************************************************",
+          "type": "narrative",
+          "page": 144
+        },
+        {
+          "id": 19229,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0",
+          "type": "equation",
+          "page": 144
+        },
+        {
+          "id": 19230,
+          "text": "0.0\n0.2\n0.4\n0.6",
+          "type": "equation",
+          "page": 144
+        },
+        {
+          "id": 19231,
+          "text": "****************************************************************************************************************************************************************************************************************************************",
+          "type": "narrative",
+          "page": 144
+        }
+      ]
+    },
+    {
+      "id": 211,
+      "name": "conditional likelihood",
+      "description": "The likelihood of the response given the predictors, Pr(G|X), used in logistic regression which ignores the marginal distribution of X.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "The logistic regression model leaves the marginal density of X as an arbitrary density function Pr(X), and fits the parameters of Pr(G|X) by maximizing the conditional likelihood",
+      "existing_formula": "\\text{Pr}(G|X)",
+      "paragraphs": [
+        {
+          "id": 19248,
+          "text": "(Friedman et al., 2008a) can \ufb01t coe\ufb03cient paths for very large logistic re-\ngression problems e\ufb03ciently (large in N or p). Their algorithms can exploit\nsparsity in the predictor matrix X, which allows for even larger problems.\nSee Section 18.4 for more details, and a discussion of L1-regularized multi-\nnomial models.",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19250,
+          "text": "In Section 4.3 we \ufb01nd that the log-posterior odds between class k and K\nare linear functions of x (4.9):",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19251,
+          "text": "log Pr(G = k|X = x)",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19252,
+          "text": "Pr(G = K|X = x)\n=\nlog \u03c0k",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19253,
+          "text": "\u03c0K\n\u22121",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19254,
+          "text": "2(\u03bck + \u03bcK)T \u03a3\u22121(\u03bck \u2212\u03bcK)",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19255,
+          "text": "+xT \u03a3\u22121(\u03bck \u2212\u03bcK)",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19256,
+          "text": "=\n\u03b1k0 + \u03b1T\nk x.\n(4.33)",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19257,
+          "text": "This linearity is a consequence of the Gaussian assumption for the class\ndensities, as well as the assumption of a common covariance matrix. The\nlinear logistic model (4.17) by construction has linear logits:",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19258,
+          "text": "log Pr(G = k|X = x)",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19259,
+          "text": "Pr(G = K|X = x) = \u03b2k0 + \u03b2T\nk x.\n(4.34)",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19260,
+          "text": "It seems that the models are the same. Although they have exactly the same\nform, the di\ufb00erence lies in the way the linear coe\ufb03cients are estimated. The\nlogistic regression model is more general, in that it makes less assumptions.\nWe can write the joint density of X and G as",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19261,
+          "text": "Pr(X, G = k) = Pr(X)Pr(G = k|X),\n(4.35)",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19262,
+          "text": "where Pr(X) denotes the marginal density of the inputs X. For both LDA\nand logistic regression, the second term on the right has the logit-linear\nform",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19263,
+          "text": "Pr(G = k|X = x) =\ne\u03b2k0+\u03b2T\nk x",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19264,
+          "text": "1 + \tK\u22121\n\u2113=1 e\u03b2\u21130+\u03b2T\n\u2113x ,\n(4.36)",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19265,
+          "text": "where we have again arbitrarily chosen the last class as the reference.\nThe logistic regression model leaves the marginal density of X as an arbi-\ntrary density function Pr(X), and \ufb01ts the parameters of Pr(G|X) by max-\nimizing the conditional likelihood\u2014the multinomial likelihood with proba-\nbilities the Pr(G = k|X). Although Pr(X) is totally ignored, we can think\nof this marginal density as being estimated in a fully nonparametric and\nunrestricted fashion, using the empirical distribution function which places\nmass 1/N at each observation.\nWith LDA we \ufb01t the parameters by maximizing the full log-likelihood,\nbased on the joint density",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19266,
+          "text": "Pr(X, G = k) = \u03c6(X; \u03bck, \u03a3)\u03c0k,\n(4.37)",
+          "type": "narrative",
+          "page": 145
+        },
+        {
+          "id": 19267,
+          "text": "128\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 146
+        },
+        {
+          "id": 19268,
+          "text": "where \u03c6 is the Gaussian density function. Standard normal theory leads\neasily to the estimates \u02c6\u03bck, \u02c6\u03a3, and \u02c6\u03c0k given in Section 4.3. Since the linear\nparameters of the logistic form (4.33) are functions of the Gaussian param-\neters, we get their maximum-likelihood estimates by plugging in the corre-\nsponding estimates. However, unlike in the conditional case, the marginal\ndensity Pr(X) does play a role here. It is a mixture density",
+          "type": "narrative",
+          "page": 146
+        },
+        {
+          "id": 19269,
+          "text": "Pr(X) =",
+          "type": "narrative",
+          "page": 146
+        },
+        {
+          "id": 19270,
+          "text": "K\n\u0002",
+          "type": "narrative",
+          "page": 146
+        },
+        {
+          "id": 19271,
+          "text": "k=1\n\u03c0k\u03c6(X; \u03bck, \u03a3),\n(4.38)",
+          "type": "narrative",
+          "page": 146
+        },
+        {
+          "id": 19272,
+          "text": "which also involves the parameters.\nWhat role can this additional component/restriction play? By relying\non the additional model assumptions, we have more information about the\nparameters, and hence can estimate them more e\ufb03ciently (lower variance).\nIf in fact the true fk(x) are Gaussian, then in the worst case ignoring this\nmarginal part of the likelihood constitutes a loss of e\ufb03ciency of about 30%\nasymptotically in the error rate (Efron, 1975). Paraphrasing: with 30%\nmore data, the conditional likelihood will do as well.\nFor example, observations far from the decision boundary (which are\ndown-weighted by logistic regression) play a role in estimating the common\ncovariance matrix. This is not all good news, because it also means that\nLDA is not robust to gross outliers.\nFrom the mixture formulation, it is clear that even observations without\nclass labels have information about the parameters. Often it is expensive\nto generate class labels, but unclassi\ufb01ed observations come cheaply. By\nrelying on strong model assumptions, such as here, we can use both types\nof information.\nThe marginal likelihood can be thought of as a regularizer, requiring\nin some sense that class densities be visible from this marginal view. For\nexample, if the data in a two-class logistic regression model can be per-\nfectly separated by a hyperplane, the maximum likelihood estimates of the\nparameters are unde\ufb01ned (i.e., in\ufb01nite; see Exercise 4.5). The LDA coe\ufb03-\ncients for the same data will be well de\ufb01ned, since the marginal likelihood\nwill not permit these degeneracies.\nIn practice these assumptions are never correct, and often some of the\ncomponents of X are qualitative variables. It is generally felt that logistic\nregression is a safer, more robust bet than the LDA model, relying on fewer\nassumptions. It is our experience that the models give very similar results,\neven when LDA is used inappropriately, such as with qualitative predictors.",
+          "type": "narrative",
+          "page": 146
+        },
+        {
+          "id": 19276,
+          "text": "We have seen that linear discriminant analysis and logistic regression both\nestimate linear decision boundaries in similar but slightly di\ufb00erent ways.\nFor the rest of this chapter we describe separating hyperplane classi\ufb01ers.\nThese procedures construct linear decision boundaries that explicitly try\nto separate the data into di\ufb00erent classes as well as possible. They provide\nthe basis for support vector classi\ufb01ers, discussed in Chapter 12. The math-\nematical level of this section is somewhat higher than that of the previous\nsections.\nFigure 4.14 shows 20 data points in two classes in IR2. These data can be\nseparated by a linear boundary. Included in the \ufb01gure (blue lines) are two\nof the in\ufb01nitely many possible separating hyperplanes. The orange line is\nthe least squares solution to the problem, obtained by regressing the \u22121/1\nresponse Y on X (with intercept); the line is given by",
+          "type": "narrative",
+          "page": 147
+        },
+        {
+          "id": 19277,
+          "text": "{x : \u02c6\u03b20 + \u02c6\u03b21x1 + \u02c6\u03b22x2 = 0}.\n(4.39)",
+          "type": "narrative",
+          "page": 147
+        },
+        {
+          "id": 19278,
+          "text": "This least squares solution does not do a perfect job in separating the\npoints, and makes one error. This is the same boundary found by LDA,\nin light of its equivalence with linear regression in the two-class case (Sec-\ntion 4.3 and Exercise 4.2).\nClassi\ufb01ers such as (4.39), that compute a linear combination of the input\nfeatures and return the sign, were called perceptrons in the engineering liter-",
+          "type": "narrative",
+          "page": 147
+        },
+        {
+          "id": 19279,
+          "text": "130\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19280,
+          "text": "x0\nx",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19281,
+          "text": "\u03b2\u2217\n\u03b20 + \u03b2T x = 0",
+          "type": "narrative",
+          "page": 148
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "support vector machine",
+      "description": "separation through over-\ufb01tting. In Chapter 12 we discuss a more attractive\nalternative known as the support vector machine, which allows for overlap,\nbut minimizes a measure of the extent of this overlap.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "In Chapter 12 we discuss a more attractive alternative known as the support vector machine, which allows for overlap, but minimizes a measure of the extent of this overlap.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19276,
+          "text": "We have seen that linear discriminant analysis and logistic regression both\nestimate linear decision boundaries in similar but slightly di\ufb00erent ways.\nFor the rest of this chapter we describe separating hyperplane classi\ufb01ers.\nThese procedures construct linear decision boundaries that explicitly try\nto separate the data into di\ufb00erent classes as well as possible. They provide\nthe basis for support vector classi\ufb01ers, discussed in Chapter 12. The math-\nematical level of this section is somewhat higher than that of the previous\nsections.\nFigure 4.14 shows 20 data points in two classes in IR2. These data can be\nseparated by a linear boundary. Included in the \ufb01gure (blue lines) are two\nof the in\ufb01nitely many possible separating hyperplanes. The orange line is\nthe least squares solution to the problem, obtained by regressing the \u22121/1\nresponse Y on X (with intercept); the line is given by",
+          "type": "narrative",
+          "page": 147
+        },
+        {
+          "id": 19277,
+          "text": "{x : \u02c6\u03b20 + \u02c6\u03b21x1 + \u02c6\u03b22x2 = 0}.\n(4.39)",
+          "type": "narrative",
+          "page": 147
+        },
+        {
+          "id": 19278,
+          "text": "This least squares solution does not do a perfect job in separating the\npoints, and makes one error. This is the same boundary found by LDA,\nin light of its equivalence with linear regression in the two-class case (Sec-\ntion 4.3 and Exercise 4.2).\nClassi\ufb01ers such as (4.39), that compute a linear combination of the input\nfeatures and return the sign, were called perceptrons in the engineering liter-",
+          "type": "narrative",
+          "page": 147
+        },
+        {
+          "id": 19279,
+          "text": "130\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19280,
+          "text": "x0\nx",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19281,
+          "text": "\u03b2\u2217\n\u03b20 + \u03b2T x = 0",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19283,
+          "text": "ature in the late 1950s (Rosenblatt, 1958). Perceptrons set the foundations\nfor the neural network models of the 1980s and 1990s.\nBefore we continue, let us digress slightly and review some vector algebra.\nFigure 4.15 depicts a hyperplane or a\ufb03ne set L de\ufb01ned by the equation\nf(x) = \u03b20 + \u03b2T x = 0; since we are in IR2 this is a line.\nHere we list some properties:",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19284,
+          "text": "1. For any two points x1 and x2 lying in L, \u03b2T (x1 \u2212x2) = 0, and hence\n\u03b2\u2217= \u03b2/||\u03b2|| is the vector normal to the surface of L.",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19285,
+          "text": "2. For any point x0 in L, \u03b2T x0 = \u2212\u03b20.",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19286,
+          "text": "3. The signed distance of any point x to L is given by",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19287,
+          "text": "\u03b2\u2217T (x \u2212x0)\n=\n1\n\u2225\u03b2\u2225(\u03b2T x + \u03b20)",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19288,
+          "text": "=\n1\n||f \u2032(x)||f(x).\n(4.40)",
+          "type": "equation",
+          "page": 148
+        },
+        {
+          "id": 19289,
+          "text": "Hence f(x) is proportional to the signed distance from x to the hyperplane\nde\ufb01ned by f(x) = 0.",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19291,
+          "text": "The perceptron learning algorithm tries to \ufb01nd a separating hyperplane by\nminimizing the distance of misclassi\ufb01ed points to the decision boundary. If",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19293,
+          "text": "a response yi = 1 is misclassi\ufb01ed, then xT\ni \u03b2 + \u03b20 < 0, and the opposite for\na misclassi\ufb01ed response with yi = \u22121. The goal is to minimize",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19294,
+          "text": "D(\u03b2, \u03b20) = \u2212\n\u0002",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19295,
+          "text": "i\u2208M\nyi(xT\ni \u03b2 + \u03b20),\n(4.41)",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19296,
+          "text": "where M indexes the set of misclassi\ufb01ed points. The quantity is non-\nnegative and proportional to the distance of the misclassi\ufb01ed points to\nthe decision boundary de\ufb01ned by \u03b2T x + \u03b20 = 0. The gradient (assuming\nM is \ufb01xed) is given by",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19297,
+          "text": "\u2202D(\u03b2, \u03b20)",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19298,
+          "text": "\u2202\u03b2\n=\n\u2212\n\u0002",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19299,
+          "text": "i\u2208M\nyixi,\n(4.42)",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19300,
+          "text": "\u2202D(\u03b2, \u03b20)",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19301,
+          "text": "\u2202\u03b20\n=\n\u2212\n\u0002",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19302,
+          "text": "i\u2208M\nyi.\n(4.43)",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19303,
+          "text": "The algorithm in fact uses stochastic gradient descent to minimize this\npiecewise linear criterion. This means that rather than computing the sum\nof the gradient contributions of each observation followed by a step in the\nnegative gradient direction, a step is taken after each observation is visited.\nHence the misclassi\ufb01ed observations are visited in some sequence, and the\nparameters \u03b2 are updated via\n\u001a\n\u03b2\n\u03b20",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19304,
+          "text": "\u001b\n\u2190\n\u001a\n\u03b2\n\u03b20",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19305,
+          "text": "\u001b\n+ \u03c1\n\u001a\nyixi\nyi",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19306,
+          "text": "\u001b\n.\n(4.44)",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19307,
+          "text": "Here \u03c1 is the learning rate, which in this case can be taken to be 1 without\nloss in generality. If the classes are linearly separable, it can be shown that\nthe algorithm converges to a separating hyperplane in a \ufb01nite number of\nsteps (Exercise 4.6). Figure 4.14 shows two solutions to a toy problem, each\nstarted at a di\ufb00erent random guess.\nThere are a number of problems with this algorithm, summarized in\nRipley (1996):",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19308,
+          "text": "\u2022 When the data are separable, there are many solutions, and which\none is found depends on the starting values.",
+          "type": "narrative",
+          "page": 149
+        }
+      ]
+    },
+    {
+      "id": 213,
+      "name": "separating hyperplane",
+      "description": "A hyperplane that perfectly separates two classes in feature space, with all points of one class on one side and all points of the other class on the opposite side.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "We have seen that linear discriminant analysis and logistic regression both estimate linear decision boundaries in similar but slightly different ways. For the rest of this chapter we describe separating hyperplane classifiers.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19276,
+          "text": "We have seen that linear discriminant analysis and logistic regression both\nestimate linear decision boundaries in similar but slightly di\ufb00erent ways.\nFor the rest of this chapter we describe separating hyperplane classi\ufb01ers.\nThese procedures construct linear decision boundaries that explicitly try\nto separate the data into di\ufb00erent classes as well as possible. They provide\nthe basis for support vector classi\ufb01ers, discussed in Chapter 12. The math-\nematical level of this section is somewhat higher than that of the previous\nsections.\nFigure 4.14 shows 20 data points in two classes in IR2. These data can be\nseparated by a linear boundary. Included in the \ufb01gure (blue lines) are two\nof the in\ufb01nitely many possible separating hyperplanes. The orange line is\nthe least squares solution to the problem, obtained by regressing the \u22121/1\nresponse Y on X (with intercept); the line is given by",
+          "type": "narrative",
+          "page": 147
+        },
+        {
+          "id": 19277,
+          "text": "{x : \u02c6\u03b20 + \u02c6\u03b21x1 + \u02c6\u03b22x2 = 0}.\n(4.39)",
+          "type": "narrative",
+          "page": 147
+        },
+        {
+          "id": 19278,
+          "text": "This least squares solution does not do a perfect job in separating the\npoints, and makes one error. This is the same boundary found by LDA,\nin light of its equivalence with linear regression in the two-class case (Sec-\ntion 4.3 and Exercise 4.2).\nClassi\ufb01ers such as (4.39), that compute a linear combination of the input\nfeatures and return the sign, were called perceptrons in the engineering liter-",
+          "type": "narrative",
+          "page": 147
+        },
+        {
+          "id": 19279,
+          "text": "130\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19280,
+          "text": "x0\nx",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19281,
+          "text": "\u03b2\u2217\n\u03b20 + \u03b2T x = 0",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19283,
+          "text": "ature in the late 1950s (Rosenblatt, 1958). Perceptrons set the foundations\nfor the neural network models of the 1980s and 1990s.\nBefore we continue, let us digress slightly and review some vector algebra.\nFigure 4.15 depicts a hyperplane or a\ufb03ne set L de\ufb01ned by the equation\nf(x) = \u03b20 + \u03b2T x = 0; since we are in IR2 this is a line.\nHere we list some properties:",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19284,
+          "text": "1. For any two points x1 and x2 lying in L, \u03b2T (x1 \u2212x2) = 0, and hence\n\u03b2\u2217= \u03b2/||\u03b2|| is the vector normal to the surface of L.",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19285,
+          "text": "2. For any point x0 in L, \u03b2T x0 = \u2212\u03b20.",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19286,
+          "text": "3. The signed distance of any point x to L is given by",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19287,
+          "text": "\u03b2\u2217T (x \u2212x0)\n=\n1\n\u2225\u03b2\u2225(\u03b2T x + \u03b20)",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19288,
+          "text": "=\n1\n||f \u2032(x)||f(x).\n(4.40)",
+          "type": "equation",
+          "page": 148
+        },
+        {
+          "id": 19289,
+          "text": "Hence f(x) is proportional to the signed distance from x to the hyperplane\nde\ufb01ned by f(x) = 0.",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19291,
+          "text": "The perceptron learning algorithm tries to \ufb01nd a separating hyperplane by\nminimizing the distance of misclassi\ufb01ed points to the decision boundary. If",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19293,
+          "text": "a response yi = 1 is misclassi\ufb01ed, then xT\ni \u03b2 + \u03b20 < 0, and the opposite for\na misclassi\ufb01ed response with yi = \u22121. The goal is to minimize",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19294,
+          "text": "D(\u03b2, \u03b20) = \u2212\n\u0002",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19295,
+          "text": "i\u2208M\nyi(xT\ni \u03b2 + \u03b20),\n(4.41)",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19296,
+          "text": "where M indexes the set of misclassi\ufb01ed points. The quantity is non-\nnegative and proportional to the distance of the misclassi\ufb01ed points to\nthe decision boundary de\ufb01ned by \u03b2T x + \u03b20 = 0. The gradient (assuming\nM is \ufb01xed) is given by",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19297,
+          "text": "\u2202D(\u03b2, \u03b20)",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19298,
+          "text": "\u2202\u03b2\n=\n\u2212\n\u0002",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19299,
+          "text": "i\u2208M\nyixi,\n(4.42)",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19300,
+          "text": "\u2202D(\u03b2, \u03b20)",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19301,
+          "text": "\u2202\u03b20\n=\n\u2212\n\u0002",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19302,
+          "text": "i\u2208M\nyi.\n(4.43)",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19303,
+          "text": "The algorithm in fact uses stochastic gradient descent to minimize this\npiecewise linear criterion. This means that rather than computing the sum\nof the gradient contributions of each observation followed by a step in the\nnegative gradient direction, a step is taken after each observation is visited.\nHence the misclassi\ufb01ed observations are visited in some sequence, and the\nparameters \u03b2 are updated via\n\u001a\n\u03b2\n\u03b20",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19304,
+          "text": "\u001b\n\u2190\n\u001a\n\u03b2\n\u03b20",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19305,
+          "text": "\u001b\n+ \u03c1\n\u001a\nyixi\nyi",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19306,
+          "text": "\u001b\n.\n(4.44)",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19307,
+          "text": "Here \u03c1 is the learning rate, which in this case can be taken to be 1 without\nloss in generality. If the classes are linearly separable, it can be shown that\nthe algorithm converges to a separating hyperplane in a \ufb01nite number of\nsteps (Exercise 4.6). Figure 4.14 shows two solutions to a toy problem, each\nstarted at a di\ufb00erent random guess.\nThere are a number of problems with this algorithm, summarized in\nRipley (1996):",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19308,
+          "text": "\u2022 When the data are separable, there are many solutions, and which\none is found depends on the starting values.",
+          "type": "narrative",
+          "page": 149
+        }
+      ]
+    },
+    {
+      "id": 218,
+      "name": "stochastic gradient descent",
+      "description": "An optimization method that updates parameters after each observation rather than computing gradients over the entire dataset, used in the perceptron algorithm.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "The algorithm in fact uses stochastic gradient descent to minimize this piecewise linear criterion. This means that rather than computing the sum of the gradient contributions of each observation followed by a step in the negative gradient direction, a step is taken after each observation is visited.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19279,
+          "text": "130\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19280,
+          "text": "x0\nx",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19281,
+          "text": "\u03b2\u2217\n\u03b20 + \u03b2T x = 0",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19283,
+          "text": "ature in the late 1950s (Rosenblatt, 1958). Perceptrons set the foundations\nfor the neural network models of the 1980s and 1990s.\nBefore we continue, let us digress slightly and review some vector algebra.\nFigure 4.15 depicts a hyperplane or a\ufb03ne set L de\ufb01ned by the equation\nf(x) = \u03b20 + \u03b2T x = 0; since we are in IR2 this is a line.\nHere we list some properties:",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19284,
+          "text": "1. For any two points x1 and x2 lying in L, \u03b2T (x1 \u2212x2) = 0, and hence\n\u03b2\u2217= \u03b2/||\u03b2|| is the vector normal to the surface of L.",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19285,
+          "text": "2. For any point x0 in L, \u03b2T x0 = \u2212\u03b20.",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19286,
+          "text": "3. The signed distance of any point x to L is given by",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19287,
+          "text": "\u03b2\u2217T (x \u2212x0)\n=\n1\n\u2225\u03b2\u2225(\u03b2T x + \u03b20)",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19288,
+          "text": "=\n1\n||f \u2032(x)||f(x).\n(4.40)",
+          "type": "equation",
+          "page": 148
+        },
+        {
+          "id": 19289,
+          "text": "Hence f(x) is proportional to the signed distance from x to the hyperplane\nde\ufb01ned by f(x) = 0.",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19291,
+          "text": "The perceptron learning algorithm tries to \ufb01nd a separating hyperplane by\nminimizing the distance of misclassi\ufb01ed points to the decision boundary. If",
+          "type": "narrative",
+          "page": 148
+        },
+        {
+          "id": 19293,
+          "text": "a response yi = 1 is misclassi\ufb01ed, then xT\ni \u03b2 + \u03b20 < 0, and the opposite for\na misclassi\ufb01ed response with yi = \u22121. The goal is to minimize",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19294,
+          "text": "D(\u03b2, \u03b20) = \u2212\n\u0002",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19295,
+          "text": "i\u2208M\nyi(xT\ni \u03b2 + \u03b20),\n(4.41)",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19296,
+          "text": "where M indexes the set of misclassi\ufb01ed points. The quantity is non-\nnegative and proportional to the distance of the misclassi\ufb01ed points to\nthe decision boundary de\ufb01ned by \u03b2T x + \u03b20 = 0. The gradient (assuming\nM is \ufb01xed) is given by",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19297,
+          "text": "\u2202D(\u03b2, \u03b20)",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19298,
+          "text": "\u2202\u03b2\n=\n\u2212\n\u0002",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19299,
+          "text": "i\u2208M\nyixi,\n(4.42)",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19300,
+          "text": "\u2202D(\u03b2, \u03b20)",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19301,
+          "text": "\u2202\u03b20\n=\n\u2212\n\u0002",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19302,
+          "text": "i\u2208M\nyi.\n(4.43)",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19303,
+          "text": "The algorithm in fact uses stochastic gradient descent to minimize this\npiecewise linear criterion. This means that rather than computing the sum\nof the gradient contributions of each observation followed by a step in the\nnegative gradient direction, a step is taken after each observation is visited.\nHence the misclassi\ufb01ed observations are visited in some sequence, and the\nparameters \u03b2 are updated via\n\u001a\n\u03b2\n\u03b20",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19304,
+          "text": "\u001b\n\u2190\n\u001a\n\u03b2\n\u03b20",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19305,
+          "text": "\u001b\n+ \u03c1\n\u001a\nyixi\nyi",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19306,
+          "text": "\u001b\n.\n(4.44)",
+          "type": "equation",
+          "page": 149
+        },
+        {
+          "id": 19307,
+          "text": "Here \u03c1 is the learning rate, which in this case can be taken to be 1 without\nloss in generality. If the classes are linearly separable, it can be shown that\nthe algorithm converges to a separating hyperplane in a \ufb01nite number of\nsteps (Exercise 4.6). Figure 4.14 shows two solutions to a toy problem, each\nstarted at a di\ufb00erent random guess.\nThere are a number of problems with this algorithm, summarized in\nRipley (1996):",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19308,
+          "text": "\u2022 When the data are separable, there are many solutions, and which\none is found depends on the starting values.",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19309,
+          "text": "\u2022 The \u201c\ufb01nite\u201d number of steps can be very large. The smaller the gap,\nthe longer the time to \ufb01nd it.",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19310,
+          "text": "\u2022 When the data are not separable, the algorithm will not converge,\nand cycles develop. The cycles can be long and therefore hard to\ndetect.",
+          "type": "narrative",
+          "page": 149
+        },
+        {
+          "id": 19311,
+          "text": "The second problem can often be eliminated by seeking a hyperplane not\nin the original space, but in a much enlarged space obtained by creating",
+          "type": "narrative",
+          "page": 149
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "B-splines",
+      "description": "Before we can get started, we need to augment the knot sequence de\ufb01ned\nin Section 5.2. Let \u03be0 < \u03be1 and \u03beK < \u03beK+1 be two boundary knots, which\ntypically de\ufb01ne the domain over which we wish to evaluate our spline. We\nnow de\ufb01ne the augmented knot sequence \u03c4 such that",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "The B-spline basis, described in the Appendix to this chapter, allows for efficient computations even when the number of knots K is large.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Haar basis functions",
+      "description": "for i = 1, . . . , K + 2M \u22121. These are also known as Haar basis functions.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "for i = 1, . . . , K + 2M \u22121. These are also known as Haar basis functions.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 126,
+      "name": "effective degrees of freedom",
+      "description": "For ridge regression, df(lambda) = sum of d_j^2/(d_j^2 + lambda), measuring the number of parameters effectively used in a regularized fit.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "By analogy we define the effective degrees of freedom... This very useful definition allows us a more intuitive way to parameterize the smoothing spline, and indeed many other smoothers as well, in a consistent fashion.",
+      "existing_formula": "\\text{df}(\\lambda) = \\text{trace}(S_\\lambda)",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 229,
+      "name": "truncated power basis",
+      "description": "A basis for representing continuous piecewise linear functions using terms like (x \u2212 \u03be)\u208a that are zero below the knot and linear above.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "A more direct way to proceed in this case is to use a basis that incorporates the constraints: h\u2081(X) = 1, h\u2082(X) = X, h\u2083(X) = (X \u2212 \u03be\u2081)\u208a, h\u2084(X) = (X \u2212 \u03be\u2082)\u208a",
+      "existing_formula": "h_j(X) = (X - \\xi_j)_+",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 233,
+      "name": "pointwise variance",
+      "description": "The variance of a fitted function at a specific point, measuring uncertainty in the fit at that location.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "This can be conveniently summarized in terms of the pointwise variance of spline functions fit by least squares.",
+      "existing_formula": "\\text{Var}[\\hat{f}(x_0)]",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 235,
+      "name": "functional modeling",
+      "description": "Using splines to reduce rather than increase flexibility by constraining coefficients to vary smoothly as functions.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "In this example we use splines to reduce flexibility rather than increase it; the application comes under the general heading of functional modeling.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 236,
+      "name": "contrast functional",
+      "description": "A function of coefficients that highlights regions where classes differ, having appreciable values where features discriminate between classes.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "The coefficients compute a contrast functional, and will have appreciable values in regions of frequency where the log-periodograms differ between the two classes.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 237,
+      "name": "filtered features",
+      "description": "Transformed features x* derived from raw features x through basis expansion or other preprocessing.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "These filtered versions of the features were then used as inputs into a learning procedure",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 239,
+      "name": "penalized residual sum of squares",
+      "description": "An objective function balancing data fit against function roughness, with a smoothing parameter controlling the tradeoff.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "among all functions f(x) with two continuous derivatives, find one that minimizes the penalized residual sum of squares... The first term measures closeness to the data, while the second term penalizes curvature in the function, and \u03bb establishes a tradeoff between the two.",
+      "existing_formula": "\\text{RSS}(f, \\lambda) = \\sum_{i=1}^N (y_i - f(x_i))^2 + \\lambda \\int [f''(t)]^2 dt",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 240,
+      "name": "Sobolev space",
+      "description": "An infinite-dimensional function space of functions with bounded derivatives, used as the domain for smoothing spline optimization.",
+      "category": "guarantees",
+      "subcategory": "assumptions",
+      "existing_quote": "The criterion (5.9) is defined on an infinite-dimensional function space\u2014in fact, a Sobolev space of functions for which the second term is defined.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 241,
+      "name": "generalized ridge regression",
+      "description": "Ridge regression with a general penalty matrix rather than identity, arising from smoothing spline formulation.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "The solution is easily seen to be \u03b8\u0302 = (N\u1d40N + \u03bb\u03a9\u2099)\u207b\u00b9N\u1d40y, a generalized ridge regression.",
+      "existing_formula": "\\hat{\\theta} = (N^T N + \\lambda \\Omega_N)^{-1} N^T y",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 242,
+      "name": "Reinsch form",
+      "description": "An alternative representation S\u03bb = (I + \u03bbK)\u207b\u00b9 separating the smoothing parameter from the penalty structure.",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "it is convenient to rewrite S\u03bb in the Reinsch form S\u03bb = (I + \u03bbK)\u207b\u00b9, where K does not depend on \u03bb.",
+      "existing_formula": "S_\\lambda = (I + \\lambda K)^{-1}",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 243,
+      "name": "projection smoothers",
+      "description": "Smoothers with idempotent smoother matrices having eigenvalues of exactly 1 or 0, selecting basis functions without shrinkage.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "a projection matrix such as H\u03be above has M eigenvalues equal to 1, and the rest are 0. For this reason smoothing splines are referred to as shrinking smoothers, while regression splines are projection smoothers",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 250,
+      "name": "tensor product basis",
+      "description": "A multidimensional basis formed by taking products of one-dimensional basis functions for each coordinate.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "Then the M\u2081 \u00d7 M\u2082 dimensional tensor product basis defined by... can be used for representing a two-dimensional function",
+      "existing_formula": "g_{jk}(X) = h_{1j}(X_1) h_{2k}(X_2)",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    },
+    {
+      "id": 252,
+      "name": "wavelet smoothing",
+      "description": "A smoothing method using wavelet basis functions, effective for functions with discontinuities and sharp features.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 19405,
+          "text": "This is page 139\nPrinter: Opaque this\n5\nBasis Expansions and Regularization",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19407,
+          "text": "We have already made use of models linear in the input features, both for\nregression and classi\ufb01cation. Linear regression, linear discriminant analysis,\nlogistic regression and separating hyperplanes all rely on a linear model.\nIt is extremely unlikely that the true function f(X) is actually linear in\nX. In regression problems, f(X) = E(Y |X) will typically be nonlinear and\nnonadditive in X, and representing f(X) by a linear model is usually a con-\nvenient, and sometimes a necessary, approximation. Convenient because a\nlinear model is easy to interpret, and is the \ufb01rst-order Taylor approxima-\ntion to f(X). Sometimes necessary, because with N small and/or p large,\na linear model might be all we are able to \ufb01t to the data without over\ufb01t-\nting. Likewise in classi\ufb01cation, a linear, Bayes-optimal decision boundary\nimplies that some monotone transformation of Pr(Y = 1|X) is linear in X.\nThis is inevitably an approximation.\nIn this chapter and the next we discuss popular methods for moving\nbeyond linearity. The core idea in this chapter is to augment/replace the\nvector of inputs X with additional variables, which are transformations of\nX, and then use linear models in this new space of derived input features.\nDenote by hm(X) : IRp \u0015\u2192IR the mth transformation of X, m =\n1, . . . , M. We then model",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19408,
+          "text": "f(X) =",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19409,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19410,
+          "text": "m=1\n\u03b2mhm(X),\n(5.1)",
+          "type": "narrative",
+          "page": 157
+        },
+        {
+          "id": 19411,
+          "text": "140\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19412,
+          "text": "a linear basis expansion in X. The beauty of this approach is that once the\nbasis functions hm have been determined, the models are linear in these\nnew variables, and the \ufb01tting proceeds as before.\nSome simple and widely used examples of the hm are the following:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19413,
+          "text": "\u2022 hm(X) = Xm, m = 1, . . . , p recovers the original linear model.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19414,
+          "text": "\u2022 hm(X) = X2\nj or hm(X) = XjXk allows us to augment the inputs with\npolynomial terms to achieve higher-order Taylor expansions. Note,\nhowever, that the number of variables grows exponentially in the de-\ngree of the polynomial. A full quadratic model in p variables requires\nO(p2) square and cross-product terms, or more generally O(pd) for a\ndegree-d polynomial.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19415,
+          "text": "\u2022 hm(X) = log(Xj),\n\"",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19416,
+          "text": "Xj, . . . permits other nonlinear transformations\nof single inputs. More generally one can use similar functions involv-\ning several inputs, such as hm(X) = ||X||.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19417,
+          "text": "\u2022 hm(X) = I(Lm \u2264Xk < Um), an indicator for a region of Xk. By\nbreaking the range of Xk up into Mk such nonoverlapping regions\nresults in a model with a piecewise constant contribution for Xk.",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19418,
+          "text": "Sometimes the problem at hand will call for particular basis functions hm,\nsuch as logarithms or power functions. More often, however, we use the basis\nexpansions as a device to achieve more \ufb02exible representations for f(X).\nPolynomials are an example of the latter, although they are limited by\ntheir global nature\u2014tweaking the coe\ufb03cients to achieve a functional form\nin one region can cause the function to \ufb02ap about madly in remote regions.\nIn this chapter we consider more useful families of piecewise-polynomials\nand splines that allow for local polynomial representations. We also discuss\nthe wavelet bases, especially useful for modeling signals and images. These\nmethods produce a dictionary D consisting of typically a very large number\n|D| of basis functions, far more than we can a\ufb00ord to \ufb01t to our data. Along\nwith the dictionary we require a method for controlling the complexity\nof our model, using basis functions from the dictionary. There are three\ncommon approaches:",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19419,
+          "text": "\u2022 Restriction methods, where we decide before-hand to limit the class\nof functions. Additivity is an example, where we assume that our\nmodel has the form",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19420,
+          "text": "f(X)\n=",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19421,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19422,
+          "text": "j=1\nfj(Xj)",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19423,
+          "text": "=",
+          "type": "equation",
+          "page": 158
+        },
+        {
+          "id": 19424,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19425,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19426,
+          "text": "Mj\n\u0002",
+          "type": "narrative",
+          "page": 158
+        },
+        {
+          "id": 19427,
+          "text": "m=1\n\u03b2jmhjm(Xj).\n(5.2)",
+          "type": "narrative",
+          "page": 158
+        }
+      ]
+    }
+  ]
+}

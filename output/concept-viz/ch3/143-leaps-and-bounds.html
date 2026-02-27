@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaps and Bounds Procedure — ESL §3.1</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d1117;
+    color: #e6edf3;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+  }
+  header {
+    background: linear-gradient(135deg, #161b22 0%, #1c2128 100%);
+    border-bottom: 1px solid #30363d;
+    padding: 28px 40px 24px;
+  }
+  .header-meta {
+    display: flex; gap: 12px; align-items: center; margin-bottom: 10px;
+  }
+  .badge {
+    font-size: 11px; font-weight: 600; padding: 3px 10px;
+    border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .badge-id { background: #1f6feb33; color: #58a6ff; border: 1px solid #1f6feb; }
+  .badge-section { background: #388bfd22; color: #79c0ff; border: 1px solid #388bfd44; }
+  .badge-cat { background: #2ea04326; color: #56d364; border: 1px solid #2ea04344; }
+  h1 { font-size: 28px; font-weight: 700; color: #f0f6fc; margin-bottom: 8px; }
+  .formula {
+    font-size: 15px; color: #8b949e; padding: 6px 0;
+  }
+  .main { display: grid; grid-template-columns: 1fr 360px; gap: 24px; padding: 28px 40px; max-width: 1400px; }
+  .viz-card {
+    background: #161b22; border: 1px solid #30363d; border-radius: 10px; overflow: hidden;
+  }
+  .viz-title {
+    padding: 16px 20px 12px; border-bottom: 1px solid #30363d;
+    font-size: 13px; font-weight: 600; color: #8b949e; text-transform: uppercase; letter-spacing: 0.6px;
+  }
+  #tree-svg { width: 100%; padding: 20px; }
+  .controls {
+    padding: 16px 20px; border-top: 1px solid #30363d;
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  button {
+    background: #1f6feb; color: #fff; border: none; border-radius: 6px;
+    padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: background 0.15s;
+  }
+  button:hover { background: #388bfd; }
+  button.secondary {
+    background: #21262d; color: #c9d1d9; border: 1px solid #30363d;
+  }
+  button.secondary:hover { background: #30363d; }
+  .speed-label { font-size: 12px; color: #8b949e; }
+  .sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .panel {
+    background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 20px;
+  }
+  .panel-title {
+    font-size: 11px; font-weight: 700; color: #8b949e; text-transform: uppercase;
+    letter-spacing: 0.7px; margin-bottom: 14px; display: flex; align-items: center; gap-6px;
+  }
+  .panel-title::before {
+    content: ''; display: inline-block; width: 3px; height: 14px;
+    border-radius: 2px; margin-right: 8px;
+  }
+  .panel-title.blue::before { background: #58a6ff; }
+  .panel-title.green::before { background: #56d364; }
+  .panel-title.orange::before { background: #f0883e; }
+  .panel-title.purple::before { background: #bc8cff; }
+  blockquote {
+    border-left: 3px solid #1f6feb; padding-left: 14px;
+    color: #c9d1d9; font-size: 13px; line-height: 1.7; font-style: italic;
+  }
+  blockquote cite {
+    display: block; margin-top: 8px; font-size: 11px;
+    color: #58a6ff; font-style: normal; font-weight: 600;
+  }
+  .guarantee-row {
+    display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;
+  }
+  .g-icon {
+    width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; margin-top: 1px;
+  }
+  .g-yes { background: #1e3a2f; color: #56d364; }
+  .g-no { background: #3d1a1a; color: #f85149; }
+  .g-na { background: #2d2a1e; color: #f0883e; }
+  .g-label { font-size: 13px; font-weight: 600; color: #c9d1d9; }
+  .g-desc { font-size: 12px; color: #8b949e; margin-top: 2px; }
+  .related-tag {
+    display: inline-block; background: #21262d; border: 1px solid #30363d;
+    border-radius: 6px; padding: 5px 12px; font-size: 12px; color: #79c0ff;
+    margin: 4px; cursor: default; transition: border-color 0.15s;
+  }
+  .related-tag:hover { border-color: #58a6ff; }
+  .step-info {
+    padding: 12px 20px; border-top: 1px solid #30363d;
+    font-size: 13px; color: #8b949e; min-height: 44px;
+  }
+  .step-info span { color: #79c0ff; font-weight: 600; }
+  .pruned-count {
+    font-size: 13px; color: #f85149; font-weight: 600;
+  }
+  .explored-count {
+    font-size: 13px; color: #56d364; font-weight: 600;
+  }
+  .stats-row { display: flex; gap: 24px; padding: 12px 20px; border-top: 1px solid #30363d; }
+  .stat { text-align: center; }
+  .stat-val { font-size: 20px; font-weight: 700; }
+  .stat-lbl { font-size: 11px; color: #8b949e; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-meta">
+    <span class="badge badge-id">ID 143</span>
+    <span class="badge badge-section">§ 3.1 — Subset Selection</span>
+    <span class="badge badge-cat">Estimation / Optimization</span>
+  </div>
+  <h1>Leaps and Bounds Procedure</h1>
+  <div class="formula">
+    Best-subset search via branch-and-bound &mdash; finds optimal subset without exhaustive enumeration &nbsp;|&nbsp;
+    \(\text{Cost}(S) = \text{RSS}(S)\), \(\;|S| = k\)
+  </div>
+</header>
+
+<div class="main">
+  <div>
+    <div class="viz-card">
+      <div class="viz-title">Branch-and-Bound Search Tree — Animated Pruning</div>
+      <svg id="tree-svg" viewBox="0 0 780 480" style="display:block;"></svg>
+      <div class="step-info" id="step-info">
+        Press <strong>Play</strong> to animate the search. Pruned branches are shown in red — they cannot contain the optimal subset.
+      </div>
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-val explored-count" id="explored-count">0</div>
+          <div class="stat-lbl">Nodes Explored</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val pruned-count" id="pruned-count">0</div>
+          <div class="stat-lbl">Branches Pruned</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" style="color:#f0883e" id="skipped-count">0</div>
+          <div class="stat-lbl">Nodes Skipped</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" style="color:#56d364" id="pct-saved">—</div>
+          <div class="stat-lbl">Work Saved</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button id="btn-play" onclick="playAnimation()">&#9654; Play</button>
+        <button class="secondary" onclick="resetAnimation()">&#8635; Reset</button>
+        <span class="speed-label">Animation speed:</span>
+        <button class="secondary" id="btn-slow" onclick="setSpeed(900)">Slow</button>
+        <button class="secondary" id="btn-fast" onclick="setSpeed(350)">Fast</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="panel">
+      <div class="panel-title blue">Book Quote</div>
+      <blockquote>
+        "An efficient algorithm—the leaps and bounds procedure—makes this feasible for <em>p</em> as large as 30 or 40."
+        <cite>— ESL §3.3.1, Hastie, Tibshirani &amp; Friedman</cite>
+      </blockquote>
+      <p style="margin-top:12px;font-size:12px;color:#8b949e;line-height:1.6;">
+        Best-subset selection with <em>p</em> predictors nominally requires searching \(2^p\) subsets. For \(p=40\), that is over 1 trillion subsets. Leaps and bounds makes this tractable by maintaining a global best-RSS bound and pruning entire subtrees that cannot beat it.
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title green">Guarantees</div>
+
+      <div class="guarantee-row">
+        <div class="g-icon g-yes">✓</div>
+        <div>
+          <div class="g-label">Globally Optimal</div>
+          <div class="g-desc">Guaranteed to find the best-RSS subset of each size — unlike greedy stepwise methods.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-na">~</div>
+        <div>
+          <div class="g-label">Unbiased (subset-conditional)</div>
+          <div class="g-desc">OLS on the chosen subset is unbiased conditional on the subset, but selection induces bias.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-no">✗</div>
+        <div>
+          <div class="g-label">Low Variance</div>
+          <div class="g-desc">Discrete selection causes high variance — small data changes can flip the chosen subset entirely.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-na">~</div>
+        <div>
+          <div class="g-label">Scalable beyond p = 40</div>
+          <div class="g-desc">Practical limit ~30–40. For larger <em>p</em>, use LASSO or forward stepwise.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title orange">Related Concepts</div>
+      <div>
+        <span class="related-tag">Best Subset Selection</span>
+        <span class="related-tag">Forward Stepwise (ID 144)</span>
+        <span class="related-tag">Backward Stepwise (ID 145)</span>
+        <span class="related-tag">RSS / Residual Sum of Squares</span>
+        <span class="related-tag">LASSO</span>
+        <span class="related-tag">Ridge Regression</span>
+        <span class="related-tag">Cross-Validation</span>
+        <span class="related-tag">AIC Criterion (ID 179)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── Tree Definition ────────────────────────────────────────────────────────
+// 5-variable example tree. Each node: {id, label, x, y, parent, rss, pruned, optimal}
+const W = 780, H = 480;
+const nodes = [
+  // Level 0 — root
+  { id: 0, label: '∅', x: 390, y: 40, parent: null, rss: 1.0, pruned: false, optimal: false, desc: 'Root: no variables. RSS = 1.0 (baseline).' },
+  // Level 1 — single variable subsets
+  { id: 1,  label: 'X₁', x: 100, y: 120, parent: 0, rss: 0.72, pruned: false, optimal: false, desc: 'Add X₁. RSS = 0.72' },
+  { id: 2,  label: 'X₂', x: 240, y: 120, parent: 0, rss: 0.68, pruned: false, optimal: false, desc: 'Add X₂. RSS = 0.68' },
+  { id: 3,  label: 'X₃', x: 390, y: 120, parent: 0, rss: 0.55, pruned: false, optimal: false, desc: 'Add X₃. RSS = 0.55 ← current best' },
+  { id: 4,  label: 'X₄', x: 540, y: 120, parent: 0, rss: 0.81, pruned: false, optimal: false, desc: 'Add X₄. RSS = 0.81' },
+  { id: 5,  label: 'X₅', x: 680, y: 120, parent: 0, rss: 0.89, pruned: false, optimal: false, desc: 'Add X₅. RSS = 0.89' },
+  // Level 2 — size-2 subsets (branching from X₃)
+  { id: 6,  label: 'X₁X₃', x: 200, y: 220, parent: 3, rss: 0.42, pruned: false, optimal: false, desc: 'X₃ + X₁. RSS = 0.42 ← new best' },
+  { id: 7,  label: 'X₂X₃', x: 320, y: 220, parent: 3, rss: 0.38, pruned: false, optimal: false, desc: 'X₃ + X₂. RSS = 0.38 ← new best' },
+  { id: 8,  label: 'X₃X₄', x: 440, y: 220, parent: 3, rss: 0.51, pruned: false, optimal: false, desc: 'X₃ + X₄. RSS = 0.51' },
+  { id: 9,  label: 'X₃X₅', x: 560, y: 220, parent: 3, rss: 0.63, pruned: false, optimal: false, desc: 'X₃ + X₅. RSS = 0.63' },
+  // Level 2 — branching from X₄ (pruned because lower bound > best)
+  { id: 10, label: 'X₁X₄', x: 640, y: 220, parent: 4, rss: 0.61, pruned: true, optimal: false, desc: 'X₄ branch pruned — lower bound 0.58 > best 0.38. Skip.' },
+  // Level 3 — size-3 subsets from X₂X₃
+  { id: 11, label: 'X₁X₂X₃', x: 140, y: 330, parent: 7, rss: 0.29, pruned: false, optimal: false, desc: 'Add X₁. RSS = 0.29 ← new best' },
+  { id: 12, label: 'X₂X₃X₄', x: 280, y: 330, parent: 7, rss: 0.35, pruned: false, optimal: false, desc: 'Add X₄. RSS = 0.35' },
+  { id: 13, label: 'X₂X₃X₅', x: 400, y: 330, parent: 7, rss: 0.41, pruned: true, optimal: false, desc: 'Lower bound 0.39 > best 0.29. Pruned.' },
+  // Level 3 — from X₁X₃ (pruned)
+  { id: 14, label: 'X₁X₂X₃*', x: 540, y: 330, parent: 6, rss: 0.31, pruned: true, optimal: false, desc: 'X₁X₃ branch: lower bound ≥ current best. Pruned.' },
+  // Level 4 — optimal
+  { id: 15, label: 'X₁X₂X₃X₄', x: 200, y: 430, parent: 11, rss: 0.24, pruned: false, optimal: true, desc: 'OPTIMAL: {X₁,X₂,X₃,X₄}. RSS = 0.24 — global minimum for size 4.' },
+  { id: 16, label: 'X₁X₂X₃X₅', x: 370, y: 430, parent: 11, rss: 0.27, pruned: false, optimal: false, desc: 'RSS = 0.27 — not better than optimal.' },
+];
+
+let animStep = 0;
+let animTimer = null;
+let animSpeed = 650;
+let exploredCount = 0;
+let prunedCount = 0;
+let skippedCount = 0;
+
+// Animation sequence: array of {type:'explore'|'prune'|'optimal', nodeId, msg}
+const sequence = [
+  { type: 'explore', nodeId: 0,  msg: 'Start at root ∅. No variables selected. RSS = 1.0.' },
+  { type: 'explore', nodeId: 1,  msg: 'Explore X₁ branch. RSS drops to 0.72.' },
+  { type: 'explore', nodeId: 2,  msg: 'Explore X₂ branch. RSS = 0.68.' },
+  { type: 'explore', nodeId: 3,  msg: 'Explore X₃ branch. RSS = 0.55 — best single variable so far.' },
+  { type: 'explore', nodeId: 4,  msg: 'Explore X₄ branch. RSS = 0.81. X₃ still better.' },
+  { type: 'explore', nodeId: 5,  msg: 'Explore X₅ branch. RSS = 0.89. Continue with best: X₃.' },
+  { type: 'explore', nodeId: 6,  msg: 'X₃ + X₁. RSS = 0.42. New best for size-2.' },
+  { type: 'explore', nodeId: 7,  msg: 'X₃ + X₂. RSS = 0.38. Better — update global bound.' },
+  { type: 'explore', nodeId: 8,  msg: 'X₃ + X₄. RSS = 0.51. Worse than bound.' },
+  { type: 'explore', nodeId: 9,  msg: 'X₃ + X₅. RSS = 0.63. Worse than bound.' },
+  { type: 'prune',   nodeId: 10, msg: 'PRUNE: X₄ subtree lower bound (0.58) > best seen (0.38). Skip entire branch.' },
+  { type: 'explore', nodeId: 11, msg: 'Dive into X₂X₃ branch. X₁X₂X₃: RSS = 0.29. New best!' },
+  { type: 'explore', nodeId: 12, msg: 'X₂X₃X₄: RSS = 0.35. Not better than 0.29.' },
+  { type: 'prune',   nodeId: 13, msg: 'PRUNE: X₂X₃X₅ lower bound ≥ 0.29. Cannot beat current best.' },
+  { type: 'prune',   nodeId: 14, msg: 'PRUNE: X₁X₃ subtree lower bound ≥ 0.29. Entire branch skipped.' },
+  { type: 'explore', nodeId: 15, msg: 'Add X₄ to X₁X₂X₃: RSS = 0.24. New best for size-4!' },
+  { type: 'explore', nodeId: 16, msg: 'Add X₅ to X₁X₂X₃: RSS = 0.27. Not better.' },
+  { type: 'optimal', nodeId: 15, msg: 'DONE. Optimal subset of size 4: {X₁, X₂, X₃, X₄}. RSS = 0.24. Pruned 3 branches, skipped ~40% of tree.' },
+];
+
+function nodeColor(node, state) {
+  if (state === 'optimal') return '#56d364';
+  if (state === 'pruned') return '#f85149';
+  if (state === 'explored') return '#58a6ff';
+  return '#30363d';
+}
+
+function renderTree(visibleUpTo, specialStates) {
+  const svg = document.getElementById('tree-svg');
+  svg.innerHTML = '';
+
+  const ns = 'http://www.w3.org/2000/svg';
+
+  function el(tag, attrs, text) {
+    const e = document.createElementNS(ns, tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+
+  // Draw edges first
+  for (let i = 0; i <= visibleUpTo && i < nodes.length; i++) {
+    const node = nodes[i];
+    if (node.parent === null) continue;
+    const parent = nodes[node.parent];
+    if (nodes[node.parent].id > visibleUpTo) continue;
+
+    const state = specialStates[node.id] || 'hidden';
+    let stroke = '#30363d';
+    if (state === 'pruned') stroke = '#f8514966';
+    else if (state === 'explored') stroke = '#58a6ff44';
+    else if (state === 'optimal') stroke = '#56d36488';
+
+    svg.appendChild(el('line', {
+      x1: parent.x, y1: parent.y, x2: node.x, y2: node.y,
+      stroke, 'stroke-width': state === 'optimal' ? 2.5 : 1.5,
+      'stroke-dasharray': state === 'pruned' ? '6,4' : 'none',
+    }));
+  }
+
+  // Draw nodes
+  for (let i = 0; i <= visibleUpTo && i < nodes.length; i++) {
+    const node = nodes[i];
+    const state = specialStates[node.id] || 'idle';
+
+    const r = state === 'optimal' ? 26 : 22;
+    let fill = '#21262d';
+    let stroke = '#30363d';
+    let textColor = '#8b949e';
+
+    if (state === 'explored') { fill = '#0d2340'; stroke = '#58a6ff'; textColor = '#58a6ff'; }
+    if (state === 'pruned')   { fill = '#2d1010'; stroke = '#f85149'; textColor = '#f8514999'; }
+    if (state === 'optimal')  { fill = '#0d2d1a'; stroke = '#56d364'; textColor = '#56d364'; }
+    if (state === 'current')  { fill = '#1a2d45'; stroke = '#79c0ff'; textColor = '#e6edf3'; }
+
+    // Glow for optimal
+    if (state === 'optimal') {
+      svg.appendChild(el('circle', { cx: node.x, cy: node.y, r: r + 6, fill: '#56d36420' }));
+    }
+
+    svg.appendChild(el('circle', {
+      cx: node.x, cy: node.y, r,
+      fill, stroke, 'stroke-width': state === 'optimal' ? 2.5 : 1.5,
+    }));
+
+    // X mark for pruned
+    if (state === 'pruned') {
+      const d = 7;
+      svg.appendChild(el('line', { x1: node.x-d, y1: node.y-d, x2: node.x+d, y2: node.y+d, stroke: '#f85149', 'stroke-width': 2 }));
+      svg.appendChild(el('line', { x1: node.x+d, y1: node.y-d, x2: node.x-d, y2: node.y+d, stroke: '#f85149', 'stroke-width': 2 }));
+    }
+
+    // RSS label below node
+    if (state !== 'hidden' && node.id !== 0) {
+      svg.appendChild(el('text', {
+        x: node.x, y: node.y + r + 13,
+        fill: '#8b949e', 'font-size': '10', 'text-anchor': 'middle', 'font-family': 'monospace'
+      }, `${node.rss.toFixed(2)}`));
+    }
+
+    // Node label
+    const fontSize = node.label.length > 6 ? '9' : '11';
+    svg.appendChild(el('text', {
+      x: node.x, y: node.y + 4,
+      fill: textColor, 'font-size': fontSize, 'text-anchor': 'middle',
+      'font-family': 'monospace', 'font-weight': '600',
+    }, node.label));
+  }
+
+  // Legend
+  const legendItems = [
+    { color: '#58a6ff', label: 'Explored' },
+    { color: '#f85149', label: 'Pruned' },
+    { color: '#56d364', label: 'Optimal' },
+    { color: '#30363d', label: 'Pending' },
+  ];
+  legendItems.forEach((item, i) => {
+    const lx = 20 + i * 110, ly = H - 20;
+    svg.appendChild(el('circle', { cx: lx, cy: ly, r: 6, fill: item.color }));
+    svg.appendChild(el('text', { x: lx + 12, y: ly + 4, fill: '#8b949e', 'font-size': '11' }, item.label));
+  });
+}
+
+const nodeStates = {};
+let maxVisible = -1;
+
+function stepAnimation() {
+  if (animStep >= sequence.length) {
+    clearInterval(animTimer);
+    animTimer = null;
+    document.getElementById('btn-play').textContent = '▶ Play';
+    return;
+  }
+
+  const s = sequence[animStep];
+  maxVisible = Math.max(maxVisible, s.nodeId);
+  nodeStates[s.nodeId] = s.type === 'prune' ? 'pruned' : (s.type === 'optimal' ? 'optimal' : 'explored');
+
+  // Mark previous current as explored
+  for (const [id, st] of Object.entries(nodeStates)) {
+    if (st === 'current' && parseInt(id) !== s.nodeId) nodeStates[id] = 'explored';
+  }
+  if (s.type === 'explore') nodeStates[s.nodeId] = 'current';
+
+  renderTree(maxVisible, nodeStates);
+
+  // Update stats
+  exploredCount = Object.values(nodeStates).filter(v => v === 'explored' || v === 'current' || v === 'optimal').length;
+  prunedCount = Object.values(nodeStates).filter(v => v === 'pruned').length;
+  skippedCount = prunedCount * 3; // approximate subtree size
+  const totalPossible = nodes.length + skippedCount;
+  const pct = Math.round((skippedCount / totalPossible) * 100);
+
+  document.getElementById('explored-count').textContent = exploredCount;
+  document.getElementById('pruned-count').textContent = prunedCount;
+  document.getElementById('skipped-count').textContent = skippedCount;
+  document.getElementById('pct-saved').textContent = prunedCount > 0 ? pct + '%' : '—';
+  document.getElementById('step-info').innerHTML = `<span>Step ${animStep + 1}/${sequence.length}</span> — ${s.msg}`;
+
+  animStep++;
+}
+
+function playAnimation() {
+  if (animTimer) {
+    clearInterval(animTimer);
+    animTimer = null;
+    document.getElementById('btn-play').textContent = '▶ Play';
+    return;
+  }
+  document.getElementById('btn-play').textContent = '⏸ Pause';
+  animTimer = setInterval(stepAnimation, animSpeed);
+}
+
+function resetAnimation() {
+  clearInterval(animTimer);
+  animTimer = null;
+  animStep = 0;
+  exploredCount = 0; prunedCount = 0; skippedCount = 0;
+  Object.keys(nodeStates).forEach(k => delete nodeStates[k]);
+  maxVisible = 0;
+  renderTree(0, {});
+  document.getElementById('btn-play').textContent = '▶ Play';
+  document.getElementById('step-info').innerHTML = 'Press <strong>Play</strong> to animate the search. Pruned branches shown in red cannot contain the optimal subset.';
+  document.getElementById('explored-count').textContent = '0';
+  document.getElementById('pruned-count').textContent = '0';
+  document.getElementById('skipped-count').textContent = '0';
+  document.getElementById('pct-saved').textContent = '—';
+}
+
+function setSpeed(ms) {
+  animSpeed = ms;
+  if (animTimer) { clearInterval(animTimer); animTimer = setInterval(stepAnimation, animSpeed); }
+}
+
+// Initial render
+renderTree(0, {});
+</script>
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curds and Whey — ESL §3.7</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0d0d0d;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      padding: 24px;
+    }
+    header {
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 18px;
+      margin-bottom: 28px;
+    }
+    header h1 { font-size: 1.9rem; color: #f0f0f0; letter-spacing: -0.5px; }
+    header .meta { margin-top: 6px; color: #888; font-size: 0.9rem; }
+    header .formula {
+      margin-top: 12px;
+      background: #161616;
+      border-left: 3px solid #ffd166;
+      padding: 10px 16px;
+      border-radius: 4px;
+      font-size: 1rem;
+      color: #fff0c0;
+    }
+    .layout { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+    .viz-section { display: flex; flex-direction: column; gap: 18px; }
+    .viz-card { background: #111; border: 1px solid #222; border-radius: 8px; padding: 20px; }
+    .viz-card h2 { font-size: 1rem; color: #aaa; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .sidebar { display: flex; flex-direction: column; gap: 18px; }
+    .panel { background: #111; border: 1px solid #222; border-radius: 8px; padding: 18px; }
+    .panel h3 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 12px; }
+    blockquote { border-left: 3px solid #ffd166; padding-left: 12px; color: #ede0b0; font-style: italic; font-size: 0.92rem; }
+    .guarantee-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #1c1c1c; font-size: 0.88rem; }
+    .guarantee-row:last-child { border-bottom: none; }
+    .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; font-weight: 600; }
+    .yes  { background: #1a3a1a; color: #5de85d; }
+    .no   { background: #3a1a1a; color: #e85d5d; }
+    .cond { background: #2a2a1a; color: #e8c45d; }
+    .related-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    .tag { background: #1a1a2e; border: 1px solid #2e2e5e; color: #8899cc; padding: 3px 10px; border-radius: 14px; font-size: 0.8rem; }
+    .controls { margin-top: 14px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    label { font-size: 0.85rem; color: #aaa; }
+    input[type=range] { accent-color: #ffd166; cursor: pointer; }
+    .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: #bbb; }
+    .legend-dot { width: 14px; height: 4px; border-radius: 2px; flex-shrink: 0; }
+    .legend-dot.dash { background: repeating-linear-gradient(90deg, currentColor 0, currentColor 4px, transparent 4px, transparent 7px); }
+    .spectrum-bar {
+      height: 24px;
+      border-radius: 4px;
+      margin: 8px 0;
+      background: linear-gradient(to right, #3a1a1a 0%, #7a4a1a 25%, #1a3a1a 50%, #1a4a3a 75%, #1a4060 100%);
+      position: relative;
+    }
+    .spectrum-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: #666; }
+    .tab-row { display: flex; gap: 0; margin-bottom: 16px; }
+    .tab { padding: 7px 18px; font-size: 0.85rem; cursor: pointer; background: #1a1a1a; border: 1px solid #2a2a2a; color: #888; transition: all 0.15s; }
+    .tab:first-child { border-radius: 6px 0 0 6px; }
+    .tab:last-child  { border-radius: 0 6px 6px 0; }
+    .tab.active { background: #2a2410; border-color: #ffd166; color: #fff0c0; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Curds and Whey</h1>
+  <div class="meta">ID 162 &nbsp;·&nbsp; ESL Section 3.7 (Breiman &amp; Friedman 1997) &nbsp;·&nbsp; Category: comparison / aggregation</div>
+  <div class="formula">
+    \(\hat{\mathbf{Y}}^{c\&amp;w} = \mathbf{X}\hat{\mathbf{B}}^{OLS}\mathbf{S}^{c\&amp;w}\) &nbsp;&nbsp;where&nbsp;&nbsp;
+    \(s_k^{c\&amp;w} = \frac{\rho_k^2}{\rho_k^2 + \frac{p}{n}(1-\rho_k^2)}\) &nbsp;(shrinkage factor for canonical variate k)
+  </div>
+</header>
+
+<div class="layout">
+  <div class="viz-section">
+    <div class="viz-card">
+      <div class="tab-row">
+        <div class="tab active" onclick="switchTab('shrink')">Shrinkage Profile</div>
+        <div class="tab" onclick="switchTab('compare')">Hard vs Soft Comparison</div>
+        <div class="tab" onclick="switchTab('mse')">MSE Reduction</div>
+      </div>
+
+      <!-- Shrinkage profile view -->
+      <div id="view-shrink">
+        <h2>Smooth shrinkage factors sₖ by canonical correlation ρₖ</h2>
+        <div id="plotShrink" style="width:100%;height:380px;"></div>
+        <div class="controls">
+          <label>n/p ratio: <input type="range" id="npSlider" min="2" max="50" value="10" style="width:120px"> <span id="npLabel">10</span></label>
+        </div>
+        <div class="legend-grid" style="margin-top:14px;">
+          <div class="legend-item"><span class="legend-dot" style="background:#ffd166;height:3px;width:20px;"></span>Curds &amp; Whey sₖ</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#ff7b54;height:3px;width:20px;"></span>Hard truncation at M (RRR)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#4ae3b5;height:3px;width:20px;"></span>No shrinkage (OLS, sₖ=1)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#b07aff;height:3px;width:20px;"></span>James-Stein-type floor (sₖ=0)</div>
+        </div>
+      </div>
+
+      <!-- Hard vs Soft comparison -->
+      <div id="view-compare" style="display:none;">
+        <h2>Prediction surface: Hard truncation (RRR) vs Smooth shrinkage (Curds &amp; Whey)</h2>
+        <div id="plotCompare" style="width:100%;height:380px;"></div>
+        <div class="controls">
+          <label>True rank: <input type="range" id="trueRankSlider" min="1" max="5" value="2" style="width:100px"> <span id="trueRankLabel">2</span></label>
+          <label>n/p: <input type="range" id="npSlider2" min="2" max="40" value="8" style="width:100px"> <span id="npLabel2">8</span></label>
+        </div>
+        <p style="font-size:0.82rem;color:#666;margin-top:10px;">Hard truncation at rank M sets coefficients to 0 or 1 abruptly. Curds &amp; whey smoothly interpolates — keeping high-correlation canonical directions close to 1 and shrinking low-correlation ones toward 0.</p>
+      </div>
+
+      <!-- MSE reduction view -->
+      <div id="view-mse" style="display:none;">
+        <h2>Relative MSE: OLS=1. Lower is better. Vary sample size n/p and true rank.</h2>
+        <div id="plotMSE" style="width:100%;height:380px;"></div>
+        <div class="controls">
+          <label>True rank: <input type="range" id="trueRankMSE" min="1" max="5" value="2" style="width:100px"> <span id="trueRankMSELabel">2</span></label>
+        </div>
+        <p style="font-size:0.82rem;color:#666;margin-top:10px;">Curds &amp; whey gains most when n/p is small (high estimation variance). At large n/p, all methods approach OLS. RRR is optimal when true rank is exact; C&amp;W is more robust.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="panel">
+      <h3>Book Quote</h3>
+      <blockquote>
+        "Curds and whey involves shrinkage of the canonical variates between X and Y, a smooth version of reduced rank regression."
+      </blockquote>
+      <p style="margin-top:6px;font-size:0.82rem;color:#666;">— ESL §3.7 (Breiman &amp; Friedman 1997)</p>
+    </div>
+
+    <div class="panel">
+      <h3>Shrinkage Spectrum</h3>
+      <div class="spectrum-bar"></div>
+      <div class="spectrum-labels">
+        <span>ρ=0 (s→0)</span>
+        <span>ρ=0.5</span>
+        <span>ρ=1 (s→1)</span>
+      </div>
+      <p style="font-size:0.81rem;color:#777;margin-top:8px;">High canonical correlation → keep direction (s≈1). Low canonical correlation → shrink heavily (s≈0). Unlike RRR there is no hard cutoff.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Guarantees</h3>
+      <div class="guarantee-row">
+        <span>Unbiased estimator</span>
+        <span class="badge no">No</span>
+      </div>
+      <div class="guarantee-row">
+        <span>Lower MSE than OLS</span>
+        <span class="badge yes">Yes</span>
+      </div>
+      <div class="guarantee-row">
+        <span>Lower MSE than RRR</span>
+        <span class="badge cond">Typically</span>
+      </div>
+      <div class="guarantee-row">
+        <span>Smooth (no hard cutoff)</span>
+        <span class="badge yes">Yes</span>
+      </div>
+      <div class="guarantee-row">
+        <span>Adaptive to rho</span>
+        <span class="badge yes">Yes</span>
+      </div>
+      <div class="guarantee-row">
+        <span>Requires CCA</span>
+        <span class="badge yes">Yes</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Key Facts</h3>
+      <ul style="font-size:0.86rem;color:#bbb;padding-left:18px;line-height:1.8;">
+        <li>Named after Breiman &amp; Friedman (1997)</li>
+        <li>Shrinkage factor depends on ρₖ and p/n ratio</li>
+        <li>sₖ → 1 as ρₖ → 1 (keep strong directions)</li>
+        <li>sₖ → 0 as ρₖ → 0 or n/p → small</li>
+        <li>Special case of a James-Stein-type estimator</li>
+        <li>More robust than RRR when rank is unknown</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3>Related Concepts</h3>
+      <div class="related-tags">
+        <span class="tag">Reduced-Rank Regression</span>
+        <span class="tag">CCA (§3.7)</span>
+        <span class="tag">Ridge Regression</span>
+        <span class="tag">James-Stein</span>
+        <span class="tag">Shrinkage Estimation</span>
+        <span class="tag">PLS (§3.5)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- helpers ----
+function cwShrink(rho, npRatio) {
+  // s_k = rho^2 / (rho^2 + (p/n)*(1 - rho^2))
+  const pn = 1 / npRatio; // p/n
+  const r2 = rho * rho;
+  return r2 / (r2 + pn * (1 - r2));
+}
+
+let currentTab = 'shrink';
+function switchTab(tab) {
+  currentTab = tab;
+  ['shrink','compare','mse'].forEach(t => {
+    document.getElementById('view-'+t).style.display = t===tab?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach((el,i) => {
+    const tabs = ['shrink','compare','mse'];
+    el.classList.toggle('active', tabs[i]===tab);
+  });
+  if(tab==='compare') buildComparePlot();
+  if(tab==='mse') buildMSEPlot();
+}
+
+// ---- Shrinkage profile ----
+function buildShrinkPlot() {
+  const npRatio = +document.getElementById('npSlider').value;
+  document.getElementById('npLabel').textContent = npRatio;
+
+  const rhos = Array.from({length:200},(_,i)=>i/199);
+  const cw   = rhos.map(r=>cwShrink(r, npRatio));
+
+  // Hard truncation reference: step at rho threshold where s_k crosses 0.5
+  const rhoThresh = Math.sqrt(1/(1 + npRatio)); // solve s=0.5 for rho
+  const hard = rhos.map(r=>r>=rhoThresh?1:0);
+
+  const traces = [
+    { x:rhos, y:cw,   mode:'lines', name:'Curds & Whey sₖ(ρ)',  line:{color:'#ffd166',width:3} },
+    { x:rhos, y:hard, mode:'lines', name:'Hard truncation (RRR, M=1)', line:{color:'#ff7b54',width:2,dash:'dash'} },
+    { x:rhos, y:rhos.map(()=>1), mode:'lines', name:'OLS (no shrink)', line:{color:'#4ae3b5',width:1.5,dash:'dot'} },
+    { x:rhos, y:rhos.map(()=>0), mode:'lines', name:'Zero (drop all)', line:{color:'#b07aff',width:1.5,dash:'dot'} },
+  ];
+
+  const layout = {
+    paper_bgcolor:'#111', plot_bgcolor:'#111',
+    font:{color:'#ccc',size:12},
+    xaxis:{title:'Canonical correlation ρₖ',gridcolor:'#222',zerolinecolor:'#333',color:'#888',range:[0,1]},
+    yaxis:{title:'Shrinkage factor sₖ',gridcolor:'#222',zerolinecolor:'#333',color:'#888',range:[-0.05,1.1]},
+    legend:{bgcolor:'#1a1a1a',bordercolor:'#333',borderwidth:1},
+    margin:{t:20,b:60,l:60,r:20},
+    annotations:[{
+      x:rhoThresh, y:0.5, xref:'x', yref:'y',
+      text:`ρ=${rhoThresh.toFixed(2)}<br>(CW=Hard threshold)`,
+      showarrow:true, arrowhead:2, arrowcolor:'#ffd166',
+      font:{color:'#ffd166',size:10}, ax:40, ay:-30
+    }]
+  };
+  Plotly.react('plotShrink', traces, layout, {responsive:true,displayModeBar:false});
+}
+
+// ---- Hard vs Soft comparison ----
+function buildComparePlot() {
+  const K = 6;
+  const trueRank = +document.getElementById('trueRankSlider').value;
+  const npRatio  = +document.getElementById('npSlider2').value;
+  document.getElementById('trueRankLabel').textContent = trueRank;
+  document.getElementById('npLabel2').textContent = npRatio;
+
+  // Simulated canonical correlations: high for first trueRank, low after
+  const rhos = Array.from({length:K},(_,k)=>{
+    if(k<trueRank) return 0.85 - k*0.05;
+    return 0.15 - k*0.01 + Math.random()*0.05;
+  }).map(r=>Math.max(0,Math.min(1,r)));
+
+  const cwFactors  = rhos.map(r=>cwShrink(r, npRatio));
+  const rrrFactors = rhos.map((_,k)=>k<trueRank?1:0); // hard at trueRank
+
+  const ks = Array.from({length:K},(_,i)=>i+1);
+
+  const traces = [
+    {
+      x:ks, y:cwFactors,
+      type:'bar', name:'Curds & Whey (smooth)',
+      marker:{color:'#ffd166',opacity:0.85},
+      width:0.35, offset:-0.18
+    },
+    {
+      x:ks, y:rrrFactors,
+      type:'bar', name:`RRR (hard rank=${trueRank})`,
+      marker:{color:'#ff7b54',opacity:0.85},
+      width:0.35, offset:0.18
+    },
+    {
+      x:ks, y:rhos,
+      type:'scatter', mode:'lines+markers',
+      name:'Canonical correlation ρₖ',
+      line:{color:'#4ae3b5',width:2,dash:'dot'},
+      marker:{size:8,symbol:'circle'}
+    }
+  ];
+
+  const layout = {
+    paper_bgcolor:'#111', plot_bgcolor:'#111',
+    font:{color:'#ccc',size:12},
+    xaxis:{title:'Canonical pair k',gridcolor:'#222',zerolinecolor:'#333',color:'#888',tickvals:ks},
+    yaxis:{title:'Weight / Shrinkage Factor',gridcolor:'#222',zerolinecolor:'#333',color:'#888',range:[0,1.15]},
+    legend:{bgcolor:'#1a1a1a',bordercolor:'#333',borderwidth:1,orientation:'h',y:1.12},
+    barmode:'overlay',
+    margin:{t:50,b:60,l:60,r:20},
+    shapes:[{
+      type:'line', x0:trueRank+0.5, x1:trueRank+0.5, y0:0, y1:1,
+      line:{color:'#ff7b54',dash:'dot',width:1.5}
+    }],
+    annotations:[{
+      x:trueRank+0.5, y:0.95, xref:'x', yref:'y',
+      text:'RRR cutoff', showarrow:false, font:{color:'#ff7b54',size:10}
+    }]
+  };
+  Plotly.react('plotCompare', traces, layout, {responsive:true,displayModeBar:false});
+}
+
+// ---- MSE reduction ----
+function buildMSEPlot() {
+  const trueRankMSE = +document.getElementById('trueRankMSE').value;
+  document.getElementById('trueRankMSELabel').textContent = trueRankMSE;
+
+  const npRatios = [1.5,2,3,4,5,6,8,10,15,20,30,50];
+
+  function cwMSE(npRatio) {
+    // Simulate MSE ratio vs OLS for curds & whey
+    // At small n/p, big gains. At large n/p, approaches 1.
+    return Math.max(0.5, 1 - 0.35/(npRatio/5+0.5) + 0.02*trueRankMSE/5);
+  }
+  function rrrMSE(npRatio) {
+    // RRR optimal when rank is exact, slightly worse when wrong
+    return Math.max(0.45, 1 - 0.40/(npRatio/5+0.5) + 0.01*trueRankMSE/5);
+  }
+  function rrrBadMSE(npRatio) {
+    // RRR with wrong rank — can be worse
+    return Math.max(0.55, 1 - 0.20/(npRatio/5+0.5) + 0.05*trueRankMSE/5);
+  }
+
+  const cw  = npRatios.map(cwMSE);
+  const rrr = npRatios.map(rrrMSE);
+  const rrrBad = npRatios.map(rrrBadMSE);
+
+  const traces = [
+    {x:npRatios, y:cw,     mode:'lines+markers', name:'Curds & Whey',          line:{color:'#ffd166',width:2.5}, marker:{size:7}},
+    {x:npRatios, y:rrr,    mode:'lines+markers', name:'RRR (correct rank)',     line:{color:'#4ae3b5',width:2},   marker:{size:7}},
+    {x:npRatios, y:rrrBad, mode:'lines+markers', name:'RRR (misspecified rank)',line:{color:'#ff7b54',width:2,dash:'dash'}, marker:{size:7}},
+    {x:npRatios, y:npRatios.map(()=>1.0), mode:'lines', name:'OLS baseline (1.0)', line:{color:'#555',width:1.5,dash:'dot'}},
+  ];
+
+  const layout = {
+    paper_bgcolor:'#111', plot_bgcolor:'#111',
+    font:{color:'#ccc',size:12},
+    xaxis:{title:'n/p ratio (sample size / # predictors)',gridcolor:'#222',zerolinecolor:'#333',color:'#888',type:'log'},
+    yaxis:{title:'Relative MSE (OLS = 1.0)',gridcolor:'#222',zerolinecolor:'#333',color:'#888',range:[0.3,1.15]},
+    legend:{bgcolor:'#1a1a1a',bordercolor:'#333',borderwidth:1},
+    margin:{t:20,b:60,l:60,r:20},
+    annotations:[{
+      x:0.5,y:1.08,xref:'paper',yref:'paper',
+      text:'Values < 1.0 mean improvement over OLS  |  true rank = ' + trueRankMSE,
+      showarrow:false,font:{color:'#888',size:11}
+    }]
+  };
+  Plotly.react('plotMSE', traces, layout, {responsive:true,displayModeBar:false});
+}
+
+document.getElementById('npSlider').addEventListener('input', buildShrinkPlot);
+document.getElementById('trueRankSlider').addEventListener('input', buildComparePlot);
+document.getElementById('npSlider2').addEventListener('input', buildComparePlot);
+document.getElementById('trueRankMSE').addEventListener('input', buildMSEPlot);
+
+buildShrinkPlot();
+</script>
+</body>
+</html>

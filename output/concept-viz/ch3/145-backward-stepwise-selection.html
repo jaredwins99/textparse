@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backward Stepwise Selection — ESL §3.3.2</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  header {
+    background: linear-gradient(135deg, #161b22 0%, #1c2128 100%);
+    border-bottom: 1px solid #30363d; padding: 28px 40px 24px;
+  }
+  .header-meta { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+  .badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .badge-id { background: #1f6feb33; color: #58a6ff; border: 1px solid #1f6feb; }
+  .badge-section { background: #388bfd22; color: #79c0ff; border: 1px solid #388bfd44; }
+  .badge-cat { background: #2ea04326; color: #56d364; border: 1px solid #2ea04344; }
+  h1 { font-size: 28px; font-weight: 700; color: #f0f6fc; margin-bottom: 8px; }
+  .formula { font-size: 14px; color: #8b949e; padding: 6px 0; }
+  .main { display: grid; grid-template-columns: 1fr 360px; gap: 24px; padding: 28px 40px; max-width: 1400px; }
+  .viz-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; overflow: hidden; }
+  .viz-title { padding: 16px 20px 12px; border-bottom: 1px solid #30363d; font-size: 13px; font-weight: 600; color: #8b949e; text-transform: uppercase; letter-spacing: 0.6px; }
+  .controls { padding: 16px 20px; border-top: 1px solid #30363d; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  button { background: #1f6feb; color: #fff; border: none; border-radius: 6px; padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+  button:hover { background: #388bfd; }
+  button.secondary { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; }
+  button.secondary:hover { background: #30363d; }
+  .sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 20px; }
+  .panel-title { font-size: 11px; font-weight: 700; color: #8b949e; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 14px; display: flex; align-items: center; }
+  .panel-title::before { content: ''; display: inline-block; width: 3px; height: 14px; border-radius: 2px; margin-right: 8px; }
+  .panel-title.blue::before { background: #58a6ff; }
+  .panel-title.green::before { background: #56d364; }
+  .panel-title.orange::before { background: #f0883e; }
+  blockquote { border-left: 3px solid #1f6feb; padding-left: 14px; color: #c9d1d9; font-size: 13px; line-height: 1.7; font-style: italic; }
+  blockquote cite { display: block; margin-top: 8px; font-size: 11px; color: #58a6ff; font-style: normal; font-weight: 600; }
+  .guarantee-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+  .g-icon { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin-top: 1px; }
+  .g-yes { background: #1e3a2f; color: #56d364; }
+  .g-no { background: #3d1a1a; color: #f85149; }
+  .g-na { background: #2d2a1e; color: #f0883e; }
+  .g-label { font-size: 13px; font-weight: 600; color: #c9d1d9; }
+  .g-desc { font-size: 12px; color: #8b949e; margin-top: 2px; }
+  .related-tag { display: inline-block; background: #21262d; border: 1px solid #30363d; border-radius: 6px; padding: 5px 12px; font-size: 12px; color: #79c0ff; margin: 4px; }
+  .step-info { padding: 12px 20px; border-top: 1px solid #30363d; font-size: 13px; color: #8b949e; min-height: 44px; }
+  .step-info span { color: #79c0ff; font-weight: 600; }
+  #chart-zscore { height: 260px; }
+  #chart-rss2 { height: 240px; }
+  .step-vars { display: flex; gap: 8px; padding: 12px 20px; border-top: 1px solid #30363d; flex-wrap: wrap; }
+  .var-chip { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; transition: all 0.3s; }
+  .var-in  { background: #0d2d1a; color: #56d364; border: 1px solid #2ea043; }
+  .var-out { background: #2d1010; color: #f8514988; border: 1px solid #f8514933; text-decoration: line-through; }
+  .var-removed { background: #3d1a1a; color: #f85149; border: 1px solid #f85149; animation: shake 0.4s ease; }
+  @keyframes shake { 0%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} 100%{transform:translateX(0)} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-meta">
+    <span class="badge badge-id">ID 145</span>
+    <span class="badge badge-section">§ 3.3.2 — Subset Selection</span>
+    <span class="badge badge-cat">Comparison / Selection</span>
+  </div>
+  <h1>Backward Stepwise Selection</h1>
+  <div class="formula">
+    At each step: remove \(\hat{j} = \arg\min_{j \in S}\, |z_j|\) where \(z_j = \hat{\beta}_j / \hat{\sigma}\sqrt{v_j}\) &nbsp;|&nbsp; Start full, shrink greedily
+  </div>
+</header>
+
+<div class="main">
+  <div>
+    <div class="viz-card">
+      <div class="viz-title">Z-scores per Variable — Remove Lowest at Each Step</div>
+      <div class="step-vars" id="step-vars"></div>
+      <div id="chart-zscore"></div>
+      <div id="chart-rss2"></div>
+      <div class="step-info" id="step-info">
+        Press <strong>Play</strong>. At each step the variable with the smallest |Z-score| is removed. Watch the bar drop out.
+      </div>
+      <div class="controls">
+        <button id="btn-play" onclick="playAnimation()">&#9654; Play</button>
+        <button class="secondary" onclick="resetAnimation()">&#8635; Reset</button>
+        <button class="secondary" onclick="stepOnce()">&#9658; Step</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="panel">
+      <div class="panel-title blue">Book Quote</div>
+      <blockquote>
+        "Backward-stepwise selection starts with the full model, and sequentially deletes the predictor that has the least impact on the fit. The candidate for dropping is the variable with the smallest Z-score."
+        <cite>— ESL §3.3.2, Hastie, Tibshirani &amp; Friedman</cite>
+      </blockquote>
+      <p style="margin-top:12px;font-size:12px;color:#8b949e;line-height:1.6;">
+        Requires \(n &gt; p\) to start (full model must be fit). Cannot be used when \(p \gg n\). Forward stepwise can start anywhere; backward requires a fitted full model.
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title green">Guarantees</div>
+      <div class="guarantee-row">
+        <div class="g-icon g-no">✗</div>
+        <div>
+          <div class="g-label">Globally Optimal</div>
+          <div class="g-desc">Greedy — removing the weakest at each step doesn't guarantee the best final subset.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-no">✗</div>
+        <div>
+          <div class="g-label">Works when p &gt; n</div>
+          <div class="g-desc">Cannot fit full model when p &gt; n. Forward stepwise is required in that regime.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-na">~</div>
+        <div>
+          <div class="g-label">Unbiased</div>
+          <div class="g-desc">Conditionally unbiased on the chosen subset; adaptive selection induces bias.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-no">✗</div>
+        <div>
+          <div class="g-label">Low Variance</div>
+          <div class="g-desc">Z-score-based removal is sensitive to collinearity and small sample fluctuations.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-yes">✓</div>
+        <div>
+          <div class="g-label">Considers full joint fit</div>
+          <div class="g-desc">Unlike forward, it starts from the joint OLS model, capturing correlated predictor effects.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title orange">Related Concepts</div>
+      <div>
+        <span class="related-tag">Forward Stepwise (ID 144)</span>
+        <span class="related-tag">Leaps &amp; Bounds (ID 143)</span>
+        <span class="related-tag">Forward Stagewise (ID 146)</span>
+        <span class="related-tag">Z-score / t-statistic</span>
+        <span class="related-tag">AIC Criterion (ID 179)</span>
+        <span class="related-tag">LASSO</span>
+        <span class="related-tag">Ridge Regression</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const varNames = ['X₁ Age', 'X₂ Income', 'X₃ Educ', 'X₄ Region', 'X₅ Occup', 'X₆ Exper'];
+const varShort = ['X₁', 'X₂', 'X₃', 'X₄', 'X₅', 'X₆'];
+
+// Each step: current Z-scores (null = removed), which one gets removed, RSS after removal
+const steps = [
+  {
+    zscores: [3.8, 4.2, 5.1, 1.2, 2.7, 0.8], removedIdx: -1, rss: 0.235,
+    msg: 'Step 0: Full model with all 6 variables. Z-scores shown. Lowest |Z| = X₆ (0.8).',
+  },
+  {
+    zscores: [3.9, 4.3, 5.2, 1.3, 2.8, null], removedIdx: 5, rss: 0.240,
+    msg: 'Step 1: Remove X₆ (Experience) — |Z| = 0.8, weakest. RSS barely changes (0.235 → 0.240).',
+  },
+  {
+    zscores: [4.0, 4.4, 5.3, null, 2.9, null], removedIdx: 3, rss: 0.262,
+    msg: 'Step 2: Remove X₄ (Region) — |Z| = 1.3, next weakest. RSS = 0.262.',
+  },
+  {
+    zscores: [4.1, 4.5, 5.5, null, null, null], removedIdx: 4, rss: 0.295,
+    msg: 'Step 3: Remove X₅ (Occupation) — |Z| = 2.9 now smallest. RSS rising.',
+  },
+  {
+    zscores: [null, 4.6, 5.6, null, null, null], removedIdx: 0, rss: 0.380,
+    msg: 'Step 4: Remove X₁ (Age) — |Z| = 4.1. Noticeable RSS jump to 0.380.',
+  },
+  {
+    zscores: [null, null, 5.7, null, null, null], removedIdx: 1, rss: 0.550,
+    msg: 'Step 5: Remove X₂ (Income) — only X₃ remains. RSS = 0.550.',
+  },
+];
+
+const rssHistory = steps.map(s => s.rss);
+
+let currentStep = 0;
+let animTimer = null;
+
+function renderChips(step) {
+  const el = document.getElementById('step-vars');
+  el.innerHTML = '';
+  const s = steps[step];
+  varShort.forEach((v, i) => {
+    const chip = document.createElement('span');
+    if (s.zscores[i] === null) {
+      chip.className = 'var-chip var-out';
+      chip.textContent = v + ' ✗';
+    } else if (s.removedIdx === i && step > 0) {
+      chip.className = 'var-chip var-removed';
+      chip.textContent = v + ' ← removed';
+    } else {
+      chip.className = 'var-chip var-in';
+      chip.textContent = v;
+    }
+    el.appendChild(chip);
+  });
+}
+
+function renderZscoreChart(step) {
+  const s = steps[step];
+  const xs = varNames.filter((_, i) => s.zscores[i] !== null);
+  const ys = s.zscores.filter(z => z !== null);
+
+  const threshold = 2.0;
+  const colors = ys.map((z, i) => {
+    const origIdx = s.zscores.reduce((acc, z2, j) => {
+      if (z2 !== null) acc.push(j); return acc;
+    }, [])[i];
+    if (step > 0 && origIdx === steps[step].removedIdx) return '#f85149';
+    if (z < threshold) return '#f0883e';
+    return '#58a6ff';
+  });
+
+  // Find minimum for arrow annotation
+  const minIdx = ys.indexOf(Math.min(...ys));
+
+  const data = [{
+    x: xs, y: ys, type: 'bar',
+    marker: { color: colors },
+    hovertemplate: '%{x}: |Z| = %{y:.1f}<extra></extra>',
+  }];
+
+  const annotations = [];
+  if (ys.length > 0) {
+    annotations.push({
+      x: xs[minIdx], y: ys[minIdx] + 0.3,
+      text: `← weakest: |Z|=${ys[minIdx].toFixed(1)}`,
+      showarrow: true, arrowhead: 2, arrowcolor: '#f85149',
+      arrowsize: 1, ax: 40, ay: -30,
+      font: { color: '#f85149', size: 11 },
+    });
+  }
+
+  // Threshold line
+  const shapes = [{
+    type: 'line', x0: -0.5, x1: xs.length - 0.5,
+    y0: threshold, y1: threshold,
+    line: { color: '#f0883e', width: 1.5, dash: 'dash' },
+  }];
+
+  const layout = {
+    paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+    margin: { l: 52, r: 20, t: 24, b: 50 },
+    xaxis: { color: '#8b949e', gridcolor: 'transparent' },
+    yaxis: {
+      range: [0, 6.5], color: '#8b949e', gridcolor: '#21262d', zeroline: false,
+      title: { text: '|Z-score|', font: { color: '#8b949e', size: 12 } },
+    },
+    annotations,
+    shapes,
+    bargap: 0.3,
+  };
+
+  Plotly.react('chart-zscore', data, layout, { responsive: true, displayModeBar: false });
+}
+
+function renderRSSChart(step) {
+  const xs = steps.slice(0, step + 1).map((_, i) => 6 - i);
+  const ys = steps.slice(0, step + 1).map(s => s.rss);
+  const labels = ['Full', '5 vars', '4 vars', '3 vars', '2 vars', '1 var'].slice(0, step + 1);
+
+  const futureXs = steps.slice(step + 1).map((_, i) => 6 - (step + 1 + i));
+  const futureYs = steps.slice(step + 1).map(s => s.rss);
+
+  const data = [
+    {
+      x: xs, y: ys, mode: 'lines+markers+text', type: 'scatter',
+      line: { color: '#f85149', width: 2.5 },
+      marker: { color: ys.map((_, i) => i === step ? '#f0883e' : '#f85149'), size: 9 },
+      text: labels, textposition: 'top right',
+      textfont: { color: '#f0883e', size: 10 },
+      hovertemplate: 'Size %{x}<br>RSS = %{y:.3f}<extra></extra>',
+      name: 'RSS after removal',
+    },
+    {
+      x: futureXs, y: futureYs, mode: 'lines+markers', type: 'scatter',
+      line: { color: '#30363d', width: 1.5, dash: 'dot' },
+      marker: { color: '#30363d', size: 6 },
+      showlegend: false, hoverinfo: 'skip',
+    }
+  ];
+
+  const layout = {
+    paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+    margin: { l: 52, r: 20, t: 14, b: 50 },
+    xaxis: {
+      range: [0.3, 6.7], autorange: 'reversed',
+      color: '#8b949e', gridcolor: '#21262d', zeroline: false,
+      title: { text: 'Number of variables remaining', font: { color: '#8b949e', size: 12 } },
+      tickvals: [1, 2, 3, 4, 5, 6], ticktext: ['1', '2', '3', '4', '5', '6 (full)'],
+    },
+    yaxis: {
+      range: [0.18, 0.62], color: '#8b949e', gridcolor: '#21262d', zeroline: false,
+      title: { text: 'RSS', font: { color: '#8b949e', size: 12 } },
+    },
+  };
+
+  Plotly.react('chart-rss2', data, layout, { responsive: true, displayModeBar: false });
+}
+
+function update(step) {
+  currentStep = step;
+  renderChips(step);
+  renderZscoreChart(step);
+  renderRSSChart(step);
+  document.getElementById('step-info').innerHTML =
+    `<span>Step ${step}/${steps.length - 1}</span> — ${steps[step].msg}`;
+}
+
+function stepOnce() {
+  if (currentStep < steps.length - 1) update(currentStep + 1);
+}
+
+function playAnimation() {
+  if (animTimer) {
+    clearInterval(animTimer); animTimer = null;
+    document.getElementById('btn-play').textContent = '▶ Play';
+    return;
+  }
+  document.getElementById('btn-play').textContent = '⏸ Pause';
+  animTimer = setInterval(() => {
+    if (currentStep >= steps.length - 1) {
+      clearInterval(animTimer); animTimer = null;
+      document.getElementById('btn-play').textContent = '▶ Play';
+      return;
+    }
+    update(currentStep + 1);
+  }, 1000);
+}
+
+function resetAnimation() {
+  clearInterval(animTimer); animTimer = null;
+  document.getElementById('btn-play').textContent = '▶ Play';
+  update(0);
+}
+
+update(0);
+</script>
+</body>
+</html>

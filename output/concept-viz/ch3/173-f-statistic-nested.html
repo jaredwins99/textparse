@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F-Statistic for Nested Models — ESL §3.2.1</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f1117; color: #e0e0e0; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  .header { background: #1a1d27; border-bottom: 1px solid #2a2d3e; padding: 24px 32px; }
+  .header-meta { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .header-meta span { color: #818cf8; }
+  h1 { font-size: 22px; font-weight: 600; color: #f0f0f8; margin-bottom: 10px; }
+  .formula-block { background: #12151f; border: 1px solid #2a2d3e; border-left: 3px solid #818cf8; border-radius: 6px; padding: 14px 20px; display: inline-block; margin-top: 6px; }
+  .main { display: grid; grid-template-columns: 1fr 340px; gap: 20px; padding: 24px 32px; max-width: 1400px; }
+  .viz-col { display: flex; flex-direction: column; gap: 16px; }
+  .viz-panel { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 10px; padding: 20px; }
+  .viz-title { font-size: 13px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+  .side-panels { display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 10px; padding: 18px; }
+  .panel-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #2a2d3e; }
+  .facts .panel-title { color: #34d399; }
+  .guarantees .panel-title { color: #f59e0b; }
+  .related .panel-title { color: #818cf8; }
+  blockquote { font-style: italic; color: #9ca3af; font-size: 13px; line-height: 1.6; border-left: 2px solid #34d399; padding-left: 12px; margin: 0; }
+  .cite { font-style: normal; color: #6b7280; font-size: 11px; margin-top: 6px; display: block; }
+  .guarantee-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+  .badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px; }
+  .badge-yes { background: #064e3b; color: #34d399; }
+  .badge-no { background: #450a0a; color: #f87171; }
+  .badge-cond { background: #451a03; color: #fb923c; }
+  .related-list { list-style: none; }
+  .related-list li { font-size: 13px; color: #9ca3af; padding: 4px 0; border-bottom: 1px solid #1f2937; }
+  .related-list li:last-child { border-bottom: none; }
+  .related-list a { color: #818cf8; text-decoration: none; }
+  .related-list a:hover { text-decoration: underline; }
+  .controls { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; }
+  .ctrl-group { display: flex; align-items: center; gap: 8px; }
+  label { font-size: 13px; color: #9ca3af; }
+  input[type=range] { accent-color: #818cf8; width: 120px; }
+  .val-display { font-size: 13px; color: #e0e0e0; font-weight: 600; min-width: 36px; }
+  .f-readout { background: #12151f; border: 1px solid #2a2d3e; border-radius: 8px; padding: 12px 16px; display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 14px; }
+  .f-stat-box { text-align: center; }
+  .f-stat-label { font-size: 11px; color: #6b7280; text-transform: uppercase; margin-bottom: 4px; }
+  .f-stat-value { font-size: 20px; font-weight: 700; }
+  .f-sig { color: #34d399; }
+  .f-nonsig { color: #6b7280; }
+  .model-boxes { display: flex; gap: 12px; margin-bottom: 14px; }
+  .model-box { flex: 1; background: #12151f; border: 1px solid #2a2d3e; border-radius: 8px; padding: 12px 14px; }
+  .model-box-title { font-size: 11px; color: #6b7280; text-transform: uppercase; margin-bottom: 6px; }
+  .model-box-eq { font-size: 13px; color: #e0e0e0; line-height: 1.5; }
+  .model-box.model0 { border-top: 2px solid #6366f1; }
+  .model-box.model1 { border-top: 2px solid #34d399; }
+  .note { font-size: 12px; color: #6b7280; margin-top: 8px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-meta">ESL <span>§3.2.1</span> · ID 173 · Category: <span>Assessment / Diagnostics</span></div>
+  <h1>F-Statistic for Nested Models</h1>
+  <div class="formula-block">
+    \( F = \dfrac{(RSS_0 - RSS_1)/(p_1 - p_0)}{RSS_1/(N - p_1 - 1)} \)
+  </div>
+</div>
+
+<div class="main">
+  <div class="viz-col">
+    <div class="viz-panel">
+      <div class="viz-title">Nested Model Comparison</div>
+
+      <div class="model-boxes">
+        <div class="model-box model0">
+          <div class="model-box-title">Model 0 (Restricted, H₀)</div>
+          <div class="model-box-eq" id="model0eq">y = β₀ + β₁x₁ + β₂x₂ + ε</div>
+          <div style="margin-top:6px;font-size:12px;color:#9ca3af;">p₀ = <span id="p0disp">2</span> predictors</div>
+        </div>
+        <div class="model-box model1">
+          <div class="model-box-title">Model 1 (Full, H₁)</div>
+          <div class="model-box-eq" id="model1eq">y = β₀ + β₁x₁ + β₂x₂ + β₃x₃ + ε</div>
+          <div style="margin-top:6px;font-size:12px;color:#9ca3af;">p₁ = <span id="p1disp">3</span> predictors</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="ctrl-group">
+          <label>Added predictors (p₁ − p₀):</label>
+          <input type="range" id="addedSlider" min="1" max="6" step="1" value="1">
+          <span class="val-display" id="addedVal">1</span>
+        </div>
+        <div class="ctrl-group">
+          <label>Signal strength:</label>
+          <input type="range" id="signalSlider" min="0" max="2" step="0.05" value="0.8">
+          <span class="val-display" id="signalVal">0.80</span>
+        </div>
+        <div class="ctrl-group">
+          <label>N:</label>
+          <input type="range" id="nSlider" min="30" max="500" step="10" value="100">
+          <span class="val-display" id="nVal">100</span>
+        </div>
+      </div>
+
+      <div class="f-readout">
+        <div class="f-stat-box">
+          <div class="f-stat-label">F statistic</div>
+          <div class="f-stat-value" id="fVal">—</div>
+        </div>
+        <div class="f-stat-box">
+          <div class="f-stat-label">Critical F (α=0.05)</div>
+          <div class="f-stat-value" id="fCrit" style="color:#f59e0b;">—</div>
+        </div>
+        <div class="f-stat-box">
+          <div class="f-stat-label">Decision</div>
+          <div class="f-stat-value" id="fDecision">—</div>
+        </div>
+        <div class="f-stat-box">
+          <div class="f-stat-label">df numerator / denom</div>
+          <div class="f-stat-value" id="fDf" style="color:#9ca3af;font-size:15px;">—</div>
+        </div>
+      </div>
+
+      <div id="fplot" style="width:100%;height:340px;"></div>
+      <div class="note">
+        The F-distribution under H₀. Red shaded region is the critical region (α = 0.05). The blue line shows the observed F value.
+        When signal is zero, F should be near 1. As signal grows, F increases toward rejection.
+      </div>
+    </div>
+  </div>
+
+  <div class="side-panels">
+    <div class="panel facts">
+      <div class="panel-title">Book Quotes</div>
+      <blockquote>
+        "The F statistic measures the change in residual sum-of-squares per additional parameter in the bigger model, and it is normalized by an estimate of σ²."
+        <span class="cite">— ESL §3.2.1</span>
+      </blockquote>
+      <blockquote style="margin-top:12px;">
+        "Under the null hypothesis that the smaller model is correct, the F statistic will have a F(p₁−p₀, N−p₁−1) distribution."
+        <span class="cite">— ESL §3.2.1</span>
+      </blockquote>
+    </div>
+
+    <div class="panel guarantees">
+      <div class="panel-title">Statistical Properties</div>
+      <div class="guarantee-row"><span class="badge badge-yes">YES</span> F-distributed under normality + H₀</div>
+      <div class="guarantee-row"><span class="badge badge-yes">YES</span> Handles simultaneous tests</div>
+      <div class="guarantee-row"><span class="badge badge-cond">COND</span> Requires models to be nested</div>
+      <div class="guarantee-row"><span class="badge badge-cond">COND</span> Robust asymptotically (large N)</div>
+      <div class="guarantee-row"><span class="badge badge-no">NO</span> Not robust to non-normality (small N)</div>
+      <div style="margin-top:10px;font-size:12px;color:#6b7280;line-height:1.6;">
+        Note: z²-test for single coefficient = F-test with p₁−p₀ = 1. The F-test generalizes to joint hypotheses.
+      </div>
+    </div>
+
+    <div class="panel related">
+      <div class="panel-title">Related Concepts</div>
+      <ul class="related-list">
+        <li><a href="172-z-score-regression.html">Z-score for coefficients (ID 172)</a></li>
+        <li><a href="174-var-cov-matrix.html">Var-covariance matrix (ID 174)</a></li>
+        <li>Residual Sum of Squares — §3.1</li>
+        <li>Likelihood ratio test</li>
+        <li>AIC / BIC model selection</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+// Approximate F critical value via Wilson-Hilferty approximation
+function fCritApprox(d1, d2, alpha) {
+  // Use lookup table for common cases, otherwise approximate
+  const table = {
+    '1,inf': 3.841, '2,inf': 2.996, '3,inf': 2.605, '4,inf': 2.372,
+    '5,inf': 2.214, '6,inf': 2.099,
+  };
+  // Rough approximation
+  if (d2 > 200) {
+    const chiCrit = d1 * (1 - 2/(9*d1) + 1.645*Math.sqrt(2/(9*d1)))**3;
+    return chiCrit / d1;
+  }
+  // Better: use normal approximation of F distribution
+  const z_alpha = 1.645; // one-sided 0.05
+  const mu = d2 / (d2 - 2);
+  const sigma2 = 2 * d2**2 * (d1 + d2 - 2) / (d1 * (d2 - 2)**2 * (d2 - 4));
+  return Math.max(1, mu + z_alpha * Math.sqrt(sigma2) * 2.1); // crude
+}
+
+// Better F critical approximation
+function approxFCrit(df1, df2) {
+  // Approximation table for alpha = 0.05
+  const base = [3.84, 3.00, 2.60, 2.37, 2.21, 2.10];
+  const scaleByDf2 = Math.max(0, 1 - 0.3 * Math.log(df2 / 100));
+  return (base[Math.min(df1, 6) - 1] || 2.0) * (1 + scaleByDf2 * 0.2);
+}
+
+// F pdf
+function fPdf(x, d1, d2) {
+  if (x <= 0) return 0;
+  const lnNum = (d1/2)*Math.log(d1) + (d2/2)*Math.log(d2) + (d1/2-1)*Math.log(x);
+  const lnDen = lbeta(d1/2, d2/2) + ((d1+d2)/2)*Math.log(d1*x + d2);
+  return Math.exp(lnNum - lnDen);
+}
+
+function lbeta(a, b) {
+  return lgamma(a) + lgamma(b) - lgamma(a + b);
+}
+
+function lgamma(z) {
+  // Stirling approximation
+  if (z < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * z)) - lgamma(1 - z);
+  z -= 1;
+  const g = 7;
+  const c = [0.99999999999980993,676.5203681218851,-1259.1392167224028,
+    771.32342877765313,-176.61502916214059,12.507343278686905,
+    -0.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
+  let x = c[0];
+  for (let i = 1; i < g + 2; i++) x += c[i] / (z + i);
+  const t = z + g + 0.5;
+  return 0.5*Math.log(2*Math.PI) + (z+0.5)*Math.log(t) - t + Math.log(x);
+}
+
+function computeF(added, signal, N) {
+  const p0 = 2;
+  const p1 = p0 + added;
+  const df1 = added;
+  const df2 = N - p1 - 1;
+  // RSS reduction proportional to signal
+  const rss1 = N * (1 - signal * 0.35);
+  const rss0 = rss1 + N * signal * 0.35 * added * 0.5;
+  const sigma2 = rss1 / df2;
+  const F = ((rss0 - rss1) / df1) / sigma2;
+  return { F: Math.max(0, F), df1, df2, p0, p1, rss0, rss1 };
+}
+
+function buildModelBoxes(p0, p1) {
+  const names = ['x₁','x₂','x₃','x₄','x₅','x₆','x₇','x₈'];
+  const m0terms = names.slice(0, p0).map((n,i) => `β${i+1}${n}`).join(' + ');
+  const m1terms = names.slice(0, p1).map((n,i) => `β${i+1}${n}`).join(' + ');
+  document.getElementById('model0eq').textContent = `y = β₀ + ${m0terms} + ε`;
+  document.getElementById('model1eq').textContent = `y = β₀ + ${m1terms} + ε`;
+  document.getElementById('p0disp').textContent = p0;
+  document.getElementById('p1disp').textContent = p1;
+}
+
+function buildPlot(added, signal, N) {
+  const { F, df1, df2, p0, p1 } = computeF(added, signal, N);
+  const fcrit = approxFCrit(df1, Math.min(df2, 200));
+  const significant = F > fcrit;
+
+  document.getElementById('fVal').textContent = F.toFixed(3);
+  document.getElementById('fVal').className = 'f-stat-value ' + (significant ? 'f-sig' : 'f-nonsig');
+  document.getElementById('fCrit').textContent = fcrit.toFixed(3);
+  document.getElementById('fDecision').textContent = significant ? 'Reject H₀' : 'Fail to reject';
+  document.getElementById('fDecision').className = 'f-stat-value ' + (significant ? 'f-sig' : 'f-nonsig');
+  document.getElementById('fDf').textContent = `${df1} / ${df2}`;
+
+  buildModelBoxes(p0, p1);
+
+  const xMax = Math.max(fcrit * 2.5, F * 1.3, 8);
+  const xs = [], ys = [];
+  for (let i = 0; i <= 400; i++) {
+    const x = (i / 400) * xMax;
+    xs.push(x);
+    ys.push(fPdf(x + 0.001, df1, df2));
+  }
+
+  // Critical region fill
+  const xCrit = [], yCrit = [];
+  for (let i = 0; i <= 400; i++) {
+    const x = fcrit + (i / 400) * (xMax - fcrit);
+    xCrit.push(x);
+    yCrit.push(fPdf(x, df1, df2));
+  }
+
+  const traces = [
+    {
+      x: xs, y: ys, type: 'scatter', mode: 'lines', name: `F(${df1},${df2})`,
+      line: { color: '#818cf8', width: 2 },
+      hovertemplate: 'x=%{x:.3f}<br>pdf=%{y:.4f}<extra></extra>'
+    },
+    {
+      x: [...xCrit, xMax, fcrit], y: [...yCrit, 0, 0],
+      fill: 'toself', fillcolor: 'rgba(239,68,68,0.2)', mode: 'none',
+      name: 'Critical region (α=0.05)', showlegend: true,
+      hoverinfo: 'skip'
+    }
+  ];
+
+  const shapes = [{
+    type: 'line', x0: F, x1: F, y0: 0, y1: Math.max(...ys) * 0.9,
+    line: { color: significant ? '#34d399' : '#6b7280', width: 2.5, dash: 'solid' }
+  }];
+
+  const annotations = [{
+    x: F, y: Math.max(...ys) * 0.92,
+    text: `F = ${F.toFixed(2)}`,
+    showarrow: true, arrowhead: 2, arrowcolor: significant ? '#34d399' : '#6b7280',
+    font: { color: significant ? '#34d399' : '#9ca3af', size: 12 },
+    bgcolor: '#1a1d27', bordercolor: '#2a2d3e'
+  }];
+
+  const layout = {
+    paper_bgcolor: '#1a1d27', plot_bgcolor: '#12151f',
+    font: { color: '#e0e0e0', family: 'Segoe UI, system-ui, sans-serif' },
+    xaxis: { title: 'F value', gridcolor: '#2a2d3e', color: '#9ca3af', range: [0, xMax] },
+    yaxis: { title: 'Density', gridcolor: '#2a2d3e', color: '#9ca3af' },
+    shapes, annotations,
+    margin: { l: 55, r: 20, t: 20, b: 50 },
+    legend: { x: 0.7, y: 0.95, bgcolor: 'rgba(0,0,0,0)', font: { size: 11 } },
+    hoverlabel: { bgcolor: '#1a1d27', bordercolor: '#2a2d3e', font: { color: '#e0e0e0' } }
+  };
+
+  Plotly.react('fplot', traces, layout, { responsive: true, displayModeBar: false });
+}
+
+const addedSlider = document.getElementById('addedSlider');
+const signalSlider = document.getElementById('signalSlider');
+const nSlider = document.getElementById('nSlider');
+
+function update() {
+  const added = parseInt(addedSlider.value);
+  const signal = parseFloat(signalSlider.value);
+  const N = parseInt(nSlider.value);
+  document.getElementById('addedVal').textContent = added;
+  document.getElementById('signalVal').textContent = signal.toFixed(2);
+  document.getElementById('nVal').textContent = N;
+  buildPlot(added, signal, N);
+}
+
+addedSlider.addEventListener('input', update);
+signalSlider.addEventListener('input', update);
+nSlider.addEventListener('input', update);
+update();
+</script>
+</body>
+</html>

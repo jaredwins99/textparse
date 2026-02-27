@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bias-Variance Tradeoff — ESL §3.1</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f1117; color: #e0e0e0; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  .header { background: #1a1d27; border-bottom: 1px solid #2a2d3e; padding: 24px 32px; }
+  .header-meta { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .header-meta span { color: #818cf8; }
+  h1 { font-size: 22px; font-weight: 600; color: #f0f0f8; margin-bottom: 10px; }
+  .main { display: grid; grid-template-columns: 1fr 340px; gap: 20px; padding: 24px 32px; max-width: 1400px; }
+  .viz-col { display: flex; flex-direction: column; gap: 16px; }
+  .viz-panel { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 10px; padding: 20px; }
+  .viz-title { font-size: 13px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+  .side-panels { display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 10px; padding: 18px; }
+  .panel-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #2a2d3e; }
+  .facts .panel-title { color: #34d399; }
+  .guarantees .panel-title { color: #f59e0b; }
+  .related .panel-title { color: #818cf8; }
+  blockquote { font-style: italic; color: #9ca3af; font-size: 13px; line-height: 1.6; border-left: 2px solid #34d399; padding-left: 12px; margin: 0; }
+  .cite { font-style: normal; color: #6b7280; font-size: 11px; margin-top: 6px; display: block; }
+  .guarantee-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+  .badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px; }
+  .badge-yes { background: #064e3b; color: #34d399; }
+  .badge-no { background: #450a0a; color: #f87171; }
+  .badge-cond { background: #451a03; color: #fb923c; }
+  .related-list { list-style: none; }
+  .related-list li { font-size: 13px; color: #9ca3af; padding: 4px 0; border-bottom: 1px solid #1f2937; }
+  .related-list li:last-child { border-bottom: none; }
+  .related-list a { color: #818cf8; text-decoration: none; }
+  .related-list a:hover { text-decoration: underline; }
+  .controls { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; }
+  label { font-size: 13px; color: #9ca3af; }
+  input[type=range] { accent-color: #818cf8; width: 130px; }
+  .val-display { font-size: 13px; color: #e0e0e0; font-weight: 600; min-width: 40px; }
+  .mode-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .mode-btn { background: #12151f; border: 1px solid #2a2d3e; border-radius: 6px; padding: 6px 14px; font-size: 12px; color: #6b7280; cursor: pointer; transition: all 0.15s; }
+  .mode-btn.active { background: #818cf8; border-color: #818cf8; color: #fff; }
+  .mode-btn:hover:not(.active) { border-color: #818cf8; color: #818cf8; }
+  .optima-row { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 12px; }
+  .opt-item { background: #12151f; border: 1px solid #2a2d3e; border-radius: 6px; padding: 8px 14px; font-size: 12px; }
+  .opt-label { color: #6b7280; margin-bottom: 3px; }
+  .opt-val { font-weight: 700; }
+  .note { font-size: 12px; color: #6b7280; margin-top: 10px; line-height: 1.6; }
+  .current-marker { display: inline-block; width: 12px; height: 12px; border-radius: 50%; vertical-align: middle; margin-right: 4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-meta">ESL <span>§3.1</span> · ID 177 · Category: <span>Principles / Guarantees</span></div>
+  <h1>Bias-Variance Tradeoff in Model Selection</h1>
+</div>
+
+<div class="main">
+  <div class="viz-col">
+    <div class="viz-panel">
+      <div class="viz-title">Bias², Variance, and Total MSE vs Model Complexity / Regularization</div>
+
+      <div class="mode-row">
+        <div class="mode-btn active" id="btn-ridge" onclick="setMode('ridge')">Ridge (λ)</div>
+        <div class="mode-btn" id="btn-subset" onclick="setMode('subset')">Best Subset (k)</div>
+        <div class="mode-btn" id="btn-poly" onclick="setMode('poly')">Polynomial degree</div>
+      </div>
+
+      <div class="controls">
+        <label>σ² (noise):
+          <input type="range" id="sigmaSlider" min="0.1" max="3" step="0.1" value="1">
+          <span class="val-display" id="sigmaVal">1.0</span>
+        </label>
+        <label>True model complexity:
+          <input type="range" id="complexSlider" min="1" max="10" step="1" value="4">
+          <span class="val-display" id="complexVal">4</span>
+        </label>
+      </div>
+
+      <div class="controls">
+        <label>Current λ/k: <span style="color:#818cf8;font-size:15px;" id="currentParam">—</span></label>
+        <label>
+          <input type="range" id="lambdaSlider" min="0" max="1" step="0.01" value="0.5">
+          <span style="font-size:12px;color:#6b7280;" id="lambdaHint">← more regularized / less regularized →</span>
+        </label>
+      </div>
+
+      <div class="optima-row">
+        <div class="opt-item">
+          <div class="opt-label">Min MSE at</div>
+          <div class="opt-val" id="optPoint" style="color:#34d399;">—</div>
+        </div>
+        <div class="opt-item">
+          <div class="opt-label">Bias² at current</div>
+          <div class="opt-val" id="curBias2" style="color:#f87171;">—</div>
+        </div>
+        <div class="opt-item">
+          <div class="opt-label">Variance at current</div>
+          <div class="opt-val" id="curVar" style="color:#60a5fa;">—</div>
+        </div>
+        <div class="opt-item">
+          <div class="opt-label">MSE at current</div>
+          <div class="opt-val" id="curMSE" style="color:#f59e0b;">—</div>
+        </div>
+      </div>
+
+      <div id="bvplot" style="width:100%;height:420px;"></div>
+
+      <div class="note">
+        <span class="current-marker" style="background:#f87171;"></span> Bias² increases as model is more regularized/restricted (underfitting).
+        <span class="current-marker" style="background:#60a5fa;"></span> Variance increases as model is less regularized (overfitting).
+        <span class="current-marker" style="background:#f59e0b;"></span> Total MSE = Bias² + Variance + σ² (irreducible noise).
+        The dashed vertical line shows your current λ/k setting. Drag the slider to find the minimum.
+      </div>
+    </div>
+  </div>
+
+  <div class="side-panels">
+    <div class="panel facts">
+      <div class="panel-title">Book Quotes</div>
+      <blockquote>
+        "Prediction accuracy can sometimes be improved by shrinking or setting some coefficients to zero. By sacrificing a little bias we can sometimes get a substantial reduction in variance."
+        <span class="cite">— ESL §3.1</span>
+      </blockquote>
+      <blockquote style="margin-top:12px;">
+        "Ordinary least squares is unbiased, but often has high variance. We can trade some bias for variance to improve overall prediction accuracy."
+        <span class="cite">— ESL §3.1 (paraphrase)</span>
+      </blockquote>
+    </div>
+
+    <div class="panel guarantees">
+      <div class="panel-title">Statistical Properties</div>
+      <div class="guarantee-row"><span class="badge badge-yes">YES</span> OLS: unbiased but possibly high variance</div>
+      <div class="guarantee-row"><span class="badge badge-cond">TRADEOFF</span> Ridge: biased, lower variance</div>
+      <div class="guarantee-row"><span class="badge badge-cond">TRADEOFF</span> Lasso: biased, sparse, variable selection</div>
+      <div class="guarantee-row"><span class="badge badge-yes">KEY</span> Optimal λ minimizes EPE (not bias alone)</div>
+      <div class="guarantee-row"><span class="badge badge-no">NO</span> No free lunch — must pick one to hurt other</div>
+      <div style="margin-top:10px;font-size:12px;color:#6b7280;line-height:1.6;">
+        MSE(θ̃) = Var(θ̃) + Bias²(θ̃). The irreducible noise σ² sets a floor. No estimator can be unbiased AND minimum variance simultaneously (unless the estimator is UMVUE).
+      </div>
+    </div>
+
+    <div class="panel related">
+      <div class="panel-title">Related Concepts</div>
+      <ul class="related-list">
+        <li><a href="178-mse-decomposition.html">MSE decomposition (ID 178)</a></li>
+        <li><a href="157-degrees-of-freedom-adaptive.html">Effective df (ID 157)</a></li>
+        <li>Ridge regression — §3.4</li>
+        <li>Lasso — §3.4</li>
+        <li>Cross-validation — §7.10</li>
+        <li>Stein's paradox / shrinkage estimators</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentMode = 'ridge';
+
+function setMode(m) {
+  currentMode = m;
+  ['ridge','subset','poly'].forEach(id => {
+    document.getElementById('btn-' + id).classList.toggle('active', id === m);
+  });
+  update();
+}
+
+function getBVCurves(mode, sigma2, trueComplexity, nPts = 200) {
+  const xs = [], bias2s = [], vars = [], mses = [];
+
+  for (let i = 0; i <= nPts; i++) {
+    const t = i / nPts; // 0 = fully regularized, 1 = unregularized
+
+    let bias2, variance, xLabel;
+    if (mode === 'ridge') {
+      // lambda from high (t=0) to low (t=1)
+      const lambda = Math.pow(10, 4 * (1 - t) - 2); // 100 down to 0.01
+      const shrink = 1 / (1 + lambda); // simplified shrinkage factor
+      bias2 = (1 - shrink) ** 2 * trueComplexity * 0.5;
+      variance = shrink ** 2 * sigma2 * 0.3 * (1 + t * 3);
+      xLabel = -Math.log10(lambda); // higher = less regularized
+    } else if (mode === 'subset') {
+      const k = t * 15; // 0 to 15 predictors
+      const optK = trueComplexity;
+      bias2 = Math.max(0, (optK - k) / optK) ** 1.5 * 2;
+      variance = (k / 15) * sigma2 * 0.8;
+      xLabel = k;
+    } else { // poly
+      const d = t * 12;
+      const optD = trueComplexity * 0.8;
+      bias2 = Math.max(0, (optD - d) / optD) ** 1.5 * 2.5;
+      variance = Math.pow(d / 12, 2) * sigma2 * 1.2;
+      xLabel = d;
+    }
+
+    const mse = bias2 + variance + sigma2 * 0.1;
+    xs.push(xLabel);
+    bias2s.push(bias2);
+    vars.push(variance);
+    mses.push(mse);
+  }
+  return { xs, bias2s, vars, mses };
+}
+
+function buildPlot(mode, sigma2, trueComplexity, lambdaT) {
+  const { xs, bias2s, vars, mses } = getBVCurves(mode, sigma2, trueComplexity);
+
+  // Current value
+  const idx = Math.round(lambdaT * (xs.length - 1));
+  const xCur = xs[idx];
+  const b2cur = bias2s[idx], vcur = vars[idx], mCur = mses[idx];
+
+  // Optimal
+  const minMSE = Math.min(...mses);
+  const optIdx = mses.indexOf(minMSE);
+  const xOpt = xs[optIdx];
+
+  document.getElementById('curBias2').textContent = b2cur.toFixed(3);
+  document.getElementById('curVar').textContent   = vcur.toFixed(3);
+  document.getElementById('curMSE').textContent   = mCur.toFixed(3);
+
+  if (mode === 'ridge') {
+    const lambda = Math.pow(10, 4 * (1 - lambdaT) - 2);
+    document.getElementById('currentParam').textContent = `λ = ${lambda < 0.1 ? lambda.toExponential(1) : lambda.toFixed(2)}`;
+    document.getElementById('optPoint').textContent = `−log₁₀(λ) = ${xOpt.toFixed(2)}`;
+    document.getElementById('lambdaHint').textContent = '← more regularized · less regularized →';
+  } else if (mode === 'subset') {
+    document.getElementById('currentParam').textContent = `k = ${xCur.toFixed(1)} predictors`;
+    document.getElementById('optPoint').textContent = `k = ${xOpt.toFixed(1)}`;
+    document.getElementById('lambdaHint').textContent = '← fewer predictors · more predictors →';
+  } else {
+    document.getElementById('currentParam').textContent = `degree = ${xCur.toFixed(1)}`;
+    document.getElementById('optPoint').textContent = `degree = ${xOpt.toFixed(1)}`;
+    document.getElementById('lambdaHint').textContent = '← lower degree · higher degree →';
+  }
+
+  const xlabel = mode === 'ridge' ? '−log₁₀(λ)  [less regularized →]'
+               : mode === 'subset' ? 'Number of predictors k'
+               : 'Polynomial degree';
+
+  const traces = [
+    {
+      x: xs, y: bias2s, type: 'scatter', mode: 'lines', name: 'Bias²',
+      line: { color: '#f87171', width: 2.5 },
+      hovertemplate: xlabel + ': %{x:.2f}<br>Bias² = %{y:.4f}<extra></extra>'
+    },
+    {
+      x: xs, y: vars, type: 'scatter', mode: 'lines', name: 'Variance',
+      line: { color: '#60a5fa', width: 2.5 },
+      hovertemplate: xlabel + ': %{x:.2f}<br>Var = %{y:.4f}<extra></extra>'
+    },
+    {
+      x: xs, y: mses, type: 'scatter', mode: 'lines', name: 'Total MSE',
+      line: { color: '#f59e0b', width: 3 },
+      hovertemplate: xlabel + ': %{x:.2f}<br>MSE = %{y:.4f}<extra></extra>'
+    }
+  ];
+
+  const shapes = [
+    {
+      type: 'line', x0: xCur, x1: xCur, y0: 0, y1: Math.max(...mses),
+      line: { color: '#818cf8', width: 2, dash: 'dash' }
+    },
+    {
+      type: 'line', x0: xOpt, x1: xOpt, y0: 0, y1: Math.max(...mses),
+      line: { color: '#34d399', width: 1.5, dash: 'dot' }
+    }
+  ];
+  const annotations = [
+    {
+      x: xOpt, y: minMSE * 0.5,
+      text: 'Optimal', showarrow: true, arrowhead: 2,
+      arrowcolor: '#34d399', font: { color: '#34d399', size: 11 },
+      bgcolor: '#1a1d27', bordercolor: '#2a2d3e'
+    }
+  ];
+
+  const layout = {
+    paper_bgcolor: '#1a1d27', plot_bgcolor: '#12151f',
+    font: { color: '#e0e0e0', family: 'Segoe UI, system-ui, sans-serif' },
+    xaxis: { title: xlabel, gridcolor: '#2a2d3e', color: '#9ca3af' },
+    yaxis: { title: 'Error', gridcolor: '#2a2d3e', color: '#9ca3af', rangemode: 'tozero' },
+    shapes, annotations,
+    margin: { l: 55, r: 20, t: 20, b: 60 },
+    legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(0,0,0,0)', font: { size: 12 } },
+    hoverlabel: { bgcolor: '#1a1d27', bordercolor: '#2a2d3e', font: { color: '#e0e0e0' } }
+  };
+
+  Plotly.react('bvplot', traces, layout, { responsive: true, displayModeBar: false });
+}
+
+const sigmaSlider  = document.getElementById('sigmaSlider');
+const complexSlider = document.getElementById('complexSlider');
+const lambdaSlider = document.getElementById('lambdaSlider');
+
+function update() {
+  const sigma2  = parseFloat(sigmaSlider.value);
+  const complex = parseInt(complexSlider.value);
+  const lambdaT = parseFloat(lambdaSlider.value);
+  document.getElementById('sigmaVal').textContent  = sigma2.toFixed(1);
+  document.getElementById('complexVal').textContent = complex;
+  buildPlot(currentMode, sigma2, complex, lambdaT);
+}
+
+sigmaSlider.addEventListener('input', update);
+complexSlider.addEventListener('input', update);
+lambdaSlider.addEventListener('input', update);
+update();
+</script>
+</body>
+</html>

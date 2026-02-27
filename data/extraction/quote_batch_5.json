@@ -1,0 +1,1088 @@
+{
+  "batch_id": 5,
+  "chapters": [
+    13,
+    14,
+    15
+  ],
+  "concepts": [
+    {
+      "id": 118,
+      "name": "euclidean distance",
+      "chapter": 13,
+      "description": "Standard distance metric ||x-x'|| used in k-nearest neighbors.",
+      "existing_quote": null
+    },
+    {
+      "id": 321,
+      "name": "responsibility",
+      "chapter": 13,
+      "description": "In the EM algorithm for Gaussian mixtures, the weight assigned to each observation for each cluster based on the likelihood of the corresponding Gaussians.",
+      "existing_quote": null
+    },
+    {
+      "id": 464,
+      "name": "model-free methods",
+      "chapter": 13,
+      "description": "Simple, highly unstructured methods for classification and pattern recognition that are not useful for understanding relationships but can be very effective as black box prediction engines.",
+      "existing_quote": null
+    },
+    {
+      "id": 467,
+      "name": "learning vector quantization",
+      "chapter": 13,
+      "description": "An online algorithm due to Kohonen where prototypes are placed strategically with respect to decision boundaries, with training points attracting prototypes of the correct class and repelling others.",
+      "existing_quote": null
+    },
+    {
+      "id": 473,
+      "name": "soft clustering",
+      "chapter": 13,
+      "description": "Clustering method where observations are assigned fractional responsibilities or weights for each cluster, as in Gaussian mixture models.",
+      "existing_quote": null
+    },
+    {
+      "id": 474,
+      "name": "hard clustering",
+      "chapter": 13,
+      "description": "Clustering method where observations are assigned to exactly one cluster, as in K-means.",
+      "existing_quote": null
+    },
+    {
+      "id": 475,
+      "name": "soft classification",
+      "chapter": 13,
+      "description": "Classification approach that produces smooth posterior probabilities for each class, though the final decision rule still selects the class with maximum probability.",
+      "existing_quote": null
+    },
+    {
+      "id": 479,
+      "name": "Cover and Hart result",
+      "chapter": 13,
+      "description": "A famous result showing that asymptotically the error rate of the 1-nearest-neighbor classifier is never more than twice the Bayes rate.",
+      "existing_quote": null
+    },
+    {
+      "id": 481,
+      "name": "adaptive nearest-neighbor",
+      "chapter": 13,
+      "description": "Nearest-neighbor rules designed to alleviate the substantial bias that can occur in real problems with the standard nearest-neighbor approach.",
+      "existing_quote": null
+    },
+    {
+      "id": 47,
+      "name": "Algorithm 14.1 K-means Clustering",
+      "chapter": 14,
+      "description": "1. For a given cluster assignment C, the total cluster variance (14.33) is\nminimized with respect to {m1, . . . , mK} yielding the means of the\ncurrently assigned clusters (14.32).",
+      "existing_quote": null
+    },
+    {
+      "id": 48,
+      "name": "Voronoi tessellation",
+      "chapter": 14,
+      "description": "This can be minimized by an alternating optimization procedure given in\nAlgorithm 14.1.\nEach of steps 1 and 2 reduces the value of the criterion (14.33), so that\nconvergence is assured. However, the result may represent a suboptimal\nlocal minimum. The algorithm of Hartigan and Wong (1979) goes further,\nand ensures that there is no single switch of an observation from one group\nto another group that will decrease the objective. In addition, one should\nstart the algorithm with many di\ufb00erent random choices for the starting\nmeans, and choose the solution having smallest value of the objective func-\ntion.\nFigure 14.6 shows some of the K-means iterations for the simulated data\nof Figure 14.4. The centroids are depicted by \u201cO\u201ds. The straight lines show\nthe partitioning of points, each sector being the set of points closest to\neach centroid. This partitioning is called the Voronoi tessellation. After 20\niterations the procedure has converged.",
+      "existing_quote": null
+    },
+    {
+      "id": 49,
+      "name": "codebook",
+      "chapter": 14,
+      "description": "numbers is regarded as a vector in IR4. A K-means clustering algorithm\n(also known as Lloyd\u2019s algorithm in this context) is run in this space.\nThe center image uses K = 200, while the right image K = 4. Each of\nthe 512 \u00d7 512 pixel blocks (or points) is approximated by its closest cluster\ncentroid, known as a codeword. The clustering process is called the encoding\nstep, and the collection of centroids is called the codebook.\nTo represent the approximated image, we need to supply for each block\nthe identity of the codebook entry that approximates it. This will require\nlog2(K) bits per block. We also need to supply the codebook itself, which\nis K \u00d7 4 real numbers (typically negligible). Overall, the storage for the\ncompressed image amounts to log2(K)/(4 \u00b7 8) of the original (0.239 for\nK = 200, 0.063 for K = 4). This is typically expressed as a rate in bits\nper pixel: log2(K)/4, which are 1.91 and 0.50, respectively. The process\nof constructing the approximate image from the centroids is called the\ndecoding step.\nWhy do we expect VQ to work at all? The reason is that for typical\neveryday images like photographs, many of the blocks look the same. In\nthis case there are many almost pure white blocks, and similarly pure gray\nblocks of various shades. These require only one block each to represent\nthem, and then multiple pointers to that block.\nWhat we have described is known as lossy compression, since our im-\nages are degraded versions of the original. The degradation or distortion is\nusually measured in terms of mean squared error. In this case D = 0.89\nfor K = 200 and D = 16.95 for K = 4. More generally a rate/distortion\ncurve would be used to assess the tradeo\ufb00. One can also perform lossless\ncompression using block clustering, and still capitalize on the repeated pat-\nterns. If you took the original image and losslessly compressed it, the best\nyou would do is 4.48 bits per pixel.\nWe claimed above that log2(K) bits were needed to identify each of the K\ncodewords in the codebook. This uses a \ufb01xed-length code, and is ine\ufb03cient\nif some codewords occur many more times than others in the image. Using\nShannon coding theory, we know that in general a variable length code\nwill do better, and the rate then becomes \u2212\tK\n\u2113=1 p\u2113log2(p\u2113)/4. The term\nin the numerator is the entropy of the distribution p\u2113of the codewords\nin the image. Using variable length coding our rates come down to 1.42\nand 0.39, respectively. Finally, there are many generalizations of VQ that\nhave been developed: for example, tree-structured VQ \ufb01nds the centroids\nwith a top-down, 2-means style algorithm, as alluded to in Section 14.3.12.\nThis allows successive re\ufb01nement of the compression. Further details may\nbe found in Gersho and Gray (1992).",
+      "existing_quote": null
+    },
+    {
+      "id": 50,
+      "name": "decoding step",
+      "chapter": 14,
+      "description": "numbers is regarded as a vector in IR4. A K-means clustering algorithm\n(also known as Lloyd\u2019s algorithm in this context) is run in this space.\nThe center image uses K = 200, while the right image K = 4. Each of\nthe 512 \u00d7 512 pixel blocks (or points) is approximated by its closest cluster\ncentroid, known as a codeword. The clustering process is called the encoding\nstep, and the collection of centroids is called the codebook.\nTo represent the approximated image, we need to supply for each block\nthe identity of the codebook entry that approximates it. This will require\nlog2(K) bits per block. We also need to supply the codebook itself, which\nis K \u00d7 4 real numbers (typically negligible). Overall, the storage for the\ncompressed image amounts to log2(K)/(4 \u00b7 8) of the original (0.239 for\nK = 200, 0.063 for K = 4). This is typically expressed as a rate in bits\nper pixel: log2(K)/4, which are 1.91 and 0.50, respectively. The process\nof constructing the approximate image from the centroids is called the\ndecoding step.\nWhy do we expect VQ to work at all? The reason is that for typical\neveryday images like photographs, many of the blocks look the same. In\nthis case there are many almost pure white blocks, and similarly pure gray\nblocks of various shades. These require only one block each to represent\nthem, and then multiple pointers to that block.\nWhat we have described is known as lossy compression, since our im-\nages are degraded versions of the original. The degradation or distortion is\nusually measured in terms of mean squared error. In this case D = 0.89\nfor K = 200 and D = 16.95 for K = 4. More generally a rate/distortion\ncurve would be used to assess the tradeo\ufb00. One can also perform lossless\ncompression using block clustering, and still capitalize on the repeated pat-\nterns. If you took the original image and losslessly compressed it, the best\nyou would do is 4.48 bits per pixel.\nWe claimed above that log2(K) bits were needed to identify each of the K\ncodewords in the codebook. This uses a \ufb01xed-length code, and is ine\ufb03cient\nif some codewords occur many more times than others in the image. Using\nShannon coding theory, we know that in general a variable length code\nwill do better, and the rate then becomes \u2212\tK\n\u2113=1 p\u2113log2(p\u2113)/4. The term\nin the numerator is the entropy of the distribution p\u2113of the codewords\nin the image. Using variable length coding our rates come down to 1.42\nand 0.39, respectively. Finally, there are many generalizations of VQ that\nhave been developed: for example, tree-structured VQ \ufb01nds the centroids\nwith a top-down, 2-means style algorithm, as alluded to in Section 14.3.12.\nThis allows successive re\ufb01nement of the compression. Further details may\nbe found in Gersho and Gray (1992).",
+      "existing_quote": null
+    },
+    {
+      "id": 51,
+      "name": "lossy compression",
+      "chapter": 14,
+      "description": "numbers is regarded as a vector in IR4. A K-means clustering algorithm\n(also known as Lloyd\u2019s algorithm in this context) is run in this space.\nThe center image uses K = 200, while the right image K = 4. Each of\nthe 512 \u00d7 512 pixel blocks (or points) is approximated by its closest cluster\ncentroid, known as a codeword. The clustering process is called the encoding\nstep, and the collection of centroids is called the codebook.\nTo represent the approximated image, we need to supply for each block\nthe identity of the codebook entry that approximates it. This will require\nlog2(K) bits per block. We also need to supply the codebook itself, which\nis K \u00d7 4 real numbers (typically negligible). Overall, the storage for the\ncompressed image amounts to log2(K)/(4 \u00b7 8) of the original (0.239 for\nK = 200, 0.063 for K = 4). This is typically expressed as a rate in bits\nper pixel: log2(K)/4, which are 1.91 and 0.50, respectively. The process\nof constructing the approximate image from the centroids is called the\ndecoding step.\nWhy do we expect VQ to work at all? The reason is that for typical\neveryday images like photographs, many of the blocks look the same. In\nthis case there are many almost pure white blocks, and similarly pure gray\nblocks of various shades. These require only one block each to represent\nthem, and then multiple pointers to that block.\nWhat we have described is known as lossy compression, since our im-\nages are degraded versions of the original. The degradation or distortion is\nusually measured in terms of mean squared error. In this case D = 0.89\nfor K = 200 and D = 16.95 for K = 4. More generally a rate/distortion\ncurve would be used to assess the tradeo\ufb00. One can also perform lossless\ncompression using block clustering, and still capitalize on the repeated pat-\nterns. If you took the original image and losslessly compressed it, the best\nyou would do is 4.48 bits per pixel.\nWe claimed above that log2(K) bits were needed to identify each of the K\ncodewords in the codebook. This uses a \ufb01xed-length code, and is ine\ufb03cient\nif some codewords occur many more times than others in the image. Using\nShannon coding theory, we know that in general a variable length code\nwill do better, and the rate then becomes \u2212\tK\n\u2113=1 p\u2113log2(p\u2113)/4. The term\nin the numerator is the entropy of the distribution p\u2113of the codewords\nin the image. Using variable length coding our rates come down to 1.42\nand 0.39, respectively. Finally, there are many generalizations of VQ that\nhave been developed: for example, tree-structured VQ \ufb01nds the centroids\nwith a top-down, 2-means style algorithm, as alluded to in Section 14.3.12.\nThis allows successive re\ufb01nement of the compression. Further details may\nbe found in Gersho and Gray (1992).",
+      "existing_quote": null
+    },
+    {
+      "id": 53,
+      "name": "chaining",
+      "chapter": 14,
+      "description": "observations within them are relatively close together (small dissimilarities)\nas compared with observations in di\ufb00erent clusters. To the extent this is\nnot the case, results will di\ufb00er.\nSingle linkage (14.41) only requires that a single dissimilarity dii\u2032, i \u2208G\nand i\u2032 \u2208H, be small for two groups G and H to be considered close\ntogether, irrespective of the other observation dissimilarities between the\ngroups. It will therefore have a tendency to combine, at relatively low\nthresholds, observations linked by a series of close intermediate observa-\ntions. This phenomenon, referred to as chaining, is often considered a de-\nfect of the method. The clusters produced by single linkage can violate the\n\u201ccompactness\u201d property that all observations within each cluster tend to\nbe similar to one another, based on the supplied observation dissimilari-\nties {dii\u2032}. If we de\ufb01ne the diameter DG of a group of observations as the\nlargest dissimilarity among its members",
+      "existing_quote": null
+    },
+    {
+      "id": 54,
+      "name": "left singular vectors",
+      "chapter": 14,
+      "description": "This is a standard decomposition in numerical analysis, and many algo-\nrithms exist for its computation (Golub and Van Loan, 1983, for example).\nHere U is an N \u00d7 p orthogonal matrix (UT U = Ip) whose columns uj are\ncalled the left singular vectors; V is a p\u00d7p orthogonal matrix (VT V = Ip)\nwith columns vj called the right singular vectors, and D is a p\u00d7p diagonal\nmatrix, with diagonal elements d1 \u2265d2 \u2265\u00b7 \u00b7 \u00b7 \u2265dp \u22650 known as the sin-\ngular values. For each rank q, the solution Vq to (14.53) consists of the \ufb01rst\nq columns of V. The columns of UD are called the principal components\nof X (see Section 3.5.1). The N optimal \u02c6\u03bbi in (14.52) are given by the \ufb01rst\nq principal components (the N rows of the N \u00d7 q matrix UqDq).\nThe one-dimensional principal component line in IR2 is illustrated in Fig-\nure 14.20. For each data point xi, there is a closest point on the line, given\nby ui1d1v1. Here v1 is the direction of the line and \u02c6\u03bbi = ui1d1 measures\ndistance along the line from the origin. Similarly Figure 14.21 shows the",
+      "existing_quote": null
+    },
+    {
+      "id": 55,
+      "name": "principal components",
+      "chapter": 14,
+      "description": "This is a standard decomposition in numerical analysis, and many algo-\nrithms exist for its computation (Golub and Van Loan, 1983, for example).\nHere U is an N \u00d7 p orthogonal matrix (UT U = Ip) whose columns uj are\ncalled the left singular vectors; V is a p\u00d7p orthogonal matrix (VT V = Ip)\nwith columns vj called the right singular vectors, and D is a p\u00d7p diagonal\nmatrix, with diagonal elements d1 \u2265d2 \u2265\u00b7 \u00b7 \u00b7 \u2265dp \u22650 known as the sin-\ngular values. For each rank q, the solution Vq to (14.53) consists of the \ufb01rst\nq columns of V. The columns of UD are called the principal components\nof X (see Section 3.5.1). The N optimal \u02c6\u03bbi in (14.52) are given by the \ufb01rst\nq principal components (the N rows of the N \u00d7 q matrix UqDq).\nThe one-dimensional principal component line in IR2 is illustrated in Fig-\nure 14.20. For each data point xi, there is a closest point on the line, given\nby ui1d1v1. Here v1 is the direction of the line and \u02c6\u03bbi = ui1d1 measures\ndistance along the line from the origin. Similarly Figure 14.21 shows the",
+      "existing_quote": null
+    },
+    {
+      "id": 56,
+      "name": "Procrustes distance",
+      "chapter": 14,
+      "description": "and the minimal distances is referred to as the Procrustes distance. From\nthe form of the solution, we can center each matrix at its column centroid,\nand then ignore location completely. Hereafter we assume this is the case.\nThe Procrustes distance with scaling solves a slightly more general\nproblem,\nmin\n\u03b2,R ||X2 \u2212\u03b2X1R||F ,\n(14.58)",
+      "existing_quote": null
+    },
+    {
+      "id": 57,
+      "name": "principal points of the distribution",
+      "chapter": 14,
+      "description": "interested mainly in the smooth ones. A principal curve is illustrated in\nFigure 14.27.\nPrincipal points are an interesting related concept. Consider a set of k\nprototypes and for each point x in the support of a distribution, identify\nthe closest prototype, that is, the prototype that is responsible for it. This\ninduces a partition of the feature space into so-called Voronoi regions. The\nset of k points that minimize the expected distance from X to its prototype\nare called the principal points of the distribution. Each principal point is\nself-consistent, in that it equals the mean of X in its Voronoi region. For\nexample, with k = 1, the principal point of a circular normal distribution is\nthe mean vector; with k = 2 they are a pair of points symmetrically placed\non a ray through the mean vector. Principal points are the distributional\nanalogs of centroids found by K-means clustering. Principal curves can be\nviewed as k = \u221eprincipal points, but constrained to lie on a smooth curve,\nin a similar way that a SOM constrains K-means cluster centers to fall on\na smooth manifold.\nTo \ufb01nd a principal curve f(\u03bb) of a distribution, we consider its coordinate\nfunctions f(\u03bb) = [f1(\u03bb), f2(\u03bb), . . . , fp(\u03bb)] and let XT = (X1, X2, . . . , Xp).\nConsider the following alternating steps:",
+      "existing_quote": null
+    },
+    {
+      "id": 58,
+      "name": "adjacency matrix",
+      "chapter": 14,
+      "description": "Alternatively, a fully connected graph includes all pairwise edges with\nweights wii\u2032 = sii\u2032, and the local behavior is controlled by the scale param-\neter c.\nThe matrix of edge weights W = {wii\u2032} from a similarity graph is called\nthe adjacency matrix. The degree of vertex i is gi = \t\ni\u2032 wii\u2032, the sum of\nthe weights of the edges connected to it. Let G be a diagonal matrix with\ndiagonal elements gi.\nFinally, the graph Laplacian is de\ufb01ned by",
+      "existing_quote": null
+    },
+    {
+      "id": 59,
+      "name": "unnormalized graph Laplacian",
+      "chapter": 14,
+      "description": "This is called the unnormalized graph Laplacian; a number of normalized\nversions have been proposed\u2014these standardize the Laplacian with respect\nto the node degrees gi, for example, \u02dcL = I \u2212G\u22121W.\nSpectral clustering \ufb01nds the m eigenvectors ZN\u00d7m corresponding to the\nm smallest eigenvalues of L (ignoring the trivial constant eigenvector).\nUsing a standard method like K-means, we then cluster the rows of Z to\nyield a clustering of the original data points.\nAn example is presented in Figure 14.29. The top left panel shows 450\nsimulated data points in three circular clusters indicated by the colors. K-\nmeans clustering would clearly have di\ufb03culty identifying the outer clusters.\nWe applied spectral clustering using a 10-nearest neighbor similarity graph,\nand display the eigenvector corresponding to the second and third smallest\neigenvalue of the graph Laplacian in the lower left. The 15 smallest eigen-\nvalues are shown in the top right panel. The two eigenvectors shown have\nidenti\ufb01ed the three clusters, and a scatterplot of the rows of the eigenvector\nmatrix Y in the bottom right clearly separates the clusters. A procedure\nsuch as K-means clustering applied to these transformed points would eas-\nily identify the three groups.\nWhy does spectral clustering work? For any vector f we have",
+      "existing_quote": null
+    },
+    {
+      "id": 60,
+      "name": "factor loadings",
+      "chapter": 14,
+      "description": "where D\u03b5 = diag[Var(\u03b51), . . . , Var(\u03b5p)]. The Sj being Gaussian and un-\ncorrelated makes them statistically independent random variables. Thus a\nbattery of educational test scores would be thought to be driven by the\nindependent underlying factors such as intelligence, drive and so on. The\ncolumns of A are referred to as the factor loadings, and are used to name\nand interpret the factors.",
+      "existing_quote": null
+    },
+    {
+      "id": 61,
+      "name": "Local MDS",
+      "chapter": 14,
+      "description": "FIGURE 14.44. The orange points show data lying on a parabola, while the blue\npoints shows multidimensional scaling representations in one dimension. Classical\nmultidimensional scaling (left panel) does not preserve the ordering of the points\nalong the curve, because it judges points on opposite ends of the curve to be close\ntogether. In contrast, local multidimensional scaling (right panel) does a good job\nof preserving the ordering of the points along the curve.",
+      "existing_quote": null
+    },
+    {
+      "id": 148,
+      "name": "singular value decomposition",
+      "chapter": 14,
+      "description": "A decomposition X = UDV^T where U and V are orthogonal matrices and D is diagonal, providing insight into variance structure of inputs.",
+      "existing_quote": null
+    },
+    {
+      "id": 251,
+      "name": "reproducing kernel hilbert space",
+      "chapter": 14,
+      "description": "A mathematical framework (RKHS) for function estimation with kernels, providing theoretical foundation for support vector machines.",
+      "existing_quote": null
+    },
+    {
+      "id": 463,
+      "name": "prototype methods",
+      "chapter": 14,
+      "description": "Classification methods that represent training data by a set of points in feature space, where each prototype has an associated class label and classification is made to the class of the closest prototype.",
+      "existing_quote": null
+    },
+    {
+      "id": 465,
+      "name": "k-means clustering for classification",
+      "chapter": 14,
+      "description": "Application of K-means clustering to labeled data by applying K-means separately to training data in each class, using R prototypes per class.",
+      "existing_quote": null
+    },
+    {
+      "id": 466,
+      "name": "within cluster variance",
+      "chapter": 14,
+      "description": "The total variance within clusters that K-means procedure iteratively minimizes by moving cluster centers.",
+      "existing_quote": null
+    },
+    {
+      "id": 468,
+      "name": "LVQ1",
+      "chapter": 14,
+      "description": "The basic learning vector quantization procedure that moves prototypes towards training points of the same class and away from training points of different classes.",
+      "existing_quote": null
+    },
+    {
+      "id": 469,
+      "name": "LVQ2",
+      "chapter": 14,
+      "description": "A modification of LVQ1 that can sometimes improve performance.",
+      "existing_quote": null
+    },
+    {
+      "id": 470,
+      "name": "LVQ3",
+      "chapter": 14,
+      "description": "A modification of LVQ1 that can sometimes improve performance.",
+      "existing_quote": null
+    },
+    {
+      "id": 471,
+      "name": "online algorithm",
+      "chapter": 14,
+      "description": "An algorithm where observations are processed one at a time, as in LVQ.",
+      "existing_quote": null
+    },
+    {
+      "id": 472,
+      "name": "stochastic approximation learning rates",
+      "chapter": 14,
+      "description": "Guidelines for decreasing the learning rate to zero with each iteration in online learning algorithms like LVQ.",
+      "existing_quote": null
+    },
+    {
+      "id": 476,
+      "name": "k-nearest-neighbor classifier",
+      "chapter": 14,
+      "description": "A memory-based classifier that finds k training points closest to a query point and classifies using majority vote among the k neighbors.",
+      "existing_quote": null
+    },
+    {
+      "id": 477,
+      "name": "memory-based classifier",
+      "chapter": 14,
+      "description": "A classifier that requires no model to be fit and uses the training data directly for prediction.",
+      "existing_quote": null
+    },
+    {
+      "id": 478,
+      "name": "majority vote",
+      "chapter": 14,
+      "description": "A classification decision rule where the class is chosen based on the most common class among k nearest neighbors.",
+      "existing_quote": null
+    },
+    {
+      "id": 480,
+      "name": "asymptotic nearest-neighbor error bound",
+      "chapter": 14,
+      "description": "The property that 1-nearest-neighbor error rate is bounded by twice the Bayes error rate asymptotically.",
+      "existing_quote": null
+    },
+    {
+      "id": 483,
+      "name": "discriminant adaptive nearest-neighbor",
+      "chapter": 14,
+      "description": "An adaptive nearest-neighbor method that uses a local linear discriminant analysis to estimate the local between-class covariance matrix and adaptively shape the neighborhood.",
+      "existing_quote": null
+    },
+    {
+      "id": 484,
+      "name": "chi-square distance",
+      "chapter": 14,
+      "description": "A distance measure for discrete distributions used in analyzing market basket data and contingency tables.",
+      "existing_quote": null
+    },
+    {
+      "id": 485,
+      "name": "market basket analysis",
+      "chapter": 14,
+      "description": "Analysis of large databases of customer transactions to discover association rules showing which items are purchased together.",
+      "existing_quote": null
+    },
+    {
+      "id": 486,
+      "name": "association rules",
+      "chapter": 14,
+      "description": "Rules of the form X => Y indicating that when itemset X appears in a transaction, itemset Y is also likely to appear, measured by support and confidence.",
+      "existing_quote": null
+    },
+    {
+      "id": 487,
+      "name": "support",
+      "chapter": 14,
+      "description": "In association rules, the percentage of transactions containing both itemsets X and Y in the rule X => Y.",
+      "existing_quote": null
+    },
+    {
+      "id": 488,
+      "name": "confidence",
+      "chapter": 14,
+      "description": "In association rules, the percentage of transactions containing X that also contain Y in the rule X => Y.",
+      "existing_quote": null
+    },
+    {
+      "id": 489,
+      "name": "apriori algorithm",
+      "chapter": 14,
+      "description": "An efficient algorithm for finding frequent itemsets in market basket analysis by exploiting the downward closure property.",
+      "existing_quote": null
+    },
+    {
+      "id": 490,
+      "name": "downward closure property",
+      "chapter": 14,
+      "description": "The property that if an itemset is frequent, then all of its subsets must also be frequent, exploited by the Apriori algorithm.",
+      "existing_quote": null
+    },
+    {
+      "id": 491,
+      "name": "frequent itemset",
+      "chapter": 14,
+      "description": "An itemset that appears in at least a minimum support threshold of transactions in market basket analysis.",
+      "existing_quote": null
+    },
+    {
+      "id": 492,
+      "name": "lift",
+      "chapter": 14,
+      "description": "A measure for association rules that compares the confidence to the baseline frequency of the consequent, indicating whether the rule provides improvement over random chance.",
+      "existing_quote": null
+    },
+    {
+      "id": 493,
+      "name": "generalized association rules",
+      "chapter": 14,
+      "description": "Extension of association rules to include quantitative and categorical features beyond binary transactions, often by discretization.",
+      "existing_quote": null
+    },
+    {
+      "id": 494,
+      "name": "unsupervised as supervised learning",
+      "chapter": 14,
+      "description": "A framework for unsupervised learning problems like clustering and association rules where a supervised learning model is used to predict the presence or absence of features.",
+      "existing_quote": null
+    },
+    {
+      "id": 495,
+      "name": "cluster analysis",
+      "chapter": 14,
+      "description": "Methods for finding groups or clusters in data such that observations within each group are more similar to each other than to observations in other groups.",
+      "existing_quote": null
+    },
+    {
+      "id": 496,
+      "name": "data segmentation",
+      "chapter": 14,
+      "description": "Another name for cluster analysis, the process of grouping data into meaningful subsets.",
+      "existing_quote": null
+    },
+    {
+      "id": 498,
+      "name": "dissimilarity",
+      "chapter": 14,
+      "description": "A measure of how different two observations are, typically satisfying d(xi, xi) = 0 and d(xi, xi\u2032) \u2265 0.",
+      "existing_quote": null
+    },
+    {
+      "id": 499,
+      "name": "attribute dissimilarity",
+      "chapter": 14,
+      "description": "Dissimilarity measures based on the attributes or features of observations, such as Euclidean distance for quantitative variables.",
+      "existing_quote": null
+    },
+    {
+      "id": 500,
+      "name": "gower dissimilarity",
+      "chapter": 14,
+      "description": "A general dissimilarity coefficient for mixed data types (quantitative, ordinal, and categorical) that combines different attribute-specific dissimilarities.",
+      "existing_quote": null
+    },
+    {
+      "id": 501,
+      "name": "object dissimilarity",
+      "chapter": 14,
+      "description": "Dissimilarity measures that treat observations as unstructured objects without explicit attributes, measured directly between observations.",
+      "existing_quote": null
+    },
+    {
+      "id": 502,
+      "name": "combinatorial clustering algorithms",
+      "chapter": 14,
+      "description": "Clustering algorithms that work directly with observed data or dissimilarities and assign observations to clusters.",
+      "existing_quote": null
+    },
+    {
+      "id": 503,
+      "name": "mixture modeling clustering",
+      "chapter": 14,
+      "description": "A probabilistic clustering approach that assumes data is generated from a mixture of underlying probability distributions.",
+      "existing_quote": null
+    },
+    {
+      "id": 504,
+      "name": "mode seeking clustering",
+      "chapter": 14,
+      "description": "Clustering methods that attempt to directly estimate distinct modes of the probability density function, with each mode representing a cluster.",
+      "existing_quote": null
+    },
+    {
+      "id": 505,
+      "name": "hierarchical clustering",
+      "chapter": 14,
+      "description": "Clustering methods that produce a sequence of nested partitions from fine (all singletons) to coarse (all observations in one cluster), often represented as a dendrogram.",
+      "existing_quote": null
+    },
+    {
+      "id": 506,
+      "name": "dendrogram",
+      "chapter": 14,
+      "description": "A tree diagram representing the hierarchical clustering structure showing how observations and clusters are merged or split at different levels.",
+      "existing_quote": null
+    },
+    {
+      "id": 507,
+      "name": "agglomerative clustering",
+      "chapter": 14,
+      "description": "A bottom-up hierarchical clustering approach that starts with each observation as its own cluster and successively merges closest pairs.",
+      "existing_quote": null
+    },
+    {
+      "id": 508,
+      "name": "divisive clustering",
+      "chapter": 14,
+      "description": "Top-down hierarchical clustering starting with all data in one cluster, recursively splitting clusters to maximize between-group dissimilarity.",
+      "existing_quote": null
+    },
+    {
+      "id": 509,
+      "name": "single linkage",
+      "chapter": 14,
+      "description": "A dissimilarity measure between two groups defined as the minimum dissimilarity between any observation in one group and any observation in the other.",
+      "existing_quote": null
+    },
+    {
+      "id": 510,
+      "name": "complete linkage",
+      "chapter": 14,
+      "description": "A dissimilarity measure between two groups defined as the maximum dissimilarity between any observation in one group and any observation in the other.",
+      "existing_quote": null
+    },
+    {
+      "id": 511,
+      "name": "average linkage",
+      "chapter": 14,
+      "description": "A dissimilarity measure between two groups defined as the average dissimilarity between all pairs of observations from the two groups.",
+      "existing_quote": null
+    },
+    {
+      "id": 512,
+      "name": "Ward's method",
+      "chapter": 14,
+      "description": "An agglomerative hierarchical clustering method that minimizes the within-cluster sum of squares at each merge, similar to K-means objective.",
+      "existing_quote": null
+    },
+    {
+      "id": 513,
+      "name": "vector quantization",
+      "chapter": 14,
+      "description": "Image and signal compression technique using K-means clustering to approximate blocks of pixels by cluster centroids (codewords), with applications in lossy compression.",
+      "existing_quote": null
+    },
+    {
+      "id": 514,
+      "name": "codeword",
+      "chapter": 14,
+      "description": "The cluster centroid used to approximate a block of pixels in vector quantization; the collection of codewords forms the codebook.",
+      "existing_quote": null
+    },
+    {
+      "id": 515,
+      "name": "encoding step",
+      "chapter": 14,
+      "description": "In vector quantization, the clustering process that assigns each data block to its nearest codeword.",
+      "existing_quote": null
+    },
+    {
+      "id": 516,
+      "name": "rate-distortion tradeoff",
+      "chapter": 14,
+      "description": "In lossy compression, the tradeoff between compression rate (bits per pixel) and distortion (reconstruction error).",
+      "existing_quote": null
+    },
+    {
+      "id": 517,
+      "name": "variable length coding",
+      "chapter": 14,
+      "description": "A coding scheme that assigns shorter codes to more frequent codewords, using entropy-based Shannon coding theory.",
+      "existing_quote": null
+    },
+    {
+      "id": 518,
+      "name": "entropy of codeword distribution",
+      "chapter": 14,
+      "description": "The Shannon entropy of the distribution of codewords in variable length coding, determining the optimal compression rate.",
+      "existing_quote": null
+    },
+    {
+      "id": 519,
+      "name": "tree-structured vector quantization",
+      "chapter": 14,
+      "description": "A generalization of VQ that finds centroids with a top-down, 2-means style algorithm, allowing successive refinement of compression.",
+      "existing_quote": null
+    },
+    {
+      "id": 520,
+      "name": "k-medoids clustering",
+      "chapter": 14,
+      "description": "Clustering method restricting cluster centers to actual observations, minimizing total dissimilarity to cluster members using arbitrary dissimilarity measures.",
+      "existing_quote": null
+    },
+    {
+      "id": 522,
+      "name": "silhouette coefficient",
+      "chapter": 14,
+      "description": "A measure of clustering quality that compares within-cluster tightness to between-cluster separation for each observation.",
+      "existing_quote": null
+    },
+    {
+      "id": 523,
+      "name": "gap statistic",
+      "chapter": 14,
+      "description": "Method for estimating optimal number of clusters by comparing log WK curve to that from uniformly distributed data, finding where gap is largest.",
+      "existing_quote": null
+    },
+    {
+      "id": 524,
+      "name": "self-organizing map",
+      "chapter": 14,
+      "description": "A constrained version of K-means clustering where prototypes lie in a low-dimensional manifold (usually 1D or 2D grid), preserving topological relationships.",
+      "existing_quote": null
+    },
+    {
+      "id": 525,
+      "name": "principal curves",
+      "chapter": 14,
+      "description": "Smooth one-dimensional curves that pass through the middle of a distribution, generalizing principal components to nonlinear manifolds.",
+      "existing_quote": null
+    },
+    {
+      "id": 526,
+      "name": "principal surfaces",
+      "chapter": 14,
+      "description": "Smooth two-dimensional surfaces that generalize principal curves to higher-dimensional manifolds.",
+      "existing_quote": null
+    },
+    {
+      "id": 527,
+      "name": "spectral clustering",
+      "chapter": 14,
+      "description": "A clustering method that uses the eigenvectors of the graph Laplacian matrix to embed data in a lower-dimensional space where clusters are more easily separated.",
+      "existing_quote": null
+    },
+    {
+      "id": 528,
+      "name": "graph laplacian",
+      "chapter": 14,
+      "description": "A matrix representation of a graph defined as L = G - W where G is the diagonal degree matrix and W is the adjacency matrix, used in spectral clustering.",
+      "existing_quote": null
+    },
+    {
+      "id": 529,
+      "name": "similarity graph",
+      "chapter": 14,
+      "description": "A graph representation of data where nodes are observations and edges represent similarities, used in spectral clustering.",
+      "existing_quote": null
+    },
+    {
+      "id": 530,
+      "name": "kernel density estimation",
+      "chapter": 14,
+      "description": "A nonparametric method for estimating the probability density function by placing kernel functions at each data point.",
+      "existing_quote": null
+    },
+    {
+      "id": 531,
+      "name": "encoding step in vector quantization",
+      "chapter": 14,
+      "description": "The clustering process in vector quantization where pixel blocks are assigned to their nearest codeword.",
+      "existing_quote": null
+    },
+    {
+      "id": 532,
+      "name": "rate in bits per pixel",
+      "chapter": 14,
+      "description": "Measure of compression efficiency expressed as log2(K)/4 bits per pixel, where K is the number of codewords.",
+      "existing_quote": null
+    },
+    {
+      "id": 533,
+      "name": "fixed-length code",
+      "chapter": 14,
+      "description": "Coding scheme using the same number of bits for each codeword, requiring log2(K) bits to identify K codewords.",
+      "existing_quote": null
+    },
+    {
+      "id": 534,
+      "name": "variable length code",
+      "chapter": 14,
+      "description": "Coding scheme using different numbers of bits for different codewords based on frequency, achieving better compression via Shannon coding theory.",
+      "existing_quote": null
+    },
+    {
+      "id": 535,
+      "name": "cophenetic correlation coefficient",
+      "chapter": 14,
+      "description": "Correlation between pairwise observation dissimilarities and their cophenetic dissimilarities from the dendrogram, measuring how well hierarchy represents data.",
+      "existing_quote": null
+    },
+    {
+      "id": 536,
+      "name": "cophenetic dissimilarity",
+      "chapter": 14,
+      "description": "Intergroup dissimilarity at which two observations are first joined together in the same cluster in hierarchical clustering.",
+      "existing_quote": null
+    },
+    {
+      "id": 537,
+      "name": "ultrametric inequality",
+      "chapter": 14,
+      "description": "Constraint on cophenetic dissimilarities requiring Cik \u2264 max(Cii\u2032, Ci\u2032k) for any three observations, implying isosceles triangles.",
+      "existing_quote": null
+    },
+    {
+      "id": 538,
+      "name": "single linkage agglomerative clustering",
+      "chapter": 14,
+      "description": "Hierarchical clustering taking intergroup dissimilarity as minimum dissimilarity between groups; tends to chain clusters via intermediate observations.",
+      "existing_quote": null
+    },
+    {
+      "id": 539,
+      "name": "complete linkage agglomerative clustering",
+      "chapter": 14,
+      "description": "Hierarchical clustering taking intergroup dissimilarity as maximum dissimilarity between groups; produces compact clusters with small diameters.",
+      "existing_quote": null
+    },
+    {
+      "id": 540,
+      "name": "group average clustering",
+      "chapter": 14,
+      "description": "Hierarchical clustering using average dissimilarity between groups; compromise between single and complete linkage, attempts compact and well-separated clusters.",
+      "existing_quote": null
+    },
+    {
+      "id": 541,
+      "name": "cluster diameter",
+      "chapter": 14,
+      "description": "Largest dissimilarity among members of a cluster, measuring cluster compactness.",
+      "existing_quote": null
+    },
+    {
+      "id": 542,
+      "name": "batch som",
+      "chapter": 14,
+      "description": "Batch version of self-organizing maps processing all observations together rather than one at a time.",
+      "existing_quote": null
+    },
+    {
+      "id": 543,
+      "name": "neighborhood function in som",
+      "chapter": 14,
+      "description": "Function h giving more weight to prototypes closer in topological coordinate space, used in sophisticated SOM updates.",
+      "existing_quote": null
+    },
+    {
+      "id": 544,
+      "name": "reconstruction error in clustering",
+      "chapter": 14,
+      "description": "Sum of squared distances ||x \u2212 mj||\u00b2 between observations and their assigned prototypes, measuring clustering quality.",
+      "existing_quote": null
+    },
+    {
+      "id": 545,
+      "name": "term-document matrix",
+      "chapter": 14,
+      "description": "Matrix representation where each row is a document and entries are relative frequencies of predefined terms, used for document retrieval.",
+      "existing_quote": null
+    },
+    {
+      "id": 546,
+      "name": "principal component analysis",
+      "chapter": 14,
+      "description": "Sequence of best linear approximations to data of all ranks q \u2264 p, providing uncorrelated projections ordered by variance.",
+      "existing_quote": null
+    },
+    {
+      "id": 547,
+      "name": "rank-q linear model",
+      "chapter": 14,
+      "description": "Parametric representation of affine hyperplane f(\u03bb) = \u03bc + Vq\u03bb approximating data points by least squares.",
+      "existing_quote": null
+    },
+    {
+      "id": 548,
+      "name": "right singular vectors",
+      "chapter": 14,
+      "description": "Columns vj of matrix V in SVD, defining principal component directions; first q columns solve rank-q approximation problem.",
+      "existing_quote": null
+    },
+    {
+      "id": 549,
+      "name": "singular values",
+      "chapter": 14,
+      "description": "Diagonal elements d1 \u2265 d2 \u2265 \u22c5\u22c5\u22c5 \u2265 dp \u2265 0 of diagonal matrix D in SVD, measuring variance along principal component directions.",
+      "existing_quote": null
+    },
+    {
+      "id": 550,
+      "name": "procrustes transformation",
+      "chapter": 14,
+      "description": "Finding optimal rotation R and location \u03bc to match two sets of corresponding points by minimizing ||X2 \u2212 X1R \u2212 1\u03bc^T||F.",
+      "existing_quote": null
+    },
+    {
+      "id": 551,
+      "name": "procrustes average",
+      "chapter": 14,
+      "description": "Shape M minimizing average squared Procrustes distance to collection of L shapes, found by alternating algorithm.",
+      "existing_quote": null
+    },
+    {
+      "id": 552,
+      "name": "principal curve",
+      "chapter": 14,
+      "description": "Smooth one-dimensional curved approximation to data satisfying self-consistency: f(\u03bb) = E(X|\u03bbf(X) = \u03bb), generalizing principal component line.",
+      "existing_quote": null
+    },
+    {
+      "id": 553,
+      "name": "self-consistency property",
+      "chapter": 14,
+      "description": "Property of principal curves where f(\u03bb) equals the average of all data points projecting to it.",
+      "existing_quote": null
+    },
+    {
+      "id": 554,
+      "name": "principal surface",
+      "chapter": 14,
+      "description": "Higher-dimensional generalization of principal curves providing curved manifold approximation, commonly used in two dimensions.",
+      "existing_quote": null
+    },
+    {
+      "id": 555,
+      "name": "mutual k-nearest-neighbor graph",
+      "chapter": 14,
+      "description": "Similarity graph connecting pairs where one point is among K-nearest neighbors of the other, with nonzero edge weights only for neighbors.",
+      "existing_quote": null
+    },
+    {
+      "id": 556,
+      "name": "normalized graph laplacian",
+      "chapter": 14,
+      "description": "Standardized version of Laplacian with respect to node degrees, e.g., L\u0303 = I \u2212 G^(-1)W.",
+      "existing_quote": null
+    },
+    {
+      "id": 557,
+      "name": "kernel principal components",
+      "chapter": 14,
+      "description": "Nonlinear PCA obtained by applying PCA in implicit feature space defined by kernel, expanding scope to non-linear transformations.",
+      "existing_quote": null
+    },
+    {
+      "id": 558,
+      "name": "sparse principal components",
+      "chapter": 14,
+      "description": "PCA variant using L1 penalties to encourage sparse loadings, making principal components easier to interpret.",
+      "existing_quote": null
+    },
+    {
+      "id": 559,
+      "name": "scotlass",
+      "chapter": 14,
+      "description": "Sparse PCA method maximizing variance subject to L1 constraint on loadings: max v^T(X^TX)v subject to \u2211|vj| \u2264 t, v^Tv = 1.",
+      "existing_quote": null
+    },
+    {
+      "id": 560,
+      "name": "elastic net for sparse pca",
+      "chapter": 14,
+      "description": "Sparse PCA using regression/reconstruction property with ridge and lasso penalties, allowing efficient computation via alternating optimization.",
+      "existing_quote": null
+    },
+    {
+      "id": 561,
+      "name": "non-negative matrix factorization",
+      "chapter": 14,
+      "description": "Alternative to PCA approximating X \u2248 WH where all elements are non-negative, useful for modeling non-negative data like images.",
+      "existing_quote": null
+    },
+    {
+      "id": 562,
+      "name": "archetypal analysis",
+      "chapter": 14,
+      "description": "Method approximating data points by convex combinations of prototypes (archetypes) that themselves are convex combinations of data, forcing prototypes onto convex hull.",
+      "existing_quote": null
+    },
+    {
+      "id": 563,
+      "name": "factor analysis",
+      "chapter": 14,
+      "description": "Classical latent variable model X = AS + \u03b5 where S are uncorrelated factors, modeling correlation structure with separate disturbances \u03b5.",
+      "existing_quote": null
+    },
+    {
+      "id": 564,
+      "name": "independent component analysis",
+      "chapter": 14,
+      "description": "Latent variable model X = AS where components S are statistically independent (not just uncorrelated), exploiting non-Gaussianity for identifiability.",
+      "existing_quote": null
+    },
+    {
+      "id": 565,
+      "name": "blind source separation",
+      "chapter": 14,
+      "description": "Recovery of independent source signals from mixed observations, classical application of ICA in cocktail party problem.",
+      "existing_quote": null
+    },
+    {
+      "id": 566,
+      "name": "differential entropy",
+      "chapter": 14,
+      "description": "Entropy H(Y) = \u2212\u222bg(y)log g(y)dy measuring randomness of continuous variable; Gaussian has maximum entropy for fixed variance.",
+      "existing_quote": null
+    },
+    {
+      "id": 567,
+      "name": "mutual information",
+      "chapter": 14,
+      "description": "Kullback-Leibler distance between joint density and product of marginals, measuring dependence between components of random vector.",
+      "existing_quote": null
+    },
+    {
+      "id": 568,
+      "name": "negentropy",
+      "chapter": 14,
+      "description": "Non-negative measure J(Yj) = H(Zj) \u2212 H(Yj) quantifying departure from Gaussianity, where Zj is Gaussian with same variance as Yj.",
+      "existing_quote": null
+    },
+    {
+      "id": 569,
+      "name": "exploratory projection pursuit",
+      "chapter": 14,
+      "description": "Graphical exploration technique for visualizing high-dimensional data by finding non-Gaussian projections revealing interesting structure like clusters or tails.",
+      "existing_quote": null
+    },
+    {
+      "id": 570,
+      "name": "projection indices",
+      "chapter": 14,
+      "description": "Measures focusing on different departures from Gaussianity for optimization in projection pursuit, similar to negentropy.",
+      "existing_quote": null
+    },
+    {
+      "id": 571,
+      "name": "tilted gaussian density",
+      "chapter": 14,
+      "description": "Representation fj(sj) = \u03c6(sj)e^(gj(sj)) for departures from Gaussianity, used in product density ICA approach.",
+      "existing_quote": null
+    },
+    {
+      "id": 572,
+      "name": "prodeniica",
+      "chapter": 14,
+      "description": "ICA algorithm estimating product density directly using generalized additive models with penalized Poisson log-likelihood and smoothing splines.",
+      "existing_quote": null
+    },
+    {
+      "id": 573,
+      "name": "amari metric",
+      "chapter": 14,
+      "description": "Measure of closeness between two frames (orthogonal mixing matrices), used to compare estimated and true mixing matrices in ICA.",
+      "existing_quote": null
+    },
+    {
+      "id": 574,
+      "name": "multidimensional scaling",
+      "chapter": 14,
+      "description": "Finding low-dimensional representation zi \u2208 R^k preserving pairwise dissimilarities dij, requiring only dissimilarities not data points.",
+      "existing_quote": null
+    },
+    {
+      "id": 575,
+      "name": "kruskal-shephard scaling",
+      "chapter": 14,
+      "description": "Least squares MDS minimizing stress function SM = \u2211i\u2260i\u2032(dii\u2032 \u2212 ||zi \u2212 zi\u2032||)\u00b2.",
+      "existing_quote": null
+    },
+    {
+      "id": 576,
+      "name": "sammon mapping",
+      "chapter": 14,
+      "description": "MDS variation minimizing weighted stress putting more emphasis on preserving smaller pairwise distances.",
+      "existing_quote": null
+    },
+    {
+      "id": 577,
+      "name": "classical scaling",
+      "chapter": 14,
+      "description": "MDS minimizing \u2211i,i\u2032(sii\u2032 \u2212 \u27e8zi, zi\u2032\u27e9)\u00b2 for similarities sii\u2032, with explicit eigenvector solution; equivalent to PCA for centered inner products.",
+      "existing_quote": null
+    },
+    {
+      "id": 578,
+      "name": "metric scaling",
+      "chapter": 14,
+      "description": "MDS methods (least squares and classical scaling) approximating actual dissimilarities or similarities rather than just ranks.",
+      "existing_quote": null
+    },
+    {
+      "id": 579,
+      "name": "shephard-kruskal nonmetric scaling",
+      "chapter": 14,
+      "description": "MDS using only ranks, minimizing stress over zi and arbitrary increasing function \u03b8 via isotonic regression.",
+      "existing_quote": null
+    },
+    {
+      "id": 580,
+      "name": "isotonic regression",
+      "chapter": 14,
+      "description": "Method finding best monotonic approximation \u03b8(dii\u2032) to ||zi \u2212 zi\u2032|| with zi fixed in nonmetric scaling.",
+      "existing_quote": null
+    },
+    {
+      "id": 581,
+      "name": "isometric feature mapping",
+      "chapter": 14,
+      "description": "Nonlinear dimension reduction constructing graph to approximate geodesic distance along manifold via shortest path, then applying classical scaling.",
+      "existing_quote": null
+    },
+    {
+      "id": 582,
+      "name": "local linear embedding",
+      "chapter": 14,
+      "description": "Nonlinear dimension reduction preserving local affine structure by approximating points as linear combinations of neighbors in both high and low dimensions.",
+      "existing_quote": null
+    },
+    {
+      "id": 583,
+      "name": "geodesic distance on manifold",
+      "chapter": 14,
+      "description": "Distance along manifold surface approximated by shortest path through neighbor graph in ISOMAP.",
+      "existing_quote": null
+    },
+    {
+      "id": 584,
+      "name": "pagerank algorithm",
+      "chapter": 14,
+      "description": "An algorithm used by Google to rank webpages, considering a webpage important if many other important webpages point to it, with recursive weighting based on the PageRank of linking pages and their number of outgoing links.",
+      "existing_quote": null
+    },
+    {
+      "id": 62,
+      "name": "Gini",
+      "chapter": 15,
+      "description": "!\nremove\n$\nCAPAVE\nhp\nfree\nCAPMAX\nedu\ngeorge\nCAPTOT\nyour\nour\n1999\nre\nyou\nhpl\nbusiness\n000\nmeeting\nmoney\n(\nwill\ninternet\n650\npm\nreceive\nover\nemail\n;\nfont\nmail\ntechnology\norder\nall\nlabs\n[\n85\naddress\noriginal\nlab\ntelnet\npeople\nproject\ndata\ncredit\nconference\n857\n#\n415\nmake\ncs\nreport\ndirect\naddresses\n3d\nparts\ntable",
+      "existing_quote": null
+    },
+    {
+      "id": 497,
+      "name": "proximity matrix",
+      "chapter": 15,
+      "description": "An N \u00d7 N matrix accumulated in random forests where for every tree, any pair of out-of-bag observations sharing a terminal node has their proximity increased by one, used to visualize similarity between observations.",
+      "existing_quote": null
+    },
+    {
+      "id": 585,
+      "name": "random forest",
+      "chapter": 15,
+      "description": "A substantial modification of bagging that builds a large collection of de-correlated trees by randomly selecting a subset of variables at each split, and then averages them.",
+      "existing_quote": null
+    },
+    {
+      "id": 586,
+      "name": "out-of-bag samples",
+      "chapter": 15,
+      "description": "A validation technique in random forests where each observation's prediction is made using only trees from bootstrap samples in which that observation did not appear, providing a built-in cross-validation estimate.",
+      "existing_quote": null
+    },
+    {
+      "id": 587,
+      "name": "out-of-bag error",
+      "chapter": 15,
+      "description": "An error estimate in random forests that is almost identical to N-fold cross-validation, computed using out-of-bag samples.",
+      "existing_quote": null
+    },
+    {
+      "id": 588,
+      "name": "variable importance via permutation",
+      "chapter": 15,
+      "description": "A method in random forests to measure variable importance by randomly permuting values of a variable in out-of-bag samples and measuring the decrease in prediction accuracy.",
+      "existing_quote": null
+    },
+    {
+      "id": 589,
+      "name": "proximity plot",
+      "chapter": 15,
+      "description": "A two-dimensional visualization of the proximity matrix using multidimensional scaling, showing which observations are effectively close together according to the random forest classifier.",
+      "existing_quote": null
+    },
+    {
+      "id": 590,
+      "name": "de-correlation effect in random forests",
+      "chapter": 15,
+      "description": "The variance reduction mechanism in random forests achieved by reducing correlation between trees through random selection of input variables at each split.",
+      "existing_quote": null
+    },
+    {
+      "id": 591,
+      "name": "sampling correlation in random forests",
+      "chapter": 15,
+      "description": "The theoretical correlation \u03c1(x) between a pair of random-forest trees evaluated at x, induced by the sampling distribution of training data and randomization parameters.",
+      "existing_quote": null
+    },
+    {
+      "id": 592,
+      "name": "within-z variance",
+      "chapter": 15,
+      "description": "The variance component in random forests due to randomization conditional on a fixed training set, which increases as the number of randomly selected variables (m) decreases.",
+      "existing_quote": null
+    },
+    {
+      "id": 593,
+      "name": "random forest as adaptive nearest neighbors",
+      "chapter": 15,
+      "description": "An interpretation of random forests as a weighted k-nearest neighbor classifier where the tree-growing algorithm finds optimal paths to training observations and the averaging process assigns weights forming an equivalent kernel.",
+      "existing_quote": null
+    },
+    {
+      "id": 596,
+      "name": "forward stagewise linear regression",
+      "chapter": 15,
+      "description": "A regularization algorithm that starts with zero coefficients and at each iteration selects the basis function that best fits current residuals, incrementing its coefficient by an infinitesimal amount while leaving others unchanged.",
+      "existing_quote": null
+    },
+    {
+      "id": 599,
+      "name": "l1 normalized margin",
+      "chapter": 15,
+      "description": "A margin measure for classification models defined as the minimum over training samples of y\u00b7f(x) divided by the L1 norm of coefficients, measuring distance to closest training point in L\u221e units.",
+      "existing_quote": null
+    },
+    {
+      "id": 603,
+      "name": "markov random field",
+      "chapter": 15,
+      "description": "An undirected graphical model where vertices represent random variables and the absence of edges implies conditional independence given other variables, also known as Markov networks.",
+      "existing_quote": null
+    },
+    {
+      "id": 604,
+      "name": "pairwise markov independence",
+      "chapter": 15,
+      "description": "The property in Markov graphs that if two vertices are not adjacent, the corresponding random variables are conditionally independent given all other variables.",
+      "existing_quote": null
+    },
+    {
+      "id": 607,
+      "name": "clique potential",
+      "chapter": 15,
+      "description": "Positive functions \u03c8C(\u00b7) in the factorization of probability densities over Markov graphs that capture dependence in variables within a clique by scoring certain instances higher than others, though not necessarily being density functions themselves.",
+      "existing_quote": null
+    },
+    {
+      "id": 608,
+      "name": "hammersley-clifford theorem",
+      "chapter": 15,
+      "description": "A fundamental result stating that for Markov networks with positive distributions, the representation of probability density as a product of clique potentials is equivalent to the independence properties defined by the graph structure.",
+      "existing_quote": null
+    }
+  ]
+}

@@ -1,0 +1,1012 @@
+{
+  "chapter": "4",
+  "sections": [
+    {
+      "number": "4.1",
+      "title": "Introduction",
+      "page_start": 119
+    },
+    {
+      "number": "4.2",
+      "title": "Linear Regression of an Indicator Matrix",
+      "page_start": 121
+    },
+    {
+      "number": "4.3",
+      "title": "Linear Discriminant Analysis",
+      "page_start": 124
+    },
+    {
+      "number": "4.3.1",
+      "title": "Regularized Discriminant Analysis",
+      "page_start": 130
+    },
+    {
+      "number": "4.3.2",
+      "title": "Computations for LDA",
+      "page_start": 131
+    },
+    {
+      "number": "4.3.3",
+      "title": "Reduced-Rank Linear Discriminant Analysis",
+      "page_start": 131
+    },
+    {
+      "number": "4.4",
+      "title": "Logistic Regression",
+      "page_start": 137
+    },
+    {
+      "number": "4.4.1",
+      "title": "Fitting Logistic Regression Models",
+      "page_start": 138
+    },
+    {
+      "number": "4.4.2",
+      "title": "Example: South African Heart Disease",
+      "page_start": 140
+    },
+    {
+      "number": "4.4.3",
+      "title": "Quadratic Approximations and Inference",
+      "page_start": 142
+    },
+    {
+      "number": "4.4.4",
+      "title": "L1 Regularized Logistic Regression",
+      "page_start": 143
+    },
+    {
+      "number": "4.4.5",
+      "title": "Logistic Regression or LDA?",
+      "page_start": 145
+    },
+    {
+      "number": "4.5",
+      "title": "Separating Hyperplanes",
+      "page_start": 147
+    },
+    {
+      "number": "4.5.1",
+      "title": "Rosenblatt\u2019s Perceptron Learning Algorithm",
+      "page_start": 148
+    },
+    {
+      "number": "4.5.2",
+      "title": "Optimal Separating Hyperplanes",
+      "page_start": 150
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": 5583,
+      "page": 119,
+      "seq": 0,
+      "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation"
+    },
+    {
+      "id": 5585,
+      "page": 119,
+      "seq": 2,
+      "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1"
+    },
+    {
+      "id": 5586,
+      "page": 119,
+      "seq": 3,
+      "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods"
+    },
+    {
+      "id": 5587,
+      "page": 119,
+      "seq": 4,
+      "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes."
+    },
+    {
+      "id": 5589,
+      "page": 120,
+      "seq": 1,
+      "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is"
+    },
+    {
+      "id": 5590,
+      "page": 120,
+      "seq": 2,
+      "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),"
+    },
+    {
+      "id": 5592,
+      "page": 120,
+      "seq": 4,
+      "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that"
+    },
+    {
+      "id": 5595,
+      "page": 120,
+      "seq": 7,
+      "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-"
+    },
+    {
+      "id": 6536,
+      "page": 121,
+      "seq": 940,
+      "text": "mation h(X) where h : IRp \u0015\u2192IRq with q > p, and will be explored in later\nchapters."
+    },
+    {
+      "id": 6538,
+      "page": 121,
+      "seq": 942,
+      "text": "Here each of the response categories are coded via an indicator variable.\nThus if G has K classes, there will be K such indicators Yk, k = 1, . . . , K,\nwith Yk = 1 if G = k else 0. These are collected together in a vector\nY = (Y1, . . . , YK), and the N training instances of these form an N \u00d7 K\nindicator response matrix Y. Y is a matrix of 0\u2019s and 1\u2019s, with each row\nhaving a single 1. We \ufb01t a linear regression model to each of the columns\nof Y simultaneously, and the \ufb01t is given by"
+    },
+    {
+      "id": 6540,
+      "page": 121,
+      "seq": 944,
+      "text": "Chapter 3 has more details on linear regression. Note that we have a coe\ufb03-\ncient vector for each response column yk, and hence a (p+1)\u00d7K coe\ufb03cient\nmatrix \u02c6B = (XT X)\u22121XT Y. Here X is the model matrix with p+1 columns\ncorresponding to the p inputs, and a leading column of 1\u2019s for the intercept.\nA new observation with input x is classi\ufb01ed as follows:"
+    },
+    {
+      "id": 6541,
+      "page": 121,
+      "seq": 945,
+      "text": "\u2022 compute the \ufb01tted output \u02c6f(x) = [(1, x) \u02c6B]T , a K vector;"
+    },
+    {
+      "id": 6542,
+      "page": 121,
+      "seq": 946,
+      "text": "\u2022 identify the largest component and classify accordingly:"
+    },
+    {
+      "id": 6545,
+      "page": 122,
+      "seq": 1,
+      "text": "What is the rationale for this approach? One rather formal justi\ufb01cation\nis to view the regression as an estimate of conditional expectation. For the\nrandom variable Yk, E(Yk|X = x) = Pr(G = k|X = x), so conditional\nexpectation of each of the Yk seems a sensible goal. The real issue is: how\ngood an approximation to conditional expectation is the rather rigid linear\nregression model? Alternatively, are the \u02c6fk(x) reasonable estimates of the\nposterior probabilities Pr(G = k|X = x), and more importantly, does this\nmatter?\nIt is quite straightforward to verify that"
+    },
+    {
+      "id": 6546,
+      "page": 122,
+      "seq": 2,
+      "text": "k\u2208G \u02c6fk(x) = 1 for any x, as\nlong as there is an intercept in the model (column of 1\u2019s in X). However,\nthe \u02c6fk(x) can be negative or greater than 1, and typically some are. This\nis a consequence of the rigid nature of linear regression, especially if we\nmake predictions outside the hull of the training data. These violations in\nthemselves do not guarantee that this approach will not work, and in fact\non many problems it gives similar results to more standard linear meth-\nods for classi\ufb01cation. If we allow linear regression onto basis expansions\nh(X) of the inputs, this approach can lead to consistent estimates of the\nprobabilities. As the size of the training set N grows bigger, we adaptively\ninclude more basis elements so that linear regression onto these basis func-\ntions approaches conditional expectation. We discuss such approaches in\nChapter 5.\nA more simplistic viewpoint is to construct targets tk for each class,\nwhere tk is the kth column of the K \u00d7 K identity matrix. Our prediction\nproblem is to try and reproduce the appropriate target for an observation.\nWith the same coding as before, the response vector yi (ith row of Y) for\nobservation i has the value yi = tk if gi = k. We might then \ufb01t the linear\nmodel by least squares:"
+    },
+    {
+      "id": 6550,
+      "page": 122,
+      "seq": 6,
+      "text": "The criterion is a sum-of-squared Euclidean distances of the \ufb01tted vectors\nfrom their targets. A new observation is classi\ufb01ed by computing its \ufb01tted\nvector \u02c6f(x) and classifying to the closest target:"
+    },
+    {
+      "id": 6553,
+      "page": 122,
+      "seq": 9,
+      "text": "\u2022 The sum-of-squared-norm criterion is exactly the criterion for multi-\nple response linear regression, just viewed slightly di\ufb00erently. Since\na squared norm is itself a sum of squares, the components decouple\nand can be rearranged as a separate linear model for each element.\nNote that this is only possible because there is nothing in the model\nthat binds the di\ufb00erent responses together."
+    },
+    {
+      "id": 8775,
+      "page": 123,
+      "seq": 2221,
+      "text": "\u2022 The closest target classi\ufb01cation rule (4.6) is easily seen to be exactly\nthe same as the maximum \ufb01tted component criterion (4.4), but does\nrequire that the \ufb01tted values sum to 1."
+    },
+    {
+      "id": 8776,
+      "page": 123,
+      "seq": 2222,
+      "text": "There is a serious problem with the regression approach when the number\nof classes K \u22653, especially prevalent when K is large. Because of the rigid\nnature of the regression model, classes can be masked by others. Figure 4.2\nillustrates an extreme situation when K = 3. The three classes are perfectly\nseparated by linear decision boundaries, yet linear regression misses the\nmiddle class completely.\nIn Figure 4.3 we have projected the data onto the line joining the three\ncentroids (there is no information in the orthogonal direction in this case),\nand we have included and coded the three response variables Y1, Y2 and\nY3. The three regression lines (left panel) are included, and we see that\nthe line corresponding to the middle class is horizontal and its \ufb01tted values\nare never dominant! Thus, observations from class 2 are classi\ufb01ed either\nas class 1 or class 3. The right panel uses quadratic regression rather than\nlinear regression. For this simple example a quadratic rather than linear\n\ufb01t (for the middle class at least) would solve the problem. However, it\ncan be seen that if there were four rather than three classes lined up like\nthis, a quadratic would not come down fast enough, and a cubic would\nbe needed as well. A loose but general rule is that if K \u22653 classes are\nlined up, polynomial terms up to degree K \u22121 might be needed to resolve\nthem. Note also that these are polynomials along the derived direction"
+    },
+    {
+      "id": 8873,
+      "page": 124,
+      "seq": 96,
+      "text": "2\n2\n2\n2\n2\n2\n2\n2\n2\n22\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2 22 2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2 222\n2\n22 2 2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2 2\n2\n22\n2\n2\n2\n2\n2\n2\n222\n2 2\n2\n22\n2\n2\n22\n22\n2\n2\n22\n2\n22\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2 2\n2\n2\n22\n2\n2\n2\n2\n2\n2\n2 2\n2\n2\n2\n2\n2\n2\n2\n2 22\n2\n2\n2\n2 2\n2\n2\n2\n2\n2\n2\n2\n2\n2"
+    },
+    {
+      "id": 9185,
+      "page": 124,
+      "seq": 408,
+      "text": "passing through the centroids, which can have arbitrary orientation. So in\np-dimensional input space, one would need general polynomial terms and\ncross-products of total degree K \u22121, O(pK\u22121) terms in all, to resolve such\nworst-case scenarios.\nThe example is extreme, but for large K and small p such maskings\nnaturally occur. As a more realistic illustration, Figure 4.4 is a projection\nof the training data for a vowel recognition problem onto an informative\ntwo-dimensional subspace. There are K = 11 classes in p = 10 dimensions.\nThis is a di\ufb03cult classi\ufb01cation problem, and the best methods achieve\naround 40% errors on the test data. The main point here is summarized in\nTable 4.1; linear regression has an error rate of 67%, while a close relative,\nlinear discriminant analysis, has an error rate of 56%. It seems that masking\nhas hurt in this case. While all the other methods in this chapter are based\non linear functions of x as well, they use them in such a way that avoids\nthis masking problem."
+    },
+    {
+      "id": 9187,
+      "page": 124,
+      "seq": 410,
+      "text": "Decision theory for classi\ufb01cation (Section 2.4) tells us that we need to know\nthe class posteriors Pr(G|X) for optimal classi\ufb01cation. Suppose fk(x) is\nthe class-conditional density of X in class G = k, and let \u03c0k be the prior\nprobability of class k, with \tK\nk=1 \u03c0k = 1. A simple application of Bayes"
+    },
+    {
+      "id": 9318,
+      "page": 125,
+      "seq": 130,
+      "text": "Technique\nError Rates\nTraining\nTest\nLinear regression\n0.48\n0.67\nLinear discriminant analysis\n0.32\n0.56\nQuadratic discriminant analysis\n0.01\n0.53\nLogistic regression\n0.22\n0.51"
+    },
+    {
+      "id": 9322,
+      "page": 126,
+      "seq": 3,
+      "text": "We see that in terms of ability to classify, having the fk(x) is almost equiv-\nalent to having the quantity Pr(G = k|X = x).\nMany techniques are based on models for the class densities:"
+    },
+    {
+      "id": 9323,
+      "page": 126,
+      "seq": 4,
+      "text": "\u2022 linear and quadratic discriminant analysis use Gaussian densities;"
+    },
+    {
+      "id": 9324,
+      "page": 126,
+      "seq": 5,
+      "text": "\u2022 more \ufb02exible mixtures of Gaussians allow for nonlinear decision bound-\naries (Section 6.8);"
+    },
+    {
+      "id": 9325,
+      "page": 126,
+      "seq": 6,
+      "text": "\u2022 general nonparametric density estimates for each class density allow\nthe most \ufb02exibility (Section 6.6.2);"
+    },
+    {
+      "id": 9326,
+      "page": 126,
+      "seq": 7,
+      "text": "\u2022 Naive Bayes models are a variant of the previous case, and assume\nthat each of the class densities are products of marginal densities;\nthat is, they assume that the inputs are conditionally independent in\neach class (Section 6.6.3)."
+    },
+    {
+      "id": 9327,
+      "page": 126,
+      "seq": 8,
+      "text": "Suppose that we model each class density as multivariate Gaussian"
+    },
+    {
+      "id": 9330,
+      "page": 126,
+      "seq": 11,
+      "text": "Linear discriminant analysis (LDA) arises in the special case when we\nassume that the classes have a common covariance matrix \u03a3k = \u03a3 \u2200k. In\ncomparing two classes k and \u2113, it is su\ufb03cient to look at the log-ratio, and\nwe see that"
+    },
+    {
+      "id": 9340,
+      "page": 126,
+      "seq": 21,
+      "text": "an equation linear in x. The equal covariance matrices cause the normal-\nization factors to cancel, as well as the quadratic part in the exponents.\nThis linear log-odds function implies that the decision boundary between\nclasses k and \u2113\u2014the set where Pr(G = k|X = x) = Pr(G = \u2113|X = x)\u2014is\nlinear in x; in p dimensions a hyperplane. This is of course true for any pair\nof classes, so all the decision boundaries are linear. If we divide IRp into\nregions that are classi\ufb01ed as class 1, class 2, etc., these regions will be sep-\narated by hyperplanes. Figure 4.5 (left panel) shows an idealized example\nwith three classes and p = 2. Here the data do arise from three Gaus-\nsian distributions with a common covariance matrix. We have included in"
+    },
+    {
+      "id": 9418,
+      "page": 127,
+      "seq": 77,
+      "text": "the \ufb01gure the contours corresponding to 95% highest probability density,\nas well as the class centroids. Notice that the decision boundaries are not\nthe perpendicular bisectors of the line segments joining the centroids. This\nwould be the case if the covariance \u03a3 were spherical \u03c32I, and the class\npriors were equal. From (4.9) we see that the linear discriminant functions"
+    },
+    {
+      "id": 9421,
+      "page": 127,
+      "seq": 80,
+      "text": "are an equivalent description of the decision rule, with G(x) = argmaxk\u03b4k(x).\nIn practice we do not know the parameters of the Gaussian distributions,\nand will need to estimate them using our training data:"
+    },
+    {
+      "id": 9422,
+      "page": 127,
+      "seq": 81,
+      "text": "\u2022 \u02c6\u03c0k = Nk/N, where Nk is the number of class-k observations;"
+    },
+    {
+      "id": 9431,
+      "page": 128,
+      "seq": 1,
+      "text": "and class 1 otherwise. Suppose we code the targets in the two classes as +1\nand \u22121, respectively. It is easy to show that the coe\ufb03cient vector from least\nsquares is proportional to the LDA direction given in (4.11) (Exercise 4.2).\n[In fact, this correspondence occurs for any (distinct) coding of the targets;\nsee Exercise 4.2]. However unless N1 = N2 the intercepts are di\ufb00erent and\nhence the resulting decision rules are di\ufb00erent.\nSince this derivation of the LDA direction via least squares does not use a\nGaussian assumption for the features, its applicability extends beyond the\nrealm of Gaussian data. However the derivation of the particular intercept\nor cut-point given in (4.11) does require Gaussian data. Thus it makes\nsense to instead choose the cut-point that empirically minimizes training\nerror for a given dataset. This is something we have found to work well in\npractice, but have not seen it mentioned in the literature.\nWith more than two classes, LDA is not the same as linear regression of\nthe class indicator matrix, and it avoids the masking problems associated\nwith that approach (Hastie et al., 1994). A correspondence between regres-\nsion and LDA can be established through the notion of optimal scoring,\ndiscussed in Section 12.5.\nGetting back to the general discriminant problem (4.8), if the \u03a3k are\nnot assumed to be equal, then the convenient cancellations in (4.9) do not\noccur; in particular the pieces quadratic in x remain. We then get quadratic\ndiscriminant functions (QDA),"
+    },
+    {
+      "id": 9435,
+      "page": 128,
+      "seq": 5,
+      "text": "The decision boundary between each pair of classes k and \u2113is described by\na quadratic equation {x : \u03b4k(x) = \u03b4\u2113(x)}.\nFigure 4.6 shows an example (from Figure 4.1 on page 103) where the\nthree classes are Gaussian mixtures (Section 6.8) and the decision bound-\naries are approximated by quadratic equations in x. Here we illustrate\ntwo popular ways of \ufb01tting these quadratic boundaries. The right plot\nuses QDA as described here, while the left plot uses LDA in the enlarged\n\ufb01ve-dimensional quadratic polynomial space. The di\ufb00erences are generally\nsmall; QDA is the preferred approach, with the LDA method a convenient\nsubstitute 2.\nThe estimates for QDA are similar to those for LDA, except that separate\ncovariance matrices must be estimated for each class. When p is large this\ncan mean a dramatic increase in parameters. Since the decision boundaries\nare functions of the parameters of the densities, counting the number of\nparameters must be done with care. For LDA, it seems there are (K \u2212\n1) \u00d7 (p + 1) parameters, since we only need the di\ufb00erences \u03b4k(x) \u2212\u03b4K(x)"
+    },
+    {
+      "id": 9436,
+      "page": 128,
+      "seq": 6,
+      "text": "2For this \ufb01gure and many similar \ufb01gures in the book we compute the decision bound-\naries by an exhaustive contouring method. We compute the decision rule on a \ufb01ne lattice\nof points, and then use contouring algorithms to compute the boundaries."
+    },
+    {
+      "id": 10377,
+      "page": 129,
+      "seq": 940,
+      "text": "between the discriminant functions where K is some pre-chosen class (here\nwe have chosen the last), and each di\ufb00erence requires p + 1 parameters3.\nLikewise for QDA there will be (K \u22121) \u00d7 {p(p + 3)/2 + 1} parameters.\nBoth LDA and QDA perform well on an amazingly large and diverse set\nof classi\ufb01cation tasks. For example, in the STATLOG project (Michie et\nal., 1994) LDA was among the top three classi\ufb01ers for 7 of the 22 datasets,\nQDA among the top three for four datasets, and one of the pair were in the\ntop three for 10 datasets. Both techniques are widely used, and entire books\nare devoted to LDA. It seems that whatever exotic tools are the rage of the\nday, we should always have available these two simple tools. The question\narises why LDA and QDA have such a good track record. The reason is not\nlikely to be that the data are approximately Gaussian, and in addition for\nLDA that the covariances are approximately equal. More likely a reason is\nthat the data can only support simple decision boundaries such as linear or\nquadratic, and the estimates provided via the Gaussian models are stable.\nThis is a bias variance tradeo\ufb00\u2014we can put up with the bias of a linear\ndecision boundary because it can be estimated with much lower variance\nthan more exotic alternatives. This argument is less believable for QDA,\nsince it can have many parameters itself, although perhaps fewer than the\nnon-parametric alternatives."
+    },
+    {
+      "id": 10378,
+      "page": 129,
+      "seq": 941,
+      "text": "3Although we \ufb01t the covariance matrix \u02c6\u03a3 to compute the LDA discriminant functions,\na much reduced function of it is all that is required to estimate the O(p) parameters\nneeded to compute the decision boundaries."
+    },
+    {
+      "id": 10383,
+      "page": 130,
+      "seq": 4,
+      "text": "\u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022"
+    },
+    {
+      "id": 10384,
+      "page": 130,
+      "seq": 5,
+      "text": "\u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022"
+    },
+    {
+      "id": 10386,
+      "page": 130,
+      "seq": 7,
+      "text": "Regularized Discriminant Analysis on the Vowel Data"
+    },
+    {
+      "id": 10391,
+      "page": 130,
+      "seq": 12,
+      "text": "Friedman (1989) proposed a compromise between LDA and QDA, which\nallows one to shrink the separate covariances of QDA toward a common\ncovariance as in LDA. These methods are very similar in \ufb02avor to ridge\nregression. The regularized covariance matrices have the form"
+    },
+    {
+      "id": 10393,
+      "page": 130,
+      "seq": 14,
+      "text": "where \u02c6\u03a3 is the pooled covariance matrix as used in LDA. Here \u03b1 \u2208[0, 1]\nallows a continuum of models between LDA and QDA, and needs to be\nspeci\ufb01ed. In practice \u03b1 can be chosen based on the performance of the\nmodel on validation data, or by cross-validation.\nFigure 4.7 shows the results of RDA applied to the vowel data. Both\nthe training and test error improve with increasing \u03b1, although the test\nerror increases sharply after \u03b1 = 0.9. The large discrepancy between the\ntraining and test error is partly due to the fact that there are many repeat\nmeasurements on a small number of individuals, di\ufb00erent in the training\nand test set.\nSimilar modi\ufb01cations allow \u02c6\u03a3 itself to be shrunk toward the scalar\ncovariance,\n\u02c6\u03a3(\u03b3) = \u03b3 \u02c6\u03a3 + (1 \u2212\u03b3)\u02c6\u03c32I\n(4.14)"
+    },
+    {
+      "id": 10394,
+      "page": 130,
+      "seq": 15,
+      "text": "for \u03b3 \u2208[0, 1]. Replacing \u02c6\u03a3 in (4.13) by \u02c6\u03a3(\u03b3) leads to a more general family\nof covariances \u02c6\u03a3(\u03b1, \u03b3) indexed by a pair of parameters.\nIn Chapter 12, we discuss other regularized versions of LDA, which are\nmore suitable when the data arise from digitized analog signals and images."
+    },
+    {
+      "id": 10396,
+      "page": 131,
+      "seq": 1,
+      "text": "In these situations the features are high-dimensional and correlated, and the\nLDA coe\ufb03cients can be regularized to be smooth or sparse in the original\ndomain of the signal. This leads to better generalization and allows for\neasier interpretation of the coe\ufb03cients. In Chapter 18 we also deal with\nvery high-dimensional problems, where for example the features are gene-\nexpression measurements in microarray studies. There the methods focus\non the case \u03b3 = 0 in (4.14), and other severely regularized versions of LDA."
+    },
+    {
+      "id": 10398,
+      "page": 131,
+      "seq": 3,
+      "text": "As a lead-in to the next topic, we brie\ufb02y digress on the computations\nrequired for LDA and especially QDA. Their computations are simpli\ufb01ed\nby diagonalizing \u02c6\u03a3 or \u02c6\u03a3k. For the latter, suppose we compute the eigen-\ndecomposition for each \u02c6\u03a3k = UkDkUT\nk , where Uk is p \u00d7 p orthonormal,\nand Dk a diagonal matrix of positive eigenvalues dk\u2113. Then the ingredients\nfor \u03b4k(x) (4.12) are"
+    },
+    {
+      "id": 10399,
+      "page": 131,
+      "seq": 4,
+      "text": "\u2022 (x \u2212\u02c6\u03bck)T \u02c6\u03a3\n\u22121\nk (x \u2212\u02c6\u03bck) = [UT\nk (x \u2212\u02c6\u03bck)]T D\u22121\nk [UT\nk (x \u2212\u02c6\u03bck)];"
+    },
+    {
+      "id": 10401,
+      "page": 131,
+      "seq": 6,
+      "text": "In light of the computational steps outlined above, the LDA classi\ufb01er\ncan be implemented by the following pair of steps:"
+    },
+    {
+      "id": 10402,
+      "page": 131,
+      "seq": 7,
+      "text": "\u2022 Sphere the data with respect to the common covariance estimate \u02c6\u03a3:\nX\u2217\u2190D\u22121"
+    },
+    {
+      "id": 10403,
+      "page": 131,
+      "seq": 8,
+      "text": "2 UT X, where \u02c6\u03a3 = UDUT . The common covariance esti-\nmate of X\u2217will now be the identity."
+    },
+    {
+      "id": 10404,
+      "page": 131,
+      "seq": 9,
+      "text": "\u2022 Classify to the closest class centroid in the transformed space, modulo\nthe e\ufb00ect of the class prior probabilities \u03c0k."
+    },
+    {
+      "id": 10406,
+      "page": 131,
+      "seq": 11,
+      "text": "So far we have discussed LDA as a restricted Gaussian classi\ufb01er. Part of\nits popularity is due to an additional restriction that allows us to view\ninformative low-dimensional projections of the data.\nThe K centroids in p-dimensional input space lie in an a\ufb03ne subspace\nof dimension \u2264K \u22121, and if p is much larger than K, this will be a con-\nsiderable drop in dimension. Moreover, in locating the closest centroid, we\ncan ignore distances orthogonal to this subspace, since they will contribute\nequally to each class. Thus we might just as well project the X\u2217onto this\ncentroid-spanning subspace HK\u22121, and make distance comparisons there.\nThus there is a fundamental dimension reduction in LDA, namely, that we\nneed only consider the data in a subspace of dimension at most K \u22121."
+    },
+    {
+      "id": 10408,
+      "page": 132,
+      "seq": 1,
+      "text": "If K = 3, for instance, this could allow us to view the data in a two-\ndimensional plot, color-coding the classes. In doing so we would not have\nrelinquished any of the information needed for LDA classi\ufb01cation.\nWhat if K > 3? We might then ask for a L < K\u22121 dimensional subspace\nHL \u2286HK\u22121 optimal for LDA in some sense. Fisher de\ufb01ned optimal to\nmean that the projected centroids were spread out as much as possible in\nterms of variance. This amounts to \ufb01nding principal component subspaces\nof the centroids themselves (principal components are described brie\ufb02y in\nSection 3.5.1, and in more detail in Section 14.5.1). Figure 4.4 shows such an\noptimal two-dimensional subspace for the vowel data. Here there are eleven\nclasses, each a di\ufb00erent vowel sound, in a ten-dimensional input space. The\ncentroids require the full space in this case, since K \u22121 = p, but we have\nshown an optimal two-dimensional subspace. The dimensions are ordered,\nso we can compute additional dimensions in sequence. Figure 4.8 shows four\nadditional pairs of coordinates, also known as canonical or discriminant\nvariables.\nIn summary then, \ufb01nding the sequences of optimal subspaces\nfor LDA involves the following steps:"
+    },
+    {
+      "id": 10409,
+      "page": 132,
+      "seq": 2,
+      "text": "\u2022 compute the K \u00d7 p matrix of class centroids M and the common\ncovariance matrix W (for within-class covariance);"
+    },
+    {
+      "id": 10410,
+      "page": 132,
+      "seq": 3,
+      "text": "\u2022 compute M\u2217= MW\u22121\n2 using the eigen-decomposition of W;"
+    },
+    {
+      "id": 10411,
+      "page": 132,
+      "seq": 4,
+      "text": "\u2022 compute B\u2217, the covariance matrix of M\u2217(B for between-class covari-\nance), and its eigen-decomposition B\u2217= V\u2217DBV\u2217T . The columns\nv\u2217\n\u2113of V\u2217in sequence from \ufb01rst to last de\ufb01ne the coordinates of the\noptimal subspaces."
+    },
+    {
+      "id": 10412,
+      "page": 132,
+      "seq": 5,
+      "text": "Combining all these operations the \u2113th discriminant variable is given by\nZ\u2113= vT\n\u2113X with v\u2113= W\u22121"
+    },
+    {
+      "id": 10413,
+      "page": 132,
+      "seq": 6,
+      "text": "2 v\u2217\n\u2113.\nFisher arrived at this decomposition via a di\ufb00erent route, without refer-\nring to Gaussian distributions at all. He posed the problem:"
+    },
+    {
+      "id": 10414,
+      "page": 132,
+      "seq": 7,
+      "text": "Find the linear combination Z = aT X such that the between-\nclass variance is maximized relative to the within-class variance."
+    },
+    {
+      "id": 10415,
+      "page": 132,
+      "seq": 8,
+      "text": "Again, the between class variance is the variance of the class means of\nZ, and the within class variance is the pooled variance about the means.\nFigure 4.9 shows why this criterion makes sense. Although the direction\njoining the centroids separates the means as much as possible (i.e., max-\nimizes the between-class variance), there is considerable overlap between\nthe projected classes due to the nature of the covariances. By taking the\ncovariance into account as well, a direction with minimum overlap can be\nfound.\nThe between-class variance of Z is aT Ba and the within-class variance\naT Wa, where W is de\ufb01ned earlier, and B is the covariance matrix of the\nclass centroid matrix M. Note that B + W = T, where T is the total\ncovariance matrix of X, ignoring class information."
+    },
+    {
+      "id": 11141,
+      "page": 134,
+      "seq": 6,
+      "text": "Fisher\u2019s problem therefore amounts to maximizing the Rayleigh quotient,"
+    },
+    {
+      "id": 11143,
+      "page": 134,
+      "seq": 8,
+      "text": "or equivalently\nmax\na\naT Ba subject to aT Wa = 1.\n(4.16)"
+    },
+    {
+      "id": 11144,
+      "page": 134,
+      "seq": 9,
+      "text": "This is a generalized eigenvalue problem, with a given by the largest\neigenvalue of W\u22121B. It is not hard to show (Exercise 4.1) that the optimal\na1 is identical to v1 de\ufb01ned above. Similarly one can \ufb01nd the next direction\na2, orthogonal in W to a1, such that aT\n2 Ba2/aT\n2 Wa2 is maximized; the\nsolution is a2 = v2, and so on. The a\u2113are referred to as discriminant\ncoordinates, not to be confused with discriminant functions. They are also\nreferred to as canonical variates, since an alternative derivation of these\nresults is through a canonical correlation analysis of the indicator response\nmatrix Y on the predictor matrix X. This line is pursued in Section 12.5.\nTo summarize the developments so far:"
+    },
+    {
+      "id": 11145,
+      "page": 134,
+      "seq": 10,
+      "text": "\u2022 Gaussian classi\ufb01cation with common covariances leads to linear deci-\nsion boundaries. Classi\ufb01cation can be achieved by sphering the data\nwith respect to W, and classifying to the closest centroid (modulo\nlog \u03c0k) in the sphered space."
+    },
+    {
+      "id": 11146,
+      "page": 134,
+      "seq": 11,
+      "text": "\u2022 Since only the relative distances to the centroids count, one can con-\n\ufb01ne the data to the subspace spanned by the centroids in the sphered\nspace."
+    },
+    {
+      "id": 11147,
+      "page": 134,
+      "seq": 12,
+      "text": "\u2022 This subspace can be further decomposed into successively optimal\nsubspaces in term of centroid separation. This decomposition is iden-\ntical to the decomposition due to Fisher."
+    },
+    {
+      "id": 11161,
+      "page": 135,
+      "seq": 13,
+      "text": "The reduced subspaces have been motivated as a data reduction (for\nviewing) tool. Can they also be used for classi\ufb01cation, and what is the\nrationale? Clearly they can, as in our original derivation; we simply limit\nthe distance-to-centroid calculations to the chosen subspace. One can show\nthat this is a Gaussian classi\ufb01cation rule with the additional restriction\nthat the centroids of the Gaussians lie in a L-dimensional subspace of IRp.\nFitting such a model by maximum likelihood, and then constructing the\nposterior probabilities using Bayes\u2019 theorem amounts to the classi\ufb01cation\nrule described above (Exercise 4.8).\nGaussian classi\ufb01cation dictates the log \u03c0k correction factor in the dis-\ntance calculation. The reason for this correction can be seen in Figure 4.9.\nThe misclassi\ufb01cation rate is based on the area of overlap between the two\ndensities. If the \u03c0k are equal (implicit in that \ufb01gure), then the optimal\ncut-point is midway between the projected means. If the \u03c0k are not equal,\nmoving the cut-point toward the smaller class will improve the error rate.\nAs mentioned earlier for two classes, one can derive the linear rule using\nLDA (or any other method), and then choose the cut-point to minimize\nmisclassi\ufb01cation error over the training data.\nAs an example of the bene\ufb01t of the reduced-rank restriction, we return\nto the vowel data. There are 11 classes and 10 variables, and hence 10\npossible dimensions for the classi\ufb01er. We can compute the training and\ntest error in each of these hierarchical subspaces; Figure 4.10 shows the\nresults. Figure 4.11 shows the decision boundaries for the classi\ufb01er based\non the two-dimensional LDA solution.\nThere is a close connection between Fisher\u2019s reduced rank discriminant\nanalysis and regression of an indicator response matrix. It turns out that"
+    },
+    {
+      "id": 11643,
+      "page": 137,
+      "seq": 1,
+      "text": "LDA amounts to the regression followed by an eigen-decomposition of\n\u02c6YT Y. In the case of two classes, there is a single discriminant variable\nthat is identical up to a scalar multiplication to either of the columns of \u02c6Y.\nThese connections are developed in Chapter 12. A related fact is that if one\ntransforms the original predictors X to \u02c6Y, then LDA using \u02c6Y is identical\nto LDA in the original space (Exercise 4.3)."
+    },
+    {
+      "id": 11645,
+      "page": 137,
+      "seq": 3,
+      "text": "The logistic regression model arises from the desire to model the posterior\nprobabilities of the K classes via linear functions in x, while at the same\ntime ensuring that they sum to one and remain in [0, 1]. The model has\nthe form"
+    },
+    {
+      "id": 11654,
+      "page": 137,
+      "seq": 12,
+      "text": "The model is speci\ufb01ed in terms of K \u22121 log-odds or logit transformations\n(re\ufb02ecting the constraint that the probabilities sum to one). Although the\nmodel uses the last class as the denominator in the odds-ratios, the choice\nof denominator is arbitrary in that the estimates are equivariant under this\nchoice. A simple calculation shows that"
+    },
+    {
+      "id": 11656,
+      "page": 137,
+      "seq": 14,
+      "text": "1 + \tK\u22121\n\u2113=1 exp(\u03b2\u21130 + \u03b2T\n\u2113x)\n, k = 1, . . . , K \u22121,"
+    },
+    {
+      "id": 11659,
+      "page": 137,
+      "seq": 17,
+      "text": "and they clearly sum to one. To emphasize the dependence on the entire pa-\nrameter set \u03b8 = {\u03b210, \u03b2T\n1 , . . . , \u03b2(K\u22121)0, \u03b2T\nK\u22121}, we denote the probabilities\nPr(G = k|X = x) = pk(x; \u03b8).\nWhen K = 2, this model is especially simple, since there is only a single\nlinear function. It is widely used in biostatistical applications where binary\nresponses (two classes) occur quite frequently. For example, patients survive\nor die, have heart disease or not, or a condition is present or absent."
+    },
+    {
+      "id": 11662,
+      "page": 138,
+      "seq": 2,
+      "text": "Logistic regression models are usually \ufb01t by maximum likelihood, using the\nconditional likelihood of G given X. Since Pr(G|X) completely speci\ufb01es the\nconditional distribution, the multinomial distribution is appropriate. The\nlog-likelihood for N observations is"
+    },
+    {
+      "id": 11666,
+      "page": 138,
+      "seq": 6,
+      "text": "where pk(xi; \u03b8) = Pr(G = k|X = xi; \u03b8).\nWe discuss in detail the two-class case, since the algorithms simplify\nconsiderably. It is convenient to code the two-class gi via a 0/1 response yi,\nwhere yi = 1 when gi = 1, and yi = 0 when gi = 2. Let p1(x; \u03b8) = p(x; \u03b8),\nand p2(x; \u03b8) = 1 \u2212p(x; \u03b8). The log-likelihood can be written"
+    },
+    {
+      "id": 11675,
+      "page": 138,
+      "seq": 15,
+      "text": "Here \u03b2 = {\u03b210, \u03b21}, and we assume that the vector of inputs xi includes\nthe constant term 1 to accommodate the intercept.\nTo maximize the log-likelihood, we set its derivatives to zero. These score\nequations are\n\u2202\u2113(\u03b2)"
+    },
+    {
+      "id": 11679,
+      "page": 138,
+      "seq": 19,
+      "text": "which are p+1 equations nonlinear in \u03b2. Notice that since the \ufb01rst compo-\nnent of xi is 1, the \ufb01rst score equation speci\ufb01es that \tN\ni=1 yi = \tN\ni=1 p(xi; \u03b2);\nthe expected number of class ones matches the observed number (and hence\nalso class twos.)\nTo solve the score equations (4.21), we use the Newton\u2013Raphson algo-\nrithm, which requires the second-derivative or Hessian matrix"
+    },
+    {
+      "id": 11690,
+      "page": 139,
+      "seq": 1,
+      "text": "It is convenient to write the score and Hessian in matrix notation. Let\ny denote the vector of yi values, X the N \u00d7 (p + 1) matrix of xi values,\np the vector of \ufb01tted probabilities with ith element p(xi; \u03b2old) and W a\nN \u00d7N diagonal matrix of weights with ith diagonal element p(xi; \u03b2old)(1\u2212\np(xi; \u03b2old)). Then we have"
+    },
+    {
+      "id": 11695,
+      "page": 139,
+      "seq": 6,
+      "text": "\u03b2new\n=\n\u03b2old + (XT WX)\u22121XT (y \u2212p)\n=\n(XT WX)\u22121XT W\n\u0005\nX\u03b2old + W\u22121(y \u2212p)\n\u0006"
+    },
+    {
+      "id": 11697,
+      "page": 139,
+      "seq": 8,
+      "text": "In the second and third line we have re-expressed the Newton step as a\nweighted least squares step, with the response"
+    },
+    {
+      "id": 11699,
+      "page": 139,
+      "seq": 10,
+      "text": "sometimes known as the adjusted response. These equations get solved re-\npeatedly, since at each iteration p changes, and hence so does W and z.\nThis algorithm is referred to as iteratively reweighted least squares or IRLS,\nsince each iteration solves the weighted least squares problem:"
+    },
+    {
+      "id": 11701,
+      "page": 139,
+      "seq": 12,
+      "text": "It seems that \u03b2 = 0 is a good starting value for the iterative procedure,\nalthough convergence is never guaranteed. Typically the algorithm does\nconverge, since the log-likelihood is concave, but overshooting can occur.\nIn the rare cases that the log-likelihood decreases, step size halving will\nguarantee convergence.\nFor the multiclass case (K \u22653) the Newton algorithm can also be ex-\npressed as an iteratively reweighted least squares algorithm, but with a\nvector of K \u22121 responses and a nondiagonal weight matrix per observation.\nThe latter precludes any simpli\ufb01ed algorithms, and in this case it is numer-\nically more convenient to work with the expanded vector \u03b8 directly (Ex-\nercise 4.4). Alternatively coordinate-descent methods (Section 3.8.6) can\nbe used to maximize the log-likelihood e\ufb03ciently. The R package glmnet\n(Friedman et al., 2008a) can \ufb01t very large logistic regression problems ef-\n\ufb01ciently, both in N and p. Although designed to \ufb01t regularized models,\noptions allow for unregularized \ufb01ts.\nLogistic regression models are used mostly as a data analysis and infer-\nence tool, where the goal is to understand the role of the input variables"
+    },
+    {
+      "id": 11704,
+      "page": 140,
+      "seq": 2,
+      "text": "Coe\ufb03cient\nStd. Error\nZ Score\n(Intercept)\n\u22124.130\n0.964\n\u22124.285\nsbp\n0.006\n0.006\n1.023\ntobacco\n0.080\n0.026\n3.034\nldl\n0.185\n0.057\n3.219\nfamhist\n0.939\n0.225\n4.178\nobesity\n-0.035\n0.029\n\u22121.187\nalcohol\n0.001\n0.004\n0.136\nage\n0.043\n0.010\n4.184"
+    },
+    {
+      "id": 11705,
+      "page": 140,
+      "seq": 3,
+      "text": "in explaining the outcome. Typically many models are \ufb01t in a search for a\nparsimonious model involving a subset of the variables, possibly with some\ninteractions terms. The following example illustrates some of the issues\ninvolved."
+    },
+    {
+      "id": 11707,
+      "page": 140,
+      "seq": 5,
+      "text": "Here we present an analysis of binary data to illustrate the traditional\nstatistical use of the logistic regression model. The data in Figure 4.12 are a\nsubset of the Coronary Risk-Factor Study (CORIS) baseline survey, carried\nout in three rural areas of the Western Cape, South Africa (Rousseauw et\nal., 1983). The aim of the study was to establish the intensity of ischemic\nheart disease risk factors in that high-incidence region. The data represent\nwhite males between 15 and 64, and the response variable is the presence or\nabsence of myocardial infarction (MI) at the time of the survey (the overall\nprevalence of MI was 5.1% in this region). There are 160 cases in our data\nset, and a sample of 302 controls. These data are described in more detail\nin Hastie and Tibshirani (1987).\nWe \ufb01t a logistic-regression model by maximum likelihood, giving the\nresults shown in Table 4.2. This summary includes Z scores for each of the\ncoe\ufb03cients in the model (coe\ufb03cients divided by their standard errors); a\nnonsigni\ufb01cant Z score suggests a coe\ufb03cient can be dropped from the model.\nEach of these correspond formally to a test of the null hypothesis that the\ncoe\ufb03cient in question is zero, while all the others are not (also known as\nthe Wald test). A Z score greater than approximately 2 in absolute value\nis signi\ufb01cant at the 5% level.\nThere are some surprises in this table of coe\ufb03cients, which must be in-\nterpreted with caution. Systolic blood pressure (sbp) is not signi\ufb01cant! Nor\nis obesity, and its sign is negative. This confusion is a result of the corre-\nlation between the set of predictors. On their own, both sbp and obesity\nare signi\ufb01cant, and with positive sign. However, in the presence of many"
+    },
+    {
+      "id": 12899,
+      "page": 141,
+      "seq": 1191,
+      "text": "o\no\no oo\no\no\no\no\no\no oooo\noo\noo\no\noo\noo\no\no o\no\no\no\no o\no\no\no\no\noo"
+    },
+    {
+      "id": 19194,
+      "page": 142,
+      "seq": 2,
+      "text": "Coe\ufb03cient\nStd. Error\nZ score\n(Intercept)\n\u22124.204\n0.498\n\u22128.45\ntobacco\n0.081\n0.026\n3.16\nldl\n0.168\n0.054\n3.09\nfamhist\n0.924\n0.223\n4.14\nage\n0.044\n0.010\n4.52"
+    },
+    {
+      "id": 19195,
+      "page": 142,
+      "seq": 3,
+      "text": "other correlated variables, they are no longer needed (and can even get a\nnegative sign).\nAt this stage the analyst might do some model selection; \ufb01nd a subset\nof the variables that are su\ufb03cient for explaining their joint e\ufb00ect on the\nprevalence of chd. One way to proceed by is to drop the least signi\ufb01cant co-\ne\ufb03cient, and re\ufb01t the model. This is done repeatedly until no further terms\ncan be dropped from the model. This gave the model shown in Table 4.3.\nA better but more time-consuming strategy is to re\ufb01t each of the models\nwith one variable removed, and then perform an analysis of deviance to\ndecide which variable to exclude. The residual deviance of a \ufb01tted model\nis minus twice its log-likelihood, and the deviance between two models is\nthe di\ufb00erence of their individual residual deviances (in analogy to sums-of-\nsquares). This strategy gave the same \ufb01nal model as above.\nHow does one interpret a coe\ufb03cient of 0.081 (Std. Error = 0.026) for\ntobacco, for example? Tobacco is measured in total lifetime usage in kilo-\ngrams, with a median of 1.0kg for the controls and 4.1kg for the cases. Thus\nan increase of 1kg in lifetime tobacco usage accounts for an increase in the\nodds of coronary heart disease of exp(0.081) = 1.084 or 8.4%. Incorporat-\ning the standard error we get an approximate 95% con\ufb01dence interval of\nexp(0.081 \u00b1 2 \u00d7 0.026) = (1.03, 1.14).\nWe return to these data in Chapter 5, where we see that some of the\nvariables have nonlinear e\ufb00ects, and when modeled appropriately, are not\nexcluded from the model."
+    },
+    {
+      "id": 19197,
+      "page": 142,
+      "seq": 5,
+      "text": "The maximum-likelihood parameter estimates \u02c6\u03b2 satisfy a self-consistency\nrelationship: they are the coe\ufb03cients of a weighted least squares \ufb01t, where\nthe responses are"
+    },
+    {
+      "id": 19201,
+      "page": 143,
+      "seq": 1,
+      "text": "and the weights are wi = \u02c6pi(1\u2212\u02c6pi), both depending on \u02c6\u03b2 itself. Apart from\nproviding a convenient algorithm, this connection with least squares has\nmore to o\ufb00er:"
+    },
+    {
+      "id": 19202,
+      "page": 143,
+      "seq": 2,
+      "text": "\u2022 The weighted residual sum-of-squares is the familiar Pearson chi-\nsquare statistic\nN\n\u0002"
+    },
+    {
+      "id": 19207,
+      "page": 143,
+      "seq": 7,
+      "text": "\u2022 Asymptotic likelihood theory says that if the model is correct, then\n\u02c6\u03b2 is consistent (i.e., converges to the true \u03b2)."
+    },
+    {
+      "id": 19208,
+      "page": 143,
+      "seq": 8,
+      "text": "\u2022 A central limit theorem then shows that the distribution of \u02c6\u03b2 con-\nverges to N(\u03b2, (XT WX)\u22121). This and other asymptotics can be de-\nrived directly from the weighted least squares \ufb01t by mimicking normal\ntheory inference."
+    },
+    {
+      "id": 19209,
+      "page": 143,
+      "seq": 9,
+      "text": "\u2022 Model building can be costly for logistic regression models, because\neach model \ufb01tted requires iteration. Popular shortcuts are the Rao\nscore test which tests for inclusion of a term, and the Wald test which\ncan be used to test for exclusion of a term. Neither of these require\niterative \ufb01tting, and are based on the maximum-likelihood \ufb01t of the\ncurrent model. It turns out that both of these amount to adding\nor dropping a term from the weighted least squares \ufb01t, using the\nsame weights. Such computations can be done e\ufb03ciently, without\nrecomputing the entire weighted least squares \ufb01t."
+    },
+    {
+      "id": 19210,
+      "page": 143,
+      "seq": 10,
+      "text": "Software implementations can take advantage of these connections. For\nexample, the generalized linear modeling software in R (which includes lo-\ngistic regression as part of the binomial family of models) exploits them\nfully. GLM (generalized linear model) objects can be treated as linear model\nobjects, and all the tools available for linear models can be applied auto-\nmatically."
+    },
+    {
+      "id": 19212,
+      "page": 143,
+      "seq": 12,
+      "text": "The L1 penalty used in the lasso (Section 3.4.2) can be used for variable\nselection and shrinkage with any linear regression model. For logistic re-\ngression, we would maximize a penalized version of (4.20):"
+    },
+    {
+      "id": 19223,
+      "page": 143,
+      "seq": 23,
+      "text": "As with the lasso, we typically do not penalize the intercept term, and stan-\ndardize the predictors for the penalty to be meaningful. Criterion (4.31) is"
+    },
+    {
+      "id": 19225,
+      "page": 144,
+      "seq": 1,
+      "text": "concave, and a solution can be found using nonlinear programming meth-\nods (Koh et al., 2007, for example). Alternatively, using the same quadratic\napproximations that were used in the Newton algorithm in Section 4.4.1,\nwe can solve (4.31) by repeated application of a weighted lasso algorithm.\nInterestingly, the score equations [see (4.24)] for the variables with non-zero\ncoe\ufb03cients have the form"
+    },
+    {
+      "id": 19227,
+      "page": 144,
+      "seq": 3,
+      "text": "which generalizes (3.58) in Section 3.4.4; the active variables are tied in\ntheir generalized correlation with the residuals.\nPath algorithms such as LAR for lasso are more di\ufb03cult, because the\ncoe\ufb03cient pro\ufb01les are piecewise smooth rather than linear. Nevertheless,\nprogress can be made using quadratic approximations."
+    },
+    {
+      "id": 19228,
+      "page": 144,
+      "seq": 4,
+      "text": "****************************************************************************************************************************************************************************************************************************************"
+    },
+    {
+      "id": 19231,
+      "page": 144,
+      "seq": 7,
+      "text": "****************************************************************************************************************************************************************************************************************************************"
+    },
+    {
+      "id": 19232,
+      "page": 144,
+      "seq": 8,
+      "text": "****************************************************************************************************************************************************************************************************************************************"
+    },
+    {
+      "id": 19233,
+      "page": 144,
+      "seq": 9,
+      "text": "*****************************************************************************************************************************************************************************************************************************************"
+    },
+    {
+      "id": 19234,
+      "page": 144,
+      "seq": 10,
+      "text": "****************************************************************************************************************************************************************************************************************************************"
+    },
+    {
+      "id": 19235,
+      "page": 144,
+      "seq": 11,
+      "text": "****************************************************************************************************************************************************************************************************************************************\n*****************************************************************************************************************************************************************************************************************************************"
+    },
+    {
+      "id": 19248,
+      "page": 145,
+      "seq": 1,
+      "text": "(Friedman et al., 2008a) can \ufb01t coe\ufb03cient paths for very large logistic re-\ngression problems e\ufb03ciently (large in N or p). Their algorithms can exploit\nsparsity in the predictor matrix X, which allows for even larger problems.\nSee Section 18.4 for more details, and a discussion of L1-regularized multi-\nnomial models."
+    },
+    {
+      "id": 19250,
+      "page": 145,
+      "seq": 3,
+      "text": "In Section 4.3 we \ufb01nd that the log-posterior odds between class k and K\nare linear functions of x (4.9):"
+    },
+    {
+      "id": 19257,
+      "page": 145,
+      "seq": 10,
+      "text": "This linearity is a consequence of the Gaussian assumption for the class\ndensities, as well as the assumption of a common covariance matrix. The\nlinear logistic model (4.17) by construction has linear logits:"
+    },
+    {
+      "id": 19260,
+      "page": 145,
+      "seq": 13,
+      "text": "It seems that the models are the same. Although they have exactly the same\nform, the di\ufb00erence lies in the way the linear coe\ufb03cients are estimated. The\nlogistic regression model is more general, in that it makes less assumptions.\nWe can write the joint density of X and G as"
+    },
+    {
+      "id": 19262,
+      "page": 145,
+      "seq": 15,
+      "text": "where Pr(X) denotes the marginal density of the inputs X. For both LDA\nand logistic regression, the second term on the right has the logit-linear\nform"
+    },
+    {
+      "id": 19265,
+      "page": 145,
+      "seq": 18,
+      "text": "where we have again arbitrarily chosen the last class as the reference.\nThe logistic regression model leaves the marginal density of X as an arbi-\ntrary density function Pr(X), and \ufb01ts the parameters of Pr(G|X) by max-\nimizing the conditional likelihood\u2014the multinomial likelihood with proba-\nbilities the Pr(G = k|X). Although Pr(X) is totally ignored, we can think\nof this marginal density as being estimated in a fully nonparametric and\nunrestricted fashion, using the empirical distribution function which places\nmass 1/N at each observation.\nWith LDA we \ufb01t the parameters by maximizing the full log-likelihood,\nbased on the joint density"
+    },
+    {
+      "id": 19268,
+      "page": 146,
+      "seq": 1,
+      "text": "where \u03c6 is the Gaussian density function. Standard normal theory leads\neasily to the estimates \u02c6\u03bck, \u02c6\u03a3, and \u02c6\u03c0k given in Section 4.3. Since the linear\nparameters of the logistic form (4.33) are functions of the Gaussian param-\neters, we get their maximum-likelihood estimates by plugging in the corre-\nsponding estimates. However, unlike in the conditional case, the marginal\ndensity Pr(X) does play a role here. It is a mixture density"
+    },
+    {
+      "id": 19272,
+      "page": 146,
+      "seq": 5,
+      "text": "which also involves the parameters.\nWhat role can this additional component/restriction play? By relying\non the additional model assumptions, we have more information about the\nparameters, and hence can estimate them more e\ufb03ciently (lower variance).\nIf in fact the true fk(x) are Gaussian, then in the worst case ignoring this\nmarginal part of the likelihood constitutes a loss of e\ufb03ciency of about 30%\nasymptotically in the error rate (Efron, 1975). Paraphrasing: with 30%\nmore data, the conditional likelihood will do as well.\nFor example, observations far from the decision boundary (which are\ndown-weighted by logistic regression) play a role in estimating the common\ncovariance matrix. This is not all good news, because it also means that\nLDA is not robust to gross outliers.\nFrom the mixture formulation, it is clear that even observations without\nclass labels have information about the parameters. Often it is expensive\nto generate class labels, but unclassi\ufb01ed observations come cheaply. By\nrelying on strong model assumptions, such as here, we can use both types\nof information.\nThe marginal likelihood can be thought of as a regularizer, requiring\nin some sense that class densities be visible from this marginal view. For\nexample, if the data in a two-class logistic regression model can be per-\nfectly separated by a hyperplane, the maximum likelihood estimates of the\nparameters are unde\ufb01ned (i.e., in\ufb01nite; see Exercise 4.5). The LDA coe\ufb03-\ncients for the same data will be well de\ufb01ned, since the marginal likelihood\nwill not permit these degeneracies.\nIn practice these assumptions are never correct, and often some of the\ncomponents of X are qualitative variables. It is generally felt that logistic\nregression is a safer, more robust bet than the LDA model, relying on fewer\nassumptions. It is our experience that the models give very similar results,\neven when LDA is used inappropriately, such as with qualitative predictors."
+    },
+    {
+      "id": 19276,
+      "page": 147,
+      "seq": 3,
+      "text": "We have seen that linear discriminant analysis and logistic regression both\nestimate linear decision boundaries in similar but slightly di\ufb00erent ways.\nFor the rest of this chapter we describe separating hyperplane classi\ufb01ers.\nThese procedures construct linear decision boundaries that explicitly try\nto separate the data into di\ufb00erent classes as well as possible. They provide\nthe basis for support vector classi\ufb01ers, discussed in Chapter 12. The math-\nematical level of this section is somewhat higher than that of the previous\nsections.\nFigure 4.14 shows 20 data points in two classes in IR2. These data can be\nseparated by a linear boundary. Included in the \ufb01gure (blue lines) are two\nof the in\ufb01nitely many possible separating hyperplanes. The orange line is\nthe least squares solution to the problem, obtained by regressing the \u22121/1\nresponse Y on X (with intercept); the line is given by"
+    },
+    {
+      "id": 19278,
+      "page": 147,
+      "seq": 5,
+      "text": "This least squares solution does not do a perfect job in separating the\npoints, and makes one error. This is the same boundary found by LDA,\nin light of its equivalence with linear regression in the two-class case (Sec-\ntion 4.3 and Exercise 4.2).\nClassi\ufb01ers such as (4.39), that compute a linear combination of the input\nfeatures and return the sign, were called perceptrons in the engineering liter-"
+    },
+    {
+      "id": 19283,
+      "page": 148,
+      "seq": 4,
+      "text": "ature in the late 1950s (Rosenblatt, 1958). Perceptrons set the foundations\nfor the neural network models of the 1980s and 1990s.\nBefore we continue, let us digress slightly and review some vector algebra.\nFigure 4.15 depicts a hyperplane or a\ufb03ne set L de\ufb01ned by the equation\nf(x) = \u03b20 + \u03b2T x = 0; since we are in IR2 this is a line.\nHere we list some properties:"
+    },
+    {
+      "id": 19284,
+      "page": 148,
+      "seq": 5,
+      "text": "1. For any two points x1 and x2 lying in L, \u03b2T (x1 \u2212x2) = 0, and hence\n\u03b2\u2217= \u03b2/||\u03b2|| is the vector normal to the surface of L."
+    },
+    {
+      "id": 19286,
+      "page": 148,
+      "seq": 7,
+      "text": "3. The signed distance of any point x to L is given by"
+    },
+    {
+      "id": 19289,
+      "page": 148,
+      "seq": 10,
+      "text": "Hence f(x) is proportional to the signed distance from x to the hyperplane\nde\ufb01ned by f(x) = 0."
+    },
+    {
+      "id": 19291,
+      "page": 148,
+      "seq": 12,
+      "text": "The perceptron learning algorithm tries to \ufb01nd a separating hyperplane by\nminimizing the distance of misclassi\ufb01ed points to the decision boundary. If"
+    },
+    {
+      "id": 19293,
+      "page": 149,
+      "seq": 1,
+      "text": "a response yi = 1 is misclassi\ufb01ed, then xT\ni \u03b2 + \u03b20 < 0, and the opposite for\na misclassi\ufb01ed response with yi = \u22121. The goal is to minimize"
+    },
+    {
+      "id": 19296,
+      "page": 149,
+      "seq": 4,
+      "text": "where M indexes the set of misclassi\ufb01ed points. The quantity is non-\nnegative and proportional to the distance of the misclassi\ufb01ed points to\nthe decision boundary de\ufb01ned by \u03b2T x + \u03b20 = 0. The gradient (assuming\nM is \ufb01xed) is given by"
+    },
+    {
+      "id": 19303,
+      "page": 149,
+      "seq": 11,
+      "text": "The algorithm in fact uses stochastic gradient descent to minimize this\npiecewise linear criterion. This means that rather than computing the sum\nof the gradient contributions of each observation followed by a step in the\nnegative gradient direction, a step is taken after each observation is visited.\nHence the misclassi\ufb01ed observations are visited in some sequence, and the\nparameters \u03b2 are updated via\n\u001a\n\u03b2\n\u03b20"
+    },
+    {
+      "id": 19307,
+      "page": 149,
+      "seq": 15,
+      "text": "Here \u03c1 is the learning rate, which in this case can be taken to be 1 without\nloss in generality. If the classes are linearly separable, it can be shown that\nthe algorithm converges to a separating hyperplane in a \ufb01nite number of\nsteps (Exercise 4.6). Figure 4.14 shows two solutions to a toy problem, each\nstarted at a di\ufb00erent random guess.\nThere are a number of problems with this algorithm, summarized in\nRipley (1996):"
+    },
+    {
+      "id": 19308,
+      "page": 149,
+      "seq": 16,
+      "text": "\u2022 When the data are separable, there are many solutions, and which\none is found depends on the starting values."
+    },
+    {
+      "id": 19309,
+      "page": 149,
+      "seq": 17,
+      "text": "\u2022 The \u201c\ufb01nite\u201d number of steps can be very large. The smaller the gap,\nthe longer the time to \ufb01nd it."
+    },
+    {
+      "id": 19310,
+      "page": 149,
+      "seq": 18,
+      "text": "\u2022 When the data are not separable, the algorithm will not converge,\nand cycles develop. The cycles can be long and therefore hard to\ndetect."
+    },
+    {
+      "id": 19311,
+      "page": 149,
+      "seq": 19,
+      "text": "The second problem can often be eliminated by seeking a hyperplane not\nin the original space, but in a much enlarged space obtained by creating"
+    },
+    {
+      "id": 19313,
+      "page": 150,
+      "seq": 1,
+      "text": "many basis-function transformations of the original variables. This is anal-\nogous to driving the residuals in a polynomial regression problem down\nto zero by making the degree su\ufb03ciently large. Perfect separation cannot\nalways be achieved: for example, if observations from two di\ufb00erent classes\nshare the same input. It may not be desirable either, since the resulting\nmodel is likely to be over\ufb01t and will not generalize well. We return to this\npoint at the end of the next section.\nA rather elegant solution to the \ufb01rst problem is to add additional con-\nstraints to the separating hyperplane."
+    },
+    {
+      "id": 19315,
+      "page": 150,
+      "seq": 3,
+      "text": "The optimal separating hyperplane separates the two classes and maximizes\nthe distance to the closest point from either class (Vapnik, 1996). Not only\ndoes this provide a unique solution to the separating hyperplane problem,\nbut by maximizing the margin between the two classes on the training data,\nthis leads to better classi\ufb01cation performance on test data.\nWe need to generalize criterion (4.41). Consider the optimization problem"
+    },
+    {
+      "id": 19317,
+      "page": 150,
+      "seq": 5,
+      "text": "subject to yi(xT\ni \u03b2 + \u03b20) \u2265M, i = 1, . . . , N.\n(4.45)"
+    },
+    {
+      "id": 19318,
+      "page": 150,
+      "seq": 6,
+      "text": "The set of conditions ensure that all the points are at least a signed\ndistance M from the decision boundary de\ufb01ned by \u03b2 and \u03b20, and we seek\nthe largest such M and associated parameters. We can get rid of the ||\u03b2|| =\n1 constraint by replacing the conditions with"
+    },
+    {
+      "id": 19322,
+      "page": 150,
+      "seq": 10,
+      "text": "Since for any \u03b2 and \u03b20 satisfying these inequalities, any positively scaled\nmultiple satis\ufb01es them too, we can arbitrarily set ||\u03b2|| = 1/M. Thus (4.45)\nis equivalent to"
+    },
+    {
+      "id": 19324,
+      "page": 150,
+      "seq": 12,
+      "text": "subject to yi(xT\ni \u03b2 + \u03b20) \u22651, i = 1, . . . , N.\n(4.48)"
+    },
+    {
+      "id": 19325,
+      "page": 150,
+      "seq": 13,
+      "text": "In light of (4.40), the constraints de\ufb01ne an empty slab or margin around the\nlinear decision boundary of thickness 1/||\u03b2||. Hence we choose \u03b2 and \u03b20 to\nmaximize its thickness. This is a convex optimization problem (quadratic"
+    },
+    {
+      "id": 19327,
+      "page": 151,
+      "seq": 1,
+      "text": "criterion with linear inequality constraints). The Lagrange (primal) func-\ntion, to be minimized w.r.t. \u03b2 and \u03b20, is"
+    },
+    {
+      "id": 19338,
+      "page": 151,
+      "seq": 12,
+      "text": "and substituting these in (4.49) we obtain the so-called Wolfe dual"
+    },
+    {
+      "id": 19348,
+      "page": 151,
+      "seq": 22,
+      "text": "The solution is obtained by maximizing LD in the positive orthant, a sim-\npler convex optimization problem, for which standard software can be used.\nIn addition the solution must satisfy the Karush\u2013Kuhn\u2013Tucker conditions,\nwhich include (4.50), (4.51), (4.52) and"
+    },
+    {
+      "id": 19351,
+      "page": 151,
+      "seq": 25,
+      "text": "\u2022 if \u03b1i > 0, then yi(xT\ni \u03b2 + \u03b20) = 1, or in other words, xi is on the\nboundary of the slab;"
+    },
+    {
+      "id": 19352,
+      "page": 151,
+      "seq": 26,
+      "text": "\u2022 if yi(xT\ni \u03b2 +\u03b20) > 1, xi is not on the boundary of the slab, and \u03b1i = 0."
+    },
+    {
+      "id": 19353,
+      "page": 151,
+      "seq": 27,
+      "text": "From (4.50) we see that the solution vector \u03b2 is de\ufb01ned in terms of a linear\ncombination of the support points xi\u2014those points de\ufb01ned to be on the\nboundary of the slab via \u03b1i > 0. Figure 4.16 shows the optimal separating\nhyperplane for our toy example; there are three support points. Likewise,\n\u03b20 is obtained by solving (4.53) for any of the support points.\nThe optimal separating hyperplane produces a function \u02c6f(x) = xT \u02c6\u03b2 + \u02c6\u03b20\nfor classifying new observations:"
+    },
+    {
+      "id": 19355,
+      "page": 151,
+      "seq": 29,
+      "text": "Although none of the training observations fall in the margin (by con-\nstruction), this will not necessarily be the case for test observations. The"
+    },
+    {
+      "id": 19358,
+      "page": 152,
+      "seq": 2,
+      "text": "intuition is that a large margin on the training data will lead to good\nseparation on the test data.\nThe description of the solution in terms of support points seems to sug-\ngest that the optimal hyperplane focuses more on the points that count,\nand is more robust to model misspeci\ufb01cation. The LDA solution, on the\nother hand, depends on all of the data, even points far away from the de-\ncision boundary. Note, however, that the identi\ufb01cation of these support\npoints required the use of all the data. Of course, if the classes are really\nGaussian, then LDA is optimal, and separating hyperplanes will pay a price\nfor focusing on the (noisier) data at the boundaries of the classes.\nIncluded in Figure 4.16 is the logistic regression solution to this prob-\nlem, \ufb01t by maximum likelihood. Both solutions are similar in this case.\nWhen a separating hyperplane exists, logistic regression will always \ufb01nd\nit, since the log-likelihood can be driven to 0 in this case (Exercise 4.5).\nThe logistic regression solution shares some other qualitative features with\nthe separating hyperplane solution. The coe\ufb03cient vector is de\ufb01ned by a\nweighted least squares \ufb01t of a zero-mean linearized response on the input\nfeatures, and the weights are larger for points near the decision boundary\nthan for those further away.\nWhen the data are not separable, there will be no feasible solution to\nthis problem, and an alternative formulation is needed. Again one can en-\nlarge the space using basis transformations, but this can lead to arti\ufb01cial"
+    },
+    {
+      "id": 19360,
+      "page": 153,
+      "seq": 1,
+      "text": "separation through over-\ufb01tting. In Chapter 12 we discuss a more attractive\nalternative known as the support vector machine, which allows for overlap,\nbut minimizes a measure of the extent of this overlap."
+    },
+    {
+      "id": 19362,
+      "page": 153,
+      "seq": 3,
+      "text": "Good general texts on classi\ufb01cation include Duda et al. (2000), Hand\n(1981), McLachlan (1992) and Ripley (1996). Mardia et al. (1979) have\na concise discussion of linear discriminant analysis. Michie et al. (1994)\ncompare a large number of popular classi\ufb01ers on benchmark datasets. Lin-\near separating hyperplanes are discussed in Vapnik (1996). Our account of\nthe perceptron learning algorithm follows Ripley (1996)."
+    },
+    {
+      "id": 19375,
+      "page": 153,
+      "seq": 16,
+      "text": "(b) Consider minimization of the least squares criterion"
+    },
+    {
+      "id": 19378,
+      "page": 153,
+      "seq": 19,
+      "text": "Show that the solution \u02c6\u03b2 satis\ufb01es\n\n\n(N \u22122) \u02c6\u03a3 + N1N2"
+    },
+    {
+      "id": 19381,
+      "page": 153,
+      "seq": 22,
+      "text": "(after simpli\ufb01cation),where \u02c6\u03a3B = (\u02c6\u03bc2 \u2212\u02c6\u03bc1)(\u02c6\u03bc2 \u2212\u02c6\u03bc1)T ."
+    },
+    {
+      "id": 19382,
+      "page": 153,
+      "seq": 23,
+      "text": "(c) Hence show that \u02c6\u03a3B\u03b2 is in the direction (\u02c6\u03bc2 \u2212\u02c6\u03bc1) and thus"
+    },
+    {
+      "id": 19384,
+      "page": 153,
+      "seq": 25,
+      "text": "Therefore the least squares regression coe\ufb03cient is identical to the\nLDA coe\ufb03cient, up to a scalar multiple."
+    },
+    {
+      "id": 19386,
+      "page": 154,
+      "seq": 1,
+      "text": "(d) Show that this result holds for any (distinct) coding of the two classes."
+    },
+    {
+      "id": 19387,
+      "page": 154,
+      "seq": 2,
+      "text": "(e) Find the solution \u02c6\u03b20, and hence the predicted values \u02c6f = \u02c6\u03b20 + \u02c6\u03b2T x.\nConsider the following rule: classify to class 2 if \u02c6yi > 0 and class\n1 otherwise. Show this is not the same as the LDA rule unless the\nclasses have equal numbers of observations."
+    },
+    {
+      "id": 19393,
+      "page": 154,
+      "seq": 8,
+      "text": "(a) Denote a hyperplane by f(x) = \u03b2T\n1 x + \u03b20 = 0, or in more compact\nnotation \u03b2T x\u2217= 0, where x\u2217= (x, 1) and \u03b2 = (\u03b21, \u03b20). Let zi =\nx\u2217\ni /||x\u2217\ni ||. Show that separability implies the existence of a \u03b2sep such\nthat yi\u03b2T\nsepzi \u22651 \u2200i"
+    },
+    {
+      "id": 19394,
+      "page": 154,
+      "seq": 9,
+      "text": "(b) Given a current \u03b2old, the perceptron algorithm identi\ufb01es a point zi that\nis misclassi\ufb01ed, and produces the update \u03b2new \u2190\u03b2old + yizi. Show\nthat ||\u03b2new\u2212\u03b2sep||2 \u2264||\u03b2old\u2212\u03b2sep||2\u22121, and hence that the algorithm\nconverges to a separating hyperplane in no more than ||\u03b2start \u2212\u03b2sep||2"
+    },
+    {
+      "id": 19401,
+      "page": 155,
+      "seq": 1,
+      "text": "a generalization of (4.41) where we sum over all the observations. Consider\nminimizing D\u2217subject to ||\u03b2|| = 1. Describe this criterion in words. Does\nit solve the optimal separating hyperplane problem?"
+    }
+  ]
+}

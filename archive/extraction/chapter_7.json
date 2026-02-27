@@ -1,0 +1,961 @@
+{
+  "chapter": "7",
+  "sections": [
+    {
+      "number": "7.1",
+      "title": "Introduction",
+      "page_start": 237
+    },
+    {
+      "number": "7.10",
+      "title": "Cross-Validation",
+      "page_start": 259
+    },
+    {
+      "number": "7.10.1",
+      "title": "K-Fold Cross-Validation",
+      "page_start": 259
+    },
+    {
+      "number": "7.10.2",
+      "title": "The Wrong and Right Way to Do Cross-validation",
+      "page_start": 263
+    },
+    {
+      "number": "7.10.3",
+      "title": "Does Cross-Validation Really Work?",
+      "page_start": 265
+    },
+    {
+      "number": "7.11",
+      "title": "Bootstrap Methods",
+      "page_start": 267
+    },
+    {
+      "number": "7.11.1",
+      "title": "Example (Continued)",
+      "page_start": 270
+    },
+    {
+      "number": "7.12",
+      "title": "Conditional or Expected Test Error?",
+      "page_start": 272
+    },
+    {
+      "number": "7.2",
+      "title": "Bias, Variance and Model Complexity",
+      "page_start": 237
+    },
+    {
+      "number": "7.3",
+      "title": "The Bias\u2013Variance Decomposition",
+      "page_start": 241
+    },
+    {
+      "number": "7.3.1",
+      "title": "Example: Bias\u2013Variance Tradeo\ufb00",
+      "page_start": 244
+    },
+    {
+      "number": "7.4",
+      "title": "Optimism of the Training Error Rate",
+      "page_start": 246
+    },
+    {
+      "number": "7.5",
+      "title": "Estimates of In-Sample Prediction Error",
+      "page_start": 248
+    },
+    {
+      "number": "7.6",
+      "title": "The E\ufb00ective Number of Parameters",
+      "page_start": 250
+    },
+    {
+      "number": "7.7",
+      "title": "The Bayesian Approach and BIC",
+      "page_start": 251
+    },
+    {
+      "number": "7.8",
+      "title": "Minimum Description Length",
+      "page_start": 253
+    },
+    {
+      "number": "7.9",
+      "title": "Vapnik\u2013Chervonenkis Dimension",
+      "page_start": 255
+    },
+    {
+      "number": "7.9.1",
+      "title": "Example (Continued)",
+      "page_start": 257
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": 25163,
+      "page": 237,
+      "seq": 0,
+      "text": "This is page 219\nPrinter: Opaque this\n7\nModel Assessment and Selection"
+    },
+    {
+      "id": 25165,
+      "page": 237,
+      "seq": 2,
+      "text": "The generalization performance of a learning method relates to its predic-\ntion capability on independent test data. Assessment of this performance\nis extremely important in practice, since it guides the choice of learning\nmethod or model, and gives us a measure of the quality of the ultimately\nchosen model.\nIn this chapter we describe and illustrate the key methods for perfor-\nmance assessment, and show how they are used to select models. We begin\nthe chapter with a discussion of the interplay between bias, variance and\nmodel complexity."
+    },
+    {
+      "id": 25169,
+      "page": 237,
+      "seq": 6,
+      "text": "\u0003\n(Y \u2212\u02c6f(X))2\nsquared error\n|Y \u2212\u02c6f(X)|\nabsolute error.\n(7.1)"
+    },
+    {
+      "id": 25178,
+      "page": 238,
+      "seq": 8,
+      "text": "Test error, also referred to as generalization error, is the prediction error\nover an independent test sample"
+    },
+    {
+      "id": 25180,
+      "page": 238,
+      "seq": 10,
+      "text": "where both X and Y are drawn randomly from their joint distribution\n(population). Here the training set T is \ufb01xed, and test error refers to the\nerror for this speci\ufb01c training set. A related quantity is the expected pre-\ndiction error (or expected test error)"
+    },
+    {
+      "id": 25182,
+      "page": 238,
+      "seq": 12,
+      "text": "Note that this expectation averages over everything that is random, includ-\ning the randomness in the training set that produced \u02c6f.\nFigure 7.1 shows the prediction error (light red curves) ErrT for 100\nsimulated training sets each of size 50. The lasso (Section 3.4.2) was used\nto produce the sequence of \ufb01ts. The solid red curve is the average, and\nhence an estimate of Err.\nEstimation of ErrT will be our goal, although we will see that Err is\nmore amenable to statistical analysis, and most methods e\ufb00ectively esti-\nmate the expected error. It does not seem possible to estimate conditional"
+    },
+    {
+      "id": 25184,
+      "page": 239,
+      "seq": 1,
+      "text": "error e\ufb00ectively, given only the information in the same training set. Some\ndiscussion of this point is given in Section 7.12.\nTraining error is the average loss over the training sample"
+    },
+    {
+      "id": 25189,
+      "page": 239,
+      "seq": 6,
+      "text": "We would like to know the expected test error of our estimated model\n\u02c6f. As the model becomes more and more complex, it uses the training\ndata more and is able to adapt to more complicated underlying structures.\nHence there is a decrease in bias but an increase in variance. There is some\nintermediate model complexity that gives minimum expected test error.\nUnfortunately training error is not a good estimate of the test error,\nas seen in Figure 7.1. Training error consistently decreases with model\ncomplexity, typically dropping to zero if we increase the model complexity\nenough. However, a model with zero training error is over\ufb01t to the training\ndata and will typically generalize poorly.\nThe story is similar for a qualitative or categorical response G taking\none of K values in a set G, labeled for convenience as 1, 2, . . . , K. Typically\nwe model the probabilities pk(X) = Pr(G = k|X) (or some monotone\ntransformations fk(X)), and then \u02c6G(X) = arg maxk \u02c6pk(X). In some cases,\nsuch as 1-nearest neighbor classi\ufb01cation (Chapters 2 and 13) we produce\n\u02c6G(X) directly. Typical loss functions are"
+    },
+    {
+      "id": 25195,
+      "page": 239,
+      "seq": 12,
+      "text": "The quantity \u22122 \u00d7 the log-likelihood is sometimes referred to as the\ndeviance.\nAgain, test error here is ErrT = E[L(G, \u02c6G(X))|T ], the population mis-\nclassi\ufb01cation error of the classi\ufb01er trained on T , and Err is the expected\nmisclassi\ufb01cation error.\nTraining error is the sample analogue, for example,"
+    },
+    {
+      "id": 25200,
+      "page": 239,
+      "seq": 17,
+      "text": "the sample log-likelihood for the model.\nThe log-likelihood can be used as a loss-function for general response\ndensities, such as the Poisson, gamma, exponential, log-normal and others.\nIf Pr\u03b8(X)(Y ) is the density of Y , indexed by a parameter \u03b8(X) that depends\non the predictor X, then"
+    },
+    {
+      "id": 25203,
+      "page": 240,
+      "seq": 1,
+      "text": "The \u201c\u22122\u201d in the de\ufb01nition makes the log-likelihood loss for the Gaussian\ndistribution match squared-error loss.\nFor ease of exposition, for the remainder of this chapter we will use Y and\nf(X) to represent all of the above situations, since we focus mainly on the\nquantitative response (squared-error loss) setting. For the other situations,\nthe appropriate translations are obvious.\nIn this chapter we describe a number of methods for estimating the\nexpected test error for a model. Typically our model will have a tuning\nparameter or parameters \u03b1 and so we can write our predictions as \u02c6f\u03b1(x).\nThe tuning parameter varies the complexity of our model, and we wish to\n\ufb01nd the value of \u03b1 that minimizes error, that is, produces the minimum of\nthe average test error curve in Figure 7.1. Having said this, for brevity we\nwill often suppress the dependence of \u02c6f(x) on \u03b1.\nIt is important to note that there are in fact two separate goals that we\nmight have in mind:"
+    },
+    {
+      "id": 25204,
+      "page": 240,
+      "seq": 2,
+      "text": "Model selection: estimating the performance of di\ufb00erent models in order\nto choose the best one."
+    },
+    {
+      "id": 25205,
+      "page": 240,
+      "seq": 3,
+      "text": "Model assessment: having chosen a \ufb01nal model, estimating its predic-\ntion error (generalization error) on new data."
+    },
+    {
+      "id": 25206,
+      "page": 240,
+      "seq": 4,
+      "text": "If we are in a data-rich situation, the best approach for both problems is\nto randomly divide the dataset into three parts: a training set, a validation\nset, and a test set. The training set is used to \ufb01t the models; the validation\nset is used to estimate prediction error for model selection; the test set is\nused for assessment of the generalization error of the \ufb01nal chosen model.\nIdeally, the test set should be kept in a \u201cvault,\u201d and be brought out only\nat the end of the data analysis. Suppose instead that we use the test-set\nrepeatedly, choosing the model with smallest test-set error. Then the test\nset error of the \ufb01nal chosen model will underestimate the true test error,\nsometimes substantially.\nIt is di\ufb03cult to give a general rule on how to choose the number of\nobservations in each of the three parts, as this depends on the signal-to-\nnoise ratio in the data and the training sample size. A typical split might\nbe 50% for training, and 25% each for validation and testing:"
+    },
+    {
+      "id": 25207,
+      "page": 240,
+      "seq": 5,
+      "text": "Test\nTrain\nValidation\nTest\nTrain\nValidation\nTest\nValidation\nTrain\nValidation\nTest\nTrain"
+    },
+    {
+      "id": 25208,
+      "page": 240,
+      "seq": 6,
+      "text": "The methods in this chapter are designed for situations where there is\ninsu\ufb03cient data to split it into three parts. Again it is too di\ufb03cult to give\na general rule on how much training data is enough; among other things,\nthis depends on the signal-to-noise ratio of the underlying function, and\nthe complexity of the models being \ufb01t to the data."
+    },
+    {
+      "id": 25210,
+      "page": 241,
+      "seq": 1,
+      "text": "The methods of this chapter approximate the validation step either an-\nalytically (AIC, BIC, MDL, SRM) or by e\ufb03cient sample re-use (cross-\nvalidation and the bootstrap). Besides their use in model selection, we also\nexamine to what extent each method provides a reliable estimate of test\nerror of the \ufb01nal chosen model.\nBefore jumping into these topics, we \ufb01rst explore in more detail the\nnature of test error and the bias\u2013variance tradeo\ufb00."
+    },
+    {
+      "id": 25212,
+      "page": 241,
+      "seq": 3,
+      "text": "As in Chapter 2, if we assume that Y = f(X) + \u03b5 where E(\u03b5) = 0 and\nVar(\u03b5) = \u03c32\n\u03b5, we can derive an expression for the expected prediction error\nof a regression \ufb01t \u02c6f(X) at an input point X = x0, using squared-error loss:"
+    },
+    {
+      "id": 25214,
+      "page": 241,
+      "seq": 5,
+      "text": "=\n\u03c32\n\u03b5 + [E \u02c6f(x0) \u2212f(x0)]2 + E[ \u02c6f(x0) \u2212E \u02c6f(x0)]2"
+    },
+    {
+      "id": 25217,
+      "page": 241,
+      "seq": 8,
+      "text": "The \ufb01rst term is the variance of the target around its true mean f(x0), and\ncannot be avoided no matter how well we estimate f(x0), unless \u03c32\n\u03b5 = 0.\nThe second term is the squared bias, the amount by which the average of\nour estimate di\ufb00ers from the true mean; the last term is the variance; the\nexpected squared deviation of \u02c6f(x0) around its mean. Typically the more\ncomplex we make the model \u02c6f, the lower the (squared) bias but the higher\nthe variance.\nFor the k-nearest-neighbor regression \ufb01t, these expressions have the sim-\nple form"
+    },
+    {
+      "id": 25227,
+      "page": 241,
+      "seq": 18,
+      "text": "Here we assume for simplicity that training inputs xi are \ufb01xed, and the ran-\ndomness arises from the yi. The number of neighbors k is inversely related\nto the model complexity. For small k, the estimate \u02c6fk(x) can potentially\nadapt itself better to the underlying f(x). As we increase k, the bias\u2014the\nsquared di\ufb00erence between f(x0) and the average of f(x) at the k-nearest\nneighbors\u2014will typically increase, while the variance decreases.\nFor a linear model \ufb01t \u02c6fp(x) = xT \u02c6\u03b2, where the parameter vector \u03b2 with\np components is \ufb01t by least squares, we have"
+    },
+    {
+      "id": 25231,
+      "page": 242,
+      "seq": 2,
+      "text": "Here h(x0) = X(XT X)\u22121x0, the N-vector of linear weights that produce\nthe \ufb01t \u02c6fp(x0) = x0T (XT X)\u22121XT y, and hence Var[ \u02c6fp(x0)] = ||h(x0)||2\u03c32\n\u03b5.\nWhile this variance changes with x0, its average (with x0 taken to be each\nof the sample values xi) is (p/N)\u03c32\n\u03b5, and hence"
+    },
+    {
+      "id": 25239,
+      "page": 242,
+      "seq": 10,
+      "text": "the in-sample error. Here model complexity is directly related to the num-\nber of parameters p.\nThe test error Err(x0) for a ridge regression \ufb01t \u02c6f\u03b1(x0) is identical in\nform to (7.11), except the linear weights in the variance term are di\ufb00erent:\nh(x0) = X(XT X + \u03b1I)T x0. The bias term will also be di\ufb00erent.\nFor a linear model family such as ridge regression, we can break down\nthe bias more \ufb01nely. Let \u03b2\u2217denote the parameters of the best-\ufb01tting linear\napproximation to f:"
+    },
+    {
+      "id": 25241,
+      "page": 242,
+      "seq": 12,
+      "text": "Here the expectation is taken with respect to the distribution of the input\nvariables X. Then we can write the average squared bias as"
+    },
+    {
+      "id": 25242,
+      "page": 242,
+      "seq": 13,
+      "text": "Ex0\n\f\nf(x0) \u2212E \u02c6f\u03b1(x0)\n\r2\n=\nEx0\n\u0013\nf(x0) \u2212xT\n0 \u03b2\u2217\n\u00142 + Ex0\n\f\nxT\n0 \u03b2\u2217\u2212ExT\n0 \u02c6\u03b2\u03b1\n\r2"
+    },
+    {
+      "id": 25245,
+      "page": 242,
+      "seq": 16,
+      "text": "The \ufb01rst term on the right-hand side is the average squared model bias, the\nerror between the best-\ufb01tting linear approximation and the true function.\nThe second term is the average squared estimation bias, the error between\nthe average estimate E(xT\n0 \u02c6\u03b2) and the best-\ufb01tting linear approximation.\nFor linear models \ufb01t by ordinary least squares, the estimation bias is zero.\nFor restricted \ufb01ts, such as ridge regression, it is positive, and we trade it o\ufb00\nwith the bene\ufb01ts of a reduced variance. The model bias can only be reduced\nby enlarging the class of linear models to a richer collection of models, by\nincluding interactions and transformations of the variables in the model.\nFigure 7.2 shows the bias\u2013variance tradeo\ufb00schematically. In the case\nof linear models, the model space is the set of all linear predictions from\np inputs and the black dot labeled \u201cclosest \ufb01t\u201d is xT \u03b2\u2217. The blue-shaded\nregion indicates the error \u03c3\u03b5 with which we see the truth in the training\nsample.\nAlso shown is the variance of the least squares \ufb01t, indicated by the large\nyellow circle centered at the black dot labeled \u201cclosest \ufb01t in population,\u2019"
+    },
+    {
+      "id": 25261,
+      "page": 244,
+      "seq": 1,
+      "text": "Now if we were to \ufb01t a model with fewer predictors, or regularize the coef-\n\ufb01cients by shrinking them toward zero (say), we would get the \u201cshrunken\n\ufb01t\u201d shown in the \ufb01gure. This \ufb01t has an additional estimation bias, due to\nthe fact that it is not the closest \ufb01t in the model space. On the other hand,\nit has smaller variance. If the decrease in variance exceeds the increase in\n(squared) bias, then this is worthwhile."
+    },
+    {
+      "id": 25264,
+      "page": 244,
+      "seq": 4,
+      "text": "Left panels: Y is 0 if X1 \u22641/2 and 1 if X1 > 1/2, and we apply k-nearest\nneighbors."
+    },
+    {
+      "id": 25265,
+      "page": 244,
+      "seq": 5,
+      "text": "Right panels: Y is 1 if \t10\nj=1 Xj is greater than 5 and 0 otherwise, and we\nuse best subset linear regression of size p."
+    },
+    {
+      "id": 25266,
+      "page": 244,
+      "seq": 6,
+      "text": "The top row is regression with squared error loss; the bottom row is classi-\n\ufb01cation with 0\u20131 loss. The \ufb01gures show the prediction error (red), squared\nbias (green) and variance (blue), all computed for a large test sample.\nIn the regression problems, bias and variance add to produce the predic-\ntion error curves, with minima at about k = 5 for k-nearest neighbors, and\np \u226510 for the linear model. For classi\ufb01cation loss (bottom \ufb01gures), some\ninteresting phenomena can be seen. The bias and variance curves are the\nsame as in the top \ufb01gures, and prediction error now refers to misclassi\ufb01-\ncation rate. We see that prediction error is no longer the sum of squared\nbias and variance. For the k-nearest neighbor classi\ufb01er, prediction error\ndecreases or stays the same as the number of neighbors is increased to 20,\ndespite the fact that the squared bias is rising. For the linear model classi-\n\ufb01er the minimum occurs for p \u226510 as in regression, but the improvement\nover the p = 1 model is more dramatic. We see that bias and variance seem\nto interact in determining prediction error.\nWhy does this happen? There is a simple explanation for the \ufb01rst phe-\nnomenon. Suppose at a given input point, the true probability of class 1 is\n0.9 while the expected value of our estimate is 0.6. Then the squared bias\u2014\n(0.6\u22120.9)2\u2014is considerable, but the prediction error is zero since we make\nthe correct decision. In other words, estimation errors that leave us on the\nright side of the decision boundary don\u2019t hurt. Exercise 7.2 demonstrates\nthis phenomenon analytically, and also shows the interaction e\ufb00ect between\nbias and variance.\nThe overall point is that the bias\u2013variance tradeo\ufb00behaves di\ufb00erently\nfor 0\u20131 loss than it does for squared error loss. This in turn means that\nthe best choices of tuning parameters may di\ufb00er substantially in the two"
+    },
+    {
+      "id": 25286,
+      "page": 246,
+      "seq": 1,
+      "text": "settings. One should base the choice of tuning parameter on an estimate of\nprediction error, as described in the following sections."
+    },
+    {
+      "id": 25288,
+      "page": 246,
+      "seq": 3,
+      "text": "Discussions of error rate estimation can be confusing, because we have\nto make clear which quantities are \ufb01xed and which are random1. Before\nwe continue, we need a few de\ufb01nitions, elaborating on the material of Sec-\ntion 7.2. Given a training set T = {(x1, y1), (x2, y2), . . . (xN, yN)} the gen-\neralization error of a model \u02c6f is"
+    },
+    {
+      "id": 25290,
+      "page": 246,
+      "seq": 5,
+      "text": "Note that the training set T is \ufb01xed in expression (7.15). The point (X0, Y 0)\nis a new test data point, drawn from F, the joint distribution of the data.\nAveraging over training sets T yields the expected error"
+    },
+    {
+      "id": 25292,
+      "page": 246,
+      "seq": 7,
+      "text": "which is more amenable to statistical analysis. As mentioned earlier, it\nturns out that most methods e\ufb00ectively estimate the expected error rather\nthan ET ; see Section 7.12 for more on this point.\nNow typically, the training error"
+    },
+    {
+      "id": 25297,
+      "page": 246,
+      "seq": 12,
+      "text": "will be less than the true error ErrT , because the same data is being used\nto \ufb01t the method and assess its error (see Exercise 2.9). A \ufb01tting method\ntypically adapts to the training data, and hence the apparent or training\nerror err will be an overly optimistic estimate of the generalization error\nErrT .\nPart of the discrepancy is due to where the evaluation points occur. The\nquantity ErrT can be thought of as extra-sample error, since the test input\nvectors don\u2019t need to coincide with the training input vectors. The nature\nof the optimism in err is easiest to understand when we focus instead on\nthe in-sample error"
+    },
+    {
+      "id": 25302,
+      "page": 246,
+      "seq": 17,
+      "text": "The Y 0 notation indicates that we observe N new response values at\neach of the training points xi, i = 1, 2, . . . , N. We de\ufb01ne the optimism as"
+    },
+    {
+      "id": 25303,
+      "page": 246,
+      "seq": 18,
+      "text": "1Indeed, in the \ufb01rst edition of our book, this section wasn\u2019t su\ufb03ciently clear."
+    },
+    {
+      "id": 25305,
+      "page": 247,
+      "seq": 1,
+      "text": "the di\ufb00erence between Errin and the training error err:"
+    },
+    {
+      "id": 25307,
+      "page": 247,
+      "seq": 3,
+      "text": "This is typically positive since err is usually biased downward as an estimate\nof prediction error. Finally, the average optimism is the expectation of the\noptimism over training sets"
+    },
+    {
+      "id": 25309,
+      "page": 247,
+      "seq": 5,
+      "text": "Here the predictors in the training set are \ufb01xed, and the expectation is\nover the training set outcome values; hence we have used the notation Ey\ninstead of ET . We can usually estimate only the expected error \u03c9 rather\nthan op, in the same way that we can estimate the expected error Err\nrather than the conditional error ErrT .\nFor squared error, 0\u20131, and other loss functions, one can show quite\ngenerally that"
+    },
+    {
+      "id": 25314,
+      "page": 247,
+      "seq": 10,
+      "text": "where Cov indicates covariance. Thus the amount by which err underesti-\nmates the true error depends on how strongly yi a\ufb00ects its own prediction.\nThe harder we \ufb01t the data, the greater Cov(\u02c6yi, yi) will be, thereby increas-\ning the optimism. Exercise 7.4 proves this result for squared error loss where\n\u02c6yi is the \ufb01tted value from the regression. For 0\u20131 loss, \u02c6yi \u2208{0, 1} is the\nclassi\ufb01cation at xi, and for entropy loss, \u02c6yi \u2208[0, 1] is the \ufb01tted probability\nof class 1 at xi.\nIn summary, we have the important relation"
+    },
+    {
+      "id": 25319,
+      "page": 247,
+      "seq": 15,
+      "text": "This expression simpli\ufb01es if \u02c6yi is obtained by a linear \ufb01t with d inputs\nor basis functions. For example,"
+    },
+    {
+      "id": 25325,
+      "page": 247,
+      "seq": 21,
+      "text": "Expression (7.23) is the basis for the de\ufb01nition of the e\ufb00ective number of\nparameters discussed in Section 7.6 The optimism increases linearly with"
+    },
+    {
+      "id": 25327,
+      "page": 248,
+      "seq": 1,
+      "text": "the number d of inputs or basis functions we use, but decreases as the\ntraining sample size increases. Versions of (7.24) hold approximately for\nother error models, such as binary data and entropy loss.\nAn obvious way to estimate prediction error is to estimate the optimism\nand then add it to the training error err. The methods described in the\nnext section\u2014Cp, AIC, BIC and others\u2014work in this way, for a special\nclass of estimates that are linear in their parameters.\nIn contrast, cross-validation and bootstrap methods, described later in\nthe chapter, are direct estimates of the extra-sample error Err. These gen-\neral tools can be used with any loss function, and with nonlinear, adaptive\n\ufb01tting techniques.\nIn-sample error is not usually of direct interest since future values of the\nfeatures are not likely to coincide with their training set values. But for\ncomparison between models, in-sample error is convenient and often leads\nto e\ufb00ective model selection. The reason is that the relative (rather than\nabsolute) size of the error is what matters."
+    },
+    {
+      "id": 25331,
+      "page": 248,
+      "seq": 5,
+      "text": "where \u02c6\u03c9 is an estimate of the average optimism.\nUsing expression (7.24), applicable when d parameters are \ufb01t under\nsquared error loss, leads to a version of the so-called Cp statistic,"
+    },
+    {
+      "id": 25334,
+      "page": 248,
+      "seq": 8,
+      "text": "Here \u02c6\u03c3\u03b5\n2 is an estimate of the noise variance, obtained from the mean-\nsquared error of a low-bias model. Using this criterion we adjust the training\nerror by a factor proportional to the number of basis functions used.\nThe Akaike information criterion is a similar but more generally appli-\ncable estimate of Errin when a log-likelihood loss function is used. It relies\non a relationship similar to (7.24) that holds asymptotically as N \u2192\u221e:"
+    },
+    {
+      "id": 25338,
+      "page": 248,
+      "seq": 12,
+      "text": "Here Pr\u03b8(Y ) is a family of densities for Y (containing the \u201ctrue\u201d density),\n\u02c6\u03b8 is the maximum-likelihood estimate of \u03b8, and \u201cloglik\u201d is the maximized\nlog-likelihood:"
+    },
+    {
+      "id": 25343,
+      "page": 249,
+      "seq": 1,
+      "text": "For example, for the logistic regression model, using the binomial log-\nlikelihood, we have"
+    },
+    {
+      "id": 25347,
+      "page": 249,
+      "seq": 5,
+      "text": "For the Gaussian model (with variance \u03c32\n\u03b5 = \u02c6\u03c3\u03b5\n2 assumed known), the AIC\nstatistic is equivalent to Cp, and so we refer to them collectively as AIC.\nTo use AIC for model selection, we simply choose the model giving small-\nest AIC over the set of models considered. For nonlinear and other complex\nmodels, we need to replace d by some measure of model complexity. We\ndiscuss this in Section 7.6.\nGiven a set of models f\u03b1(x) indexed by a tuning parameter \u03b1, denote\nby err(\u03b1) and d(\u03b1) the training error and number of parameters for each\nmodel. Then for this set of models we de\ufb01ne"
+    },
+    {
+      "id": 25350,
+      "page": 249,
+      "seq": 8,
+      "text": "The function AIC(\u03b1) provides an estimate of the test error curve, and we\n\ufb01nd the tuning parameter \u02c6\u03b1 that minimizes it. Our \ufb01nal chosen model\nis f\u02c6\u03b1(x). Note that if the basis functions are chosen adaptively, (7.23) no\nlonger holds. For example, if we have a total of p inputs, and we choose\nthe best-\ufb01tting linear model with d < p inputs, the optimism will exceed\n(2d/N)\u03c32\n\u03b5. Put another way, by choosing the best-\ufb01tting model with d\ninputs, the e\ufb00ective number of parameters \ufb01t is more than d.\nFigure 7.4 shows AIC in action for the phoneme recognition example\nof Section 5.2.3 on page 148. The input vector is the log-periodogram of\nthe spoken vowel, quantized to 256 uniformly spaced frequencies. A lin-\near logistic regression model is used to predict the phoneme class, with\ncoe\ufb03cient function \u03b2(f) = \tM\nm=1 hm(f)\u03b8m, an expansion in M spline ba-\nsis functions. For any given M, a basis of natural cubic splines is used\nfor the hm, with knots chosen uniformly over the range of frequencies (so\nd(\u03b1) = d(M) = M). Using AIC to select the number of basis functions will\napproximately minimize Err(M) for both entropy and 0\u20131 loss.\nThe simple formula"
+    },
+    {
+      "id": 25354,
+      "page": 249,
+      "seq": 12,
+      "text": "holds exactly for linear models with additive errors and squared error loss,\nand approximately for linear models and log-likelihoods. In particular, the\nformula does not hold in general for 0\u20131 loss (Efron, 1986), although many\nauthors nevertheless use it in that context (right panel of Figure 7.4)."
+    },
+    {
+      "id": 25394,
+      "page": 250,
+      "seq": 39,
+      "text": "The concept of \u201cnumber of parameters\u201d can be generalized, especially to\nmodels where regularization is used in the \ufb01tting. Suppose we stack the\noutcomes y1, y2, . . . , yN into a vector y, and similarly for the predictions\n\u02c6y. Then a linear \ufb01tting method is one for which we can write"
+    },
+    {
+      "id": 25396,
+      "page": 250,
+      "seq": 41,
+      "text": "where S is an N \u00d7 N matrix depending on the input vectors xi but not on\nthe yi. Linear \ufb01tting methods include linear regression on the original fea-\ntures or on a derived basis set, and smoothing methods that use quadratic\nshrinkage, such as ridge regression and cubic smoothing splines. Then the\ne\ufb00ective number of parameters is de\ufb01ned as"
+    },
+    {
+      "id": 25398,
+      "page": 250,
+      "seq": 43,
+      "text": "the sum of the diagonal elements of S (also known as the e\ufb00ective degrees-\nof-freedom). Note that if S is an orthogonal-projection matrix onto a basis"
+    },
+    {
+      "id": 25400,
+      "page": 251,
+      "seq": 1,
+      "text": "set spanned by M features, then trace(S) = M. It turns out that trace(S) is\nexactly the correct quantity to replace d as the number of parameters in the\nCp statistic (7.26). If y arises from an additive-error model Y = f(X) + \u03b5\nwith Var(\u03b5) = \u03c32\n\u03b5, then one can show that \tN\ni=1 Cov(\u02c6yi, yi) = trace(S)\u03c32\n\u03b5,\nwhich motivates the more general de\ufb01nition"
+    },
+    {
+      "id": 25403,
+      "page": 251,
+      "seq": 4,
+      "text": "(Exercises 7.4 and 7.5). Section 5.4.1 on page 153 gives some more intuition\nfor the de\ufb01nition df = trace(S) in the context of smoothing splines.\nFor models like neural networks, in which we minimize an error function\nR(w) with weight decay penalty (regularization) \u03b1 \t\nm w2\nm, the e\ufb00ective\nnumber of parameters has the form"
+    },
+    {
+      "id": 25408,
+      "page": 251,
+      "seq": 9,
+      "text": "where the \u03b8m are the eigenvalues of the Hessian matrix \u22022R(w)/\u2202w\u2202wT .\nExpression (7.34) follows from (7.32) if we make a quadratic approximation\nto the error function at the solution (Bishop, 1995)."
+    },
+    {
+      "id": 25410,
+      "page": 251,
+      "seq": 11,
+      "text": "The Bayesian information criterion (BIC), like AIC, is applicable in settings\nwhere the \ufb01tting is carried out by maximization of a log-likelihood. The\ngeneric form of BIC is"
+    },
+    {
+      "id": 25412,
+      "page": 251,
+      "seq": 13,
+      "text": "The BIC statistic (times 1/2) is also known as the Schwarz criterion (Schwarz,\n1978).\nUnder the Gaussian model, assuming the variance \u03c32\n\u03b5 is known, \u22122\u00b7loglik\nequals (up to a constant) \t\ni(yi\u2212\u02c6f(xi))2/\u03c32\n\u03b5, which is N \u00b7err/\u03c32\n\u03b5 for squared\nerror loss. Hence we can write"
+    },
+    {
+      "id": 25417,
+      "page": 251,
+      "seq": 18,
+      "text": "Therefore BIC is proportional to AIC (Cp), with the factor 2 replaced\nby log N. Assuming N > e2 \u22487.4, BIC tends to penalize complex models\nmore heavily, giving preference to simpler models in selection. As with AIC,\n\u03c32\n\u03b5 is typically estimated by the mean squared error of a low-bias model.\nFor classi\ufb01cation problems, use of the multinomial log-likelihood leads to a\nsimilar relationship with the AIC, using cross-entropy as the error measure."
+    },
+    {
+      "id": 25419,
+      "page": 252,
+      "seq": 1,
+      "text": "Note however that the misclassi\ufb01cation error measure does not arise in the\nBIC context, since it does not correspond to the log-likelihood of the data\nunder any probability model.\nDespite its similarity with AIC, BIC is motivated in quite a di\ufb00erent\nway. It arises in the Bayesian approach to model selection, which we now\ndescribe.\nSuppose we have a set of candidate models Mm, m = 1, . . . , M and\ncorresponding model parameters \u03b8m, and we wish to choose a best model\nfrom among them. Assuming we have a prior distribution Pr(\u03b8m|Mm) for\nthe parameters of each model Mm, the posterior probability of a given\nmodel is"
+    },
+    {
+      "id": 25422,
+      "page": 252,
+      "seq": 4,
+      "text": "where Z represents the training data {xi, yi}N\n1 . To compare two models\nMm and M\u2113, we form the posterior odds"
+    },
+    {
+      "id": 25427,
+      "page": 252,
+      "seq": 9,
+      "text": "If the odds are greater than one we choose model m, otherwise we choose\nmodel \u2113. The rightmost quantity"
+    },
+    {
+      "id": 25430,
+      "page": 252,
+      "seq": 12,
+      "text": "is called the Bayes factor, the contribution of the data toward the posterior\nodds.\nTypically we assume that the prior over models is uniform, so that\nPr(Mm) is constant. We need some way of approximating Pr(Z|Mm).\nA so-called Laplace approximation to the integral followed by some other\nsimpli\ufb01cations (Ripley, 1996, page 64) to (7.37) gives"
+    },
+    {
+      "id": 25433,
+      "page": 252,
+      "seq": 15,
+      "text": "Here \u02c6\u03b8m is a maximum likelihood estimate and dm is the number of free\nparameters in model Mm. If we de\ufb01ne our loss function to be"
+    },
+    {
+      "id": 25435,
+      "page": 252,
+      "seq": 17,
+      "text": "this is equivalent to the BIC criterion of equation (7.35).\nTherefore, choosing the model with minimum BIC is equivalent to choos-\ning the model with largest (approximate) posterior probability. But this\nframework gives us more. If we compute the BIC criterion for a set of M,"
+    },
+    {
+      "id": 25437,
+      "page": 253,
+      "seq": 1,
+      "text": "models, giving BICm, m = 1, 2, . . . , M, then we can estimate the posterior\nprobability of each model Mm as"
+    },
+    {
+      "id": 25441,
+      "page": 253,
+      "seq": 5,
+      "text": "Thus we can estimate not only the best model, but also assess the relative\nmerits of the models considered.\nFor model selection purposes, there is no clear choice between AIC and\nBIC. BIC is asymptotically consistent as a selection criterion. What this\nmeans is that given a family of models, including the true model, the prob-\nability that BIC will select the correct model approaches one as the sample\nsize N \u2192\u221e. This is not the case for AIC, which tends to choose models\nwhich are too complex as N \u2192\u221e. On the other hand, for \ufb01nite samples,\nBIC often chooses models that are too simple, because of its heavy penalty\non complexity."
+    },
+    {
+      "id": 25443,
+      "page": 253,
+      "seq": 7,
+      "text": "The minimum description length (MDL) approach gives a selection cri-\nterion formally identical to the BIC approach, but is motivated from an\noptimal coding viewpoint. We \ufb01rst review the theory of coding for data\ncompression, and then apply it to model selection.\nWe think of our datum z as a message that we want to encode and\nsend to someone else (the \u201creceiver\u201d). We think of our model as a way of\nencoding the datum, and will choose the most parsimonious model, that is\nthe shortest code, for the transmission.\nSuppose \ufb01rst that the possible messages we might want to transmit are\nz1, z2, . . . , zm. Our code uses a \ufb01nite alphabet of length A: for example, we\nmight use a binary code {0, 1} of length A = 2. Here is an example with\nfour possible messages and a binary coding:"
+    },
+    {
+      "id": 25445,
+      "page": 253,
+      "seq": 9,
+      "text": "This code is known as an instantaneous pre\ufb01x code: no code is the pre-\n\ufb01x of any other, and the receiver (who knows all of the possible codes),\nknows exactly when the message has been completely sent. We restrict our\ndiscussion to such instantaneous pre\ufb01x codes.\nOne could use the coding in (7.42) or we could permute the codes, for\nexample use codes 110, 10, 111, 0 for z1, z2, z3, z4. How do we decide which\nto use? It depends on how often we will be sending each of the messages.\nIf, for example, we will be sending z1 most often, it makes sense to use the\nshortest code 0 for z1. Using this kind of strategy\u2014shorter codes for more\nfrequent messages\u2014the average message length will be shorter."
+    },
+    {
+      "id": 25447,
+      "page": 254,
+      "seq": 1,
+      "text": "In general, if messages are sent with probabilities Pr(zi), i = 1, 2, . . . , 4,\na famous theorem due to Shannon says we should use code lengths li =\n\u2212log2 Pr(zi) and the average message length satis\ufb01es"
+    },
+    {
+      "id": 25449,
+      "page": 254,
+      "seq": 3,
+      "text": "The right-hand side above is also called the entropy of the distribution\nPr(zi). The inequality is an equality when the probabilities satisfy pi =\nA\u2212li. In our example, if Pr(zi) = 1/2, 1/4, 1/8, 1/8, respectively, then the\ncoding shown in (7.42) is optimal and achieves the entropy lower bound.\nIn general the lower bound cannot be achieved, but procedures like the\nHu\ufb00mann coding scheme can get close to the bound. Note that with an\nin\ufb01nite set of messages, the entropy is replaced by \u2212\n#\nPr(z) log2 Pr(z)dz.\nFrom this result we glean the following:"
+    },
+    {
+      "id": 25450,
+      "page": 254,
+      "seq": 4,
+      "text": "To transmit a random variable z having probability density func-\ntion Pr(z), we require about \u2212log2 Pr(z) bits of information."
+    },
+    {
+      "id": 25451,
+      "page": 254,
+      "seq": 5,
+      "text": "We henceforth change notation from log2 Pr(z) to log Pr(z) = loge Pr(z);\nthis is for convenience, and just introduces an unimportant multiplicative\nconstant.\nNow we apply this result to the problem of model selection. We have\na model M with parameters \u03b8, and data Z = (X, y) consisting of both\ninputs and outputs. Let the (conditional) probability of the outputs under\nthe model be Pr(y|\u03b8, M, X), assume the receiver knows all of the inputs,\nand we wish to transmit the outputs. Then the message length required to\ntransmit the outputs is"
+    },
+    {
+      "id": 25453,
+      "page": 254,
+      "seq": 7,
+      "text": "the log-probability of the target values given the inputs. The second term\nis the average code length for transmitting the model parameters \u03b8, while\nthe \ufb01rst term is the average code length for transmitting the discrepancy\nbetween the model and actual target values. For example suppose we have\na single target y with y \u223cN(\u03b8, \u03c32), parameter \u03b8 \u223cN(0, 1) and no input\n(for simplicity). Then the message length is"
+    },
+    {
+      "id": 25457,
+      "page": 254,
+      "seq": 11,
+      "text": "Note that the smaller \u03c3 is, the shorter on average is the message length,\nsince y is more concentrated around \u03b8.\nThe MDL principle says that we should choose the model that mini-\nmizes (7.44). We recognize (7.44) as the (negative) log-posterior distribu-\ntion, and hence minimizing description length is equivalent to maximizing\nposterior probability. Hence the BIC criterion, derived as approximation to\nlog-posterior probability, can also be viewed as a device for (approximate)\nmodel choice by minimum description length."
+    },
+    {
+      "id": 25464,
+      "page": 255,
+      "seq": 6,
+      "text": "Note that we have ignored the precision with which a random variable\nz is coded. With a \ufb01nite code length we cannot code a continuous variable\nexactly. However, if we code z within a tolerance \u03b4z, the message length\nneeded is the log of the probability in the interval [z, z+\u03b4z] which is well ap-\nproximated by \u03b4zPr(z) if \u03b4z is small. Since log \u03b4zPr(z) = log \u03b4z +log Pr(z),\nthis means we can just ignore the constant log \u03b4z and use log Pr(z) as our\nmeasure of message length, as we did above.\nThe preceding view of MDL for model selection says that we should\nchoose the model with highest posterior probability. However, many Bayes-\nians would instead do inference by sampling from the posterior distribution."
+    },
+    {
+      "id": 25466,
+      "page": 255,
+      "seq": 8,
+      "text": "A di\ufb03culty in using estimates of in-sample error is the need to specify the\nnumber of parameters (or the complexity) d used in the \ufb01t. Although the\ne\ufb00ective number of parameters introduced in Section 7.6 is useful for some\nnonlinear models, it is not fully general. The Vapnik\u2013Chervonenkis (VC)\ntheory provides such a general measure of complexity, and gives associated\nbounds on the optimism. Here we give a brief review of this theory.\nSuppose we have a class of functions {f(x, \u03b1)} indexed by a parameter\nvector \u03b1, with x \u2208IRp. Assume for now that f is an indicator function,\nthat is, takes the values 0 or 1. If \u03b1 = (\u03b10, \u03b11) and f is the linear indi-\ncator function I(\u03b10 + \u03b1T\n1 x > 0), then it seems reasonable to say that the\ncomplexity of the class f is the number of parameters p + 1. But what\nabout f(x, \u03b1) = I(sin \u03b1 \u00b7 x) where \u03b1 is any real number and x \u2208IR? The\nfunction sin(50 \u00b7 x) is shown in Figure 7.5. This is a very wiggly function\nthat gets even rougher as the frequency \u03b1 increases, but it has only one\nparameter: despite this, it doesn\u2019t seem reasonable to conclude that it has\nless complexity than the linear indicator function I(\u03b10 + \u03b11x) in p = 1\ndimension."
+    },
+    {
+      "id": 25469,
+      "page": 256,
+      "seq": 2,
+      "text": "The Vapnik\u2013Chervonenkis dimension is a way of measuring the com-\nplexity of a class of functions by assessing how wiggly its members can\nbe."
+    },
+    {
+      "id": 25470,
+      "page": 256,
+      "seq": 3,
+      "text": "The VC dimension of the class {f(x, \u03b1)} is de\ufb01ned to be the\nlargest number of points (in some con\ufb01guration) that can be\nshattered by members of {f(x, \u03b1)}."
+    },
+    {
+      "id": 25471,
+      "page": 256,
+      "seq": 4,
+      "text": "A set of points is said to be shattered by a class of functions if, no matter\nhow we assign a binary label to each point, a member of the class can\nperfectly separate them.\nFigure 7.6 shows that the VC dimension of linear indicator functions\nin the plane is 3 but not 4, since no four points can be shattered by a\nset of lines. In general, a linear indicator function in p dimensions has VC\ndimension p+1, which is also the number of free parameters. On the other\nhand, it can be shown that the family sin(\u03b1x) has in\ufb01nite VC dimension,\nas Figure 7.5 suggests. By appropriate choice of \u03b1, any set of points can be\nshattered by this class (Exercise 7.8).\nSo far we have discussed the VC dimension only of indicator functions,\nbut this can be extended to real-valued functions. The VC dimension of a\nclass of real-valued functions {g(x, \u03b1)} is de\ufb01ned to be the VC dimension\nof the indicator class {I(g(x, \u03b1) \u2212\u03b2 > 0)}, where \u03b2 takes values over the\nrange of g.\nOne can use the VC dimension in constructing an estimate of (extra-\nsample) prediction error; di\ufb00erent types of results are available. Using the\nconcept of VC dimension, one can prove results about the optimism of the\ntraining error when using a class of functions. An example of such a result is\nthe following. If we \ufb01t N training points using a class of functions {f(x, \u03b1)}\nhaving VC dimension h, then with probability at least 1 \u2212\u03b7 over training"
+    },
+    {
+      "id": 25485,
+      "page": 257,
+      "seq": 13,
+      "text": "These bounds hold simultaneously for all members f(x, \u03b1), and are taken\nfrom Cherkassky and Mulier (2007, pages 116\u2013118). They recommend the\nvalue c = 1. For regression they suggest a1 = a2 = 1, and for classi\ufb01cation\nthey make no recommendation, with a1 = 4 and a2 = 2 corresponding\nto worst-case scenarios. They also give an alternative practical bound for\nregression"
+    },
+    {
+      "id": 25495,
+      "page": 257,
+      "seq": 23,
+      "text": "N , which is free of tuning constants. The bounds suggest that the\noptimism increases with h and decreases with N in qualitative agreement\nwith the AIC correction d/N given is (7.24). However, the results in (7.46)\nare stronger: rather than giving the expected optimism for each \ufb01xed func-\ntion f(x, \u03b1), they give probabilistic upper bounds for all functions f(x, \u03b1),\nand hence allow for searching over the class.\nVapnik\u2019s structural risk minimization (SRM) approach \ufb01ts a nested se-\nquence of models of increasing VC dimensions h1 < h2 < \u00b7 \u00b7 \u00b7 , and then\nchooses the model with the smallest value of the upper bound.\nWe note that upper bounds like the ones in (7.46) are often very loose,\nbut that doesn\u2019t rule them out as good criteria for model selection, where\nthe relative (not absolute) size of the test error is important. The main\ndrawback of this approach is the di\ufb03culty in calculating the VC dimension\nof a class of functions. Often only a crude upper bound for VC dimension\nis obtainable, and this may not be adequate. An example in which the\nstructural risk minimization program can be successfully carried out is the\nsupport vector classi\ufb01er, discussed in Section 12.2."
+    },
+    {
+      "id": 25513,
+      "page": 259,
+      "seq": 1,
+      "text": "and worst possible model choices: min\u03b1 ErrT (\u03b1) and max\u03b1 ErrT (\u03b1). The\nboxplots show the distribution of the quantity"
+    },
+    {
+      "id": 25514,
+      "page": 259,
+      "seq": 2,
+      "text": "100 \u00d7\nErrT (\u02c6\u03b1) \u2212min\u03b1 ErrT (\u03b1)\nmax\u03b1 ErrT (\u03b1) \u2212min\u03b1 ErrT (\u03b1),"
+    },
+    {
+      "id": 25515,
+      "page": 259,
+      "seq": 3,
+      "text": "which represents the error in using the chosen model relative to the best\nmodel. For linear regression the model complexity was measured by the\nnumber of features; as mentioned in Section 7.5, this underestimates the\ndf, since it does not charge for the search for the best model of that size.\nThis was also used for the VC dimension of the linear classi\ufb01er. For k-\nnearest neighbors, we used the quantity N/k. Under an additive-error re-\ngression model, this can be justi\ufb01ed as the exact e\ufb00ective degrees of free-\ndom (Exercise 7.6); we do not know if it corresponds to the VC dimen-\nsion. We used a1 = a2 = 1 for the constants in (7.46); the results for SRM\nchanged with di\ufb00erent constants, and this choice gave the most favorable re-\nsults. We repeated the SRM selection using the alternative practical bound\n(7.47), and got almost identical results. For misclassi\ufb01cation error we used\n\u02c6\u03c3\u03b5\n2 = [N/(N \u2212d)] \u00b7 err(\u03b1) for the least restrictive model (k = 5 for KNN,\nsince k = 1 results in zero training error). The AIC criterion seems to work\nwell in all four scenarios, despite the lack of theoretical support with 0\u20131\nloss. BIC does nearly as well, while the performance of SRM is mixed."
+    },
+    {
+      "id": 25517,
+      "page": 259,
+      "seq": 5,
+      "text": "Probably the simplest and most widely used method for estimating predic-\ntion error is cross-validation. This method directly estimates the expected\nextra-sample error Err = E[L(Y, \u02c6f(X))], the average generalization error\nwhen the method \u02c6f(X) is applied to an independent test sample from the\njoint distribution of X and Y . As mentioned earlier, we might hope that\ncross-validation estimates the conditional error, with the training set T\nheld \ufb01xed. But as we will see in Section 7.12, cross-validation typically\nestimates well only the expected prediction error."
+    },
+    {
+      "id": 25519,
+      "page": 259,
+      "seq": 7,
+      "text": "Ideally, if we had enough data, we would set aside a validation set and use\nit to assess the performance of our prediction model. Since data are often\nscarce, this is usually not possible. To \ufb01nesse the problem, K-fold cross-\nvalidation uses part of the available data to \ufb01t the model, and a di\ufb00erent\npart to test it. We split the data into K roughly equal-sized parts; for\nexample, when K = 5, the scenario looks like this:"
+    },
+    {
+      "id": 25524,
+      "page": 260,
+      "seq": 4,
+      "text": "For the kth part (third above), we \ufb01t the model to the other K \u22121 parts\nof the data, and calculate the prediction error of the \ufb01tted model when\npredicting the kth part of the data. We do this for k = 1, 2, . . . , K and\ncombine the K estimates of prediction error.\nHere are more details. Let \u03ba : {1, . . . , N} \u0015\u2192{1, . . . , K} be an indexing\nfunction that indicates the partition to which observation i is allocated by\nthe randomization. Denote by \u02c6f \u2212k(x) the \ufb01tted function, computed with\nthe kth part of the data removed. Then the cross-validation estimate of\nprediction error is"
+    },
+    {
+      "id": 25529,
+      "page": 260,
+      "seq": 9,
+      "text": "Typical choices of K are 5 or 10 (see below). The case K = N is known\nas leave-one-out cross-validation. In this case \u03ba(i) = i, and for the ith\nobservation the \ufb01t is computed using all the data except the ith.\nGiven a set of models f(x, \u03b1) indexed by a tuning parameter \u03b1, denote\nby \u02c6f \u2212k(x, \u03b1) the \u03b1th model \ufb01t with the kth part of the data removed. Then\nfor this set of models we de\ufb01ne"
+    },
+    {
+      "id": 25534,
+      "page": 260,
+      "seq": 14,
+      "text": "The function CV( \u02c6f, \u03b1) provides an estimate of the test error curve, and we\n\ufb01nd the tuning parameter \u02c6\u03b1 that minimizes it. Our \ufb01nal chosen model is\nf(x, \u02c6\u03b1), which we then \ufb01t to all the data.\nIt is interesting to wonder about what quantity K-fold cross-validation\nestimates. With K = 5 or 10, we might guess that it estimates the ex-\npected error Err, since the training sets in each fold are quite di\ufb00erent\nfrom the original training set. On the other hand, if K = N we might\nguess that cross-validation estimates the conditional error ErrT . It turns\nout that cross-validation only estimates e\ufb00ectively the average error Err,\nas discussed in Section 7.12.\nWhat value should we choose for K? With K = N, the cross-validation\nestimator is approximately unbiased for the true (expected) prediction er-\nror, but can have high variance because the N \u201ctraining sets\u201d are so similar\nto one another. The computational burden is also considerable, requiring\nN applications of the learning method. In certain special problems, this\ncomputation can be done quickly\u2014see Exercises 7.3 and 5.13."
+    },
+    {
+      "id": 25541,
+      "page": 261,
+      "seq": 6,
+      "text": "On the other hand, with K = 5 say, cross-validation has lower variance.\nBut bias could be a problem, depending on how the performance of the\nlearning method varies with the size of the training set. Figure 7.8 shows\na hypothetical \u201clearning curve\u201d for a classi\ufb01er on a given task, a plot of\n1 \u2212Err versus the size of the training set N. The performance of the\nclassi\ufb01er improves as the training set size increases to 100 observations;\nincreasing the number further to 200 brings only a small bene\ufb01t. If our\ntraining set had 200 observations, \ufb01vefold cross-validation would estimate\nthe performance of our classi\ufb01er over training sets of size 160, which from\nFigure 7.8 is virtually the same as the performance for training set size\n200. Thus cross-validation would not su\ufb00er from much bias. However if the\ntraining set had 50 observations, \ufb01vefold cross-validation would estimate\nthe performance of our classi\ufb01er over training sets of size 40, and from the\n\ufb01gure that would be an underestimate of 1 \u2212Err. Hence as an estimate of\nErr, cross-validation would be biased upward.\nTo summarize, if the learning curve has a considerable slope at the given\ntraining set size, \ufb01ve- or tenfold cross-validation will overestimate the true\nprediction error. Whether this bias is a drawback in practice depends on\nthe objective. On the other hand, leave-one-out cross-validation has low\nbias but can have high variance. Overall, \ufb01ve- or tenfold cross-validation\nare recommended as a good compromise: see Breiman and Spector (1992)\nand Kohavi (1995).\nFigure 7.9 shows the prediction error and tenfold cross-validation curve\nestimated from a single training set, from the scenario in the bottom right\npanel of Figure 7.3. This is a two-class classi\ufb01cation problem, using a lin-"
+    },
+    {
+      "id": 25552,
+      "page": 262,
+      "seq": 10,
+      "text": "ear model with best subsets regression of subset size p. Standard error bars\nare shown, which are the standard errors of the individual misclassi\ufb01cation\nerror rates for each of the ten parts. Both curves have minima at p = 10,\nalthough the CV curve is rather \ufb02at beyond 10. Often a \u201cone-standard\nerror\u201d rule is used with cross-validation, in which we choose the most par-\nsimonious model whose error is no more than one standard error above\nthe error of the best model. Here it looks like a model with about p = 9\npredictors would be chosen, while the true model uses p = 10.\nGeneralized cross-validation provides a convenient approximation to leave-\none out cross-validation, for linear \ufb01tting under squared-error loss. As de-\n\ufb01ned in Section 7.6, a linear \ufb01tting method is one for which we can write"
+    },
+    {
+      "id": 25563,
+      "page": 262,
+      "seq": 21,
+      "text": "where Sii is the ith diagonal element of S (see Exercise 7.3). The GCV\napproximation is"
+    },
+    {
+      "id": 25572,
+      "page": 263,
+      "seq": 1,
+      "text": "The quantity trace(S) is the e\ufb00ective number of parameters, as de\ufb01ned in\nSection 7.6.\nGCV can have a computational advantage in some settings, where the\ntrace of S can be computed more easily than the individual elements Sii.\nIn smoothing problems, GCV can also alleviate the tendency of cross-\nvalidation to undersmooth. The similarity between GCV and AIC can be\nseen from the approximation 1/(1 \u2212x)2 \u22481 + 2x (Exercise 7.7)."
+    },
+    {
+      "id": 25574,
+      "page": 263,
+      "seq": 3,
+      "text": "Consider a classi\ufb01cation problem with a large number of predictors, as may\narise, for example, in genomic or proteomic applications. A typical strategy\nfor analysis might be as follows:"
+    },
+    {
+      "id": 25575,
+      "page": 263,
+      "seq": 4,
+      "text": "1. Screen the predictors: \ufb01nd a subset of \u201cgood\u201d predictors that show\nfairly strong (univariate) correlation with the class labels"
+    },
+    {
+      "id": 25576,
+      "page": 263,
+      "seq": 5,
+      "text": "2. Using just this subset of predictors, build a multivariate classi\ufb01er."
+    },
+    {
+      "id": 25577,
+      "page": 263,
+      "seq": 6,
+      "text": "3. Use cross-validation to estimate the unknown tuning parameters and\nto estimate the prediction error of the \ufb01nal model."
+    },
+    {
+      "id": 25578,
+      "page": 263,
+      "seq": 7,
+      "text": "Is this a correct application of cross-validation? Consider a scenario with\nN = 50 samples in two equal-sized classes, and p = 5000 quantitative\npredictors (standard Gaussian) that are independent of the class labels.\nThe true (test) error rate of any classi\ufb01er is 50%. We carried out the above\nrecipe, choosing in step (1) the 100 predictors having highest correlation\nwith the class labels, and then using a 1-nearest neighbor classi\ufb01er, based\non just these 100 predictors, in step (2). Over 50 simulations from this\nsetting, the average CV error rate was 3%. This is far lower than the true\nerror rate of 50%.\nWhat has happened? The problem is that the predictors have an unfair\nadvantage, as they were chosen in step (1) on the basis of all of the samples.\nLeaving samples out after the variables have been selected does not cor-\nrectly mimic the application of the classi\ufb01er to a completely independent\ntest set, since these predictors \u201chave already seen\u201d the left out samples.\nFigure 7.10 (top panel) illustrates the problem. We selected the 100 pre-\ndictors having largest correlation with the class labels over all 50 samples.\nThen we chose a random set of 10 samples, as we would do in \ufb01ve-fold cross-\nvalidation, and computed the correlations of the pre-selected 100 predictors\nwith the class labels over just these 10 samples (left panel). We see that\nthe correlations average about 0.28, rather than 0, as one might expect.\nHere is the correct way to carry out cross-validation in this example:"
+    },
+    {
+      "id": 25579,
+      "page": 263,
+      "seq": 8,
+      "text": "1. Divide the samples into K cross-validation folds (groups) at random."
+    },
+    {
+      "id": 25593,
+      "page": 264,
+      "seq": 12,
+      "text": "(a) Find a subset of \u201cgood\u201d predictors that show fairly strong (uni-\nvariate) correlation with the class labels, using all of the samples\nexcept those in fold k."
+    },
+    {
+      "id": 25594,
+      "page": 264,
+      "seq": 13,
+      "text": "(b) Using just this subset of predictors, build a multivariate classi-\n\ufb01er, using all of the samples except those in fold k."
+    },
+    {
+      "id": 25595,
+      "page": 264,
+      "seq": 14,
+      "text": "(c) Use the classi\ufb01er to predict the class labels for the samples in\nfold k."
+    },
+    {
+      "id": 25596,
+      "page": 264,
+      "seq": 15,
+      "text": "The error estimates from step 2(c) are then accumulated over all K folds, to\nproduce the cross-validation estimate of prediction error. The lower panel\nof Figure 7.10 shows the correlations of class labels with the 100 predictors\nchosen in step 2(a) of the correct procedure, over the samples in a typical\nfold k. We see that they average about zero, as they should.\nIn general, with a multistep modeling procedure, cross-validation must\nbe applied to the entire sequence of modeling steps. In particular, samples\nmust be \u201cleft out\u201d before any selection or \ufb01ltering steps are applied. There\nis one quali\ufb01cation: initial unsupervised screening steps can be done be-\nfore samples are left out. For example, we could select the 1000 predictors"
+    },
+    {
+      "id": 25598,
+      "page": 265,
+      "seq": 1,
+      "text": "with highest variance across all 50 samples, before starting cross-validation.\nSince this \ufb01ltering does not involve the class labels, it does not give the\npredictors an unfair advantage.\nWhile this point may seem obvious to the reader, we have seen this\nblunder committed many times in published papers in top rank journals.\nWith the large numbers of predictors that are so common in genomic and\nother areas, the potential consequences of this error have also increased\ndramatically; see Ambroise and McLachlan (2002) for a detailed discussion\nof this issue."
+    },
+    {
+      "id": 25600,
+      "page": 265,
+      "seq": 3,
+      "text": "We once again examine the behavior of cross-validation in a high-dimensional\nclassi\ufb01cation problem. Consider a scenario with N = 20 samples in two\nequal-sized classes, and p = 500 quantitative predictors that are indepen-\ndent of the class labels. Once again, the true error rate of any classi\ufb01er is\n50%. Consider a simple univariate classi\ufb01er: a single split that minimizes\nthe misclassi\ufb01cation error (a \u201cstump\u201d). Stumps are trees with a single split,\nand are used in boosting methods (Chapter 10). A simple argument sug-\ngests that cross-validation will not work properly in this setting2:"
+    },
+    {
+      "id": 25601,
+      "page": 265,
+      "seq": 4,
+      "text": "Fitting to the entire training set, we will \ufb01nd a predictor that\nsplits the data very well If we do 5-fold cross-validation, this\nsame predictor should split any 4/5ths and 1/5th of the data\nwell too, and hence its cross-validation error will be small (much\nless than 50%) Thus CV does not give an accurate estimate of\nerror."
+    },
+    {
+      "id": 25602,
+      "page": 265,
+      "seq": 5,
+      "text": "To investigate whether this argument is correct, Figure 7.11 shows the\nresult of a simulation from this setting. There are 500 predictors and 20\nsamples, in each of two equal-sized classes, with all predictors having a\nstandard Gaussian distribution. The panel in the top left shows the number\nof training errors for each of the 500 stumps \ufb01t to the training data. We\nhave marked in color the six predictors yielding the fewest errors. In the top\nright panel, the training errors are shown for stumps \ufb01t to a random 4/5ths\npartition of the data (16 samples), and tested on the remaining 1/5th (four\nsamples). The colored points indicate the same predictors marked in the\ntop left panel. We see that the stump for the blue predictor (whose stump\nwas the best in the top left panel), makes two out of four test errors (50%),\nand is no better than random.\nWhat has happened? The preceding argument has ignored the fact that\nin cross-validation, the model must be completely retrained for each fold"
+    },
+    {
+      "id": 25603,
+      "page": 265,
+      "seq": 6,
+      "text": "2This argument was made to us by a scientist at a proteomics lab meeting, and led\nto material in this section."
+    },
+    {
+      "id": 25622,
+      "page": 267,
+      "seq": 1,
+      "text": "of the process. In the present example, this means that the best predictor\nand corresponding split point are found from 4/5ths of the data. The e\ufb00ect\nof predictor choice is seen in the top right panel. Since the class labels are\nindependent of the predictors, the performance of a stump on the 4/5ths\ntraining data contains no information about its performance in the remain-\ning 1/5th. The e\ufb00ect of the choice of split point is shown in the bottom left\npanel. Here we see the data for predictor 436, corresponding to the blue\ndot in the top left plot. The colored points indicate the 1/5th data, while\nthe remaining points belong to the 4/5ths. The optimal split points for this\npredictor based on both the full training set and 4/5ths data are indicated.\nThe split based on the full data makes no errors on the 1/5ths data. But\ncross-validation must base its split on the 4/5ths data, and this incurs two\nerrors out of four samples.\nThe results of applying \ufb01ve-fold cross-validation to each of 50 simulated\ndatasets is shown in the bottom right panel. As we would hope, the average\ncross-validation error is around 50%, which is the true expected prediction\nerror for this classi\ufb01er. Hence cross-validation has behaved as it should.\nOn the other hand, there is considerable variability in the error, underscor-\ning the importance of reporting the estimated standard error of the CV\nestimate. See Exercise 7.10 for another variation of this problem."
+    },
+    {
+      "id": 25624,
+      "page": 267,
+      "seq": 3,
+      "text": "The bootstrap is a general tool for assessing statistical accuracy. First we\ndescribe the bootstrap in general, and then show how it can be used to\nestimate extra-sample prediction error. As with cross-validation, the boot-\nstrap seeks to estimate the conditional error ErrT , but typically estimates\nwell only the expected prediction error Err.\nSuppose we have a model \ufb01t to a set of training data. We denote the\ntraining set by Z = (z1, z2, . . . , zN) where zi = (xi, yi). The basic idea is\nto randomly draw datasets with replacement from the training data, each\nsample the same size as the original training set. This is done B times\n(B = 100 say), producing B bootstrap datasets, as shown in Figure 7.12.\nThen we re\ufb01t the model to each of the bootstrap datasets, and examine\nthe behavior of the \ufb01ts over the B replications.\nIn the \ufb01gure, S(Z) is any quantity computed from the data Z, for ex-\nample, the prediction at some input point. From the bootstrap sampling\nwe can estimate any aspect of the distribution of S(Z), for example, its\nvariance,"
+    },
+    {
+      "id": 25637,
+      "page": 268,
+      "seq": 9,
+      "text": "where \u00afS\u2217= \t\nb S(Z\u2217b)/B. Note that 0\nVar[S(Z)] can be thought of as a\nMonte-Carlo estimate of the variance of S(Z) under sampling from the\nempirical distribution function \u02c6F for the data (z1, z2, . . . , zN).\nHow can we apply the bootstrap to estimate prediction error? One ap-\nproach would be to \ufb01t the model in question on a set of bootstrap samples,\nand then keep track of how well it predicts the original training set. If\n\u02c6f \u2217b(xi) is the predicted value at xi, from the model \ufb01tted to the bth boot-\nstrap dataset, our estimate is"
+    },
+    {
+      "id": 25644,
+      "page": 268,
+      "seq": 16,
+      "text": "However, it is easy to see that 0\nErrboot does not provide a good estimate in\ngeneral. The reason is that the bootstrap datasets are acting as the training\nsamples, while the original training set is acting as the test sample, and\nthese two samples have observations in common. This overlap can make\nover\ufb01t predictions look unrealistically good, and is the reason that cross-\nvalidation explicitly uses non-overlapping data for the training and test\nsamples. Consider for example a 1-nearest neighbor classi\ufb01er applied to a\ntwo-class classi\ufb01cation problem with the same number of observations in"
+    },
+    {
+      "id": 25646,
+      "page": 269,
+      "seq": 1,
+      "text": "each class, in which the predictors and class labels are in fact independent.\nThen the true error rate is 0.5. But the contributions to the bootstrap\nestimate 0\nErrboot will be zero unless the observation i does not appear in the\nbootstrap sample b. In this latter case it will have the correct expectation\n0.5. Now"
+    },
+    {
+      "id": 25652,
+      "page": 269,
+      "seq": 7,
+      "text": "Hence the expectation of 0\nErrboot is about 0.5 \u00d7 0.368 = 0.184, far below\nthe correct error rate 0.5.\nBy mimicking cross-validation, a better bootstrap estimate can be ob-\ntained. For each observation, we only keep track of predictions from boot-\nstrap samples not containing that observation. The leave-one-out bootstrap\nestimate of prediction error is de\ufb01ned by"
+    },
+    {
+      "id": 25660,
+      "page": 269,
+      "seq": 15,
+      "text": "Here C\u2212i is the set of indices of the bootstrap samples b that do not contain"
+    },
+    {
+      "id": 25661,
+      "page": 269,
+      "seq": 16,
+      "text": "observation i, and |C\u2212i| is the number of such samples. In computing 0\nErr\n(1),\nwe either have to choose B large enough to ensure that all of the |C\u2212i| are\ngreater than zero, or we can just leave out the terms in (7.56) corresponding\nto |C\u2212i|\u2019s that are zero.\nThe leave-one out bootstrap solves the over\ufb01tting problem su\ufb00ered by\n0\nErrboot, but has the training-set-size bias mentioned in the discussion of\ncross-validation. The average number of distinct observations in each boot-\nstrap sample is about 0.632 \u00b7 N, so its bias will roughly behave like that of\ntwofold cross-validation. Thus if the learning curve has considerable slope\nat sample size N/2, the leave-one out bootstrap will be biased upward as\nan estimate of the true error.\nThe \u201c.632 estimator\u201d is designed to alleviate this bias. It is de\ufb01ned by"
+    },
+    {
+      "id": 25663,
+      "page": 269,
+      "seq": 18,
+      "text": "The derivation of the .632 estimator is complex; intuitively it pulls the\nleave-one out bootstrap estimate down toward the training error rate, and\nhence reduces its upward bias. The use of the constant .632 relates to (7.55).\nThe .632 estimator works well in \u201clight \ufb01tting\u201d situations, but can break\ndown in over\ufb01t ones. Here is an example due to Breiman et al. (1984).\nSuppose we have two equal-size classes, with the targets independent of\nthe class labels, and we apply a one-nearest neighbor rule. Then err = 0,"
+    },
+    {
+      "id": 25665,
+      "page": 270,
+      "seq": 1,
+      "text": "0\nErr\n(1) = 0.5 and so 0\nErr\n(.632) = .632 \u00d7 0.5 = .316. However, the true error\nrate is 0.5.\nOne can improve the .632 estimator by taking into account the amount\nof over\ufb01tting. First we de\ufb01ne \u03b3 to be the no-information error rate: this\nis the error rate of our prediction rule if the inputs and class labels were\nindependent. An estimate of \u03b3 is obtained by evaluating the prediction rule\non all possible combinations of targets yi and predictors xi\u2032"
+    },
+    {
+      "id": 25671,
+      "page": 270,
+      "seq": 7,
+      "text": "For example, consider the dichotomous classi\ufb01cation problem: let \u02c6p1 be\nthe observed proportion of responses yi equaling 1, and let \u02c6q1 be the ob-\nserved proportion of predictions \u02c6f(xi\u2032) equaling 1. Then"
+    },
+    {
+      "id": 25673,
+      "page": 270,
+      "seq": 9,
+      "text": "With a rule like 1-nearest neighbors for which \u02c6q1 = \u02c6p1 the value of \u02c6\u03b3 is\n2\u02c6p1(1\u2212\u02c6p1). The multi-category generalization of (7.59) is \u02c6\u03b3 = \t\n\u2113\u02c6p\u2113(1\u2212\u02c6q\u2113).\nUsing this, the relative over\ufb01tting rate is de\ufb01ned to be"
+    },
+    {
+      "id": 25675,
+      "page": 270,
+      "seq": 11,
+      "text": "a quantity that ranges from 0 if there is no over\ufb01tting (0\nErr\n(1) = err) to 1\nif the over\ufb01tting equals the no-information value \u02c6\u03b3 \u2212err. Finally, we de\ufb01ne\nthe \u201c.632+\u201d estimator by"
+    },
+    {
+      "id": 25679,
+      "page": 270,
+      "seq": 15,
+      "text": "The weight w ranges from .632 if \u02c6R = 0 to 1 if \u02c6R = 1, so 0\nErr\n(.632+)"
+    },
+    {
+      "id": 25680,
+      "page": 270,
+      "seq": 16,
+      "text": "ranges from 0\nErr\n(.632) to 0\nErr\n(1). Again, the derivation of (7.61) is compli-\ncated: roughly speaking, it produces a compromise between the leave-one-\nout bootstrap and the training error rate that depends on the amount of\nover\ufb01tting. For the 1-nearest-neighbor problem with class labels indepen-"
+    },
+    {
+      "id": 25681,
+      "page": 270,
+      "seq": 17,
+      "text": "dent of the inputs, \u02c6w = \u02c6R = 1, so 0\nErr\n(.632+) = 0\nErr\n(1), which has the correct"
+    },
+    {
+      "id": 25682,
+      "page": 270,
+      "seq": 18,
+      "text": "expectation of 0.5. In other problems with less over\ufb01tting, 0\nErr\n(.632+) will"
+    },
+    {
+      "id": 25698,
+      "page": 272,
+      "seq": 1,
+      "text": "sen model by 38%, 37%, 51%, and 30%, respectively, over the four scenarios,\nwith BIC performing similarly. In contrast, cross-validation overestimated\nthe error by 1%, 4%, 0%, and 4%, with the bootstrap doing about the\nsame. Hence the extra work involved in computing a cross-validation or\nbootstrap measure is worthwhile, if an accurate estimate of test error is\nrequired. With other \ufb01tting methods like trees, cross-validation and boot-\nstrap can underestimate the true error by 10%, because the search for best\ntree is strongly a\ufb00ected by the validation set. In these situations only a\nseparate test set will provide an unbiased estimate of test error."
+    },
+    {
+      "id": 25700,
+      "page": 272,
+      "seq": 3,
+      "text": "Figures 7.14 and 7.15 examine the question of whether cross-validation does\na good job in estimating ErrT , the error conditional on a given training set\nT (expression (7.15) on page 228), as opposed to the expected test error.\nFor each of 100 training sets generated from the \u201creg/linear\u201d setting in\nthe top-right panel of Figure 7.3, Figure 7.14 shows the conditional error\ncurves ErrT as a function of subset size (top left). The next two panels show\n10-fold and N-fold cross-validation, the latter also known as leave-one-out\n(LOO). The thick red curve in each plot is the expected error Err, while\nthe thick black curves are the expected cross-validation curves. The lower\nright panel shows how well cross-validation approximates the conditional\nand expected error.\nOne might have expected N-fold CV to approximate ErrT well, since it\nalmost uses the full training sample to \ufb01t a new test point. 10-fold CV, on\nthe other hand, might be expected to estimate Err well, since it averages\nover somewhat di\ufb00erent training sets. From the \ufb01gure it appears 10-fold\ndoes a better job than N-fold in estimating ErrT , and estimates Err even\nbetter. Indeed, the similarity of the two black curves with the red curve\nsuggests both CV curves are approximately unbiased for Err, with 10-fold\nhaving less variance. Similar trends were reported by Efron (1983).\nFigure 7.15 shows scatterplots of both 10-fold and N-fold cross-validation\nerror estimates versus the true conditional error for the 100 simulations.\nAlthough the scatterplots do not indicate much correlation, the lower right\npanel shows that for the most part the correlations are negative, a curi-\nous phenomenon that has been observed before. This negative correlation\nexplains why neither form of CV estimates ErrT well. The broken lines in\neach plot are drawn at Err(p), the expected error for the best subset of\nsize p. We see again that both forms of CV are approximately unbiased for\nexpected error, but the variation in test error for di\ufb00erent training sets is\nquite substantial.\nAmong the four experimental conditions in 7.3, this \u201creg/linear\u201d scenario\nshowed the highest correlation between actual and predicted test error. This"
+    },
+    {
+      "id": 25747,
+      "page": 275,
+      "seq": 1,
+      "text": "phenomenon also occurs for bootstrap estimates of error, and we would\nguess, for any other estimate of conditional prediction error.\nWe conclude that estimation of test error for a particular training set is\nnot easy in general, given just the data from that same training set. Instead,\ncross-validation and related methods may provide reasonable estimates of\nthe expected error Err."
+    },
+    {
+      "id": 25749,
+      "page": 275,
+      "seq": 3,
+      "text": "Key references for cross-validation are Stone (1974), Stone (1977) and\nAllen (1977). The AIC was proposed by Akaike (1973), while the BIC\nwas introduced by Schwarz (1978). Madigan and Raftery (1994) give an\noverview of Bayesian model selection. The MDL criterion is due to Rissa-\nnen (1983). Cover and Thomas (1991) contains a good description of coding\ntheory and complexity. VC dimension is described in Vapnik (1996). Stone\n(1977) showed that the AIC and leave-one out cross-validation are asymp-\ntotically equivalent. Generalized cross-validation is described by Golub et\nal. (1979) and Wahba (1980); a further discussion of the topic may be found\nin the monograph by Wahba (1990). See also Hastie and Tibshirani (1990),\nChapter 3. The bootstrap is due to Efron (1979); see Efron and Tibshi-\nrani (1993) for an overview. Efron (1983) proposes a number of bootstrap\nestimates of prediction error, including the optimism and .632 estimates.\nEfron (1986) compares CV, GCV and bootstrap estimates of error rates.\nThe use of cross-validation and the bootstrap for model selection is stud-\nied by Breiman and Spector (1992), Breiman (1992), Shao (1996), Zhang\n(1993) and Kohavi (1995). The .632+ estimator was proposed by Efron\nand Tibshirani (1997).\nCherkassky and Ma (2003) published a study on the performance of\nSRM for model selection in regression, in response to our study of section\n7.9.1. They complained that we had been unfair to SRM because had not\napplied it properly. Our response can be found in the same issue of the\njournal (Hastie et al. (2003))."
+    },
+    {
+      "id": 25754,
+      "page": 275,
+      "seq": 8,
+      "text": "=\nErrB(x0) + |2f(x0) \u22121|Pr( \u02c6G(x0) \u0338= G(x0)|X = x0),\n(7.62)"
+    },
+    {
+      "id": 25758,
+      "page": 276,
+      "seq": 3,
+      "text": "2) is the Bayes classi\ufb01er,\nand ErrB(x0) = Pr(Y \u0338= G(x0)|X = x0), the irreducible Bayes error at x0.\nUsing the approximation \u02c6f(x0) \u223cN(E \u02c6f(x0), Var( \u02c6f(x0)), show that"
+    },
+    {
+      "id": 25771,
+      "page": 276,
+      "seq": 16,
+      "text": "the cumulative Gaussian distribution function. This is an increasing func-\ntion, with value 0 at t = \u2212\u221eand value 1 at t = +\u221e.\nWe can think of sign( 1"
+    },
+    {
+      "id": 25773,
+      "page": 276,
+      "seq": 18,
+      "text": "2) as a kind of boundary-\nbias term, as it depends on the true f(x0) only through which side of the\nboundary ( 1"
+    },
+    {
+      "id": 25774,
+      "page": 276,
+      "seq": 19,
+      "text": "2) that it lies. Notice also that the bias and variance combine\nin a multiplicative rather than additive fashion. If E \u02c6f(x0) is on the same\nside of 1"
+    },
+    {
+      "id": 25775,
+      "page": 276,
+      "seq": 20,
+      "text": "2 as f(x0), then the bias is negative, and decreasing the variance\nwill decrease the misclassi\ufb01cation error. On the other hand, if E \u02c6f(x0) is\non the opposite side of 1"
+    },
+    {
+      "id": 25776,
+      "page": 276,
+      "seq": 21,
+      "text": "2 to f(x0), then the bias is positive and it pays to\nincrease the variance! Such an increase will improve the chance that \u02c6f(x0)\nfalls on the correct side of 1"
+    },
+    {
+      "id": 25779,
+      "page": 276,
+      "seq": 24,
+      "text": "(a) If Sii is the ith diagonal element of S, show that for S arising from least\nsquares projections and cubic smoothing splines, the cross-validated\nresidual can be written as"
+    },
+    {
+      "id": 25782,
+      "page": 276,
+      "seq": 27,
+      "text": "(b) Use this result to show that |yi \u2212\u02c6f \u2212i(xi)| \u2265|yi \u2212\u02c6f(xi)|."
+    },
+    {
+      "id": 25783,
+      "page": 276,
+      "seq": 28,
+      "text": "(c) Find general conditions on any smoother S to make result (7.64) hold."
+    },
+    {
+      "id": 25792,
+      "page": 277,
+      "seq": 1,
+      "text": "Add and subtract f(xi) and E \u02c6f(xi) in each expression and expand. Hence\nestablish that the average optimism in the training error is"
+    },
+    {
+      "id": 25800,
+      "page": 277,
+      "seq": 9,
+      "text": "which justi\ufb01es its use as the e\ufb00ective number of parameters."
+    },
+    {
+      "id": 25805,
+      "page": 277,
+      "seq": 14,
+      "text": "for any \u2113. Hence the VC dimension of the class {I(sin(\u03b1x) > 0)} is in\ufb01nite."
+    }
+  ]
+}

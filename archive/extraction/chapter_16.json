@@ -1,0 +1,503 @@
+{
+  "chapter": "16",
+  "sections": [
+    {
+      "number": "16.1",
+      "title": "Introduction",
+      "page_start": 623
+    },
+    {
+      "number": "16.2",
+      "title": "Boosting and Regularization Paths",
+      "page_start": 625
+    },
+    {
+      "number": "16.2.1",
+      "title": "Penalized Regression",
+      "page_start": 625
+    },
+    {
+      "number": "16.2.2",
+      "title": "The \u201cBet on Sparsity\u201d Principle",
+      "page_start": 628
+    },
+    {
+      "number": "16.2.3",
+      "title": "Regularization Paths, Over-\ufb01tting and Margins",
+      "page_start": 631
+    },
+    {
+      "number": "16.3",
+      "title": "Learning Ensembles",
+      "page_start": 634
+    },
+    {
+      "number": "16.3.1",
+      "title": "Learning a Good Ensemble",
+      "page_start": 635
+    },
+    {
+      "number": "16.3.2",
+      "title": "Rule Ensembles",
+      "page_start": 640
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": 47814,
+      "page": 623,
+      "seq": 0,
+      "text": "This is page 605\nPrinter: Opaque this\n16\nEnsemble Learning"
+    },
+    {
+      "id": 47816,
+      "page": 623,
+      "seq": 2,
+      "text": "The idea of ensemble learning is to build a prediction model by combining\nthe strengths of a collection of simpler base models. We have already seen\na number of examples that fall into this category.\nBagging in Section 8.7 and random forests in Chapter 15 are ensemble\nmethods for classi\ufb01cation, where a committee of trees each cast a vote for\nthe predicted class. Boosting in Chapter 10 was initially proposed as a\ncommittee method as well, although unlike random forests, the committee\nof weak learners evolves over time, and the members cast a weighted vote.\nStacking (Section 8.8) is a novel approach to combining the strengths of\na number of \ufb01tted models. In fact one could characterize any dictionary\nmethod, such as regression splines, as an ensemble method, with the basis\nfunctions serving the role of weak learners.\nBayesian methods for nonparametric regression can also be viewed as\nensemble methods: a large number of candidate models are averaged with\nrespect to the posterior distribution of their parameter settings (e.g. (Neal\nand Zhang, 2006)).\nEnsemble learning can be broken down into two tasks: developing a pop-\nulation of base learners from the training data, and then combining them\nto form the composite predictor. In this chapter we discuss boosting tech-\nnology that goes a step further; it builds an ensemble model by conducting\na regularized and supervised search in a high-dimensional space of weak\nlearners."
+    },
+    {
+      "id": 47818,
+      "page": 624,
+      "seq": 1,
+      "text": "An early example of a learning ensemble is a method designed for multi-\nclass classi\ufb01cation using error-correcting output codes (Dietterich and Bakiri,\n1995, ECOC). Consider the 10-class digit classi\ufb01cation problem, and the\ncoding matrix C given in Table 16.1."
+    },
+    {
+      "id": 47820,
+      "page": 624,
+      "seq": 3,
+      "text": "Digit\nC1\nC2\nC3\nC4\nC5\nC6\n\u00b7 \u00b7 \u00b7\nC15\n0\n1\n1\n0\n0\n0\n0\n\u00b7 \u00b7 \u00b7\n1\n1\n0\n0\n1\n1\n1\n1\n\u00b7 \u00b7 \u00b7\n0\n2\n1\n0\n0\n1\n0\n0\n\u00b7 \u00b7 \u00b7\n1\n..."
+    },
+    {
+      "id": 47822,
+      "page": 624,
+      "seq": 5,
+      "text": "Note that the \u2113th column of the coding matrix C\u2113de\ufb01nes a two-class\nvariable that merges all the original classes into two groups. The method\nworks as follows:"
+    },
+    {
+      "id": 47823,
+      "page": 624,
+      "seq": 6,
+      "text": "1. Learn a separate classi\ufb01er for each of the L = 15 two class problems\nde\ufb01ned by the columns of the coding matrix."
+    },
+    {
+      "id": 47824,
+      "page": 624,
+      "seq": 7,
+      "text": "2. At a test point x, let \u02c6p\u2113(x) be the predicted probability of a one for\nthe \u2113th response."
+    },
+    {
+      "id": 47825,
+      "page": 624,
+      "seq": 8,
+      "text": "3. De\ufb01ne \u03b4k(x) = \tL\n\u2113=1 |Ck\u2113\u2212\u02c6p\u2113(x)|, the discriminant function for the\nkth class, where Ck\u2113is the entry for row k and column \u2113in Table 16.1."
+    },
+    {
+      "id": 47826,
+      "page": 624,
+      "seq": 9,
+      "text": "Each row of C is a binary code for representing that class. The rows have\nmore bits than is necessary, and the idea is that the redundant \u201cerror-\ncorrecting\u201d bits allow for some inaccuracies, and can improve performance.\nIn fact, the full code matrix C above has a minimum Hamming distance1"
+    },
+    {
+      "id": 47827,
+      "page": 624,
+      "seq": 10,
+      "text": "of 7 between any pair of rows. Note that even the indicator response coding\n(Section 4.2) is redundant, since 10 classes require only \u2308log2 10 = 4 bits for\ntheir unique representation. Dietterich and Bakiri (1995) showed impressive\nimprovements in performance for a variety of multiclass problems when\nclassi\ufb01cation trees were used as the base classi\ufb01er.\nJames and Hastie (1998) analyzed the ECOC approach, and showed\nthat random code assignment worked as well as the optimally constructed\nerror-correcting codes. They also argued that the main bene\ufb01t of the coding\nwas in variance reduction (as in bagging and random forests), because the\ndi\ufb00erent coded problems resulted in di\ufb00erent trees, and the decoding step\n(3) above has a similar e\ufb00ect as averaging."
+    },
+    {
+      "id": 47828,
+      "page": 624,
+      "seq": 11,
+      "text": "1The Hamming distance between two vectors is the number mismatches between\ncorresponding entries."
+    },
+    {
+      "id": 47831,
+      "page": 625,
+      "seq": 2,
+      "text": "In Section 10.12.2 of the \ufb01rst edition of this book, we suggested an analogy\nbetween the sequence of models produced by a gradient boosting algorithm\nand regularized model \ufb01tting in high-dimensional feature spaces. This was\nprimarily motivated by observing the close connection between a boosted\nversion of linear regression and the lasso (Section 3.4.2). These connec-\ntions have been pursued by us and others, and here we present our current\nthinking in this area. We start with the original motivation, which \ufb01ts more\nnaturally in this chapter on ensemble learning."
+    },
+    {
+      "id": 47833,
+      "page": 625,
+      "seq": 4,
+      "text": "Intuition for the success of the shrinkage strategy (10.41) of gradient boost-\ning (page 364 in Chapter 10) can be obtained by drawing analogies with\npenalized linear regression with a large basis expansion. Consider the dic-\ntionary of all possible J-terminal node regression trees T = {Tk} that could\nbe realized on the training data as basis functions in IRp. The linear model\nis"
+    },
+    {
+      "id": 47837,
+      "page": 625,
+      "seq": 8,
+      "text": "where K = card(T ). Suppose the coe\ufb03cients are to be estimated by least\nsquares. Since the number of such trees is likely to be much larger than\neven the largest training data sets, some form of regularization is required.\nLet \u02c6\u03b1(\u03bb) solve"
+    },
+    {
+      "id": 47851,
+      "page": 625,
+      "seq": 22,
+      "text": "J(\u03b1) is a function of the coe\ufb03cients that generally penalizes larger values.\nExamples are"
+    },
+    {
+      "id": 47859,
+      "page": 625,
+      "seq": 30,
+      "text": "both covered in Section 3.4. As discussed there, the solution to the lasso\nproblem with moderate to large \u03bb tends to be sparse; many of the \u02c6\u03b1k(\u03bb) =\n0. That is, only a small fraction of all possible trees enter the model (16.1)."
+    },
+    {
+      "id": 47861,
+      "page": 626,
+      "seq": 1,
+      "text": "Algorithm 16.1 Forward Stagewise Linear Regression."
+    },
+    {
+      "id": 47862,
+      "page": 626,
+      "seq": 2,
+      "text": "1. Initialize \u02c7\u03b1k = 0, k = 1, . . . , K. Set \u03b5 > 0 to some small constant,\nand M large."
+    },
+    {
+      "id": 47864,
+      "page": 626,
+      "seq": 4,
+      "text": "(a) (\u03b2\u2217, k\u2217) = arg min\u03b2,k\n\tN\ni=1\n\u0007\nyi \u2212\tK\nl=1 \u03b1lTl(xi) \u2212\u03b2Tk(xi)\n\b2\n."
+    },
+    {
+      "id": 47867,
+      "page": 626,
+      "seq": 7,
+      "text": "This seems reasonable since it is likely that only a small fraction of all pos-\nsible trees will be relevant in approximating any particular target function.\nHowever, the relevant subset will be di\ufb00erent for di\ufb00erent targets. Those\ncoe\ufb03cients that are not set to zero are shrunk by the lasso in that their\nabsolute values are smaller than their corresponding least squares values2:\n| \u02c6\u03b1k(\u03bb) | < | \u02c6\u03b1k(0) |. As \u03bb increases, the coe\ufb03cients all shrink, each one\nultimately becoming zero.\nOwing to the very large number of basis functions Tk, directly solving\n(16.2) with the lasso penalty (16.4) is not possible. However, a feasible\nforward stagewise strategy exists that closely approximates the e\ufb00ect of\nthe lasso, and is very similar to boosting and the forward stagewise Algo-\nrithm 10.2. Algorithm 16.1 gives the details. Although phrased in terms\nof tree basis functions Tk, the algorithm can be used with any set of ba-\nsis functions. Initially all coe\ufb03cients are zero in line 1; this corresponds\nto \u03bb = \u221ein (16.2). At each successive step, the tree Tk\u2217is selected that\nbest \ufb01ts the current residuals in line 2(a). Its corresponding coe\ufb03cient \u02c7\u03b1k\u2217\nis then incremented or decremented by an in\ufb01nitesimal amount in 2(b),\nwhile all other coe\ufb03cients\u02c7\u03b1k, k \u0338= k\u2217are left unchanged. In principle, this\nprocess could be iterated until either all the residuals are zero, or \u03b2\u2217= 0.\nThe latter case can occur if K < N, and at that point the coe\ufb03cient values\nrepresent a least squares solution. This corresponds to \u03bb = 0 in (16.2).\nAfter applying Algorithm 16.1 with M < \u221eiterations, many of the coef-\n\ufb01cients will be zero, namely, those that have yet to be incremented. The oth-\ners will tend to have absolute values smaller than their corresponding least\nsquares solution values, | \u02c7\u03b1k(M) | < | \u02c6\u03b1k(0) |. Therefore this M-iteration\nsolution qualitatively resembles the lasso, with M inversely related to \u03bb.\nFigure 16.1 shows an example, using the prostate data studied in Chap-\nter 3. Here, instead of using trees Tk(X) as basis functions, we use the origi-"
+    },
+    {
+      "id": 47868,
+      "page": 626,
+      "seq": 8,
+      "text": "2If K > N, there is in general no unique \u201cleast squares value,\u201d since in\ufb01nitely many\nsolutions will exist that \ufb01t the data perfectly. We can pick the minimum L1-norm solution\namongst these, which is the unique lasso solution."
+    },
+    {
+      "id": 47897,
+      "page": 627,
+      "seq": 28,
+      "text": "k |\u03b1k|. The right panel shows\nthe results of the stagewise linear regression Algorithm 16.1, using M = 220\nconsecutive steps of size \u03b5 = .01."
+    },
+    {
+      "id": 47898,
+      "page": 627,
+      "seq": 29,
+      "text": "nal variables Xk themselves; that is, a multiple linear regression model. The\nleft panel displays the pro\ufb01les of estimated coe\ufb03cients from the lasso, for\ndi\ufb00erent values of the bound parameter t = \t\nk |\u03b1k|. The right panel shows\nthe results of the stagewise Algorithm 16.1, with M = 250 and \u03b5 = 0.01.\n[The left and right panels of Figure 16.1 are the same as Figure 3.10 and\nthe left panel of Figure 3.19, respectively.] The similarity between the two\ngraphs is striking.\nIn some situations the resemblance is more than qualitative. For example,\nif all of the basis functions Tk are mutually uncorrelated, then as \u03b5 \u21930, M \u2191\nsuch that M\u03f5 \u2192t, Algorithm 16.1 yields exactly the same solution as the\nlasso for bound parameter t = \t\nk |\u03b1k| (and likewise for all solutions along\nthe path). Of course, tree-based regressors are not uncorrelated. However,\nthe solution sets are also identical if the coe\ufb03cients \u02c6\u03b1k(\u03bb) are all monotone\nfunctions of \u03bb. This is often the case when the correlation between the\nvariables is low. When the \u02c6\u03b1k(\u03bb) are not monotone in \u03bb, then the solution\nsets are not identical. The solution sets for Algorithm 16.1 tend to change\nless rapidly with changing values of the regularization parameter than those\nof the lasso."
+    },
+    {
+      "id": 47900,
+      "page": 628,
+      "seq": 1,
+      "text": "Efron et al. (2004) make the connections more precise, by characterizing\nthe exact solution paths in the \u03b5-limiting case. They show that the coe\ufb03-\ncient paths are piece-wise linear functions, both for the lasso and forward\nstagewise. This facilitates e\ufb03cient algorithms which allow the entire paths\nto be computed with the same cost as a single least-squares \ufb01t. This least\nangle regression algorithm is described in more detail in Section 3.8.1.\nHastie et al. (2007) show that this in\ufb01nitesimal forward stagewise algo-\nrithm (FS0) \ufb01ts a monotone version of the lasso, which optimally reduces\nat each step the loss function for a given increase in the arc length of the\ncoe\ufb03cient path (see Sections 16.2.3 and 3.8.1). The arc-length for the \u03f5 > 0\ncase is M\u03f5, and hence proportional to the number of steps.\nTree boosting (Algorithm 10.3) with shrinkage (10.41) closely resembles\nAlgorithm 16.1, with the learning rate parameter \u03bd corresponding to \u03b5. For\nsquared error loss, the only di\ufb00erence is that the optimal tree to be selected\nat each iteration Tk\u2217is approximated by the standard top-down greedy\ntree-induction algorithm. For other loss functions, such as the exponential\nloss of AdaBoost and the binomial deviance, Rosset et al. (2004a) show\nsimilar results to what we see here. Thus, one can view tree boosting with\nshrinkage as a form of monotone ill-posed regression on all possible (J-\nterminal node) trees, with the lasso penalty (16.4) as a regularizer. We\nreturn to this topic in Section 16.2.3.\nThe choice of no shrinkage [\u03bd = 1 in equation (10.41)] is analogous to\nforward-stepwise regression, and its more aggressive cousin best-subset se-\nlection, which penalizes the number of non zero coe\ufb03cients J(\u03b1) = \t\nk |\u03b1k|0.\nWith a small fraction of dominant variables, best subset approaches often\nwork well. But with a moderate fraction of strong variables, it is well known\nthat subset selection can be excessively greedy (Copas, 1983), often yielding\npoor results when compared to less aggressive strategies such as the lasso\nor ridge regression. The dramatic improvements often seen when shrinkage\nis used with boosting are yet another con\ufb01rmation of this approach."
+    },
+    {
+      "id": 47902,
+      "page": 628,
+      "seq": 3,
+      "text": "As shown in the previous section, boosting\u2019s forward stagewise strategy\nwith shrinkage approximately minimizes the same loss function with a\nlasso-style L1 penalty. The model is built up slowly, searching through\n\u201cmodel space\u201d and adding shrunken basis functions derived from impor-\ntant predictors. In contrast, the L2 penalty is computationally much easier\nto deal with, as shown in Section 12.3.7. With the basis functions and L2\npenalty chosen to match a particular positive-de\ufb01nite kernel, one can solve\nthe corresponding optimization problem without explicitly searching over\nindividual basis functions.\nHowever, the sometimes superior performance of boosting over proce-\ndures such as the support vector machine may be largely due to the im-\nplicit use of the L1 versus L2 penalty. The shrinkage resulting from the"
+    },
+    {
+      "id": 47904,
+      "page": 629,
+      "seq": 1,
+      "text": "L1 penalty is better suited to sparse situations, where there are few basis\nfunctions with nonzero coe\ufb03cients (among all possible choices).\nWe can strengthen this argument through a simple example, taken from\nFriedman et al. (2004). Suppose we have 10, 000 data points and our model\nis a linear combination of a million trees. If the true population coe\ufb03cients\nof these trees arose from a Gaussian distribution, then we know that in a\nBayesian sense the best predictor is ridge regression (Exercise 3.6). That is,\nwe should use an L2 rather than an L1 penalty when \ufb01tting the coe\ufb03cients.\nOn the other hand, if there are only a small number (e.g., 1000) coe\ufb03cients\nthat are nonzero, the lasso (L1 penalty) will work better. We think of this\nas a sparse scenario, while the \ufb01rst case (Gaussian coe\ufb03cients) is dense.\nNote however that in the dense scenario, although the L2 penalty is best,\nneither method does very well since there is too little data from which to\nestimate such a large number of nonzero coe\ufb03cients. This is the curse of\ndimensionality taking its toll. In a sparse setting, we can potentially do\nwell with the L1 penalty, since the number of nonzero coe\ufb03cients is small.\nThe L2 penalty fails again.\nIn other words, use of the L1 penalty follows what we call the \u201cbet on\nsparsity\u201d principle for high-dimensional problems:"
+    },
+    {
+      "id": 47905,
+      "page": 629,
+      "seq": 2,
+      "text": "Use a procedure that does well in sparse problems, since no pro-\ncedure does well in dense problems."
+    },
+    {
+      "id": 47907,
+      "page": 629,
+      "seq": 4,
+      "text": "\u2022 For any given application, the degree of sparseness/denseness depends\non the unknown true target function, and the chosen dictionary T ."
+    },
+    {
+      "id": 47908,
+      "page": 629,
+      "seq": 5,
+      "text": "\u2022 The notion of sparse versus dense is relative to the size of the train-\ning data set and/or the noise-to-signal ratio (NSR). Larger training\nsets allow us to estimate coe\ufb03cients with smaller standard errors.\nLikewise in situations with small NSR, we can identify more nonzero\ncoe\ufb03cients with a given sample size than in situations where the NSR\nis larger."
+    },
+    {
+      "id": 47909,
+      "page": 629,
+      "seq": 6,
+      "text": "\u2022 The size of the dictionary plays a role as well. Increasing the size of the\ndictionary may lead to a sparser representation for our function, but\nthe search problem becomes more di\ufb03cult leading to higher variance."
+    },
+    {
+      "id": 47956,
+      "page": 631,
+      "seq": 1,
+      "text": "added to the linear predictor \u03b7(X) = XT \u03b2 to produce a continuous re-\nsponse. For classi\ufb01cation the linear predictor is transformed via the inverse-\nlogit to a probability, and a binary response is generated. Five di\ufb00er-\nent noise-to-signal ratios are presented, obtained by scaling \u03b7(X) prior\nto generating the response. In both cases this is de\ufb01ned to be NSR =\nVar(Y |\u03b7(X))/Var(\u03b7(X)). Both the ridge regression and lasso coe\ufb03cient\npaths were \ufb01t using a series of 50 values of \u03bb corresponding to a range of\ndf from 1 to 50 (see Chapter 3 for details). The models were evaluated on\na large test set (in\ufb01nite for Gaussian, 5000 for binary), and in each case the\nvalue for \u03bb was chosen to minimize the test-set error. We report percentage\nvariance explained for the regression problems, and percentage misclassi\ufb01-\ncation error explained for the classi\ufb01cation problems (relative to a baseline\nerror of 0.5). There are 20 simulation runs for each scenario.\nNote that for the classi\ufb01cation problems, we are using squared-error loss\nto \ufb01t the binary response. Note also that we do not using the training\ndata to select \u03bb, but rather are reporting the best possible behavior for\neach method in the di\ufb00erent scenarios. The L2 penalty performs poorly\neverywhere. The Lasso performs reasonably well in the only two situations\nwhere it can (sparse coe\ufb03cients). As expected the performance gets worse\nas the NSR increases (less so for classi\ufb01cation), and as the model becomes\ndenser. The di\ufb00erences are less marked for classi\ufb01cation than for regression.\nThese empirical results are supported by a large body of theoretical\nresults (Donoho and Johnstone, 1994; Donoho and Elad, 2003; Donoho,\n2006b; Candes and Tao, 2007) that support the superiority of L1 estimation\nin sparse settings."
+    },
+    {
+      "id": 47958,
+      "page": 631,
+      "seq": 3,
+      "text": "It has often been observed that boosting \u201cdoes not over\ufb01t,\u201d or more as-\ntutely is \u201cslow to over\ufb01t.\u201d Part of the explanation for this phenomenon was\nmade earlier for random forests \u2014 misclassi\ufb01cation error is less sensitive to\nvariance than is mean-squared error, and classi\ufb01cation is the major focus\nin the boosting community. In this section we show that the regulariza-\ntion paths of boosted models are \u201cwell behaved,\u201d and that for certain loss\nfunctions they have an appealing limiting form.\nFigure 16.3 shows the coe\ufb03cient paths for lasso and in\ufb01nitesimal forward\nstagewise (FS0) in a simulated regression setting. The data consists of a\ndictionary of 1000 Gaussian variables, strongly correlated (\u03c1 = 0.95) within\nblocks of 20, but uncorrelated between blocks. The generating model has\nnonzero coe\ufb03cients for 50 variables, one drawn from each block, and the\ncoe\ufb03cient values are drawn from a standard Gaussian. Finally, Gaussian\nnoise is added, with a noise-to-signal ratio of 0.72 (Exercise\n16.1.) The\nFS0 algorithm is a limiting form of algorithm 16.1, where the step size \u03b5\nis shrunk to zero (Section 3.8.1). The grouping of the variables is intended\nto mimic the correlations of nearby trees, and with the forward-stagewise"
+    },
+    {
+      "id": 47970,
+      "page": 632,
+      "seq": 11,
+      "text": "algorithm, this setup is intended as an idealized version of gradient boosting\nwith shrinkage. For both these algorithms, the coe\ufb03cient paths can be\ncomputed exactly, since they are piecewise linear (see the LARS algorithm\nin Section 3.8.1).\nHere the coe\ufb03cient pro\ufb01les are similar only in the early stages of the\npaths. For the later stages, the forward stagewise paths tend to be mono-\ntone and smoother, while those for the lasso \ufb02uctuate widely. This is due\nto the strong correlations among subsets of the variables \u2014lasso su\ufb00ers\nsomewhat from the multi-collinearity problem (Exercise 3.28).\nThe performance of the two models is rather similar (Figure 16.4), and\nthey achieve about the same minimum. In the later stages forward stagewise\ntakes longer to over\ufb01t, a likely consequence of the smoother paths.\nHastie et al. (2007) show that FS0 solves a monotone version of the lasso\nproblem for squared error loss. Let T a = T \u222a{\u2212T } be the augmented\ndictionary obtained by including a negative copy of every basis element\nin T . We consider models f(x) ="
+    },
+    {
+      "id": 47971,
+      "page": 632,
+      "seq": 12,
+      "text": "Tk\u2208T a \u03b1kTk(x) with non-negative co-\ne\ufb03cients \u03b1k \u22650. In this expanded space, the lasso coe\ufb03cient paths are\npositive, while those of FS0 are monotone nondecreasing.\nThe monotone lasso path is characterized by a di\ufb00erential equation"
+    },
+    {
+      "id": 47979,
+      "page": 633,
+      "seq": 5,
+      "text": "oooooooooooooo oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
+    },
+    {
+      "id": 47984,
+      "page": 633,
+      "seq": 10,
+      "text": "oooo ooooooooo\noooooooo ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
+    },
+    {
+      "id": 47991,
+      "page": 633,
+      "seq": 17,
+      "text": "with initial condition \u03b1(0) = 0, where \u2113is the L1 arc-length of the path\n\u03b1(\u2113) (Exercise 16.2). The monotone lasso move direction (velocity vector)\n\u03c1ml(\u03b1(\u2113)) decreases the loss at the optimal quadratic rate per unit increase\nin the L1 arc-length of the path. Since \u03c1ml\nk (\u03b1(\u2113)) \u22650 \u2200k, \u2113, the solution\npaths are monotone.\nThe lasso can similarly be characterized as the solution to a di\ufb00erential\nequation as in (16.6), except that the move directions decrease the loss\noptimally per unit increase in the L1 norm of the path. As a consequence,\nthey are not necessarily positive, and hence the lasso paths need not be\nmonotone.\nIn this augmented dictionary, restricting the coe\ufb03cients to be positive is\nnatural, since it avoids an obvious ambiguity. It also ties in more naturally\nwith tree boosting\u2014we always \ufb01nd trees positively correlated with the\ncurrent residual.\nThere have been suggestions that boosting performs well (for two-class\nclassi\ufb01cation) because it exhibits maximal-margin properties, much like the\nsupport-vector machines of Chapters 4.5.2 and 12. Schapire et al. (1998)\nde\ufb01ne the normalized L1 margin of a \ufb01tted model f(x) = \t\nk \u03b1kTk(x) as"
+    },
+    {
+      "id": 47993,
+      "page": 633,
+      "seq": 19,
+      "text": "Here the minimum is taken over the training sample, and yi \u2208{\u22121, +1}.\nUnlike the L2 margin (4.40) of support vector machines, the L1 margin\nm(f) measures the distance to the closest training point in L\u221eunits (max-\nimum coordinate distance)."
+    },
+    {
+      "id": 48004,
+      "page": 634,
+      "seq": 10,
+      "text": "Schapire et al. (1998) prove that with separable data, Adaboost in-\ncreases m(f) with each iteration, converging to a margin-symmetric so-\nlution. R\u00a8atsch and Warmuth (2002) prove the asymptotic convergence of\nAdaboost with shrinkage to a L1-margin-maximizing solution. Rosset et\nal. (2004a) consider regularized models of the form (16.2) for general loss\nfunctions. They show that as \u03bb \u21930, for particular loss functions the solution\nconverges to a margin-maximizing con\ufb01guration. In particular they show\nthis to be the case for the exponential loss of Adaboost, as well as binomial\ndeviance.\nCollecting together the results of this section, we reach the following\nsummary for boosted classi\ufb01ers:"
+    },
+    {
+      "id": 48005,
+      "page": 634,
+      "seq": 11,
+      "text": "The sequence of boosted classi\ufb01ers form an L1-regularized mono-\ntone path to a margin-maximizing solution."
+    },
+    {
+      "id": 48006,
+      "page": 634,
+      "seq": 12,
+      "text": "Of course the margin-maximizing end of the path can be a very poor, over\ufb01t\nsolution, as it is in the example in Figure 16.5. Early stopping amounts\nto picking a point along the path, and should be done with the aid of a\nvalidation dataset."
+    },
+    {
+      "id": 48008,
+      "page": 634,
+      "seq": 14,
+      "text": "The insights learned from the previous sections can be harnessed to produce\na more e\ufb00ective and e\ufb03cient ensemble model. Again we consider functions"
+    },
+    {
+      "id": 48012,
+      "page": 635,
+      "seq": 3,
+      "text": "where T is a dictionary of basis functions, typically trees. For gradient\nboosting and random forests, |T | is very large, and it is quite typical for the\n\ufb01nal model to involve many thousands of trees. In the previous section we\nargue that gradient boosting with shrinkage \ufb01ts an L1 regularized monotone\npath in this space of trees.\nFriedman and Popescu (2003) propose a hybrid approach which breaks\nthis process down into two stages:"
+    },
+    {
+      "id": 48013,
+      "page": 635,
+      "seq": 4,
+      "text": "\u2022 A \ufb01nite dictionary TL = {T1(x), T2(x), . . . , TM(x)} of basis functions\nis induced from the training data;"
+    },
+    {
+      "id": 48014,
+      "page": 635,
+      "seq": 5,
+      "text": "\u2022 A family of functions f\u03bb(x) is built by \ufb01tting a lasso path in this\ndictionary:"
+    },
+    {
+      "id": 48022,
+      "page": 635,
+      "seq": 13,
+      "text": "In its simplest form this model could be seen as a way of post-processing\nboosting or random forests, taking for TL the collection of trees produced\nby the gradient boosting or random forest algorithms. By \ufb01tting the lasso\npath to these trees, we would typically use a much reduced set, which would\nsave in computations and storage for future predictions. In the next section\nwe describe modi\ufb01cations of this prescription that reduce the correlations in\nthe ensemble TL, and improve the performance of the lasso post processor.\nAs an initial illustration, we apply this procedure to a random forest\nensemble grown on the spam data.\nFigure 16.6 shows that a lasso post-processing o\ufb00ers modest improve-\nment over the random forest (blue curve), and reduces the forest to about\n40 trees, rather than the original 1000. The post-processed performance\nmatches that of gradient boosting. The orange curves represent a modi\ufb01ed\nversion of random forests, designed to reduce the correlations between trees\neven more. Here a random sub-sample (without replacement) of 5% of the\ntraining sample is used to grow each tree, and the trees are restricted to be\nshallow (about six terminal nodes). The post-processing o\ufb00ers more dra-\nmatic improvements here, and the training costs are reduced by a factor\nof about 100. However, the performance of the post-processed model falls\nsomewhat short of the blue curves."
+    },
+    {
+      "id": 48024,
+      "page": 635,
+      "seq": 15,
+      "text": "Not all ensembles TL will perform well with post-processing. In terms of\nbasis functions, we want a collection that covers the space well in places"
+    },
+    {
+      "id": 48031,
+      "page": 636,
+      "seq": 6,
+      "text": "Random Forest\nRandom Forest (5%, 6)\nGradient Boost (5 node)"
+    },
+    {
+      "id": 48033,
+      "page": 636,
+      "seq": 8,
+      "text": "where they are needed, and are su\ufb03ciently di\ufb00erent from each other for\nthe post-processor to be e\ufb00ective.\nFriedman and Popescu (2003) gain insights from numerical quadrature\nand importance sampling. They view the unknown function as an integral"
+    },
+    {
+      "id": 48035,
+      "page": 636,
+      "seq": 10,
+      "text": "where \u03b3 \u2208\u0393 indexes the basis functions b(x; \u03b3). For example, if the basis\nfunctions are trees, then \u03b3 indexes the splitting variables, the split-points\nand the values in the terminal nodes. Numerical quadrature amounts to\n\ufb01nding a set of M evaluation points \u03b3m \u2208\u0393 and corresponding weights\n\u03b1m so that fm(x) = \u03b10 + \tM\nm=1 \u03b1mb(x; \u03b3m) approximates f(x) well over\nthe domain of x. Importance sampling amounts to sampling \u03b3 at random,\nbut giving more weight to relevant regions of the space \u0393. Friedman and\nPopescu (2003) suggest a measure of (lack of) relevance that uses the loss\nfunction (16.9):"
+    },
+    {
+      "id": 48040,
+      "page": 637,
+      "seq": 4,
+      "text": "evaluated on the training data.\nIf a single basis function were to be selected (e.g., a tree), it would be\nthe global minimizer \u03b3\u2217= arg min\u03b3\u2208\u0393 Q(\u03b3). Introducing randomness in the\nselection of \u03b3 would necessarily produce less optimal values with Q(\u03b3) \u2265\nQ(\u03b3\u2217). They propose a natural measure of the characteristic width \u03c3 of the\nsampling scheme S,\n\u03c3 = ES[Q(\u03b3) \u2212Q(\u03b3\u2217)].\n(16.12)"
+    },
+    {
+      "id": 48041,
+      "page": 637,
+      "seq": 5,
+      "text": "\u2022 \u03c3 too narrow suggests too many of the b(x; \u03b3m) look alike, and similar\nto b(x; \u03b3\u2217);"
+    },
+    {
+      "id": 48042,
+      "page": 637,
+      "seq": 6,
+      "text": "\u2022 \u03c3 too wide implies a large spread in the b(x; \u03b3m), but possibly con-\nsisting of many irrelevant cases."
+    },
+    {
+      "id": 48043,
+      "page": 637,
+      "seq": 7,
+      "text": "Friedman and Popescu (2003) use sub-sampling as a mechanism for intro-\nducing randomness, leading to their ensemble-generation algorithm 16.2."
+    },
+    {
+      "id": 48051,
+      "page": 637,
+      "seq": 15,
+      "text": "Sm(\u03b7) refers to a subsample of N \u00b7 \u03b7 (\u03b7 \u2208(0, 1]) of the training obser-\nvations, typically without replacement. Their simulations suggest picking\n\u03b7 \u2264\n1\n2, and for large N picking \u03b7 \u223c1/\n\u221a"
+    },
+    {
+      "id": 48052,
+      "page": 637,
+      "seq": 16,
+      "text": "N. Reducing \u03b7 increases the\nrandomness, and hence the width \u03c3. The parameter \u03bd \u2208[0, 1] introduces\nmemory into the randomization process; the larger \u03bd, the more the pro-\ncedure avoids b(x; \u03b3) similar to those found before. A number of familiar\nrandomization schemes are special cases of Algorithm 16.2:"
+    },
+    {
+      "id": 48053,
+      "page": 637,
+      "seq": 17,
+      "text": "Bagging has \u03b7 = 1, but samples with replacement, and has \u03bd = 0. Fried-\nman and Hall (2007) argue that sampling without replacement with\n\u03b7 = 1/2 is equivalent to sampling with replacement with \u03b7 = 1, and\nthe former is much more e\ufb03cient."
+    },
+    {
+      "id": 48055,
+      "page": 638,
+      "seq": 1,
+      "text": "Random forest sampling is similar, with more randomness introduced by\nthe selection of the splitting variable. Reducing \u03b7 < 1/2 in algo-\nrithm 16.2 has a similar e\ufb00ect to reducing m in random forests, but\ndoes not su\ufb00er from the potential biases discussed in Section 15.4.2."
+    },
+    {
+      "id": 48056,
+      "page": 638,
+      "seq": 2,
+      "text": "Gradient boosting with shrinkage (10.41) uses \u03b7 = 1, but typically does\nnot produce su\ufb03cient width \u03c3."
+    },
+    {
+      "id": 48057,
+      "page": 638,
+      "seq": 3,
+      "text": "Stochastic gradient boosting (Friedman, 1999) follows the recipe exactly."
+    },
+    {
+      "id": 48059,
+      "page": 638,
+      "seq": 5,
+      "text": "2, and call their combined\nprocedure (ensemble generation and post processing) Importance sampled\nlearning ensemble (ISLE).\nFigure 16.7 shows the performance of an ISLE on the spam data. It does"
+    },
+    {
+      "id": 48067,
+      "page": 638,
+      "seq": 13,
+      "text": "not improve the predictive performance, but is able to produce a more\nparsimonious model. Note that in practice the post-processing includes\nthe selection of the regularization parameter \u03bb in (16.9), which would be"
+    },
+    {
+      "id": 48069,
+      "page": 639,
+      "seq": 1,
+      "text": "chosen by cross-validation. Here we simply demonstrate the e\ufb00ects of post-\nprocessing by showing the entire path on the test data.\nFigure 16.8 shows various ISLEs on a regression example. The generating"
+    },
+    {
+      "id": 48074,
+      "page": 639,
+      "seq": 6,
+      "text": "GBM (1, 0.01)\nGBM (0.1, 0.01)\nISLE  GB\nISLE RF\nRandom Forest"
+    },
+    {
+      "id": 48082,
+      "page": 639,
+      "seq": 14,
+      "text": "where X \u223cU[0, 1]100 (the last 65 elements are noise variables). The re-\nsponse Y = f(X) + \u03b5 where \u03b5 \u223cN(0, \u03c32); we chose \u03c3 = 1.3 resulting in a\nsignal-to-noise ratio of approximately 2. We used a training sample of size\n1000, and estimated the mean squared error E( \u02c6f(X)\u2212f(X))2 by averaging\nover a test set of 500 samples. The sub-sampled GBM curve (light blue)\nis an instance of stochastic gradient boosting (Friedman, 1999) discussed in\nSection 10.12, and it outperforms gradient boosting on this example."
+    },
+    {
+      "id": 48085,
+      "page": 640,
+      "seq": 2,
+      "text": "Here we describe a modi\ufb01cation of the tree-ensemble method that focuses\non individual rules (Friedman and Popescu, 2003). We encountered rules\nin Section 9.3 in the discussion of the PRIM method. The idea is to enlarge\nan ensemble of trees by constructing a set of rules from each of the trees\nin the collection."
+    },
+    {
+      "id": 48096,
+      "page": 640,
+      "seq": 13,
+      "text": "R1(X)\n=\nI(X1 < 2.1)\nR2(X)\n=\nI(X1 \u22652.1)\nR3(X)\n=\nI(X1 \u22652.1) \u00b7 I(X3 \u2208{S})\nR4(X)\n=\nI(X1 \u22652.1) \u00b7 I(X3 \u2208{M, L})\nR5(X)\n=\nI(X1 \u22652.1) \u00b7 I(X3 \u2208{S}) \u00b7 I(X7 < 4.5)\nR6(X)\n=\nI(X1 \u22652.1) \u00b7 I(X3 \u2208{S}) \u00b7 I(X7 \u22654.5)"
+    },
+    {
+      "id": 48098,
+      "page": 640,
+      "seq": 15,
+      "text": "A linear expansion in rules 1, 4, 5 and 6 is equivalent to the tree itself\n(Exercise 16.3); hence (16.14) is an over-complete basis for the tree.\nFor each tree Tm in an ensemble T , we can construct its mini-ensemble\nof rules T m\nRULE, and then combine them all to form a larger ensemble"
+    },
+    {
+      "id": 48102,
+      "page": 640,
+      "seq": 19,
+      "text": "This is then treated like any other ensemble, and post-processed via the\nlasso or similar regularized procedure.\nThere are several advantages to this approach of deriving rules from the\nmore complex trees:"
+    },
+    {
+      "id": 48103,
+      "page": 640,
+      "seq": 20,
+      "text": "\u2022 The space of models is enlarged, and can lead to improved perfor-\nmance."
+    },
+    {
+      "id": 48109,
+      "page": 641,
+      "seq": 5,
+      "text": "\u2022 Rules are easier to interpret than trees, so there is the potential for\na simpli\ufb01ed model."
+    },
+    {
+      "id": 48110,
+      "page": 641,
+      "seq": 6,
+      "text": "\u2022 It is often natural to augment T RULE by including each variable Xj\nseparately as well, thus allowing the ensemble to model linear func-\ntions well."
+    },
+    {
+      "id": 48111,
+      "page": 641,
+      "seq": 7,
+      "text": "Friedman and Popescu (2008) demonstrate the power of this procedure on a\nnumber of illustrative examples, including the simulation example (16.13).\nFigure 16.10 shows boxplots of the mean-squared error from the true model\nfor twenty realizations from this model. The models were all \ufb01t using the\nRulefit software, available on the ESL homepage3, which runs in an auto-\nmatic mode.\nOn the same training set as used in Figure 16.8, the rule based model\nachieved a mean-squared error of 1.06. Although slightly worse than the\nbest achieved in that \ufb01gure, the results are not comparable because cross-\nvalidation was used here to select the \ufb01nal model."
+    },
+    {
+      "id": 48113,
+      "page": 641,
+      "seq": 9,
+      "text": "As noted in the introduction, many of the new methods in machine learning\nhave been dubbed \u201censemble\u201d methods. These include neural networks\nboosting, bagging and random forests; Dietterich (2000a) gives a survey of\ntree-based ensemble methods. Neural networks (Chapter 11) are perhaps\nmore deserving of the name, since they simultaneously learn the parameters"
+    },
+    {
+      "id": 48116,
+      "page": 642,
+      "seq": 1,
+      "text": "of the hidden units (basis functions), along with how to combine them.\nBishop (2006) discusses neural networks in some detail, along with the\nBayesian perspective (MacKay, 1992; Neal, 1996). Support vector machines\n(Chapter 12) can also be regarded as an ensemble method; they perform\nL2 regularized model \ufb01tting in high-dimensional feature spaces. Boosting\nand lasso exploit sparsity through L1 regularization to overcome the high-\ndimensionality, while SVMs rely on the \u201ckernel trick\u201d characteristic of L2\nregularization.\nC5.0 (Quinlan, 2004) is a commercial tree and rule generation package,\nwith some goals in common with Rulefit.\nThere is a vast and varied literature often referred to as \u201ccombining clas-\nsi\ufb01ers\u201d which abounds in ad-hoc schemes for mixing methods of di\ufb00erent\ntypes to achieve better performance. For a principled approach, see Kittler\net al. (1998)."
+    },
+    {
+      "id": 48122,
+      "page": 642,
+      "seq": 7,
+      "text": "Show that \u039b(t) \u2265|\u03b1(t)|1, with equality i\ufb00\u03b1(t) is monotone."
+    }
+  ]
+}

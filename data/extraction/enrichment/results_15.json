@@ -1,0 +1,647 @@
+[
+  {
+    "concept_id": 336,
+    "concept_name": "stacking",
+    "facts": [
+      {
+        "fact_text": "Stacked generalization, or stacking, is a way of doing this. Let f\u0302(\u2212i)m(x) be the prediction at x, using model m, applied to the dataset with the ith training observation removed. The stacking estimate of the weights is obtained from the least squares linear regression of yi on f\u0302(\u2212i)m(xi), m = 1, 2, . . . , M.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 26702,
+        "page_number": 308
+      },
+      {
+        "fact_text": "The problem is that we have not put each of the models on the same footing by taking into account their complexity (the number of inputs m in this example).",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 26702,
+        "page_number": 308
+      },
+      {
+        "fact_text": "By using the cross-validated predictions f\u0302(\u2212i)m(x), stacking avoids giving unfairly high weight to models with higher complexity.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 26712,
+        "page_number": 308
+      },
+      {
+        "fact_text": "Better results can be obtained by restricting the weights to be nonnegative, and to sum to 1. This seems like a reasonable restriction if we interpret the weights as posterior model probabilities as in equation (8.54), and it leads to a tractable quadratic programming problem.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 26712,
+        "page_number": 308
+      },
+      {
+        "fact_text": "There is a close connection between stacking and model selection via leave-one-out cross-validation (Section 7.10). If we restrict the minimization in (8.59) to weight vectors w that have one unit weight and the rest zero, this leads to a model choice m\u0302 with smallest leave-one-out cross-validation error.",
+        "fact_type": "comparison",
+        "importance_rank": 5,
+        "paragraph_id": 26712,
+        "page_number": 308
+      },
+      {
+        "fact_text": "Rather than choose a single model, stacking combines them with estimated optimal weights. This will often lead to better prediction, but less interpretability than the choice of only one of the M models.",
+        "fact_type": "comparison",
+        "importance_rank": 6,
+        "paragraph_id": 26712,
+        "page_number": 308
+      },
+      {
+        "fact_text": "The stacking idea is actually more general than described above. One can use any learning method, not just linear regression, to combine the models as in (8.59); the weights could also depend on the input location x. In this way, learning methods are \u201cstacked\u201d on top of one another, to improve prediction performance.",
+        "fact_type": "property",
+        "importance_rank": 7,
+        "paragraph_id": 26712,
+        "page_number": 308
+      }
+    ]
+  },
+  {
+    "concept_id": 337,
+    "concept_name": "bumping",
+    "facts": [
+      {
+        "fact_text": "The final method described in this chapter does not involve averaging or combining models, but rather is a technique for finding a better single model. Bumping uses bootstrap sampling to move randomly through model space. For problems where fitting method finds many local minima, bumping can help the method to avoid getting stuck in poor solutions.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 26714,
+        "page_number": 308
+      },
+      {
+        "fact_text": "Bumping uses bootstrap sampling to move randomly through model space. For problems where fitting method finds many local minima, bumping can help the method to avoid getting stuck in poor solutions. We draw bootstrap samples and fit a model to each. But rather than average the predictions, we choose the model estimated from a bootstrap sample that best fits the training data.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 26714,
+        "page_number": 308
+      },
+      {
+        "fact_text": "The final method described in this chapter does not involve averaging or combining models, but rather is a technique for finding a better single model.",
+        "fact_type": "comparison",
+        "importance_rank": 3,
+        "paragraph_id": 26714,
+        "page_number": 308
+      },
+      {
+        "fact_text": "We draw bootstrap samples and fit a model to each. But rather than average the predictions, we choose the model estimated from a bootstrap sample that best fits the training data.",
+        "fact_type": "property",
+        "importance_rank": 4,
+        "paragraph_id": 26714,
+        "page_number": 308
+      }
+    ]
+  },
+  {
+    "concept_id": 220,
+    "concept_name": "margin in classification",
+    "facts": [
+      {
+        "fact_text": "In classification (with a -1/1 response) the margin plays a role analogous to the residuals y-f(x) in regression. The classification rule G(x) = sign[f(x)] implies that observations with positive margin yif(xi) > 0 are classified correctly whereas those with negative margin yif(xi) < 0 are misclassified.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27428,
+        "page_number": 313
+      },
+      {
+        "fact_text": "The classification rule G(x) = sign[f(x)] implies that observations with positive margin yif(xi) > 0 are classified correctly whereas those with negative margin yif(xi) < 0 are misclassified.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 27428,
+        "page_number": 313
+      },
+      {
+        "fact_text": "In classification (with a -1/1 response) the margin plays a role analogous to the residuals y-f(x) in regression.",
+        "fact_type": "comparison",
+        "importance_rank": 3,
+        "paragraph_id": 27428,
+        "page_number": 313
+      },
+      {
+        "fact_text": "Regression models play an important role in many data analyses, providing prediction and classification rules, and data analytic tools for understanding the importance of different inputs.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 27428,
+        "page_number": 313
+      }
+    ]
+  },
+  {
+    "concept_id": 338,
+    "concept_name": "generalized additive model",
+    "facts": [
+      {
+        "fact_text": "In the regression setting, a generalized additive model has the form E(Y |X1, X2, . . . , Xp) = \u03b1 + f1(X1) + f2(X2) + \u00b7 \u00b7 \u00b7 + fp(Xp).",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27429,
+        "page_number": 313
+      },
+      {
+        "fact_text": "As usual X1, X2, . . . , Xp represent predictors and Y is the outcome; the fj\u2019s are unspecified smooth (\u201cnonparametric\u201d) functions.",
+        "fact_type": "definition",
+        "importance_rank": 2,
+        "paragraph_id": 27431,
+        "page_number": 314
+      },
+      {
+        "fact_text": "In general, the conditional mean \u03bc(X) of a response Y is related to an additive function of the predictors via a link function g: g[\u03bc(X)] = \u03b1 + f1(X1) + \u00b7 \u00b7 \u00b7 + fp(Xp).",
+        "fact_type": "formula",
+        "importance_rank": 3,
+        "paragraph_id": 27437,
+        "page_number": 314
+      },
+      {
+        "fact_text": "These techniques each assume a (different) structured form for the unknown regression function, and by doing so they finesse the curse of dimensionality. Of course, they pay the possible price of misspecifying the model, and so in each case there is a tradeoff that has to be made.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 27426,
+        "page_number": 313
+      },
+      {
+        "fact_text": "The functions fj are estimated in a flexible manner, using an algorithm whose basic building block is a scatterplot smoother. The estimated function f\u0302j can then reveal possible nonlinearities in the effect of Xj.",
+        "fact_type": "property",
+        "importance_rank": 5,
+        "paragraph_id": 27442,
+        "page_number": 314
+      },
+      {
+        "fact_text": "We can easily mix in linear and other parametric forms with the nonlinear terms, a necessity when some of the inputs are qualitative variables (factors). The nonlinear terms are not restricted to main effects either; we can have nonlinear components in two or more variables, or separate curves in Xj for each level of the factor Xk.",
+        "fact_type": "property",
+        "importance_rank": 6,
+        "paragraph_id": 27444,
+        "page_number": 315
+      },
+      {
+        "fact_text": "Additive models can replace linear models in a wide variety of settings, for example an additive decomposition of time series, Yt = St + Tt + \u03b5t, where St is a seasonal component, Tt is a trend and \u03b5 is an error term.",
+        "fact_type": "example",
+        "importance_rank": 7,
+        "paragraph_id": 27449,
+        "page_number": 315
+      }
+    ]
+  },
+  {
+    "concept_id": 339,
+    "concept_name": "additive logistic regression",
+    "facts": [
+      {
+        "fact_text": "The additive logistic regression model replaces each linear term by a more general functional form log[\u03bc(X)/(1\u2212\u03bc(X))] = \u03b1 + f1(X1) + \u00b7 \u00b7 \u00b7 + fp(Xp), where again each fj is an unspecified smooth function.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27434,
+        "page_number": 314
+      },
+      {
+        "fact_text": "While the nonparametric form for the functions fj makes the model more flexible, the additivity is retained and allows us to interpret the model in much the same way as before.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 27437,
+        "page_number": 314
+      },
+      {
+        "fact_text": "The additive logistic regression model is an example of a generalized additive model. In general, the conditional mean \u03bc(X) of a response Y is related to an additive function of the predictors via a link function g: g[\u03bc(X)] = \u03b1 + f1(X1) + \u00b7 \u00b7 \u00b7 + fp(Xp).",
+        "fact_type": "comparison",
+        "importance_rank": 3,
+        "paragraph_id": 27437,
+        "page_number": 314
+      },
+      {
+        "fact_text": "We relate the mean of the binary response \u03bc(X) = Pr(Y = 1|X) to the predictors via a linear regression model and the logit link function.",
+        "fact_type": "intuition",
+        "importance_rank": 4,
+        "paragraph_id": 27431,
+        "page_number": 314
+      },
+      {
+        "fact_text": "For two-class classification, recall the logistic regression model for binary data discussed in Section 4.4.",
+        "fact_type": "intuition",
+        "importance_rank": 5,
+        "paragraph_id": 27431,
+        "page_number": 314
+      }
+    ]
+  },
+  {
+    "concept_id": 341,
+    "concept_name": "identity link",
+    "facts": [
+      {
+        "fact_text": "g(\u03bc) = \u03bc is the identity link, used for linear and additive models for Gaussian response data.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27439,
+        "page_number": 314
+      },
+      {
+        "fact_text": "Examples of classical link functions are the following: g(\u03bc) = \u03bc is the identity link, used for linear and additive models for Gaussian response data.",
+        "fact_type": "example",
+        "importance_rank": 2,
+        "paragraph_id": 27438,
+        "page_number": 314
+      },
+      {
+        "fact_text": "All three of these arise from exponential family sampling models, which in addition include the gamma and negative-binomial distributions. These families generate the well-known class of generalized linear models, which are all extended in the same way to generalized additive models.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 27442,
+        "page_number": 314
+      }
+    ]
+  },
+  {
+    "concept_id": 342,
+    "concept_name": "logit link",
+    "facts": [
+      {
+        "fact_text": "g(\u03bc) = logit(\u03bc) as above, or g(\u03bc) = probit(\u03bc), the probit link function, for modeling binomial probabilities. The probit function is the inverse Gaussian cumulative distribution function: probit(\u03bc) = \u03a6\u22121(\u03bc).",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27440,
+        "page_number": 314
+      },
+      {
+        "fact_text": "We relate the mean of the binary response \u03bc(X) = Pr(Y = 1|X) to the predictors via a linear regression model and the logit link function.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 27431,
+        "page_number": 314
+      },
+      {
+        "fact_text": "All three of these arise from exponential family sampling models, which in addition include the gamma and negative-binomial distributions. These families generate the well-known class of generalized linear models, which are all extended in the same way to generalized additive models.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 27442,
+        "page_number": 314
+      },
+      {
+        "fact_text": "Examples of classical link functions are the following: g(\u03bc) = logit(\u03bc) as above, or g(\u03bc) = probit(\u03bc), the probit link function, for modeling binomial probabilities.",
+        "fact_type": "example",
+        "importance_rank": 4,
+        "paragraph_id": 27438,
+        "page_number": 314
+      }
+    ]
+  },
+  {
+    "concept_id": 343,
+    "concept_name": "probit link",
+    "facts": [
+      {
+        "fact_text": "The probit function is the inverse Gaussian cumulative distribution function: probit(\u03bc) = \u03a6\u22121(\u03bc).",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27440,
+        "page_number": 314
+      },
+      {
+        "fact_text": "g(\u03bc) = logit(\u03bc) as above, or g(\u03bc) = probit(\u03bc), the probit link function, for modeling binomial probabilities. The probit function is the inverse Gaussian cumulative distribution function: probit(\u03bc) = \u03a6\u22121(\u03bc).",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 27440,
+        "page_number": 314
+      },
+      {
+        "fact_text": "All three of these arise from exponential family sampling models, which in addition include the gamma and negative-binomial distributions. These families generate the well-known class of generalized linear models, which are all extended in the same way to generalized additive models.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 27442,
+        "page_number": 314
+      }
+    ]
+  },
+  {
+    "concept_id": 344,
+    "concept_name": "log link",
+    "facts": [
+      {
+        "fact_text": "g(\u03bc) = log(\u03bc) for log-linear or log-additive models for Poisson count data.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27441,
+        "page_number": 314
+      },
+      {
+        "fact_text": "All three of these arise from exponential family sampling models, which in addition include the gamma and negative-binomial distributions. These families generate the well-known class of generalized linear models, which are all extended in the same way to generalized additive models.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 27442,
+        "page_number": 314
+      },
+      {
+        "fact_text": "Examples of classical link functions are the following: g(\u03bc) = log(\u03bc) for log-linear or log-additive models for Poisson count data.",
+        "fact_type": "example",
+        "importance_rank": 3,
+        "paragraph_id": 27438,
+        "page_number": 314
+      }
+    ]
+  },
+  {
+    "concept_id": 349,
+    "concept_name": "weakest link pruning",
+    "facts": [
+      {
+        "fact_text": "To find T\u03b1 we use weakest link pruning: we successively collapse the internal node that produces the smallest per-node increase in \u03a3 NmQm(T), and continue until we produce the single-node (root) tree.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27452,
+        "page_number": 315
+      },
+      {
+        "fact_text": "In this section we describe a modular algorithm for fitting additive models and their generalizations. The building block is the scatterplot smoother for fitting nonlinear effects in a flexible way.",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 27452,
+        "page_number": 315
+      },
+      {
+        "fact_text": "These techniques each assume a (different) structured form for the unknown regression function, and by doing so they finesse the curse of dimensionality.",
+        "fact_type": "property",
+        "importance_rank": 3,
+        "paragraph_id": 27426,
+        "page_number": 313
+      }
+    ]
+  },
+  {
+    "concept_id": 350,
+    "concept_name": "node impurity",
+    "facts": [
+      {
+        "fact_text": "Different measures Qm(T) of node impurity include the following: Misclassification error, Gini index, Cross-entropy or deviance.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27437,
+        "page_number": 314
+      },
+      {
+        "fact_text": "The functions fj are estimated in a flexible manner, using an algorithm whose basic building block is a scatterplot smoother. The estimated function f\u0302j can then reveal possible nonlinearities in the effect of Xj.",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 27442,
+        "page_number": 314
+      },
+      {
+        "fact_text": "Although attractively simple, the traditional linear model often fails in these situations: in real life, effects are often not linear.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 27428,
+        "page_number": 313
+      }
+    ]
+  },
+  {
+    "concept_id": 351,
+    "concept_name": "gini index",
+    "facts": [
+      {
+        "fact_text": "Gini index: \u03a3k\u2260k\u2019 p\u0302mk p\u0302mk\u2019 = \u03a3K p\u0302mk(1 - p\u0302mk).",
+        "fact_type": "formula",
+        "importance_rank": 1,
+        "paragraph_id": 27437,
+        "page_number": 314
+      },
+      {
+        "fact_text": "Different measures Qm(T) of node impurity include the following: Misclassification error, Gini index, Cross-entropy or deviance.",
+        "fact_type": "definition",
+        "importance_rank": 2,
+        "paragraph_id": 27437,
+        "page_number": 314
+      },
+      {
+        "fact_text": "In general, the conditional mean \u03bc(X) of a response Y is related to an additive function of the predictors via a link function g: g[\u03bc(X)] = \u03b1 + f1(X1) + \u00b7 \u00b7 \u00b7 + fp(Xp).",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 27437,
+        "page_number": 314
+      }
+    ]
+  },
+  {
+    "concept_id": 352,
+    "concept_name": "cross-entropy for trees",
+    "facts": [
+      {
+        "fact_text": "Cross-entropy or deviance: -\u03a3K p\u0302mk log p\u0302mk.",
+        "fact_type": "formula",
+        "importance_rank": 1,
+        "paragraph_id": 27437,
+        "page_number": 314
+      },
+      {
+        "fact_text": "Different measures Qm(T) of node impurity include the following: Misclassification error, Gini index, Cross-entropy or deviance.",
+        "fact_type": "definition",
+        "importance_rank": 2,
+        "paragraph_id": 27437,
+        "page_number": 314
+      },
+      {
+        "fact_text": "The functions fj are estimated in a flexible manner, using an algorithm whose basic building block is a scatterplot smoother. The estimated function f\u0302j can then reveal possible nonlinearities in the effect of Xj.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 27442,
+        "page_number": 314
+      }
+    ]
+  },
+  {
+    "concept_id": 353,
+    "concept_name": "surrogate splits",
+    "facts": [
+      {
+        "fact_text": "The second more general approach is the construction of surrogate variables. When considering a predictor for a split, we use only the observations for which that predictor is not missing. Having chosen the best (primary) predictor and split point, we form a list of surrogate predictors and split points.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27444,
+        "page_number": 315
+      },
+      {
+        "fact_text": "We can easily mix in linear and other parametric forms with the nonlinear terms, a necessity when some of the inputs are qualitative variables (factors). The nonlinear terms are not restricted to main effects either; we can have nonlinear components in two or more variables, or separate curves in Xj for each level of the factor Xk.",
+        "fact_type": "property",
+        "importance_rank": 2,
+        "paragraph_id": 27444,
+        "page_number": 315
+      },
+      {
+        "fact_text": "Although attractively simple, the traditional linear model often fails in these situations: in real life, effects are often not linear.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 27428,
+        "page_number": 313
+      }
+    ]
+  },
+  {
+    "concept_id": 355,
+    "concept_name": "specificity in classification",
+    "facts": [
+      {
+        "fact_text": "Specificity: probability of predicting non-disease given true state is non-disease.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27437,
+        "page_number": 314
+      },
+      {
+        "fact_text": "Regression models play an important role in many data analyses, providing prediction and classification rules, and data analytic tools for understanding the importance of different inputs.",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 27428,
+        "page_number": 313
+      },
+      {
+        "fact_text": "The classification rule G(x) = sign[f(x)] implies that observations with positive margin yif(xi) > 0 are classified correctly whereas those with negative margin yif(xi) < 0 are misclassified.",
+        "fact_type": "comparison",
+        "importance_rank": 3,
+        "paragraph_id": 27428,
+        "page_number": 313
+      }
+    ]
+  },
+  {
+    "concept_id": 356,
+    "concept_name": "receiver operating characteristic curve",
+    "facts": [
+      {
+        "fact_text": "The receiver operating characteristic curve (ROC) is a commonly used summary for assessing the tradeoff between sensitivity and specificity. It is a plot of the sensitivity versus specificity as we vary the parameters of a classification rule.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27437,
+        "page_number": 314
+      },
+      {
+        "fact_text": "Specificity: probability of predicting non-disease given true state is non-disease.",
+        "fact_type": "comparison",
+        "importance_rank": 2,
+        "paragraph_id": 27437,
+        "page_number": 314
+      },
+      {
+        "fact_text": "Regression models play an important role in many data analyses, providing prediction and classification rules, and data analytic tools for understanding the importance of different inputs.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 27428,
+        "page_number": 313
+      }
+    ]
+  },
+  {
+    "concept_id": 358,
+    "concept_name": "patient rule induction method",
+    "facts": [
+      {
+        "fact_text": "The patient rule induction method (PRIM) also finds boxes in the feature space, but seeks boxes in which the response average is high. Hence it looks for maxima in the target function, an exercise known as bump hunting.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27452,
+        "page_number": 315
+      },
+      {
+        "fact_text": "In this section we describe a modular algorithm for fitting additive models and their generalizations. The building block is the scatterplot smoother for fitting nonlinear effects in a flexible way.",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 27452,
+        "page_number": 315
+      },
+      {
+        "fact_text": "These techniques each assume a (different) structured form for the unknown regression function, and by doing so they finesse the curse of dimensionality. Of course, they pay the possible price of misspecifying the model, and so in each case there is a tradeoff that has to be made.",
+        "fact_type": "comparison",
+        "importance_rank": 3,
+        "paragraph_id": 27426,
+        "page_number": 313
+      },
+      {
+        "fact_text": "We describe five related techniques: generalized additive models, trees, multivariate adaptive regression splines, the patient rule induction method, and hierarchical mixtures of experts.",
+        "fact_type": "comparison",
+        "importance_rank": 4,
+        "paragraph_id": 27426,
+        "page_number": 313
+      }
+    ]
+  },
+  {
+    "concept_id": 362,
+    "concept_name": "generalized cross-validation for mars",
+    "facts": [
+      {
+        "fact_text": "For computational savings the MARS procedure instead uses generalized cross-validation.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27456,
+        "page_number": 315
+      },
+      {
+        "fact_text": "where the error term \u03b5 has mean zero. Given observations xi, yi, a criterion like the penalized sum of squares (5.9) of Section 5.4 can be specified for this problem.",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 27456,
+        "page_number": 315
+      },
+      {
+        "fact_text": "In this section we describe a modular algorithm for fitting additive models and their generalizations. The building block is the scatterplot smoother for fitting nonlinear effects in a flexible way. For concreteness we use as our scatterplot smoother the cubic smoothing spline described in Chapter 5.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 27452,
+        "page_number": 315
+      }
+    ]
+  },
+  {
+    "concept_id": 364,
+    "concept_name": "gating networks in hme",
+    "facts": [
+      {
+        "fact_text": "The top gating network has the output gj(x, \u03b3j) = e^(\u03b3j\u1d40x) / \u03a3K e^(\u03b3k\u1d40x), j = 1, 2, ..., K, where each \u03b3j is a vector of unknown parameters. This represents a soft K-way split.",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27437,
+        "page_number": 314
+      },
+      {
+        "fact_text": "In general, the conditional mean \u03bc(X) of a response Y is related to an additive function of the predictors via a link function g: g[\u03bc(X)] = \u03b1 + f1(X1) + \u00b7 \u00b7 \u00b7 + fp(Xp).",
+        "fact_type": "formula",
+        "importance_rank": 2,
+        "paragraph_id": 27437,
+        "page_number": 314
+      },
+      {
+        "fact_text": "These techniques each assume a (different) structured form for the unknown regression function, and by doing so they finesse the curse of dimensionality.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 27426,
+        "page_number": 313
+      },
+      {
+        "fact_text": "We describe five related techniques: generalized additive models, trees, multivariate adaptive regression splines, the patient rule induction method, and hierarchical mixtures of experts.",
+        "fact_type": "comparison",
+        "importance_rank": 4,
+        "paragraph_id": 27426,
+        "page_number": 313
+      }
+    ]
+  },
+  {
+    "concept_id": 366,
+    "concept_name": "missing completely at random",
+    "facts": [
+      {
+        "fact_text": "Data are said to be missing completely at random (MCAR) if the distribution of R doesn\u2019t depend on the observed or missing data: Pr(R|Z, \u03b8) = Pr(R|\u03b8).",
+        "fact_type": "definition",
+        "importance_rank": 1,
+        "paragraph_id": 27456,
+        "page_number": 315
+      },
+      {
+        "fact_text": "where the error term \u03b5 has mean zero. Given observations xi, yi, a criterion like the penalized sum of squares (5.9) of Section 5.4 can be specified for this problem.",
+        "fact_type": "intuition",
+        "importance_rank": 2,
+        "paragraph_id": 27456,
+        "page_number": 315
+      },
+      {
+        "fact_text": "Although attractively simple, the traditional linear model often fails in these situations: in real life, effects are often not linear.",
+        "fact_type": "intuition",
+        "importance_rank": 3,
+        "paragraph_id": 27428,
+        "page_number": 313
+      }
+    ]
+  }
+]

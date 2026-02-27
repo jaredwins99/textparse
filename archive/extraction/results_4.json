@@ -1,0 +1,696 @@
+{
+  "concepts": [
+    {
+      "name": "natural cubic spline",
+      "type": "method",
+      "description": "A cubic spline with the additional constraint that the function is linear beyond the boundary knots, reducing boundary variance.",
+      "quote": "A natural cubic spline adds additional constraints, namely that the function is linear beyond the boundary knots. This frees up four degrees of freedom (two constraints each in both boundary regions), which can be spent more profitably by sprinkling more knots in the interior region.",
+      "paragraph_ids": [
+        19816
+      ]
+    },
+    {
+      "name": "order-M spline",
+      "type": "property",
+      "description": "A piecewise-polynomial of order M with continuous derivatives up to order M-2 at the knots.",
+      "quote": "More generally, an order-M spline with knots \u03bej, j = 1, . . . , K is a piecewise-polynomial of order M, and has continuous derivatives up to order M \u2212 2.",
+      "paragraph_ids": [
+        19790
+      ]
+    },
+    {
+      "name": "cubic spline",
+      "type": "method",
+      "description": "An order-4 spline with continuous first and second derivatives at knots, the lowest order where knot discontinuity is invisible to the human eye.",
+      "quote": "It is claimed that cubic splines are the lowest-order spline for which the knot-discontinuity is not visible to the human eye.",
+      "paragraph_ids": [
+        19785,
+        19793
+      ]
+    },
+    {
+      "name": "truncated power basis",
+      "type": "technique",
+      "description": "A conceptually simple but numerically problematic basis for representing splines using polynomial terms and truncated power functions.",
+      "quote": "While the truncated power basis is conceptually simple, it is not too attractive numerically: powers of large numbers can lead to severe rounding problems.",
+      "paragraph_ids": [
+        19793
+      ]
+    },
+    {
+      "name": "pointwise variance",
+      "type": "metric",
+      "description": "The variance of a fitted function at a specific point, measuring uncertainty in the fit at that location.",
+      "quote": "This can be conveniently summarized in terms of the pointwise variance of spline functions fit by least squares.",
+      "paragraph_ids": [
+        19795
+      ]
+    },
+    {
+      "name": "backward stepwise deletion",
+      "type": "technique",
+      "description": "A model selection procedure that iteratively removes terms from a model to minimize an information criterion while preserving group structure.",
+      "quote": "We carried out a backward stepwise deletion process, dropping terms from this model while preserving the group structure of each term, rather than dropping one coefficient at a time.",
+      "paragraph_ids": [
+        19825
+      ]
+    },
+    {
+      "name": "functional modeling",
+      "type": "technique",
+      "description": "Using splines to reduce rather than increase flexibility by constraining coefficients to vary smoothly as functions.",
+      "quote": "In this example we use splines to reduce flexibility rather than increase it; the application comes under the general heading of functional modeling.",
+      "paragraph_ids": [
+        19858
+      ]
+    },
+    {
+      "name": "contrast functional",
+      "type": "technique",
+      "description": "A function of coefficients that highlights regions where classes differ, having appreciable values where features discriminate between classes.",
+      "quote": "The coefficients compute a contrast functional, and will have appreciable values in regions of frequency where the log-periodograms differ between the two classes.",
+      "paragraph_ids": [
+        19880
+      ]
+    },
+    {
+      "name": "feature extraction",
+      "type": "technique",
+      "description": "Preprocessing high-dimensional features through transformation (linear or nonlinear) before applying a learning algorithm.",
+      "quote": "Preprocessing of high-dimensional features is a very general and powerful method for improving the performance of a learning algorithm.",
+      "paragraph_ids": [
+        19884
+      ]
+    },
+    {
+      "name": "filtered features",
+      "type": "technique",
+      "description": "Transformed features x* derived from raw features x through basis expansion or other preprocessing.",
+      "quote": "These filtered versions of the features were then used as inputs into a learning procedure",
+      "paragraph_ids": [
+        19884
+      ]
+    },
+    {
+      "name": "smoothing spline",
+      "type": "method",
+      "description": "A spline that minimizes penalized RSS with a knot at every unique x value, controlling complexity via a roughness penalty rather than knot selection.",
+      "quote": "Here we discuss a spline basis method that avoids the knot selection problem completely by using a maximal set of knots. The complexity of the fit is controlled by regularization.",
+      "paragraph_ids": [
+        19888
+      ]
+    },
+    {
+      "name": "penalized residual sum of squares",
+      "type": "metric",
+      "description": "An objective function balancing data fit against function roughness, with a smoothing parameter controlling the tradeoff.",
+      "quote": "among all functions f(x) with two continuous derivatives, find one that minimizes the penalized residual sum of squares... The first term measures closeness to the data, while the second term penalizes curvature in the function, and \u03bb establishes a tradeoff between the two.",
+      "paragraph_ids": [
+        19888,
+        19892
+      ]
+    },
+    {
+      "name": "roughness penalty",
+      "type": "technique",
+      "description": "A penalty term based on the integrated squared second derivative, penalizing curvature in the function.",
+      "quote": "the second term penalizes curvature in the function",
+      "paragraph_ids": [
+        19892
+      ]
+    },
+    {
+      "name": "Sobolev space",
+      "type": "property",
+      "description": "An infinite-dimensional function space of functions with bounded derivatives, used as the domain for smoothing spline optimization.",
+      "quote": "The criterion (5.9) is defined on an infinite-dimensional function space\u2014in fact, a Sobolev space of functions for which the second term is defined.",
+      "paragraph_ids": [
+        19895
+      ]
+    },
+    {
+      "name": "generalized ridge regression",
+      "type": "method",
+      "description": "Ridge regression with a general penalty matrix rather than identity, arising from smoothing spline formulation.",
+      "quote": "The solution is easily seen to be \u03b8\u0302 = (N\u1d40N + \u03bb\u03a9\u2099)\u207b\u00b9N\u1d40y, a generalized ridge regression.",
+      "paragraph_ids": [
+        20242
+      ]
+    },
+    {
+      "name": "linear smoother",
+      "type": "property",
+      "description": "A fitting method where fitted values are a linear function of responses, characterized by a smoother matrix independent of y.",
+      "quote": "A smoothing spline with prechosen \u03bb is an example of a linear smoother (as in linear operator). This is because the estimated parameters in (5.12) are a linear combination of the y\u1d62.",
+      "paragraph_ids": [
+        20251
+      ]
+    },
+    {
+      "name": "hat matrix",
+      "type": "property",
+      "description": "The projection operator in ordinary least squares that maps responses to fitted values, an idempotent matrix.",
+      "quote": "Here the linear operator H\u03be is a projection operator, also known as the hat matrix in statistics.",
+      "paragraph_ids": [
+        20256
+      ]
+    },
+    {
+      "name": "effective degrees of freedom",
+      "type": "metric",
+      "description": "The trace of the smoother matrix, providing a unified measure of model complexity across different smoothing methods.",
+      "quote": "By analogy we define the effective degrees of freedom... This very useful definition allows us a more intuitive way to parameterize the smoothing spline, and indeed many other smoothers as well, in a consistent fashion.",
+      "paragraph_ids": [
+        20260,
+        20264
+      ]
+    },
+    {
+      "name": "Reinsch form",
+      "type": "technique",
+      "description": "An alternative representation S\u03bb = (I + \u03bbK)\u207b\u00b9 separating the smoothing parameter from the penalty structure.",
+      "quote": "it is convenient to rewrite S\u03bb in the Reinsch form S\u03bb = (I + \u03bbK)\u207b\u00b9, where K does not depend on \u03bb.",
+      "paragraph_ids": [
+        20264
+      ]
+    },
+    {
+      "name": "projection smoothers",
+      "type": "property",
+      "description": "Smoothers with idempotent smoother matrices having eigenvalues of exactly 1 or 0, selecting basis functions without shrinkage.",
+      "quote": "a projection matrix such as H\u03be above has M eigenvalues equal to 1, and the rest are 0. For this reason smoothing splines are referred to as shrinking smoothers, while regression splines are projection smoothers",
+      "paragraph_ids": [
+        20376
+      ]
+    },
+    {
+      "name": "Demmler-Reinsch basis",
+      "type": "technique",
+      "description": "The eigenvector basis of the smoother matrix, providing a representation where the penalty is diagonal.",
+      "quote": "One can reparametrize the smoothing spline using the basis vectors u\u2096 (the Demmler\u2013Reinsch basis).",
+      "paragraph_ids": [
+        20380
+      ]
+    },
+    {
+      "name": "integrated squared prediction error",
+      "type": "metric",
+      "description": "Expected prediction error averaged over both training samples and prediction points, combining bias and variance.",
+      "quote": "The integrated squared prediction error (EPE) combines both bias and variance in a single summary... Note that this is averaged both over the training sample (giving rise to f\u0302\u03bb), and the values of the (independently chosen) prediction points (X, Y).",
+      "paragraph_ids": [
+        20691,
+        20695
+      ]
+    },
+    {
+      "name": "nonparametric logistic regression",
+      "type": "method",
+      "description": "Logistic regression with a smooth nonparametric function replacing the linear predictor, fit via penalized log-likelihood.",
+      "quote": "The smoothing spline problem (5.9) in Section 5.4 is posed in a regression setting. It is typically straightforward to transfer this technology to other domains. Here we consider logistic regression with a single quantitative input X.",
+      "paragraph_ids": [
+        20708
+      ]
+    },
+    {
+      "name": "penalized log-likelihood",
+      "type": "technique",
+      "description": "A log-likelihood criterion augmented with a roughness penalty for fitting smooth nonparametric models.",
+      "quote": "We construct the penalized log-likelihood criterion",
+      "paragraph_ids": [
+        20714
+      ]
+    },
+    {
+      "name": "weighted smoothing spline",
+      "type": "technique",
+      "description": "A smoothing spline fit with observation-specific weights, arising in iterative algorithms like Newton-Raphson for GLMs.",
+      "quote": "Referring back to (5.12) and (5.14), we see that the update fits a weighted smoothing spline to the working response z",
+      "paragraph_ids": [
+        20736
+      ]
+    },
+    {
+      "name": "working response",
+      "type": "technique",
+      "description": "An adjusted response variable used in iterative weighted least squares algorithms for fitting GLMs.",
+      "quote": "the update fits a weighted smoothing spline to the working response z",
+      "paragraph_ids": [
+        20736
+      ]
+    },
+    {
+      "name": "tensor product basis",
+      "type": "method",
+      "description": "A multidimensional basis formed by taking products of one-dimensional basis functions for each coordinate.",
+      "quote": "Then the M\u2081 \u00d7 M\u2082 dimensional tensor product basis defined by... can be used for representing a two-dimensional function",
+      "paragraph_ids": [
+        20738,
+        20740
+      ]
+    },
+    {
+      "name": "reproducing kernel Hilbert space",
+      "type": "property",
+      "description": "A Hilbert space of functions with a reproducing kernel, providing a unifying framework for regularization and spline smoothing.",
+      "quote": "Regularization and Reproducing Kernel Hilbert Spaces",
+      "paragraph_ids": []
+    },
+    {
+      "name": "wavelet smoothing",
+      "type": "method",
+      "description": "A smoothing method using wavelet basis functions, effective for functions with discontinuities and sharp features.",
+      "quote": "Wavelet Smoothing",
+      "paragraph_ids": []
+    },
+    {
+      "name": "wavelet basis",
+      "type": "technique",
+      "description": "A basis of wavelet functions for representing signals, allowing multi-resolution analysis.",
+      "quote": "Wavelet Bases and the Wavelet Transform",
+      "paragraph_ids": []
+    },
+    {
+      "name": "wavelet transform",
+      "type": "technique",
+      "description": "A transformation decomposing signals into wavelet coefficients at different scales and locations.",
+      "quote": "for signal or image recognition a popular approach is to first transform the raw features via a wavelet transform x* = H\u1d40x (Section 5.9)",
+      "paragraph_ids": [
+        19886
+      ]
+    },
+    {
+      "name": "adaptive wavelet filtering",
+      "type": "technique",
+      "description": "A wavelet smoothing method that adaptively selects coefficients based on data-driven criteria.",
+      "quote": "Adaptive Wavelet Filtering",
+      "paragraph_ids": []
+    },
+    {
+      "name": "kernel smoother",
+      "type": "method",
+      "description": "A nonparametric regression method using kernel-weighted local averages.",
+      "quote": "One-Dimensional Kernel Smoothers",
+      "paragraph_ids": []
+    },
+    {
+      "name": "local linear regression",
+      "type": "method",
+      "description": "A kernel smoother fitting local linear models, automatically correcting boundary bias.",
+      "quote": "Local Linear Regression",
+      "paragraph_ids": []
+    },
+    {
+      "name": "AIC statistic",
+      "type": "metric",
+      "description": "Akaike Information Criterion - a model selection criterion balancing fit and complexity, used for term selection in stepwise procedures.",
+      "quote": "The AIC statistic (Section 7.5) was used to drop terms, and all the terms remaining in the final model would cause AIC to increase if deleted from the model",
+      "paragraph_ids": [
+        19825
+      ]
+    },
+    {
+      "name": "B-spline basis",
+      "type": "technique",
+      "description": "A numerically stable basis for representing splines, allowing efficient computation even with many knots.",
+      "quote": "The B-spline basis, described in the Appendix to this chapter, allows for efficient computations even when the number of knots K is large.",
+      "paragraph_ids": [
+        19793
+      ]
+    },
+    {
+      "name": "boundary knots",
+      "type": "property",
+      "description": "The extreme knots defining the domain boundaries where spline behavior can become erratic.",
+      "quote": "The polynomials fit beyond the boundary knots behave even more wildly than the corresponding global polynomials in that region.",
+      "paragraph_ids": [
+        19795
+      ]
+    },
+    {
+      "name": "interior knots",
+      "type": "property",
+      "description": "Knots placed within the data range, controlling spline flexibility in regions with data.",
+      "quote": "bs(x,df=7) in R generates a basis matrix of cubic-spline functions evaluated at the N observations in x, with the 7\u22123 = 4 interior knots",
+      "paragraph_ids": [
+        19793
+      ]
+    },
+    {
+      "name": "generalized cross-validation",
+      "type": "technique",
+      "description": "A model selection technique related to cross-validation but computationally more efficient, used for choosing smoothing parameters.",
+      "quote": "techniques such as K-fold cross-validation, GCV and Cp are all in common use",
+      "paragraph_ids": [
+        20695
+      ]
+    },
+    {
+      "name": "Cp statistic",
+      "type": "metric",
+      "description": "Mallows' Cp - a model selection criterion estimating prediction error, commonly used for subset selection.",
+      "quote": "techniques such as K-fold cross-validation, GCV and Cp are all in common use",
+      "paragraph_ids": [
+        20695
+      ]
+    },
+    {
+      "name": "automatic kernel carpentry",
+      "type": "property",
+      "description": "The phenomenon where local linear regression automatically modifies the kernel to correct boundary bias exactly to first order.",
+      "quote": "Local linear regression automatically modifies the kernel to correct the bias exactly to first order, a phenomenon dubbed as automatic kernel carpentry.",
+      "paragraph_ids": []
+    },
+    {
+      "name": "idempotent matrix",
+      "type": "property",
+      "description": "A matrix A satisfying A\u00b2 = A, characteristic of projection operators in linear algebra.",
+      "quote": "H\u03be H\u03be = H\u03be (idempotent), while S\u03bb S\u03bb \u2aaf S\u03bb, meaning that the right-hand side exceeds the left-hand side by a positive semidefinite matrix.",
+      "paragraph_ids": [
+        20258
+      ]
+    },
+    {
+      "name": "positive semidefinite matrix",
+      "type": "property",
+      "description": "A symmetric matrix with non-negative eigenvalues, ensuring non-negative quadratic forms.",
+      "quote": "Both are symmetric, positive semidefinite matrices.",
+      "paragraph_ids": [
+        20257
+      ]
+    },
+    {
+      "name": "eigendecomposition",
+      "type": "technique",
+      "description": "The decomposition of a matrix into eigenvectors and eigenvalues, revealing the structure of linear operators.",
+      "quote": "Since S\u03bb is symmetric (and positive semidefinite), it has a real eigendecomposition.",
+      "paragraph_ids": [
+        20264
+      ]
+    },
+    {
+      "name": "MARS",
+      "type": "method",
+      "description": "Multivariate Adaptive Regression Splines - a greedy algorithm for adaptive knot placement in regression splines.",
+      "quote": "The MARS procedure in Chapter 9 uses a greedy algorithm with some additional approximations to achieve a practical compromise.",
+      "paragraph_ids": [
+        20410
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "source": "natural cubic spline",
+      "target": "cubic spline",
+      "type": "special_case_of",
+      "quote": "A natural cubic spline adds additional constraints, namely that the function is linear beyond the boundary knots."
+    },
+    {
+      "source": "natural cubic spline",
+      "target": "regression splines",
+      "type": "example_of",
+      "quote": "A natural cubic spline with K knots is represented by K basis functions."
+    },
+    {
+      "source": "cubic spline",
+      "target": "order-M spline",
+      "type": "special_case_of",
+      "quote": "A cubic spline has M = 4."
+    },
+    {
+      "source": "regression splines",
+      "target": "truncated power basis",
+      "type": "uses",
+      "quote": "While the truncated power basis is conceptually simple, it is not too attractive numerically"
+    },
+    {
+      "source": "smoothing spline",
+      "target": "penalized residual sum of squares",
+      "type": "uses",
+      "quote": "among all functions f(x) with two continuous derivatives, find one that minimizes the penalized residual sum of squares"
+    },
+    {
+      "source": "smoothing spline",
+      "target": "natural cubic spline",
+      "type": "uses",
+      "quote": "it can be shown that (5.9) has an explicit, finite-dimensional, unique minimizer which is a natural cubic spline with knots at the unique values of the x\u1d62"
+    },
+    {
+      "source": "smoothing spline",
+      "target": "Sobolev space",
+      "type": "uses",
+      "quote": "The criterion (5.9) is defined on an infinite-dimensional function space\u2014in fact, a Sobolev space"
+    },
+    {
+      "source": "smoothing spline",
+      "target": "generalized ridge regression",
+      "type": "equivalent_to",
+      "quote": "The solution is easily seen to be \u03b8\u0302 = (N\u1d40N + \u03bb\u03a9\u2099)\u207b\u00b9N\u1d40y, a generalized ridge regression."
+    },
+    {
+      "source": "smoothing spline",
+      "target": "linear smoother",
+      "type": "example_of",
+      "quote": "A smoothing spline with prechosen \u03bb is an example of a linear smoother"
+    },
+    {
+      "source": "smoothing spline",
+      "target": "shrinking smoothers",
+      "type": "example_of",
+      "quote": "smoothing splines are referred to as shrinking smoothers"
+    },
+    {
+      "source": "smoothing spline",
+      "target": "regression splines",
+      "type": "contrasts_with",
+      "quote": "Here we discuss a spline basis method that avoids the knot selection problem completely by using a maximal set of knots."
+    },
+    {
+      "source": "penalized residual sum of squares",
+      "target": "roughness penalty",
+      "type": "uses",
+      "quote": "the second term penalizes curvature in the function, and \u03bb establishes a tradeoff between the two."
+    },
+    {
+      "source": "linear smoother",
+      "target": "smoother matrix",
+      "type": "uses",
+      "quote": "the finite linear operator S\u03bb is known as the smoother matrix"
+    },
+    {
+      "source": "effective degrees of freedom",
+      "target": "smoother matrix",
+      "type": "uses",
+      "quote": "we define the effective degrees of freedom... the sum of the diagonal elements of S\u03bb"
+    },
+    {
+      "source": "smoother matrix",
+      "target": "Reinsch form",
+      "type": "uses",
+      "quote": "it is convenient to rewrite S\u03bb in the Reinsch form S\u03bb = (I + \u03bbK)\u207b\u00b9"
+    },
+    {
+      "source": "Reinsch form",
+      "target": "penalty matrix",
+      "type": "uses",
+      "quote": "S\u03bb = (I + \u03bbK)\u207b\u00b9, where K does not depend on \u03bb"
+    },
+    {
+      "source": "hat matrix",
+      "target": "projection smoothers",
+      "type": "example_of",
+      "quote": "the linear operator H\u03be is a projection operator, also known as the hat matrix"
+    },
+    {
+      "source": "shrinking smoothers",
+      "target": "projection smoothers",
+      "type": "contrasts_with",
+      "quote": "smoothing splines are referred to as shrinking smoothers, while regression splines are projection smoothers"
+    },
+    {
+      "source": "regression splines",
+      "target": "projection smoothers",
+      "type": "example_of",
+      "quote": "regression splines are projection smoothers"
+    },
+    {
+      "source": "Demmler-Reinsch basis",
+      "target": "smoother matrix",
+      "type": "uses",
+      "quote": "One can reparametrize the smoothing spline using the basis vectors u\u2096 (the Demmler\u2013Reinsch basis)."
+    },
+    {
+      "source": "leave-one-out cross-validation",
+      "target": "smoother matrix",
+      "type": "uses",
+      "quote": "which can (remarkably) be computed for each value of \u03bb from the original fitted values and the diagonal elements S\u03bb(i, i) of S\u03bb"
+    },
+    {
+      "source": "integrated squared prediction error",
+      "target": "bias-variance tradeoff",
+      "type": "uses",
+      "quote": "The integrated squared prediction error (EPE) combines both bias and variance in a single summary"
+    },
+    {
+      "source": "nonparametric logistic regression",
+      "target": "penalized log-likelihood",
+      "type": "uses",
+      "quote": "We construct the penalized log-likelihood criterion"
+    },
+    {
+      "source": "nonparametric logistic regression",
+      "target": "weighted smoothing spline",
+      "type": "uses",
+      "quote": "the update fits a weighted smoothing spline to the working response z"
+    },
+    {
+      "source": "weighted smoothing spline",
+      "target": "working response",
+      "type": "uses",
+      "quote": "the update fits a weighted smoothing spline to the working response z"
+    },
+    {
+      "source": "penalized log-likelihood",
+      "target": "penalized residual sum of squares",
+      "type": "generalizes",
+      "quote": "The smoothing spline problem (5.9) in Section 5.4 is posed in a regression setting. It is typically straightforward to transfer this technology to other domains."
+    },
+    {
+      "source": "feature extraction",
+      "target": "filtered features",
+      "type": "uses",
+      "quote": "These filtered versions of the features were then used as inputs into a learning procedure"
+    },
+    {
+      "source": "filtered features",
+      "target": "wavelet transform",
+      "type": "example_of",
+      "quote": "for signal or image recognition a popular approach is to first transform the raw features via a wavelet transform"
+    },
+    {
+      "source": "wavelet smoothing",
+      "target": "wavelet transform",
+      "type": "uses",
+      "quote": "transform the raw features via a wavelet transform"
+    },
+    {
+      "source": "wavelet smoothing",
+      "target": "wavelet basis",
+      "type": "uses",
+      "quote": "Wavelet Bases and the Wavelet Transform"
+    },
+    {
+      "source": "adaptive wavelet filtering",
+      "target": "wavelet smoothing",
+      "type": "special_case_of",
+      "quote": "Adaptive Wavelet Filtering"
+    },
+    {
+      "source": "local linear regression",
+      "target": "kernel smoother",
+      "type": "special_case_of",
+      "quote": "Local Linear Regression"
+    },
+    {
+      "source": "tensor product basis",
+      "target": "natural cubic spline",
+      "type": "uses",
+      "quote": "Then the M\u2081 \u00d7 M\u2082 dimensional tensor product basis defined by... can be used for representing a two-dimensional function"
+    },
+    {
+      "source": "smoothing spline",
+      "target": "reproducing kernel Hilbert space",
+      "type": "uses",
+      "quote": "Regularization and Reproducing Kernel Hilbert Spaces"
+    },
+    {
+      "source": "B-spline basis",
+      "target": "truncated power basis",
+      "type": "contrasts_with",
+      "quote": "While the truncated power basis is conceptually simple, it is not too attractive numerically... The B-spline basis, described in the Appendix to this chapter, allows for efficient computations"
+    },
+    {
+      "source": "natural cubic spline",
+      "target": "boundary knots",
+      "type": "uses",
+      "quote": "A natural cubic spline adds additional constraints, namely that the function is linear beyond the boundary knots."
+    },
+    {
+      "source": "generalized cross-validation",
+      "target": "leave-one-out cross-validation",
+      "type": "contrasts_with",
+      "quote": "techniques such as K-fold cross-validation, GCV and Cp are all in common use"
+    },
+    {
+      "source": "hat matrix",
+      "target": "idempotent matrix",
+      "type": "example_of",
+      "quote": "H\u03be H\u03be = H\u03be (idempotent)"
+    },
+    {
+      "source": "smoother matrix",
+      "target": "positive semidefinite matrix",
+      "type": "example_of",
+      "quote": "Both are symmetric, positive semidefinite matrices."
+    },
+    {
+      "source": "smoother matrix",
+      "target": "eigendecomposition",
+      "type": "uses",
+      "quote": "Since S\u03bb is symmetric (and positive semidefinite), it has a real eigendecomposition."
+    },
+    {
+      "source": "MARS",
+      "target": "regression splines",
+      "type": "uses",
+      "quote": "The MARS procedure in Chapter 9 uses a greedy algorithm with some additional approximations to achieve a practical compromise."
+    },
+    {
+      "source": "backward stepwise deletion",
+      "target": "AIC statistic",
+      "type": "uses",
+      "quote": "The AIC statistic (Section 7.5) was used to drop terms"
+    },
+    {
+      "source": "Cp statistic",
+      "target": "generalized cross-validation",
+      "type": "contrasts_with",
+      "quote": "techniques such as K-fold cross-validation, GCV and Cp are all in common use"
+    },
+    {
+      "source": "effective degrees of freedom",
+      "target": "Demmler-Reinsch basis",
+      "type": "uses",
+      "quote": "df\u03bb = trace(S\u03bb) = \u2211\u03c1k(\u03bb). For projection smoothers, all the eigenvalues are 1, each one corresponding to a dimension of the projection subspace."
+    },
+    {
+      "source": "generalized ridge regression",
+      "target": "penalty matrix",
+      "type": "uses",
+      "quote": "The solution is easily seen to be \u03b8\u0302 = (N\u1d40N + \u03bb\u03a9\u2099)\u207b\u00b9N\u1d40y"
+    },
+    {
+      "source": "truncated power basis",
+      "target": "order-M spline",
+      "type": "uses",
+      "quote": "the general form for the truncated-power basis set would be"
+    },
+    {
+      "source": "pointwise variance",
+      "target": "natural cubic spline",
+      "type": "uses",
+      "quote": "Figure 5.3 compares the pointwise variances for a variety of different models... Natural Cubic Spline - 6 knots"
+    },
+    {
+      "source": "integrated squared prediction error",
+      "target": "leave-one-out cross-validation",
+      "type": "contrasts_with",
+      "quote": "Since we don't know the true function, we do not have access to EPE, and need an estimate... In Figure 5.9 we include the N-fold (leave-one-out) cross-validation curve"
+    },
+    {
+      "source": "tensor product basis",
+      "target": "regression splines",
+      "type": "generalizes",
+      "quote": "Then the M\u2081 \u00d7 M\u2082 dimensional tensor product basis defined by... can be used for representing a two-dimensional function"
+    }
+  ]
+}

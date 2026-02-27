@@ -1,0 +1,2625 @@
+{
+  "batch_number": 32,
+  "concepts": [
+    {
+      "id": 636,
+      "name": "symmetric multiclass logistic model",
+      "description": "A version of multiclass logistic regression where all K classes have their own coefficient vectors, with regularization forcing \u03a3\u02c6\u03b2_lj = 0.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "With K classes, we use a symmetric version of the multiclass logistic model (4.17) on page 119: Pr(G = k|X = x) = exp(\u03b2k0 + x^T\u03b2k)/\u03a3 exp(\u03b2l0 + x^T\u03b2l)",
+      "existing_formula": "\\text{Pr}(G = k|X = x) = \\frac{\\exp(\\beta_{k0} + x^T\\beta_k)}{\\sum_l \\exp(\\beta_{l0} + x^T\\beta_l)}",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 637,
+      "name": "one versus one approach",
+      "description": "A method for generalizing two-class classifiers to K > 2 classes by computing all pairwise classifiers and using voting to determine the predicted class.",
+      "category": "multi_model",
+      "subcategory": "aggregating",
+      "existing_quote": "In the \"one versus one\" (ovo) approach, we compute all pairwise classifiers. For each test point, the predicted class is the one that wins the most pairwise contests.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 638,
+      "name": "one versus all approach",
+      "description": "A method for generalizing two-class classifiers to K > 2 classes by comparing each class to all others in K two-class comparisons, choosing the class with highest confidence.",
+      "category": "multi_model",
+      "subcategory": "aggregating",
+      "existing_quote": "In the \"one versus all\" (ova) approach, each class is compared to all of the others in K two-class comparisons. To classify a test point, we compute the confidences (signed distance from the hyperplane) for each of the K classifiers. The winner is the class with the highest confidence.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 641,
+      "name": "fused lasso",
+      "description": "A modification of the lasso for functional data that penalizes both the L1 norm of coefficients and the L1 norm of their successive differences, encouraging sparsity and smoothness.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "The fused lasso (Tibshirani et al., 2005) solves min_\u03b2 \u03a3(yi - \u03a3\u03b2jxij)^2 + \u03bb1\u03a3|\u03b2j| + \u03bb2\u03a3|\u03b2j - \u03b2j-1|. The first penalty encourages the solution to be sparse, while the second encourages it to be smooth in the index j.",
+      "existing_formula": "\\min_\\beta \\sum_i (y_i - \\sum_j \\beta_j x_{ij})^2 + \\lambda_1\\sum_j|\\beta_j| + \\lambda_2\\sum_j|\\beta_j - \\beta_{j-1}|",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 643,
+      "name": "string kernel",
+      "description": "A similarity measure for variable-length strings based on counting matching substrings, computing inner products K(x1,x2) = \u03a3\u03c6_a(x1)\u03c6_a(x2) where \u03c6_a counts occurrences of substring a.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "Using this, we define the inner product K(x1,x2) = \u03a3_{a\u2208A^m} \u03c6_a(x1)\u03c6_a(x2) which measures the similarity between the two strings x1, x2.",
+      "existing_formula": "K(x_1,x_2) = \\sum_{a \\in A^m} \\phi_a(x_1)\\phi_a(x_2)",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 644,
+      "name": "bag of words representation",
+      "description": "A document representation where features x_ij are counts of how many times word j appears in document i, discarding word order.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "We extracted all unique words from these abstracts, and defined features xij to be the number of times word j appears in abstract i. This is the so-called bag of words representation.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 645,
+      "name": "double-centered kernel",
+      "description": "Computing principal components from an uncentered inner-product matrix by centering: (I - M)K(I - M) where M is the mean operator.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "Thus we compute the eigenvectors of the double-centered kernel (I \u2212M)K(I \u2212M) for the principal components from an uncentered inner-product matrix.",
+      "existing_formula": "(I - M)K(I - M)",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 646,
+      "name": "supervised principal components",
+      "description": "A method for high-dimensional regression that filters features by univariate significance, then computes principal components on the reduced set, and uses them in a regression model.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "Supervised principal components is a simple approach to regression and generalized regression that is especially useful when p \u226bN. We restrict attention to features which by themselves have a sizable correlation with the outcome.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 649,
+      "name": "kaplan-meier method",
+      "description": "A method for estimating survival curves from censored survival data.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "Figure 18.12 shows the survival curve estimated by the Kaplan\u2013Meier method for the 80 patients in the test set.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 650,
+      "name": "latent variable model for supervised pca",
+      "description": "A single-component factor analysis model where outcome Y relates to latent factor U, and relevant features X_j also relate to U through linear models.",
+      "category": "model",
+      "subcategory": "dgp",
+      "existing_quote": "Suppose we have a response variable Y which is related to an underlying latent variable U by a linear model Y = \u03b220 + \u03b221U + \u03b5. In addition, we have measurements on a set of features Xj indexed by j \u2208P (for pathway), for which Xj = \u03b210j + \u03b211jU + \u03f5j.",
+      "existing_formula": "Y = \\beta_{20} + \\beta_{21}U + \\varepsilon, \\quad X_j = \\beta_{10j} + \\beta_{11j}U + \\epsilon_j",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 651,
+      "name": "thresholded partial least squares",
+      "description": "A variant of partial least squares where features are thresholded based on their correlation with the outcome before applying PLS, similar to supervised principal components.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "We select the features as in steps (1) and (2a) of supervised principal components, but then apply PLS (rather than principal components) to these features. For our current discussion, we call this \"thresholded PLS.\"",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 652,
+      "name": "pre-conditioning for interpretability",
+      "description": "A method for finding a reduced set of features that approximates a model when the threshold yields too many features for interpretation.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "Then for interpretational purposes, as well as for practical uses, we would like some way of finding a reduced a set of features that approximates the model. Pre-conditioning (Section 18.6.3) is one way of doing this.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 653,
+      "name": "pre-conditioned lasso",
+      "description": "A variant of the lasso where the outcome variable is first denoised using supervised principal components, then the lasso is applied with the denoised outcome as the target. All features are used in the lasso fit, not just those retained in thresholding.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "In this approach, one first computes the supervised principal component predictor \u0177i for each observation in the training set (with the threshold selected by cross-validation). Then we apply the lasso with \u0177i as the outcome variable, in place of the usual outcome yi.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 656,
+      "name": "permutation distribution for hypothesis testing",
+      "description": "A nonparametric approach to computing p-values by permuting sample labels and computing test statistics for each permutation, avoiding distributional assumptions.",
+      "category": "validation",
+      "subcategory": "validation",
+      "existing_quote": "An attractive alternative approach is to use the permutation distribution, since it avoids assumptions about the distribution of the data. We compute (in principle) all K = (58 choose 14) permutations of the sample labels, and for each permutation k compute the t-statistics tk_j.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 658,
+      "name": "family-wise error rate",
+      "description": "The probability of making at least one false rejection among all hypothesis tests, a conservative measure of overall error in multiple testing.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "The family-wise error rate (FWER) is the probability of at least one false rejection, and is a commonly used overall measure of error.",
+      "existing_formula": "\\text{FWER} = \\text{Pr}(V \\geq 1)",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 661,
+      "name": "benjamini-hochberg procedure",
+      "description": "A procedure for controlling false discovery rate at level \u03b1 by ordering p-values and finding the largest index where p(j) \u2264 j\u03b1/M, then rejecting all hypotheses with smaller p-values.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "Benjamini and Hochberg (1995) first proposed the notion of false discovery rate, and gave a testing procedure (Algorithm 18.2) whose FDR is bounded by a user-defined level \u03b1.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 662,
+      "name": "plug-in estimate of false discovery rate",
+      "description": "A direct estimate of FDR computed as the average number of permutation values exceeding a threshold divided by the number of observed values exceeding that threshold.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "The total number of permutation values |tk_j| equal or greater than 4.101 is 1518, for an average of 1518/1000 = 1.518 per permutation. Thus a direct estimate of the false discovery rate is FDR\u0302 = 1.518/11 \u2248 14%.",
+      "existing_formula": "\\widehat{\\text{FDR}} = \\frac{\\text{# permutation values} \\geq C}{\\text{# observed values} \\geq C}",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 663,
+      "name": "significance analysis of microarrays",
+      "description": "A method for computing asymmetric significance cutpoints by plotting ordered test statistics against expected order statistics from permutations and finding where points leave a band of width \u0394 from the 45\u00b0 line.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "The significance analysis of microarrays (SAM) approach offers a way of doing this. The basis of the SAM method is shown in Figure 18.20. On the vertical axis we have plotted the ordered test statistics t(1) \u2264 t(2) \u2264 ... \u2264 t(M), while the horizontal axis shows the expected order statistics from the permutations of the data.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 665,
+      "name": "positive false discovery rate",
+      "description": "A variant of FDR defined as E[V/R | R > 0], the expected false discovery rate conditional on making at least one rejection.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "First we need to define the positive false discovery rate (pFDR) as",
+      "existing_formula": "\\text{pFDR} = E\\left[\\frac{V}{R} \\mid R > 0\\right]",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    },
+    {
+      "id": 666,
+      "name": "mixture model for hypothesis testing",
+      "description": "A Bayesian framework where each test statistic comes from either the null distribution F0 with probability \u03c00 or the alternative distribution F1 with probability 1-\u03c00.",
+      "category": "model",
+      "subcategory": "dgp",
+      "existing_quote": "We define a random variable Zj which equals 0 if the jth null hypothesis is true, and 1 otherwise. We assume that each pair (tj, Zj) are i.i.d random variables with",
+      "existing_formula": "\\text{Pr}(t_j, Z_j) = \\pi_0 F_0(t_j) + (1-\\pi_0) F_1(t_j)",
+      "paragraphs": [
+        {
+          "id": 48493,
+          "text": "This is page 649\nPrinter: Opaque this\n18\nHigh-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48495,
+          "text": "In this chapter we discuss prediction problems in which the number of\nfeatures p is much larger than the number of observations N, often written\np \u226bN. Such problems have become of increasing importance, especially in\ngenomics and other areas of computational biology. We will see that high\nvariance and over\ufb01tting are a major concern in this setting. As a result,\nsimple, highly regularized approaches often become the methods of choice.\nThe \ufb01rst part of the chapter focuses on prediction in both the classi\ufb01cation\nand regression settings, while the second part discusses the more basic\nproblem of feature selection and assessment.\nTo get us started, Figure 18.1 summarizes a small simulation study that\ndemonstrates the \u201cless \ufb01tting is better\u201d principle that applies when p \u226bN.\nFor each of N = 100 samples, we generated p standard Gaussian features\nX with pairwise correlation 0.2. The outcome Y was generated according\nto a linear model",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48496,
+          "text": "Y =",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48497,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48498,
+          "text": "j=1\nXj\u03b2j + \u03c3\u03b5\n(18.1)",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48499,
+          "text": "where \u03b5 was generated from a standard Gaussian distribution. For each\ndataset, the set of coe\ufb03cients \u03b2j were also generated from a standard Gaus-\nsian distribution. We investigated three cases: p = 20, 100, and 1000. The\nstandard deviation \u03c3 was chosen in each case so that the signal-to-noise\nratio Var[E(Y |X)])/Var(\u03b5) equaled 2. As a result, the number of signi\ufb01cant",
+          "type": "narrative",
+          "page": 667
+        },
+        {
+          "id": 48500,
+          "text": "650\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48501,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48502,
+          "text": "20\n9\n2",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48503,
+          "text": "20 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48504,
+          "text": "Test Error",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48505,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48506,
+          "text": "99\n35\n7",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48507,
+          "text": "100 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48508,
+          "text": "1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48509,
+          "text": "99\n87\n43",
+          "type": "equation",
+          "page": 668
+        },
+        {
+          "id": 48510,
+          "text": "1000 features",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48511,
+          "text": "Effective Degrees of Freedom",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48513,
+          "text": "univariate regression coe\ufb03cients1 was 9, 33 and 331, respectively, averaged\nover the 100 simulation runs. The p = 1000 case is designed to mimic the\nkind of data that we might see in a high-dimensional genomic or proteomic\ndataset, for example.\nWe \ufb01t a ridge regression to the data, with three di\ufb00erent values for the\nregularization parameter \u03bb: 0.001, 100, and 1000. When \u03bb = 0.001, this\nis nearly the same as least squares regression, with a little regularization\njust to ensure that the problem is non-singular when p > N. Figure 18.1\nshows boxplots of the relative test error achieved by the di\ufb00erent estimators\nin each scenario. The corresponding average degrees of freedom used in\neach ridge-regression \ufb01t is indicated (computed using formula (3.50) on\npage 682). The degrees of freedom is a more interpretable parameter than\n\u03bb. We see that ridge regression with \u03bb = 0.001 (20 df) wins when p = 20;\n\u03bb = 100 (35 df) wins when p = 100, and \u03bb = 1000 (43 df) wins when\np = 1000,\nHere is an explanation for these results. When p = 20, we \ufb01t all the way\nand we can identify as many of the signi\ufb01cant coe\ufb03cients as possible with",
+          "type": "narrative",
+          "page": 668
+        },
+        {
+          "id": 48514,
+          "text": "1We call a regression coe\ufb03cient signi\ufb01cant if |b\u03b2j/ bsej| \u22652, where \u02c6\u03b2j is the estimated\n(univariate) coe\ufb03cient and bsej is its estimated standard error.\n2For a \ufb01xed value of the regularization parameter \u03bb, the degrees of freedom depends\non the observed predictor values in each simulation. Hence we compute the average\ndegrees of freedom over simulations.",
+          "type": "narrative",
+          "page": 668
+        }
+      ]
+    }
+  ]
+}

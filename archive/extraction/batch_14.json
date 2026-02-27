@@ -1,0 +1,1043 @@
+{
+  "batch_id": 14,
+  "page_range": "698-763",
+  "sections": [
+    {
+      "number": "18.6.2",
+      "title": "Relationship with Partial Least Squares",
+      "page_start": 698
+    },
+    {
+      "number": "18.6.3",
+      "title": "Pre-Conditioning for Feature Selection",
+      "page_start": 699
+    },
+    {
+      "number": "18.7",
+      "title": "Feature Assessment and the Multiple-Testing Problem",
+      "page_start": 701
+    },
+    {
+      "number": "18.7.1",
+      "title": "The False Discovery Rate",
+      "page_start": 705
+    },
+    {
+      "number": "18.7.2",
+      "title": "Asymmetric Cutpoints and the SAM Procedure",
+      "page_start": 708
+    },
+    {
+      "number": "18.7.3",
+      "title": "A Bayesian Interpretation of the FDR",
+      "page_start": 710
+    },
+    {
+      "number": "18.8",
+      "title": "Bibliographic Notes",
+      "page_start": 711
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": 48889,
+      "page": 698,
+      "text": "where u is the true (unobservable) latent variable in the model (18.32),\n(18.33).\nWe now present a simulation example to compare the methods numeri-\ncally. There are N = 100 samples and p = 5000 genes. We generated the\ndata as follows:"
+    },
+    {
+      "id": 48893,
+      "page": 699,
+      "text": "\u0003\n3 + \u03f5ij\nif i \u226450,\n4 + \u03f5ij\nif i > 50\nj = 1, . . . , 50"
+    },
+    {
+      "id": 48895,
+      "page": 699,
+      "text": "\u0003\n1.5 + \u03f5ij\nif 1 \u2264i \u226425 or 51 \u2264i \u226475\n5.5 + \u03f5ij\nif 26 \u2264i \u226450 or 76 \u2264i \u2264100\nj = 51, . . . , 250"
+    },
+    {
+      "id": 48899,
+      "page": 699,
+      "text": "where \u03f5ij and \u03b5i are independent normal random variables with mean 0 and\nstandard deviations 1 and 1.5, respectively. Thus in the \ufb01rst 50 genes, there\nis an average di\ufb00erence of 1 unit between samples 1\u201350 and 51\u2013100, and this\ndi\ufb00erence correlates with the outcome y. The next 200 genes have a large\naverage di\ufb00erence of 4 units between samples (1\u201325, 51\u201375) and (26\u201350,\n76\u2013100), but this di\ufb00erence is uncorrelated with the outcome. The rest of\nthe genes are noise. Figure 18.15 shows a heatmap of a typical realization,\nwith the outcome at the left, and the \ufb01rst 500 genes to the right.\nWe generated 100 simulations from this model, and summarize the test\nerror results in Figure 18.16. The test errors of principal components and\npartial least squares are shown at the right of the plot; both are badly\na\ufb00ected by the noisy features in the data. Supervised principal components\nand thresholded PLS work best over a wide range of the number of selected\nfeatures, with the former showing consistently lower test errors.\nWhile this example seems \u201ctailor-made\u201d for supervised principal com-\nponents, its good performance seems to hold in other simulated and real\ndatasets (Bair et al., 2006)."
+    },
+    {
+      "id": 48901,
+      "page": 699,
+      "text": "Supervised principal components can yield lower test errors than competing\nmethods, as shown in Figure 18.16. However, it does not always produce a\nsparse model involving only a small number of features (genes). Even if the\nthresholding in Step (1) of the algorithm yields a relatively small number"
+    },
+    {
+      "id": 48909,
+      "page": 700,
+      "text": "of features, it may be that some of the omitted features have sizable inner\nproducts with the supervised principal component (and could act as a good\nsurrogate). In addition, highly correlated features will tend to be chosen\ntogether, and there may be great deal of redundancy in the set of selected\nfeatures.\nThe lasso (Sections 18.4 and 3.4.2), on the other hand, produces a sparse\nmodel from the data. How do the test errors of the two methods compare on\nthe simulated example of the last section? Figure 18.17 shows the test errors\nfor one realization from model (18.37) for the lasso, supervised principal\ncomponents, and the pre-conditioned lasso (described below).\nWe see that supervised principal components (orange curve) reaches its\nlowest error when about 50 features are included in the model, which is\nthe correct number for the simulation. Although a linear model in the \ufb01rst\n50 features is optimal, the lasso (green) is adversely a\ufb00ected by the large\nnumber of noisy features, and starts over\ufb01tting when far fewer are in the\nmodel.\nCan we get the low test error of supervised principal components along\nwith the sparsity of the lasso? This is the goal of pre-conditioning (Paul\net al., 2008). In this approach, one \ufb01rst computes the supervised principal\ncomponent predictor \u02c6yi for each observation in the training set (with the"
+    },
+    {
+      "id": 48915,
+      "page": 701,
+      "text": "Lasso\nSupervised Principal Components\nPreconditioned Lasso"
+    },
+    {
+      "id": 48917,
+      "page": 701,
+      "text": "threshold selected by cross-validation). Then we apply the lasso with \u02c6yi as\nthe outcome variable, in place of the usual outcome yi. All features are used\nin the lasso \ufb01t, not just those that were retained in the thresholding step\nin supervised principal components. The idea is that by \ufb01rst denoising the\noutcome variable, the lasso should not be as adversely a\ufb00ected by the large\nnumber of noise features. Figure 18.17 shows that pre-conditioning (purple\ncurve) has been successful here, yielding much lower test error than the\nusual lasso, and as low (in this case) as for supervised principal components.\nIt also can achieve this using less features. The usual lasso, applied to\nthe raw outcome, starts to over\ufb01t more quickly than the pre-conditioned\nversion. Over\ufb01tting is not a problem, since the outcome variable has been\ndenoised. We usually select the tuning parameter for the pre-conditioned\nlasso on more subjective grounds, like parsimony.\nPre-conditioning can be applied in a variety of settings, using initial\nestimates other than supervised principal components and post-processors\nother than the lasso. More details may be found in Paul et al. (2008)."
+    },
+    {
+      "id": 48919,
+      "page": 701,
+      "text": "In the \ufb01rst part of this chapter we discuss prediction models in the p \u226bN\nsetting. Here we consider the more basic problem of assessing the signif-"
+    },
+    {
+      "id": 48921,
+      "page": 702,
+      "text": "icance of each of the p features. Consider the protein mass spectrometry\nexample of Section 18.4.1. In that problem, the scientist might not be inter-\nested in predicting whether a given patient has prostate cancer. Rather the\ngoal might be to identify proteins whose abundance di\ufb00ers between nor-\nmal and cancer samples, in order to enhance understanding of the disease\nand suggest targets for drug development. Thus our goal is to assess the\nsigni\ufb01cance of individual features. This assessment is usually done without\nthe use of a multivariate predictive model like those in the \ufb01rst part of this\nchapter. The feature assessment problem moves our focus from prediction\nto the traditional statistical topic of multiple hypothesis testing. For the\nremainder of this chapter we will use M instead of p to denote the number\nof features, since we will frequently be referring to p-values."
+    },
+    {
+      "id": 48923,
+      "page": 702,
+      "text": "Normal\nRadiation Sensitive\nGene 1\n7.85\n29.74\n29.50\n. . .\n17.20\n-50.75\n-18.89\n. . .\nGene 2\n15.44\n2.70\n19.37\n. . .\n6.57\n-7.41\n79.18\n. . .\nGene 3\n-1.79\n15.52\n-3.13\n. . .\n-8.32\n12.64\n4.75\n. . .\nGene 4\n-11.74\n22.35\n-36.11\n. . .\n-52.17\n7.24\n-2.32\n. . .\n..."
+    },
+    {
+      "id": 48926,
+      "page": 702,
+      "text": "Consider, for example, the microarray data in Table 18.4, taken from a\nstudy on the sensitivity of cancer patients to ionizing radiation treatment\n(Rieger et al., 2004). Each row consists of the expression of genes in 58\npatient samples: 44 samples were from patients with a normal reaction, and\n14 from patients who had a severe reaction to radiation. The measurements\nwere made on oligo-nucleotide microarrays. The object of the experiment\nwas to \ufb01nd genes whose expression was di\ufb00erent in the radiation sensitive\ngroup of patients. There are M = 12, 625 genes altogether; the table shows\nthe data for some of the genes and samples for illustration.\nTo identify informative genes, we construct a two-sample t-statistic for\neach gene."
+    },
+    {
+      "id": 48930,
+      "page": 702,
+      "text": "i\u2208C\u2113xij/N\u2113. Here C\u2113are the indices of the N\u2113samples in\ngroup \u2113, where \u2113= 1 is the untreated group and \u2113= 2 is the treated group.\nThe quantity sej is the pooled within-group standard error for gene j:"
+    },
+    {
+      "id": 48943,
+      "page": 703,
+      "text": "(18.39)\nA histogram of the 12,625 t-statistics is shown in orange in Figure 18.18,\nranging in value from \u22124.7 to 5.0. If the tj values were normally distributed\nwe could consider any value greater than two in absolute value to be sig-\nni\ufb01cantly large. This would correspond to a signi\ufb01cance level of about 5%.\nHere there are 1189 genes with |tj| \u22652. However with 12,625 genes we\nwould expect many large values to occur by chance, even if the treatment\nhad no e\ufb00ect on any gene. For example, if the genes were independent\n(which they are surely not), the number of falsely signi\ufb01cant genes would\nhave a binomial distribution with mean 12, 625 \u00b7 0.05 = 631.3 and standard\ndeviation 24.5; the actual 1189 is way out of range.\nHow do we assess the results for all 12,625 genes? This is called the mul-\ntiple testing problem. We can start as above by computing a p-value for\neach gene. This can be done using the theoretical t-distribution probabil-\nities, which assumes the features are normally distributed. An attractive\nalternative approach is to use the permutation distribution, since it avoids\nassumptions about the distribution of the data. We compute (in principle)\nall K =\n\u000558\n14\n\u0006\npermutations of the sample labels, and for each permutation\nk compute the t-statistics tk\nj . Then the p-value for gene j is"
+    },
+    {
+      "id": 48949,
+      "page": 704,
+      "text": "Of course,\n\u000558\n14\n\u0006\nis a large number (around 1013) and so we can\u2019t enumer-\nate all of the possible permutations. Instead we take a random sample of\nthe possible permutations; here we took a random sample of K = 1000\npermutations.\nTo exploit the fact that the genes are similar (e.g., measured on the\nsame scale), we can instead pool the results for all genes in computing the\np-values."
+    },
+    {
+      "id": 48955,
+      "page": 704,
+      "text": "This also gives more granular p-values than does (18.40), since there many\nmore values in the pooled null distribution than there are in each individual\nnull distribution.\nUsing this set of p-values, we would like test the hypotheses:"
+    },
+    {
+      "id": 48956,
+      "page": 704,
+      "text": "H0j\n=\ntreatment has no e\ufb00ect on gene j\nversus\n(18.42)"
+    },
+    {
+      "id": 48958,
+      "page": 704,
+      "text": "for all j = 1, 2, . . . , M. We reject H0j at level \u03b1 if pj < \u03b1. This test has\ntype-I error equal to \u03b1; that is, the probability of falsely rejecting H0j is \u03b1.\nNow with many tests to consider, it is not clear what we should use\nas an overall measure of error. Let Aj be the event that H0j is falsely\nrejected; by de\ufb01nition Pr(Aj) = \u03b1. The family-wise error rate (FWER)\nis the probability of at least one false rejection, and is a commonly used\noverall measure of error. In detail, if A = \u222aM\nj=1Aj is the event of at least\none false rejection, then the FWER is Pr(A). Generally Pr(A) \u226b\u03b1 for\nlarge M, and depends on the correlation between the tests. If the tests are\nindependent each with type-I error rate \u03b1, then the family-wise error rate\nof the collection of tests is (1 \u2212(1 \u2212\u03b1)M). On the other hand, if the tests\nhave positive dependence, that is Pr(Aj|Ak) > Pr(Aj), then the FWER\nwill be less than (1 \u2212(1 \u2212\u03b1)M). Positive dependence between tests often\noccurs in practice, in particular in genomic studies.\nOne of the simplest approaches to multiple testing is the Bonferroni\nmethod. It makes each individual test more stringent, in order to make the\nFWER equal to at most \u03b1: we reject H0j if pj < \u03b1/M. It is easy to show\nthat the resulting FWER is \u2264\u03b1 (Exercise 18.16). The Bonferroni method\ncan be useful if M is relatively small, but for large M it is too conservative,\nthat is, it calls too few genes signi\ufb01cant.\nIn our example, if we test at level say \u03b1 = 0.05, then we must use the\nthreshold 0.05/12, 625 = 3.9\u00d710\u22126. None of the 12, 625 genes had a p-value\nthis small."
+    },
+    {
+      "id": 48960,
+      "page": 705,
+      "text": "There are variations to this approach that adjust the individual p-values\nto achieve an FWER of at most \u03b1, with some approaches avoiding the\nassumption of independence; see, e.g., Dudoit et al. (2002b)."
+    },
+    {
+      "id": 48962,
+      "page": 705,
+      "text": "A di\ufb00erent approach to multiple testing does not try to control the FWER,\nbut focuses instead on the proportion of falsely signi\ufb01cant genes. As we will\nsee, this approach has a strong practical appeal.\nTable 18.5 summarizes the theoretical outcomes of M hypothesis tests.\nNote that the family-wise error rate is Pr(V \u22651). Here we instead focus"
+    },
+    {
+      "id": 48964,
+      "page": 705,
+      "text": "Called\nCalled\nNot Signi\ufb01cant\nSigni\ufb01cant\nTotal\nH0 True\nU\nV\nM0\nH0 False\nT\nS\nM1\nTotal\nM \u2212R\nR\nM"
+    },
+    {
+      "id": 48967,
+      "page": 705,
+      "text": "In the microarray setting, this is the expected proportion of genes that\nare incorrectly called signi\ufb01cant, among the R genes that are called signif-\nicant. The expectation is taken over the population from which the data\nare generated. Benjamini and Hochberg (1995) \ufb01rst proposed the notion of\nfalse discovery rate, and gave a testing procedure (Algorithm 18.2) whose\nFDR is bounded by a user-de\ufb01ned level \u03b1. The Benjamini\u2013Hochberg (BH)\nprocedure is based on p-values; these can be obtained from an asymptotic\napproximation to the test statistic (e.g., Gaussian), or a permutation dis-\ntribution, as is done here.\nIf the hypotheses are independent, Benjamini and Hochberg (1995) show\nthat regardless of how many null hypotheses are true and regardless of the\ndistribution of the p-values when the null hypothesis is false, this procedure\nhas the property"
+    },
+    {
+      "id": 48970,
+      "page": 705,
+      "text": "For illustration we chose \u03b1 = 0.15. The bottom left panel of Figure 18.18\nshows a plot of the ordered p-values p(j), and the line with slope 0.15/12625."
+    },
+    {
+      "id": 48973,
+      "page": 706,
+      "text": "1. Fix the false discovery rate \u03b1 and let p(1) \u2264p(2) \u2264\u00b7 \u00b7 \u00b7 \u2264p(M) denote\nthe ordered p-values"
+    },
+    {
+      "id": 48978,
+      "page": 706,
+      "text": "3. Reject all hypotheses H0j for which pj \u2264p(L), the BH rejection\nthreshold."
+    },
+    {
+      "id": 48983,
+      "page": 706,
+      "text": "\u2022\n\u2022\n\u2022 \u2022 \u2022 \u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+    },
+    {
+      "id": 48986,
+      "page": 707,
+      "text": "Algorithm 18.3 The Plug-in Estimate of the False Discovery Rate."
+    },
+    {
+      "id": 48987,
+      "page": 707,
+      "text": "1. Create K permutations of the data, producing t-statistics tk\nj for fea-\ntures j = 1, 2, . . . , M and permutations k = 1, 2, . . . , K."
+    },
+    {
+      "id": 48998,
+      "page": 707,
+      "text": "Starting at the left and moving right, the BH method \ufb01nds the last time\nthat the p-values fall below the line. This occurs at j = 11, so we reject\nthe 11 genes with smallest p-values. Note that the cuto\ufb00occurs at the 11th\nsmallest p-value, 0.00012, and the 11th largest of the values |tj| is 4.101\nThus we reject the 11 genes with |tj| \u22654.101.\nFrom our brief description, it is not clear how the BH procedure works;\nthat is, why the corresponding FDR is at most 0.15, the value used for \u03b1.\nIndeed, the proof of this fact is quite complicated (Benjamini and Hochberg,\n1995).\nA more direct way to proceed is a plug-in approach. Rather than starting\nwith a value for \u03b1, we \ufb01x a cut-point for our t-statistics, say the value\n4.101 that appeared above. The number of observed values |tj| equal or\ngreater than 4.101 is 11. The total number of permutation values |tk\nj | equal\nor greater than 4.101 is 1518, for an average of 1518/1000 = 1.518 per\npermutation. Thus a direct estimate of the false discovery rate is \u0002\nFDR =\n1.518/11 \u224814%. Note that 14% is approximately equal to the value of\n\u03b1 = 0.15 used above (the di\ufb00erence is due to discreteness). This procedure\nis summarized in Algorithm 18.3. To recap:"
+    },
+    {
+      "id": 48999,
+      "page": 707,
+      "text": "The plug-in estimate of FDR of Algorithm 18.3 is equivalent to the BH\nprocedure of Algorithm 18.2, using the permutation p-values (18.40)."
+    },
+    {
+      "id": 49000,
+      "page": 707,
+      "text": "This correspondence between the BH method and the plug-in estimate is\nnot a coincidence. Exercise 18.17 shows that they are equivalent in general.\nNote that this procedure makes no reference to p-values at all, but rather\nworks directly with the test statistics.\nThe plug-in estimate is based on the approximation"
+    },
+    {
+      "id": 49003,
+      "page": 707,
+      "text": "and in general \u0002\nFDR is a consistent estimate of FDR (Storey, 2002; Storey et\nal., 2004). Note that the numerator \u0002\nE(V ) actually estimates (M/M0)E(V ),"
+    },
+    {
+      "id": 49005,
+      "page": 708,
+      "text": "since the permutation distribution uses M rather M0 null hypotheses.\nHence if an estimate of M0 is available, a better estimate of FDR can be\nobtained from ( \u02c6\nM0/M) \u00b7 \u0002\nFDR. Exercise 18.19 shows a way to estimate M0.\nThe most conservative (upwardly biased) estimate of FDR uses M0 = M.\nEquivalently, an estimate of M0 can be used to improve the BH method,\nthrough relation (18.45).\nThe reader might be surprised that we chose a value as large as 0.15 for\n\u03b1, the FDR bound. We must remember that the FDR is not the same as\ntype-I error, for which 0.05 is the customary choice. For the scientist, the\nfalse discovery rate is the expected proportion of false positive genes among\nthe list of genes that the statistician tells him are signi\ufb01cant. Microarray\nexperiments with FDRs as high as 0.15 might still be useful, especially if\nthey are exploratory in nature."
+    },
+    {
+      "id": 49007,
+      "page": 708,
+      "text": "In the testing methods described above, we used the absolute value of the\ntest statistic tj, and hence applied the same cut-points to both positive and\nnegative values of the statistic. In some experiments, it might happen that\nmost or all of the di\ufb00erentially expressed genes change in the positive direc-\ntion (or all in the negative direction). For this situation it is advantageous\nto derive separate cut-points for the two cases.\nThe signi\ufb01cance analysis of microarrays (SAM) approach o\ufb00ers a way of\ndoing this. The basis of the SAM method is shown in Figure 18.20. On the\nvertical axis we have plotted the ordered test statistics t(1) \u2264t(2) \u2264\u00b7 \u00b7 \u00b7 \u2264\nt(M), while the horizontal axis shows the expected order statistics from the\npermutations of the data: \u02dct(j) = (1/K) \tK\nk=1 tk\n(j), where tk\n(1) \u2264tk\n(2) \u2264\u00b7 \u00b7 \u00b7 \u2264\ntk\n(M) are the ordered test statistics from permutation k.\nTwo lines are drawn, parallel to the 45\u25e6line, \u0394 units away. Starting at\nthe origin and moving to the right, we \ufb01nd the \ufb01rst place that the genes\nleave the band. This de\ufb01nes the upper cutpoint Chi and all genes beyond\nthat point are called signi\ufb01cant (marked red). Similarly we \ufb01nd the lower\ncutpoint Clow for genes in the bottom left corner. Thus each value of the\ntuning parameter \u0394 de\ufb01nes upper and lower cutpoints, and the plug-in\nestimate \u0002\nFDR for each of these cutpoints is estimated as before. Typically\na range of values of \u0394 and associated \u0002\nFDR values are computed, from which\na particular pair are chosen on subjective grounds.\nThe advantage of the SAM approach lies in the possible asymmetry of\nthe cutpoints. In the example of Figure 18.20, with \u0394 = 0.71 we obtain\n11 signi\ufb01cant genes; they are all in the upper right. The data points in the\nbottom left never leave the band, and hence Clow = \u2212\u221e. Hence for this\nvalue of \u0394, no genes are called signi\ufb01cant on the left (negative) side. We\ndo not impose symmetry on the cutpoints, as was done in Section 18.7.1,\nas there is no reason to assume similar behavior at the two ends."
+    },
+    {
+      "id": 49013,
+      "page": 709,
+      "text": "\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022"
+    },
+    {
+      "id": 49018,
+      "page": 710,
+      "text": "There is some similarity between this approach and the asymmetry possi-\nble with likelihood-ratio tests. Suppose we have a log-likelihood \u21130(tj) under\nthe null-hypothesis of no e\ufb00ect, and a log-likelihood \u2113(tj) under the alterna-\ntive. Then a likelihood ratio test amounts to rejecting the null-hypothesis\nif\n\u2113(tj) \u2212\u21130(tj) > \u0394,\n(18.48)"
+    },
+    {
+      "id": 49019,
+      "page": 710,
+      "text": "for some \u0394. Depending on the likelihoods, and particularly their relative\nvalues, this can result in a di\ufb00erent threshold for tj than for \u2212tj. The SAM\nprocedure rejects the null-hypothesis if"
+    },
+    {
+      "id": 49021,
+      "page": 710,
+      "text": "Again, the threshold for each t(j) depends on the corresponding value of\nthe null value \u02dct(j)."
+    },
+    {
+      "id": 49023,
+      "page": 710,
+      "text": "There is an interesting Bayesian view of the FDR, developed in Storey\n(2002) and Efron and Tibshirani (2002). First we need to de\ufb01ne the positive\nfalse discovery rate (pFDR) as"
+    },
+    {
+      "id": 49027,
+      "page": 710,
+      "text": "The additional term positive refers to the fact that we are only interested\nin estimating an error rate where positive \ufb01ndings have occurred. It is\nthis slightly modi\ufb01ed version of the FDR that has a clean Bayesian inter-\npretation. Note that the usual FDR [expression (18.43)] is not de\ufb01ned if\nPr(R = 0) > 0.\nLet \u0393 be a rejection region for a single test; in the example above we used\n\u0393 = (\u2212\u221e, \u22124.10) \u222a(4.10, \u221e). Suppose that M identical simple hypothe-\nsis tests are performed with the i.i.d. statistics t1, . . . , tM and rejection\nregion \u0393. We de\ufb01ne a random variable Zj which equals 0 if the jth null\nhypothesis is true, and 1 otherwise. We assume that each pair (tj, Zj) are\ni.i.d random variables with"
+    },
+    {
+      "id": 49029,
+      "page": 710,
+      "text": "for some distributions F0 and F1. This says that each test statistic tj comes\nfrom one of two distributions: F0 if the null hypothesis is true, and F1\notherwise. Letting Pr(Zj = 0) = \u03c00, marginally we have:"
+    },
+    {
+      "id": 49031,
+      "page": 710,
+      "text": "Then it can be shown (Efron et al., 2001; Storey, 2002) that"
+    },
+    {
+      "id": 49034,
+      "page": 711,
+      "text": "Hence under the mixture model (18.51), the pFDR is the posterior proba-\nbility that the null hypothesis it true, given that test statistic falls in the\nrejection region for the test; that is, given that we reject the null hypothesis\n(Exercise 18.20).\nThe false discovery rate provides a measure of accuracy for tests based\non an entire rejection region, such as |tj| \u22652. But if the FDR of such a test\nis say 10%, then a gene with say tj = 5 will be more signi\ufb01cant than a gene\nwith tj = 2. Thus it is of interest to derive a local (gene-speci\ufb01c) version\nof the FDR. The q-value (Storey, 2003) of a test statistic tj is de\ufb01ned to\nbe the smallest FDR over all rejection regions that reject tj. That is, for\nsymmetric rejection regions, the q-value for tj = 2 is de\ufb01ned to be the\nFDR for the rejection region \u0393 = {\u2212(\u221e, \u22122) \u222a(2, \u221e)}. Thus the q-value\nfor tj = 5 will be smaller than that for tj = 2, re\ufb02ecting the fact that tj = 5\nis more signi\ufb01cant than tj = 2. The local false discovery rate (Efron and\nTibshirani, 2002) at t = t0 is de\ufb01ned to be"
+    },
+    {
+      "id": 49036,
+      "page": 711,
+      "text": "This is the (positive) FDR for an in\ufb01nitesimal rejection region surrounding\nthe value tj = t0."
+    },
+    {
+      "id": 49038,
+      "page": 711,
+      "text": "Many references were given at speci\ufb01c points in this chapter; we give some\nadditional ones here. Dudoit et al. (2002a) give an overview and compar-\nison of discrimination methods for gene expression data. Levina (2002)\ndoes some mathematical analysis comparing diagonal LDA to full LDA, as\np, N \u2192\u221ewith p > N. She shows that with reasonable assumptions diago-\nnal LDA has a lower asymptotic error rate than full LDA. Tibshirani et al.\n(2001a) and Tibshirani et al. (2003) proposed the nearest shrunken-centroid\nclassi\ufb01er. Zhu and Hastie (2004) study regularized logistic regression. High-\ndimensional regression and the lasso are very active areas of research, and\nmany references are given in Section 3.8.5. The fused lasso was proposed\nby Tibshirani et al. (2005), while Zou and Hastie (2005) introduced the\nelastic net. Supervised principal components is discussed in Bair and Tib-\nshirani (2004) and Bair et al. (2006). For an introduction to the analysis\nof censored survival data, see Kalb\ufb02eisch and Prentice (1980).\nMicroarray technology has led to a \ufb02urry of statistical research: see for\nexample the books by Speed (2003), Parmigiani et al. (2003), Simon et al.\n(2004), and Lee (2004).\nThe false discovery rate was proposed by Benjamini and Hochberg (1995),\nand studied and generalized in subsequent papers by these authors and"
+    },
+    {
+      "id": 49040,
+      "page": 712,
+      "text": "many others. A partial list of papers on FDR may be found on Yoav Ben-\njamini\u2019s homepage. Some more recent papers include Efron and Tibshirani\n(2002), Storey (2002), Genovese and Wasserman (2004), Storey and Tib-\nshirani (2003) and Benjamini and Yekutieli (2005). Dudoit et al. (2002b)\nreview methods for identifying di\ufb00erentially expressed genes in microarray\nstudies."
+    },
+    {
+      "id": 49063,
+      "page": 712,
+      "text": "Show that the solution is equivalent to the nearest shrunken centroid es-\ntimator (18.5), with s0 set to zero, and Mk equal to 1/Nk instead of\n1/Nk \u22121/N as before."
+    },
+    {
+      "id": 49070,
+      "page": 713,
+      "text": "(a) Show that there are in\ufb01nitely many least-squares solutions all with\nzero residuals."
+    },
+    {
+      "id": 49071,
+      "page": 713,
+      "text": "(b) Show that the ridge-regression estimate for \u03b2 can be written"
+    },
+    {
+      "id": 49073,
+      "page": 713,
+      "text": "(c) Show that when \u03bb = 0, the solution \u02c6\u03b20 = VD\u22121UT y has residuals\nall equal to zero, and is unique in that it has the smallest Euclidean\nnorm amongst all zero-residual solutions."
+    },
+    {
+      "id": 49075,
+      "page": 713,
+      "text": "(a) Consider the linear regression model f(x) = \u03b1 + \u03b2T x \ufb01t to a binary\nresponse Y \u2208{\u22121, +1}. Using Exercise 18.7, show that there are\nin\ufb01nitely many directions de\ufb01ned by \u02c6\u03b2 in IRp onto which the data\nproject to exactly two points, one for each class. These are known as\ndata piling directions (Ahn and Marron, 2005)."
+    },
+    {
+      "id": 49076,
+      "page": 713,
+      "text": "(b) Show that the distance between the projected points is 2/||\u02c6\u03b2||, and\nhence these directions de\ufb01ne separating hyperplanes with that mar-\ngin."
+    },
+    {
+      "id": 49077,
+      "page": 713,
+      "text": "(c) Argue that there is a single maximal data piling direction for which\nthis distance is largest, and is de\ufb01ned by \u02c6\u03b20 = VD\u22121UT y = X\u2212y,\nwhere X = UDVT is the SVD of X."
+    },
+    {
+      "id": 49082,
+      "page": 714,
+      "text": "pair i, i\u2032 with yi = 0 and yi\u2032 = 1, xi\u2032 \u2212xi \u2265C for some C > 0. You wish\nto \ufb01t a linear logistic regression model logitPr(Y = 1|X) = \u03b1 + \u03b2X by\nmaximum-likelihood. Show that \u02c6\u03b2 is unde\ufb01ned."
+    },
+    {
+      "id": 49086,
+      "page": 714,
+      "text": "(b) \u02c6\u03b2 is the ridged logistic regression estimate with input matrix R =\nUD."
+    },
+    {
+      "id": 49087,
+      "page": 714,
+      "text": "Argue that the same approach can be used for any appropriate kernel\nmatrix K."
+    },
+    {
+      "id": 49092,
+      "page": 714,
+      "text": "can be viewed as a nonparametric discriminant function correspond-\ning to 1-NN classi\ufb01cation. [Hint: Show that \u02c6f+(x0) =\n1\nN+d+(x0) can\nbe viewed as a nonparametric estimate of the density in class +1 at\nx0]."
+    },
+    {
+      "id": 49093,
+      "page": 714,
+      "text": "(b) How would you modify this function to introduce class prior probabil-\nities \u03c0+ and \u03c0\u2212di\ufb00erent from the sample-priors N+/N and N\u2212/N?"
+    },
+    {
+      "id": 49094,
+      "page": 714,
+      "text": "(c) How would you generalize this approach for K-NN classi\ufb01cation?"
+    },
+    {
+      "id": 49097,
+      "page": 715,
+      "text": "vector k0, containing the N inner-products between a new point x0 and\neach of the xi in our training set. Show that the (centered) projections of\nx0 onto the principal-component directions are given by"
+    },
+    {
+      "id": 49100,
+      "page": 715,
+      "text": "(a) Show that Pr(A) \u2264\u03b1. [Hint: Pr(Aj \u222aAj\u2032) = Pr(Aj) + Pr(Aj\u2032) \u2212\nPr(Aj \u2229Aj\u2032)]"
+    },
+    {
+      "id": 49101,
+      "page": 715,
+      "text": "(b) If the hypotheses H0j, j = 1, 2, . . . , M, are independent, then Pr(A) =\n1 \u2212Pr(AC) = 1 \u2212/M\nj=1 Pr(AC\nj ) = 1 \u2212(1 \u2212\u03b1/M)M. Use this to show\nthat Pr(A) \u2248\u03b1 in this case."
+    },
+    {
+      "id": 49103,
+      "page": 715,
+      "text": "(a) In the notation of Algorithm 18.2, show that for rejection threshold\np0 = p(L), a proportion of at most p0 of the permuted values tk\nj\nexceed |T|(L) where |T|(L) is the Lth largest value among the |tj|."
+    },
+    {
+      "id": 49104,
+      "page": 715,
+      "text": "Hence show that the plug-in FDR estimate \u0002\nFDR is less than or equal\nto p0 \u00b7 M/L = \u03b1."
+    },
+    {
+      "id": 49105,
+      "page": 715,
+      "text": "(b) Show that the cut-point |T|(L+1) produces a test with estimated FDR\ngreater than \u03b1."
+    },
+    {
+      "id": 49107,
+      "page": 715,
+      "text": "pFDR =\n\u03c00 \u00b7 {Type I error of \u0393}\n\u03c00 \u00b7 {Type I error of \u0393} + \u03c01{Power of \u0393}\n(18.59)"
+    },
+    {
+      "id": 49110,
+      "page": 715,
+      "text": "(a) Using a symmetric two-sided rejection region based on the t-statistic,\ncompute the plug-in estimate of the FDR for various values of the\ncut-point."
+    },
+    {
+      "id": 49111,
+      "page": 715,
+      "text": "(b) Carry out the BH procedure for various FDR levels \u03b1 and show the\nequivalence of your results, with those from part (a)."
+    },
+    {
+      "id": 49113,
+      "page": 716,
+      "text": "(c) Let (q.25, q.75) be the quartiles of the t-statistics from the permuted\ndatasets. Let \u02c6\u03c00 = {#tj \u2208(q.25, q.75)}/(.5M), and set \u02c6\u03c00 = min(\u02c6\u03c00, 1).\nMultiply the FDR estimates from (a) by \u02c6\u03c00 and examine the results."
+    },
+    {
+      "id": 49114,
+      "page": 716,
+      "text": "(d) Give a motivation for the estimate in part (c)."
+    },
+    {
+      "id": 49127,
+      "page": 716,
+      "text": "Use the fact that given R = k, V is a binomial random variable, with k\ntrials and probability of success Pr(H = 0|T \u2208\u0393), to complete the proof."
+    },
+    {
+      "id": 49129,
+      "page": 717,
+      "text": "Abu-Mostafa, Y. (1995). Hints, Neural Computation 7: 639\u2013671."
+    },
+    {
+      "id": 49131,
+      "page": 717,
+      "text": "Adam, B.-L., Qu, Y., Davis, J. W., Ward, M. D., Clements, M. A.,\nCazares, L. H., Semmes, O. J., Schellhammer, P. F., Yasui, Y.,\nFeng, Z. and Wright, G. (2003). Serum protein \ufb01ngerprinting cou-\npled with a pattern-matching algorithm distinguishes prostate cancer\nfrom benign prostate hyperplasia and healthy mean, Cancer Research\n63(10): 3609\u20133614."
+    },
+    {
+      "id": 49132,
+      "page": 717,
+      "text": "Agrawal, R., Mannila, H., Srikant, R., Toivonen, H. and Verkamo, A. I.\n(1995). Fast discovery of association rules, Advances in Knowledge\nDiscovery and Data Mining, AAAI/MIT Press, Cambridge, MA."
+    },
+    {
+      "id": 49163,
+      "page": 719,
+      "text": "Breiman, L. (1996a). Bagging predictors, Machine Learning 26: 123\u2013140."
+    },
+    {
+      "id": 49164,
+      "page": 719,
+      "text": "Breiman, L. (1996b). Stacked regressions, Machine Learning 24: 51\u201364."
+    },
+    {
+      "id": 49176,
+      "page": 720,
+      "text": "B\u00a8uhlmann, P. and Hothorn, T. (2008). Boosting algorithms: regulariza-\ntion, prediction and model \ufb01tting (with discussion), Statistical Science\n22(4): 477\u2013505."
+    },
+    {
+      "id": 49185,
+      "page": 721,
+      "text": "Chambers,\nJ.\nand\nHastie,\nT.\n(1991).\nStatistical\nModels\nin\nS,\nWadsworth/Brooks Cole, Paci\ufb01c Grove, CA."
+    },
+    {
+      "id": 49192,
+      "page": 721,
+      "text": "Cli\ufb00ord, P. (1990). Markov random \ufb01elds in statistics, in G. R. Grimmett\nand D. J. A. Welsh (eds), Disorder in Physical Systems. A Volume in\nHonour of John M. Hammersley, Clarendon Press, Oxford, pp. 19\u201332."
+    },
+    {
+      "id": 49208,
+      "page": 722,
+      "text": "de Boor, C. (1978). A Practical Guide to Splines, Springer, New York."
+    },
+    {
+      "id": 49212,
+      "page": 722,
+      "text": "Dietterich, T. (2000a).\nEnsemble methods in machine learning, Lecture\nNotes in Computer Science 1857: 1\u201315."
+    },
+    {
+      "id": 49213,
+      "page": 722,
+      "text": "Dietterich, T. (2000b). An experimental comparison of three methods for\nconstructing ensembles of decision trees: bagging, boosting, and ran-\ndomization, Machine Learning 40(2): 139\u2013157."
+    },
+    {
+      "id": 49216,
+      "page": 722,
+      "text": "Donoho, D. (2006a). Compressed sensing, IEEE Transactions on Informa-\ntion Theory 52(4): 1289\u20131306."
+    },
+    {
+      "id": 49218,
+      "page": 723,
+      "text": "Donoho, D. (2006b). For most large underdetermined systems of equations,\nthe minimal \u21131-norm solution is the sparsest solution, Communications\non Pure and Applied Mathematics 59: 797\u2013829."
+    },
+    {
+      "id": 49225,
+      "page": 723,
+      "text": "Dudoit, S., Fridlyand, J. and Speed, T. (2002a). Comparison of discrimi-\nnation methods for the classi\ufb01cation of tumors using gene expression\ndata, Journal of the American Statistical Association 97(457): 77\u201387."
+    },
+    {
+      "id": 49226,
+      "page": 723,
+      "text": "Dudoit, S., Yang, Y., Callow, M. and Speed, T. (2002b). Statistical meth-\nods for identifying di\ufb00erentially expressed genes in replicated cDNA\nmicroarray experiments, Statistica Sinica pp. 111\u2013139."
+    },
+    {
+      "id": 49255,
+      "page": 725,
+      "text": "Freund, Y. and Schapire, R. (1996a). Experiments with a new boosting\nalgorithm, Machine Learning: Proceedings of the Thirteenth Interna-\ntional Conference, Morgan Kau\ufb00man, San Francisco, pp. 148\u2013156."
+    },
+    {
+      "id": 49256,
+      "page": 725,
+      "text": "Freund, Y. and Schapire, R. (1996b). Game theory, on-line prediction and\nboosting, Proceedings of the Ninth Annual Conference on Computa-\ntional Learning Theory, Desenzano del Garda, Italy, pp. 325\u2013332."
+    },
+    {
+      "id": 49261,
+      "page": 725,
+      "text": "Friedman, J. (1994a). Flexible metric nearest-neighbor classi\ufb01cation, Tech-\nnical report, Stanford University."
+    },
+    {
+      "id": 49262,
+      "page": 725,
+      "text": "Friedman, J. (1994b).\nAn overview of predictive learning and function\napproximation, in V. Cherkassky, J. Friedman and H. Wechsler (eds),\nFrom Statistics to Neural Networks, Vol. 136 of NATO ISI Series F,\nSpringer, New York."
+    },
+    {
+      "id": 49278,
+      "page": 726,
+      "text": "Friedman, J., Hastie, T. and Tibshirani, R. (2007a). Sparse inverse covari-\nance estimation with the graphical lasso, Biostatistics 9: 432\u2013441."
+    },
+    {
+      "id": 49279,
+      "page": 726,
+      "text": "Friedman, J., Hastie, T. and Tibshirani, R. (2008a). Regularization paths\nfor generalized linear models via coordinate descent, Technical report,\nStanford University."
+    },
+    {
+      "id": 49281,
+      "page": 727,
+      "text": "Friedman, J., Hastie, T. and Tibshirani, R. (2008b). Response to \u201cmease\nand wyner: Evidence contrary to the statistical view of boosting\u201d,\nJournal of Machine Learning Research 9: 175\u2013180."
+    },
+    {
+      "id": 49282,
+      "page": 727,
+      "text": "Friedman, J., Hastie, T., Hoe\ufb02ing, H. and Tibshirani, R. (2007b). Pathwise\ncoordinate optimization, Annals of Applied Statistics 2(1): 302\u2013332."
+    },
+    {
+      "id": 49297,
+      "page": 728,
+      "text": "Golub, T., Slonim, D., Tamayo, P., Huard, C., Gaasenbeek, M., Mesirov,\nJ., Coller, H., Loh, M., Downing, J., Caligiuri, M., Bloom\ufb01eld, C. and\nLander, E. (1999). Molecular classi\ufb01cation of cancer: class discovery\nand class prediction by gene expression monitoring, Science 286: 531\u2013\n536."
+    },
+    {
+      "id": 49320,
+      "page": 729,
+      "text": "Hastie, T. and Tibshirani, R. (1996a).\nDiscriminant adaptive nearest-\nneighbor classi\ufb01cation, IEEE Pattern Recognition and Machine In-\ntelligence 18: 607\u2013616."
+    },
+    {
+      "id": 49321,
+      "page": 729,
+      "text": "Hastie, T. and Tibshirani, R. (1996b). Discriminant analysis by Gaussian\nmixtures, Journal of the Royal Statistical Society Series B. 58: 155\u2013\n176."
+    },
+    {
+      "id": 49343,
+      "page": 731,
+      "text": "Hoe\ufb02ing, H. and Tibshirani, R. (2008). Estimation of sparse Markov net-\nworks using modi\ufb01ed logistic regression and the lasso, submitted."
+    },
+    {
+      "id": 49349,
+      "page": 731,
+      "text": "Hyv\u00a8arinen, A. and Oja, E. (2000). Independent component analysis: algo-\nrithms and applications, Neural Networks 13: 411\u2013430."
+    },
+    {
+      "id": 49350,
+      "page": 731,
+      "text": "Hyv\u00a8arinen, A., Karhunen, J. and Oja, E. (2001). Independent Component\nAnalysis, Wiley, New York."
+    },
+    {
+      "id": 49358,
+      "page": 731,
+      "text": "Jirou\u00b4sek, R. and P\u02c7reu\u02c7cil, S. (1995). On the e\ufb00ective implementation of the\niterative proportional \ufb01tting procedure, Computational Statistics and\nData Analysis 19: 177\u2013189."
+    },
+    {
+      "id": 49361,
+      "page": 732,
+      "text": "Joli\ufb00e, I. T., Trenda\ufb01lov, N. T., and Uddin, M. (2003). A modi\ufb01ed principal\ncomponent technique based on the lasso, Journal of Computational\nand Graphical Statistics 12: 531\u2013547."
+    },
+    {
+      "id": 49365,
+      "page": 732,
+      "text": "Kalb\ufb02eisch, J. and Prentice, R. (1980). The Statistical Analysis of Failure\nTime Data, Wiley, New York."
+    },
+    {
+      "id": 49377,
+      "page": 733,
+      "text": "Kohonen, T., Kaski, S., Lagus, K., Saloj\u00a8arvi, J., Paatero, A. and Saarela,\nA. (2000). Self-organization of a massive document collection, IEEE\nTransactions on Neural Networks 11(3): 574\u2013585. Special Issue on\nNeural Networks for Data Mining and Knowledge Discovery."
+    },
+    {
+      "id": 49386,
+      "page": 733,
+      "text": "Le Cun, Y., Boser, B., Denker, J., Henderson, D., Howard, R., Hubbard,\nW. and Jackel, L. (1990). Handwritten digit recognition with a back-\npropogation network, in D. Touretzky (ed.), Advances in Neural In-\nformation Processing Systems, Vol. 2, Morgan Kaufman, Denver, CO,\npp. 386\u2013404."
+    },
+    {
+      "id": 49392,
+      "page": 734,
+      "text": "LeCun, Y., Bottou, L., Bengio, Y. and Ha\ufb00ner, P. (1998). Gradient-based\nlearning applied to document recognition, Proceedings of the IEEE\n86(11): 2278\u20132324."
+    },
+    {
+      "id": 49408,
+      "page": 735,
+      "text": "MacKay, D. (1992). A practical Bayesian framework for backpropagation\nneural networks, Neural Computation 4: 448\u2013472."
+    },
+    {
+      "id": 49409,
+      "page": 735,
+      "text": "MacQueen, J. (1967). Some methods for classi\ufb01cation and analysis of mul-\ntivariate observations, Proceedings of the Fifth Berkeley Symposium\non Mathematical Statistics and Probability, eds. L.M. LeCam and J.\nNeyman, University of California Press, pp. 281\u2013297."
+    },
+    {
+      "id": 49414,
+      "page": 735,
+      "text": "McCullagh, P. and Nelder, J. (1989). Generalized Linear Models, Chapman\nand Hall, London."
+    },
+    {
+      "id": 49415,
+      "page": 735,
+      "text": "McCulloch, W. and Pitts, W. (1943). A logical calculus of the ideas immi-\nnent in nervous activity, Bulletin of Mathematical Biophysics 5: 115\u2013\n133. Reprinted in Anderson and Rosenfeld (1988), pp 96-104."
+    },
+    {
+      "id": 49416,
+      "page": 735,
+      "text": "McLachlan, G. (1992).\nDiscriminant Analysis and Statistical Pattern\nRecognition, Wiley, New York."
+    },
+    {
+      "id": 49431,
+      "page": 736,
+      "text": "Osborne, M., Presnell, B. and Turlach, B. (2000a). A new approach to\nvariable selection in least squares problems, IMA Journal of Numerical\nAnalysis 20: 389\u2013404."
+    },
+    {
+      "id": 49432,
+      "page": 736,
+      "text": "Osborne, M., Presnell, B. and Turlach, B. (2000b). On the lasso and its\ndual, Journal of Computational and Graphical Statistics 9: 319\u2013337."
+    },
+    {
+      "id": 49444,
+      "page": 737,
+      "text": "Petricoin, E. F., Ardekani, A. M., Hitt, B. A., Levine, P. J., Fusaro, V.,\nSteinberg, S. M., Mills, G. B., Simone, C., Fishman, D. A., Kohn,\nE. and Liotta, L. A. (2002). Use of proteomic patterns in serum to\nidentify ovarian cancer, Lancet 359: 572\u2013577."
+    },
+    {
+      "id": 49449,
+      "page": 738,
+      "text": "Ramaswamy, S., Tamayo, P., Rifkin, R., Mukherjee, S., Yeang, C., Angelo,\nM., Ladd, C., Reich, M., Latulippe, E., Mesirov, J., Poggio, T., Gerald,\nW., Loda, M., Lander, E. and Golub, T. (2001). Multiclass cancer\ndiagnosis using tumor gene expression signature, PNAS 98: 15149\u2013\n15154."
+    },
+    {
+      "id": 49452,
+      "page": 738,
+      "text": "R\u00a8atsch, G. and Warmuth, M. (2002). Maximizing the margin with boost-\ning, Proceedings of the 15th Annual Conference on Computational\nLearning Theory, pp. 334\u2013350."
+    },
+    {
+      "id": 49455,
+      "page": 738,
+      "text": "Rieger, K., Hong, W., Tusher, V., Tang, J., Tibshirani, R. and Chu, G.\n(2004).\nToxicity from radiation therapy associated with abnormal\ntranscriptional responses to DNA damage, Proceedings of the National\nAcademy of Sciences 101: 6634\u20136640."
+    },
+    {
+      "id": 49463,
+      "page": 739,
+      "text": "Rosenwald, A., Wright, G., Chan, W. C., Connors, J. M., Campo, E.,\nFisher, R. I., Gascoyne, R. D., Muller-Hermelink, H. K., Smeland,\nE. B. and Staudt, L. M. (2002). The use of molecular pro\ufb01ling to\npredict survival after chemotherapy for di\ufb00use large b-cell lymphoma,\nThe New England Journal of Medicine 346: 1937\u20131947."
+    },
+    {
+      "id": 49465,
+      "page": 739,
+      "text": "Rosset, S., Zhu, J. and Hastie, T. (2004a). Boosting as a regularized path to\na maximum margin classi\ufb01er, Journal of Machine Learning Research\n5: 941\u2013973."
+    },
+    {
+      "id": 49466,
+      "page": 739,
+      "text": "Rosset, S., Zhu, J. and Hastie, T. (2004b). Margin maximizing loss func-\ntions, in S. Thrun, L. Saul and B. Sch\u00a8olkopf (eds), Advances in Neural\nInformation Processing Systems 16, MIT Press, Cambridge, MA."
+    },
+    {
+      "id": 49467,
+      "page": 739,
+      "text": "Rousseauw, J., du Plessis, J., Benade, A., Jordaan, P., Kotze, J., Jooste, P.\nand Ferreira, J. (1983). Coronary risk factor screening in three rural\ncommunities, South African Medical Journal 64: 430\u2013436."
+    },
+    {
+      "id": 49476,
+      "page": 740,
+      "text": "Sch\u00a8olkopf, B., Smola, A. and M\u00a8uller, K.-R. (1999). Kernel principal compo-\nnent analysis, in B. Sch\u00a8olkopf, C. Burges and A. Smola (eds), Advances\nin Kernel Methods\u2014Support Vector Learning, MIT Press, Cambridge,\nMA, USA, pp. 327\u2013352."
+    },
+    {
+      "id": 49487,
+      "page": 740,
+      "text": "Simon, R. M., Korn, E. L., McShane, L. M., Radmacher, M. D., Wright,\nG. and Zhao, Y. (2004).\nDesign and Analysis of DNA Microarray\nInvestigations, Springer, New York."
+    },
+    {
+      "id": 49488,
+      "page": 740,
+      "text": "Sj\u00a8ostrand, K., Rostrup, E., Ryberg, C., Larsen, R., Studholme, C., Baezner,\nH., Ferro, J., Fazekas, F., Pantoni, L., Inzitari, D. and Waldemar,\nG. (2007). Sparse decomposition and modeling of anatomical shape\nvariation, IEEE Transactions on Medical Imaging 26(12): 1625\u20131635."
+    },
+    {
+      "id": 49494,
+      "page": 741,
+      "text": "Stamey, T., Kabalin, J., McNeal, J., Johnstone, I., Freiha, F., Redwine, E.\nand Yang, N. (1989). Prostate speci\ufb01c antigen in the diagnosis and\ntreatment of adenocarcinoma of the prostate II radical prostatectomy\ntreated patients, Journal of Urology 16: 1076\u20131083."
+    },
+    {
+      "id": 49513,
+      "page": 742,
+      "text": "Tibshirani, R., Hastie, T., Narasimhan, B. and Chu, G. (2001a). Diagnosis\nof multiple cancer types by shrunken centroids of gene expression,\nProceedings of the National Academy of Sciences 99: 6567\u20136572."
+    },
+    {
+      "id": 49516,
+      "page": 742,
+      "text": "Tibshirani, R., Walther, G. and Hastie, T. (2001b). Estimating the number\nof clusters in a dataset via the gap statistic, Journal of the Royal\nStatistical Society, Series B. 32(2): 411\u2013423."
+    },
+    {
+      "id": 49521,
+      "page": 743,
+      "text": "van der Merwe, A. and Zidek, J. (1980). Multivariate regression analysis\nand canonical variates, The Canadian Journal of Statistics 8: 27\u201339."
+    },
+    {
+      "id": 49525,
+      "page": 743,
+      "text": "von Luxburg, U. (2007). A tutorial on spectral clustering, Statistics and\nComputing 17(4): 395\u2013416."
+    },
+    {
+      "id": 49558,
+      "page": 747,
+      "text": "Abu-Mostafa, Y. 95, 474\nAckley, D. H. 645\nAdam, B.-L. 664\nAgrawal, R. 489\u2013491, 578\nAgresti, A. 385, 638, 640\nAhn, J. 695\nAkaike, H. 257\nAllen, D. 257\nAmbroise, C. 247\nAmit, Y. 602\nAnderson, J. R. 641\nAnderson, T. 645\nAngelo, M. 654, 658\nArdekani, A. M. 664"
+    },
+    {
+      "id": 49559,
+      "page": 747,
+      "text": "Bach, F. 569\nBaezner, H. 551\nBair, E. 676, 679\u2013683, 693\nBakin, S. 90\nBakiri, G. 605, 606\nBanerjee, O. 636\nBarnhill, S. 658\nBarron, A. 415\nBarry, R. 371\nBartlett, P. 384, 615"
+    },
+    {
+      "id": 49560,
+      "page": 747,
+      "text": "Baskett, F. 480\nBaxter, J. 384\nBecker, R. 369\nBell, A. 578\nBellman, R. E. 22\nBenade, A. 122\nBengio, Y. 404, 407, 408, 414, 644\nBenjamini, Y. 687, 689, 693\nBentley, J. 480\nBest, N. 292\nBibby, J. 94, 135, 441, 539, 559,\n578, 630, 679\nBickel, P. 652\nBickel, P. J. 89\nBishop, C. 38, 233, 414, 623, 645\nBishop, Y. 629, 638\nBloom\ufb01eld, C. 663\nBoser, B. 404, 414\nBotha, J. 334\nBottou, L. 404, 407, 408, 414, 644\nBoyd, S. 125, 632\nBreiman, L. 85, 243, 251, 257, 292,\n308, 310, 334, 339, 367,\n384, 451, 453, 455, 554,\n587, 602"
+    },
+    {
+      "id": 49562,
+      "page": 748,
+      "text": "Bremaud, P. 577\nBrin, S. 577\nBrooks, R. J. 81\nBrown, P. 679\nBruce, A. 181\nB\u00a8uhlmann, P. 87, 361, 384\nBuja, A. 110, 297, 441, 446, 451,\n455, 565, 574, 576, 578\nBunea, F. 91\nBurges, C. 455\nButte, A. 631"
+    },
+    {
+      "id": 49563,
+      "page": 748,
+      "text": "Caligiuri, M. 663\nCallow, M. 686, 693\nCampo, E. 674\nCandes, E. 86, 89, 613\nCarlin, J. 292\nCazares, L. H. 664\nChambers, J. 334\nChan, W. C. 674\nChaudhuri, S. 631, 633\nChen, L. 574, 576, 578\nChen, S. S. 68, 94\nCherkassky, V. 38, 239, 257\nChu, G. 684, 693\nChui, C. 181\nClark, L. 331\nClark, M. 539\nClements, M. A. 664\nCleveland, W. 369\nCli\ufb00ord, P. 629\nCohen, A. 668, 669\nCoifman, R. R. 679\nColler, H. 663\nComon, P. 578\nConnors, J. M. 674\nCook, D. 565, 578\nCook, N. 317\nCopas, J. B. 94, 610\nCover, T. 257, 465, 481\nCox, D. 292, 645\nCressie, N. 171\nCsiszar, I. 292\nCun, Y. L. 407, 471, 481\nCutler, A. 554"
+    },
+    {
+      "id": 49564,
+      "page": 748,
+      "text": "Dale, M. 526\nDasarathy, B. 480, 481\nd\u2019Aspremont, A. 636\nDaubechies, I. 92, 181\nDavis, J. W. 664\nde Boor, C. 181\nDe Mol, C. 92\nde Silva, V. 573\nDefrise, M. 92\nDempster, A. 292, 449, 633\nDenham, M. 679\nDenker, J. 404, 407, 414, 471, 481\nDevijver, P. 480\nDietterich, T. 286, 602, 605, 606,\n623\nDonath, W. E. 578\nDonoho, D. 68, 86, 91, 94, 179,\n181, 554, 613\nDowning, J. 663\nDrton, M. 631, 633\ndu Plessis, J. 122\nDuan, N. 480\nDubes, R. 508, 522\nDuchamp, T. 541\nDuda, R. 38, 135\nDudoit, S. 686, 693\nDuin, R. 624"
+    },
+    {
+      "id": 49565,
+      "page": 748,
+      "text": "Edwards, D. 645\nEfron, B. 73, 86, 90, 94, 97, 98,\n128, 231, 254, 257, 292,\n334, 568, 609, 692, 693\nElad, M. 613\nElith, J. 375, 376, 378\nEskin, E. 668, 669\nEvgeniou, T. 168, 181, 455"
+    },
+    {
+      "id": 49566,
+      "page": 748,
+      "text": "Fan, J. 92, 216, 539, 654\nFan, Y. 654\nFazekas, F. 551\nFeng, Z. 664\nFerreira, J. 122\nFerro, J. 551\nFiedler, M. 578\nFienberg, S. 585, 629, 638"
+    },
+    {
+      "id": 49568,
+      "page": 749,
+      "text": "Finkel, R. 480\nFisher, N. 334\nFisher, R. A. 136, 455\nFisher, R. I. 674\nFisher, W. 310\nFishman, D. A. 664\nFix, E. 481\nFlury, B. 578\nForgy, E. 578\nFrancis, M. 375, 376, 378\nFrank, I. 81, 82, 94\nFrean, M. 384\nFreiha, F. 3, 49\nFreund, Y. 337, 383, 384, 615\nFridlyand, J. 693\nFriedman, J. 38, 81, 82, 85, 92\u201394,\n111, 121, 126, 251, 257,\n258, 308, 310, 334, 339,\n345, 365, 367, 384, 391,\n414, 437, 451, 453, 475,\n480, 565, 578, 602, 611,\n617\u2013621, 623, 636, 657,\n661, 667\nFriedman, N. 629, 630, 645\nFu, W. 91, 92\nFukunaga, K. 475\nFurnival, G. 57\nFusaro, V. 664"
+    },
+    {
+      "id": 49569,
+      "page": 749,
+      "text": "Gaasenbeek, M. 663\nGanapathi, V. 642\nGao, H. 181\nGascoyne, R. D. 674\nGelfand, A. 292\nGelman, A. 292\nGeman, D. 292, 602\nGeman, S. 292\nGenkin, A. 661\nGenovese, C. 693\nGerald, W. 654, 658\nGersho, A. 514, 515, 526, 578\nGhaoui, L. E. 636\nGijbels, I. 216\nGilks, W. 292\nGill, P. 96, 421"
+    },
+    {
+      "id": 49570,
+      "page": 749,
+      "text": "Girosi, F. 168, 174, 181, 415\nGolub, G. 257, 335, 535\nGolub, T. 631, 654, 658, 663\nGoodall, C. 578\nGordon, A. 578\nGray, R. 514, 515, 526, 578\nGreen, P. 181, 183, 334\nGreenacre, M. 455\nGreenshtein, E. 91\nGuo, Y. 657\nGuyon, I. 658"
+    },
+    {
+      "id": 49571,
+      "page": 749,
+      "text": "Ha\ufb00ner, P. 404, 407, 408, 414, 644\nHall, P. 292, 602, 619\nHammersley, J. M. 629\nHand, D. 135, 475\nHanley, J. 317\nHansen, M. 328\nHansen, R. 93\nHart, P. 38, 135, 465, 480, 481\nHartigan, J. A. 510, 578\nHastie, T. 72, 73, 78, 86, 88, 90,\n92\u201394, 97, 98, 110, 121,\n122, 126, 137, 174, 216,\n257, 297, 299, 304, 334,\n339, 345, 348, 349, 375,\n376, 378, 384, 385, 414,\n428, 431, 434, 437, 441,\n446, 451, 455, 475, 478,\n480, 481, 519, 539, 550,\n565, 568, 578, 606, 609\u2013\n611, 614, 615, 636, 657,\n658, 660\u2013662, 664, 667,\n676, 679\u2013683, 693\nHatef, M. 624\nHathaway, R. J. 292\nHeath, M. 257\nHebb, D. 414\nHenderson, D. 404, 414\nHerman, A. 334\nHertz, J. 414\nHinkley, D. 292\nHinton, G. 292, 334, 408, 414, 644,\n645\nHitt, B. A. 664"
+    },
+    {
+      "id": 49573,
+      "page": 750,
+      "text": "Ho, T. K. 602\nHochberg, Y. 687, 689, 693\nHodges, J. 481\nHoe\ufb02ing, H. 92, 93, 642, 667\nHoerl, A. E. 64, 94\nHo\ufb00, M. 396, 414\nHo\ufb00man, A. J. 578\nHofmann, H. 578\nHolland, P. 629, 638\nHong, W. 684\nHothorn, T. 87, 361, 384\nHoward, R. 404, 414\nHuard, C. 663\nHubbard, W. 404, 414\nHuber, P. 349, 414, 435, 565, 578\nHunter, D. 294\nHyv\u00a8arinen, A. 560, 562, 578, 583"
+    },
+    {
+      "id": 49574,
+      "page": 750,
+      "text": "Ihaka, R. 455\nInskip, H. 292\nInzitari, D. 551\nIzenman, A. 84"
+    },
+    {
+      "id": 49575,
+      "page": 750,
+      "text": "Jackel, L. 404, 414\nJacobs, R. 334\nJain, A. 508, 522\nJames, G. 606\nJancey, R. 578\nJensen, F. V. 629\nJiang, W. 384\nJirou\u00b4sek, R. 640\nJohnson, N. 412\nJohnstone, I. 3, 49, 73, 86, 94, 97,\n98, 179, 181, 609, 613\nJoli\ufb00e, I. T. 550\nJones, L. 415\nJones, M. 168, 174, 181, 415\nJooste, P. 122\nJordaan, P. 122\nJordan, M. 334, 569, 645"
+    },
+    {
+      "id": 49576,
+      "page": 750,
+      "text": "Kabalin, J. 3, 49\nKalb\ufb02eisch, J. 674, 693\nKarhunen, J. 583\nKaski, S. 531, 532, 578"
+    },
+    {
+      "id": 49577,
+      "page": 750,
+      "text": "Kaufman, L. 517, 526, 578\nKearns, M. 380\nKennard, R. 64, 94\nKent, J. 94, 135, 441, 539, 559,\n578, 630, 679\nKiiveri, H. T. 632\nKim, S.-J. 125\nKishon, E. 539\nKittler, J. 480, 624\nKleinberg, E. M. 602\nKnight, K. 91, 292, 666, 693\nKoh, K. 125\nKohane, I. 631\nKohavi, R. 243, 257\nKohn, E. 664\nKohonen, T. 462, 481, 531, 532,\n578\nKoller, D. 629, 630, 642, 645\nKooperberg, C. 328\nKorn, E. L. 693\nKotze, J. 122\nKressel, U. 437\nKrogh, A. 414"
+    },
+    {
+      "id": 49578,
+      "page": 750,
+      "text": "Ladd, C. 654, 658\nLa\ufb00erty, J. 90, 304\nLa\ufb00erty, J. D. 642\nLagus, K. 531, 532, 578\nLaird, N. 292, 449\nLambert, D. 376\nLander, E. 654, 658, 663\nLange, K. 92, 294, 583, 584\nLangford, J. C. 573\nLarsen, R. 551\nLatulippe, E. 654, 658\nLau\ufb00enburger, D. 625\nLauritzen, S. 629, 632, 645\nLawson, C. 93\nLe Cun, Y. 404, 406\u2013408, 414\nLeathwick, J. 375, 376, 378\nLeblanc, M. 292\nLeCun, Y. 644\nLee, D. 552, 553\nLee, M.-L. 693\nLee, S.-I. 642"
+    },
+    {
+      "id": 49580,
+      "page": 751,
+      "text": "Lee, W. 384, 615\nLeslie, C. 668, 669\nLevina, E. 652, 693\nLevine, P. J. 664\nLewis, D. 661\nLi, K.-C. 480\nLi, R. 92\nLin, H. 331\nLin, Y. 90, 304, 428, 455\nLiotta, L. A. 664\nLittle, R. 332, 647\nLittman, M. 578\nLiu, H. 90, 304\nLloyd, S. 481, 578\nLoader, C. 209, 216\nLoda, M. 654, 658\nLogosi, G. 384\nLoh, M. 663\nLoh, W. 310"
+    },
+    {
+      "id": 49581,
+      "page": 751,
+      "text": "Ma, Y. 257\nMacnaughton Smith, P. 526\nMacKay, D. 623\nMacQueen, J. 481, 578\nMadigan, D. 257, 292, 661\nMakeig, S. 564, 565\nMannila, H. 489\u2013491, 578\nMardia, K. 94, 135, 441, 539, 559,\n578, 630, 679\nMarron, J. 695\nMason, L. 384\nMassart, D. 517\nMatas, J. 624\nMcCullagh, P. 638, 640\nMcCulloch, C. 331\nMcCulloch, W. 414\nMcLachlan, G. 135, 247\nMcNeal, J. 3, 49\nMcNeil, B. 317\nMcShane, L. M. 693\nMease, D. 384, 603\nMeinshausen, N. 91, 635, 642\nMeir, R. 384\nMesirov, J. 654, 658, 663\nMills, G. B. 664"
+    },
+    {
+      "id": 49582,
+      "page": 751,
+      "text": "Mockett, L. 526\nMorgan, J. N. 334\nMotwani, R. 577\nMukherjee, S. 654, 658\nMulier, F. 38, 239\nMuller-Hermelink, H. K. 674\nM\u00a8uller, K.-R. 547, 548\nMunro, S. 397\nMurray, W. 96, 421\nMyles, J. 475"
+    },
+    {
+      "id": 49583,
+      "page": 751,
+      "text": "Nadler, B. 679\nNarasimhan, B. 693\nNeal, R. 268, 292, 409\u2013412, 414,\n605, 623\nNelder, J. 638, 640\nNoble, W. S. 668, 669\nNolan, G. 625\nNowlan, S. 334"
+    },
+    {
+      "id": 49584,
+      "page": 751,
+      "text": "Oja, E. 560, 562, 578, 583\nOlesen, K. G. 629\nOlshen, R. 251, 308, 310, 334, 367,\n451, 453\nOnton, J. 564, 565\nOsborne, M. 76, 94\nOsindero, S. 644"
+    },
+    {
+      "id": 49585,
+      "page": 751,
+      "text": "Paatero, A. 531, 532, 578\nPace, R. K. 371\nPage, L. 577\nPalmer, R. 414\nPantoni, L. 551\nPark, M. Y. 94, 126, 661\nParker, D. 414\nPaul, D. 676, 679\u2013683, 693\nPearl, J. 629, 645\nPe\u2019er, D. 625\nPerez, O. 625\nPeterson 641\nPetricoin, E. F. 664\nPitts, W. 414\nPlastria, F. 517\nPlatt, J. 453\nPoggio, T. 168, 174, 181, 415, 455,\n654, 658"
+    },
+    {
+      "id": 49587,
+      "page": 752,
+      "text": "Pontil, M. 168, 181, 455\nPopescu, B. 617\u2013619, 621, 623\nPrentice, R. 674, 693\nPresnell, B. 76, 94\nP\u02c7reu\u02c7cil, S. 640"
+    },
+    {
+      "id": 49589,
+      "page": 752,
+      "text": "Radmacher, M. D. 693\nRaftery, A. 257, 292\nRamaswamy, S. 654, 658\nRamsay, J. 181, 578\nRao, C. R. 455\nR\u00a8atsch, G. 384, 615\nRavikumar, P. 90, 304, 642\nRedwine, E. 3, 49\nReich, M. 654, 658\nRichardson, J. 375\nRichardson, T. S. 631, 633\nRidgeway, G. 361\nRieger, K. 684\nRifkin, R. 654, 658\nRipley, B. D. 38, 131, 135, 136,\n234, 308, 310, 400, 414,\n415, 455, 468, 480, 481,\n641, 645\nRissanen, J. 257\nRitov, Y. 89, 91\nRobbins, H. 397\nRocha, G. 90\nRoosen, C. 414\nRosenblatt, F. 102, 129, 414\nRosenwald, A. 674\nRosset, S. 89, 98, 348, 349, 385,\n426, 428, 434, 610, 611,\n615, 657, 661, 664, 666,\n693\nRostrup, E. 551\nRousseauw, J. 122\nRousseeuw, P. 517, 526, 578\nRowe, D. 375\nRoweis, S. T. 573\nRubin, D. 292, 332, 449, 647\nRumelhart, D. 414"
+    },
+    {
+      "id": 49591,
+      "page": 752,
+      "text": "Saarela, A. 531, 532, 578\nSachs, K. 625\nSaloj\u00a8arvi, J. 531, 532, 578\nSaul, L. K. 573\nSaunders, M. 68, 94, 666, 693\nSchapire, R. 337, 380, 383, 384,\n615\nSchellhammer, P. F. 664\nSchnitzler, C. 334\nSch\u00a8olkopf, B. 547, 548\nSchroeder, A. 391\nSchwarz, G. 233, 257\nScott, D. 216\nSeber, G. 94\nSegal, M. 596\nSejnowski, T. 578, 645\nSemmes, O. J. 664\nSeung, H. 552, 553\nShafer, G. 629\nShao, J. 257\nShenoy, P. 629\nShort, R. 475\nShustek, L. 480\nShyu, M. 369\nSiegmund, D. 689\nSilverman, B. 181, 183, 216, 334,\n486, 567, 578\nSilvey, S. 292\nSimard, P. 407, 471, 480, 481\nSimon, R. M. 693\nSimone, C. 664\nSinger, Y. 384\nSj\u00a8ostrand, K. 551\nSlate, E. 331\nSlonim, D. 631, 663\nSmeland, E. B. 674\nSmith, A. 292\nSmola, A. 547, 548\nSonquist, J. A. 334\nSpector, P. 243, 257\nSpeed, T. 632, 686, 693\nSpiegelhalter, D. 292, 629\nSpiegelman, C. 679"
+    },
+    {
+      "id": 49593,
+      "page": 753,
+      "text": "Spielman, D. A. 578\nSrikant, R. 489\u2013491, 578\nStamey, T. 3, 49\nStaudt, L. M. 674\nSteinberg, S. M. 664\nStern, H. 292\nStodden, V. 554\nStone, C. 251, 308, 310, 328, 334,\n367, 451, 453\nStone, M. 81, 257\nStorey, J. 689, 692, 693, 697, 698\nStork, D. 38, 135\nStudholme, C. 551\nStuetzle, W. 391, 414, 541, 578\nSurowiecki, J. 286\nSwayne, D. 565, 578"
+    },
+    {
+      "id": 49594,
+      "page": 753,
+      "text": "Tamayo, P. 631, 654, 658, 663\nTang, J. 684\nTanner, M. 292\nTao, T. 89, 613\nTarpey, T. 578\nTaylor, J. 88, 94, 610, 614, 689\nTaylor, P. 375, 376, 378\nTeh, Y.-W. 644\nTenenbaum, J. B. 573\nTeng, S.-H. 578\nThomas, J. 257\nTibshirani, R. 73, 78, 86, 88, 90,\n92\u201394, 97, 98, 110, 121,\n122, 126, 137, 216, 257,\n292, 297, 299, 304, 334,\n339, 345, 384, 428, 431,\n434, 437, 441, 446, 451,\n455, 475, 478, 480, 481,\n519, 550, 565, 568, 609\u2013\n611, 614, 636, 642, 657,\n658, 660, 661, 666, 667,\n676, 679\u2013684, 692, 693\nToivonen, H. 489\u2013491, 578\nTraskin, M. 384\nTrenda\ufb01lov, N. T. 550\nTropp, J. 91\nTruong, Y. 328\nTsybakov, A. 89, 91"
+    },
+    {
+      "id": 49595,
+      "page": 753,
+      "text": "Tukey, J. 414, 565, 578\nTurlach, B. 76, 94\nTurnbull, B. 331\nTusher, V. 684, 692\nTusn\u00b4ady, G. 292"
+    },
+    {
+      "id": 49597,
+      "page": 753,
+      "text": "Valiant, L. G. 380\nvan der Merwe, A. 84\nVan Loan, C. 335, 535\nVandenberghe, L. 632\nVanichsetakul, N. 310\nVapnik, V. 38, 102, 132, 135, 171,\n257, 438, 455, 658\nVayatis, N. 384\nVazirani, U. 380\nVerkamo, A. I. 489\u2013491, 578\nVidakovic, B. 181\nvon Luxburg, U. 578"
+    },
+    {
+      "id": 49598,
+      "page": 753,
+      "text": "Wahba, G. 168, 169, 181, 257, 268,\n428, 429, 455\nWainwright, M. 91\nWainwright, M. J. 642\nWaldemar, G. 551\nWalther, G. 88, 94, 519, 610, 614\nWang, P. 667\nWard, M. D. 664\nWarmuth, M. 615\nWasserman, L. 90, 304, 626, 645,\n693\nWatkins, C. 658\nWegkamp, M. 91\nWeisberg, S. 94\nWerbos, P. 414\nWermuth, N. 645\nWeston, J. 658, 668, 669\nWhittaker, J. 632, 633, 641, 645\nWickerhauser, M. 181\nWidrow, B. 396, 414\nWild, C. 300\nWilliams, R. 414\nWilliams, W. 526\nWilson, R. 57"
+    },
+    {
+      "id": 49600,
+      "page": 754,
+      "text": "Winograd, T. 577\nWold, H. 94\nWolpert, D. 292\nWong, M. A. 510\nWong, W. 292\nWright, G. 664, 674, 693\nWright, M. 96, 421\nWu, T. 92, 294, 583\nWyner, A. 384, 603"
+    },
+    {
+      "id": 49601,
+      "page": 754,
+      "text": "Yang, N. 3, 49\nYang, Y. 686, 693\nYasui, Y. 664\nYeang, C. 654, 658\nYee, T. 300\nYekutieli, Y. 693\nYu, B. 90, 91, 384\nYuan, M. 90"
+    },
+    {
+      "id": 49602,
+      "page": 754,
+      "text": "Zhang, H. 90, 304, 428, 455\nZhang, J. 409\u2013412, 605\nZhang, P. 257\nZhang, T. 384\nZhao, P. 90, 91\nZhao, Y. 693\nZhu, J. 89, 98, 174, 348, 349, 385,\n426, 428, 434, 610, 611,\n615, 657, 661, 664, 666,\n693\nZidek, J. 84\nZou, H. 72, 78, 92, 349, 385, 550,\n662, 693"
+    },
+    {
+      "id": 49605,
+      "page": 755,
+      "text": "Activation function, 392\u2013395\nAdaBoost, 337\u2013346\nAdaptive lasso, 92\nAdaptive methods, 429\nAdaptive nearest neighbor meth-\nods, 475\u2013478\nAdaptive wavelet \ufb01ltering, 181\nAdditive model, 295\u2013304\nAdjusted response, 297\nA\ufb03ne set, 130\nA\ufb03ne-invariant average, 482, 540\nAIC, see Akaike information cri-\nterion\nAkaike information criterion (AIC),\n230\nAnalysis of deviance, 124\nApplications\nabstracts, 672\naorta, 204\nbone, 152\nCalifornia housing, 371\u2013372,\n591\ncountries, 517"
+    },
+    {
+      "id": 49606,
+      "page": 755,
+      "text": "demographics, 379\u2013380\ndocument, 532\n\ufb02ow cytometry, 637\ngalaxy, 201\nheart attack, 122, 146, 207\nlymphoma, 674\nmarketing, 488\nmicroarray, 5, 505, 532\nnested spheres, 590\nNew Zealand \ufb01sh, 375\u2013379\nnuclear magnetic resonance,\n176\nozone, 201\nprostate cancer, 3, 49, 61, 608\nprotein mass spectrometry, 664\nsatellite image, 470\nskin of the orange, 429\u2013432\nspam, 2, 300\u2013304, 313, 320,\n328, 352, 593\nvowel, 440, 464\nwaveform, 451\nZIP code, 4, 404, 536\u2013539\nArchetypal analysis, 554\u2013557\nAssociation rules, 492\u2013495, 499\u2013\n501"
+    },
+    {
+      "id": 49608,
+      "page": 756,
+      "text": "Automatic relevance determination,\n411\nAutomatic selection of smoothing\nparameters , 156"
+    },
+    {
+      "id": 49609,
+      "page": 756,
+      "text": "B-Spline, 186\nBack-propagation, 392\u2013397, 408\u2013\n409\nBack\ufb01tting, 297, 391\nBackward\nselection, 58\nstepwise selection, 59\nBackward pass, 396\nBagging, 282\u2013288, 409, 587\nBasis expansions and regulariza-\ntion, 139\u2013189\nBasis functions, 141, 186, 189, 321,\n328\nBatch learning, 397\nBaum\u2013Welch algorithm, 272\nBayes\nclassi\ufb01er, 21\nfactor, 234\nmethods, 233\u2013235, 267\u2013272\nrate, 21\nBayesian, 409\nBayesian information criterion (BIC),\n233\nBenjamini\u2013Hochberg method, 688\nBest-subset selection, 57, 610\nBetween class covariance matrix,\n114\nBias, 16, 24, 37, 160, 219\nBias-variance decomposition, 24,\n37, 219\nBias-variance tradeo\ufb00, 37, 219\nBIC, see Bayesian Information Cri-\nterion\nBoltzmann machines, 638\u2013648\nBonferroni method, 686\nBoosting, 337\u2013386, 409\nas lasso regression, 607\u2013609\nexponential loss and AdaBoost,\n343\ngradient boosting, 358"
+    },
+    {
+      "id": 49610,
+      "page": 756,
+      "text": "implementations, 360\nmargin maximization, 613\nnumerical optimization, 358\npartial-dependence plots, 369\nregularization path, 607\nshrinkage, 364\nstochastic gradient boosting,\n365\ntree size, 361\nvariable importance, 367\nBootstrap, 249, 261\u2013264, 267, 271\u2013\n282, 587\nrelationship to Bayesian method,\n271\nrelationship to maximum like-\nlihood method, 267\nBottom-up clustering, 520\u2013528\nBump hunting, see Patient rule\ninduction method\nBumping, 290\u2013292"
+    },
+    {
+      "id": 49611,
+      "page": 756,
+      "text": "C5.0, 624\nCanonical variates, 441\nCART, see Classi\ufb01cation and re-\ngression trees\nCategorical predictors, 10, 310\nCensored data, 674\nClassical multidimensional scaling,\n570\nClassi\ufb01cation, 22, 101\u2013137, 305\u2013\n317, 417\u2013429\nClassi\ufb01cation and regression trees\n(CART), 305\u2013317\nClique, 628\nClustering, 501\u2013528\nk-means, 509\u2013510\nagglomerative, 523\u2013528\nhierarchical, 520\u2013528\nCodebook, 515\nCombinatorial algorithms, 507\nCombining models, 288\u2013290\nCommittee, 289, 587, 605\nComparison of learning methods,\n350\u2013352\nComplete data, 276"
+    },
+    {
+      "id": 49613,
+      "page": 757,
+      "text": "Complexity parameter, 37\nComputational shortcuts\nquadratic penalty, 659\nCondensing procedure, 480\nConditional likelihood, 31\nConfusion matrix, 301\nConjugate gradients, 396\nConsensus, 285\u2013286\nConvolutional networks, 407\nCoordinate descent, 92, 636, 668\nCOSSO, 304\nCost complexity pruning, 308\nCovariance graph, 631\nCp statistic, 230\nCross-entropy, 308\u2013310\nCross-validation, 241\u2013245\nCubic smoothing spline, 151\u2013153\nCubic spline, 151\u2013153\nCurse of dimensionality, 22\u201326"
+    },
+    {
+      "id": 49614,
+      "page": 757,
+      "text": "Dantzig selector, 89\nData augmentation, 276\nDaubechies symmlet-8 wavelets,\n176\nDe-correlation, 597\nDecision boundary, 13\u201315, 21\nDecision trees, 305\u2013317\nDecoder, 515, see encoder\nDecomposable models, 641\nDegrees of freedom\nin an additive model, 302\nin ridge regression, 68\nof a tree, 336\nof smoother matrices, 153\u2013154,\n158\nDelta rule, 397\nDemmler-Reinsch basis for splines,\n156\nDensity estimation, 208\u2013215\nDeviance, 124, 309\nDiagonal linear discriminant anal-\nysis, 651\u2013654\nDimension reduction, 658\nfor nearest neighbors, 479\nDiscrete variables, 10, 310\u2013311"
+    },
+    {
+      "id": 49615,
+      "page": 757,
+      "text": "Discriminant\nadaptive nearest neighbor clas-\nsi\ufb01er, 475\u2013480\nanalysis, 106\u2013119\ncoordinates, 108\nfunctions, 109\u2013110\nDissimilarity measure, 503\u2013504\nDummy variables, 10"
+    },
+    {
+      "id": 49616,
+      "page": 757,
+      "text": "Early stopping, 398\nE\ufb00ective degrees of freedom, 17,\n68, 153\u2013154, 158, 232, 302,\n336\nE\ufb00ective number of parameters,\n15, 68, 153\u2013154, 158, 232,\n302, 336\nEigenvalues of a smoother matrix,\n154\nElastic net, 662\nEM algorithm, 272\u2013279\nas a maximization-maximization\nprocedure, 277\nfor two component Gaussian\nmixture, 272\nEncoder, 514\u2013515\nEnsemble, 616\u2013623\nEnsemble learning, 605\u2013624\nEntropy, 309\nEquivalent kernel, 156\nError rate, 219\u2013230\nError-correcting codes, 606\nEstimates of in-sample prediction\nerror, 230\nExpectation-maximization algorithm,\nsee EM algorithm\nExtra-sample error, 228"
+    },
+    {
+      "id": 49617,
+      "page": 757,
+      "text": "False discovery rate, 687\u2013690, 692,\n693\nFeature, 1\nextraction, 150\nselection, 409, 658, 681\u2013683\nFeed-forward neural networks, 392\u2013\n408"
+    },
+    {
+      "id": 49619,
+      "page": 758,
+      "text": "Fisher\u2019s linear discriminant, 106\u2013\n119, 438\nFlexible discriminant analysis, 440\u2013\n445\nForward\nselection, 58\nstagewise, 86, 608\nstagewise additive modeling,\n342\nstepwise, 73\nForward pass algorithm, 395\nFourier transform, 168\nFrequentist methods, 267\nFunction approximation, 28\u201336\nFused lasso, 666"
+    },
+    {
+      "id": 49620,
+      "page": 758,
+      "text": "Gap statistic, 519\nGating networks, 329\nGauss-Markov theorem, 51\u201352\nGauss-Newton method, 391\nGaussian (normal) distribution, 16\nGaussian graphical model, 630\nGaussian mixtures, 273, 463, 492,\n509\nGaussian radial basis functions,\n212\nGBM, see Gradient boosting\nGBM package, see Gradient boost-\ning\nGCV, see Generalized cross-validation\nGEM (generalized EM), 277\nGeneralization\nerror, 220\nperformance, 220\nGeneralized additive model, 295\u2013\n304\nGeneralized association rules, 497\u2013\n499\nGeneralized cross-validation, 244\nGeneralized linear discriminant anal-\nysis, 438\nGeneralized linear models, 125\nGibbs sampler, 279\u2013280, 641\nfor mixtures, 280\nGini index, 309"
+    },
+    {
+      "id": 49621,
+      "page": 758,
+      "text": "Global Markov property, 628\nGradient Boosting, 359\u2013361\nGradient descent, 358, 395\u2013397\nGraph Laplacian, 545\nGraphical lasso, 636\nGrouped lasso, 90"
+    },
+    {
+      "id": 49622,
+      "page": 758,
+      "text": "Haar basis function, 176\nHammersley-Cli\ufb00ord theorem, 629\nHard-thresholding, 653\nHat matrix, 46\nHelix, 582\nHessian matrix, 121\nHidden nodes, 641\u2013642\nHidden units, 393\u2013394\nHierarchical clustering, 520\u2013528\nHierarchical mixtures of experts,\n329\u2013332\nHigh-dimensional problems, 649\nHints, 96\nHyperplane, see Separating Hy-\nperplane"
+    },
+    {
+      "id": 49623,
+      "page": 758,
+      "text": "ICA, see Independent components\nanalysis\nImportance sampling, 617\nIn-sample prediction error, 230\nIncomplete data, 332\nIndependent components analysis,\n557\u2013570\nIndependent variables, 9\nIndicator response matrix, 103\nInference, 261\u2013294\nInformation\nFisher, 266\nobserved, 274\nInformation theory, 236, 561\nInner product, 53, 668, 670\nInputs, 10\nInstability of trees, 312\nIntercept, 11\nInvariance manifold, 471\nInvariant metric, 471\nInverse wavelet transform, 179"
+    },
+    {
+      "id": 49625,
+      "page": 759,
+      "text": "IRLS, see Iteratively reweighted\nleast squares\nIrreducible error, 224\nIsing model, 638\nISOMAP, 572\nIsometric feature mapping, 572\nIterative proportional scaling, 585\nIteratively reweighted least squares\n(IRLS), 121"
+    },
+    {
+      "id": 49626,
+      "page": 759,
+      "text": "Jensen\u2019s inequality, 293\nJoin tree, 629\nJunction tree, 629"
+    },
+    {
+      "id": 49627,
+      "page": 759,
+      "text": "K-means clustering, 460, 509\u2013514\nK-medoid clustering, 515\u2013520\nK-nearest neighbor classi\ufb01ers, 463\nKarhunen-Loeve transformation (prin-\ncipal components), 66\u2013\n67, 79, 534\u2013539\nKarush-Kuhn-Tucker conditions,\n133, 420\nKernel\nclassi\ufb01cation, 670\ndensity classi\ufb01cation, 210\ndensity estimation, 208\u2013215\nfunction, 209\nlogistic regression, 654\nprincipal component, 547\u2013550\nstring, 668\u2013669\ntrick, 660\nKernel methods, 167\u2013176, 208\u2013215,\n423\u2013438, 659\nKnot, 141, 322\nKriging, 171\nKruskal-Shephard scaling, 570\nKullback-Leibler distance, 561"
+    },
+    {
+      "id": 49628,
+      "page": 759,
+      "text": "Lagrange multipliers, 293\nLandmark, 539\nLaplacian, 545\nLaplacian distribution, 72\nLAR, see Least angle regression\nLasso, 68\u201369, 86\u201390, 609, 635, 636,\n661"
+    },
+    {
+      "id": 49629,
+      "page": 759,
+      "text": "fused, 666\nLatent\nfactor, 674\nvariable, 678\nLearning, 1\nLearning rate, 396\nLearning vector quantization, 462\nLeast angle regression, 73\u201379, 86,\n610\nLeast squares, 11, 32\nLeave-one-out cross-validation, 243\nLeNet, 406\nLikelihood function, 265, 273\nLinear basis expansion, 139\u2013148\nLinear combination splits, 312\nLinear discriminant function, 106\u2013\n119\nLinear methods\nfor classi\ufb01cation, 101\u2013137\nfor regression, 43\u201399\nLinear models and least squares,\n11\nLinear regression of an indicator\nmatrix, 103\nLinear separability, 129\nLinear smoother, 153\nLink function, 296\nLLE, see Local linear embedding\nLocal false discovery rate, 693\nLocal likelihood, 205\nLocal linear embedding, 572\nLocal methods in high dimensions,\n22\u201327\nLocal minima, 400\nLocal polynomial regression, 197\nLocal regression, 194, 200\nLocalization in time/frequency, 175\nLoess (local regression), 194, 200\nLog-linear model, 639\nLog-odds ratio (logit), 119\nLogistic (sigmoid) function, 393\nLogistic regression, 119\u2013128, 299\nLogit (log-odds ratio), 119\nLoss function, 18, 21, 219\u2013223, 346\nLoss matrix, 310"
+    },
+    {
+      "id": 49631,
+      "page": 760,
+      "text": "Lossless compression, 515\nLossy compression, 515\nLVQ, see Learning Vector Quan-\ntization"
+    },
+    {
+      "id": 49632,
+      "page": 760,
+      "text": "Mahalanobis distance, 441\nMajority vote, 337\nMajorization, 294, 553\nMajorize-Minimize algorithm, 294,\n584\nMAP (maximum aposteriori) es-\ntimate, 270\nMargin, 134, 418\nMarket basket analysis, 488, 499\nMarkov chain Monte Carlo (MCMC)\nmethods, 279\nMarkov graph, 627\nMarkov networks, 638\u2013648\nMARS, see Multivariate adaptive\nregression splines\nMART, see Multiple additive re-\ngression trees\nMaximum likelihood estimation,\n31, 261, 265\nMCMC, see Markov Chain Monte\nCarlo Methods\nMDL, see Minimum description\nlength\nMean \ufb01eld approximation, 641\nMean squared error, 24, 285\nMemory-based method, 463\nMetropolis-Hastings algorithm, 282\nMinimum description length (MDL),\n235\nMinorization, 294, 553\nMinorize-Maximize algorithm, 294,\n584\nMisclassi\ufb01cation error, 17, 309\nMissing data, 276, 332\u2013333\nMissing predictor values, 332\u2013333\nMixing proportions, 214\nMixture discriminant analysis, 449\u2013\n455\nMixture modeling, 214\u2013215, 272\u2013\n275, 449\u2013455, 692"
+    },
+    {
+      "id": 49633,
+      "page": 760,
+      "text": "Mixture of experts, 329\u2013332\nMixtures and the EM algorithm,\n272\u2013275\nMM algorithm, 294, 584\nMode seekers, 507\nModel averaging and stacking, 288\nModel combination, 289\nModel complexity, 221\u2013222\nModel selection, 57, 222\u2013223, 230\u2013\n231\nModi\ufb01ed regression, 634\nMonte Carlo method, 250, 495\nMother wavelet, 178\nMultidimensional scaling, 570\u2013572\nMultidimensional splines, 162\nMultiedit algorithm, 480\nMultilayer perceptron, 400, 401\nMultinomial distribution, 120\nMultiple additive regression trees\n(MART), 361\nMultiple hypothesis testing, 683\u2013\n693\nMultiple minima, 291, 400\nMultiple outcome shrinkage and\nselection, 84\nMultiple outputs, 56, 84, 103\u2013106\nMultiple regression from simple uni-\nvariate regression, 52\nMultiresolution analysis, 178\nMultivariate adaptive regression\nsplines (MARS), 321\u2013327\nMultivariate nonparametric regres-\nsion, 445"
+    },
+    {
+      "id": 49634,
+      "page": 760,
+      "text": "Nadaraya\u2013Watson estimate, 193\nNaive Bayes classi\ufb01er, 108, 210\u2013\n211, 694\nNatural cubic splines, 144\u2013146\nNearest centroids, 670\nNearest neighbor methods, 463\u2013\n483\nNearest shrunken centroids, 651\u2013\n654, 694\nNetwork diagram, 392\nNeural networks, 389\u2013416"
+    },
+    {
+      "id": 49636,
+      "page": 761,
+      "text": "Newton\u2019s method (Newton-Raphson\nprocedure), 120\u2013122\nNon-negative matrix factorization,\n553\u2013554\nNonparametric logistic regression,\n299\u2013304\nNormal (Gaussian) distribution,\n16, 31\nNormal equations, 12\nNumerical optimization, 395\u2013396"
+    },
+    {
+      "id": 49637,
+      "page": 761,
+      "text": "Object dissimilarity, 505\u2013507\nOnline algorithm, 397\nOptimal scoring, 445, 450\u2013451\nOptimal separating hyperplane, 132\u2013\n135\nOptimism of the training error rate,\n228\u2013230\nOrdered categorical (ordinal) pre-\ndictor, 10, 504\nOrdered features, 666\nOrthogonal predictors, 53\nOver\ufb01tting, 220, 228\u2013230, 364"
+    },
+    {
+      "id": 49638,
+      "page": 761,
+      "text": "PageRank, 576\nPairwise distance, 668\nPairwise Markov property, 628\nParametric bootstrap, 264\nPartial dependence plots, 369\u2013370\nPartial least squares, 80\u201382, 680\nPartition function, 638\nParzen window, 208\nPasting, 318\nPath algorithm, 73\u201379, 86\u201389, 432\nPatient rule induction method(PRIM),\n317\u2013321, 499\u2013501\nPeeling, 318\nPenalization, 607, see regulariza-\ntion\nPenalized discriminant analysis, 446\u2013\n449\nPenalized polynomial regression,\n171\nPenalized regression, 34, 61\u201369, 171\nPenalty matrix, 152, 189"
+    },
+    {
+      "id": 49639,
+      "page": 761,
+      "text": "Perceptron, 392\u2013416\nPiecewise polynomials and splines,\n36, 143\nPosterior\ndistribution, 268\nprobability, 233\u2013235, 268\nPower method, 577\nPre-conditioning, 681\u2013683\nPrediction accuracy, 329\nPrediction error, 18\nPredictive distribution, 268\nPRIM, see Patient rule induction\nmethod\nPrincipal components, 66\u201367, 79\u2013\n80, 534\u2013539, 547\nregression, 79\u201380\nsparse, 550\nsupervised, 674\nPrincipal curves and surfaces, 541\u2013\n544\nPrincipal points, 541\nPrior distribution, 268\u2013272\nProcrustes\naverage, 540\ndistance, 539\nProjection pursuit, 389\u2013392, 565\nregression, 389\u2013392\nPrototype classi\ufb01er, 459\u2013463\nPrototype methods, 459\u2013463\nProximity matrices, 503\nPruning, 308"
+    },
+    {
+      "id": 49640,
+      "page": 761,
+      "text": "QR decomposition, 55\nQuadratic approximations and in-\nference, 124\nQuadratic discriminant function,\n108, 110"
+    },
+    {
+      "id": 49641,
+      "page": 761,
+      "text": "Radial basis function (RBF) net-\nwork, 392\nRadial basis functions, 212\u2013214,\n275, 393\nRadial kernel, 548\nRandom forest, 409, 587\u2013604\nalgorithm, 588"
+    },
+    {
+      "id": 49643,
+      "page": 762,
+      "text": "bias, 596\u2013601\ncomparison to boosting, 589\nexample, 589\nout-of-bag (oob), 592\nover\ufb01t, 596\nproximity plot, 595\nvariable importance, 593\nvariance, 597\u2013601\nRao score test, 125\nRayleigh quotient, 116\nReceiver operating characteristic\n(ROC) curve, 317\nReduced-rank linear discriminant\nanalysis, 113\nRegression, 11\u201314, 43\u201399, 200\u2013204\nRegression spline, 144\nRegularization, 34, 167\u2013176\nRegularized discriminant analysis,\n112\u2013113, 654\nRelevance network, 631\nRepresenter of evaluation, 169\nReproducing kernel Hilbert space,\n167\u2013176, 428\u2013429\nReproducing property, 169\nResponsibilities, 274\u2013275\nRidge regression, 61\u201368, 650, 659\nRisk factor, 122\nRobust \ufb01tting, 346\u2013350\nRosenblatt\u2019s perceptron learning\nalgorithm, 130\nRug plot, 303\nRule\ufb01t, 623"
+    },
+    {
+      "id": 49644,
+      "page": 762,
+      "text": "SAM, 690\u2013693, see Signi\ufb01cance Anal-\nysis of Microarrays\nSammon mapping, 571\nSCAD, 92\nScaling of the inputs, 398\nSchwarz\u2019s criterion, 230\u2013235\nScore equations, 120, 265\nSelf-consistency property, 541\u2013543\nSelf-organizing map (SOM), 528\u2013\n534\nSensitivity of a test, 314\u2013317\nSeparating hyperplane, 132\u2013135"
+    },
+    {
+      "id": 49645,
+      "page": 762,
+      "text": "Separating hyperplanes, 136, 417\u2013\n419\nSeparator, 628\nShape average, 482, 540\nShrinkage methods, 61\u201369, 652\nSigmoid, 393\nSigni\ufb01cance Analysis of Microar-\nrays, 690\u2013693\nSimilarity measure, see Dissimi-\nlarity measure\nSingle index model, 390\nSingular value decomposition, 64,\n535\u2013536, 659\nsingular values, 535\nsingular vectors, 535\nSliced inverse regression, 480\nSmoother, 139\u2013156, 192\u2013199\nmatrix, 153\nSmoothing parameter, 37, 156\u2013161,\n198\u2013199\nSmoothing spline, 151\u2013156\nSoft clustering, 512\nSoft-thresholding, 653\nSoftmax function, 393\nSOM, see Self-organizing map\nSparse, 175, 304, 610\u2013613, 636\nadditive model, 91\ngraph, 625, 635\nSpeci\ufb01city of a test, 314\u2013317\nSpectral clustering, 544\u2013547\nSpline, 186\nadditive, 297\u2013299\ncubic, 151\u2013153\ncubic smoothing, 151\u2013153\ninteraction, 428\nregression, 144\nsmoothing, 151\u2013156\nthin plate, 165\nSquared error loss, 18, 24, 37, 219\nSRM, see Structural risk minimiza-\ntion\nStacking (stacked generalization),\n290\nStarting values, 397\nStatistical decision theory, 18\u201322"
+    },
+    {
+      "id": 49647,
+      "page": 763,
+      "text": "Statistical model, 28\u201329\nSteepest descent, 358, 395\u2013397\nStepwise selection, 60\nStochastic approximation, 397\nStochastic search (bumping), 290\u2013\n292\nStress function, 570\u2013572\nStructural risk minimization (SRM),\n239\u2013241\nSubset selection, 57\u201360\nSupervised learning, 2\nSupervised principal components,\n674\u2013681\nSupport vector classi\ufb01er, 417\u2013421,\n654\nmulticlass, 657\nSupport vector machine, 423\u2013437\nSURE shrinkage method, 179\nSurvival analysis, 674\nSurvival curve, 674\nSVD, see Singular value decom-\nposition\nSymmlet basis, 176"
+    },
+    {
+      "id": 49648,
+      "page": 763,
+      "text": "Tangent distance, 471\u2013475\nTanh activation function, 424\nTarget variables, 10\nTensor product basis, 162\nTest error, 220\u2013223\nTest set, 220\nThin plate spline, 165\nThinning strategy, 189\nTrace of a matrix, 153\nTraining epoch, 397\nTraining error, 220\u2013223\nTraining set, 219\u2013223\nTree for regression, 307\u2013308\nTree-based methods, 305\u2013317\nTrees for classi\ufb01cation, 308\u2013310\nTrellis display, 202"
+    }
+  ]
+}

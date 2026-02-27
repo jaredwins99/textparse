@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gram-Schmidt Orthogonalization — ESL Ch. 3.2.3</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:       #0d1117;
+      --surface:  #161b22;
+      --border:   #30363d;
+      --accent:   #58a6ff;
+      --accent2:  #f78166;
+      --accent3:  #3fb950;
+      --accent4:  #d2a8ff;
+      --text:     #e6edf3;
+      --muted:    #8b949e;
+      --quote-bg: #1c2128;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+    header {
+      padding: 2rem 2.5rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .header-meta { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: .75rem; }
+    .badge {
+      font-size: .7rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      padding: .25rem .6rem; border-radius: 2rem; background: #1f2937; color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .badge.cat  { color: var(--accent3); border-color: var(--accent3); }
+    .badge.sec  { color: var(--muted);   border-color: var(--border); }
+    h1 { font-size: 1.75rem; font-weight: 700; color: var(--text); margin-bottom: .4rem; }
+    .formula-line {
+      font-size: 1rem; color: var(--accent4); font-family: 'Courier New', monospace;
+      background: var(--quote-bg); display: inline-block; padding: .35rem .8rem; border-radius: .4rem;
+      border-left: 3px solid var(--accent4);
+    }
+
+    .main { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; padding: 1.5rem 2.5rem; }
+    @media (max-width: 960px) { .main { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: .6rem; padding: 1.25rem; margin-bottom: 1.25rem;
+    }
+    .card h2 { font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 1rem; }
+
+    /* Stepper */
+    .stepper { display: flex; gap: .5rem; margin-bottom: 1rem; align-items: center; flex-wrap: wrap; }
+    .step-btn {
+      padding: .35rem .8rem; border-radius: .35rem; border: 1px solid var(--border);
+      background: var(--quote-bg); color: var(--muted); cursor: pointer; font-size: .82rem; transition: all .15s;
+    }
+    .step-btn.active { background: var(--accent4); color: #0d1117; border-color: var(--accent4); font-weight: 700; }
+    .step-btn:hover:not(.active) { border-color: var(--accent4); color: var(--accent4); }
+    .auto-btn {
+      margin-left: auto; padding: .35rem 1rem; border-radius: .35rem;
+      background: #1f2937; border: 1px solid var(--accent3); color: var(--accent3);
+      cursor: pointer; font-size: .82rem; font-weight: 600; transition: all .15s;
+    }
+    .auto-btn:hover { background: var(--accent3); color: #0d1117; }
+    .auto-btn.running { background: var(--accent2); border-color: var(--accent2); color: #0d1117; }
+
+    #gs-plot { width: 100%; height: 400px; }
+
+    .step-info {
+      background: var(--quote-bg); border: 1px solid var(--border); border-radius: .5rem;
+      padding: 1rem; margin-top: .75rem;
+    }
+    .step-info .step-title { font-size: .85rem; font-weight: 700; color: var(--accent4); margin-bottom: .5rem; }
+    .step-info .step-desc  { font-size: .82rem; color: var(--text); line-height: 1.7; }
+    .step-info code { background: #1f2937; padding: .1rem .35rem; border-radius: .25rem; font-family: monospace; color: var(--accent3); }
+    .step-info .math-line { margin: .4rem 0; padding: .4rem .8rem; background: #0d1117; border-radius: .3rem; font-family: monospace; font-size: .82rem; color: var(--accent); }
+
+    /* Tabs */
+    .tab-bar { display: flex; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .tab {
+      padding: .35rem .9rem; border-radius: .35rem; border: 1px solid var(--border);
+      background: transparent; color: var(--muted); cursor: pointer; font-size: .85rem; transition: all .15s;
+    }
+    .tab.active, .tab:hover { background: var(--accent); color: #0d1117; border-color: var(--accent); font-weight: 600; }
+
+    #angles-plot { width: 100%; height: 320px; }
+    #proj-plot   { width: 100%; height: 320px; }
+
+    blockquote {
+      border-left: 3px solid var(--accent2); background: var(--quote-bg);
+      padding: .75rem 1rem; border-radius: 0 .4rem .4rem 0;
+      font-style: italic; font-size: .88rem; color: var(--text); line-height: 1.6;
+      margin-bottom: .75rem;
+    }
+    blockquote cite { display: block; margin-top: .5rem; font-style: normal; font-size: .75rem; color: var(--muted); }
+
+    .guarantee-grid { display: grid; gap: .6rem; }
+    .g-item { display: flex; align-items: flex-start; gap: .75rem; padding: .6rem; border-radius: .4rem; background: var(--quote-bg); }
+    .g-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: .05rem; }
+    .g-label { font-size: .8rem; font-weight: 700; color: var(--text); margin-bottom: .2rem; }
+    .g-desc  { font-size: .75rem; color: var(--muted); line-height: 1.5; }
+
+    .rel-list { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .rel-chip {
+      padding: .3rem .75rem; border-radius: 2rem; border: 1px solid var(--border);
+      font-size: .78rem; color: var(--muted); background: var(--quote-bg); cursor: default; transition: all .15s;
+    }
+    .rel-chip:hover { border-color: var(--accent4); color: var(--accent4); }
+
+    .ctrl-row { display: flex; align-items: center; gap: 1rem; margin-bottom: .75rem; }
+    .ctrl-row label { font-size: .82rem; color: var(--muted); white-space: nowrap; }
+    input[type=range] { flex: 1; accent-color: var(--accent4); }
+    .ctrl-val { font-size: .82rem; color: var(--accent4); font-weight: 600; min-width: 2rem; text-align: right; }
+
+    .legend-row { display: flex; gap: 1.5rem; margin-top: .75rem; flex-wrap: wrap; }
+    .leg-item { display: flex; align-items: center; gap: .4rem; font-size: .78rem; color: var(--muted); }
+    .leg-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-meta">
+    <span class="badge">ID 141</span>
+    <span class="badge sec">Section 3.2.3</span>
+    <span class="badge cat">Implementation / Computation</span>
+  </div>
+  <h1>Gram-Schmidt Orthogonalization</h1>
+  <div class="formula-line">zⱼ = xⱼ − Σₖ&lt;ⱼ ⟨xⱼ, qₖ⟩ qₖ ,  qⱼ = zⱼ / ‖zⱼ‖</div>
+</header>
+
+<div class="main">
+  <!-- Left column -->
+  <div>
+    <div class="card">
+      <h2>Visualization</h2>
+      <div class="tab-bar">
+        <button class="tab active" onclick="showMainTab('step')">Step-by-Step</button>
+        <button class="tab" onclick="showMainTab('angles')">Angle Evolution</button>
+        <button class="tab" onclick="showMainTab('proj')">Projection Residuals</button>
+      </div>
+
+      <!-- Step-by-step tab -->
+      <div id="tab-step">
+        <div class="stepper">
+          <button class="step-btn active" onclick="gotoStep(0)">0: Original</button>
+          <button class="step-btn" onclick="gotoStep(1)">1: q₁</button>
+          <button class="step-btn" onclick="gotoStep(2)">2: z₂</button>
+          <button class="step-btn" onclick="gotoStep(3)">3: q₂</button>
+          <button class="step-btn" onclick="gotoStep(4)">4: z₃</button>
+          <button class="step-btn" onclick="gotoStep(5)">5: q₃</button>
+          <button class="auto-btn" id="auto-btn" onclick="toggleAuto()">Auto Play</button>
+        </div>
+        <div class="ctrl-row">
+          <label>Spread:</label>
+          <input type="range" id="slider-spread" min="1" max="9" value="5" step="1" oninput="resetVectors()">
+          <span class="ctrl-val" id="val-spread">5</span>
+        </div>
+        <div id="gs-plot"></div>
+        <div class="step-info" id="step-info"></div>
+        <div class="legend-row">
+          <div class="leg-item"><div class="leg-dot" style="background:#f78166"></div>Original vectors x₁, x₂, x₃</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#3fb950"></div>Orthonormal q vectors</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#d2a8ff"></div>Projection component</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#58a6ff"></div>Residual z (pre-normalization)</div>
+        </div>
+      </div>
+
+      <!-- Angle evolution tab -->
+      <div id="tab-angles" style="display:none;">
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:.75rem;">
+          Track the angle between each pair of vectors through the orthogonalization process.
+          By step 5, all pairs should be at exactly 90 degrees.
+        </p>
+        <div id="angles-plot"></div>
+      </div>
+
+      <!-- Projection residuals tab -->
+      <div id="tab-proj" style="display:none;">
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:.75rem;">
+          At each step, the projection magnitude (removed component) and residual magnitude (kept component) show how much information each new direction contributes.
+        </p>
+        <div id="proj-plot"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right column -->
+  <div>
+    <div class="card">
+      <h2>Book Quote</h2>
+      <blockquote>
+        "Algorithm 3.1 is known as the Gram-Schmidt procedure for multiple regression, and is also a form of the QR decomposition for X."
+        <cite>— ESL, Section 3.2.3</cite>
+      </blockquote>
+      <blockquote>
+        "The result of this algorithm is \(\hat{\beta}_j = \langle \mathbf{z}_j, \mathbf{y} \rangle / \langle \mathbf{z}_j, \mathbf{z}_j \rangle\). Re-expressing, the multiple regression coefficient of \(x_j\) is the simple regression of \(y\) on \(z_j\)."
+        <cite>— ESL, Section 3.2.3</cite>
+      </blockquote>
+    </div>
+
+    <div class="card">
+      <h2>Guarantees</h2>
+      <div class="guarantee-grid">
+        <div class="g-item">
+          <div class="g-icon">✓</div>
+          <div>
+            <div class="g-label">Produces Orthonormal Basis</div>
+            <div class="g-desc">Each qⱼ is unit length, and ⟨qᵢ, qⱼ⟩ = 0 for i ≠ j. Span is preserved at every step.</div>
+          </div>
+        </div>
+        <div class="g-item">
+          <div class="g-icon">✓</div>
+          <div>
+            <div class="g-label">Isolates Marginal Contribution</div>
+            <div class="g-desc">zⱼ captures the component of xⱼ orthogonal to all previous predictors — pure marginal information.</div>
+          </div>
+        </div>
+        <div class="g-item">
+          <div class="g-icon">✓</div>
+          <div>
+            <div class="g-label">Coefficient Invariance</div>
+            <div class="g-desc">The last coefficient β̂ₚ is identical whether computed by GS or by full OLS on all p predictors.</div>
+          </div>
+        </div>
+        <div class="g-item">
+          <div class="g-icon">✓</div>
+          <div>
+            <div class="g-label">Reveals Collinearity</div>
+            <div class="g-desc">If ‖zⱼ‖ ≈ 0, predictor j is nearly a linear combination of earlier predictors — the algorithm exposes this.</div>
+          </div>
+        </div>
+        <div class="g-item">
+          <div class="g-icon">~</div>
+          <div>
+            <div class="g-label">Order-Dependent</div>
+            <div class="g-desc">The basis {q₁, …, qₚ} depends on the ordering of predictors. The final β̂ values are the same, but intermediate zⱼ change.</div>
+          </div>
+        </div>
+        <div class="g-item">
+          <div class="g-icon">~</div>
+          <div>
+            <div class="g-label">Numerical Stability</div>
+            <div class="g-desc">Classical GS is unstable for nearly-dependent vectors; Modified GS (MGS) fixes this and is preferred in practice.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Related Concepts</h2>
+      <div class="rel-list">
+        <span class="rel-chip">QR Decomposition (ID 140)</span>
+        <span class="rel-chip">OLS β̂ = (XᵀX)⁻¹Xᵀy</span>
+        <span class="rel-chip">Orthogonal projections</span>
+        <span class="rel-chip">Hat matrix H</span>
+        <span class="rel-chip">Variance inflation factor</span>
+        <span class="rel-chip">SVD</span>
+        <span class="rel-chip">Collinearity</span>
+        <span class="rel-chip">Modified Gram-Schmidt</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// Vector math helpers (2D, for visualization)
+// ─────────────────────────────────────────────────────────────
+const dot2 = (a, b) => a[0]*b[0] + a[1]*b[1];
+const norm2 = v => Math.sqrt(dot2(v, v));
+const scale2 = (s, v) => [s*v[0], s*v[1]];
+const sub2 = (a, b) => [a[0]-b[0], a[1]-b[1]];
+const add2 = (a, b) => [a[0]+b[0], a[1]+b[1]];
+const unit2 = v => { const n = norm2(v); return n > 1e-9 ? [v[0]/n, v[1]/n] : [0, 0]; };
+const angleDeg = (a, b) => {
+  const c = dot2(unit2(a), unit2(b));
+  return Math.acos(Math.max(-1, Math.min(1, c))) * 180 / Math.PI;
+};
+
+// ─────────────────────────────────────────────────────────────
+// Generate 3 random-ish vectors based on spread slider
+// ─────────────────────────────────────────────────────────────
+let vectors, gsSteps, currentStep = 0, autoTimer = null;
+
+function getSpread() { return +document.getElementById('slider-spread').value / 10; }
+
+function generateVectors() {
+  const s = getSpread();
+  // Base vectors pointing in different quadrants, modulated by spread
+  return [
+    [1.0,  0.3 + s * 0.4],
+    [0.4 + s * 0.3, 1.0],
+    [-0.2 + s * 0.5, 0.6 + s * 0.3]
+  ];
+}
+
+function computeGS(vecs) {
+  // Returns array of step snapshots
+  const [x1, x2, x3] = vecs;
+  const steps = [];
+
+  // Step 0: original
+  steps.push({ label: 'Original vectors', originals: [x1, x2, x3], qs: [], zs: [], proj: [] });
+
+  // Step 1: q1 = x1 / ||x1||
+  const q1 = unit2(x1);
+  steps.push({ label: 'Normalize x₁ → q₁', originals: [x1, x2, x3], qs: [q1], zs: [x1], proj: [], active: 0 });
+
+  // Step 2: z2 = x2 - <x2,q1>q1
+  const proj2 = scale2(dot2(x2, q1), q1);
+  const z2 = sub2(x2, proj2);
+  steps.push({ label: 'Remove q₁ component from x₂ → z₂', originals: [x1, x2, x3], qs: [q1], zs: [z2], proj: [proj2], projFrom: x2, active: 1 });
+
+  // Step 3: q2 = z2 / ||z2||
+  const q2 = unit2(z2);
+  steps.push({ label: 'Normalize z₂ → q₂', originals: [x1, x2, x3], qs: [q1, q2], zs: [z2], proj: [], active: 1 });
+
+  // Step 4: z3 = x3 - <x3,q1>q1 - <x3,q2>q2
+  const proj3a = scale2(dot2(x3, q1), q1);
+  const proj3b = scale2(dot2(x3, q2), q2);
+  const z3 = sub2(sub2(x3, proj3a), proj3b);
+  steps.push({ label: 'Remove q₁, q₂ components from x₃ → z₃', originals: [x1, x2, x3], qs: [q1, q2], zs: [z3], proj: [proj3a, proj3b], projFrom: x3, active: 2 });
+
+  // Step 5: q3 = z3 / ||z3||
+  const q3 = unit2(z3);
+  steps.push({ label: 'Normalize z₃ → q₃ — orthonormal basis complete', originals: [x1, x2, x3], qs: [q1, q2, q3], zs: [z3], proj: [], active: 2 });
+
+  return steps;
+}
+
+function resetVectors() {
+  document.getElementById('val-spread').textContent = document.getElementById('slider-spread').value;
+  vectors = generateVectors();
+  gsSteps = computeGS(vectors);
+  gotoStep(0);
+  renderAnglesPlot();
+  renderProjPlot();
+}
+
+// ─────────────────────────────────────────────────────────────
+// Step renderer
+// ─────────────────────────────────────────────────────────────
+const COLORS = {
+  orig: '#f78166',
+  q:    '#3fb950',
+  z:    '#58a6ff',
+  proj: '#d2a8ff'
+};
+
+const stepDescs = [
+  {
+    title: 'Step 0: Original vectors',
+    desc: 'We start with three vectors <code>x₁, x₂, x₃</code> that are generally not orthogonal. They span a subspace of ℝ². Our goal is to produce an orthonormal basis spanning the same subspace.'
+  },
+  {
+    title: 'Step 1: First orthonormal vector q₁',
+    desc: '<div class="math-line">q₁ = x₁ / ‖x₁‖</div>Simply normalize the first vector. There is no projection needed for the first step — all subsequent vectors will be orthogonalized against q₁.'
+  },
+  {
+    title: 'Step 2: Orthogonalize x₂ against q₁',
+    desc: '<div class="math-line">z₂ = x₂ − ⟨x₂, q₁⟩ q₁</div>Subtract the component of x₂ in the direction of q₁. The purple arrow is the removed projection; the blue arrow is the residual z₂, perpendicular to q₁.'
+  },
+  {
+    title: 'Step 3: Normalize residual → q₂',
+    desc: '<div class="math-line">q₂ = z₂ / ‖z₂‖</div>Normalize z₂ to unit length. Now q₁ ⊥ q₂ by construction. The angle between them is exactly 90°.'
+  },
+  {
+    title: 'Step 4: Orthogonalize x₃ against q₁ and q₂',
+    desc: '<div class="math-line">z₃ = x₃ − ⟨x₃, q₁⟩ q₁ − ⟨x₃, q₂⟩ q₂</div>Subtract both projection components. The residual z₃ is orthogonal to both q₁ and q₂.'
+  },
+  {
+    title: 'Step 5: Normalize → q₃, basis complete',
+    desc: '<div class="math-line">q₃ = z₃ / ‖z₃‖</div>All three vectors are now orthonormal: ⟨qᵢ, qⱼ⟩ = δᵢⱼ. This is the column-by-column QR factorization of X.'
+  }
+];
+
+function arrowTrace(from, to, color, name, width, dash) {
+  return {
+    x: [from[0], to[0]],
+    y: [from[1], to[1]],
+    mode: 'lines+markers',
+    type: 'scatter',
+    name,
+    line: { color, width: width || 2, dash: dash || 'solid' },
+    marker: { symbol: 'arrow', size: 10, color, angleref: 'previous' },
+    hoverinfo: 'name'
+  };
+}
+
+function originArrow(vec, color, name, width) {
+  return arrowTrace([0, 0], vec, color, name, width);
+}
+
+function gotoStep(n) {
+  currentStep = n;
+  document.querySelectorAll('.step-btn').forEach((b, i) => b.classList.toggle('active', i === n));
+  renderStep(n);
+  const info = document.getElementById('step-info');
+  info.innerHTML = `<div class="step-title">${stepDescs[n].title}</div><div class="step-desc">${stepDescs[n].desc}</div>`;
+  if (window.MathJax) MathJax.typesetPromise([info]);
+}
+
+function renderStep(n) {
+  const s = gsSteps[n];
+  const traces = [];
+  const origin = [0, 0];
+
+  // Original vectors (faded after we've processed them)
+  s.originals.forEach((v, i) => {
+    const processed = i < (s.qs ? s.qs.length : 0);
+    const a = s.active === i ? 1 : (processed ? 0.25 : 0.55);
+    traces.push({
+      x: [0, v[0]], y: [0, v[1]], mode: 'lines+markers', type: 'scatter',
+      name: `x${i+1}`, opacity: a,
+      line: { color: COLORS.orig, width: s.active === i ? 3 : 1.5, dash: processed ? 'dot' : 'solid' },
+      marker: { symbol: 'arrow', size: 9, color: COLORS.orig, angleref: 'previous' },
+      hoverinfo: 'name'
+    });
+  });
+
+  // Projection components
+  if (s.proj && s.proj.length > 0 && s.projFrom) {
+    s.proj.forEach((pv, pi) => {
+      const cumProj = pi === 0 ? pv : add2(s.proj[0], pv);
+      traces.push({
+        x: [s.projFrom[0], s.projFrom[0] - pv[0]],
+        y: [s.projFrom[1], s.projFrom[1] - pv[1]],
+        mode: 'lines', type: 'scatter', name: `proj${pi+1}`,
+        line: { color: COLORS.proj, width: 2, dash: 'dash' },
+        hoverinfo: 'name'
+      });
+      // projection vector from origin
+      traces.push({
+        x: [0, pv[0]], y: [0, pv[1]], mode: 'lines+markers', type: 'scatter',
+        name: `⟨x, q${pi+1}⟩q${pi+1}`,
+        line: { color: COLORS.proj, width: 2 },
+        marker: { symbol: 'arrow', size: 8, color: COLORS.proj, angleref: 'previous' },
+        hoverinfo: 'name', opacity: 0.7
+      });
+    });
+  }
+
+  // Residual z vectors
+  if (s.zs) {
+    s.zs.forEach((z, zi) => {
+      traces.push({
+        x: [0, z[0]], y: [0, z[1]], mode: 'lines+markers', type: 'scatter',
+        name: `z${zi + (s.qs ? s.qs.length : 0) + 1}`,
+        line: { color: COLORS.z, width: 2.5 },
+        marker: { symbol: 'arrow', size: 10, color: COLORS.z, angleref: 'previous' },
+        hoverinfo: 'name'
+      });
+    });
+  }
+
+  // Orthonormal q vectors
+  if (s.qs) {
+    s.qs.forEach((q, qi) => {
+      traces.push({
+        x: [0, q[0]], y: [0, q[1]], mode: 'lines+markers', type: 'scatter',
+        name: `q${qi+1}`,
+        line: { color: COLORS.q, width: 3 },
+        marker: { symbol: 'arrow', size: 11, color: COLORS.q, angleref: 'previous' },
+        hoverinfo: 'name'
+      });
+    });
+  }
+
+  // Unit circle reference
+  const theta = Array.from({length: 361}, (_, i) => i * Math.PI / 180);
+  traces.push({
+    x: theta.map(Math.cos), y: theta.map(Math.sin),
+    mode: 'lines', type: 'scatter', name: 'unit circle',
+    line: { color: '#21262d', width: 1, dash: 'dot' }, hoverinfo: 'none'
+  });
+
+  // Right-angle markers for orthogonality
+  if (s.qs && s.qs.length >= 2) {
+    const q1 = s.qs[0], q2 = s.qs[1];
+    const size = 0.08;
+    const pt = add2(scale2(size, q1), scale2(size, q2));
+    const pt1 = scale2(size, q1);
+    const pt2 = scale2(size, q2);
+    traces.push({
+      x: [pt1[0], pt[0], pt2[0]], y: [pt1[1], pt[1], pt2[1]],
+      mode: 'lines', type: 'scatter', name: '90°',
+      line: { color: '#3fb950', width: 1 }, hoverinfo: 'name'
+    });
+  }
+
+  const range = [-0.2, 1.8];
+  const layout = {
+    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
+    font: { color: '#e6edf3', size: 11 },
+    margin: { l: 40, r: 20, t: 20, b: 40 },
+    xaxis: { range, zeroline: true, zerolinecolor: '#30363d', zerolinewidth: 1, gridcolor: '#21262d', color: '#8b949e' },
+    yaxis: { range, zeroline: true, zerolinecolor: '#30363d', zerolinewidth: 1, gridcolor: '#21262d', color: '#8b949e', scaleanchor: 'x' },
+    showlegend: true,
+    legend: { x: 1.02, y: 1, bgcolor: '#161b22', bordercolor: '#30363d', borderwidth: 1, font: {size: 10} }
+  };
+
+  Plotly.react('gs-plot', traces, layout, { responsive: true, displayModeBar: false });
+}
+
+// ─────────────────────────────────────────────────────────────
+// Angles evolution plot
+// ─────────────────────────────────────────────────────────────
+function renderAnglesPlot() {
+  if (!vectors) return;
+  const [x1, x2, x3] = vectors;
+  const q1 = unit2(x1);
+  const proj2 = scale2(dot2(x2, q1), q1);
+  const z2 = sub2(x2, proj2);
+  const q2 = unit2(z2);
+  const proj3a = scale2(dot2(x3, q1), q1);
+  const proj3b = scale2(dot2(x3, q2), q2);
+  const z3 = sub2(sub2(x3, proj3a), proj3b);
+  const q3 = unit2(z3);
+
+  const stepLabels = ['Original x', 'After q₁', 'After q₂', 'After q₃'];
+
+  // Angle between pair (1,2), (1,3), (2,3)
+  const pairs = [
+    { label: 'x₁–x₂ → q₁–q₂', data: [
+      angleDeg(x1, x2), angleDeg(x1, x2), angleDeg(q1, q2), angleDeg(q1, q2)
+    ]},
+    { label: 'x₁–x₃ → q₁–q₃', data: [
+      angleDeg(x1, x3), angleDeg(x1, x3), angleDeg(q1, q3), angleDeg(q1, q3)
+    ]},
+    { label: 'x₂–x₃ → q₂–q₃', data: [
+      angleDeg(x2, x3), angleDeg(x2, x3), angleDeg(q2, q3), angleDeg(q2, q3)
+    ]}
+  ];
+
+  // For intermediate stages
+  const allPairs = [
+    [angleDeg(x1, x2), angleDeg(q1, z2), angleDeg(q1, q2), 90],
+    [angleDeg(x1, x3), angleDeg(q1, x3), angleDeg(q1, z3), 90],
+    [angleDeg(x2, x3), angleDeg(z2, x3), angleDeg(q2, z3), 90]
+  ];
+
+  const colors = ['#f78166', '#58a6ff', '#d2a8ff'];
+  const traces = pairs.map((p, i) => ({
+    x: stepLabels, y: allPairs[i],
+    mode: 'lines+markers', type: 'scatter', name: p.label,
+    line: { color: colors[i], width: 2 },
+    marker: { size: 8, color: colors[i] },
+    hovertemplate: '%{y:.1f}°<extra>%{fullData.name}</extra>'
+  }));
+
+  // 90-degree reference line
+  traces.push({
+    x: stepLabels, y: [90, 90, 90, 90],
+    mode: 'lines', type: 'scatter', name: '90° target',
+    line: { color: '#3fb950', width: 1.5, dash: 'dot' },
+    hoverinfo: 'none'
+  });
+
+  Plotly.react('angles-plot', traces, {
+    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
+    font: { color: '#e6edf3', size: 11 },
+    margin: { l: 50, r: 20, t: 20, b: 50 },
+    xaxis: { color: '#8b949e', gridcolor: '#21262d' },
+    yaxis: { title: 'Angle (degrees)', color: '#8b949e', gridcolor: '#21262d', range: [0, 180] },
+    legend: { bgcolor: '#161b22', bordercolor: '#30363d', borderwidth: 1 }
+  }, { responsive: true, displayModeBar: false });
+}
+
+// ─────────────────────────────────────────────────────────────
+// Projection residuals plot
+// ─────────────────────────────────────────────────────────────
+function renderProjPlot() {
+  if (!vectors) return;
+  const [x1, x2, x3] = vectors;
+  const q1 = unit2(x1);
+  const proj2 = scale2(dot2(x2, q1), q1);
+  const z2 = sub2(x2, proj2);
+  const q2 = unit2(z2);
+  const proj3a = scale2(dot2(x3, q1), q1);
+  const proj3b = scale2(dot2(x3, q2), q2);
+  const z3 = sub2(sub2(x3, proj3a), proj3b);
+
+  const labels = ['x₂ step', 'x₃ step (q₁)', 'x₃ step (q₂)'];
+  const projMags = [norm2(proj2), norm2(proj3a), norm2(proj3b)];
+  const residMags = [norm2(z2), undefined, norm2(z3)];
+
+  const traces = [
+    {
+      x: labels, y: projMags, name: 'Projection magnitude (removed)',
+      type: 'bar', marker: { color: '#d2a8ff', opacity: 0.85 }
+    },
+    {
+      x: ['x₂ step', 'x₃ step (final)'],
+      y: [norm2(z2), norm2(z3)],
+      name: 'Residual ‖z‖ (kept)',
+      type: 'bar', marker: { color: '#3fb950', opacity: 0.85 }
+    }
+  ];
+
+  Plotly.react('proj-plot', traces, {
+    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
+    font: { color: '#e6edf3', size: 11 },
+    margin: { l: 50, r: 20, t: 20, b: 50 },
+    xaxis: { color: '#8b949e', gridcolor: '#21262d' },
+    yaxis: { title: 'Vector magnitude', color: '#8b949e', gridcolor: '#21262d' },
+    barmode: 'group',
+    legend: { bgcolor: '#161b22', bordercolor: '#30363d', borderwidth: 1 }
+  }, { responsive: true, displayModeBar: false });
+}
+
+// ─────────────────────────────────────────────────────────────
+// Auto-play
+// ─────────────────────────────────────────────────────────────
+function toggleAuto() {
+  const btn = document.getElementById('auto-btn');
+  if (autoTimer) {
+    clearInterval(autoTimer);
+    autoTimer = null;
+    btn.textContent = 'Auto Play';
+    btn.classList.remove('running');
+  } else {
+    btn.textContent = 'Stop';
+    btn.classList.add('running');
+    autoTimer = setInterval(() => {
+      const next = (currentStep + 1) % 6;
+      gotoStep(next);
+    }, 1800);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Main tab switch
+// ─────────────────────────────────────────────────────────────
+function showMainTab(name) {
+  ['step','angles','proj'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t === name ? '' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach((b, i) => {
+    b.classList.toggle('active', ['step','angles','proj'][i] === name);
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// Init
+// ─────────────────────────────────────────────────────────────
+resetVectors();
+renderAnglesPlot();
+renderProjPlot();
+</script>
+</body>
+</html>

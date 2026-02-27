@@ -1,0 +1,678 @@
+{
+  "concepts": [
+    {
+      "name": "pairwise markov graph",
+      "type": "method",
+      "description": "A graphical model with a potential function for each edge (pair of variables) and at most second-order interactions. More parsimonious than general graphical models and easier to work with.",
+      "quote": "Here there is a potential function for each edge (pair of variables as in f (2) above), and at most second\u2013order interactions are represented. These are more parsimonious in terms of parameters, easier to work with, and give the minimal complexity implied by the graph structure.",
+      "paragraph_ids": [48192]
+    },
+    {
+      "name": "gaussian graphical model",
+      "type": "method",
+      "description": "A graphical model where all variables are continuous with multivariate Gaussian distribution. The inverse covariance matrix contains information about partial covariances between variables.",
+      "quote": "The Gaussian distribution has the property that all conditional distributions are also Gaussian. The inverse covariance matrix \u03a3\u22121 contains information about the partial covariances between the variables; that is, the covariances between pairs i and j, conditioned on all other variables.",
+      "paragraph_ids": [48194]
+    },
+    {
+      "name": "inverse covariance matrix",
+      "type": "technique",
+      "description": "The matrix \u0398 = \u03a3\u22121 that contains information about partial covariances. If the ijth component is zero, then variables i and j are conditionally independent given other variables.",
+      "quote": "The inverse covariance matrix \u03a3\u22121 contains information about the partial covariances between the variables; that is, the covariances between pairs i and j, conditioned on all other variables. In particular, if the ijth component of \u0398 = \u03a3\u22121 is zero, then variables i and j are conditionally independent, given the other variables",
+      "paragraph_ids": [48194]
+    },
+    {
+      "name": "natural parameter for gaussian graphical model",
+      "type": "property",
+      "description": "The inverse covariance matrix \u0398 captures all second-order information (structural and quantitative) needed to describe the conditional distribution of each node given the rest.",
+      "quote": "Thus \u0398 captures all the second-order information (both structural and quantitative) needed to describe the conditional distribution of each node given the rest, and is the so-called \u201cnatural\u201d parameter for the Gaussian graphical model",
+      "paragraph_ids": [48207]
+    },
+    {
+      "name": "covariance graph",
+      "type": "method",
+      "description": "A graphical model where vertices are connected by bidirectional edges if the covariance (rather than partial covariance) between variables is nonzero. Also called a relevance network.",
+      "quote": "Another (di\ufb00erent) kind of graphical model is the covariance graph or relevance network, in which vertices are connected by bidirectional edges if the covariance (rather than the partial covariance) between the corresponding variables is nonzero.",
+      "paragraph_ids": [48207]
+    },
+    {
+      "name": "relevance network",
+      "type": "method",
+      "description": "Alternative name for covariance graph, popular in genomics, where edges represent nonzero covariances rather than partial covariances.",
+      "quote": "Another (di\ufb00erent) kind of graphical model is the covariance graph or relevance network, in which vertices are connected by bidirectional edges if the covariance (rather than the partial covariance) between the corresponding variables is nonzero. These are popular in genomics",
+      "paragraph_ids": [48207]
+    },
+    {
+      "name": "modified regression algorithm for graphical models",
+      "type": "algorithm",
+      "description": "An iterative procedure that solves for \u0398 and its inverse W one row and column at a time by performing constrained regressions using the current covariance estimate.",
+      "quote": "The graph estimation problem is not p separate regression problems, but rather p coupled problems. The use of the common W in step (b), in place of the observed cross-products matrix, couples the problems together in the appropriate fashion.",
+      "paragraph_ids": [48238]
+    },
+    {
+      "name": "iterative proportional fitting procedure",
+      "type": "algorithm",
+      "description": "A method for solving equality-constrained convex optimization problems in graphical model estimation where some edges are missing.",
+      "quote": "This is an equality-constrained convex optimization problem, and a number of methods have been proposed for solving it, in particular the iterative proportional fitting procedure (Speed and Kiiveri, 1986).",
+      "paragraph_ids": [48218]
+    },
+    {
+      "name": "positive definite completion",
+      "type": "technique",
+      "description": "The process of estimating a complete covariance matrix from a partially specified one, subject to constraints from a graphical model structure.",
+      "quote": "The estimation of \u02c6\u03a3 is an example of what is sometimes called the positive de\ufb01nite \u201ccompletion\u201d of S.",
+      "paragraph_ids": [48269]
+    },
+    {
+      "name": "meinshausen-b\u00fchlmann approach",
+      "type": "method",
+      "description": "A simple approach to graphical model estimation that fits lasso regressions using each variable as response and others as predictors, estimating which components of \u03b8ij are nonzero without fully estimating \u03a3 or \u0398.",
+      "quote": "Meinshausen and B\u00a8uhlmann (2006) take a simple approach to the problem: rather than trying to fully estimate \u03a3 or \u0398 = \u03a3\u22121, they only estimate which components of \u03b8ij are nonzero. To do this, they \ufb01t a lasso regression using each variable as the response and the others as predictors.",
+      "paragraph_ids": [48272]
+    },
+    {
+      "name": "soft-threshold operator",
+      "type": "technique",
+      "description": "An operator S(x, t) = sign(x)(|x| \u2212 t)+ that shrinks values toward zero by thresholding, used in lasso and graphical lasso algorithms.",
+      "quote": "where S is the soft-threshold operator: S(x, t) = sign(x)(|x| \u2212t)+.",
+      "paragraph_ids": [48293]
+    },
+    {
+      "name": "pathwise coordinate descent for graphical lasso",
+      "type": "algorithm",
+      "description": "An efficient algorithm that cycles through predictors, updating each using the soft-threshold operator until convergence, used to solve the modified lasso problem at each stage of graphical lasso.",
+      "quote": "Friedman et al. (2007a) use the pathwise coordinate descent method (Section 3.8.6) to solve the modi\ufb01ed lasso problem at each stage.",
+      "paragraph_ids": [48290]
+    },
+    {
+      "name": "ising model",
+      "type": "method",
+      "description": "An undirected Markov network with all discrete (typically binary) variables modeling pairwise interactions. The joint probability has the form Pr(X) = exp(\u03a3\u03b8jkXjXk - \u03a6(\u0398)).",
+      "quote": "Denoting the binary valued variable at node j by Xj, the Ising model for their joint probabilities is given by Pr(X) = exp[\u03a3(j,k)\u2208E \u03b8jkXjXk - \u03a6(\u0398)] with X = {0, 1}^p.",
+      "paragraph_ids": [48341, 48344]
+    },
+    {
+      "name": "boltzmann machine",
+      "type": "method",
+      "description": "A pairwise Markov network with binary variables where vertices (nodes/units) can be observed (visible) or unobserved (hidden), often organized in layers similar to a neural network.",
+      "quote": "They are sometimes called Ising models in the statistical mechanics literature, and Boltzmann machines in the machine learning literature, where the vertices are referred to as \u201cnodes\u201d or \u201cunits\u201d and are binary-valued.",
+      "paragraph_ids": [48341]
+    },
+    {
+      "name": "visible units",
+      "type": "technique",
+      "description": "Nodes in a Boltzmann machine where the values are observed, as opposed to hidden units.",
+      "quote": "In addition, the values at each node can be observed (\u201cvisible\u201d) or unobserved (\u201chidden\u201d).",
+      "paragraph_ids": [48341]
+    },
+    {
+      "name": "hidden units in boltzmann machines",
+      "type": "technique",
+      "description": "Nodes in a Boltzmann machine where the values are unobserved/latent, allowing the model to capture complex nonlinear relationships.",
+      "quote": "In addition, the values at each node can be observed (\u201cvisible\u201d) or unobserved (\u201chidden\u201d).",
+      "paragraph_ids": [48341]
+    },
+    {
+      "name": "poisson log-linear modeling for graphical models",
+      "type": "method",
+      "description": "Treating the Ising model estimation as a regression problem where the response is the vector of 2^p counts in each cell of the multiway tabulation, with computational cost O(p^4*2^p).",
+      "quote": "Poisson log-linear modeling, where we treat the problem as a large regression problem (Exercise 17.12). The response vector y is the vector of 2p counts in each of the cells of the multiway tabulation of the data.",
+      "paragraph_ids": [48387]
+    },
+    {
+      "name": "mean field approximation",
+      "type": "technique",
+      "description": "An approximation method that estimates E\u0398(XjXk) by E\u0398(Xj)E\u0398(Xj) and replaces input variables by their means, leading to nonlinear equations for parameters \u03b8jk.",
+      "quote": "The mean \ufb01eld approximation (Peterson and Anderson, 1987) estimates E\u0398(XjXk) by E\u0398(Xj)E\u0398(Xj), and replaces the input variables by their means, leading to a set of nonlinear equations for the parameters \u03b8jk.",
+      "paragraph_ids": [48393]
+    },
+    {
+      "name": "junction tree algorithm",
+      "type": "algorithm",
+      "description": "An algorithm that exploits the special clique structure in sparse graphs to reduce computational complexity when computing gradients in graphical models.",
+      "quote": "These computations can be reduced by exploiting the special clique structure in sparse graphs, using the junction-tree algorithm.",
+      "paragraph_ids": [48388]
+    },
+    {
+      "name": "restricted boltzmann machine",
+      "type": "method",
+      "description": "A Boltzmann machine with one layer of visible units and one layer of hidden units with no connections within each layer, simplifying conditional expectation computations.",
+      "quote": "A restricted Boltzmann machine (RBM) consists of one layer of visible units and one layer of hidden units with no connections within each layer.",
+      "paragraph_ids": [48425]
+    },
+    {
+      "name": "contrastive divergence",
+      "type": "algorithm",
+      "description": "A training method for RBMs where the second expectation in the gradient is estimated by running the Markov chain for only a few steps instead of to convergence, proposed by Hinton (2002).",
+      "quote": "Hinton (2002) noticed empirically that learning still works well if we estimate the second expectation in (17.37) by starting the Markov chain at the data and only running for a few steps (instead of to convergence). He calls this contrastive divergence",
+      "paragraph_ids": [48429]
+    },
+    {
+      "name": "greedy layer-by-layer learning",
+      "type": "algorithm",
+      "description": "A method for learning features in deep networks by training RBMs sequentially, where hidden states from one RBM become visible units for the next.",
+      "quote": "The details and justi\ufb01cation for learning features in this greedy, layer-by-layer way are described in Hinton et al. (2006).",
+      "paragraph_ids": [48432]
+    },
+    {
+      "name": "high-dimensional problem",
+      "type": "property",
+      "description": "A prediction problem where the number of features p is much larger than the number of observations N, often written p >> N. High variance and overfitting are major concerns.",
+      "quote": "In this chapter we discuss prediction problems in which the number of features p is much larger than the number of observations N, often written p \u226bN. Such problems have become of increasing importance, especially in genomics and other areas of computational biology. We will see that high variance and over\ufb01tting are a major concern in this setting.",
+      "paragraph_ids": [48495]
+    },
+    {
+      "name": "diagonal-covariance lda",
+      "type": "method",
+      "description": "A version of LDA that assumes features are independent within each class (diagonal within-class covariance matrix), reducing parameters and often working well when p >> N.",
+      "quote": "The simplest form of regularization assumes that the features are independent within each class, that is, the within-class covariance matrix is diagonal. Despite the fact that features will rarely be independent within a class, when p \u226bN we don\u2019t have enough data to estimate their dependencies.",
+      "paragraph_ids": [48518]
+    },
+    {
+      "name": "independence rule",
+      "type": "method",
+      "description": "Alternative name for diagonal-covariance LDA, demonstrated theoretically to often outperform standard LDA in high-dimensional settings.",
+      "quote": "It is also called the \u201cindependence rule\u201d in Bickel and Levina (2004), who demonstrate theoretically that it will often outperform standard linear discriminant analysis in high-dimensional problems.",
+      "paragraph_ids": [48529]
+    },
+    {
+      "name": "nearest shrunken centroids",
+      "type": "method",
+      "description": "A regularized nearest centroid classifier that shrinks classwise means toward the overall mean for each feature separately using soft thresholding, performing automatic feature selection.",
+      "quote": "We would like to regularize in a way that automatically drops out features that are not contributing to the class predictions. We can do this by shrinking the classwise mean toward the overall mean, for each feature separately. The result is a regularized version of the nearest centroid classifier, or equivalently a regularized version of the diagonal-covariance form of LDA. We call the procedure nearest shrunken centroids (NSC).",
+      "paragraph_ids": [48529]
+    },
+    {
+      "name": "soft thresholding for nearest shrunken centroids",
+      "type": "technique",
+      "description": "Shrinking standardized classwise differences toward zero using d'_kj = sign(d_kj)(|d_kj| - \u0394)+, setting values to zero if their absolute value is less than threshold \u0394.",
+      "quote": "We shrink the dkj toward zero using soft thresholding d\u2032kj = sign(dkj)(|dkj| \u2212\u0394)+",
+      "paragraph_ids": [48536]
+    },
+    {
+      "name": "hard thresholding",
+      "type": "technique",
+      "description": "An alternative to soft thresholding that sets values to zero below a threshold but leaves values above unchanged, less smooth than soft thresholding.",
+      "quote": "An alternative is to use hard thresholding... we prefer soft-thresholding, as it is a smoother operation and typically works better.",
+      "paragraph_ids": [48537, 48539]
+    },
+    {
+      "name": "regularized discriminant analysis",
+      "type": "method",
+      "description": "A method that shrinks the within-covariance estimate toward its diagonal: \u02c6\u03a3(\u03b3) = \u03b3\u02c6\u03a3 + (1-\u03b3)diag(\u02c6\u03a3), overcoming singularity issues when p >> N.",
+      "quote": "RDA overcomes the singularity issues by regularizing the within-covariance estimate \u02c6\u03a3. Here we use a version of RDA that shrinks \u02c6\u03a3 towards its diagonal: \u02c6\u03a3(\u03b3) = \u03b3 \u02c6\u03a3 + (1 \u2212\u03b3)diag( \u02c6\u03a3), with \u03b3 \u2208[0, 1].",
+      "paragraph_ids": [48576, 48577]
+    },
+    {
+      "name": "symmetric multiclass logistic model",
+      "type": "method",
+      "description": "A version of multiclass logistic regression where all K classes have their own coefficient vectors, with regularization forcing \u03a3\u02c6\u03b2_lj = 0.",
+      "quote": "With K classes, we use a symmetric version of the multiclass logistic model (4.17) on page 119: Pr(G = k|X = x) = exp(\u03b2k0 + x^T\u03b2k)/\u03a3 exp(\u03b2l0 + x^T\u03b2l)",
+      "paragraph_ids": [48582, 48583]
+    },
+    {
+      "name": "one versus one approach",
+      "type": "technique",
+      "description": "A method for generalizing two-class classifiers to K > 2 classes by computing all pairwise classifiers and using voting to determine the predicted class.",
+      "quote": "In the \u201cone versus one\u201d (ovo) approach, we compute all pairwise classifiers. For each test point, the predicted class is the one that wins the most pairwise contests.",
+      "paragraph_ids": [48597]
+    },
+    {
+      "name": "one versus all approach",
+      "type": "technique",
+      "description": "A method for generalizing two-class classifiers to K > 2 classes by comparing each class to all others in K two-class comparisons, choosing the class with highest confidence.",
+      "quote": "In the \u201cone versus all\u201d (ova) approach, each class is compared to all of the others in K two-class comparisons. To classify a test point, we compute the con\ufb01dences (signed distance from the hyperplane) for each of the K classi\ufb01ers. The winner is the class with the highest con\ufb01dence.",
+      "paragraph_ids": [48597]
+    },
+    {
+      "name": "computational shortcuts for p >> n",
+      "type": "technique",
+      "description": "Using singular value decomposition to perform computations in N-dimensional space rather than p-dimensional when p > N, reducing cost from O(p^3) to O(pN^2).",
+      "quote": "When p > N, the computations can be carried out in an N-dimensional space, rather than p, via the singular value decomposition introduced in Section 14.5... This trick reduces the computational cost from O(p3) to O(pN 2) when p > N.",
+      "paragraph_ids": [48603, 48609]
+    },
+    {
+      "name": "elastic net penalty",
+      "type": "technique",
+      "description": "A compromise between lasso and ridge penalties of the form \u03bb[\u03b1||\u03b2||_1 + (1-\u03b1)||\u03b2||_2^2], encouraging correlated features to be averaged while maintaining sparsity.",
+      "quote": "The elastic net penalty (Zou and Hastie, 2005) is a compromise, and has the form \u03bb[\u03b1\u03a3|\u03b2j| + (1/2)(1-\u03b1)\u03a3\u03b2j^2]. The second term encourages highly correlated features to be averaged, while the \ufb01rst term encourages a sparse solution in the coe\ufb03cients of these averaged features.",
+      "paragraph_ids": [48655, 48659]
+    },
+    {
+      "name": "protein mass spectrometry",
+      "type": "technique",
+      "description": "A technology for analyzing proteins in blood by observing intensity for many time of flight values, related to mass over charge ratio (m/z) of constituent proteins.",
+      "quote": "Protein mass spectrometry has become a popular technology for analyzing the proteins in blood, and can be used to diagnose a disease or understand the processes underlying it. For each blood serum sample i, we observe the intensity xij for many time of \ufb02ight values tj.",
+      "paragraph_ids": [48686]
+    },
+    {
+      "name": "fused lasso",
+      "type": "method",
+      "description": "A modification of the lasso for functional data that penalizes both the L1 norm of coefficients and the L1 norm of their successive differences, encouraging sparsity and smoothness.",
+      "quote": "The fused lasso (Tibshirani et al., 2005) solves min_\u03b2 \u03a3(yi - \u03a3\u03b2jxij)^2 + \u03bb1\u03a3|\u03b2j| + \u03bb2\u03a3|\u03b2j - \u03b2j-1|. The \ufb01rst penalty encourages the solution to be sparse, while the second encourages it to be smooth in the index j.",
+      "paragraph_ids": [48701, 48713]
+    },
+    {
+      "name": "fused lasso signal approximator",
+      "type": "method",
+      "description": "A special case of fused lasso with X = I_N used to approximate a sequence, balancing fidelity to data with sparsity and smoothness.",
+      "quote": "A particularly useful special case arises when the predictor matrix X = IN, the N \u00d7 N identity matrix. This is a special case of the fused lasso, used to approximate a sequence {yi}^N_1.",
+      "paragraph_ids": [48725]
+    },
+    {
+      "name": "string kernel",
+      "type": "technique",
+      "description": "A similarity measure for variable-length strings based on counting matching substrings, computing inner products K(x1,x2) = \u03a3\u03c6_a(x1)\u03c6_a(x2) where \u03c6_a counts occurrences of substring a.",
+      "quote": "Using this, we de\ufb01ne the inner product K(x1,x2) = \u03a3_{a\u2208A^m} \u03c6_a(x1)\u03c6_a(x2) which measures the similarity between the two strings x1, x2.",
+      "paragraph_ids": [48749, 48751, 48753]
+    },
+    {
+      "name": "bag of words representation",
+      "type": "technique",
+      "description": "A document representation where features x_ij are counts of how many times word j appears in document i, discarding word order.",
+      "quote": "We extracted all unique words from these abstracts, and de\ufb01ned features xij to be the number of times word j appears in abstract i. This is the so-called bag of words representation.",
+      "paragraph_ids": [48793]
+    },
+    {
+      "name": "double-centered kernel",
+      "type": "technique",
+      "description": "Computing principal components from an uncentered inner-product matrix by centering: (I - M)K(I - M) where M is the mean operator.",
+      "quote": "Thus we compute the eigenvectors of the double-centered kernel (I \u2212M)K(I \u2212M) for the principal components from an uncentered inner-product matrix.",
+      "paragraph_ids": [48778, 48779]
+    },
+    {
+      "name": "medoid",
+      "type": "technique",
+      "description": "The observation in a class with smallest average distance to other observations in that class, used in classification and k-medoids clustering.",
+      "quote": "Distances and inner-products also allow us to compute the medoid in each class\u2014the observation with smallest average distance to other observations in that class.",
+      "paragraph_ids": [48785]
+    },
+    {
+      "name": "supervised principal components",
+      "type": "method",
+      "description": "A method for high-dimensional regression that filters features by univariate significance, then computes principal components on the reduced set, and uses them in a regression model.",
+      "quote": "Supervised principal components is a simple approach to regression and generalized regression that is especially useful when p \u226bN. We restrict attention to features which by themselves have a sizable correlation with the outcome.",
+      "paragraph_ids": [48803, 48825]
+    },
+    {
+      "name": "cox proportional hazards model",
+      "type": "method",
+      "description": "A regression model widely used for survival problems, used in supervised principal components for score tests and multivariate modeling with censored outcomes.",
+      "quote": "For survival problems, Cox\u2019s proportional hazards regression model is widely used; hence we use the score test from this model in step (1) and the multivariate Cox model in step (2b).",
+      "paragraph_ids": [48863]
+    },
+    {
+      "name": "right censored survival data",
+      "type": "property",
+      "description": "Survival data where for some individuals we only know they lived at least until a certain time, not their exact survival time.",
+      "quote": "We have not yet discussed regression with censored survival data in this book; it represents a generalized form of regression in which the outcome variable (survival time) is only partly observed for some individuals... This individual is said to be \u201cright censored\u201d at 365 days.",
+      "paragraph_ids": [48803]
+    },
+    {
+      "name": "kaplan-meier method",
+      "type": "method",
+      "description": "A method for estimating survival curves from censored survival data.",
+      "quote": "Figure 18.12 shows the survival curve estimated by the Kaplan\u2013Meier method for the 80 patients in the test set.",
+      "paragraph_ids": [48803]
+    },
+    {
+      "name": "latent variable model for supervised pca",
+      "type": "method",
+      "description": "A single-component factor analysis model where outcome Y relates to latent factor U, and relevant features X_j also relate to U through linear models.",
+      "quote": "Suppose we have a response variable Y which is related to an underlying latent variable U by a linear model Y = \u03b20 + \u03b21U + \u03b5. In addition, we have measurements on a set of features Xj indexed by j \u2208P (for pathway), for which Xj = \u03b10j + \u03b11jU + \u03f5j.",
+      "paragraph_ids": [48865, 48867, 48869, 48871]
+    },
+    {
+      "name": "thresholded partial least squares",
+      "type": "method",
+      "description": "A modification of PLS that selects features by univariate significance as in supervised PCA, then applies PLS to these features rather than principal components.",
+      "quote": "We select the features as in steps (1) and (2a) of supervised principal components, but then apply PLS (rather than principal components) to these features. For our current discussion, we call this \u201cthresholded PLS.\u201d",
+      "paragraph_ids": [48878]
+    },
+    {
+      "name": "pre-conditioning for interpretability",
+      "type": "technique",
+      "description": "A method for finding a reduced set of features that approximates a model when the threshold yields too many features for interpretation.",
+      "quote": "Then for interpretational purposes, as well as for practical uses, we would like some way of \ufb01nding a reduced a set of features that approximates the model. Pre-conditioning (Section 18.6.3) is one way of doing this.",
+      "paragraph_ids": [48875]
+    }
+  ],
+  "relationships": [
+    {
+      "source": "pairwise markov graph",
+      "target": "gaussian graphical model",
+      "type": "example_of",
+      "quote": "The Gaussian distribution is almost always used for such graphical models, because of its convenient analytical properties... it automatically encodes a pairwise Markov graph."
+    },
+    {
+      "source": "gaussian graphical model",
+      "target": "inverse covariance matrix",
+      "type": "uses",
+      "quote": "The inverse covariance matrix \u03a3\u22121 contains information about the partial covariances between the variables"
+    },
+    {
+      "source": "inverse covariance matrix",
+      "target": "natural parameter for gaussian graphical model",
+      "type": "equivalent_to",
+      "quote": "Thus \u0398 captures all the second-order information (both structural and quantitative) needed to describe the conditional distribution of each node given the rest, and is the so-called \u201cnatural\u201d parameter for the Gaussian graphical model"
+    },
+    {
+      "source": "covariance graph",
+      "target": "relevance network",
+      "type": "equivalent_to",
+      "quote": "Another (di\ufb00erent) kind of graphical model is the covariance graph or relevance network"
+    },
+    {
+      "source": "covariance graph",
+      "target": "gaussian graphical model",
+      "type": "contrasts_with",
+      "quote": "Another (di\ufb00erent) kind of graphical model is the covariance graph or relevance network, in which vertices are connected by bidirectional edges if the covariance (rather than the partial covariance) between the corresponding variables is nonzero."
+    },
+    {
+      "source": "graphical lasso",
+      "target": "lasso",
+      "type": "uses",
+      "quote": "The resulting procedure is called the graphical lasso, proposed by Friedman et al. (2007a) building on the work of Banerjee et al. (2008)."
+    },
+    {
+      "source": "graphical lasso",
+      "target": "soft-threshold operator",
+      "type": "uses",
+      "quote": "where S is the soft-threshold operator: S(x, t) = sign(x)(|x| \u2212t)+."
+    },
+    {
+      "source": "graphical lasso",
+      "target": "pathwise coordinate descent for graphical lasso",
+      "type": "uses",
+      "quote": "Friedman et al. (2007a) use the pathwise coordinate descent method (Section 3.8.6) to solve the modi\ufb01ed lasso problem at each stage."
+    },
+    {
+      "source": "pathwise coordinate descent for graphical lasso",
+      "target": "soft-threshold operator",
+      "type": "uses",
+      "quote": "Letting V = W11, the update has the form... where S is the soft-threshold operator"
+    },
+    {
+      "source": "meinshausen-b\u00fchlmann approach",
+      "target": "lasso",
+      "type": "uses",
+      "quote": "To do this, they \ufb01t a lasso regression using each variable as the response and the others as predictors."
+    },
+    {
+      "source": "meinshausen-b\u00fchlmann approach",
+      "target": "graphical lasso",
+      "type": "contrasts_with",
+      "quote": "Meinshausen and B\u00a8uhlmann (2006) take a simple approach to the problem: rather than trying to fully estimate \u03a3 or \u0398 = \u03a3\u22121, they only estimate which components of \u03b8ij are nonzero."
+    },
+    {
+      "source": "iterative proportional fitting procedure",
+      "target": "modified regression algorithm for graphical models",
+      "type": "contrasts_with",
+      "quote": "This is an equality-constrained convex optimization problem, and a number of methods have been proposed for solving it, in particular the iterative proportional fitting procedure (Speed and Kiiveri, 1986)... Here we outline a simple alternate approach"
+    },
+    {
+      "source": "ising model",
+      "target": "boltzmann machine",
+      "type": "equivalent_to",
+      "quote": "They are sometimes called Ising models in the statistical mechanics literature, and Boltzmann machines in the machine learning literature"
+    },
+    {
+      "source": "boltzmann machine",
+      "target": "visible units",
+      "type": "uses",
+      "quote": "In addition, the values at each node can be observed (\u201cvisible\u201d) or unobserved (\u201chidden\u201d)."
+    },
+    {
+      "source": "boltzmann machine",
+      "target": "hidden units in boltzmann machines",
+      "type": "uses",
+      "quote": "In addition, the values at each node can be observed (\u201cvisible\u201d) or unobserved (\u201chidden\u201d)."
+    },
+    {
+      "source": "restricted boltzmann machine",
+      "target": "boltzmann machine",
+      "type": "special_case_of",
+      "quote": "A restricted Boltzmann machine (RBM) consists of one layer of visible units and one layer of hidden units with no connections within each layer."
+    },
+    {
+      "source": "restricted boltzmann machine",
+      "target": "contrastive divergence",
+      "type": "uses",
+      "quote": "Hinton (2002) noticed empirically that learning still works well if we estimate the second expectation in (17.37) by starting the Markov chain at the data and only running for a few steps (instead of to convergence). He calls this contrastive divergence"
+    },
+    {
+      "source": "restricted boltzmann machine",
+      "target": "greedy layer-by-layer learning",
+      "type": "uses",
+      "quote": "The details and justi\ufb01cation for learning features in this greedy, layer-by-layer way are described in Hinton et al. (2006)."
+    },
+    {
+      "source": "contrastive divergence",
+      "target": "gibbs sampling",
+      "type": "contrasts_with",
+      "quote": "Gibbs sampling in a restricted Boltzmann machine can be very slow... Hinton (2002) noticed empirically that learning still works well if we estimate the second expectation in (17.37) by starting the Markov chain at the data and only running for a few steps (instead of to convergence)."
+    },
+    {
+      "source": "poisson log-linear modeling for graphical models",
+      "target": "ising model",
+      "type": "equivalent_to",
+      "quote": "In the statistics literature, this model is equivalent to a \ufb01rst-order-interaction Poisson log-linear model for multiway tables of counts"
+    },
+    {
+      "source": "mean field approximation",
+      "target": "gibbs sampling",
+      "type": "contrasts_with",
+      "quote": "The mean \ufb01eld approximation (Peterson and Anderson, 1987) estimates E\u0398(XjXk) by E\u0398(Xj)E\u0398(Xj)... To obtain near-exact solutions, Gibbs sampling (Section 8.6) is used to approximate E\u0398(XjXk)"
+    },
+    {
+      "source": "junction tree algorithm",
+      "target": "partition function",
+      "type": "uses",
+      "quote": "A prominent example is the join tree or junction tree algorithm for computing marginal and low order probabilities from the joint distribution on a graph."
+    },
+    {
+      "source": "diagonal-covariance lda",
+      "target": "independence rule",
+      "type": "equivalent_to",
+      "quote": "It is also called the \u201cindependence rule\u201d in Bickel and Levina (2004)"
+    },
+    {
+      "source": "nearest shrunken centroids",
+      "target": "diagonal-covariance lda",
+      "type": "generalizes",
+      "quote": "We would like to regularize in a way that automatically drops out features that are not contributing to the class predictions... The result is a regularized version of the nearest centroid classi\ufb01er, or equivalently a regularized version of the diagonal-covariance form of LDA."
+    },
+    {
+      "source": "nearest shrunken centroids",
+      "target": "soft thresholding for nearest shrunken centroids",
+      "type": "uses",
+      "quote": "We shrink the dkj toward zero using soft thresholding d\u2032kj = sign(dkj)(|dkj| \u2212\u0394)+"
+    },
+    {
+      "source": "soft thresholding for nearest shrunken centroids",
+      "target": "hard thresholding",
+      "type": "contrasts_with",
+      "quote": "An alternative is to use hard thresholding... we prefer soft-thresholding, as it is a smoother operation and typically works better."
+    },
+    {
+      "source": "soft thresholding for nearest shrunken centroids",
+      "target": "lasso",
+      "type": "equivalent_to",
+      "quote": "The estimator (18.5) can also be viewed as a lasso-style estimator for the class means"
+    },
+    {
+      "source": "regularized discriminant analysis",
+      "target": "ridge regression",
+      "type": "uses",
+      "quote": "The form of shrinkage in (18.9) is much like ridge regression (Section 3.4.1), which shrinks the total covariance matrix of the features towards a diagonal (scalar) matrix."
+    },
+    {
+      "source": "regularized discriminant analysis",
+      "target": "diagonal-covariance lda",
+      "type": "generalizes",
+      "quote": "Note that \u03b3 = 0 corresponds to diagonal LDA, which is the \u201cno shrinkage\u201d version of nearest shrunken centroids."
+    },
+    {
+      "source": "symmetric multiclass logistic model",
+      "target": "support vector machine",
+      "type": "contrasts_with",
+      "quote": "It can be shown (Rosset et al., 2004a) that for separable data, as \u03bb \u21920, the regularized (two-class) logistic regression estimate (renormalized) converges to the maximal margin classi\ufb01er (Section 12.2). This gives an attractive alternative to the support-vector machine"
+    },
+    {
+      "source": "one versus one approach",
+      "target": "support vector machine",
+      "type": "uses",
+      "quote": "There are many di\ufb00erent methods for generalizing the two-class support-vector classi\ufb01er to K > 2 classes. In the \u201cone versus one\u201d (ovo) approach, we compute all pairwise classi\ufb01ers."
+    },
+    {
+      "source": "one versus all approach",
+      "target": "support vector machine",
+      "type": "uses",
+      "quote": "In the \u201cone versus all\u201d (ova) approach, each class is compared to all of the others in K two-class comparisons."
+    },
+    {
+      "source": "one versus all approach",
+      "target": "lasso",
+      "type": "uses",
+      "quote": "For more than two classes, there are many possible approaches, including the ova and ovo methods discussed in Section 18.3.3. We tried the ova-approach on the cancer data in Section 18.3."
+    },
+    {
+      "source": "recursive feature elimination",
+      "target": "support vector machine",
+      "type": "uses",
+      "quote": "This is known as recursive feature elimination (Guyon et al., 2002). It was not successful in this example; Ramaswamy et al. (2001) report, for example, that the accuracy of the support-vector classi\ufb01er starts to degrade"
+    },
+    {
+      "source": "computational shortcuts for p >> n",
+      "target": "ridge regression",
+      "type": "uses",
+      "quote": "As a simple example, let\u2019s \ufb01rst consider the estimates from a ridge regression: \u02c6\u03b2 = (XT X + \u03bbI)\u22121XT y."
+    },
+    {
+      "source": "computational shortcuts for p >> n",
+      "target": "regularized discriminant analysis",
+      "type": "uses",
+      "quote": "The computational burden of inverting this large p\u00d7p matrix is overcome using the methods discussed in Section 18.3.5."
+    },
+    {
+      "source": "computational shortcuts for p >> n",
+      "target": "support vector machine",
+      "type": "uses",
+      "quote": "This result can be applied to many of the learning methods discussed in this chapter, such as regularized (multiclass) logistic regression, linear discriminant analysis (Exercise 18.6), and support vector machines."
+    },
+    {
+      "source": "elastic net penalty",
+      "target": "lasso",
+      "type": "generalizes",
+      "quote": "The elastic net penalty (Zou and Hastie, 2005) is a compromise, and has the form \u03bb[\u03b1\u03a3|\u03b2j| + (1/2)(1-\u03b1)\u03a3\u03b2j^2]."
+    },
+    {
+      "source": "elastic net penalty",
+      "target": "ridge regression",
+      "type": "generalizes",
+      "quote": "The lasso penalty is somewhat indi\ufb00erent to the choice among a set of strong but correlated variables (Exercise 3.28). The ridge penalty, on the other hand, tends to shrink the coe\ufb03cients of correlated variables toward each other (Exercise 3.29 on page 99). The elastic net penalty (Zou and Hastie, 2005) is a compromise"
+    },
+    {
+      "source": "fused lasso",
+      "target": "lasso",
+      "type": "generalizes",
+      "quote": "The fused lasso (Tibshirani et al., 2005) solves... The \ufb01rst penalty encourages the solution to be sparse, while the second encourages it to be smooth"
+    },
+    {
+      "source": "fused lasso signal approximator",
+      "target": "fused lasso",
+      "type": "special_case_of",
+      "quote": "A particularly useful special case arises when the predictor matrix X = IN, the N \u00d7 N identity matrix. This is a special case of the fused lasso"
+    },
+    {
+      "source": "string kernel",
+      "target": "support vector machine",
+      "type": "uses",
+      "quote": "Using software from Leslie et al. (2003), we computed the string kernel for m = 4, which was then used in a support vector classi\ufb01er to \ufb01nd the maximal margin solution"
+    },
+    {
+      "source": "double-centered kernel",
+      "target": "principal components",
+      "type": "uses",
+      "quote": "Thus we compute the eigenvectors of the double-centered kernel (I \u2212M)K(I \u2212M) for the principal components from an uncentered inner-product matrix."
+    },
+    {
+      "source": "medoid",
+      "target": "k-medoids clustering",
+      "type": "uses",
+      "quote": "This can be used for classi\ufb01cation (closest medoids), as well as to drive k-medoids clustering (Section 14.3.10)."
+    },
+    {
+      "source": "supervised principal components",
+      "target": "principal components",
+      "type": "uses",
+      "quote": "Given 2P, the largest principal component in step (2) estimates the latent factor U."
+    },
+    {
+      "source": "supervised principal components",
+      "target": "cox proportional hazards model",
+      "type": "uses",
+      "quote": "For survival problems, Cox\u2019s proportional hazards regression model is widely used; hence we use the score test from this model in step (1) and the multivariate Cox model in step (2b)."
+    },
+    {
+      "source": "supervised principal components",
+      "target": "latent variable model for supervised pca",
+      "type": "uses",
+      "quote": "A formal connection between supervised principal components and the underlying cell type model (Figure 18.13) can be seen through a latent variable model for the data."
+    },
+    {
+      "source": "supervised principal components",
+      "target": "thresholded partial least squares",
+      "type": "contrasts_with",
+      "quote": "Supervised principal components is closely related to partial least squares regression (Section 3.5.2)... However, a modi\ufb01cation of the partial least squares procedure has been proposed that has a similar \ufb02avor to supervised principal components"
+    },
+    {
+      "source": "thresholded partial least squares",
+      "target": "partial least squares",
+      "type": "uses",
+      "quote": "We select the features as in steps (1) and (2a) of supervised principal components, but then apply PLS (rather than principal components) to these features."
+    },
+    {
+      "source": "thresholded partial least squares",
+      "target": "supervised principal components",
+      "type": "contrasts_with",
+      "quote": "Thresholded PLS can be viewed as a noisy version of supervised principal components, and hence we might not expect it to work as well in practice."
+    },
+    {
+      "source": "latent variable model for supervised pca",
+      "target": "factor analysis",
+      "type": "special_case_of",
+      "quote": "This is a special case of a latent-structure model, or single-component factor-analysis model (Mardia et al., 1979, see also Section 14.7)."
+    },
+    {
+      "source": "kaplan-meier method",
+      "target": "right censored survival data",
+      "type": "uses",
+      "quote": "Figure 18.12 shows the survival curve estimated by the Kaplan\u2013Meier method for the 80 patients in the test set."
+    },
+    {
+      "source": "high-dimensional problem",
+      "target": "nearest shrunken centroids",
+      "type": "uses",
+      "quote": "As a result, simple, highly regularized approaches often become the methods of choice."
+    },
+    {
+      "source": "high-dimensional problem",
+      "target": "supervised principal components",
+      "type": "uses",
+      "quote": "Supervised principal components is a simple approach to regression and generalized regression that is especially useful when p \u226bN."
+    },
+    {
+      "source": "modified regression algorithm for graphical models",
+      "target": "inverse covariance matrix",
+      "type": "uses",
+      "quote": "We will show how we can use regression to solve for \u0398 and its inverse W = \u0398\u22121 one row and column at a time."
+    },
+    {
+      "source": "soft-threshold operator",
+      "target": "soft thresholding for nearest shrunken centroids",
+      "type": "uses",
+      "quote": "Each dkj is reduced by an amount \u0394 in absolute value, and is set to zero if its absolute value is less than zero. The soft-thresholding function is shown in Figure 18.2"
+    }
+  ]
+}

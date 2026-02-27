@@ -1,0 +1,681 @@
+{
+  "chapter": "17",
+  "sections": [
+    {
+      "number": "17.1",
+      "title": "Introduction",
+      "page_start": 643
+    },
+    {
+      "number": "17.2",
+      "title": "Markov Graphs and Their Properties",
+      "page_start": 645
+    },
+    {
+      "number": "17.3",
+      "title": "Undirected Graphical Models for Continuous",
+      "page_start": 648
+    },
+    {
+      "number": "17.3.1",
+      "title": "Estimation of the Parameters when the Graph",
+      "page_start": 649
+    },
+    {
+      "number": "17.3.2",
+      "title": "Estimation of the Graph Structure",
+      "page_start": 653
+    },
+    {
+      "number": "17.4",
+      "title": "Undirected Graphical Models for Discrete",
+      "page_start": 656
+    },
+    {
+      "number": "17.4.1",
+      "title": "Estimation of the Parameters when the Graph",
+      "page_start": 657
+    },
+    {
+      "number": "17.4.2",
+      "title": "Hidden Nodes",
+      "page_start": 659
+    },
+    {
+      "number": "17.4.3",
+      "title": "Estimation of the Graph Structure",
+      "page_start": 660
+    },
+    {
+      "number": "17.4.4",
+      "title": "Restricted Boltzmann Machines",
+      "page_start": 661
+    }
+  ],
+  "paragraphs": [
+    {
+      "id": 48125,
+      "page": 643,
+      "seq": 0,
+      "text": "This is page 625\nPrinter: Opaque this\n17\nUndirected Graphical Models"
+    },
+    {
+      "id": 48127,
+      "page": 643,
+      "seq": 2,
+      "text": "A graph consists of a set of vertices (nodes), along with a set of edges join-\ning some pairs of the vertices. In graphical models, each vertex represents\na random variable, and the graph gives a visual way of understanding the\njoint distribution of the entire set of random variables. They can be use-\nful for either unsupervised or supervised learning. In an undirected graph,\nthe edges have no directional arrows. We restrict our discussion to undi-\nrected graphical models, also known as Markov random \ufb01elds or Markov\nnetworks. In these graphs, the absence of an edge between two vertices has\na special meaning: the corresponding random variables are conditionally\nindependent, given the other variables.\nFigure 17.1 shows an example of a graphical model for a \ufb02ow-cytometry\ndataset with p = 11 proteins measured on N = 7466 cells, from Sachs\net al. (2003). Each vertex in the graph corresponds to the real-valued ex-\npression level of a protein. The network structure was estimated assuming\na multivariate Gaussian distribution, using the graphical lasso procedure\ndiscussed later in this chapter.\nSparse graphs have a relatively small number of edges, and are convenient\nfor interpretation. They are useful in a variety of domains, including ge-\nnomics and proteomics, where they provide rough models of cell pathways.\nMuch work has been done in de\ufb01ning and understanding the structure of\ngraphical models; see the Bibliographic Notes for references."
+    },
+    {
+      "id": 48140,
+      "page": 644,
+      "seq": 12,
+      "text": "As we will see, the edges in a graph are parametrized by values or po-\ntentials that encode the strength of the conditional dependence between\nthe random variables at the corresponding vertices. The main challenges in\nworking with graphical models are model selection (choosing the structure\nof the graph), estimation of the edge parameters from data, and compu-\ntation of marginal vertex probabilities and expectations, from their joint\ndistribution. The last two tasks are sometimes called learning and inference\nin the computer science literature.\nWe do not attempt a comprehensive treatment of this interesting area.\nInstead, we introduce some basic concepts, and then discuss a few sim-\nple methods for estimation of the parameters and structure of undirected\ngraphical models; methods that relate to the techniques already discussed\nin this book. The estimation approaches that we present for continuous\nand discrete-valued vertices are di\ufb00erent, so we treat them separately. Sec-\ntions 17.3.1 and 17.3.2 may be of particular interest, as they describe new,\nregression-based procedures for estimating graphical models.\nThere is a large and active literature on directed graphical models or\nBayesian networks; these are graphical models in which the edges have\ndirectional arrows (but no directed cycles). Directed graphical models rep-\nresent probability distributions that can be factored into products of condi-\ntional distributions, and have the potential for causal interpretations. We\nrefer the reader to Wasserman (2004) for a brief overview of both undi-\nrected and directed graphs; the next section follows closely his Chapter 18."
+    },
+    {
+      "id": 48158,
+      "page": 645,
+      "seq": 17,
+      "text": "A longer list of useful references is given in the Bibliographic Notes on\npage 645."
+    },
+    {
+      "id": 48160,
+      "page": 645,
+      "seq": 19,
+      "text": "In this section we discuss the basic properties of graphs as models for the\njoint distribution of a set of random variables. We defer discussion of (a)\nparametrization and estimation of the edge parameters from data, and (b)\nestimation of the topology of a graph, to later sections.\nFigure 17.2 shows four examples of undirected graphs. A graph G consists\nof a pair (V, E), where V is a set of vertices and E the set of edges (de\ufb01ned\nby pairs of vertices). Two vertices X and Y are called adjacent if there\nis a edge joining them; this is denoted by X \u223cY . A path X1, X2, . . . , Xn\nis a set of vertices that are joined, that is Xi\u22121 \u223cXi for i = 2, . . . , n. A\ncomplete graph is a graph with every pair of vertices joined by an edge.\nA subgraph U \u2208V is a subset of vertices together with their edges. For\nexample, (X, Y, Z) in Figure 17.2(a) form a path but not a complete graph.\nSuppose that we have a graph G whose vertex set V represents a set of\nrandom variables having joint distribution P. In a Markov graph G, the\nabsence of an edge implies that the corresponding random variables are\nconditionally independent given the variables at the other vertices. This is\nexpressed with the following notation:"
+    },
+    {
+      "id": 48163,
+      "page": 646,
+      "seq": 2,
+      "text": "where \u201crest\u201d refers to all of the other vertices in the graph. For example\nin Figure 17.2(a) X \u22a5Z|Y . These are known as the pairwise Markov\nindependencies of G.\nIf A, B and C are subgraphs, then C is said to separate A and B if every\npath between A and B intersects a node in C. For example, Y separates\nX and Z in Figures 17.2(a) and (d), and Z separates Y and W in (d). In\nFigure 17.2(b) Z is not connected to X, Y, W so we say that the two sets\nare separated by the empty set. In Figure 17.2(c), C = {X, Z} separates\nY and W.\nSeparators have the nice property that they break the graph into con-\nditionally independent pieces. Speci\ufb01cally, in a Markov graph G with sub-\ngraphs A, B and C,"
+    },
+    {
+      "id": 48165,
+      "page": 646,
+      "seq": 4,
+      "text": "These are known as the global Markov properties of G. It turns out that the\npairwise and global Markov properties of a graph are equivalent (for graphs\nwith positive distributions). That is, the set of graphs with associated prob-\nability distributions that satisfy the pairwise Markov independencies and\nglobal Markov assumptions are the same. This result is useful for inferring\nglobal independence relations from simple pairwise properties. For example\nin Figure 17.2(d) X \u22a5Z|{Y, W} since it is a Markov graph and there is no\nlink joining X and Z. But Y also separates X from Z and W and hence by\nthe global Markov assumption we conclude that X \u22a5Z|Y and X \u22a5W|Y .\nSimilarly we have Y \u22a5W|Z.\nThe global Markov property allows us to decompose graphs into smaller\nmore manageable pieces and thus leads to essential simpli\ufb01cations in com-\nputation and interpretation. For this purpose we separate the graph into\ncliques. A clique is a complete subgraph\u2014 a set of vertices that are all\nadjacent to one another; it is called maximal if it is a clique and no other\nvertices can be added to it and still yield a clique. The maximal cliques for\nthe graphs of Figure 17.2 are"
+    },
+    {
+      "id": 48170,
+      "page": 646,
+      "seq": 9,
+      "text": "Although the following applies to both continuous and discrete distri-\nbutions, much of the development has been for the latter. A probability\ndensity function f over a Markov graph G can be can represented as"
+    },
+    {
+      "id": 48176,
+      "page": 647,
+      "seq": 5,
+      "text": "where C is the set of maximal cliques, and the positive functions \u03c8C(\u00b7) are\ncalled clique potentials. These are not in general density functions1, but\nrather are a\ufb03nities that capture the dependence in XC by scoring certain\ninstances xC higher than others. The quantity"
+    },
+    {
+      "id": 48181,
+      "page": 647,
+      "seq": 10,
+      "text": "is the normalizing constant, also known as the partition function. Alterna-\ntively, the representation (17.3) implies a graph with independence prop-\nerties de\ufb01ned by the cliques in the product. This result holds for Markov\nnetworks G with positive distributions, and is known as the Hammersley-\nCli\ufb00ord theorem (Hammersley and Cli\ufb00ord, 1971; Cli\ufb00ord, 1990).\nMany of the methods for estimation and computation on graphs \ufb01rst de-\ncompose the graph into its maximal cliques. Relevant quantities are com-\nputed in the individual cliques and then accumulated across the entire\ngraph. A prominent example is the join tree or junction tree algorithm for\ncomputing marginal and low order probabilities from the joint distribution\non a graph. Details can be found in Pearl (1986), Lauritzen and Spiegel-\nhalter (1988), Pearl (1988), Shenoy and Shafer (1988), Jensen et al. (1990),\nor Koller and Friedman (2007)."
+    },
+    {
+      "id": 48186,
+      "page": 647,
+      "seq": 15,
+      "text": "A graphical model does not always uniquely specify the higher-order\ndependence structure of a joint probability distribution. Consider the com-\nplete three-node graph in Figure 17.3. It could represent the dependence\nstructure of either of the following distributions:"
+    },
+    {
+      "id": 48189,
+      "page": 647,
+      "seq": 18,
+      "text": "The \ufb01rst speci\ufb01es only second order dependence (and can be represented\nwith fewer parameters). Graphical models for discrete data are a special"
+    },
+    {
+      "id": 48190,
+      "page": 647,
+      "seq": 19,
+      "text": "1If the cliques are separated, then the potentials can be densities, but this is in general\nnot the case."
+    },
+    {
+      "id": 48192,
+      "page": 648,
+      "seq": 1,
+      "text": "case of loglinear models for multiway contingency tables (Bishop et al.,\n1975, e.g.); in that language f (2) is referred to as the \u201cno second-order\ninteraction\u201d model.\nFor the remainder of this chapter we focus on pairwise Markov graphs\n(Koller and Friedman, 2007). Here there is a potential function for each\nedge (pair of variables as in f (2) above), and at most second\u2013order interac-\ntions are represented. These are more parsimonious in terms of parameters,\neasier to work with, and give the minimal complexity implied by the graph\nstructure. The models for both continuous and discrete data are functions\nof only the pairwise marginal distributions of the variables represented in\nthe edge set."
+    },
+    {
+      "id": 48194,
+      "page": 648,
+      "seq": 3,
+      "text": "Here we consider Markov networks where all the variables are continuous.\nThe Gaussian distribution is almost always used for such graphical models,\nbecause of its convenient analytical properties. We assume that the observa-\ntions have a multivariate Gaussian distribution with mean \u03bc and covariance\nmatrix \u03a3. Since the Gaussian distribution represents at most second-order\nrelationships, it automatically encodes a pairwise Markov graph. The graph\nin Figure 17.1 is an example of a Gaussian graphical model.\nThe Gaussian distribution has the property that all conditional distri-\nbutions are also Gaussian. The inverse covariance matrix \u03a3\u22121 contains\ninformation about the partial covariances between the variables; that is,\nthe covariances between pairs i and j, conditioned on all other variables.\nIn particular, if the ijth component of \u0398 = \u03a3\u22121 is zero, then variables i and\nj are conditionally independent, given the other variables (Exercise 17.3).\nIt is instructive to examine the conditional distribution of one variable\nversus the rest, where the role of \u0398 is explicit. Suppose we partition X =\n(Z, Y ) where Z = (X1, . . . , Xp\u22121) consists of the \ufb01rst p \u22121 variables and\nY = Xp is the last. Then we have the conditional distribution of Y give Z\n(Mardia et al., 1979, e.g.)"
+    },
+    {
+      "id": 48195,
+      "page": 648,
+      "seq": 4,
+      "text": "Y |Z = z \u223cN\n\u0005\n\u03bcY + (z \u2212\u03bcZ)T \u03a3\u22121\nZZ\u03c3ZY , \u03c3Y Y \u2212\u03c3T\nZY \u03a3\u22121\nZZ\u03c3ZY\n\u0006\n,\n(17.6)"
+    },
+    {
+      "id": 48199,
+      "page": 648,
+      "seq": 8,
+      "text": "The conditional mean in (17.6) has exactly the same form as the pop-\nulation multiple linear regression of Y on Z, with regression coe\ufb03cient\n\u03b2 = \u03a3\u22121\nZZ\u03c3ZY [see (2.16) on page 19]. If we partition \u0398 in the same way,\nsince \u03a3\u0398 = I standard formulas for partitioned inverses give"
+    },
+    {
+      "id": 48205,
+      "page": 649,
+      "seq": 5,
+      "text": "\u2022 The dependence of Y on Z in (17.6) is in the mean term alone. Here\nwe see explicitly that zero elements in \u03b2 and hence \u03b8ZY mean that\nthe corresponding elements of Z are conditionally independent of Y ,\ngiven the rest."
+    },
+    {
+      "id": 48206,
+      "page": 649,
+      "seq": 6,
+      "text": "\u2022 We can learn about this dependence structure through multiple linear\nregression."
+    },
+    {
+      "id": 48207,
+      "page": 649,
+      "seq": 7,
+      "text": "Thus \u0398 captures all the second-order information (both structural and\nquantitative) needed to describe the conditional distribution of each node\ngiven the rest, and is the so-called \u201cnatural\u201d parameter for the Gaussian\ngraphical model2.\nAnother (di\ufb00erent) kind of graphical model is the covariance graph or rel-\nevance network, in which vertices are connected by bidirectional edges if the\ncovariance (rather than the partial covariance) between the corresponding\nvariables is nonzero. These are popular in genomics, see especially Butte\net al. (2000). The negative log-likelihood from these models is not convex,\nmaking the computations more challenging (Chaudhuri et al., 2007)."
+    },
+    {
+      "id": 48209,
+      "page": 649,
+      "seq": 9,
+      "text": "Given some realizations of X, we would like to estimate the parameters\nof an undirected graph that approximates their joint distribution. Suppose\n\ufb01rst that the graph is complete (fully connected). We assume that we have\nN multivariate normal realizations xi, i = 1, . . . , N with population mean\n\u03bc and covariance \u03a3. Let"
+    },
+    {
+      "id": 48214,
+      "page": 649,
+      "seq": 14,
+      "text": "be the empirical covariance matrix, with \u00afx the sample mean vector. Ignoring\nconstants, the log-likelihood of the data can be written as"
+    },
+    {
+      "id": 48215,
+      "page": 649,
+      "seq": 15,
+      "text": "2The distribution arising from a Gaussian graphical model is a Wishart distribution.\nThis is a member of the exponential family, with canonical or \u201cnatural\u201d parameter\n\u0398 = \u03a3\u22121. Indeed, the partially maximized log-likelihood (17.11) is (up to constants)\nthe Wishart log-likelihood."
+    },
+    {
+      "id": 48218,
+      "page": 650,
+      "seq": 2,
+      "text": "In (17.11) we have partially maximized with respect to the mean parameter\n\u03bc. The quantity \u2212\u2113(\u0398) is a convex function of \u0398. It is easy to show that\nthe maximum likelihood estimate of \u03a3 is simply S.\nNow to make the graph more useful (especially in high-dimensional set-\ntings) let\u2019s assume that some of the edges are missing; for example, the\nedge between PIP3 and Erk is one of several missing in Figure 17.1. As we\nhave seen, for the Gaussian distribution this implies that the correspond-\ning entries of \u0398 = \u03a3\u22121 are zero. Hence we now would like to maximize\n(17.11) under the constraints that some pre-de\ufb01ned subset of the parame-\nters are zero. This is an equality-constrained convex optimization problem,\nand a number of methods have been proposed for solving it, in particular\nthe iterative proportional \ufb01tting procedure (Speed and Kiiveri, 1986). This\nand other methods are summarized for example in Whittaker (1990) and\nLauritzen (1996). These methods exploit the simpli\ufb01cations that arise from\ndecomposing the graph into its maximal cliques, as described in the previ-\nous section. Here we outline a simple alternate approach, that exploits the\nsparsity in a di\ufb00erent way. The fruits of this approach will become apparent\nlater when we discuss the problem of estimation of the graph structure.\nThe idea is based on linear regression, as inspired by (17.6) and (17.9).\nIn particular, suppose that we want to estimate the edge parameters \u03b8ij for\nthe vertices that are joined to a given vertex i, restricting those that are not\njoined to be zero. Then it would seem that the linear regression of the node\ni values on the other relevant vertices might provide a reasonable estimate.\nBut this ignores the dependence structure among the predictors in this\nregression. It turns out that if instead we use our current (model-based)\nestimate of the cross-product matrix of the predictors when we perform\nour regressions, this gives the correct solutions and solves the constrained\nmaximum-likelihood problem exactly. We now give details.\nTo constrain the log-likelihood (17.11), we add Lagrange constants for\nall missing edges"
+    },
+    {
+      "id": 48221,
+      "page": 650,
+      "seq": 5,
+      "text": "The gradient equation for maximizing (17.12) can be written as"
+    },
+    {
+      "id": 48223,
+      "page": 650,
+      "seq": 7,
+      "text": "using the fact that the derivative of log det \u0398 equals \u0398\u22121 (Boyd and Van-\ndenberghe, 2004, for example, page 641). \u0393 is a matrix of Lagrange param-\neters with nonzero values for all pairs with edges absent.\nWe will show how we can use regression to solve for \u0398 and its inverse\nW = \u0398\u22121 one row and column at a time. For simplicity let\u2019s focus on the\nlast row and column. Then the upper right block of equation (17.13) can\nbe written as"
+    },
+    {
+      "id": 48226,
+      "page": 651,
+      "seq": 2,
+      "text": "Here we have partitioned the matrices into two parts as in (17.7): part 1\nbeing the \ufb01rst p\u22121 rows and columns, and part 2 the pth row and column.\nWith W and its inverse \u0398 partitioned in a similar fashion, we have\n\u001aW11\nw12\nwT\n12\nw22"
+    },
+    {
+      "id": 48233,
+      "page": 651,
+      "seq": 9,
+      "text": "where \u03b2 = \u2212\u03b812/\u03b822 as in (17.9). Now substituting (17.17) into (17.14)\ngives\nW11\u03b2 \u2212s12 \u2212\u03b312 = 0.\n(17.18)"
+    },
+    {
+      "id": 48234,
+      "page": 651,
+      "seq": 10,
+      "text": "These can be interpreted as the p \u22121 estimating equations for the con-\nstrained regression of Xp on the other predictors, except that the observed\nmean cross-products matrix S11 is replaced by W11, the current estimated\ncovariance matrix from the model.\nNow we can solve (17.18) by simple subset regression. Suppose there are\np\u2212q nonzero elements in \u03b312\u2014i.e., p\u2212q edges constrained to be zero. These\np \u2212q rows carry no information and can be removed. Furthermore we can\nreduce \u03b2 to \u03b2\u2217by removing its p \u2212q zero elements, yielding the reduced\nq \u00d7 q system of equations"
+    },
+    {
+      "id": 48236,
+      "page": 651,
+      "seq": 12,
+      "text": "with solution \u02c6\u03b2\u2217= W\u2217\n11\n\u22121s\u2217\n12. This is padded with p \u2212q zeros to give \u02c6\u03b2.\nAlthough it appears from (17.16) that we only recover the elements \u03b812\nup to a scale factor 1/\u03b822, it is easy to show that"
+    },
+    {
+      "id": 48238,
+      "page": 651,
+      "seq": 14,
+      "text": "(using partitioned inverse formulas). Also w22 = s22, since the diagonal of\n\u0393 in (17.13) is zero.\nThis leads to the simple iterative procedure given in Algorithm 17.1 for\nestimating both\n\u02c6\nW and its inverse \u02c6\u0398, subject to the constraints of the\nmissing edges.\nNote that this algorithm makes conceptual sense. The graph estimation\nproblem is not p separate regression problems, but rather p coupled prob-\nlems. The use of the common W in step (b), in place of the observed\ncross-products matrix, couples the problems together in the appropriate\nfashion. Surprisingly, we were not able to \ufb01nd this procedure in the lit-\nerature. However it is related to the covariance selection procedures of"
+    },
+    {
+      "id": 48240,
+      "page": 652,
+      "seq": 1,
+      "text": "Algorithm 17.1 A Modi\ufb01ed Regression Algorithm for Estimation of an\nUndirected Gaussian Graphical Model with Known Structure."
+    },
+    {
+      "id": 48242,
+      "page": 652,
+      "seq": 3,
+      "text": "2. Repeat for j = 1, 2, . . . , p, 1, 2, . . . , p, . . . until convergence:"
+    },
+    {
+      "id": 48243,
+      "page": 652,
+      "seq": 4,
+      "text": "(a) Partition the matrix W into part 1: all but the jth row and\ncolumn, and part 2: the jth row and column."
+    },
+    {
+      "id": 48244,
+      "page": 652,
+      "seq": 5,
+      "text": "(b) Solve W\u2217\n11\u03b2\u2217\u2212s\u2217\n12 = 0 for the unconstrained edge parameters\n\u03b2\u2217, using the reduced system of equations as in (17.19). Obtain\n\u02c6\u03b2 by padding \u02c6\u03b2\u2217with zeros in the appropriate positions."
+    },
+    {
+      "id": 48246,
+      "page": 652,
+      "seq": 7,
+      "text": "3. In the \ufb01nal cycle (for each j) solve for \u02c6\u03b812 = \u2212\u02c6\u03b2 \u00b7 \u02c6\u03b822, with 1/\u02c6\u03b822 =\ns22 \u2212wT\n12 \u02c6\u03b2."
+    },
+    {
+      "id": 48257,
+      "page": 652,
+      "seq": 18,
+      "text": "Dempster (1972), and is similar in \ufb02avor to the iterative conditional \ufb01tting\nprocedure for covariance graphs, proposed by Chaudhuri et al. (2007).\nHere is a little example, borrowed from Whittaker (1990). Suppose that\nour model is as depicted in Figure 17.4, along with its empirical covariance\nmatrix S. We apply algorithm (17.1) to this problem; for example, in the\nmodi\ufb01ed regression for variable 1 in step (b), variable 3 is left out. The\nprocedure quickly converged to the solutions:"
+    },
+    {
+      "id": 48261,
+      "page": 652,
+      "seq": 22,
+      "text": "10.00\n1.00\n1.31\n4.00\n1.00\n10.00\n2.00\n0.87\n1.31\n2.00\n10.00\n3.00\n4.00\n0.87\n3.00\n10.00"
+    },
+    {
+      "id": 48266,
+      "page": 652,
+      "seq": 27,
+      "text": "0.12\n\u22120.01\n0.00\n\u22120.05\n\u22120.01\n0.11\n\u22120.02\n0.00\n0.00\n\u22120.02\n0.11\n\u22120.03\n\u22120.05\n0.00\n\u22120.03\n0.13"
+    },
+    {
+      "id": 48269,
+      "page": 652,
+      "seq": 30,
+      "text": "Note the zeroes in \u02c6\u03a3\u22121, corresponding to the missing edges (1,3) and (2,4).\nNote also that the corresponding elements in \u02c6\u03a3 are the only elements dif-\nferent from S. The estimation of \u02c6\u03a3 is an example of what is sometimes\ncalled the positive de\ufb01nite \u201ccompletion\u201d of S."
+    },
+    {
+      "id": 48272,
+      "page": 653,
+      "seq": 2,
+      "text": "In most cases we do not know which edges to omit from our graph, and\nso would like to try to discover this from the data itself. In recent years a\nnumber of authors have proposed the use of L1 (lasso) regularization for\nthis purpose.\nMeinshausen and B\u00a8uhlmann (2006) take a simple approach to the prob-\nlem: rather than trying to fully estimate \u03a3 or \u0398 = \u03a3\u22121, they only estimate\nwhich components of \u03b8ij are nonzero. To do this, they \ufb01t a lasso regression\nusing each variable as the response and the others as predictors. The com-\nponent \u03b8ij is then estimated to be nonzero if either the estimated coe\ufb03cient\nof variable i on j is nonzero, or the estimated coe\ufb03cient of variable j on\ni is nonzero (alternatively they use an and rule). They show that asymp-\ntotically this procedure consistently estimates the set of nonzero elements\nof \u0398.\nWe can take a more systematic approach with the lasso penalty, following\nthe development of the previous section. Consider maximizing the penalized\nlog-likelihood\nlog det \u0398 \u2212trace(S\u0398) \u2212\u03bb||\u0398||1,\n(17.21)"
+    },
+    {
+      "id": 48273,
+      "page": 653,
+      "seq": 3,
+      "text": "where ||\u0398||1 is the L1 norm\u2014the sum of the absolute values of the elements\nof \u03a3\u22121, and we have ignored constants. The negative of this penalized\nlikelihood is a convex function of \u0398.\nIt turns out that one can adapt the lasso to give the exact maximizer of\nthe penalized log-likelihood. In particular, we simply replace the modi\ufb01ed\nregression step (b) in Algorithm 17.1 by a modi\ufb01ed lasso step. Here are the\ndetails.\nThe analog of the gradient equation (17.13) is now"
+    },
+    {
+      "id": 48275,
+      "page": 653,
+      "seq": 5,
+      "text": "Here we use sub-gradient notation, with Sign(\u03b8jk) = sign(\u03b8jk) if \u03b8jk \u0338= 0,\nelse Sign(\u03b8jk) \u2208[\u22121, 1] if \u03b8jk = 0. Continuing the development in the\nprevious section, we reach the analog of (17.18)"
+    },
+    {
+      "id": 48277,
+      "page": 653,
+      "seq": 7,
+      "text": "(recall that \u03b2 and \u03b812 have opposite signs). We will now see that this system\nis exactly equivalent to the estimating equations for a lasso regression.\nConsider the usual regression setup with outcome variables y and pre-\ndictor matrix Z. There the lasso minimizes"
+    },
+    {
+      "id": 48279,
+      "page": 653,
+      "seq": 9,
+      "text": "[see (3.52) on page 68; here we have added a factor 1"
+    },
+    {
+      "id": 48280,
+      "page": 653,
+      "seq": 10,
+      "text": "2 for convenience]. The\ngradient of this expression is"
+    },
+    {
+      "id": 48283,
+      "page": 654,
+      "seq": 2,
+      "text": "1. Initialize W = S + \u03bbI. The diagonal of W remains unchanged in\nwhat follows."
+    },
+    {
+      "id": 48284,
+      "page": 654,
+      "seq": 3,
+      "text": "2. Repeat for j = 1, 2, . . . p, 1, 2, . . . p, . . . until convergence:"
+    },
+    {
+      "id": 48285,
+      "page": 654,
+      "seq": 4,
+      "text": "(a) Partition the matrix W into part 1: all but the jth row and\ncolumn, and part 2: the jth row and column."
+    },
+    {
+      "id": 48286,
+      "page": 654,
+      "seq": 5,
+      "text": "(b) Solve the estimating equations W11\u03b2 \u2212s12 + \u03bb \u00b7 Sign(\u03b2) = 0\nusing the cyclical coordinate-descent algorithm (17.26) for the\nmodi\ufb01ed lasso."
+    },
+    {
+      "id": 48288,
+      "page": 654,
+      "seq": 7,
+      "text": "3. In the \ufb01nal cycle (for each j) solve for \u02c6\u03b812 = \u2212\u02c6\u03b2 \u00b7 \u02c6\u03b822, with 1/\u02c6\u03b822 =\nw22 \u2212wT\n12 \u02c6\u03b2."
+    },
+    {
+      "id": 48290,
+      "page": 654,
+      "seq": 9,
+      "text": "So up to a factor 1/N, ZT y is the analog of s12, and we replace ZT Z by\nW11, the estimated cross-product matrix from our current model.\nThe resulting procedure is called the graphical lasso, proposed by Fried-\nman et al. (2007a) building on the work of Banerjee et al. (2008). It is\nsummarized in Algorithm 17.2.\nFriedman et al. (2007a) use the pathwise coordinate descent method\n(Section 3.8.6) to solve the modi\ufb01ed lasso problem at each stage. Here are\nthe details of pathwise coordinate descent for the graphical lasso algorithm.\nLetting V = W11, the update has the form"
+    },
+    {
+      "id": 48293,
+      "page": 654,
+      "seq": 12,
+      "text": "for j = 1, 2, . . . , p \u22121, 1, 2, . . . , p \u22121, . . ., where S is the soft-threshold\noperator:\nS(x, t) = sign(x)(|x| \u2212t)+.\n(17.27)"
+    },
+    {
+      "id": 48294,
+      "page": 654,
+      "seq": 13,
+      "text": "The procedure cycles through the predictors until convergence.\nIt is easy to show that the diagonal elements wjj of the solution matrix\nW are simply sjj + \u03bb, and these are \ufb01xed in step 1 of Algorithm 17.23.\nThe graphical lasso algorithm is extremely fast, and can solve a moder-\nately sparse problem with 1000 nodes in less than a minute. It is easy to\nmodify the algorithm to have edge-speci\ufb01c penalty parameters \u03bbjk; since"
+    },
+    {
+      "id": 48295,
+      "page": 654,
+      "seq": 14,
+      "text": "3An alternative formulation of the problem (17.21) can be posed, where we don\u2019t\npenalize the diagonal of \u0398. Then the diagonal elements wjj of the solution matrix are\nsjj, and the rest of the algorithm is unchanged."
+    },
+    {
+      "id": 48297,
+      "page": 655,
+      "seq": 1,
+      "text": "\u03bbjk = \u221ewill force \u02c6\u03b8jk to be zero, this algorithm subsumes Algorithm 17.1.\nBy casting the sparse inverse-covariance problem as a series of regressions,\none can also quickly compute and examine the solution paths as a function\nof the penalty parameter \u03bb. More details can be found in Friedman et al.\n(2007a)."
+    },
+    {
+      "id": 48339,
+      "page": 656,
+      "seq": 1,
+      "text": "(Exercise 17.9). However, sometimes the entire node is hidden or latent.\nIn the Gaussian model, if a node has all missing values, due to linearity\none can simply average over the missing nodes to yield another Gaussian\nmodel over the observed nodes. Hence the inclusion of hidden nodes does\nnot enrich the resulting model for the observed nodes; in fact, it imposes\nadditional structure on its covariance matrix. However in the discrete model\n(described next) the inherent nonlinearities make hidden units a powerful\nway of expanding the model."
+    },
+    {
+      "id": 48341,
+      "page": 656,
+      "seq": 3,
+      "text": "Undirected Markov networks with all discrete variables are popular, and\nin particular pairwise Markov networks with binary variables being the\nmost common. They are sometimes called Ising models in the statistical\nmechanics literature, and Boltzmann machines in the machine learning lit-\nerature, where the vertices are referred to as \u201cnodes\u201d or \u201cunits\u201d and are\nbinary-valued.\nIn addition, the values at each node can be observed (\u201cvisible\u201d) or un-\nobserved (\u201chidden\u201d). The nodes are often organized in layers, similar to a\nneural network. Boltzmann machines are useful both for unsupervised and\nsupervised learning, especially for structured input data such as images,\nbut have been hampered by computational di\ufb03culties. Figure 17.6 shows\na restricted Boltzmann machine (discussed later), in which some variables\nare hidden, and only some pairs of nodes are connected. We \ufb01rst consider\nthe simpler case in which all p nodes are visible with edge pairs (j, k) enu-\nmerated in E.\nDenoting the binary valued variable at node j by Xj, the Ising model\nfor their joint probabilities is given by"
+    },
+    {
+      "id": 48344,
+      "page": 656,
+      "seq": 6,
+      "text": "with X = {0, 1}p. As with the Gaussian model of the previous section,\nonly pairwise interactions are modeled. The Ising model was developed in\nstatistical mechanics, and is now used more generally to model the joint\ne\ufb00ects of pairwise interactions. \u03a6(\u0398) is the log of the partition function,\nand is de\ufb01ned by"
+    },
+    {
+      "id": 48349,
+      "page": 656,
+      "seq": 11,
+      "text": "The partition function ensures that the probabilities add to one over the\nsample space. The terms \u03b8jkXjXk represent a particular parametrization"
+    },
+    {
+      "id": 48351,
+      "page": 657,
+      "seq": 1,
+      "text": "of the (log) potential functions (17.5), and for technical reasons requires\na constant node X0 \u22611 to be included (Exercise 17.10), with \u201cedges\u201d to\nall the other nodes. In the statistics literature, this model is equivalent\nto a \ufb01rst-order-interaction Poisson log-linear model for multiway tables of\ncounts (Bishop et al., 1975; McCullagh and Nelder, 1989; Agresti, 2002).\nThe Ising model implies a logistic form for each node conditional on the\nothers (exercise 17.11):"
+    },
+    {
+      "id": 48352,
+      "page": 657,
+      "seq": 2,
+      "text": "Pr(Xj = 1|X\u2212j = x\u2212j) =\n1\n1 + exp(\u2212\u03b8j0 \u2212\t\n(j,k)\u2208E \u03b8jkxk),\n(17.30)"
+    },
+    {
+      "id": 48353,
+      "page": 657,
+      "seq": 3,
+      "text": "where X\u2212j denotes all of the nodes except j. Hence the parameter \u03b8jk\nmeasures the dependence of Xj on Xk, conditional on the other nodes."
+    },
+    {
+      "id": 48355,
+      "page": 657,
+      "seq": 5,
+      "text": "Given some data from this model, how can we estimate the parameters?\nSuppose we have observations xi = (xi1, xi2, . . . , xip) \u2208{0, 1}p, i = 1, . . . , N.\nThe log-likelihood is"
+    },
+    {
+      "id": 48386,
+      "page": 658,
+      "seq": 5,
+      "text": "the expectation taken with respect to the empirical distribution of the data.\nLooking at (17.34), we see that the maximum likelihood estimates simply\nmatch the estimated inner products between the nodes to their observed\ninner products. This is a standard form for the score (gradient) equation\nfor exponential family models, in which su\ufb03cient statistics are set equal to\ntheir expectations under the model.\nTo \ufb01nd the maximum likelihood estimates, we can use gradient search\nor Newton methods. However the computation of E\u0398(XjXk) involves enu-\nmeration of p(X, \u0398) over 2p\u22122 of the |X| = 2p possible values of X, and is\nnot generally feasible for large p (e.g., larger than about 30). For smaller\np, a number of standard statistical approaches are available:"
+    },
+    {
+      "id": 48387,
+      "page": 658,
+      "seq": 6,
+      "text": "Poisson log-linear modeling, where we treat the problem as a large regres-\nsion problem (Exercise 17.12). The response vector y is the vector of\n2p counts in each of the cells of the multiway tabulation of the data4.\nThe predictor matrix Z has 2p rows and up to 1+p+p2 columns that\ncharacterize each of the cells, although this number depends on the\nsparsity of the graph. The computational cost is essentially that of a\nregression problem of this size, which is O(p42p) and is manageable\nfor p < 20. The Newton updates are typically computed by iteratively\nreweighted least squares, and the number of steps is usually in the\nsingle digits. See Agresti (2002) and McCullagh and Nelder (1989) for\ndetails. Standard software (such as the R package glm) can be used\nto \ufb01t this model."
+    },
+    {
+      "id": 48388,
+      "page": 658,
+      "seq": 7,
+      "text": "Gradient descent requires at most O(p22p\u22122) computations to compute\nthe gradient, but may require many more gradient steps than the\nsecond\u2013order Newton methods. Nevertheless, it can handle slightly\nlarger problems with p \u226430. These computations can be reduced\nby exploiting the special clique structure in sparse graphs, using the\njunction-tree algorithm. Details are not given here."
+    },
+    {
+      "id": 48389,
+      "page": 658,
+      "seq": 8,
+      "text": "Iterative proportional \ufb01tting (IPF) performs cyclical coordinate descent on\nthe gradient equations (17.34). At each step a parameter is updated\nso that its gradient equation is exactly zero. This is done in a cyclical\nfashion until all the gradients are zero. One complete cycle costs the\nsame as a gradient evaluation, but may be more e\ufb03cient. Jirou\u00b4sek and\nP\u02c7reu\u02c7cil (1995) implement an e\ufb03cient version of IPF, using junction\ntrees."
+    },
+    {
+      "id": 48390,
+      "page": 658,
+      "seq": 9,
+      "text": "4Each of the cell counts is treated as an independent Poisson variable. We get the\nmultinomial model corresponding to (17.28) by conditioning on the total count N (which\nis also Poisson under this framework)."
+    },
+    {
+      "id": 48392,
+      "page": 659,
+      "seq": 1,
+      "text": "When p is large (> 30) other approaches have been used to approximate\nthe gradient."
+    },
+    {
+      "id": 48393,
+      "page": 659,
+      "seq": 2,
+      "text": "\u2022 The mean \ufb01eld approximation (Peterson and Anderson, 1987) esti-\nmates E\u0398(XjXk) by E\u0398(Xj)E\u0398(Xj), and replaces the input vari-\nables by their means, leading to a set of nonlinear equations for the\nparameters \u03b8jk."
+    },
+    {
+      "id": 48394,
+      "page": 659,
+      "seq": 3,
+      "text": "\u2022 To obtain near-exact solutions, Gibbs sampling (Section 8.6) is used\nto approximate E\u0398(XjXk) by successively sampling from the esti-\nmated model probabilities Pr\u0398(Xj|X\u2212j) (see e.g. Ripley (1996))."
+    },
+    {
+      "id": 48395,
+      "page": 659,
+      "seq": 4,
+      "text": "We have not discussed decomposable models, for which the maximum\nlikelihood estimates can be found in closed form without any iteration\nwhatsoever. These models arise, for example, in trees: special graphs with\ntree-structured topology. When computational tractability is a concern,\ntrees represent a useful class of models and they sidestep the computational\nconcerns raised in this section. For details, see for example Chapter 12 of\nWhittaker (1990)."
+    },
+    {
+      "id": 48397,
+      "page": 659,
+      "seq": 6,
+      "text": "We can increase the complexity of a discrete Markov network by including\nlatent or hidden nodes. Suppose that a subset of the variables XH are\nunobserved or \u201chidden\u201d, and the remainder XV are observed or \u201cvisible.\u201d\nThen the log-likelihood of the observed data is"
+    },
+    {
+      "id": 48407,
+      "page": 659,
+      "seq": 16,
+      "text": "The sum over xH means that we are summing over all possible {0, 1} values\nfor the hidden units. The gradient works out to be"
+    },
+    {
+      "id": 48410,
+      "page": 659,
+      "seq": 19,
+      "text": "The \ufb01rst term is an empirical average of XjXk if both are visible; if one\nor both are hidden, they are \ufb01rst imputed given the visible data, and then\naveraged over the hidden variables. The second term is the unconditional\nexpectation of XjXk.\nThe inner expectation in the \ufb01rst term can be evaluated using basic rules\nof conditional expectation and properties of Bernoulli random variables. In\ndetail, for observation i"
+    },
+    {
+      "id": 48412,
+      "page": 660,
+      "seq": 1,
+      "text": "E\u0398(XjXk|XV = xiV) =\n\u0016 xijxik\nif j, k \u2208V\nxijPr\u0398(Xk = 1|XV = xiV)\nif j \u2208V, k \u2208H\nPr\u0398(Xj = 1, Xk = 1|XV = xiV)\nif j, k \u2208H.\n(17.38)\nNow two separate runs of Gibbs sampling are required; the \ufb01rst to estimate\nE\u0398(XjXk) by sampling from the model as above, and the second to esti-\nmate E\u0398(XjXk|XV = xiV). In this latter run, the visible units are \ufb01xed\n(\u201cclamped\u201d) at their observed values and only the hidden variables are\nsampled. Gibbs sampling must be done for each observation in the training\nset, at each stage of the gradient search. As a result this procedure can be\nvery slow, even for moderate-sized models. In Section 17.4.4 we consider\nfurther model restrictions to make these computations manageable."
+    },
+    {
+      "id": 48414,
+      "page": 660,
+      "seq": 3,
+      "text": "The use of a lasso penalty with binary pairwise Markov networks has been\nsuggested by Lee et al. (2007) and Wainwright et al. (2007). The \ufb01rst au-\nthors investigate a conjugate gradient procedure for exact minimization of\na penalized log-likelihood. The bottleneck is the computation of E\u0398(XjXk)\nin the gradient; exact computation via the junction tree algorithm is man-\nageable for sparse graphs but becomes unwieldy for dense graphs.\nThe second authors propose an approximate solution, analogous to the\nMeinshausen and B\u00a8uhlmann (2006) approach for the Gaussian graphical\nmodel. They \ufb01t an L1-penalized logistic regression model to each node as\na function of the other nodes, and then symmetrize the edge parameter\nestimates in some fashion. For example if \u02dc\u03b8jk is the estimate of the j-k\nedge parameter from the logistic model for outcome node j, the \u201cmin\u201d\nsymmetrization sets \u02c6\u03b8jk to either \u02dc\u03b8jk or \u02dc\u03b8kj, whichever is smallest in abso-\nlute value. The \u201cmax\u201d criterion is de\ufb01ned similarly. They show that under\ncertain conditions either approximation estimates the nonzero edges cor-\nrectly as the sample size goes to in\ufb01nity. Hoe\ufb02ing and Tibshirani (2008)\nextend the graphical lasso to discrete Markov networks, obtaining a pro-\ncedure which is somewhat faster than conjugate gradients, but still must\ndeal with computation of E\u0398(XjXk). They also compare the exact and\napproximate solutions in an extensive simulation study and \ufb01nd the \u201cmin\u201d\nor \u201cmax\u201d approximations are only slightly less accurate than the exact pro-\ncedure, both for estimating the nonzero edges and for estimating the actual\nvalues of the edge parameters, and are much faster. Furthermore, they can\nhandle denser graphs because they never need to compute the quantities\nE\u0398(XjXk).\nFinally, we point out a key di\ufb00erence between the Gaussian and binary\nmodels. In the Gaussian case, both \u03a3 and its inverse will often be of interest,\nand the graphical lasso procedure delivers estimates for both of these quan-\ntities. However, the approximation of Meinshausen and B\u00a8uhlmann (2006)\nfor Gaussian graphical models, analogous to the Wainwright et al. (2007)"
+    },
+    {
+      "id": 48423,
+      "page": 661,
+      "seq": 8,
+      "text": "approximation for the binary case, only yields an estimate of \u03a3\u22121. In con-\ntrast, in the Markov model for binary data, \u0398 is the object of interest, and\nits inverse is not of interest. The approximate method of Wainwright et al.\n(2007) estimates \u0398 e\ufb03ciently and hence is an attractive solution for the\nbinary problem."
+    },
+    {
+      "id": 48425,
+      "page": 661,
+      "seq": 10,
+      "text": "In this section we consider a particular architecture for graphical models\ninspired by neural networks, where the units are organized in layers. A\nrestricted Boltzmann machine (RBM) consists of one layer of visible units\nand one layer of hidden units with no connections within each layer. It\nis much simpler to compute the conditional expectations (as in 17.37 and\n17.38) if the connections between hidden units are removed 5. Figure 17.6\nshows an example; the visible layer is divided into input variables V1 and\noutput variables V2, and there is a hidden layer H. We denote such a\nnetwork by\nV1 \u2194H \u2194V2.\n(17.39)"
+    },
+    {
+      "id": 48426,
+      "page": 661,
+      "seq": 11,
+      "text": "For example, V1 could be the binary pixels of an image of a handwritten\ndigit, and V2 could have 10 units, one for each of the observed class labels\n0-9.\nThe restricted form of this model simpli\ufb01es the Gibbs sampling for es-\ntimating the expectations in (17.37), since the variables in each layer are\nindependent of one another, given the variables in the other layers. Hence\nthey can be sampled together, using the conditional probabilities given by\nexpression (17.30).\nThe resulting model is less general than a Boltzmann machine, but is still\nuseful; for example it can learn to extract interesting features from images."
+    },
+    {
+      "id": 48427,
+      "page": 661,
+      "seq": 12,
+      "text": "5We thank Geo\ufb00rey Hinton for assistance in the preparation of the material on RBMs."
+    },
+    {
+      "id": 48429,
+      "page": 662,
+      "seq": 1,
+      "text": "By alternately sampling the variables in each layer of the RBM shown\nin Figure 17.6, it is possible to generate samples from the joint density\nmodel. If the V1 part of the visible layer is clamped at a particular feature\nvector during the alternating sampling, it is possible to sample from the\ndistribution over labels given V1. Alternatively classi\ufb01cation of test items\ncan also be achieved by comparing the unnormalized joint densities of each\nlabel category with the observed features. We do not need to compute the\npartition function as it is the same for all of these combinations.\nAs noted the restricted Boltzmann machine has the same generic form\nas a single hidden layer neural network (Section 11.3). The edges in the\nlatter model are directed, the hidden units are usually real-valued, and the\n\ufb01tting criterion is di\ufb00erent. The neural network minimizes the error (cross-\nentropy) between the targets and their model predictions, conditional on\nthe input features. In contrast, the restricted Boltzmann machine maxi-\nmizes the log-likelihood for the joint distribution of all visible units\u2014that\nis, the features and targets. It can extract information from the input fea-\ntures that is useful for predicting the labels, but, unlike supervised learning\nmethods, it may also use some of its hidden units to model structure in the\nfeature vectors that is not immediately relevant for predicting the labels.\nThese features may turn out to be useful, however, when combined with\nfeatures derived from other hidden layers.\nUnfortunately, Gibbs sampling in a restricted Boltzmann machine can\nbe very slow, as it can take a long time to reach stationarity. As the net-\nwork weights get larger, the chain mixes more slowly and we need to run\nmore steps to get the unconditional estimates. Hinton (2002) noticed em-\npirically that learning still works well if we estimate the second expectation\nin (17.37) by starting the Markov chain at the data and only running for a\nfew steps (instead of to convergence). He calls this contrastive divergence:\nwe sample H given V1, V2, then V1, V2 given H and \ufb01nally H given V1, V2\nagain. The idea is that when the parameters are far from the solution, it\nmay be wasteful to iterate the Gibbs sampler to stationarity, as just a single\niteration will reveal a good direction for moving the estimates.\nWe now give an example to illustrate the use of an RBM. Using con-\ntrastive divergence, it is possible to train an RBM to recognize hand-written\ndigits from the MNIST dataset (LeCun et al., 1998). With 2000 hidden\nunits, 784 visible units for representing binary pixel intensities and one\n10-way multinomial visible unit for representing labels, the RBM achieves\nan error rate of 1.9% on the test set. This is a little higher than the 1.4%\nachieved by a support vector machine and comparable to the error rate\nachieved by a neural network trained with backpropagation. The error rate\nof the RBM, however, can be reduced to 1.25% by replacing the 784 pixel\nintensities by 500 features that are produced from the images without using\nany label information. First, an RBM with 784 visible units and 500 hidden\nunits is trained, using contrastive divergence, to model the set of images.\nThen the hidden states of the \ufb01rst RBM are used as data for training a"
+    },
+    {
+      "id": 48432,
+      "page": 663,
+      "seq": 2,
+      "text": "second RBM that has 500 visible units and 500 hidden units. Finally, the\nhidden states of the second RBM are used as the features for training an\nRBM with 2000 hidden units as a joint density model. The details and\njusti\ufb01cation for learning features in this greedy, layer-by-layer way are de-\nscribed in Hinton et al. (2006). Figure 17.7 gives a representation of the\ncomposite model that is learned in this way and also shows some examples\nof the types of distortion that it can cope with."
+    },
+    {
+      "id": 48434,
+      "page": 663,
+      "seq": 4,
+      "text": "Much work has been done in de\ufb01ning and understanding the structure of\ngraphical models. Comprehensive treatments of graphical models can be\nfound in Whittaker (1990), Lauritzen (1996), Cox and Wermuth (1996),\nEdwards (2000), Pearl (2000), Anderson (2003), Jordan (2004), and Koller\nand Friedman (2007). Wasserman (2004) gives a brief introduction, and\nChapter 8 of Bishop (2006) gives a more detailed overview. Boltzmann\nmachines were proposed in Ackley et al. (1985). Ripley (1996) has a detailed\nchapter on topics in graphical models that relate to machine learning. We\nfound this particularly useful for its discussion of Boltzmann machines."
+    },
+    {
+      "id": 48447,
+      "page": 664,
+      "seq": 10,
+      "text": "(c) X1 \u22a5X4|X2, X3, X1 \u22a5X3|X2, X4 and X3 \u22a5X4|X1, X2."
+    },
+    {
+      "id": 48450,
+      "page": 664,
+      "seq": 13,
+      "text": "2. Show that if any o\ufb00-diagonal element of \u0398 is zero, then the partial\ncorrelation coe\ufb03cient between the corresponding variables is zero."
+    },
+    {
+      "id": 48451,
+      "page": 664,
+      "seq": 14,
+      "text": "3. Show that if we treat \u0398 as if it were a covariance matrix, and compute\nthe corresponding \u201ccorrelation\u201d matrix"
+    },
+    {
+      "id": 48453,
+      "page": 664,
+      "seq": 16,
+      "text": "then rjk = \u2212\u03c1jk|rest\nEx. 17.4 Denote by\nf(X1|X2, X3, . . . , Xp)"
+    },
+    {
+      "id": 48454,
+      "page": 664,
+      "seq": 17,
+      "text": "the conditional density of X1 given X2, . . . , Xp. If"
+    },
+    {
+      "id": 48459,
+      "page": 665,
+      "seq": 2,
+      "text": "are the estimating equations for the multiple regression coe\ufb03cients of the\nlast variable on the rest."
+    },
+    {
+      "id": 48463,
+      "page": 665,
+      "seq": 6,
+      "text": "Since \u02c6\u03b2 = W\u22121\n11 w12, show that \u02c6\u03b822 = 1/(w22 \u2212wT\n12 \u02c6\u03b2) and \u02c6\u03b812 = \u2212\u02c6\u03b2\u02c6\u03b822.\nThus \u02c6\u03b812 is a simply rescaling of \u02c6\u03b2 by \u2212\u02c6\u03b822."
+    },
+    {
+      "id": 48466,
+      "page": 665,
+      "seq": 9,
+      "text": "(a) Write a program to \ufb01t the lasso using the coordinate descent procedure\n(17.26). Compare its results to those from the lars program or some\nother convex optimizer, to check that it is working correctly."
+    },
+    {
+      "id": 48467,
+      "page": 665,
+      "seq": 10,
+      "text": "(b) Using the program from (a), write code to implement the graphical\nlasso algorithm (17.2). Apply it to the \ufb02ow cytometry data from the\nbook website. Vary the regularization parameter and examine the\nresulting networks."
+    },
+    {
+      "id": 48469,
+      "page": 665,
+      "seq": 12,
+      "text": "(a) Consider the EM algorithm for a dataset of N i.i.d. multivariate ob-\nservations xi \u2208IRp with mean \u03bc and covariance matrix \u03a3. For each\nsample i, let oi and mi index the predictors that are observed and\nmissing, respectively. Show that in the E step, the observations are\nimputed from the current estimates of \u03bc and \u03a3:"
+    },
+    {
+      "id": 48470,
+      "page": 665,
+      "seq": 13,
+      "text": "\u02c6xi,mi = E(xi,mi|xi,oi, \u03b8) = \u02c6\u03bcmi + \u02c6\u03a3mi,oi \u02c6\u03a3\u22121\noi,oi(xi,oi \u2212\u02c6\u03bcoi)\n(17.43)"
+    },
+    {
+      "id": 48471,
+      "page": 665,
+      "seq": 14,
+      "text": "while in the M step, \u03bc and \u03a3 are re-estimated from the empirical\nmean and (modi\ufb01ed) covariance of the imputed data:"
+    },
+    {
+      "id": 48479,
+      "page": 666,
+      "seq": 4,
+      "text": "where ci,jj\u2032 = \u02c6\u03a3jj\u2032 if j, j\u2032 \u2208mi and zero otherwise. Explain the reason\nfor the correction term ci,jj\u2032 (Little and Rubin, 2002)."
+    },
+    {
+      "id": 48480,
+      "page": 666,
+      "seq": 5,
+      "text": "(b) Implement the EM algorithm for the Gaussian graphical model using\nthe modi\ufb01ed regression procedure from Exercise 17.7 for the M-step."
+    },
+    {
+      "id": 48481,
+      "page": 666,
+      "seq": 6,
+      "text": "(c) For the \ufb02ow cytometry data on the book website, set the data for the\nlast protein Jnk in the \ufb01rst 1000 observations to missing, \ufb01t the model\nof Figure 17.1, and compare the predicted values to the actual values\nfor Jnk. Compare the results to those obtained from a regression of\nJnk on the other vertices with edges to Jnk in Figure 17.1, using only\nthe non-missing data."
+    },
+    {
+      "id": 48487,
+      "page": 666,
+      "seq": 12,
+      "text": "using the same notation as in Section 17.4.1 (including the constant variable\nxi0 = 1\u2200i). We assume the response is distributed as"
+    },
+    {
+      "id": 48490,
+      "page": 666,
+      "seq": 15,
+      "text": "Write down the conditional log-likelihood for the observed responses yi,\nand compute the gradient."
+    },
+    {
+      "id": 48491,
+      "page": 666,
+      "seq": 16,
+      "text": "(a) Show that the gradient equation for \u03b800 computes the partition func-\ntion (17.29)."
+    },
+    {
+      "id": 48492,
+      "page": 666,
+      "seq": 17,
+      "text": "(b) Show that the gradient equations for the remainder of the parameters\nare equivalent to the gradient (17.34)."
+    }
+  ]
+}

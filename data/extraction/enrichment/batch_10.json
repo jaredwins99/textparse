@@ -1,0 +1,3789 @@
+{
+  "batch_number": 10,
+  "concepts": [
+    {
+      "id": 125,
+      "name": "hat matrix",
+      "description": "The matrix H = X(XT X)^-1 XT that puts the hat on y by computing the orthogonal projection onto the column space of X.",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "Here the linear operator H\u03be is a projection operator, also known as the hat matrix in statistics.",
+      "existing_formula": "H = X(X^T X)^{-1} X^T",
+      "paragraphs": [
+        {
+          "id": 20249,
+          "text": "summary reinforces the evidence in the data that the growth spurt for\nfemales precedes that for males by about two years. In both cases the\nsmoothing parameter \u03bb was approximately 0.00022; this choice is discussed\nin the next section.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20251,
+          "text": "We have not yet indicated how \u03bb is chosen for the smoothing spline. Later\nin this chapter we describe automatic methods using techniques such as\ncross-validation. In this section we discuss intuitive ways of prespecifying\nthe amount of smoothing.\nA smoothing spline with prechosen \u03bb is an example of a linear smoother\n(as in linear operator). This is because the estimated parameters in (5.12)\nare a linear combination of the yi. Denote by \u02c6f the N-vector of \ufb01tted values\n\u02c6f(xi) at the training predictors xi. Then",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20252,
+          "text": "\u02c6f\n=\nN(NT N + \u03bb\u03a9N)\u22121NT y",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20253,
+          "text": "=\nS\u03bby.\n(5.14)",
+          "type": "equation",
+          "page": 171
+        },
+        {
+          "id": 20254,
+          "text": "Again the \ufb01t is linear in y, and the \ufb01nite linear operator S\u03bb is known as\nthe smoother matrix. One consequence of this linearity is that the recipe\nfor producing \u02c6f from y does not depend on y itself; S\u03bb depends only on\nthe xi and \u03bb.\nLinear operators are familiar in more traditional least squares \ufb01tting as\nwell. Suppose B\u03be is a N \u00d7 M matrix of M cubic-spline basis functions\nevaluated at the N training points xi, with knot sequence \u03be, and M \u226aN.\nThen the vector of \ufb01tted spline values is given by",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20255,
+          "text": "\u02c6f\n=\nB\u03be(BT\n\u03be B\u03be)\u22121BT\n\u03be y\n=\nH\u03bey.\n(5.15)",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20256,
+          "text": "Here the linear operator H\u03be is a projection operator, also known as the hat\nmatrix in statistics. There are some important similarities and di\ufb00erences\nbetween H\u03be and S\u03bb:",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20257,
+          "text": "\u2022 Both are symmetric, positive semide\ufb01nite matrices.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20258,
+          "text": "\u2022 H\u03beH\u03be = H\u03be (idempotent), while S\u03bbS\u03bb \u2aafS\u03bb, meaning that the right-\nhand side exceeds the left-hand side by a positive semide\ufb01nite matrix.\nThis is a consequence of the shrinking nature of S\u03bb, which we discuss\nfurther below.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20259,
+          "text": "\u2022 H\u03be has rank M, while S\u03bb has rank N.",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20260,
+          "text": "The expression M = trace(H\u03be) gives the dimension of the projection space,\nwhich is also the number of basis functions, and hence the number of pa-\nrameters involved in the \ufb01t. By analogy we de\ufb01ne the e\ufb00ective degrees of",
+          "type": "narrative",
+          "page": 171
+        },
+        {
+          "id": 20261,
+          "text": "154\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20262,
+          "text": "freedom of a smoothing spline to be",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20263,
+          "text": "df\u03bb = trace(S\u03bb),\n(5.16)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20264,
+          "text": "the sum of the diagonal elements of S\u03bb. This very useful de\ufb01nition allows\nus a more intuitive way to parameterize the smoothing spline, and indeed\nmany other smoothers as well, in a consistent fashion. For example, in Fig-\nure 5.6 we speci\ufb01ed df\u03bb = 12 for each of the curves, and the corresponding\n\u03bb \u22480.00022 was derived numerically by solving trace(S\u03bb) = 12. There are\nmany arguments supporting this de\ufb01nition of degrees of freedom, and we\ncover some of them here.\nSince S\u03bb is symmetric (and positive semide\ufb01nite), it has a real eigen-\ndecomposition. Before we proceed, it is convenient to rewrite S\u03bb in the\nReinsch form\nS\u03bb = (I + \u03bbK)\u22121,\n(5.17)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20265,
+          "text": "where K does not depend on \u03bb (Exercise 5.9). Since \u02c6f = S\u03bby solves",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20266,
+          "text": "min\nf (y \u2212f)T (y \u2212f) + \u03bbf T Kf,\n(5.18)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20267,
+          "text": "K is known as the penalty matrix, and indeed a quadratic form in K has\na representation in terms of a weighted sum of squared (divided) second\ndi\ufb00erences. The eigen-decomposition of S\u03bb is",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20268,
+          "text": "S\u03bb =",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20269,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20270,
+          "text": "k=1\n\u03c1k(\u03bb)ukuT\nk\n(5.19)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20271,
+          "text": "with\n\u03c1k(\u03bb) =\n1\n1 + \u03bbdk\n,\n(5.20)",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20272,
+          "text": "and dk the corresponding eigenvalue of K. Figure 5.7 (top) shows the re-\nsults of applying a cubic smoothing spline to some air pollution data (128\nobservations). Two \ufb01ts are given: a smoother \ufb01t corresponding to a larger\npenalty \u03bb and a rougher \ufb01t for a smaller penalty. The lower panels repre-\nsent the eigenvalues (lower left) and some eigenvectors (lower right) of the\ncorresponding smoother matrices. Some of the highlights of the eigenrep-\nresentation are the following:",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20273,
+          "text": "\u2022 The eigenvectors are not a\ufb00ected by changes in \u03bb, and hence the whole\nfamily of smoothing splines (for a particular sequence x) indexed by\n\u03bb have the same eigenvectors.",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20274,
+          "text": "\u2022 S\u03bby = \tN\nk=1 uk\u03c1k(\u03bb)\u27e8uk, y\u27e9, and hence the smoothing spline oper-\nates by decomposing y w.r.t. the (complete) basis {uk}, and di\ufb00er-\nentially shrinking the contributions using \u03c1k(\u03bb). This is to be con-\ntrasted with a basis-regression method, where the components are",
+          "type": "narrative",
+          "page": 172
+        },
+        {
+          "id": 20276,
+          "text": "Daggot Pressure Gradient",
+          "type": "narrative",
+          "page": 173
+        },
+        {
+          "id": 20277,
+          "text": "Ozone Concentration",
+          "type": "narrative",
+          "page": 173
+        },
+        {
+          "id": 20278,
+          "text": "-50\n0\n50\n100",
+          "type": "equation",
+          "page": 173
+        },
+        {
+          "id": 20279,
+          "text": "0\n10\n20\n30",
+          "type": "equation",
+          "page": 173
+        },
+        {
+          "id": 20280,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 173
+        }
+      ]
+    },
+    {
+      "id": 244,
+      "name": "Demmler-Reinsch basis",
+      "description": "The eigenvector basis of the smoother matrix, providing a representation where the penalty is diagonal.",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "One can reparametrize the smoothing spline using the basis vectors u\u2096 (the Demmler\u2013Reinsch basis).",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 20375,
+          "text": "156\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 174
+        },
+        {
+          "id": 20376,
+          "text": "either left alone, or shrunk to zero\u2014that is, a projection matrix such\nas H\u03be above has M eigenvalues equal to 1, and the rest are 0. For\nthis reason smoothing splines are referred to as shrinking smoothers,\nwhile regression splines are projection smoothers (see Figure 3.17 on\npage 80).",
+          "type": "narrative",
+          "page": 174
+        },
+        {
+          "id": 20377,
+          "text": "\u2022 The sequence of uk, ordered by decreasing \u03c1k(\u03bb), appear to increase\nin complexity. Indeed, they have the zero-crossing behavior of polyno-\nmials of increasing degree. Since S\u03bbuk = \u03c1k(\u03bb)uk, we see how each of\nthe eigenvectors themselves are shrunk by the smoothing spline: the\nhigher the complexity, the more they are shrunk. If the domain of X\nis periodic, then the uk are sines and cosines at di\ufb00erent frequencies.",
+          "type": "narrative",
+          "page": 174
+        },
+        {
+          "id": 20378,
+          "text": "\u2022 The \ufb01rst two eigenvalues are always one, and they correspond to the\ntwo-dimensional eigenspace of functions linear in x (Exercise 5.11),\nwhich are never shrunk.",
+          "type": "narrative",
+          "page": 174
+        },
+        {
+          "id": 20379,
+          "text": "\u2022 The eigenvalues \u03c1k(\u03bb) = 1/(1 + \u03bbdk) are an inverse function of the\neigenvalues dk of the penalty matrix K, moderated by \u03bb; \u03bb controls\nthe rate at which the \u03c1k(\u03bb) decrease to zero. d1 = d2 = 0 and again\nlinear functions are not penalized.",
+          "type": "narrative",
+          "page": 174
+        },
+        {
+          "id": 20380,
+          "text": "\u2022 One can reparametrize the smoothing spline using the basis vectors\nuk (the Demmler\u2013Reinsch basis). In this case the smoothing spline\nsolves\nmin\n\u03b8 \u2225y \u2212U\u03b8\u22252 + \u03bb\u03b8T D\u03b8,\n(5.21)",
+          "type": "narrative",
+          "page": 174
+        },
+        {
+          "id": 20381,
+          "text": "where U has columns uk and D is a diagonal matrix with elements\ndk.",
+          "type": "narrative",
+          "page": 174
+        },
+        {
+          "id": 20382,
+          "text": "\u2022 df\u03bb = trace(S\u03bb) = \tN\nk=1 \u03c1k(\u03bb). For projection smoothers, all the\neigenvalues are 1, each one corresponding to a dimension of the pro-\njection subspace.",
+          "type": "narrative",
+          "page": 174
+        },
+        {
+          "id": 20385,
+          "text": "The smoothing parameters for regression splines encompass the degree of\nthe splines, and the number and placement of the knots. For smoothing",
+          "type": "narrative",
+          "page": 174
+        },
+        {
+          "id": 20387,
+          "text": "115",
+          "type": "equation",
+          "page": 175
+        },
+        {
+          "id": 20388,
+          "text": "100",
+          "type": "equation",
+          "page": 175
+        },
+        {
+          "id": 20389,
+          "text": "75",
+          "type": "equation",
+          "page": 175
+        },
+        {
+          "id": 20390,
+          "text": "50",
+          "type": "equation",
+          "page": 175
+        },
+        {
+          "id": 20391,
+          "text": "25",
+          "type": "equation",
+          "page": 175
+        },
+        {
+          "id": 20392,
+          "text": "12",
+          "type": "equation",
+          "page": 175
+        },
+        {
+          "id": 20393,
+          "text": "Smoother Matrix",
+          "type": "narrative",
+          "page": 175
+        },
+        {
+          "id": 20394,
+          "text": "\u2022\u2022\u2022\u2022 \u2022 \u2022 \u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022 \u2022\n\u2022",
+          "type": "narrative",
+          "page": 175
+        },
+        {
+          "id": 20395,
+          "text": "Row 115",
+          "type": "narrative",
+          "page": 175
+        },
+        {
+          "id": 20396,
+          "text": "\u2022\u2022\u2022\u2022 \u2022 \u2022 \u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022 \u2022",
+          "type": "narrative",
+          "page": 175
+        },
+        {
+          "id": 20397,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 175
+        },
+        {
+          "id": 20398,
+          "text": "Row 100",
+          "type": "narrative",
+          "page": 175
+        },
+        {
+          "id": 20399,
+          "text": "\u2022\u2022\u2022\u2022 \u2022 \u2022 \u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022 \u2022\n\u2022",
+          "type": "narrative",
+          "page": 175
+        },
+        {
+          "id": 20400,
+          "text": "Row 75",
+          "type": "narrative",
+          "page": 175
+        },
+        {
+          "id": 20401,
+          "text": "\u2022\u2022\u2022\u2022 \u2022 \u2022 \u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022 \u2022\n\u2022",
+          "type": "narrative",
+          "page": 175
+        },
+        {
+          "id": 20402,
+          "text": "Row 50",
+          "type": "narrative",
+          "page": 175
+        },
+        {
+          "id": 20403,
+          "text": "\u2022\u2022\u2022\u2022 \u2022 \u2022 \u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022 \u2022\n\u2022",
+          "type": "narrative",
+          "page": 175
+        },
+        {
+          "id": 20404,
+          "text": "Row 25",
+          "type": "narrative",
+          "page": 175
+        },
+        {
+          "id": 20405,
+          "text": "\u2022\u2022\u2022\u2022 \u2022 \u2022 \u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 \u2022\u2022 \u2022\n\u2022",
+          "type": "narrative",
+          "page": 175
+        },
+        {
+          "id": 20406,
+          "text": "Row 12",
+          "type": "narrative",
+          "page": 175
+        },
+        {
+          "id": 20407,
+          "text": "Equivalent Kernels",
+          "type": "narrative",
+          "page": 175
+        }
+      ]
+    },
+    {
+      "id": 245,
+      "name": "integrated squared prediction error",
+      "description": "Expected prediction error averaged over both training samples and prediction points, combining bias and variance.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "The integrated squared prediction error (EPE) combines both bias and variance in a single summary... Note that this is averaged both over the training sample (giving rise to f\u0302\u03bb), and the values of the (independently chosen) prediction points (X, Y).",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 20409,
+          "text": "158\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20410,
+          "text": "splines, we have only the penalty parameter \u03bb to select, since the knots are\nat all the unique training X\u2019s, and cubic degree is almost always used in\npractice.\nSelecting the placement and number of knots for regression splines can be\na combinatorially complex task, unless some simpli\ufb01cations are enforced.\nThe MARS procedure in Chapter 9 uses a greedy algorithm with some\nadditional approximations to achieve a practical compromise. We will not\ndiscuss this further here.",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20412,
+          "text": "Since df\u03bb = trace(S\u03bb) is monotone in \u03bb for smoothing splines, we can in-\nvert the relationship and specify \u03bb by \ufb01xing df. In practice this can be\nachieved by simple numerical methods. So, for example, in R one can use\nsmooth.spline(x,y,df=6) to specify the amount of smoothing. This encour-\nages a more traditional mode of model selection, where we might try a cou-\nple of di\ufb00erent values of df, and select one based on approximate F-tests,\nresidual plots and other more subjective criteria. Using df in this way pro-\nvides a uniform approach to compare many di\ufb00erent smoothing methods.\nIt is particularly useful in generalized additive models (Chapter 9), where\nseveral smoothing methods can be simultaneously used in one model.",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20415,
+          "text": "Y = f(X) + \u03b5,",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20416,
+          "text": "f(X) = sin(12(X + 0.2))",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20417,
+          "text": "X + 0.2\n,\n(5.22)",
+          "type": "equation",
+          "page": 176
+        },
+        {
+          "id": 20418,
+          "text": "with X \u223cU[0, 1] and \u03b5 \u223cN(0, 1). Our training sample consists of N = 100\npairs xi, yi drawn independently from this model.\nThe \ufb01tted splines for three di\ufb00erent values of df\u03bb are shown. The yellow\nshaded region in the \ufb01gure represents the pointwise standard error of \u02c6f\u03bb,\nthat is, we have shaded the region between \u02c6f\u03bb(x) \u00b1 2 \u00b7 se( \u02c6f\u03bb(x)). Since\n\u02c6f = S\u03bby,",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20419,
+          "text": "Cov(\u02c6f)\n=\nS\u03bbCov(y)ST\n\u03bb\n=\nS\u03bbST\n\u03bb .\n(5.23)",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20420,
+          "text": "The diagonal contains the pointwise variances at the training xi. The bias\nis given by",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20421,
+          "text": "Bias(\u02c6f)\n=\nf \u2212E(\u02c6f)\n=\nf \u2212S\u03bbf,\n(5.24)",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20423,
+          "text": "6\n8\n10\n12\n14",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20424,
+          "text": "0.9\n1.0\n1.1\n1.2",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20425,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\u2022\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20426,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20427,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20428,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\u2022\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20429,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20430,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20431,
+          "text": "y",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20432,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20433,
+          "text": "-4\n-2\n0\n2",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20434,
+          "text": "O",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20435,
+          "text": "O",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20436,
+          "text": "O",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20437,
+          "text": "O",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20438,
+          "text": "OO",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20439,
+          "text": "O",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20440,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20441,
+          "text": "O",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20442,
+          "text": "O",
+          "type": "narrative",
+          "page": 177
+        }
+      ]
+    },
+    {
+      "id": 267,
+      "name": "MARS",
+      "description": "Multivariate Adaptive Regression Splines - a greedy algorithm for adaptive knot placement in regression splines.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "The MARS procedure in Chapter 9 uses a greedy algorithm with some additional approximations to achieve a practical compromise.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 20409,
+          "text": "158\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20410,
+          "text": "splines, we have only the penalty parameter \u03bb to select, since the knots are\nat all the unique training X\u2019s, and cubic degree is almost always used in\npractice.\nSelecting the placement and number of knots for regression splines can be\na combinatorially complex task, unless some simpli\ufb01cations are enforced.\nThe MARS procedure in Chapter 9 uses a greedy algorithm with some\nadditional approximations to achieve a practical compromise. We will not\ndiscuss this further here.",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20412,
+          "text": "Since df\u03bb = trace(S\u03bb) is monotone in \u03bb for smoothing splines, we can in-\nvert the relationship and specify \u03bb by \ufb01xing df. In practice this can be\nachieved by simple numerical methods. So, for example, in R one can use\nsmooth.spline(x,y,df=6) to specify the amount of smoothing. This encour-\nages a more traditional mode of model selection, where we might try a cou-\nple of di\ufb00erent values of df, and select one based on approximate F-tests,\nresidual plots and other more subjective criteria. Using df in this way pro-\nvides a uniform approach to compare many di\ufb00erent smoothing methods.\nIt is particularly useful in generalized additive models (Chapter 9), where\nseveral smoothing methods can be simultaneously used in one model.",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20415,
+          "text": "Y = f(X) + \u03b5,",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20416,
+          "text": "f(X) = sin(12(X + 0.2))",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20417,
+          "text": "X + 0.2\n,\n(5.22)",
+          "type": "equation",
+          "page": 176
+        },
+        {
+          "id": 20418,
+          "text": "with X \u223cU[0, 1] and \u03b5 \u223cN(0, 1). Our training sample consists of N = 100\npairs xi, yi drawn independently from this model.\nThe \ufb01tted splines for three di\ufb00erent values of df\u03bb are shown. The yellow\nshaded region in the \ufb01gure represents the pointwise standard error of \u02c6f\u03bb,\nthat is, we have shaded the region between \u02c6f\u03bb(x) \u00b1 2 \u00b7 se( \u02c6f\u03bb(x)). Since\n\u02c6f = S\u03bby,",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20419,
+          "text": "Cov(\u02c6f)\n=\nS\u03bbCov(y)ST\n\u03bb\n=\nS\u03bbST\n\u03bb .\n(5.23)",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20420,
+          "text": "The diagonal contains the pointwise variances at the training xi. The bias\nis given by",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20421,
+          "text": "Bias(\u02c6f)\n=\nf \u2212E(\u02c6f)\n=\nf \u2212S\u03bbf,\n(5.24)",
+          "type": "narrative",
+          "page": 176
+        },
+        {
+          "id": 20423,
+          "text": "6\n8\n10\n12\n14",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20424,
+          "text": "0.9\n1.0\n1.1\n1.2",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20425,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\u2022\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20426,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20427,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20428,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\u2022\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20429,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20430,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20431,
+          "text": "y",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20432,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20433,
+          "text": "-4\n-2\n0\n2",
+          "type": "equation",
+          "page": 177
+        },
+        {
+          "id": 20434,
+          "text": "O",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20435,
+          "text": "O",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20436,
+          "text": "O",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20437,
+          "text": "O",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20438,
+          "text": "OO",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20439,
+          "text": "O",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20440,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20441,
+          "text": "O",
+          "type": "narrative",
+          "page": 177
+        },
+        {
+          "id": 20442,
+          "text": "O",
+          "type": "narrative",
+          "page": 177
+        }
+      ]
+    },
+    {
+      "id": 246,
+      "name": "nonparametric logistic regression",
+      "description": "Logistic regression with a smooth nonparametric function replacing the linear predictor, fit via penalized log-likelihood.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "The smoothing spline problem (5.9) in Section 5.4 is posed in a regression setting. It is typically straightforward to transfer this technology to other domains. Here we consider logistic regression with a single quantitative input X.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 20697,
+          "text": "CV( \u02c6f\u03bb)\n=\n1\nN",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20698,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20699,
+          "text": "i=1\n(yi \u2212\u02c6f (\u2212i)\n\u03bb\n(xi))2\n(5.26)",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20700,
+          "text": "=\n1\nN",
+          "type": "equation",
+          "page": 179
+        },
+        {
+          "id": 20701,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20702,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20703,
+          "text": "\u0011\nyi \u2212\u02c6f\u03bb(xi)\n1 \u2212S\u03bb(i, i)",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20704,
+          "text": "\u00122",
+          "type": "equation",
+          "page": 179
+        },
+        {
+          "id": 20705,
+          "text": ",\n(5.27)",
+          "type": "equation",
+          "page": 179
+        },
+        {
+          "id": 20706,
+          "text": "which can (remarkably) be computed for each value of \u03bb from the original\n\ufb01tted values and the diagonal elements S\u03bb(i, i) of S\u03bb (Exercise 5.13).\nThe EPE and CV curves have a similar shape, but the entire CV curve\nis above the EPE curve. For some realizations this is reversed, and overall\nthe CV curve is approximately unbiased as an estimate of the EPE curve.",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20708,
+          "text": "The smoothing spline problem (5.9) in Section 5.4 is posed in a regression\nsetting. It is typically straightforward to transfer this technology to other\ndomains. Here we consider logistic regression with a single quantitative\ninput X. The model is",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20709,
+          "text": "log Pr(Y = 1|X = x)",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20710,
+          "text": "Pr(Y = 0|X = x) = f(x),\n(5.28)",
+          "type": "equation",
+          "page": 179
+        },
+        {
+          "id": 20711,
+          "text": "which implies",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20712,
+          "text": "Pr(Y = 1|X = x) =\nef(x)",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20713,
+          "text": "1 + ef(x) .\n(5.29)",
+          "type": "equation",
+          "page": 179
+        },
+        {
+          "id": 20714,
+          "text": "Fitting f(x) in a smooth fashion leads to a smooth estimate of the condi-\ntional probability Pr(Y = 1|x), which can be used for classi\ufb01cation or risk\nscoring.\nWe construct the penalized log-likelihood criterion",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20715,
+          "text": "\u2113(f; \u03bb)\n=",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20716,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20717,
+          "text": "i=1\n[yi log p(xi) + (1 \u2212yi) log(1 \u2212p(xi))] \u22121",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20718,
+          "text": "2\u03bb\n\u0004\n{f \u2032\u2032(t)}2dt",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20719,
+          "text": "=",
+          "type": "equation",
+          "page": 179
+        },
+        {
+          "id": 20720,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20721,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20722,
+          "text": "yif(xi) \u2212log(1 + ef(xi))\n\r\n\u22121",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20723,
+          "text": "2\u03bb\n\u0004\n{f \u2032\u2032(t)}2dt,\n(5.30)",
+          "type": "equation",
+          "page": 179
+        },
+        {
+          "id": 20724,
+          "text": "where we have abbreviated p(x) = Pr(Y = 1|x). The \ufb01rst term in this ex-\npression is the log-likelihood based on the binomial distribution (c.f. Chap-\nter 4, page 120). Arguments similar to those used in Section 5.4 show that\nthe optimal f is a \ufb01nite-dimensional natural spline with knots at the unique",
+          "type": "narrative",
+          "page": 179
+        }
+      ]
+    },
+    {
+      "id": 247,
+      "name": "penalized log-likelihood",
+      "description": "A log-likelihood criterion augmented with a roughness penalty for fitting smooth nonparametric models.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "We construct the penalized log-likelihood criterion",
+      "existing_formula": "\\ell(f; \\lambda) = \\sum_{i=1}^N [y_i \\log p(x_i) + (1-y_i)\\log(1-p(x_i))] - \\frac{\\lambda}{2} \\int [f''(t)]^2 dt",
+      "paragraphs": [
+        {
+          "id": 20697,
+          "text": "CV( \u02c6f\u03bb)\n=\n1\nN",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20698,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20699,
+          "text": "i=1\n(yi \u2212\u02c6f (\u2212i)\n\u03bb\n(xi))2\n(5.26)",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20700,
+          "text": "=\n1\nN",
+          "type": "equation",
+          "page": 179
+        },
+        {
+          "id": 20701,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20702,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20703,
+          "text": "\u0011\nyi \u2212\u02c6f\u03bb(xi)\n1 \u2212S\u03bb(i, i)",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20704,
+          "text": "\u00122",
+          "type": "equation",
+          "page": 179
+        },
+        {
+          "id": 20705,
+          "text": ",\n(5.27)",
+          "type": "equation",
+          "page": 179
+        },
+        {
+          "id": 20706,
+          "text": "which can (remarkably) be computed for each value of \u03bb from the original\n\ufb01tted values and the diagonal elements S\u03bb(i, i) of S\u03bb (Exercise 5.13).\nThe EPE and CV curves have a similar shape, but the entire CV curve\nis above the EPE curve. For some realizations this is reversed, and overall\nthe CV curve is approximately unbiased as an estimate of the EPE curve.",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20708,
+          "text": "The smoothing spline problem (5.9) in Section 5.4 is posed in a regression\nsetting. It is typically straightforward to transfer this technology to other\ndomains. Here we consider logistic regression with a single quantitative\ninput X. The model is",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20709,
+          "text": "log Pr(Y = 1|X = x)",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20710,
+          "text": "Pr(Y = 0|X = x) = f(x),\n(5.28)",
+          "type": "equation",
+          "page": 179
+        },
+        {
+          "id": 20711,
+          "text": "which implies",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20712,
+          "text": "Pr(Y = 1|X = x) =\nef(x)",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20713,
+          "text": "1 + ef(x) .\n(5.29)",
+          "type": "equation",
+          "page": 179
+        },
+        {
+          "id": 20714,
+          "text": "Fitting f(x) in a smooth fashion leads to a smooth estimate of the condi-\ntional probability Pr(Y = 1|x), which can be used for classi\ufb01cation or risk\nscoring.\nWe construct the penalized log-likelihood criterion",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20715,
+          "text": "\u2113(f; \u03bb)\n=",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20716,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20717,
+          "text": "i=1\n[yi log p(xi) + (1 \u2212yi) log(1 \u2212p(xi))] \u22121",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20718,
+          "text": "2\u03bb\n\u0004\n{f \u2032\u2032(t)}2dt",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20719,
+          "text": "=",
+          "type": "equation",
+          "page": 179
+        },
+        {
+          "id": 20720,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20721,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20722,
+          "text": "yif(xi) \u2212log(1 + ef(xi))\n\r\n\u22121",
+          "type": "narrative",
+          "page": 179
+        },
+        {
+          "id": 20723,
+          "text": "2\u03bb\n\u0004\n{f \u2032\u2032(t)}2dt,\n(5.30)",
+          "type": "equation",
+          "page": 179
+        },
+        {
+          "id": 20724,
+          "text": "where we have abbreviated p(x) = Pr(Y = 1|x). The \ufb01rst term in this ex-\npression is the log-likelihood based on the binomial distribution (c.f. Chap-\nter 4, page 120). Arguments similar to those used in Section 5.4 show that\nthe optimal f is a \ufb01nite-dimensional natural spline with knots at the unique",
+          "type": "narrative",
+          "page": 179
+        }
+      ]
+    },
+    {
+      "id": 248,
+      "name": "weighted smoothing spline",
+      "description": "A smoothing spline fit with observation-specific weights, arising in iterative algorithms like Newton-Raphson for GLMs.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "Referring back to (5.12) and (5.14), we see that the update fits a weighted smoothing spline to the working response z",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 20725,
+          "text": "162\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20726,
+          "text": "values of x. This means that we can represent f(x) = \tN\nj=1 Nj(x)\u03b8j. We\ncompute the \ufb01rst and second derivatives",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20727,
+          "text": "\u2202\u2113(\u03b8)",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20728,
+          "text": "\u2202\u03b8\n=\nNT (y \u2212p) \u2212\u03bb\u03a9\u03b8,\n(5.31)",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20729,
+          "text": "\u22022\u2113(\u03b8)\n\u2202\u03b8\u2202\u03b8T\n=\n\u2212NT WN \u2212\u03bb\u03a9,\n(5.32)",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20730,
+          "text": "where p is the N-vector with elements p(xi), and W is a diagonal matrix\nof weights p(xi)(1 \u2212p(xi)). The \ufb01rst derivative (5.31) is nonlinear in \u03b8, so\nwe need to use an iterative algorithm as in Section 4.4.1. Using Newton\u2013\nRaphson as in (4.23) and (4.26) for linear logistic regression, the update\nequation can be written",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20731,
+          "text": "\u03b8new\n=\n(NT WN + \u03bb\u03a9)\u22121NT W\n\u0005\nN\u03b8old + W\u22121(y \u2212p)\n\u0006",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20732,
+          "text": "=\n(NT WN + \u03bb\u03a9)\u22121NT Wz.\n(5.33)",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20733,
+          "text": "We can also express this update in terms of the \ufb01tted values",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20734,
+          "text": "f new\n=\nN(NT WN + \u03bb\u03a9)\u22121NT W\n\u0005\nf old + W\u22121(y \u2212p)\n\u0006",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20735,
+          "text": "=\nS\u03bb,wz.\n(5.34)",
+          "type": "equation",
+          "page": 180
+        },
+        {
+          "id": 20736,
+          "text": "Referring back to (5.12) and (5.14), we see that the update \ufb01ts a weighted\nsmoothing spline to the working response z (Exercise 5.12).\nThe form of (5.34) is suggestive. It is tempting to replace S\u03bb,w by any\nnonparametric (weighted) regression operator, and obtain general fami-\nlies of nonparametric logistic regression models. Although here x is one-\ndimensional, this procedure generalizes naturally to higher-dimensional x.\nThese extensions are at the heart of generalized additive models, which we\npursue in Chapter 9.",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20738,
+          "text": "So far we have focused on one-dimensional spline models. Each of the ap-\nproaches have multidimensional analogs. Suppose X \u2208IR2, and we have\na basis of functions h1k(X1), k = 1, . . . , M1 for representing functions of\ncoordinate X1, and likewise a set of M2 functions h2k(X2) for coordinate\nX2. Then the M1 \u00d7 M2 dimensional tensor product basis de\ufb01ned by",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20739,
+          "text": "gjk(X) = h1j(X1)h2k(X2), j = 1, . . . , M1, k = 1, . . . , M2\n(5.35)",
+          "type": "equation",
+          "page": 180
+        },
+        {
+          "id": 20740,
+          "text": "can be used for representing a two-dimensional function:",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20741,
+          "text": "g(X) =",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20742,
+          "text": "M1\n\u0002",
+          "type": "equation",
+          "page": 180
+        },
+        {
+          "id": 20743,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20744,
+          "text": "M2\n\u0002",
+          "type": "equation",
+          "page": 180
+        },
+        {
+          "id": 20745,
+          "text": "k=1\n\u03b8jkgjk(X).\n(5.36)",
+          "type": "narrative",
+          "page": 180
+        },
+        {
+          "id": 20750,
+          "text": "164\n5. Basis Expansions and Regularization",
+          "type": "narrative",
+          "page": 182
+        },
+        {
+          "id": 20751,
+          "text": "Additive Natural Cubic Splines - 4 df each",
+          "type": "narrative",
+          "page": 182
+        },
+        {
+          "id": 20752,
+          "text": ".. .\n. . .\n. . . .\n. . . . .\n. . . . . .\n. . . . . . .\n. . . . . . .\n. . . . . . . .\n. . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+          "type": "narrative",
+          "page": 182
+        },
+        {
+          "id": 20753,
+          "text": ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . . . . . . . .\n. . . . . . .\n. . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . . .\n. . . . .\n. . . . . . . . . . . . . .\n. . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . . .\n. . . . . . . . .\n. . . . . . . . .\n. . . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . . .\n. . . . . . .\n. . . . . . .\n. . . . . . .\n. . . . . .\n. . . . . .\n. . . . .\n. . . . .\n. . . . .\n. . . .\n. . . .\n. . . .\n. . .\n. . .\n. . .\n. .\n. .\n. ...",
+          "type": "narrative",
+          "page": 182
+        },
+        {
+          "id": 20754,
+          "text": "o\no",
+          "type": "narrative",
+          "page": 182
+        },
+        {
+          "id": 20755,
+          "text": "o\no\no",
+          "type": "narrative",
+          "page": 182
+        },
+        {
+          "id": 20756,
+          "text": "o",
+          "type": "narrative",
+          "page": 182
+        },
+        {
+          "id": 20757,
+          "text": "o",
+          "type": "narrative",
+          "page": 182
+        },
+        {
+          "id": 20758,
+          "text": "o",
+          "type": "narrative",
+          "page": 182
+        },
+        {
+          "id": 20759,
+          "text": "o",
+          "type": "narrative",
+          "page": 182
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "equivalent kernel",
+      "description": "yi (the li(x0) do not involve y). These weights li(x0) combine the weight-\ning kernel K\u03bb(x0, \u00b7) and the least squares operations, and are sometimes\nreferred to as the equivalent kernel. Figure 6.4 illustrates the e\ufb00ect of lo-\ncal linear regression on the equivalent kernel. Historically, the bias in the\nNadaraya\u2013Watson and other local average kernel methods were corrected\nby modifying the kernel. These modi\ufb01cations were based on theoretical\nasymptotic mean-square-error considerations, and besides being tedious to\nimplement, are only approximate for \ufb01nite sample sizes. Local linear re-\ngression automatically modi\ufb01es the kernel to correct the bias exactly to\n\ufb01rst order, a phenomenon dubbed as automatic kernel carpentry. Consider\nthe following expansion for E \u02c6f(x0), using the linearity of local regression\nand a series expansion of the true function f around x0,",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "These weights li(x0) combine the weighting kernel K\u03bb(x0, \u00b7) and the least squares operations, and are sometimes referred to as the equivalent kernel.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 23760,
+          "text": "192\n6. Kernel Smoothing Methods",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23761,
+          "text": "Nearest-Neighbor Kernel",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23762,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23763,
+          "text": "-1.0\n-0.5\n0.0\n0.5\n1.0\n1.5",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23764,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23765,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23766,
+          "text": "OO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23767,
+          "text": "OO\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23768,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23769,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23770,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23771,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23772,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23773,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23774,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23775,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23776,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23777,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23778,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23779,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23780,
+          "text": "OOO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23781,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23782,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23783,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23784,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23785,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23786,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23787,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23788,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23789,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        }
+      ]
+    },
+    {
+      "id": 70,
+      "name": "expected prediction error",
+      "description": "The expected test error averaging over both the randomness in test data and the randomness in the training set, denoted Err = E_T E_{X\u2070,Y\u2070}[L(Y\u2070, f\u0302(X\u2070)|T)].",
+      "category": "validation",
+      "subcategory": "validation",
+      "existing_quote": "A related quantity is the expected prediction error (or expected test error) where this expectation averages over everything that is random, including the randomness in the training set that produced f\u0302.",
+      "existing_formula": "\\text{Err} = E_T E_{X^0,Y^0}[L(Y^0, \\hat{f}(X^0)|T)]",
+      "paragraphs": [
+        {
+          "id": 23760,
+          "text": "192\n6. Kernel Smoothing Methods",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23761,
+          "text": "Nearest-Neighbor Kernel",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23762,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23763,
+          "text": "-1.0\n-0.5\n0.0\n0.5\n1.0\n1.5",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23764,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23765,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23766,
+          "text": "OO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23767,
+          "text": "OO\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23768,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23769,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23770,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23771,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23772,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23773,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23774,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23775,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23776,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23777,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23778,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23779,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23780,
+          "text": "OOO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23781,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23782,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23783,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23784,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23785,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23786,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23787,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23788,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23789,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        }
+      ]
+    },
+    {
+      "id": 71,
+      "name": "training error",
+      "description": "The average loss over the training sample, which consistently decreases with model complexity and is not a good estimate of test error because it is overly optimistic.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "Training error is not a good estimate of the test error. Training error consistently decreases with model complexity, typically dropping to zero if we increase the model complexity enough.",
+      "existing_formula": "\\overline{\\text{err}} = \\frac{1}{N}\\sum_{i=1}^N L(y_i, \\hat{f}(x_i))",
+      "paragraphs": [
+        {
+          "id": 23760,
+          "text": "192\n6. Kernel Smoothing Methods",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23761,
+          "text": "Nearest-Neighbor Kernel",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23762,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23763,
+          "text": "-1.0\n-0.5\n0.0\n0.5\n1.0\n1.5",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23764,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23765,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23766,
+          "text": "OO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23767,
+          "text": "OO\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23768,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23769,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23770,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23771,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23772,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23773,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23774,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23775,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23776,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23777,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23778,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23779,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23780,
+          "text": "OOO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23781,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23782,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23783,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23784,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23785,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23786,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23787,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23788,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23789,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "name": "bias-variance decomposition",
+      "description": "The decomposition of expected prediction error into irreducible error \u03c3\u00b2_\u03b5, squared bias [Ef\u0302(x\u2080)-f(x\u2080)]\u00b2, and variance E[f\u0302(x\u2080)-Ef\u0302(x\u2080)]\u00b2. More complex models have lower bias but higher variance.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "Err(x\u2080) = \u03c3\u00b2_\u03b5 + [Ef\u0302(x\u2080) - f(x\u2080)]\u00b2 + E[f\u0302(x\u2080) - Ef\u0302(x\u2080)]\u00b2. The first term is the variance of the target around its true mean f(x\u2080), and cannot be avoided no matter how well we estimate f(x\u2080). The second term is the squared bias, the amount by which the average of our estimate differs from the true mean; the last term is the variance",
+      "existing_formula": "\\text{Err}(x_0) = \\sigma^2_\\varepsilon + [E\\hat{f}(x_0) - f(x_0)]^2 + E[\\hat{f}(x_0) - E\\hat{f}(x_0)]^2",
+      "paragraphs": [
+        {
+          "id": 23760,
+          "text": "192\n6. Kernel Smoothing Methods",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23761,
+          "text": "Nearest-Neighbor Kernel",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23762,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23763,
+          "text": "-1.0\n-0.5\n0.0\n0.5\n1.0\n1.5",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23764,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23765,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23766,
+          "text": "OO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23767,
+          "text": "OO\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23768,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23769,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23770,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23771,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23772,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23773,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23774,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23775,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23776,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23777,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23778,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23779,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23780,
+          "text": "OOO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23781,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23782,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23783,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23784,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23785,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23786,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23787,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23788,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23789,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        }
+      ]
+    },
+    {
+      "id": 111,
+      "name": "in-sample error",
+      "description": "The expected prediction error for N new response values at each of the training input points, denoted Err_in = (1/N)\u03a3\u1d62 E_Y\u2070[L(Y\u1d62\u2070, f\u0302(x\u1d62))|T], used to measure optimism of training error.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "The nature of the optimism in err is easiest to understand when we focus instead on the in-sample error Err_in = (1/N)\u03a3\u1d62 E_Y\u2070[L(Y\u1d62\u2070, f\u0302(x\u1d62))|T]",
+      "existing_formula": "\\text{Err}_{in} = \\frac{1}{N}\\sum_{i=1}^N E_{Y_i^0}[L(Y_i^0, \\hat{f}(x_i))|T]",
+      "paragraphs": [
+        {
+          "id": 23760,
+          "text": "192\n6. Kernel Smoothing Methods",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23761,
+          "text": "Nearest-Neighbor Kernel",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23762,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23763,
+          "text": "-1.0\n-0.5\n0.0\n0.5\n1.0\n1.5",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23764,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23765,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23766,
+          "text": "OO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23767,
+          "text": "OO\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23768,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23769,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23770,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23771,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23772,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23773,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23774,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23775,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23776,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23777,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23778,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23779,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23780,
+          "text": "OOO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23781,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23782,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23783,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23784,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23785,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23786,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23787,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23788,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23789,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        }
+      ]
+    },
+    {
+      "id": 262,
+      "name": "cp statistic",
+      "description": "An estimate of expected prediction error for linear models under squared error loss, equal to training error plus (2d/N)\u03c3\u0302\u00b2_\u03b5 where d is the number of parameters, adjusting for optimism.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "Using expression (7.24), applicable when d parameters are fit under squared error loss, leads to a version of the so-called C\u209a statistic: \u0108\u209a = err + 2(d/N)\u03c3\u0302\u00b2_\u03b5",
+      "existing_formula": "C_p = \\overline{\\text{err}} + 2\\frac{d}{N}\\hat{\\sigma}^2_\\varepsilon",
+      "paragraphs": [
+        {
+          "id": 23760,
+          "text": "192\n6. Kernel Smoothing Methods",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23761,
+          "text": "Nearest-Neighbor Kernel",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23762,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23763,
+          "text": "-1.0\n-0.5\n0.0\n0.5\n1.0\n1.5",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23764,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23765,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23766,
+          "text": "OO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23767,
+          "text": "OO\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23768,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23769,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23770,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23771,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23772,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23773,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23774,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23775,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23776,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23777,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23778,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23779,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23780,
+          "text": "OOO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23781,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23782,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23783,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23784,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23785,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23786,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23787,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23788,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23789,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        }
+      ]
+    },
+    {
+      "id": 263,
+      "name": "automatic kernel carpentry",
+      "description": "The phenomenon whereby local linear regression automatically modifies the kernel to correct the bias exactly to first order, without requiring manual kernel modifications based on asymptotic theory.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "Local linear regression automatically modifies the kernel to correct the bias exactly to first order, a phenomenon dubbed as automatic kernel carpentry.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 23760,
+          "text": "192\n6. Kernel Smoothing Methods",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23761,
+          "text": "Nearest-Neighbor Kernel",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23762,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23763,
+          "text": "-1.0\n-0.5\n0.0\n0.5\n1.0\n1.5",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23764,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23765,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23766,
+          "text": "OO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23767,
+          "text": "OO\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23768,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23769,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23770,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23771,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23772,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23773,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23774,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23775,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23776,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23777,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23778,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23779,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23780,
+          "text": "OOO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23781,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23782,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23783,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23784,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23785,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23786,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23787,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23788,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23789,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        }
+      ]
+    },
+    {
+      "id": 268,
+      "name": "local polynomial regression",
+      "description": "An extension of local linear regression that fits polynomials of degree d locally, providing bias reduction at the cost of increased variance. Local quadratic regression (d=2) can correct curvature bias in the interior of the domain.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "We can fit local polynomial fits of any degree d, with solution f\u0302(x0) = \u03b1\u0302(x0) + \u03a3\u2c7c\u208c\u2081\u1d48 \u03b2\u0302\u2c7c(x0)x\u2c7c\u2080. In fact, an expansion such as (6.10) will tell us that the bias will only have components of degree d+1 and higher",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 23760,
+          "text": "192\n6. Kernel Smoothing Methods",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23761,
+          "text": "Nearest-Neighbor Kernel",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23762,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23763,
+          "text": "-1.0\n-0.5\n0.0\n0.5\n1.0\n1.5",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23764,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23765,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23766,
+          "text": "OO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23767,
+          "text": "OO\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23768,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23769,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23770,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23771,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23772,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23773,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23774,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23775,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23776,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23777,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23778,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23779,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23780,
+          "text": "OOO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23781,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23782,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23783,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23784,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23785,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23786,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23787,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23788,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23789,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        }
+      ]
+    },
+    {
+      "id": 269,
+      "name": "trimming the hills and filling the valleys",
+      "description": "A bias phenomenon in local linear fits where the estimator tends to be biased in regions of curvature of the true function, underestimating peaks and overestimating valleys.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "Local linear fits tend to be biased in regions of curvature of the true function, a phenomenon referred to as trimming the hills and filling the valleys.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 23760,
+          "text": "192\n6. Kernel Smoothing Methods",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23761,
+          "text": "Nearest-Neighbor Kernel",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23762,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23763,
+          "text": "-1.0\n-0.5\n0.0\n0.5\n1.0\n1.5",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23764,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23765,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23766,
+          "text": "OO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23767,
+          "text": "OO\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23768,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23769,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23770,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23771,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23772,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23773,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23774,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23775,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23776,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23777,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23778,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23779,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23780,
+          "text": "OOO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23781,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23782,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23783,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23784,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23785,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23786,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23787,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23788,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23789,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        }
+      ]
+    },
+    {
+      "id": 270,
+      "name": "nadaraya-watson kernel smoother",
+      "description": "A kernel smoothing method that fits a constant locally with weights supplied by a kernel, which suffers from boundary bias that can be corrected by local linear regression.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "The Nadaraya\u2013Watson kernel smoother fits a constant locally with weights supplied by a p-dimensional kernel.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 23760,
+          "text": "192\n6. Kernel Smoothing Methods",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23761,
+          "text": "Nearest-Neighbor Kernel",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23762,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23763,
+          "text": "-1.0\n-0.5\n0.0\n0.5\n1.0\n1.5",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23764,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23765,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23766,
+          "text": "OO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23767,
+          "text": "OO\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23768,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23769,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23770,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23771,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23772,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23773,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23774,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23775,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23776,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23777,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23778,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23779,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23780,
+          "text": "OOO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23781,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23782,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23783,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23784,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23785,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23786,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23787,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23788,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23789,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        }
+      ]
+    },
+    {
+      "id": 271,
+      "name": "varying coefficient models",
+      "description": "A class of structured regression models where the model is conditionally linear for some predictors, but the coefficients are allowed to vary smoothly as a function of other covariates, fit using locally weighted least squares.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "For given Z, this is a linear model, but each of the coefficients can vary with Z. It is natural to fit such a model by locally weighted least squares",
+      "existing_formula": "Y = \\alpha(Z) + \\beta_1(Z)X_1 + \\cdots + \\beta_p(Z)X_p + \\varepsilon",
+      "paragraphs": [
+        {
+          "id": 23760,
+          "text": "192\n6. Kernel Smoothing Methods",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23761,
+          "text": "Nearest-Neighbor Kernel",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23762,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23763,
+          "text": "-1.0\n-0.5\n0.0\n0.5\n1.0\n1.5",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23764,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23765,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23766,
+          "text": "OO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23767,
+          "text": "OO\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23768,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23769,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23770,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23771,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23772,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23773,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23774,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23775,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23776,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23777,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23778,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23779,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23780,
+          "text": "OOO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23781,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23782,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23783,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23784,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23785,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23786,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23787,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23788,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23789,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        }
+      ]
+    },
+    {
+      "id": 272,
+      "name": "local likelihood",
+      "description": "A method that generalizes local regression by using likelihood-based models fit locally, allowing parametric models to be made locally flexible. Any parametric model can be made local if the fitting method accommodates observation weights.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "Local likelihood allows a relaxation from a globally linear model to one that is locally linear.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 23760,
+          "text": "192\n6. Kernel Smoothing Methods",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23761,
+          "text": "Nearest-Neighbor Kernel",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23762,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23763,
+          "text": "-1.0\n-0.5\n0.0\n0.5\n1.0\n1.5",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23764,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23765,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23766,
+          "text": "OO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23767,
+          "text": "OO\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23768,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23769,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23770,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23771,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23772,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23773,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23774,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23775,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23776,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23777,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23778,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23779,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23780,
+          "text": "OOO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23781,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23782,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23783,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23784,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23785,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23786,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23787,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23788,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23789,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        }
+      ]
+    },
+    {
+      "id": 273,
+      "name": "parzen density estimate",
+      "description": "A smooth kernel density estimator that counts observations close to a point with weights that decrease with distance, using a kernel such as the Gaussian. It is the convolution of the empirical distribution with a smoothing kernel.",
+      "category": "model",
+      "subcategory": "dgp",
+      "existing_quote": "The Parzen density estimate is preferred because it counts observations close to x0 with weights that decrease with distance from x0.",
+      "existing_formula": "\\hat{f}(x_0) = \\frac{1}{N\\lambda} \\sum_{i=1}^N K_\\lambda(x_0, x_i)",
+      "paragraphs": [
+        {
+          "id": 23760,
+          "text": "192\n6. Kernel Smoothing Methods",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23761,
+          "text": "Nearest-Neighbor Kernel",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23762,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23763,
+          "text": "-1.0\n-0.5\n0.0\n0.5\n1.0\n1.5",
+          "type": "equation",
+          "page": 210
+        },
+        {
+          "id": 23764,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23765,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23766,
+          "text": "OO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23767,
+          "text": "OO\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23768,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23769,
+          "text": "O\nO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23770,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23771,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23772,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23773,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23774,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23775,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23776,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23777,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23778,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23779,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23780,
+          "text": "OOO",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23781,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23782,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23783,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23784,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23785,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23786,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23787,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23788,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        },
+        {
+          "id": 23789,
+          "text": "O",
+          "type": "narrative",
+          "page": 210
+        }
+      ]
+    }
+  ]
+}

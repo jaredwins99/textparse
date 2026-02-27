@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Variance-Covariance Matrix — ESL §3.1</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f1117; color: #e0e0e0; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  .header { background: #1a1d27; border-bottom: 1px solid #2a2d3e; padding: 24px 32px; }
+  .header-meta { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .header-meta span { color: #818cf8; }
+  h1 { font-size: 22px; font-weight: 600; color: #f0f0f8; margin-bottom: 10px; }
+  .formula-block { background: #12151f; border: 1px solid #2a2d3e; border-left: 3px solid #818cf8; border-radius: 6px; padding: 14px 20px; display: inline-block; margin-top: 6px; }
+  .main { display: grid; grid-template-columns: 1fr 340px; gap: 20px; padding: 24px 32px; max-width: 1400px; }
+  .viz-col { display: flex; flex-direction: column; gap: 16px; }
+  .viz-panel { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 10px; padding: 20px; }
+  .viz-title { font-size: 13px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+  .side-panels { display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 10px; padding: 18px; }
+  .panel-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #2a2d3e; }
+  .facts .panel-title { color: #34d399; }
+  .guarantees .panel-title { color: #f59e0b; }
+  .related .panel-title { color: #818cf8; }
+  blockquote { font-style: italic; color: #9ca3af; font-size: 13px; line-height: 1.6; border-left: 2px solid #34d399; padding-left: 12px; margin: 0; }
+  .cite { font-style: normal; color: #6b7280; font-size: 11px; margin-top: 6px; display: block; }
+  .guarantee-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+  .badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px; }
+  .badge-yes { background: #064e3b; color: #34d399; }
+  .badge-no { background: #450a0a; color: #f87171; }
+  .badge-cond { background: #451a03; color: #fb923c; }
+  .related-list { list-style: none; }
+  .related-list li { font-size: 13px; color: #9ca3af; padding: 4px 0; border-bottom: 1px solid #1f2937; }
+  .related-list li:last-child { border-bottom: none; }
+  .related-list a { color: '#818cf8'; text-decoration: none; }
+  .related-list a { color: #818cf8; text-decoration: none; }
+  .related-list a:hover { text-decoration: underline; }
+  .controls { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; }
+  label { font-size: 13px; color: #9ca3af; }
+  input[type=range] { accent-color: #818cf8; width: 140px; }
+  .val-display { font-size: 13px; color: #e0e0e0; font-weight: 600; min-width: 40px; }
+  .matrix-display { background: #12151f; border: 1px solid #2a2d3e; border-radius: 8px; padding: 14px 18px; display: flex; gap: 32px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+  .matrix-item { text-align: center; }
+  .matrix-label { font-size: 11px; color: #6b7280; text-transform: uppercase; margin-bottom: 6px; }
+  .matrix-val { font-size: 16px; font-weight: 700; }
+  .variance-warn { color: #f87171; }
+  .variance-ok { color: #34d399; }
+  .note { font-size: 12px; color: #6b7280; margin-top: 8px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-meta">ESL <span>§3.1</span> · ID 174 · Category: <span>Principles / Guarantees</span></div>
+  <h1>Variance-Covariance Matrix of Least Squares Estimates</h1>
+  <div class="formula-block">
+    \( \text{Var}(\hat{\boldsymbol\beta}) = (X^\top X)^{-1}\sigma^2 \)
+  </div>
+</div>
+
+<div class="main">
+  <div class="viz-col">
+    <div class="viz-panel">
+      <div class="viz-title">Confidence Ellipse for (β̂₁, β̂₂) — Multicollinearity Effect</div>
+
+      <div class="controls">
+        <label>Predictor correlation ρ:
+          <input type="range" id="rhoSlider" min="-0.98" max="0.98" step="0.02" value="0">
+          <span class="val-display" id="rhoVal">0.00</span>
+        </label>
+        <label>σ²:
+          <input type="range" id="sigmaSlider" min="0.1" max="3" step="0.1" value="1">
+          <span class="val-display" id="sigmaVal">1.0</span>
+        </label>
+        <label>N:
+          <input type="range" id="nSlider" min="20" max="300" step="10" value="100">
+          <span class="val-display" id="nVal">100</span>
+        </label>
+      </div>
+
+      <div class="matrix-display">
+        <div class="matrix-item">
+          <div class="matrix-label">Var(β̂₁)</div>
+          <div class="matrix-val" id="var1">—</div>
+        </div>
+        <div class="matrix-item">
+          <div class="matrix-label">Var(β̂₂)</div>
+          <div class="matrix-val" id="var2">—</div>
+        </div>
+        <div class="matrix-item">
+          <div class="matrix-label">Cov(β̂₁,β̂₂)</div>
+          <div class="matrix-val" id="cov12">—</div>
+        </div>
+        <div class="matrix-item">
+          <div class="matrix-label">Variance inflation</div>
+          <div class="matrix-val" id="vif">—</div>
+        </div>
+      </div>
+
+      <div id="ellplot" style="width:100%;height:420px;"></div>
+      <div class="note">
+        The ellipse shows the 95% confidence region for (β̂₁, β̂₂). As |ρ| → 1, the matrix (XᵀX)⁻¹ blows up,
+        elongating the ellipse — coefficient estimates become wildly uncertain even though the fit is fine.
+        VIF = 1/(1−ρ²) is the variance inflation factor.
+      </div>
+    </div>
+  </div>
+
+  <div class="side-panels">
+    <div class="panel facts">
+      <div class="panel-title">Book Quotes</div>
+      <blockquote>
+        "The variance–covariance matrix of the least squares parameter estimates is Var(β̂) = (XᵀX)⁻¹σ²"
+        <span class="cite">— ESL §3.1</span>
+      </blockquote>
+      <blockquote style="margin-top:12px;">
+        "We estimate σ² by σ̂² = Σᵢ(yᵢ − ŷᵢ)²/(N−p−1). The N−p−1 rather than N−p in the denominator makes σ̂² an unbiased estimate."
+        <span class="cite">— ESL §3.1</span>
+      </blockquote>
+    </div>
+
+    <div class="panel guarantees">
+      <div class="panel-title">Statistical Properties</div>
+      <div class="guarantee-row"><span class="badge badge-yes">YES</span> BLUE — Gauss-Markov theorem</div>
+      <div class="guarantee-row"><span class="badge badge-yes">YES</span> Unbiased: E[β̂] = β</div>
+      <div class="guarantee-row"><span class="badge badge-yes">YES</span> Consistent (N → ∞)</div>
+      <div class="guarantee-row"><span class="badge badge-cond">COND</span> Low variance only if XᵀX well-conditioned</div>
+      <div class="guarantee-row"><span class="badge badge-no">CAUTION</span> Variance explodes under multicollinearity</div>
+      <div style="margin-top:10px;font-size:12px;color:#6b7280;line-height:1.6;">
+        BLUE = Best Linear Unbiased Estimator. Even with large variance, OLS is still unbiased — but useless for inference when predictors are nearly collinear.
+      </div>
+    </div>
+
+    <div class="panel related">
+      <div class="panel-title">Related Concepts</div>
+      <ul class="related-list">
+        <li><a href="172-z-score-regression.html">Z-score for coefficients (ID 172)</a></li>
+        <li><a href="176-multicollinearity.html">Multicollinearity (ID 176)</a></li>
+        <li><a href="177-bias-variance-tradeoff.html">Bias-variance tradeoff (ID 177)</a></li>
+        <li>Gauss-Markov theorem</li>
+        <li>Variance Inflation Factor (VIF)</li>
+        <li>Ridge regression — §3.4</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+// (XtX)^-1 for 2 correlated predictors with unit variance and correlation rho
+// Sigma_X = [[1,rho],[rho,1]], so (N * Sigma_X)^-1 = (1/N) * [[1,-rho],[-rho,1]] / (1-rho^2)
+
+function getCovMatrix(rho, sigma2, N) {
+  const det = 1 - rho * rho;
+  const scale = sigma2 / (N * det);
+  return {
+    v11: scale,
+    v22: scale,
+    v12: -rho * scale
+  };
+}
+
+function ellipsePoints(cx, cy, cov, npts, chiSq) {
+  // 95% CI: chi-squared(2) = 5.991
+  const { v11, v22, v12 } = cov;
+  // Eigendecomposition of 2x2
+  const trace = v11 + v22;
+  const det = v11 * v22 - v12 * v12;
+  const disc = Math.sqrt(Math.max(0, (trace/2)**2 - det));
+  const l1 = trace/2 + disc;
+  const l2 = trace/2 - disc;
+  // Eigenvectors
+  let ex1, ey1;
+  if (Math.abs(v12) > 1e-10) {
+    const norm1 = Math.sqrt((l1 - v22)**2 + v12**2);
+    ex1 = (l1 - v22) / norm1;
+    ey1 = v12 / norm1;
+  } else {
+    ex1 = 1; ey1 = 0;
+  }
+  const ex2 = -ey1, ey2 = ex1;
+
+  const a = Math.sqrt(l1 * chiSq);
+  const b = Math.sqrt(Math.max(0, l2 * chiSq));
+
+  const xs = [], ys = [];
+  for (let i = 0; i <= npts; i++) {
+    const t = (2 * Math.PI * i) / npts;
+    const x = a * Math.cos(t);
+    const y = b * Math.sin(t);
+    xs.push(cx + x * ex1 + y * ex2);
+    ys.push(cy + x * ey1 + y * ey2);
+  }
+  return { xs, ys };
+}
+
+function buildPlot(rho, sigma2, N) {
+  const cov = getCovMatrix(rho, sigma2, N);
+  const vif = 1 / (1 - rho * rho);
+  const baseVar = sigma2 / N;
+
+  document.getElementById('var1').textContent = cov.v11.toFixed(4);
+  document.getElementById('var2').textContent = cov.v22.toFixed(4);
+  document.getElementById('cov12').textContent = cov.v12.toFixed(4);
+
+  const vifDisplay = document.getElementById('vif');
+  vifDisplay.textContent = vif.toFixed(2) + 'x';
+  vifDisplay.className = 'matrix-val ' + (vif > 4 ? 'variance-warn' : vif > 2 ? '' : 'variance-ok');
+  vifDisplay.style.color = vif > 4 ? '#f87171' : vif > 2 ? '#f59e0b' : '#34d399';
+
+  const ellipse95 = ellipsePoints(0, 0, cov, 200, 5.991);
+  const ellipse68 = ellipsePoints(0, 0, cov, 200, 2.296);
+
+  const traceEll95 = {
+    x: ellipse95.xs, y: ellipse95.ys, type: 'scatter', mode: 'lines',
+    name: '95% CI',
+    line: { color: '#818cf8', width: 2 },
+    fill: 'toself', fillcolor: 'rgba(129,140,248,0.07)',
+    hoverinfo: 'skip'
+  };
+  const traceEll68 = {
+    x: ellipse68.xs, y: ellipse68.ys, type: 'scatter', mode: 'lines',
+    name: '68% CI',
+    line: { color: '#34d399', width: 1.5, dash: 'dot' },
+    fill: 'toself', fillcolor: 'rgba(52,211,153,0.05)',
+    hoverinfo: 'skip'
+  };
+  const traceCenter = {
+    x: [0], y: [0], type: 'scatter', mode: 'markers',
+    name: 'True β',
+    marker: { color: '#f59e0b', size: 10, symbol: 'cross' },
+    hovertemplate: 'True (β₁, β₂) = (0, 0)<extra></extra>'
+  };
+
+  const axMax = Math.sqrt(cov.v11 * 5.991) * 2.5;
+
+  const layout = {
+    paper_bgcolor: '#1a1d27', plot_bgcolor: '#12151f',
+    font: { color: '#e0e0e0', family: 'Segoe UI, system-ui, sans-serif' },
+    xaxis: {
+      title: 'β̂₁', gridcolor: '#2a2d3e', color: '#9ca3af',
+      zeroline: true, zerolinecolor: '#4b5563',
+      range: [-axMax, axMax], scaleanchor: 'y', scaleratio: 1
+    },
+    yaxis: {
+      title: 'β̂₂', gridcolor: '#2a2d3e', color: '#9ca3af',
+      zeroline: true, zerolinecolor: '#4b5563',
+      range: [-axMax, axMax]
+    },
+    margin: { l: 55, r: 20, t: 20, b: 50 },
+    legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(0,0,0,0)', font: { size: 11 } },
+    annotations: [{
+      x: axMax * 0.6, y: axMax * 0.85,
+      text: `ρ = ${rho.toFixed(2)}<br>VIF = ${vif.toFixed(1)}x`,
+      showarrow: false,
+      font: { color: vif > 4 ? '#f87171' : '#9ca3af', size: 12 },
+      bgcolor: '#1a1d27', bordercolor: '#2a2d3e', borderpad: 6
+    }],
+    hoverlabel: { bgcolor: '#1a1d27', bordercolor: '#2a2d3e', font: { color: '#e0e0e0' } }
+  };
+
+  Plotly.react('ellplot', [traceEll95, traceEll68, traceCenter], layout, { responsive: true, displayModeBar: false });
+}
+
+const rhoSlider   = document.getElementById('rhoSlider');
+const sigmaSlider = document.getElementById('sigmaSlider');
+const nSlider     = document.getElementById('nSlider');
+
+function update() {
+  const rho    = parseFloat(rhoSlider.value);
+  const sigma2 = parseFloat(sigmaSlider.value);
+  const N      = parseInt(nSlider.value);
+  document.getElementById('rhoVal').textContent   = rho.toFixed(2);
+  document.getElementById('sigmaVal').textContent = sigma2.toFixed(1);
+  document.getElementById('nVal').textContent     = N;
+  buildPlot(rho, sigma2, N);
+}
+
+rhoSlider.addEventListener('input', update);
+sigmaSlider.addEventListener('input', update);
+nSlider.addEventListener('input', update);
+update();
+</script>
+</body>
+</html>

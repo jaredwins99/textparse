@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Canonical Correlation Analysis — ESL §3.7</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0d0d0d;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      padding: 24px;
+    }
+    header {
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 18px;
+      margin-bottom: 28px;
+    }
+    header h1 { font-size: 1.9rem; color: #f0f0f0; letter-spacing: -0.5px; }
+    header .meta { margin-top: 6px; color: #888; font-size: 0.9rem; }
+    header .formula {
+      margin-top: 12px;
+      background: #161616;
+      border-left: 3px solid #b07aff;
+      padding: 10px 16px;
+      border-radius: 4px;
+      font-size: 1rem;
+      color: #dcceff;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+    }
+    .viz-section {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .viz-card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .viz-card h2 { font-size: 1rem; color: #aaa; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .sidebar { display: flex; flex-direction: column; gap: 18px; }
+    .panel {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .panel h3 {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #666;
+      margin-bottom: 12px;
+    }
+    blockquote {
+      border-left: 3px solid #b07aff;
+      padding-left: 12px;
+      color: #cbbeed;
+      font-style: italic;
+      font-size: 0.92rem;
+    }
+    .guarantee-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid #1c1c1c;
+      font-size: 0.88rem;
+    }
+    .guarantee-row:last-child { border-bottom: none; }
+    .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; font-weight: 600; }
+    .yes  { background: #1a3a1a; color: #5de85d; }
+    .no   { background: #3a1a1a; color: #e85d5d; }
+    .cond { background: #2a2a1a; color: #e8c45d; }
+    .related-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    .tag { background: #1a1a2e; border: 1px solid #2e2e5e; color: #8899cc; padding: 3px 10px; border-radius: 14px; font-size: 0.8rem; }
+    .controls { margin-top: 14px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    label { font-size: 0.85rem; color: #aaa; }
+    input[type=range] { accent-color: #b07aff; cursor: pointer; }
+    .tab-row { display: flex; gap: 0; margin-bottom: 16px; }
+    .tab {
+      padding: 7px 18px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #888;
+      transition: all 0.15s;
+    }
+    .tab:first-child { border-radius: 6px 0 0 6px; }
+    .tab:last-child  { border-radius: 0 6px 6px 0; }
+    .tab.active { background: #1e1a30; border-color: #b07aff; color: #dcceff; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Canonical Correlation Analysis</h1>
+  <div class="meta">ID 160 &nbsp;·&nbsp; ESL Section 3.7 &nbsp;·&nbsp; Category: implementation / representation</div>
+  <div class="formula">
+    \(\max_{a,b} \; \mathrm{Corr}(\mathbf{X}a,\, \mathbf{Y}b)\) &nbsp;s.t.&nbsp; \(\mathrm{Var}(\mathbf{X}a)=\mathrm{Var}(\mathbf{Y}b)=1\)
+    &nbsp;&nbsp;&mdash;&nbsp;&nbsp;
+    \(\rho_k = \sigma_k(\boldsymbol{\Sigma}_{xx}^{-1/2}\boldsymbol{\Sigma}_{xy}\boldsymbol{\Sigma}_{yy}^{-1/2})\)
+  </div>
+</header>
+
+<div class="layout">
+  <div class="viz-section">
+    <div class="viz-card">
+      <div class="tab-row">
+        <div class="tab active" onclick="switchTab('scatter')">Canonical Variates</div>
+        <div class="tab" onclick="switchTab('corr')">Canonical Correlations</div>
+      </div>
+      <div id="view-scatter">
+        <h2>X-space and Y-space canonical directions (2D projection)</h2>
+        <div id="plotScatter" style="width:100%;height:400px;"></div>
+        <div class="controls">
+          <label>Pair shown: <input type="range" id="pairSlider" min="1" max="3" value="1" style="width:100px"> <span id="pairLabel">1</span></label>
+          <label>Corr strength: <input type="range" id="rhoSlider" min="10" max="95" value="70" style="width:120px"> <span id="rhoLabel">0.70</span></label>
+          <button id="regenBtn" style="background:#1a1a2e;border:1px solid #2e2e5e;color:#8899cc;padding:4px 14px;border-radius:6px;cursor:pointer;font-size:0.85rem;">Regenerate</button>
+        </div>
+        <p style="font-size:0.82rem;color:#666;margin-top:10px;">Each canonical pair (Uₖ, Vₖ) maximizes correlation between the X-linear combination Uₖ=Xaₖ and Y-linear combination Vₖ=Ybₖ, subject to orthogonality to previous pairs.</p>
+      </div>
+      <div id="view-corr" style="display:none;">
+        <h2>Canonical correlations ρ₁ ≥ ρ₂ ≥ … ≥ ρₖ (decreasing)</h2>
+        <div id="plotCorr" style="width:100%;height:400px;"></div>
+        <p style="font-size:0.82rem;color:#666;margin-top:10px;">Canonical correlations are the singular values of \(\Sigma_{xx}^{-1/2}\Sigma_{xy}\Sigma_{yy}^{-1/2}\). They are always ordered and at most min(p,q) of them.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="panel">
+      <h3>Book Quote</h3>
+      <blockquote>
+        "CCA finds uncorrelated linear combinations with successively maximized correlations. The solution is obtained via a generalized SVD of the cross-covariance matrix."
+      </blockquote>
+      <p style="margin-top:10px;font-size:0.82rem;color:#666;">— ESL §3.7</p>
+    </div>
+
+    <div class="panel">
+      <h3>Guarantees</h3>
+      <div class="guarantee-row">
+        <span>Unbiased estimator</span>
+        <span class="badge no">N/A</span>
+      </div>
+      <div class="guarantee-row">
+        <span>Canonical corrs unique</span>
+        <span class="badge yes">Yes</span>
+      </div>
+      <div class="guarantee-row">
+        <span>Directions uncorrelated</span>
+        <span class="badge yes">Yes</span>
+      </div>
+      <div class="guarantee-row">
+        <span>Prediction consistent</span>
+        <span class="badge cond">Via RRR</span>
+      </div>
+      <div class="guarantee-row">
+        <span>Requires n &gt; p+q</span>
+        <span class="badge no">Strict</span>
+      </div>
+      <div class="guarantee-row">
+        <span>Rotation invariant</span>
+        <span class="badge yes">Yes</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Key Facts</h3>
+      <ul style="font-size:0.86rem;color:#bbb;padding-left:18px;line-height:1.8;">
+        <li>K = min(p, q) canonical pairs at most</li>
+        <li>ρ₁ ≥ ρ₂ ≥ … ≥ ρ_K ≥ 0 always</li>
+        <li>Generalizes simple correlation to multivariate</li>
+        <li>Solved via SVD of whitened cross-covariance</li>
+        <li>CCA with K directions used in reduced-rank regression</li>
+        <li>Sensitive to small sample size (n must be large)</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3>Related Concepts</h3>
+      <div class="related-tags">
+        <span class="tag">Reduced-Rank Regression</span>
+        <span class="tag">PLS (§3.5)</span>
+        <span class="tag">SVD</span>
+        <span class="tag">Curds &amp; Whey</span>
+        <span class="tag">Multivariate Regression</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- helpers ----
+function randn() {
+  let u=0,v=0;
+  while(!u) u=Math.random();
+  while(!v) v=Math.random();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+}
+
+let currentTab = 'scatter';
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('view-scatter').style.display = tab==='scatter'?'block':'none';
+  document.getElementById('view-corr').style.display   = tab==='corr'?'block':'none';
+  document.querySelectorAll('.tab').forEach((el,i)=>{
+    el.classList.toggle('active', (i===0&&tab==='scatter')||(i===1&&tab==='corr'));
+  });
+  if(tab==='corr') buildCorrPlot();
+}
+
+const COLORS = ['#b07aff','#ff7b54','#4ae3b5'];
+const NAMES  = ['Pair 1 (ρ₁)','Pair 2 (ρ₂)','Pair 3 (ρ₃)'];
+
+function buildScatterPlot() {
+  const pair = +document.getElementById('pairSlider').value;
+  const rho0 = +document.getElementById('rhoSlider').value / 100;
+  document.getElementById('pairLabel').textContent = pair;
+  document.getElementById('rhoLabel').textContent  = rho0.toFixed(2);
+
+  // Simulate canonical variates: U ~ N(0,1), V = rho*U + sqrt(1-rho^2)*noise
+  // Each successive pair has lower rho
+  const rhos = [rho0, rho0*0.65, rho0*0.3];
+  const rhoK = rhos[pair-1];
+  const n = 180;
+  const U = Array.from({length:n}, randn);
+  const V = U.map(u => rhoK*u + Math.sqrt(1-rhoK*rhoK)*randn());
+
+  // Project back to 2D "X-space" and "Y-space" with a rotation per pair
+  const angle = (pair-1)*Math.PI/4;
+  const Xx = U.map(u => Math.cos(angle)*u + randn()*0.15);
+  const Xy = U.map(u => Math.sin(angle)*u + randn()*0.15);
+  const Yx = V.map(v => Math.cos(angle+0.4)*v + randn()*0.15);
+  const Yy = V.map(v => Math.sin(angle+0.4)*v + randn()*0.15);
+
+  const color = COLORS[pair-1];
+  const traces = [
+    {
+      x: Xx, y: Xy,
+      mode:'markers', type:'scatter',
+      marker:{color: '#4a9eff', size:5, opacity:0.5},
+      name:'X canonical scores (Uₖ)'
+    },
+    {
+      x: Yx, y: Yy,
+      mode:'markers', type:'scatter',
+      marker:{color: color, size:5, opacity:0.5, symbol:'diamond'},
+      name:'Y canonical scores (Vₖ)'
+    }
+  ];
+
+  // Draw direction arrows
+  const axLen = 2;
+  const axU = [Math.cos(angle), Math.sin(angle)];
+  const axV = [Math.cos(angle+0.4), Math.sin(angle+0.4)];
+  traces.push({
+    x:[-axU[0]*axLen, axU[0]*axLen], y:[-axU[1]*axLen, axU[1]*axLen],
+    mode:'lines', line:{color:'#4a9eff',width:2.5},
+    name:'aₖ (X direction)'
+  });
+  traces.push({
+    x:[-axV[0]*axLen, axV[0]*axLen], y:[-axV[1]*axLen, axV[1]*axLen],
+    mode:'lines', line:{color:color,width:2.5,dash:'dash'},
+    name:'bₖ (Y direction)'
+  });
+
+  const layout = {
+    paper_bgcolor:'#111', plot_bgcolor:'#111',
+    font:{color:'#ccc',size:12},
+    xaxis:{title:'dim 1',gridcolor:'#222',zerolinecolor:'#333',color:'#888',range:[-3.5,3.5]},
+    yaxis:{title:'dim 2',gridcolor:'#222',zerolinecolor:'#333',color:'#888',range:[-3.5,3.5],scaleanchor:'x'},
+    legend:{bgcolor:'#1a1a1a',bordercolor:'#333',borderwidth:1},
+    margin:{t:10,b:50,l:50,r:20},
+    title:{text:`Canonical Pair ${pair}  |  ρ = ${rhoK.toFixed(2)}`, font:{color:'#b07aff',size:14}}
+  };
+  Plotly.react('plotScatter', traces, layout, {responsive:true, displayModeBar:false});
+}
+
+function buildCorrPlot() {
+  const rho0 = +document.getElementById('rhoSlider').value / 100;
+  const K = 5;
+  const rhos = Array.from({length:K},(_,i)=>Math.max(0, rho0*Math.pow(0.6,i)+randn()*0.02).toFixed(3)).map(Number);
+  rhos.sort((a,b)=>b-a);
+
+  const traces = [{
+    x: Array.from({length:K},(_,i)=>i+1),
+    y: rhos,
+    type:'bar',
+    marker:{
+      color:rhos,
+      colorscale:[[0,'#3a1a1a'],[0.5,'#b07aff'],[1,'#e8d4ff']],
+      showscale:false
+    },
+    text: rhos.map(r=>r.toFixed(3)),
+    textposition:'outside',
+    textfont:{color:'#ccc'},
+    name:'Canonical correlation ρₖ'
+  }];
+
+  const layout = {
+    paper_bgcolor:'#111', plot_bgcolor:'#111',
+    font:{color:'#ccc',size:12},
+    xaxis:{title:'Canonical pair k',gridcolor:'#222',zerolinecolor:'#333',color:'#888',tickvals:[1,2,3,4,5]},
+    yaxis:{title:'ρₖ',gridcolor:'#222',zerolinecolor:'#333',color:'#888',range:[0,1.1]},
+    margin:{t:10,b:50,l:60,r:20},
+    showlegend:false,
+    annotations:[{
+      x:0.5,y:1.07,xref:'paper',yref:'paper',
+      text:'Canonical correlations are always ordered ρ₁ ≥ ρ₂ ≥ … ≥ 0',
+      showarrow:false,font:{color:'#888',size:11}
+    }]
+  };
+  Plotly.react('plotCorr', traces, layout, {responsive:true, displayModeBar:false});
+}
+
+document.getElementById('pairSlider').addEventListener('input', buildScatterPlot);
+document.getElementById('rhoSlider').addEventListener('input', () => { buildScatterPlot(); if(currentTab==='corr') buildCorrPlot(); });
+document.getElementById('regenBtn').addEventListener('click', () => { buildScatterPlot(); if(currentTab==='corr') buildCorrPlot(); });
+
+buildScatterPlot();
+</script>
+</body>
+</html>

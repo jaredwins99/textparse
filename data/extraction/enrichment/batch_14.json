@@ -1,0 +1,3741 @@
+{
+  "batch_number": 14,
+  "concepts": [
+    {
+      "id": 329,
+      "name": "burn-in period",
+      "description": "The initial iterations of MCMC that are discarded before the chain reaches stationarity.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "Here we have averaged over the last M\u2212m+1 members of the sequence, to allow for an initial 'burn-in' period before stationarity is reached.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 25809,
+          "text": "This is page 261\nPrinter: Opaque this\n8\nModel Inference and Averaging",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25811,
+          "text": "For most of this book, the \ufb01tting (learning) of models has been achieved by\nminimizing a sum of squares for regression, or by minimizing cross-entropy\nfor classi\ufb01cation. In fact, both of these minimizations are instances of the\nmaximum likelihood approach to \ufb01tting.\nIn this chapter we provide a general exposition of the maximum likeli-\nhood approach, as well as the Bayesian method for inference. The boot-\nstrap, introduced in Chapter 7, is discussed in this context, and its relation\nto maximum likelihood and Bayes is described. Finally, we present some\nrelated techniques for model averaging and improvement, including com-\nmittee methods, bagging, stacking and bumping.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25814,
+          "text": "The bootstrap method provides a direct computational way of assessing\nuncertainty, by sampling from the training data. Here we illustrate the\nbootstrap in a simple one-dimensional smoothing problem, and show its\nconnection to maximum likelihood.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25815,
+          "text": "262\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25816,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25817,
+          "text": "-1\n0\n1\n2\n3\n4\n5",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25818,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25819,
+          "text": "y",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25820,
+          "text": "\u2022\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25821,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25822,
+          "text": "\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25823,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25824,
+          "text": "\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25825,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25826,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25827,
+          "text": "\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25828,
+          "text": "\u2022\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25829,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25830,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25831,
+          "text": "\u2022\n\u2022\u2022\n\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25832,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25833,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25834,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25835,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25836,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25837,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25838,
+          "text": "B-spline Basis",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25840,
+          "text": "Denote the training data by Z = {z1, z2, . . . , zN}, with zi = (xi, yi),\ni = 1, 2, . . . , N. Here xi is a one-dimensional input, and yi the outcome,\neither continuous or categorical. As an example, consider the N = 50 data\npoints shown in the left panel of Figure 8.1.\nSuppose we decide to \ufb01t a cubic spline to the data, with three knots\nplaced at the quartiles of the X values. This is a seven-dimensional lin-\near space of functions, and can be represented, for example, by a linear\nexpansion of B-spline basis functions (see Section 5.9.2):",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25841,
+          "text": "\u03bc(x)\n=",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25842,
+          "text": "7\n\u0002",
+          "type": "equation",
+          "page": 280
+        }
+      ]
+    },
+    {
+      "id": 330,
+      "name": "bagging",
+      "description": "Bootstrap aggregation: a method that averages predictions over bootstrap samples to reduce variance and improve prediction accuracy.",
+      "category": "multi_model",
+      "subcategory": "aggregating",
+      "existing_quote": "Bootstrap aggregation or bagging averages this prediction over a collection of bootstrap samples, thereby reducing its variance. For each bootstrap sample Z*b, b = 1, 2, . . . , B, we fit our model, giving prediction f\u0302*b(x). The bagging estimate is defined by f\u0302bag(x) = (1/B)\u2211\u1d2eb=1 f\u0302*b(x).",
+      "existing_formula": "\\hat{f}_{\\text{bag}}(x) = \\frac{1}{B}\\sum_{b=1}^B \\hat{f}^{*b}(x)",
+      "paragraphs": [
+        {
+          "id": 25809,
+          "text": "This is page 261\nPrinter: Opaque this\n8\nModel Inference and Averaging",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25811,
+          "text": "For most of this book, the \ufb01tting (learning) of models has been achieved by\nminimizing a sum of squares for regression, or by minimizing cross-entropy\nfor classi\ufb01cation. In fact, both of these minimizations are instances of the\nmaximum likelihood approach to \ufb01tting.\nIn this chapter we provide a general exposition of the maximum likeli-\nhood approach, as well as the Bayesian method for inference. The boot-\nstrap, introduced in Chapter 7, is discussed in this context, and its relation\nto maximum likelihood and Bayes is described. Finally, we present some\nrelated techniques for model averaging and improvement, including com-\nmittee methods, bagging, stacking and bumping.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25814,
+          "text": "The bootstrap method provides a direct computational way of assessing\nuncertainty, by sampling from the training data. Here we illustrate the\nbootstrap in a simple one-dimensional smoothing problem, and show its\nconnection to maximum likelihood.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25815,
+          "text": "262\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25816,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25817,
+          "text": "-1\n0\n1\n2\n3\n4\n5",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25818,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25819,
+          "text": "y",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25820,
+          "text": "\u2022\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25821,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25822,
+          "text": "\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25823,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25824,
+          "text": "\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25825,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25826,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25827,
+          "text": "\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25828,
+          "text": "\u2022\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25829,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25830,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25831,
+          "text": "\u2022\n\u2022\u2022\n\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25832,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25833,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25834,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25835,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25836,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25837,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25838,
+          "text": "B-spline Basis",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25840,
+          "text": "Denote the training data by Z = {z1, z2, . . . , zN}, with zi = (xi, yi),\ni = 1, 2, . . . , N. Here xi is a one-dimensional input, and yi the outcome,\neither continuous or categorical. As an example, consider the N = 50 data\npoints shown in the left panel of Figure 8.1.\nSuppose we decide to \ufb01t a cubic spline to the data, with three knots\nplaced at the quartiles of the X values. This is a seven-dimensional lin-\near space of functions, and can be represented, for example, by a linear\nexpansion of B-spline basis functions (see Section 5.9.2):",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25841,
+          "text": "\u03bc(x)\n=",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25842,
+          "text": "7\n\u0002",
+          "type": "equation",
+          "page": 280
+        }
+      ]
+    },
+    {
+      "id": 331,
+      "name": "empirical distribution",
+      "description": "A distribution putting equal probability on each observed data point, used as the sampling distribution in nonparametric bootstrap.",
+      "category": "model",
+      "subcategory": "dgp",
+      "existing_quote": "Denote by P\u0302 the empirical distribution putting equal probability 1/N on each of the data points (xi, yi). In fact the 'true' bagging estimate is defined by EP\u0302f\u0302*(x), where Z* consists of observations sampled from P\u0302.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 25809,
+          "text": "This is page 261\nPrinter: Opaque this\n8\nModel Inference and Averaging",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25811,
+          "text": "For most of this book, the \ufb01tting (learning) of models has been achieved by\nminimizing a sum of squares for regression, or by minimizing cross-entropy\nfor classi\ufb01cation. In fact, both of these minimizations are instances of the\nmaximum likelihood approach to \ufb01tting.\nIn this chapter we provide a general exposition of the maximum likeli-\nhood approach, as well as the Bayesian method for inference. The boot-\nstrap, introduced in Chapter 7, is discussed in this context, and its relation\nto maximum likelihood and Bayes is described. Finally, we present some\nrelated techniques for model averaging and improvement, including com-\nmittee methods, bagging, stacking and bumping.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25814,
+          "text": "The bootstrap method provides a direct computational way of assessing\nuncertainty, by sampling from the training data. Here we illustrate the\nbootstrap in a simple one-dimensional smoothing problem, and show its\nconnection to maximum likelihood.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25815,
+          "text": "262\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25816,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25817,
+          "text": "-1\n0\n1\n2\n3\n4\n5",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25818,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25819,
+          "text": "y",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25820,
+          "text": "\u2022\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25821,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25822,
+          "text": "\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25823,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25824,
+          "text": "\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25825,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25826,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25827,
+          "text": "\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25828,
+          "text": "\u2022\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25829,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25830,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25831,
+          "text": "\u2022\n\u2022\u2022\n\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25832,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25833,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25834,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25835,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25836,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25837,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25838,
+          "text": "B-spline Basis",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25840,
+          "text": "Denote the training data by Z = {z1, z2, . . . , zN}, with zi = (xi, yi),\ni = 1, 2, . . . , N. Here xi is a one-dimensional input, and yi the outcome,\neither continuous or categorical. As an example, consider the N = 50 data\npoints shown in the left panel of Figure 8.1.\nSuppose we decide to \ufb01t a cubic spline to the data, with three knots\nplaced at the quartiles of the X values. This is a seven-dimensional lin-\near space of functions, and can be represented, for example, by a linear\nexpansion of B-spline basis functions (see Section 5.9.2):",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25841,
+          "text": "\u03bc(x)\n=",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25842,
+          "text": "7\n\u0002",
+          "type": "equation",
+          "page": 280
+        }
+      ]
+    },
+    {
+      "id": 332,
+      "name": "consensus vote",
+      "description": "In bagging for classification, combining predictions by majority voting across bootstrap samples.",
+      "category": "multi_model",
+      "subcategory": "aggregating",
+      "existing_quote": "For classification we can understand the bagging effect in terms of a consensus of independent weak learners. Let the Bayes optimal decision at x be G(x) = 1 in a two-class example. Suppose each of the weak learners G*b have an error-rate eb = e < 0.5, and let S1(x) = \u2211\u1d2eb=1 I(G*b(x) = 1) be the consensus vote for class 1.",
+      "existing_formula": "S_1(x) = \\sum_{b=1}^B I(G^{*b}(x) = 1)",
+      "paragraphs": [
+        {
+          "id": 25809,
+          "text": "This is page 261\nPrinter: Opaque this\n8\nModel Inference and Averaging",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25811,
+          "text": "For most of this book, the \ufb01tting (learning) of models has been achieved by\nminimizing a sum of squares for regression, or by minimizing cross-entropy\nfor classi\ufb01cation. In fact, both of these minimizations are instances of the\nmaximum likelihood approach to \ufb01tting.\nIn this chapter we provide a general exposition of the maximum likeli-\nhood approach, as well as the Bayesian method for inference. The boot-\nstrap, introduced in Chapter 7, is discussed in this context, and its relation\nto maximum likelihood and Bayes is described. Finally, we present some\nrelated techniques for model averaging and improvement, including com-\nmittee methods, bagging, stacking and bumping.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25814,
+          "text": "The bootstrap method provides a direct computational way of assessing\nuncertainty, by sampling from the training data. Here we illustrate the\nbootstrap in a simple one-dimensional smoothing problem, and show its\nconnection to maximum likelihood.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25815,
+          "text": "262\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25816,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25817,
+          "text": "-1\n0\n1\n2\n3\n4\n5",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25818,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25819,
+          "text": "y",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25820,
+          "text": "\u2022\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25821,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25822,
+          "text": "\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25823,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25824,
+          "text": "\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25825,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25826,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25827,
+          "text": "\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25828,
+          "text": "\u2022\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25829,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25830,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25831,
+          "text": "\u2022\n\u2022\u2022\n\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25832,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25833,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25834,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25835,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25836,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25837,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25838,
+          "text": "B-spline Basis",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25840,
+          "text": "Denote the training data by Z = {z1, z2, . . . , zN}, with zi = (xi, yi),\ni = 1, 2, . . . , N. Here xi is a one-dimensional input, and yi the outcome,\neither continuous or categorical. As an example, consider the N = 50 data\npoints shown in the left panel of Figure 8.1.\nSuppose we decide to \ufb01t a cubic spline to the data, with three knots\nplaced at the quartiles of the X values. This is a seven-dimensional lin-\near space of functions, and can be represented, for example, by a linear\nexpansion of B-spline basis functions (see Section 5.9.2):",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25841,
+          "text": "\u03bc(x)\n=",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25842,
+          "text": "7\n\u0002",
+          "type": "equation",
+          "page": 280
+        }
+      ]
+    },
+    {
+      "id": 333,
+      "name": "weak learners",
+      "description": "Classifiers with error rate better than random but not necessarily strong, which can be combined to form a strong classifier.",
+      "category": "multi_model",
+      "subcategory": "aggregating",
+      "existing_quote": "A weak classifier is one whose error rate is only slightly better than random guessing. The purpose of boosting is to sequentially apply the weak classification algorithm to repeatedly modified versions of the data",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 25809,
+          "text": "This is page 261\nPrinter: Opaque this\n8\nModel Inference and Averaging",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25811,
+          "text": "For most of this book, the \ufb01tting (learning) of models has been achieved by\nminimizing a sum of squares for regression, or by minimizing cross-entropy\nfor classi\ufb01cation. In fact, both of these minimizations are instances of the\nmaximum likelihood approach to \ufb01tting.\nIn this chapter we provide a general exposition of the maximum likeli-\nhood approach, as well as the Bayesian method for inference. The boot-\nstrap, introduced in Chapter 7, is discussed in this context, and its relation\nto maximum likelihood and Bayes is described. Finally, we present some\nrelated techniques for model averaging and improvement, including com-\nmittee methods, bagging, stacking and bumping.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25814,
+          "text": "The bootstrap method provides a direct computational way of assessing\nuncertainty, by sampling from the training data. Here we illustrate the\nbootstrap in a simple one-dimensional smoothing problem, and show its\nconnection to maximum likelihood.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25815,
+          "text": "262\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25816,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25817,
+          "text": "-1\n0\n1\n2\n3\n4\n5",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25818,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25819,
+          "text": "y",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25820,
+          "text": "\u2022\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25821,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25822,
+          "text": "\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25823,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25824,
+          "text": "\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25825,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25826,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25827,
+          "text": "\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25828,
+          "text": "\u2022\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25829,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25830,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25831,
+          "text": "\u2022\n\u2022\u2022\n\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25832,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25833,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25834,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25835,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25836,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25837,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25838,
+          "text": "B-spline Basis",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25840,
+          "text": "Denote the training data by Z = {z1, z2, . . . , zN}, with zi = (xi, yi),\ni = 1, 2, . . . , N. Here xi is a one-dimensional input, and yi the outcome,\neither continuous or categorical. As an example, consider the N = 50 data\npoints shown in the left panel of Figure 8.1.\nSuppose we decide to \ufb01t a cubic spline to the data, with three knots\nplaced at the quartiles of the X values. This is a seven-dimensional lin-\near space of functions, and can be represented, for example, by a linear\nexpansion of B-spline basis functions (see Section 5.9.2):",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25841,
+          "text": "\u03bc(x)\n=",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25842,
+          "text": "7\n\u0002",
+          "type": "equation",
+          "page": 280
+        }
+      ]
+    },
+    {
+      "id": 334,
+      "name": "bayesian model averaging",
+      "description": "A Bayesian approach to combining predictions from multiple models, weighting each by its posterior probability.",
+      "category": "multi_model",
+      "subcategory": "aggregating",
+      "existing_quote": "We have a set of candidate models Mm, m = 1, . . . , M for our training set Z. The posterior distribution of \u03b6 is Pr(\u03b6|Z) = \u2211\u1d39m=1 Pr(\u03b6|Mm, Z)Pr(Mm|Z). This Bayesian prediction is a weighted average of the individual predictions, with weights proportional to the posterior probability of each model.",
+      "existing_formula": "\\Pr(\\zeta|\\mathbf{Z}) = \\sum_{m=1}^M \\Pr(\\zeta|\\mathcal{M}_m, \\mathbf{Z})\\Pr(\\mathcal{M}_m|\\mathbf{Z})",
+      "paragraphs": [
+        {
+          "id": 25809,
+          "text": "This is page 261\nPrinter: Opaque this\n8\nModel Inference and Averaging",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25811,
+          "text": "For most of this book, the \ufb01tting (learning) of models has been achieved by\nminimizing a sum of squares for regression, or by minimizing cross-entropy\nfor classi\ufb01cation. In fact, both of these minimizations are instances of the\nmaximum likelihood approach to \ufb01tting.\nIn this chapter we provide a general exposition of the maximum likeli-\nhood approach, as well as the Bayesian method for inference. The boot-\nstrap, introduced in Chapter 7, is discussed in this context, and its relation\nto maximum likelihood and Bayes is described. Finally, we present some\nrelated techniques for model averaging and improvement, including com-\nmittee methods, bagging, stacking and bumping.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25814,
+          "text": "The bootstrap method provides a direct computational way of assessing\nuncertainty, by sampling from the training data. Here we illustrate the\nbootstrap in a simple one-dimensional smoothing problem, and show its\nconnection to maximum likelihood.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25815,
+          "text": "262\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25816,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25817,
+          "text": "-1\n0\n1\n2\n3\n4\n5",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25818,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25819,
+          "text": "y",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25820,
+          "text": "\u2022\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25821,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25822,
+          "text": "\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25823,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25824,
+          "text": "\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25825,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25826,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25827,
+          "text": "\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25828,
+          "text": "\u2022\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25829,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25830,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25831,
+          "text": "\u2022\n\u2022\u2022\n\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25832,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25833,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25834,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25835,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25836,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25837,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25838,
+          "text": "B-spline Basis",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25840,
+          "text": "Denote the training data by Z = {z1, z2, . . . , zN}, with zi = (xi, yi),\ni = 1, 2, . . . , N. Here xi is a one-dimensional input, and yi the outcome,\neither continuous or categorical. As an example, consider the N = 50 data\npoints shown in the left panel of Figure 8.1.\nSuppose we decide to \ufb01t a cubic spline to the data, with three knots\nplaced at the quartiles of the X values. This is a seven-dimensional lin-\near space of functions, and can be represented, for example, by a linear\nexpansion of B-spline basis functions (see Section 5.9.2):",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25841,
+          "text": "\u03bc(x)\n=",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25842,
+          "text": "7\n\u0002",
+          "type": "equation",
+          "page": 280
+        }
+      ]
+    },
+    {
+      "id": 335,
+      "name": "committee methods",
+      "description": "Model averaging strategies that take a simple unweighted average of predictions from multiple models.",
+      "category": "multi_model",
+      "subcategory": "aggregating",
+      "existing_quote": "This formulation leads to a number of different model-averaging strategies. Committee methods take a simple unweighted average of the predictions from each model, essentially giving equal probability to each model.",
+      "existing_formula": "\\hat{f}_{\\text{committee}}(x) = \\frac{1}{M}\\sum_{m=1}^M \\hat{f}_m(x)",
+      "paragraphs": [
+        {
+          "id": 25809,
+          "text": "This is page 261\nPrinter: Opaque this\n8\nModel Inference and Averaging",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25811,
+          "text": "For most of this book, the \ufb01tting (learning) of models has been achieved by\nminimizing a sum of squares for regression, or by minimizing cross-entropy\nfor classi\ufb01cation. In fact, both of these minimizations are instances of the\nmaximum likelihood approach to \ufb01tting.\nIn this chapter we provide a general exposition of the maximum likeli-\nhood approach, as well as the Bayesian method for inference. The boot-\nstrap, introduced in Chapter 7, is discussed in this context, and its relation\nto maximum likelihood and Bayes is described. Finally, we present some\nrelated techniques for model averaging and improvement, including com-\nmittee methods, bagging, stacking and bumping.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25814,
+          "text": "The bootstrap method provides a direct computational way of assessing\nuncertainty, by sampling from the training data. Here we illustrate the\nbootstrap in a simple one-dimensional smoothing problem, and show its\nconnection to maximum likelihood.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25815,
+          "text": "262\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25816,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25817,
+          "text": "-1\n0\n1\n2\n3\n4\n5",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25818,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25819,
+          "text": "y",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25820,
+          "text": "\u2022\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25821,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25822,
+          "text": "\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25823,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25824,
+          "text": "\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25825,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25826,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25827,
+          "text": "\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25828,
+          "text": "\u2022\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25829,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25830,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25831,
+          "text": "\u2022\n\u2022\u2022\n\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25832,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25833,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25834,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25835,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25836,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25837,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25838,
+          "text": "B-spline Basis",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25840,
+          "text": "Denote the training data by Z = {z1, z2, . . . , zN}, with zi = (xi, yi),\ni = 1, 2, . . . , N. Here xi is a one-dimensional input, and yi the outcome,\neither continuous or categorical. As an example, consider the N = 50 data\npoints shown in the left panel of Figure 8.1.\nSuppose we decide to \ufb01t a cubic spline to the data, with three knots\nplaced at the quartiles of the X values. This is a seven-dimensional lin-\near space of functions, and can be represented, for example, by a linear\nexpansion of B-spline basis functions (see Section 5.9.2):",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25841,
+          "text": "\u03bc(x)\n=",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25842,
+          "text": "7\n\u0002",
+          "type": "equation",
+          "page": 280
+        }
+      ]
+    },
+    {
+      "id": 340,
+      "name": "link function",
+      "description": "A function relating the conditional mean of a response to an additive function of predictors in generalized models.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "In general, the conditional mean \u03bc(X) of a response Y is related to an additive function of the predictors via a link function g: g[\u03bc(X)] = \u03b1 + f1(X1) + \u00b7 \u00b7 \u00b7 + fp(Xp).",
+      "existing_formula": "g[\\mu(X)] = \\alpha + f_1(X_1) + \\cdots + f_p(X_p)",
+      "paragraphs": [
+        {
+          "id": 25809,
+          "text": "This is page 261\nPrinter: Opaque this\n8\nModel Inference and Averaging",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25811,
+          "text": "For most of this book, the \ufb01tting (learning) of models has been achieved by\nminimizing a sum of squares for regression, or by minimizing cross-entropy\nfor classi\ufb01cation. In fact, both of these minimizations are instances of the\nmaximum likelihood approach to \ufb01tting.\nIn this chapter we provide a general exposition of the maximum likeli-\nhood approach, as well as the Bayesian method for inference. The boot-\nstrap, introduced in Chapter 7, is discussed in this context, and its relation\nto maximum likelihood and Bayes is described. Finally, we present some\nrelated techniques for model averaging and improvement, including com-\nmittee methods, bagging, stacking and bumping.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25814,
+          "text": "The bootstrap method provides a direct computational way of assessing\nuncertainty, by sampling from the training data. Here we illustrate the\nbootstrap in a simple one-dimensional smoothing problem, and show its\nconnection to maximum likelihood.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25815,
+          "text": "262\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25816,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25817,
+          "text": "-1\n0\n1\n2\n3\n4\n5",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25818,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25819,
+          "text": "y",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25820,
+          "text": "\u2022\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25821,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25822,
+          "text": "\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25823,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25824,
+          "text": "\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25825,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25826,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25827,
+          "text": "\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25828,
+          "text": "\u2022\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25829,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25830,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25831,
+          "text": "\u2022\n\u2022\u2022\n\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25832,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25833,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25834,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25835,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25836,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25837,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25838,
+          "text": "B-spline Basis",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25840,
+          "text": "Denote the training data by Z = {z1, z2, . . . , zN}, with zi = (xi, yi),\ni = 1, 2, . . . , N. Here xi is a one-dimensional input, and yi the outcome,\neither continuous or categorical. As an example, consider the N = 50 data\npoints shown in the left panel of Figure 8.1.\nSuppose we decide to \ufb01t a cubic spline to the data, with three knots\nplaced at the quartiles of the X values. This is a seven-dimensional lin-\near space of functions, and can be represented, for example, by a linear\nexpansion of B-spline basis functions (see Section 5.9.2):",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25841,
+          "text": "\u03bc(x)\n=",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25842,
+          "text": "7\n\u0002",
+          "type": "equation",
+          "page": 280
+        }
+      ]
+    },
+    {
+      "id": 345,
+      "name": "backfitting algorithm",
+      "description": "An iterative procedure for fitting additive models by cycling through predictors, applying a smoother to partial residuals for each predictor while holding others fixed.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "We apply a cubic smoothing spline Sj to the targets {yi\u2212\u03b1\u0302\u2212\u2211k\u2260j f\u0302k(xik)}\u1d3a\u2081, as a function of xij, to obtain a new estimate f\u0302j. This is done for each predictor in turn, using the current estimates of the other functions f\u0302k when computing yi\u2212\u03b1\u0302\u2212\u2211k\u2260j f\u0302k(xik). The process is continued until the estimates f\u0302j stabilize. This procedure is known as 'backfitting'.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 25809,
+          "text": "This is page 261\nPrinter: Opaque this\n8\nModel Inference and Averaging",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25811,
+          "text": "For most of this book, the \ufb01tting (learning) of models has been achieved by\nminimizing a sum of squares for regression, or by minimizing cross-entropy\nfor classi\ufb01cation. In fact, both of these minimizations are instances of the\nmaximum likelihood approach to \ufb01tting.\nIn this chapter we provide a general exposition of the maximum likeli-\nhood approach, as well as the Bayesian method for inference. The boot-\nstrap, introduced in Chapter 7, is discussed in this context, and its relation\nto maximum likelihood and Bayes is described. Finally, we present some\nrelated techniques for model averaging and improvement, including com-\nmittee methods, bagging, stacking and bumping.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25814,
+          "text": "The bootstrap method provides a direct computational way of assessing\nuncertainty, by sampling from the training data. Here we illustrate the\nbootstrap in a simple one-dimensional smoothing problem, and show its\nconnection to maximum likelihood.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25815,
+          "text": "262\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25816,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25817,
+          "text": "-1\n0\n1\n2\n3\n4\n5",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25818,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25819,
+          "text": "y",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25820,
+          "text": "\u2022\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25821,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25822,
+          "text": "\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25823,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25824,
+          "text": "\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25825,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25826,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25827,
+          "text": "\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25828,
+          "text": "\u2022\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25829,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25830,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25831,
+          "text": "\u2022\n\u2022\u2022\n\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25832,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25833,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25834,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25835,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25836,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25837,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25838,
+          "text": "B-spline Basis",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25840,
+          "text": "Denote the training data by Z = {z1, z2, . . . , zN}, with zi = (xi, yi),\ni = 1, 2, . . . , N. Here xi is a one-dimensional input, and yi the outcome,\neither continuous or categorical. As an example, consider the N = 50 data\npoints shown in the left panel of Figure 8.1.\nSuppose we decide to \ufb01t a cubic spline to the data, with three knots\nplaced at the quartiles of the X values. This is a seven-dimensional lin-\near space of functions, and can be represented, for example, by a linear\nexpansion of B-spline basis functions (see Section 5.9.2):",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25841,
+          "text": "\u03bc(x)\n=",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25842,
+          "text": "7\n\u0002",
+          "type": "equation",
+          "page": 280
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "name": "nonparametric bootstrap",
+      "description": "The bootstrap method described above, in which we sample with re-\nplacement from the training data, is called the nonparametric bootstrap.\nThis really means that the method is \u201cmodel-free,\u201d since it uses the raw\ndata, not a speci\ufb01c parametric model, to generate new datasets. Consider\na variation of the bootstrap, called the parametric bootstrap, in which we\nsimulate new responses by adding Gaussian noise to the predicted values:",
+      "category": "validation",
+      "subcategory": "validation",
+      "existing_quote": "The bootstrap method described above, in which we sample with replacement from the training data, is called the nonparametric bootstrap. This really means that the method is 'model-free,' since it uses the raw data, not a specific parametric model, to generate new datasets.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 25809,
+          "text": "This is page 261\nPrinter: Opaque this\n8\nModel Inference and Averaging",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25811,
+          "text": "For most of this book, the \ufb01tting (learning) of models has been achieved by\nminimizing a sum of squares for regression, or by minimizing cross-entropy\nfor classi\ufb01cation. In fact, both of these minimizations are instances of the\nmaximum likelihood approach to \ufb01tting.\nIn this chapter we provide a general exposition of the maximum likeli-\nhood approach, as well as the Bayesian method for inference. The boot-\nstrap, introduced in Chapter 7, is discussed in this context, and its relation\nto maximum likelihood and Bayes is described. Finally, we present some\nrelated techniques for model averaging and improvement, including com-\nmittee methods, bagging, stacking and bumping.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25814,
+          "text": "The bootstrap method provides a direct computational way of assessing\nuncertainty, by sampling from the training data. Here we illustrate the\nbootstrap in a simple one-dimensional smoothing problem, and show its\nconnection to maximum likelihood.",
+          "type": "narrative",
+          "page": 279
+        },
+        {
+          "id": 25815,
+          "text": "262\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25816,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25817,
+          "text": "-1\n0\n1\n2\n3\n4\n5",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25818,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25819,
+          "text": "y",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25820,
+          "text": "\u2022\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25821,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25822,
+          "text": "\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25823,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25824,
+          "text": "\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25825,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25826,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25827,
+          "text": "\u2022\u2022\u2022 \u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25828,
+          "text": "\u2022\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25829,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25830,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25831,
+          "text": "\u2022\n\u2022\u2022\n\u2022\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25832,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25833,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25834,
+          "text": "\u2022\u2022",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25835,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25836,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 280
+        },
+        {
+          "id": 25837,
+          "text": "x",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25838,
+          "text": "B-spline Basis",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25840,
+          "text": "Denote the training data by Z = {z1, z2, . . . , zN}, with zi = (xi, yi),\ni = 1, 2, . . . , N. Here xi is a one-dimensional input, and yi the outcome,\neither continuous or categorical. As an example, consider the N = 50 data\npoints shown in the left panel of Figure 8.1.\nSuppose we decide to \ufb01t a cubic spline to the data, with three knots\nplaced at the quartiles of the X values. This is a seven-dimensional lin-\near space of functions, and can be represented, for example, by a linear\nexpansion of B-spline basis functions (see Section 5.9.2):",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25841,
+          "text": "\u03bc(x)\n=",
+          "type": "narrative",
+          "page": 280
+        },
+        {
+          "id": 25842,
+          "text": "7\n\u0002",
+          "type": "equation",
+          "page": 280
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "name": "log-likelihood",
+      "description": "which we will sometimes abbreviate as \u2113(\u03b8). This expression is called the\nlog-likelihood, and each value \u2113(\u03b8; zi) = log g\u03b8(zi) is called a log-likelihood\ncomponent. The method of maximum likelihood chooses the value \u03b8 = \u02c6\u03b8\nto maximize \u2113(\u03b8; Z).\nThe likelihood function can be used to assess the precision of \u02c6\u03b8. We need\na few more de\ufb01nitions. The score function is de\ufb01ned by",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "This expression is called the log-likelihood, and each value \u2113(\u03b8; zi) = log g\u03b8(zi) is called a log-likelihood component.",
+      "existing_formula": "\\ell(\\theta; \\mathbf{Z}) = \\sum_{i=1}^N \\log g_\\theta(z_i)",
+      "paragraphs": [
+        {
+          "id": 25943,
+          "text": "It turns out that the parametric bootstrap agrees with least squares in the\nprevious example because the model (8.5) has additive Gaussian errors. In\ngeneral, the parametric bootstrap agrees not with least squares but with\nmaximum likelihood, which we now review.\nWe begin by specifying a probability density or probability mass function\nfor our observations",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25944,
+          "text": "zi \u223cg\u03b8(z).\n(8.8)",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25945,
+          "text": "In this expression \u03b8 represents one or more unknown parameters that gov-\nern the distribution of Z. This is called a parametric model for Z. As an\nexample, if Z has a normal distribution with mean \u03bc and variance \u03c32, then",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25946,
+          "text": "\u03b8 = (\u03bc, \u03c32),\n(8.9)",
+          "type": "equation",
+          "page": 283
+        },
+        {
+          "id": 25947,
+          "text": "and",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25948,
+          "text": "g\u03b8(z) =\n1\n\u221a",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25949,
+          "text": "2\u03c0\u03c3 e\u22121",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25950,
+          "text": "2 (z\u2212\u03bc)2/\u03c32.\n(8.10)",
+          "type": "equation",
+          "page": 283
+        },
+        {
+          "id": 25951,
+          "text": "Maximum likelihood is based on the likelihood function, given by",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25952,
+          "text": "L(\u03b8; Z) =",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25953,
+          "text": "N\n.",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25954,
+          "text": "i=1\ng\u03b8(zi),\n(8.11)",
+          "type": "equation",
+          "page": 283
+        },
+        {
+          "id": 25955,
+          "text": "the probability of the observed data under the model g\u03b8. The likelihood is\nde\ufb01ned only up to a positive multiplier, which we have taken to be one.\nWe think of L(\u03b8; Z) as a function of \u03b8, with our data Z \ufb01xed.\nDenote the logarithm of L(\u03b8; Z) by",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25956,
+          "text": "\u2113(\u03b8; Z)\n=",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25957,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25958,
+          "text": "i=1\n\u2113(\u03b8; zi)",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25959,
+          "text": "=",
+          "type": "equation",
+          "page": 283
+        },
+        {
+          "id": 25960,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25961,
+          "text": "i=1\nlog g\u03b8(zi),\n(8.12)",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25962,
+          "text": "which we will sometimes abbreviate as \u2113(\u03b8). This expression is called the\nlog-likelihood, and each value \u2113(\u03b8; zi) = log g\u03b8(zi) is called a log-likelihood\ncomponent. The method of maximum likelihood chooses the value \u03b8 = \u02c6\u03b8\nto maximize \u2113(\u03b8; Z).\nThe likelihood function can be used to assess the precision of \u02c6\u03b8. We need\na few more de\ufb01nitions. The score function is de\ufb01ned by",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25963,
+          "text": "\u02d9\u2113(\u03b8; Z) =",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25964,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25965,
+          "text": "i=1\n\u02d9\u2113(\u03b8; zi),\n(8.13)",
+          "type": "equation",
+          "page": 283
+        },
+        {
+          "id": 25966,
+          "text": "266\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 284
+        },
+        {
+          "id": 25967,
+          "text": "where \u02d9\u2113(\u03b8; zi) = \u2202\u2113(\u03b8; zi)/\u2202\u03b8. Assuming that the likelihood takes its maxi-\nmum in the interior of the parameter space, \u02d9\u2113(\u02c6\u03b8; Z) = 0. The information\nmatrix is",
+          "type": "narrative",
+          "page": 284
+        },
+        {
+          "id": 25968,
+          "text": "I(\u03b8) = \u2212",
+          "type": "narrative",
+          "page": 284
+        },
+        {
+          "id": 25969,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 284
+        },
+        {
+          "id": 25970,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 284
+        },
+        {
+          "id": 25971,
+          "text": "\u22022\u2113(\u03b8; zi)",
+          "type": "narrative",
+          "page": 284
+        },
+        {
+          "id": 25972,
+          "text": "\u2202\u03b8\u2202\u03b8T\n.\n(8.14)",
+          "type": "equation",
+          "page": 284
+        }
+      ]
+    },
+    {
+      "id": 312,
+      "name": "likelihood function",
+      "description": "The probability of the observed data under a parametric model, defined as the product of densities over all observations.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "Maximum likelihood is based on the likelihood function, given by L(\u03b8; Z) = \u220f\u1d3a\u1d62\u208c\u2081 g\u03b8(zi), the probability of the observed data under the model g\u03b8.",
+      "existing_formula": "L(\\theta; \\mathbf{Z}) = \\prod_{i=1}^N g_\\theta(z_i)",
+      "paragraphs": [
+        {
+          "id": 25943,
+          "text": "It turns out that the parametric bootstrap agrees with least squares in the\nprevious example because the model (8.5) has additive Gaussian errors. In\ngeneral, the parametric bootstrap agrees not with least squares but with\nmaximum likelihood, which we now review.\nWe begin by specifying a probability density or probability mass function\nfor our observations",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25944,
+          "text": "zi \u223cg\u03b8(z).\n(8.8)",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25945,
+          "text": "In this expression \u03b8 represents one or more unknown parameters that gov-\nern the distribution of Z. This is called a parametric model for Z. As an\nexample, if Z has a normal distribution with mean \u03bc and variance \u03c32, then",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25946,
+          "text": "\u03b8 = (\u03bc, \u03c32),\n(8.9)",
+          "type": "equation",
+          "page": 283
+        },
+        {
+          "id": 25947,
+          "text": "and",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25948,
+          "text": "g\u03b8(z) =\n1\n\u221a",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25949,
+          "text": "2\u03c0\u03c3 e\u22121",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25950,
+          "text": "2 (z\u2212\u03bc)2/\u03c32.\n(8.10)",
+          "type": "equation",
+          "page": 283
+        },
+        {
+          "id": 25951,
+          "text": "Maximum likelihood is based on the likelihood function, given by",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25952,
+          "text": "L(\u03b8; Z) =",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25953,
+          "text": "N\n.",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25954,
+          "text": "i=1\ng\u03b8(zi),\n(8.11)",
+          "type": "equation",
+          "page": 283
+        },
+        {
+          "id": 25955,
+          "text": "the probability of the observed data under the model g\u03b8. The likelihood is\nde\ufb01ned only up to a positive multiplier, which we have taken to be one.\nWe think of L(\u03b8; Z) as a function of \u03b8, with our data Z \ufb01xed.\nDenote the logarithm of L(\u03b8; Z) by",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25956,
+          "text": "\u2113(\u03b8; Z)\n=",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25957,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25958,
+          "text": "i=1\n\u2113(\u03b8; zi)",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25959,
+          "text": "=",
+          "type": "equation",
+          "page": 283
+        },
+        {
+          "id": 25960,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25961,
+          "text": "i=1\nlog g\u03b8(zi),\n(8.12)",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25962,
+          "text": "which we will sometimes abbreviate as \u2113(\u03b8). This expression is called the\nlog-likelihood, and each value \u2113(\u03b8; zi) = log g\u03b8(zi) is called a log-likelihood\ncomponent. The method of maximum likelihood chooses the value \u03b8 = \u02c6\u03b8\nto maximize \u2113(\u03b8; Z).\nThe likelihood function can be used to assess the precision of \u02c6\u03b8. We need\na few more de\ufb01nitions. The score function is de\ufb01ned by",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25963,
+          "text": "\u02d9\u2113(\u03b8; Z) =",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25964,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 283
+        },
+        {
+          "id": 25965,
+          "text": "i=1\n\u02d9\u2113(\u03b8; zi),\n(8.13)",
+          "type": "equation",
+          "page": 283
+        },
+        {
+          "id": 25966,
+          "text": "266\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 284
+        },
+        {
+          "id": 25967,
+          "text": "where \u02d9\u2113(\u03b8; zi) = \u2202\u2113(\u03b8; zi)/\u2202\u03b8. Assuming that the likelihood takes its maxi-\nmum in the interior of the parameter space, \u02d9\u2113(\u02c6\u03b8; Z) = 0. The information\nmatrix is",
+          "type": "narrative",
+          "page": 284
+        },
+        {
+          "id": 25968,
+          "text": "I(\u03b8) = \u2212",
+          "type": "narrative",
+          "page": 284
+        },
+        {
+          "id": 25969,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 284
+        },
+        {
+          "id": 25970,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 284
+        },
+        {
+          "id": 25971,
+          "text": "\u22022\u2113(\u03b8; zi)",
+          "type": "narrative",
+          "page": 284
+        },
+        {
+          "id": 25972,
+          "text": "\u2202\u03b8\u2202\u03b8T\n.\n(8.14)",
+          "type": "equation",
+          "page": 284
+        }
+      ]
+    },
+    {
+      "id": 131,
+      "name": "posterior distribution",
+      "description": "In Bayesian inference, the updated distribution of parameters after observing data, computed via Bayes rule from the prior and likelihood.",
+      "category": "model",
+      "subcategory": "dgp",
+      "existing_quote": "In the Bayesian approach to inference, we specify a sampling model Pr(Z|\u03b8) (density or probability mass function) for our data given the parameters, and a prior distribution for the parameters Pr(\u03b8) reflecting our knowledge about \u03b8 before we see the data. We then compute the posterior distribution Pr(\u03b8|Z) = Pr(Z|\u03b8)\u00b7Pr(\u03b8) / \u222bPr(Z|\u03b8)\u00b7Pr(\u03b8)d\u03b8.",
+      "existing_formula": "\\Pr(\\theta|\\mathbf{Z}) = \\frac{\\Pr(\\mathbf{Z}|\\theta)\\cdot\\Pr(\\theta)}{\\int \\Pr(\\mathbf{Z}|\\theta)\\cdot\\Pr(\\theta)d\\theta}",
+      "paragraphs": [
+        {
+          "id": 25991,
+          "text": "Let\u2019s return to our smoothing example to see what maximum likelihood\nyields. The parameters are \u03b8 = (\u03b2, \u03c32). The log-likelihood is",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25992,
+          "text": "\u2113(\u03b8) = \u2212N",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25993,
+          "text": "2 log \u03c322\u03c0 \u2212\n1\n2\u03c32",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25994,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25995,
+          "text": "i=1\n(yi \u2212h(xi)T \u03b2)2.\n(8.20)",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25996,
+          "text": "The maximum likelihood estimate is obtained by setting \u2202\u2113/\u2202\u03b2 = 0 and\n\u2202\u2113/\u2202\u03c32 = 0, giving",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25997,
+          "text": "\u02c6\u03b2 = (HT H)\u22121HT y,",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25998,
+          "text": "\u02c6\u03c32 = 1",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25999,
+          "text": "N",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 26000,
+          "text": "\u0002\n(yi \u2212\u02c6\u03bc(xi))2,\n(8.21)",
+          "type": "equation",
+          "page": 285
+        },
+        {
+          "id": 26001,
+          "text": "which are the same as the usual estimates given in (8.2) and below (8.3).\nThe information matrix for \u03b8 = (\u03b2, \u03c32) is block-diagonal, and the block\ncorresponding to \u03b2 is",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 26002,
+          "text": "I(\u03b2) = (HT H)/\u03c32,\n(8.22)",
+          "type": "equation",
+          "page": 285
+        },
+        {
+          "id": 26003,
+          "text": "so that the estimated variance (HT H)\u22121\u02c6\u03c32 agrees with the least squares\nestimate (8.3).",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 26005,
+          "text": "In essence the bootstrap is a computer implementation of nonparametric or\nparametric maximum likelihood. The advantage of the bootstrap over the\nmaximum likelihood formula is that it allows us to compute maximum like-\nlihood estimates of standard errors and other quantities in settings where\nno formulas are available.\nIn our example, suppose that we adaptively choose by cross-validation\nthe number and position of the knots that de\ufb01ne the B-splines, rather\nthan \ufb01x them in advance. Denote by \u03bb the collection of knots and their\npositions. Then the standard errors and con\ufb01dence bands should account\nfor the adaptive choice of \u03bb, but there is no way to do this analytically.\nWith the bootstrap, we compute the B-spline smooth with an adaptive\nchoice of knots for each bootstrap sample. The percentiles of the resulting\ncurves capture the variability from both the noise in the targets as well as\nthat from \u02c6\u03bb. In this particular example the con\ufb01dence bands (not shown)\ndon\u2019t look much di\ufb00erent than the \ufb01xed \u03bb bands. But in other problems,\nwhere more adaptation is used, this can be an important e\ufb00ect to capture.",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 26007,
+          "text": "In the Bayesian approach to inference, we specify a sampling model Pr(Z|\u03b8)\n(density or probability mass function) for our data given the parameters,",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 26008,
+          "text": "268\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26009,
+          "text": "and a prior distribution for the parameters Pr(\u03b8) re\ufb02ecting our knowledge\nabout \u03b8 before we see the data. We then compute the posterior distribution",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26010,
+          "text": "Pr(\u03b8|Z) =\nPr(Z|\u03b8) \u00b7 Pr(\u03b8)\n#\nPr(Z|\u03b8) \u00b7 Pr(\u03b8)d\u03b8,\n(8.23)",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26011,
+          "text": "which represents our updated knowledge about \u03b8 after we see the data. To\nunderstand this posterior distribution, one might draw samples from it or\nsummarize by computing its mean or mode. The Bayesian approach di\ufb00ers\nfrom the standard (\u201cfrequentist\u201d) method for inference in its use of a prior\ndistribution to express the uncertainty present before seeing the data, and\nto allow the uncertainty remaining after seeing the data to be expressed in\nthe form of a posterior distribution.\nThe posterior distribution also provides the basis for predicting the values\nof a future observation znew, via the predictive distribution:",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26012,
+          "text": "Pr(znew|Z) =\n\u0004\nPr(znew|\u03b8) \u00b7 Pr(\u03b8|Z)d\u03b8.\n(8.24)",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26013,
+          "text": "In contrast, the maximum likelihood approach would use Pr(znew|\u02c6\u03b8),\nthe data density evaluated at the maximum likelihood estimate, to predict\nfuture data. Unlike the predictive distribution (8.24), this does not account\nfor the uncertainty in estimating \u03b8.\nLet\u2019s walk through the Bayesian approach in our smoothing example.\nWe start with the parametric model given by equation (8.5), and assume\nfor the moment that \u03c32 is known. We assume that the observed feature\nvalues x1, x2, . . . , xN are \ufb01xed, so that the randomness in the data comes\nsolely from y varying around its mean \u03bc(x).\nThe second ingredient we need is a prior distribution. Distributions on\nfunctions are fairly complex entities: one approach is to use a Gaussian\nprocess prior in which we specify the prior covariance between any two\nfunction values \u03bc(x) and \u03bc(x\u2032) (Wahba, 1990; Neal, 1996).\nHere we take a simpler route: by considering a \ufb01nite B-spline basis for\n\u03bc(x), we can instead provide a prior for the coe\ufb03cients \u03b2, and this implicitly\nde\ufb01nes a prior for \u03bc(x). We choose a Gaussian prior centered at zero",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26014,
+          "text": "\u03b2 \u223cN(0, \u03c4\u03a3)\n(8.25)",
+          "type": "equation",
+          "page": 286
+        },
+        {
+          "id": 26015,
+          "text": "with the choices of the prior correlation matrix \u03a3 and variance \u03c4 to be\ndiscussed below. The implicit process prior for \u03bc(x) is hence Gaussian,\nwith covariance kernel",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26016,
+          "text": "K(x, x\u2032)\n=\ncov[\u03bc(x), \u03bc(x\u2032)]\n=\n\u03c4 \u00b7 h(x)T \u03a3h(x\u2032).\n(8.26)",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26018,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 287
+        },
+        {
+          "id": 26019,
+          "text": "-3\n-2\n-1\n0\n1\n2\n3",
+          "type": "equation",
+          "page": 287
+        },
+        {
+          "id": 26020,
+          "text": "\u03bc(x)",
+          "type": "narrative",
+          "page": 287
+        },
+        {
+          "id": 26021,
+          "text": "x",
+          "type": "narrative",
+          "page": 287
+        },
+        {
+          "id": 26023,
+          "text": "The posterior distribution for \u03b2 is also Gaussian, with mean and covariance",
+          "type": "narrative",
+          "page": 287
+        },
+        {
+          "id": 26024,
+          "text": "E(\u03b2|Z) =\n\u001a\nHT H + \u03c32",
+          "type": "narrative",
+          "page": 287
+        }
+      ]
+    },
+    {
+      "id": 318,
+      "name": "predictive distribution",
+      "description": "The Bayesian distribution for future observations, integrating over the posterior distribution of parameters.",
+      "category": "model",
+      "subcategory": "dgp",
+      "existing_quote": "The posterior distribution also provides the basis for predicting the values of a future observation znew, via the predictive distribution: Pr(znew|Z) = \u222bPr(znew|\u03b8)Pr(\u03b8|Z)d\u03b8.",
+      "existing_formula": "\\Pr(z_{\\text{new}}|\\mathbf{Z}) = \\int \\Pr(z_{\\text{new}}|\\theta)\\Pr(\\theta|\\mathbf{Z})d\\theta",
+      "paragraphs": [
+        {
+          "id": 25991,
+          "text": "Let\u2019s return to our smoothing example to see what maximum likelihood\nyields. The parameters are \u03b8 = (\u03b2, \u03c32). The log-likelihood is",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25992,
+          "text": "\u2113(\u03b8) = \u2212N",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25993,
+          "text": "2 log \u03c322\u03c0 \u2212\n1\n2\u03c32",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25994,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25995,
+          "text": "i=1\n(yi \u2212h(xi)T \u03b2)2.\n(8.20)",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25996,
+          "text": "The maximum likelihood estimate is obtained by setting \u2202\u2113/\u2202\u03b2 = 0 and\n\u2202\u2113/\u2202\u03c32 = 0, giving",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25997,
+          "text": "\u02c6\u03b2 = (HT H)\u22121HT y,",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25998,
+          "text": "\u02c6\u03c32 = 1",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 25999,
+          "text": "N",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 26000,
+          "text": "\u0002\n(yi \u2212\u02c6\u03bc(xi))2,\n(8.21)",
+          "type": "equation",
+          "page": 285
+        },
+        {
+          "id": 26001,
+          "text": "which are the same as the usual estimates given in (8.2) and below (8.3).\nThe information matrix for \u03b8 = (\u03b2, \u03c32) is block-diagonal, and the block\ncorresponding to \u03b2 is",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 26002,
+          "text": "I(\u03b2) = (HT H)/\u03c32,\n(8.22)",
+          "type": "equation",
+          "page": 285
+        },
+        {
+          "id": 26003,
+          "text": "so that the estimated variance (HT H)\u22121\u02c6\u03c32 agrees with the least squares\nestimate (8.3).",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 26005,
+          "text": "In essence the bootstrap is a computer implementation of nonparametric or\nparametric maximum likelihood. The advantage of the bootstrap over the\nmaximum likelihood formula is that it allows us to compute maximum like-\nlihood estimates of standard errors and other quantities in settings where\nno formulas are available.\nIn our example, suppose that we adaptively choose by cross-validation\nthe number and position of the knots that de\ufb01ne the B-splines, rather\nthan \ufb01x them in advance. Denote by \u03bb the collection of knots and their\npositions. Then the standard errors and con\ufb01dence bands should account\nfor the adaptive choice of \u03bb, but there is no way to do this analytically.\nWith the bootstrap, we compute the B-spline smooth with an adaptive\nchoice of knots for each bootstrap sample. The percentiles of the resulting\ncurves capture the variability from both the noise in the targets as well as\nthat from \u02c6\u03bb. In this particular example the con\ufb01dence bands (not shown)\ndon\u2019t look much di\ufb00erent than the \ufb01xed \u03bb bands. But in other problems,\nwhere more adaptation is used, this can be an important e\ufb00ect to capture.",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 26007,
+          "text": "In the Bayesian approach to inference, we specify a sampling model Pr(Z|\u03b8)\n(density or probability mass function) for our data given the parameters,",
+          "type": "narrative",
+          "page": 285
+        },
+        {
+          "id": 26008,
+          "text": "268\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26009,
+          "text": "and a prior distribution for the parameters Pr(\u03b8) re\ufb02ecting our knowledge\nabout \u03b8 before we see the data. We then compute the posterior distribution",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26010,
+          "text": "Pr(\u03b8|Z) =\nPr(Z|\u03b8) \u00b7 Pr(\u03b8)\n#\nPr(Z|\u03b8) \u00b7 Pr(\u03b8)d\u03b8,\n(8.23)",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26011,
+          "text": "which represents our updated knowledge about \u03b8 after we see the data. To\nunderstand this posterior distribution, one might draw samples from it or\nsummarize by computing its mean or mode. The Bayesian approach di\ufb00ers\nfrom the standard (\u201cfrequentist\u201d) method for inference in its use of a prior\ndistribution to express the uncertainty present before seeing the data, and\nto allow the uncertainty remaining after seeing the data to be expressed in\nthe form of a posterior distribution.\nThe posterior distribution also provides the basis for predicting the values\nof a future observation znew, via the predictive distribution:",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26012,
+          "text": "Pr(znew|Z) =\n\u0004\nPr(znew|\u03b8) \u00b7 Pr(\u03b8|Z)d\u03b8.\n(8.24)",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26013,
+          "text": "In contrast, the maximum likelihood approach would use Pr(znew|\u02c6\u03b8),\nthe data density evaluated at the maximum likelihood estimate, to predict\nfuture data. Unlike the predictive distribution (8.24), this does not account\nfor the uncertainty in estimating \u03b8.\nLet\u2019s walk through the Bayesian approach in our smoothing example.\nWe start with the parametric model given by equation (8.5), and assume\nfor the moment that \u03c32 is known. We assume that the observed feature\nvalues x1, x2, . . . , xN are \ufb01xed, so that the randomness in the data comes\nsolely from y varying around its mean \u03bc(x).\nThe second ingredient we need is a prior distribution. Distributions on\nfunctions are fairly complex entities: one approach is to use a Gaussian\nprocess prior in which we specify the prior covariance between any two\nfunction values \u03bc(x) and \u03bc(x\u2032) (Wahba, 1990; Neal, 1996).\nHere we take a simpler route: by considering a \ufb01nite B-spline basis for\n\u03bc(x), we can instead provide a prior for the coe\ufb03cients \u03b2, and this implicitly\nde\ufb01nes a prior for \u03bc(x). We choose a Gaussian prior centered at zero",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26014,
+          "text": "\u03b2 \u223cN(0, \u03c4\u03a3)\n(8.25)",
+          "type": "equation",
+          "page": 286
+        },
+        {
+          "id": 26015,
+          "text": "with the choices of the prior correlation matrix \u03a3 and variance \u03c4 to be\ndiscussed below. The implicit process prior for \u03bc(x) is hence Gaussian,\nwith covariance kernel",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26016,
+          "text": "K(x, x\u2032)\n=\ncov[\u03bc(x), \u03bc(x\u2032)]\n=\n\u03c4 \u00b7 h(x)T \u03a3h(x\u2032).\n(8.26)",
+          "type": "narrative",
+          "page": 286
+        },
+        {
+          "id": 26018,
+          "text": "0.0\n0.5\n1.0\n1.5\n2.0\n2.5\n3.0",
+          "type": "equation",
+          "page": 287
+        },
+        {
+          "id": 26019,
+          "text": "-3\n-2\n-1\n0\n1\n2\n3",
+          "type": "equation",
+          "page": 287
+        },
+        {
+          "id": 26020,
+          "text": "\u03bc(x)",
+          "type": "narrative",
+          "page": 287
+        },
+        {
+          "id": 26021,
+          "text": "x",
+          "type": "narrative",
+          "page": 287
+        },
+        {
+          "id": 26023,
+          "text": "The posterior distribution for \u03b2 is also Gaussian, with mean and covariance",
+          "type": "narrative",
+          "page": 287
+        },
+        {
+          "id": 26024,
+          "text": "E(\u03b2|Z) =\n\u001a\nHT H + \u03c32",
+          "type": "narrative",
+          "page": 287
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "name": "GEM (generalized EM) algorithms",
+      "description": "Hence the EM iteration never decreases the log-likelihood.\nThis argument also makes it clear that a full maximization in the M\nstep is not necessary: we need only to \ufb01nd a value \u02c6\u03b8(j+1) so that Q(\u03b8\u2032, \u02c6\u03b8(j))\nincreases as a function of the \ufb01rst argument, that is, Q(\u02c6\u03b8(j+1), \u02c6\u03b8(j)) >\nQ(\u02c6\u03b8(j), \u02c6\u03b8(j)). Such procedures are called GEM (generalized EM) algorithms.\nThe EM algorithm can also be viewed as a minorization procedure: see\nExercise 8.7.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "This argument also makes it clear that a full maximization in the M step is not necessary: we need only to find a value \u03b8\u0302(j+1) so that Q(\u03b8', \u03b8\u0302(j)) increases as a function of the first argument, that is, Q(\u03b8\u0302(j+1), \u03b8\u0302(j)) > Q(\u03b8\u0302(j), \u03b8\u0302(j)). Such procedures are called GEM (generalized EM) algorithms.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 26092,
+          "text": "272\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 290
+        },
+        {
+          "id": 26093,
+          "text": "that is, the prior probability mass function is proportional to /L\n\u2113=1 wa\u22121\n\u2113\n.\nThen the posterior density of w is",
+          "type": "narrative",
+          "page": 290
+        },
+        {
+          "id": 26094,
+          "text": "w \u223cDiL(a1 + N \u02c6w),\n(8.33)",
+          "type": "narrative",
+          "page": 290
+        },
+        {
+          "id": 26095,
+          "text": "where N is the sample size. Letting a \u21920 to obtain a noninformative prior\ngives",
+          "type": "narrative",
+          "page": 290
+        },
+        {
+          "id": 26096,
+          "text": "w \u223cDiL(N \u02c6w).\n(8.34)",
+          "type": "narrative",
+          "page": 290
+        },
+        {
+          "id": 26097,
+          "text": "Now the bootstrap distribution, obtained by sampling with replacement\nfrom the data, can be expressed as sampling the category proportions from\na multinomial distribution. Speci\ufb01cally,",
+          "type": "narrative",
+          "page": 290
+        },
+        {
+          "id": 26098,
+          "text": "N \u02c6w\u2217\u223cMult(N, \u02c6w),\n(8.35)",
+          "type": "narrative",
+          "page": 290
+        },
+        {
+          "id": 26099,
+          "text": "where Mult(N, \u02c6w) denotes a multinomial distribution, having probability\nmass function\n\u0005\nN\nN \u02c6\nw\u2217\n1,...,N \u02c6\nw\u2217\nL\n\u0006 / \u02c6wN \u02c6\nw\u2217\n\u2113\n\u2113\n. This distribution is similar to the pos-\nterior distribution above, having the same support, same mean, and nearly\nthe same covariance matrix. Hence the bootstrap distribution of S( \u02c6w\u2217) will\nclosely approximate the posterior distribution of S(w).\nIn this sense, the bootstrap distribution represents an (approximate)\nnonparametric, noninformative posterior distribution for our parameter.\nBut this bootstrap distribution is obtained painlessly\u2014without having to\nformally specify a prior and without having to sample from the posterior\ndistribution. Hence we might think of the bootstrap distribution as a \u201cpoor\nman\u2019s\u201d Bayes posterior. By perturbing the data, the bootstrap approxi-\nmates the Bayesian e\ufb00ect of perturbing the parameters, and is typically\nmuch simpler to carry out.",
+          "type": "narrative",
+          "page": 290
+        },
+        {
+          "id": 26101,
+          "text": "The EM algorithm is a popular tool for simplifying di\ufb03cult maximum\nlikelihood problems. We \ufb01rst describe it in the context of a simple mixture\nmodel.",
+          "type": "narrative",
+          "page": 290
+        },
+        {
+          "id": 26103,
+          "text": "In this section we describe a simple mixture model for density estimation,\nand the associated EM algorithm for carrying out maximum likelihood\nestimation. This has a natural connection to Gibbs sampling methods for\nBayesian inference. Mixture models are discussed and demonstrated in sev-\neral other parts of the book, in particular Sections 6.8, 12.7 and 13.2.3.\nThe left panel of Figure 8.5 shows a histogram of the 20 \ufb01ctitious data\npoints in Table 8.1.",
+          "type": "narrative",
+          "page": 290
+        },
+        {
+          "id": 26105,
+          "text": "0\n2\n4\n6",
+          "type": "equation",
+          "page": 291
+        },
+        {
+          "id": 26106,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 291
+        },
+        {
+          "id": 26107,
+          "text": "y\ny",
+          "type": "narrative",
+          "page": 291
+        },
+        {
+          "id": 26108,
+          "text": "density",
+          "type": "narrative",
+          "page": 291
+        },
+        {
+          "id": 26109,
+          "text": "0\n2\n4\n6",
+          "type": "equation",
+          "page": 291
+        },
+        {
+          "id": 26110,
+          "text": "0.0\n0.2\n0.4\n0.6\n0.8\n1.0",
+          "type": "equation",
+          "page": 291
+        },
+        {
+          "id": 26111,
+          "text": "\u2022 \u2022\u2022 \u2022 \u2022\u2022\n\u2022\u2022",
+          "type": "equation",
+          "page": 291
+        },
+        {
+          "id": 26112,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 291
+        },
+        {
+          "id": 26113,
+          "text": "\u2022\n\u2022 \u2022\u2022 \u2022 \u2022 \u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 291
+        },
+        {
+          "id": 26116,
+          "text": "-0.39\n0.12\n0.94\n1.67\n1.76\n2.44\n3.72\n4.28\n4.92\n5.53\n0.06\n0.48\n1.01\n1.68\n1.80\n3.25\n4.12\n4.60\n5.28\n6.22",
+          "type": "narrative",
+          "page": 291
+        },
+        {
+          "id": 26117,
+          "text": "We would like to model the density of the data points, and due to the\napparent bi-modality, a Gaussian distribution would not be appropriate.\nThere seems to be two separate underlying regimes, so instead we model\nY as a mixture of two normal distributions:",
+          "type": "narrative",
+          "page": 291
+        },
+        {
+          "id": 26118,
+          "text": "Y1\n\u223c\nN(\u03bc1, \u03c32\n1),\nY2\n\u223c\nN(\u03bc2, \u03c32\n2),\n(8.36)\nY\n=\n(1 \u2212\u0394) \u00b7 Y1 + \u0394 \u00b7 Y2,",
+          "type": "equation",
+          "page": 291
+        },
+        {
+          "id": 26119,
+          "text": "where \u0394 \u2208{0, 1} with Pr(\u0394 = 1) = \u03c0. This generative representation is\nexplicit: generate a \u0394 \u2208{0, 1} with probability \u03c0, and then depending on\nthe outcome, deliver either Y1 or Y2. Let \u03c6\u03b8(x) denote the normal density\nwith parameters \u03b8 = (\u03bc, \u03c32). Then the density of Y is",
+          "type": "narrative",
+          "page": 291
+        },
+        {
+          "id": 26120,
+          "text": "gY (y) = (1 \u2212\u03c0)\u03c6\u03b81(y) + \u03c0\u03c6\u03b82(y).\n(8.37)",
+          "type": "narrative",
+          "page": 291
+        },
+        {
+          "id": 26121,
+          "text": "Now suppose we wish to \ufb01t this model to the data in Figure 8.5 by maxi-\nmum likelihood. The parameters are",
+          "type": "narrative",
+          "page": 291
+        },
+        {
+          "id": 26122,
+          "text": "\u03b8 = (\u03c0, \u03b81, \u03b82) = (\u03c0, \u03bc1, \u03c32\n1, \u03bc2, \u03c32\n2).\n(8.38)",
+          "type": "equation",
+          "page": 291
+        },
+        {
+          "id": 26123,
+          "text": "The log-likelihood based on the N training cases is",
+          "type": "narrative",
+          "page": 291
+        },
+        {
+          "id": 26124,
+          "text": "\u2113(\u03b8; Z) =",
+          "type": "narrative",
+          "page": 291
+        },
+        {
+          "id": 26125,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 291
+        },
+        {
+          "id": 26126,
+          "text": "i=1\nlog[(1 \u2212\u03c0)\u03c6\u03b81(yi) + \u03c0\u03c6\u03b82(yi)].\n(8.39)",
+          "type": "narrative",
+          "page": 291
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "name": "data augmentation",
+      "description": "The above procedure is an example of the EM (or Baum\u2013Welch) algorithm\nfor maximizing likelihoods in certain classes of problems. These problems\nare ones for which maximization of the likelihood is di\ufb03cult, but made\neasier by enlarging the sample with latent (unobserved) data. This is called\ndata augmentation. Here the latent data are the model memberships \u0394i.\nIn other problems, the latent data are actual data that should have been\nobserved but are missing.\nAlgorithm 8.2 gives the general formulation of the EM algorithm. Our\nobserved data is Z, having log-likelihood \u2113(\u03b8; Z) depending on parameters\n\u03b8. The latent or missing data is Zm, so that the complete data is T =\n(Z, Zm) with log-likelihood \u21130(\u03b8; T), \u21130 based on the complete density. In\nthe mixture problem (Z, Zm) = (y, \u0394), and \u21130(\u03b8; T) is given in (8.40).\nIn our mixture example, E(\u21130(\u03b8\u2032; T)|Z, \u02c6\u03b8(j)) is simply (8.40) with the \u0394i\nreplaced by the responsibilities \u02c6\u03b3i(\u02c6\u03b8), and the maximizers in step 3 are just\nweighted means and variances.\nWe now give an explanation of why the EM algorithm works in general.\nSince",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "These problems are ones for which maximization of the likelihood is difficult, but made easier by enlarging the sample with latent (unobserved) data. This is called data augmentation. Here the latent data are the model memberships \u0394i.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 26157,
+          "text": "276\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 294
+        },
+        {
+          "id": 26158,
+          "text": "Iteration",
+          "type": "narrative",
+          "page": 294
+        },
+        {
+          "id": 26159,
+          "text": "Observed Data Log-likelihood",
+          "type": "narrative",
+          "page": 294
+        },
+        {
+          "id": 26160,
+          "text": "5\n10\n15\n20",
+          "type": "equation",
+          "page": 294
+        },
+        {
+          "id": 26161,
+          "text": "-44\n-43\n-42\n-41\n-40\n-39",
+          "type": "equation",
+          "page": 294
+        },
+        {
+          "id": 26162,
+          "text": "o",
+          "type": "narrative",
+          "page": 294
+        },
+        {
+          "id": 26163,
+          "text": "o\no\no\no\no",
+          "type": "narrative",
+          "page": 294
+        },
+        {
+          "id": 26164,
+          "text": "o",
+          "type": "narrative",
+          "page": 294
+        },
+        {
+          "id": 26165,
+          "text": "o\no\no\no\no\no\no\no\no\no\no\no\no",
+          "type": "narrative",
+          "page": 294
+        },
+        {
+          "id": 26168,
+          "text": "The above procedure is an example of the EM (or Baum\u2013Welch) algorithm\nfor maximizing likelihoods in certain classes of problems. These problems\nare ones for which maximization of the likelihood is di\ufb03cult, but made\neasier by enlarging the sample with latent (unobserved) data. This is called\ndata augmentation. Here the latent data are the model memberships \u0394i.\nIn other problems, the latent data are actual data that should have been\nobserved but are missing.\nAlgorithm 8.2 gives the general formulation of the EM algorithm. Our\nobserved data is Z, having log-likelihood \u2113(\u03b8; Z) depending on parameters\n\u03b8. The latent or missing data is Zm, so that the complete data is T =\n(Z, Zm) with log-likelihood \u21130(\u03b8; T), \u21130 based on the complete density. In\nthe mixture problem (Z, Zm) = (y, \u0394), and \u21130(\u03b8; T) is given in (8.40).\nIn our mixture example, E(\u21130(\u03b8\u2032; T)|Z, \u02c6\u03b8(j)) is simply (8.40) with the \u0394i\nreplaced by the responsibilities \u02c6\u03b3i(\u02c6\u03b8), and the maximizers in step 3 are just\nweighted means and variances.\nWe now give an explanation of why the EM algorithm works in general.\nSince",
+          "type": "narrative",
+          "page": 294
+        },
+        {
+          "id": 26169,
+          "text": "Pr(Zm|Z, \u03b8\u2032) = Pr(Zm, Z|\u03b8\u2032)",
+          "type": "narrative",
+          "page": 294
+        },
+        {
+          "id": 26170,
+          "text": "Pr(Z|\u03b8\u2032)\n,\n(8.44)",
+          "type": "equation",
+          "page": 294
+        },
+        {
+          "id": 26171,
+          "text": "we can write",
+          "type": "narrative",
+          "page": 294
+        },
+        {
+          "id": 26172,
+          "text": "Pr(Z|\u03b8\u2032) =\nPr(T|\u03b8\u2032)\nPr(Zm|Z, \u03b8\u2032).\n(8.45)",
+          "type": "narrative",
+          "page": 294
+        },
+        {
+          "id": 26173,
+          "text": "In terms of log-likelihoods, we have \u2113(\u03b8\u2032; Z) = \u21130(\u03b8\u2032; T)\u2212\u21131(\u03b8\u2032; Zm|Z), where\n\u21131 is based on the conditional density Pr(Zm|Z, \u03b8\u2032). Taking conditional\nexpectations with respect to the distribution of T|Z governed by parameter\n\u03b8 gives",
+          "type": "narrative",
+          "page": 294
+        },
+        {
+          "id": 26174,
+          "text": "\u2113(\u03b8\u2032; Z)\n=\nE[\u21130(\u03b8\u2032; T)|Z, \u03b8] \u2212E[\u21131(\u03b8\u2032; Zm|Z)|Z, \u03b8]",
+          "type": "narrative",
+          "page": 294
+        }
+      ]
+    },
+    {
+      "id": 325,
+      "name": "generalized em algorithms",
+      "description": "Variants of EM that only require increasing (not maximizing) the Q function in the M-step.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "This argument also makes it clear that a full maximization in the M step is not necessary: we need only to find a value \u03b8\u0302(j+1) so that Q(\u03b8', \u03b8\u0302(j)) increases as a function of the first argument, that is, Q(\u03b8\u0302(j+1), \u03b8\u0302(j)) > Q(\u03b8\u0302(j), \u03b8\u0302(j)). Such procedures are called GEM (generalized EM) algorithms.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 26176,
+          "text": "Algorithm 8.2 The EM Algorithm.",
+          "type": "narrative",
+          "page": 295
+        },
+        {
+          "id": 26177,
+          "text": "1. Start with initial guesses for the parameters \u02c6\u03b8(0).",
+          "type": "narrative",
+          "page": 295
+        },
+        {
+          "id": 26178,
+          "text": "2. Expectation Step: at the jth step, compute",
+          "type": "narrative",
+          "page": 295
+        },
+        {
+          "id": 26179,
+          "text": "Q(\u03b8\u2032, \u02c6\u03b8(j)) = E(\u21130(\u03b8\u2032; T)|Z, \u02c6\u03b8(j))\n(8.43)",
+          "type": "narrative",
+          "page": 295
+        },
+        {
+          "id": 26180,
+          "text": "as a function of the dummy argument \u03b8\u2032.",
+          "type": "narrative",
+          "page": 295
+        },
+        {
+          "id": 26181,
+          "text": "3. Maximization Step: determine the new estimate \u02c6\u03b8(j+1) as the maxi-\nmizer of Q(\u03b8\u2032, \u02c6\u03b8(j)) over \u03b8\u2032.",
+          "type": "narrative",
+          "page": 295
+        },
+        {
+          "id": 26182,
+          "text": "4. Iterate steps 2 and 3 until convergence.",
+          "type": "narrative",
+          "page": 295
+        },
+        {
+          "id": 26183,
+          "text": "\u2261\nQ(\u03b8\u2032, \u03b8) \u2212R(\u03b8\u2032, \u03b8).\n(8.46)",
+          "type": "equation",
+          "page": 295
+        },
+        {
+          "id": 26184,
+          "text": "In the M step, the EM algorithm maximizes Q(\u03b8\u2032, \u03b8) over \u03b8\u2032, rather than\nthe actual objective function \u2113(\u03b8\u2032; Z). Why does it succeed in maximizing\n\u2113(\u03b8\u2032; Z)? Note that R(\u03b8\u2217, \u03b8) is the expectation of a log-likelihood of a density\n(indexed by \u03b8\u2217), with respect to the same density indexed by \u03b8, and hence\n(by Jensen\u2019s inequality) is maximized as a function of \u03b8\u2217, when \u03b8\u2217= \u03b8 (see\nExercise 8.1). So if \u03b8\u2032 maximizes Q(\u03b8\u2032, \u03b8), we see that",
+          "type": "narrative",
+          "page": 295
+        },
+        {
+          "id": 26185,
+          "text": "\u2113(\u03b8\u2032; Z) \u2212\u2113(\u03b8; Z)\n=\n[Q(\u03b8\u2032, \u03b8) \u2212Q(\u03b8, \u03b8)] \u2212[R(\u03b8\u2032, \u03b8) \u2212R(\u03b8, \u03b8)]\n\u2265\n0.\n(8.47)",
+          "type": "equation",
+          "page": 295
+        },
+        {
+          "id": 26186,
+          "text": "Hence the EM iteration never decreases the log-likelihood.\nThis argument also makes it clear that a full maximization in the M\nstep is not necessary: we need only to \ufb01nd a value \u02c6\u03b8(j+1) so that Q(\u03b8\u2032, \u02c6\u03b8(j))\nincreases as a function of the \ufb01rst argument, that is, Q(\u02c6\u03b8(j+1), \u02c6\u03b8(j)) >\nQ(\u02c6\u03b8(j), \u02c6\u03b8(j)). Such procedures are called GEM (generalized EM) algorithms.\nThe EM algorithm can also be viewed as a minorization procedure: see\nExercise 8.7.",
+          "type": "narrative",
+          "page": 295
+        },
+        {
+          "id": 26188,
+          "text": "Here is a di\ufb00erent view of the EM procedure, as a joint maximization\nalgorithm. Consider the function",
+          "type": "narrative",
+          "page": 295
+        },
+        {
+          "id": 26189,
+          "text": "F(\u03b8\u2032, \u02dcP) = E \u02dc\nP [\u21130(\u03b8\u2032; T)] \u2212E \u02dc\nP [log \u02dcP(Zm)].\n(8.48)",
+          "type": "narrative",
+          "page": 295
+        },
+        {
+          "id": 26190,
+          "text": "Here \u02dcP(Zm) is any distribution over the latent data Zm. In the mixture\nexample, \u02dcP(Zm) comprises the set of probabilities \u03b3i = Pr(\u0394i = 1|\u03b8, Z).\nNote that F evaluated at \u02dcP(Zm) = Pr(Zm|Z, \u03b8\u2032), is the log-likelihood of",
+          "type": "narrative",
+          "page": 295
+        },
+        {
+          "id": 26191,
+          "text": "278\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 296
+        },
+        {
+          "id": 26192,
+          "text": "1\n2\n3\n4\n5",
+          "type": "equation",
+          "page": 296
+        },
+        {
+          "id": 26193,
+          "text": "0\n1\n2\n3\n4",
+          "type": "equation",
+          "page": 296
+        },
+        {
+          "id": 26194,
+          "text": "0.1\n0.3",
+          "type": "equation",
+          "page": 296
+        },
+        {
+          "id": 26195,
+          "text": "0.5\n0.7\n0.9",
+          "type": "equation",
+          "page": 296
+        },
+        {
+          "id": 26196,
+          "text": "Model Parameters",
+          "type": "narrative",
+          "page": 296
+        },
+        {
+          "id": 26197,
+          "text": "Latent Data Parameters",
+          "type": "narrative",
+          "page": 296
+        },
+        {
+          "id": 26198,
+          "text": "E",
+          "type": "narrative",
+          "page": 296
+        },
+        {
+          "id": 26199,
+          "text": "M",
+          "type": "narrative",
+          "page": 296
+        },
+        {
+          "id": 26200,
+          "text": "E\nM",
+          "type": "narrative",
+          "page": 296
+        },
+        {
+          "id": 26202,
+          "text": "the observed data, from (8.46)1. The function F expands the domain of\nthe log-likelihood, to facilitate its maximization.\nThe EM algorithm can be viewed as a joint maximization method for F\nover \u03b8\u2032 and \u02dcP(Zm), by \ufb01xing one argument and maximizing over the other.\nThe maximizer over \u02dcP(Zm) for \ufb01xed \u03b8\u2032 can be shown to be",
+          "type": "narrative",
+          "page": 296
+        },
+        {
+          "id": 26203,
+          "text": "\u02dcP(Zm) = Pr(Zm|Z, \u03b8\u2032)\n(8.49)",
+          "type": "narrative",
+          "page": 296
+        },
+        {
+          "id": 26204,
+          "text": "(Exercise 8.2). This is the distribution computed by the E step, for example,\n(8.42) in the mixture example. In the M step, we maximize F(\u03b8\u2032, \u02dcP) over \u03b8\u2032",
+          "type": "narrative",
+          "page": 296
+        },
+        {
+          "id": 26205,
+          "text": "with \u02dcP \ufb01xed: this is the same as maximizing the \ufb01rst term E \u02dc\nP [\u21130(\u03b8\u2032; T)|Z, \u03b8]\nsince the second term does not involve \u03b8\u2032.\nFinally, since F(\u03b8\u2032, \u02dcP) and the observed data log-likelihood agree when\n\u02dcP(Zm) = Pr(Zm|Z, \u03b8\u2032), maximization of the former accomplishes maxi-\nmization of the latter. Figure 8.7 shows a schematic view of this process.\nThis view of the EM algorithm leads to alternative maximization proce-",
+          "type": "narrative",
+          "page": 296
+        },
+        {
+          "id": 26206,
+          "text": "1 (8.46) holds for all \u03b8, including \u03b8 = \u03b8\u2032.",
+          "type": "narrative",
+          "page": 296
+        },
+        {
+          "id": 26208,
+          "text": "Algorithm 8.3 Gibbs Sampler.",
+          "type": "narrative",
+          "page": 297
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "name": "Algorithm 8.3 Gibbs Sampler",
+      "description": "For k = 1, 2, . . . , K generate U (t)\nk\nfrom\nPr(U (t)\nk |U (t)\n1 , . . . , U (t)\nk\u22121, U (t\u22121)\nk+1 , . . . , U (t\u22121)\nK\n).",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "For k = 1, 2, . . . , K generate U (t)\u2096 from Pr(U (t)\u2096 |U (t)\u2081, . . . , U (t)\u2096\u208b\u2081, U (t\u22121)\u2096\u208a\u2081, . . . , U (t\u22121)\u2096).",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 26208,
+          "text": "Algorithm 8.3 Gibbs Sampler.",
+          "type": "narrative",
+          "page": 297
+        },
+        {
+          "id": 26209,
+          "text": "1. Take some initial values U (0)\nk , k = 1, 2, . . . , K.",
+          "type": "narrative",
+          "page": 297
+        },
+        {
+          "id": 26210,
+          "text": "2. Repeat for t = 1, 2, . . . , . :",
+          "type": "narrative",
+          "page": 297
+        },
+        {
+          "id": 26211,
+          "text": "For k = 1, 2, . . . , K generate U (t)\nk\nfrom\nPr(U (t)\nk |U (t)\n1 , . . . , U (t)\nk\u22121, U (t\u22121)\nk+1 , . . . , U (t\u22121)\nK\n).",
+          "type": "narrative",
+          "page": 297
+        },
+        {
+          "id": 26212,
+          "text": "3. Continue step 2 until the joint distribution of (U (t)\n1 , U (t)\n2 , . . . , U (t)\nK )\ndoes not change.",
+          "type": "narrative",
+          "page": 297
+        },
+        {
+          "id": 26213,
+          "text": "dures. For example, one does not need to maximize with respect to all of\nthe latent data parameters at once, but could instead maximize over one\nof them at a time, alternating with the M step.",
+          "type": "narrative",
+          "page": 297
+        },
+        {
+          "id": 26215,
+          "text": "Having de\ufb01ned a Bayesian model, one would like to draw samples from\nthe resulting posterior distribution, in order to make inferences about the\nparameters. Except for simple models, this is often a di\ufb03cult computa-\ntional problem. In this section we discuss the Markov chain Monte Carlo\n(MCMC) approach to posterior sampling. We will see that Gibbs sampling,\nan MCMC procedure, is closely related to the EM algorithm: the main dif-\nference is that it samples from the conditional distributions rather than\nmaximizing over them.\nConsider \ufb01rst the following abstract problem. We have random variables\nU1, U2, . . . , UK and we wish to draw a sample from their joint distribution.\nSuppose this is di\ufb03cult to do, but it is easy to simulate from the conditional\ndistributions Pr(Uj|U1, U2, . . . , Uj\u22121, Uj+1, . . . , UK), j = 1, 2, . . . , K. The\nGibbs sampling procedure alternatively simulates from each of these distri-\nbutions and when the process stabilizes, provides a sample from the desired\njoint distribution. The procedure is de\ufb01ned Algorithm 8.3.\nUnder regularity conditions it can be shown that this procedure even-\ntually stabilizes, and the resulting random variables are indeed a sample\nfrom the joint distribution of U1, U2, . . . , UK. This occurs despite the fact\nthat the samples (U (t)\n1 , U (t)\n2 , . . . , U (t)\nK ) are clearly not independent for dif-\nferent t. More formally, Gibbs sampling produces a Markov chain whose\nstationary distribution is the true joint distribution, and hence the term\n\u201cMarkov chain Monte Carlo.\u201d It is not surprising that the true joint dis-\ntribution is stationary under this process, as the successive steps leave the\nmarginal distributions of the Uk\u2019s unchanged.",
+          "type": "narrative",
+          "page": 297
+        },
+        {
+          "id": 26216,
+          "text": "280\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 298
+        },
+        {
+          "id": 26217,
+          "text": "Note that we don\u2019t need to know the explicit form of the conditional\ndensities, but just need to be able to sample from them. After the procedure\nreaches stationarity, the marginal density of any subset of the variables\ncan be approximated by a density estimate applied to the sample values.\nHowever if the explicit form of the conditional density Pr(Uk, |U\u2113, \u2113\u0338= k)\nis available, a better estimate of say the marginal density of Uk can be\nobtained from (Exercise 8.3):",
+          "type": "narrative",
+          "page": 298
+        },
+        {
+          "id": 26218,
+          "text": "3\nPrUk(u) =\n1\n(M \u2212m + 1)",
+          "type": "narrative",
+          "page": 298
+        },
+        {
+          "id": 26219,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 298
+        },
+        {
+          "id": 26220,
+          "text": "t=m\nPr(u|U (t)\n\u2113, \u2113\u0338= k).\n(8.50)",
+          "type": "narrative",
+          "page": 298
+        },
+        {
+          "id": 26221,
+          "text": "Here we have averaged over the last M \u2212m + 1 members of the sequence,\nto allow for an initial \u201cburn-in\u201d period before stationarity is reached.\nNow getting back to Bayesian inference, our goal is to draw a sample from\nthe joint posterior of the parameters given the data Z. Gibbs sampling will\nbe helpful if it is easy to sample from the conditional distribution of each\nparameter given the other parameters and Z. An example\u2014the Gaussian\nmixture problem\u2014is detailed next.\nThere is a close connection between Gibbs sampling from a posterior and\nthe EM algorithm in exponential family models. The key is to consider the\nlatent data Zm from the EM procedure to be another parameter for the\nGibbs sampler. To make this explicit for the Gaussian mixture problem,\nwe take our parameters to be (\u03b8, Zm). For simplicity we \ufb01x the variances\n\u03c32\n1, \u03c32\n2 and mixing proportion \u03c0 at their maximum likelihood values so that\nthe only unknown parameters in \u03b8 are the means \u03bc1 and \u03bc2. The Gibbs\nsampler for the mixture problem is given in Algorithm 8.4. We see that\nsteps 2(a) and 2(b) are the same as the E and M steps of the EM pro-\ncedure, except that we sample rather than maximize. In step 2(a), rather\nthan compute the maximum likelihood responsibilities \u03b3i = E(\u0394i|\u03b8, Z),\nthe Gibbs sampling procedure simulates the latent data \u0394i from the distri-\nbutions Pr(\u0394i|\u03b8, Z). In step 2(b), rather than compute the maximizers of\nthe posterior Pr(\u03bc1, \u03bc2, \u0394|Z) we simulate from the conditional distribution\nPr(\u03bc1, \u03bc2|\u0394, Z).\nFigure 8.8 shows 200 iterations of Gibbs sampling, with the mean param-\neters \u03bc1 (lower) and \u03bc2 (upper) shown in the left panel, and the proportion\nof class 2 observations \t\ni \u0394i/N on the right. Horizontal broken lines have\nbeen drawn at the maximum likelihood estimate values \u02c6\u03bc1, \u02c6\u03bc2 and",
+          "type": "narrative",
+          "page": 298
+        },
+        {
+          "id": 26222,
+          "text": "i \u02c6\u03b3i/N\nin each case. The values seem to stabilize quite quickly, and are distributed\nevenly around the maximum likelihood values.\nThe above mixture model was simpli\ufb01ed, in order to make the clear\nconnection between Gibbs sampling and the EM algorithm. More realisti-\ncally, one would put a prior distribution on the variances \u03c32\n1, \u03c32\n2 and mixing\nproportion \u03c0, and include separate Gibbs sampling steps in which we sam-\nple from their posterior distributions, conditional on the other parameters.\nOne can also incorporate proper (informative) priors for the mean param-",
+          "type": "narrative",
+          "page": 298
+        },
+        {
+          "id": 26224,
+          "text": "Algorithm 8.4 Gibbs sampling for mixtures.",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26225,
+          "text": "1. Take some initial values \u03b8(0) = (\u03bc(0)\n1 , \u03bc(0)\n2 ).",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26226,
+          "text": "2. Repeat for t = 1, 2, . . . , .",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26227,
+          "text": "(a) For i = 1, 2, . . . , N generate \u0394(t)\ni\n\u2208{0, 1} with Pr(\u0394(t)\ni\n= 1) =\n\u02c6\u03b3i(\u03b8(t)), from equation (8.42).",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26228,
+          "text": "(b) Set",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26229,
+          "text": "\u02c6\u03bc1\n=\n\tN\ni=1(1 \u2212\u0394(t)\ni ) \u00b7 yi\n\tN\ni=1(1 \u2212\u0394(t)\ni )\n,",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26230,
+          "text": "\u02c6\u03bc2\n=\n\tN\ni=1 \u0394(t)\ni\n\u00b7 yi\n\tN\ni=1 \u0394(t)\ni\n,",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26231,
+          "text": "and generate \u03bc(t)\n1\n\u223cN(\u02c6\u03bc1, \u02c6\u03c32\n1) and \u03bc(t)\n2\n\u223cN(\u02c6\u03bc2, \u02c6\u03c32\n2).",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26232,
+          "text": "3. Continue step 2 until the joint distribution of (\u0394(t), \u03bc(t)\n1 , \u03bc(t)\n2 ) doesn\u2019t\nchange",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26233,
+          "text": "Gibbs Iteration",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26234,
+          "text": "Mean Parameters",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26235,
+          "text": "0\n50\n100\n150\n200",
+          "type": "equation",
+          "page": 299
+        },
+        {
+          "id": 26236,
+          "text": "0\n2\n4\n6\n8",
+          "type": "equation",
+          "page": 299
+        },
+        {
+          "id": 26237,
+          "text": "Gibbs Iteration",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26238,
+          "text": "Mixing Proportion",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26239,
+          "text": "0\n50\n100\n150\n200",
+          "type": "equation",
+          "page": 299
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "name": "Algorithm 8.4 Gibbs sampling for mixtures",
+      "description": "(a) For i = 1, 2, . . . , N generate \u0394(t)\ni\n\u2208{0, 1} with Pr(\u0394(t)\ni\n= 1) =\n\u02c6\u03b3i(\u03b8(t)), from equation (8.42).",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "(a) For i = 1, 2, . . . , N generate \u0394(t)\u1d62 \u2208{0, 1} with Pr(\u0394(t)\u1d62 = 1) = \u03b3\u0302\u1d62(\u03b8(t)), from equation (8.42).",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 26208,
+          "text": "Algorithm 8.3 Gibbs Sampler.",
+          "type": "narrative",
+          "page": 297
+        },
+        {
+          "id": 26209,
+          "text": "1. Take some initial values U (0)\nk , k = 1, 2, . . . , K.",
+          "type": "narrative",
+          "page": 297
+        },
+        {
+          "id": 26210,
+          "text": "2. Repeat for t = 1, 2, . . . , . :",
+          "type": "narrative",
+          "page": 297
+        },
+        {
+          "id": 26211,
+          "text": "For k = 1, 2, . . . , K generate U (t)\nk\nfrom\nPr(U (t)\nk |U (t)\n1 , . . . , U (t)\nk\u22121, U (t\u22121)\nk+1 , . . . , U (t\u22121)\nK\n).",
+          "type": "narrative",
+          "page": 297
+        },
+        {
+          "id": 26212,
+          "text": "3. Continue step 2 until the joint distribution of (U (t)\n1 , U (t)\n2 , . . . , U (t)\nK )\ndoes not change.",
+          "type": "narrative",
+          "page": 297
+        },
+        {
+          "id": 26213,
+          "text": "dures. For example, one does not need to maximize with respect to all of\nthe latent data parameters at once, but could instead maximize over one\nof them at a time, alternating with the M step.",
+          "type": "narrative",
+          "page": 297
+        },
+        {
+          "id": 26215,
+          "text": "Having de\ufb01ned a Bayesian model, one would like to draw samples from\nthe resulting posterior distribution, in order to make inferences about the\nparameters. Except for simple models, this is often a di\ufb03cult computa-\ntional problem. In this section we discuss the Markov chain Monte Carlo\n(MCMC) approach to posterior sampling. We will see that Gibbs sampling,\nan MCMC procedure, is closely related to the EM algorithm: the main dif-\nference is that it samples from the conditional distributions rather than\nmaximizing over them.\nConsider \ufb01rst the following abstract problem. We have random variables\nU1, U2, . . . , UK and we wish to draw a sample from their joint distribution.\nSuppose this is di\ufb03cult to do, but it is easy to simulate from the conditional\ndistributions Pr(Uj|U1, U2, . . . , Uj\u22121, Uj+1, . . . , UK), j = 1, 2, . . . , K. The\nGibbs sampling procedure alternatively simulates from each of these distri-\nbutions and when the process stabilizes, provides a sample from the desired\njoint distribution. The procedure is de\ufb01ned Algorithm 8.3.\nUnder regularity conditions it can be shown that this procedure even-\ntually stabilizes, and the resulting random variables are indeed a sample\nfrom the joint distribution of U1, U2, . . . , UK. This occurs despite the fact\nthat the samples (U (t)\n1 , U (t)\n2 , . . . , U (t)\nK ) are clearly not independent for dif-\nferent t. More formally, Gibbs sampling produces a Markov chain whose\nstationary distribution is the true joint distribution, and hence the term\n\u201cMarkov chain Monte Carlo.\u201d It is not surprising that the true joint dis-\ntribution is stationary under this process, as the successive steps leave the\nmarginal distributions of the Uk\u2019s unchanged.",
+          "type": "narrative",
+          "page": 297
+        },
+        {
+          "id": 26216,
+          "text": "280\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 298
+        },
+        {
+          "id": 26217,
+          "text": "Note that we don\u2019t need to know the explicit form of the conditional\ndensities, but just need to be able to sample from them. After the procedure\nreaches stationarity, the marginal density of any subset of the variables\ncan be approximated by a density estimate applied to the sample values.\nHowever if the explicit form of the conditional density Pr(Uk, |U\u2113, \u2113\u0338= k)\nis available, a better estimate of say the marginal density of Uk can be\nobtained from (Exercise 8.3):",
+          "type": "narrative",
+          "page": 298
+        },
+        {
+          "id": 26218,
+          "text": "3\nPrUk(u) =\n1\n(M \u2212m + 1)",
+          "type": "narrative",
+          "page": 298
+        },
+        {
+          "id": 26219,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 298
+        },
+        {
+          "id": 26220,
+          "text": "t=m\nPr(u|U (t)\n\u2113, \u2113\u0338= k).\n(8.50)",
+          "type": "narrative",
+          "page": 298
+        },
+        {
+          "id": 26221,
+          "text": "Here we have averaged over the last M \u2212m + 1 members of the sequence,\nto allow for an initial \u201cburn-in\u201d period before stationarity is reached.\nNow getting back to Bayesian inference, our goal is to draw a sample from\nthe joint posterior of the parameters given the data Z. Gibbs sampling will\nbe helpful if it is easy to sample from the conditional distribution of each\nparameter given the other parameters and Z. An example\u2014the Gaussian\nmixture problem\u2014is detailed next.\nThere is a close connection between Gibbs sampling from a posterior and\nthe EM algorithm in exponential family models. The key is to consider the\nlatent data Zm from the EM procedure to be another parameter for the\nGibbs sampler. To make this explicit for the Gaussian mixture problem,\nwe take our parameters to be (\u03b8, Zm). For simplicity we \ufb01x the variances\n\u03c32\n1, \u03c32\n2 and mixing proportion \u03c0 at their maximum likelihood values so that\nthe only unknown parameters in \u03b8 are the means \u03bc1 and \u03bc2. The Gibbs\nsampler for the mixture problem is given in Algorithm 8.4. We see that\nsteps 2(a) and 2(b) are the same as the E and M steps of the EM pro-\ncedure, except that we sample rather than maximize. In step 2(a), rather\nthan compute the maximum likelihood responsibilities \u03b3i = E(\u0394i|\u03b8, Z),\nthe Gibbs sampling procedure simulates the latent data \u0394i from the distri-\nbutions Pr(\u0394i|\u03b8, Z). In step 2(b), rather than compute the maximizers of\nthe posterior Pr(\u03bc1, \u03bc2, \u0394|Z) we simulate from the conditional distribution\nPr(\u03bc1, \u03bc2|\u0394, Z).\nFigure 8.8 shows 200 iterations of Gibbs sampling, with the mean param-\neters \u03bc1 (lower) and \u03bc2 (upper) shown in the left panel, and the proportion\nof class 2 observations \t\ni \u0394i/N on the right. Horizontal broken lines have\nbeen drawn at the maximum likelihood estimate values \u02c6\u03bc1, \u02c6\u03bc2 and",
+          "type": "narrative",
+          "page": 298
+        },
+        {
+          "id": 26222,
+          "text": "i \u02c6\u03b3i/N\nin each case. The values seem to stabilize quite quickly, and are distributed\nevenly around the maximum likelihood values.\nThe above mixture model was simpli\ufb01ed, in order to make the clear\nconnection between Gibbs sampling and the EM algorithm. More realisti-\ncally, one would put a prior distribution on the variances \u03c32\n1, \u03c32\n2 and mixing\nproportion \u03c0, and include separate Gibbs sampling steps in which we sam-\nple from their posterior distributions, conditional on the other parameters.\nOne can also incorporate proper (informative) priors for the mean param-",
+          "type": "narrative",
+          "page": 298
+        },
+        {
+          "id": 26224,
+          "text": "Algorithm 8.4 Gibbs sampling for mixtures.",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26225,
+          "text": "1. Take some initial values \u03b8(0) = (\u03bc(0)\n1 , \u03bc(0)\n2 ).",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26226,
+          "text": "2. Repeat for t = 1, 2, . . . , .",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26227,
+          "text": "(a) For i = 1, 2, . . . , N generate \u0394(t)\ni\n\u2208{0, 1} with Pr(\u0394(t)\ni\n= 1) =\n\u02c6\u03b3i(\u03b8(t)), from equation (8.42).",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26228,
+          "text": "(b) Set",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26229,
+          "text": "\u02c6\u03bc1\n=\n\tN\ni=1(1 \u2212\u0394(t)\ni ) \u00b7 yi\n\tN\ni=1(1 \u2212\u0394(t)\ni )\n,",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26230,
+          "text": "\u02c6\u03bc2\n=\n\tN\ni=1 \u0394(t)\ni\n\u00b7 yi\n\tN\ni=1 \u0394(t)\ni\n,",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26231,
+          "text": "and generate \u03bc(t)\n1\n\u223cN(\u02c6\u03bc1, \u02c6\u03c32\n1) and \u03bc(t)\n2\n\u223cN(\u02c6\u03bc2, \u02c6\u03c32\n2).",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26232,
+          "text": "3. Continue step 2 until the joint distribution of (\u0394(t), \u03bc(t)\n1 , \u03bc(t)\n2 ) doesn\u2019t\nchange",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26233,
+          "text": "Gibbs Iteration",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26234,
+          "text": "Mean Parameters",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26235,
+          "text": "0\n50\n100\n150\n200",
+          "type": "equation",
+          "page": 299
+        },
+        {
+          "id": 26236,
+          "text": "0\n2\n4\n6\n8",
+          "type": "equation",
+          "page": 299
+        },
+        {
+          "id": 26237,
+          "text": "Gibbs Iteration",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26238,
+          "text": "Mixing Proportion",
+          "type": "narrative",
+          "page": 299
+        },
+        {
+          "id": 26239,
+          "text": "0\n50\n100\n150\n200",
+          "type": "equation",
+          "page": 299
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "name": "MM algorithms",
+      "description": "There are analogous de\ufb01nitions for majorization, for minimizing a function\nf(x). The resulting algorithms are known as MM algorithms, for \u201cMinorize-\nMaximize\u201d or \u201cMajorize-Minimize.\u201d\nShow that the EM algorithm (Section 8.5.2) is an example of an MM al-\ngorithm, using Q(\u03b8\u2032, \u03b8)+log Pr(Z|\u03b8)\u2212Q(\u03b8, \u03b8) to minorize the observed data\nlog-likelihood \u2113(\u03b8\u2032; Z). (Note that only the \ufb01rst term involves the relevant\nparameter \u03b8\u2032).",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "There are analogous definitions for majorization, for minimizing a function f(x). The resulting algorithms are known as MM algorithms, for 'Minorize-Maximize' or 'Majorize-Minimize.'",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 26701,
+          "text": "290\n8. Model Inference and Averaging",
+          "type": "narrative",
+          "page": 308
+        },
+        {
+          "id": 26702,
+          "text": "Of course the population linear regression (8.57) is not available, and it\nis natural to replace it with the linear regression over the training set. But\nthere are simple examples where this does not work well. For example, if\n\u02c6fm(x), m = 1, 2, . . . , M represent the prediction from the best subset of\ninputs of size m among M total inputs, then linear regression would put all\nof the weight on the largest model, that is, \u02c6wM = 1, \u02c6wm = 0, m < M. The\nproblem is that we have not put each of the models on the same footing\nby taking into account their complexity (the number of inputs m in this\nexample).\nStacked generalization, or stacking, is a way of doing this. Let \u02c6f \u2212i\nm (x)\nbe the prediction at x, using model m, applied to the dataset with the\nith training observation removed. The stacking estimate of the weights is\nobtained from the least squares linear regression of yi on \u02c6f \u2212i\nm (xi), m =\n1, 2, . . . , M. In detail the stacking weights are given by",
+          "type": "narrative",
+          "page": 308
+        },
+        {
+          "id": 26703,
+          "text": "\u02c6wst = argmin\nw",
+          "type": "narrative",
+          "page": 308
+        },
+        {
+          "id": 26704,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 308
+        },
+        {
+          "id": 26705,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 308
+        },
+        {
+          "id": 26706,
+          "text": "$",
+          "type": "equation",
+          "page": 308
+        },
+        {
+          "id": 26707,
+          "text": "yi \u2212",
+          "type": "narrative",
+          "page": 308
+        },
+        {
+          "id": 26708,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 308
+        },
+        {
+          "id": 26709,
+          "text": "m=1\nwm \u02c6f \u2212i\nm (xi)",
+          "type": "narrative",
+          "page": 308
+        },
+        {
+          "id": 26710,
+          "text": "%2",
+          "type": "equation",
+          "page": 308
+        },
+        {
+          "id": 26711,
+          "text": ".\n(8.59)",
+          "type": "equation",
+          "page": 308
+        },
+        {
+          "id": 26712,
+          "text": "The \ufb01nal prediction is \t\nm \u02c6wst\nm \u02c6fm(x). By using the cross-validated pre-\ndictions \u02c6f \u2212i\nm (x), stacking avoids giving unfairly high weight to models with\nhigher complexity. Better results can be obtained by restricting the weights\nto be nonnegative, and to sum to 1. This seems like a reasonable restriction\nif we interpret the weights as posterior model probabilities as in equation\n(8.54), and it leads to a tractable quadratic programming problem.\nThere is a close connection between stacking and model selection via\nleave-one-out cross-validation (Section 7.10). If we restrict the minimization\nin (8.59) to weight vectors w that have one unit weight and the rest zero,\nthis leads to a model choice \u02c6m with smallest leave-one-out cross-validation\nerror. Rather than choose a single model, stacking combines them with\nestimated optimal weights. This will often lead to better prediction, but\nless interpretability than the choice of only one of the M models.\nThe stacking idea is actually more general than described above. One\ncan use any learning method, not just linear regression, to combine the\nmodels as in (8.59); the weights could also depend on the input location\nx. In this way, learning methods are \u201cstacked\u201d on top of one another, to\nimprove prediction performance.",
+          "type": "narrative",
+          "page": 308
+        },
+        {
+          "id": 26714,
+          "text": "The \ufb01nal method described in this chapter does not involve averaging or\ncombining models, but rather is a technique for \ufb01nding a better single\nmodel. Bumping uses bootstrap sampling to move randomly through model\nspace. For problems where \ufb01tting method \ufb01nds many local minima, bump-\ning can help the method to avoid getting stuck in poor solutions.",
+          "type": "narrative",
+          "page": 308
+        },
+        {
+          "id": 26716,
+          "text": "Regular 4-Node Tree",
+          "type": "narrative",
+          "page": 309
+        },
+        {
+          "id": 26717,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26718,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26719,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26720,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26721,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26722,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26723,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26724,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26725,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26726,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26727,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26728,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26729,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26730,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26731,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 309
+        },
+        {
+          "id": 26732,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 309
+        }
+      ]
+    }
+  ]
+}

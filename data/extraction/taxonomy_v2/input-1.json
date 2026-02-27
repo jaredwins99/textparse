@@ -1,0 +1,770 @@
+[
+  {
+    "id": 1,
+    "name": "supervised learning",
+    "description": "The \ufb01rst three examples described in Chapter 1 have several components\nin common. For each there is a set of variables that might be denoted as\ninputs, which are measured or preset. These have some in\ufb02uence on one or\nmore outputs. For each example the goal is to use the inputs to predict the\nvalues of the outputs. This exercise is called supervised learning.\nWe have used the more modern language of machine learning. In the\nstatistical literature the inputs are often called the predictors, a term we\nwill use interchangeably with inputs, and more classically the independent\nvariables. In the pattern recognition literature the term features is preferred,\nwhich we use as well. The outputs are called the responses, or classically\nthe dependent variables.",
+    "section": "2.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 2,
+    "name": "training data",
+    "description": "ith observation from the N-vector xj consisting of all the observations on\nvariable Xj. Since all vectors are assumed to be column vectors, the ith\nrow of X is xT\ni , the vector transpose of xi.\nFor the moment we can loosely state the learning task as follows: given\nthe value of an input vector X, make a good prediction of the output Y,\ndenoted by \u02c6Y (pronounced \u201cy-hat\u201d). If Y takes values in IR then so should\n\u02c6Y ; likewise for categorical outputs, \u02c6G should take values in the same set G\nassociated with G.\nFor a two-class G, one approach is to denote the binary coded target\nas Y , and then treat it as a quantitative output. The predictions \u02c6Y will\ntypically lie in [0, 1], and we can assign to \u02c6G the class label according to\nwhether \u02c6y > 0.5. This approach generalizes to K-level qualitative outputs\nas well.\nWe need data to construct prediction rules, often a lot of it. We thus\nsuppose we have available a set of measurements (xi, yi) or (xi, gi), i =\n1, . . . , N, known as the training data, with which to construct our prediction\nrule.",
+    "section": "2.3 Least Squares and Nearest Neighbors",
+    "old_category": "validation",
+    "old_subcategory": "validation"
+  },
+  {
+    "id": 3,
+    "name": "bias in machine learning",
+    "description": "The term \u02c6\u03b20 is the intercept, also known as the bias in machine learning.\nOften it is convenient to include the constant variable 1 in X, include \u02c6\u03b20 in\nthe vector of coe\ufb03cients \u02c6\u03b2, and then write the linear model in vector form\nas an inner product\n\u02c6Y = XT \u02c6\u03b2,\n(2.2)",
+    "section": "2.3.1 Linear Models and Least Squares",
+    "old_category": "guarantees",
+    "old_subcategory": "guarantees"
+  },
+  {
+    "id": 4,
+    "name": "regression function",
+    "description": "the conditional expectation, also known as the regression function. Thus\nthe best prediction of Y at any point X = x is the conditional mean, when\nbest is measured by average squared error.\nThe nearest-neighbor methods attempt to directly implement this recipe\nusing the training data. At each point x, we might ask for the average of all",
+    "section": "2.4 Statistical Decision Theory",
+    "old_category": "model",
+    "old_subcategory": "dgp"
+  },
+  {
+    "id": 5,
+    "name": "Bayes rate",
+    "description": "This reasonable solution is known as the Bayes classi\ufb01er, and says that\nwe classify to the most probable class, using the conditional (discrete) dis-\ntribution Pr(G|X). Figure 2.5 shows the Bayes-optimal decision boundary\nfor our simulation example. The error rate of the Bayes classi\ufb01er is called\nthe Bayes rate.",
+    "section": "2.4 Statistical Decision Theory",
+    "old_category": "guarantees",
+    "old_subcategory": "guarantees"
+  },
+  {
+    "id": 6,
+    "name": "Bayes classifier",
+    "description": "This reasonable solution is known as the Bayes classi\ufb01er, and says that\nwe classify to the most probable class, using the conditional (discrete) dis-\ntribution Pr(G|X). Figure 2.5 shows the Bayes-optimal decision boundary\nfor our simulation example. The error rate of the Bayes classi\ufb01er is called\nthe Bayes rate.",
+    "section": "2.4 Statistical Decision Theory",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 7,
+    "name": "activation function",
+    "description": "where \u03c3(x) = 1/(1 + e\u2212x) is known as the activation function. Here, as\nin the projection pursuit model, the directions \u03b1m and the bias terms bm\nhave to be determined, and their estimation is the meat of the computation.\nDetails are give in Chapter 11.\nThese adaptively chosen basis function methods are also known as dictio-\nnary methods, where one has available a possibly in\ufb01nite set or dictionary\nD of candidate basis functions from which to choose, and models are built\nup by employing some kind of search mechanism.",
+    "section": "2.8.3 Basis Functions and Dictionary Methods",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 9,
+    "name": "Lasso",
+    "description": "FIGURE 3.15. Left panel shows the LAR coe\ufb03cient pro\ufb01les on the simulated\ndata, as a function of the L1 arc length. The right panel shows the Lasso pro\ufb01le.\nThey are identical until the dark-blue coe\ufb03cient crosses zero at an arc length of\nabout 18.",
+    "section": "3.4 Shrinkage Methods",
+    "old_category": "multi_model",
+    "old_subcategory": "selection"
+  },
+  {
+    "id": 12,
+    "name": "canonical variates",
+    "description": "This is a generalized eigenvalue problem, with a given by the largest\neigenvalue of W\u22121B. It is not hard to show (Exercise 4.1) that the optimal\na1 is identical to v1 de\ufb01ned above. Similarly one can \ufb01nd the next direction\na2, orthogonal in W to a1, such that aT\n2 Ba2/aT\n2 Wa2 is maximized; the\nsolution is a2 = v2, and so on. The a\u2113are referred to as discriminant\ncoordinates, not to be confused with discriminant functions. They are also\nreferred to as canonical variates, since an alternative derivation of these\nresults is through a canonical correlation analysis of the indicator response\nmatrix Y on the predictor matrix X. This line is pursued in Section 12.5.\nTo summarize the developments so far:",
+    "section": "4.1 Introduction",
+    "old_category": "improvements",
+    "old_subcategory": "preprocessing"
+  },
+  {
+    "id": 13,
+    "name": "adjusted response",
+    "description": "sometimes known as the adjusted response. These equations get solved re-\npeatedly, since at each iteration p changes, and hence so does W and z.\nThis algorithm is referred to as iteratively reweighted least squares or IRLS,\nsince each iteration solves the weighted least squares problem:",
+    "section": "4.4 Logistic Regression",
+    "old_category": "estimation",
+    "old_subcategory": "optimization"
+  },
+  {
+    "id": 14,
+    "name": "support vector machine",
+    "description": "separation through over-\ufb01tting. In Chapter 12 we discuss a more attractive\nalternative known as the support vector machine, which allows for overlap,\nbut minimizes a measure of the extent of this overlap.",
+    "section": "4.5 Separating Hyperplanes",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 15,
+    "name": "regression splines",
+    "description": "It is claimed that cubic splines are the lowest-order spline for which the\nknot-discontinuity is not visible to the human eye. There is seldom any\ngood reason to go beyond cubic-splines, unless one is interested in smooth\nderivatives. In practice the most widely used orders are M = 1, 2 and 4.\nThese \ufb01xed-knot splines are also known as regression splines. One needs\nto select the order of the spline, the number of knots and their placement.\nOne simple approach is to parameterize a family of splines by the number\nof basis functions or degrees of freedom, and have the observations xi de-\ntermine the positions of the knots. For example, the expression bs(x,df=7)\nin R generates a basis matrix of cubic-spline functions evaluated at the N\nobservations in x, with the 7\u22123 = 41 interior knots at the appropriate per-\ncentiles of x (20, 40, 60 and 80th.) One can be more explicit, however; bs(x,\ndegree=1, knots = c(0.2, 0.4, 0.6)) generates a basis for linear splines,\nwith three interior knots, and returns an N \u00d7 4 matrix.\nSince the space of spline functions of a particular order and knot sequence\nis a vector space, there are many equivalent bases for representing them\n(just as there are for ordinary polynomials.) While the truncated power\nbasis is conceptually simple, it is not too attractive numerically: powers of\nlarge numbers can lead to severe rounding problems. The B-spline basis,\ndescribed in the Appendix to this chapter, allows for e\ufb03cient computations\neven when the number of knots K is large.",
+    "section": "5.2 Piecewise Polynomials and Splines",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 16,
+    "name": "smoother matrix",
+    "description": "Again the \ufb01t is linear in y, and the \ufb01nite linear operator S\u03bb is known as\nthe smoother matrix. One consequence of this linearity is that the recipe\nfor producing \u02c6f from y does not depend on y itself; S\u03bb depends only on\nthe xi and \u03bb.\nLinear operators are familiar in more traditional least squares \ufb01tting as\nwell. Suppose B\u03be is a N \u00d7 M matrix of M cubic-spline basis functions\nevaluated at the N training points xi, with knot sequence \u03be, and M \u226aN.\nThen the vector of \ufb01tted spline values is given by",
+    "section": "5.4.1 Degrees of Freedom and Smoother Matrices",
+    "old_category": "improvements",
+    "old_subcategory": "efficiencies"
+  },
+  {
+    "id": 17,
+    "name": "penalty matrix",
+    "description": "K is known as the penalty matrix, and indeed a quadratic form in K has\na representation in terms of a weighted sum of squared (divided) second\ndi\ufb00erences. The eigen-decomposition of S\u03bb is",
+    "section": "5.4.1 Degrees of Freedom and Smoother Matrices",
+    "old_category": "estimation",
+    "old_subcategory": "criteria"
+  },
+  {
+    "id": 18,
+    "name": "shrinking smoothers",
+    "description": "either left alone, or shrunk to zero\u2014that is, a projection matrix such\nas H\u03be above has M eigenvalues equal to 1, and the rest are 0. For\nthis reason smoothing splines are referred to as shrinking smoothers,\nwhile regression splines are projection smoothers (see Figure 3.17 on\npage 80).",
+    "section": "5.4 Smoothing Splines",
+    "old_category": "multi_model",
+    "old_subcategory": "selection"
+  },
+  {
+    "id": 19,
+    "name": "B-splines",
+    "description": "Before we can get started, we need to augment the knot sequence de\ufb01ned\nin Section 5.2. Let \u03be0 < \u03be1 and \u03beK < \u03beK+1 be two boundary knots, which\ntypically de\ufb01ne the domain over which we wish to evaluate our spline. We\nnow de\ufb01ne the augmented knot sequence \u03c4 such that",
+    "section": "5.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 20,
+    "name": "Haar basis functions",
+    "description": "for i = 1, . . . , K + 2M \u22121. These are also known as Haar basis functions.",
+    "section": "5.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 21,
+    "name": "equivalent kernel",
+    "description": "yi (the li(x0) do not involve y). These weights li(x0) combine the weight-\ning kernel K\u03bb(x0, \u00b7) and the least squares operations, and are sometimes\nreferred to as the equivalent kernel. Figure 6.4 illustrates the e\ufb00ect of lo-\ncal linear regression on the equivalent kernel. Historically, the bias in the\nNadaraya\u2013Watson and other local average kernel methods were corrected\nby modifying the kernel. These modi\ufb01cations were based on theoretical\nasymptotic mean-square-error considerations, and besides being tedious to\nimplement, are only approximate for \ufb01nite sample sizes. Local linear re-\ngression automatically modi\ufb01es the kernel to correct the bias exactly to\n\ufb01rst order, a phenomenon dubbed as automatic kernel carpentry. Consider\nthe following expansion for E \u02c6f(x0), using the linearity of local regression\nand a series expansion of the true function f around x0,",
+    "section": "6.1 One-Dimensional Kernel Smoothers",
+    "old_category": "improvements",
+    "old_subcategory": "efficiencies"
+  },
+  {
+    "id": 22,
+    "name": "generalization error",
+    "description": "Test error, also referred to as generalization error, is the prediction error\nover an independent test sample",
+    "section": "7.2 Bias, Variance and Model Complexity",
+    "old_category": "validation",
+    "old_subcategory": "validation"
+  },
+  {
+    "id": 23,
+    "name": "deviance",
+    "description": "The quantity \u22122 \u00d7 the log-likelihood is sometimes referred to as the\ndeviance.\nAgain, test error here is ErrT = E[L(G, \u02c6G(X))|T ], the population mis-\nclassi\ufb01cation error of the classi\ufb01er trained on T , and Err is the expected\nmisclassi\ufb01cation error.\nTraining error is the sample analogue, for example,",
+    "section": "7.2 Bias, Variance and Model Complexity",
+    "old_category": "estimation",
+    "old_subcategory": "criteria"
+  },
+  {
+    "id": 24,
+    "name": "Bayes factor",
+    "description": "is called the Bayes factor, the contribution of the data toward the posterior\nodds.\nTypically we assume that the prior over models is uniform, so that\nPr(Mm) is constant. We need some way of approximating Pr(Z|Mm).\nA so-called Laplace approximation to the integral followed by some other\nsimpli\ufb01cations (Ripley, 1996, page 64) to (7.37) gives",
+    "section": "7.7 The Bayesian Approach and BIC",
+    "old_category": "multi_model",
+    "old_subcategory": "selection"
+  },
+  {
+    "id": 25,
+    "name": "leave-one-out cross-validation",
+    "description": "Typical choices of K are 5 or 10 (see below). The case K = N is known\nas leave-one-out cross-validation. In this case \u03ba(i) = i, and for the ith\nobservation the \ufb01t is computed using all the data except the ith.\nGiven a set of models f(x, \u03b1) indexed by a tuning parameter \u03b1, denote\nby \u02c6f \u2212k(x, \u03b1) the \u03b1th model \ufb01t with the kth part of the data removed. Then\nfor this set of models we de\ufb01ne",
+    "section": "7.10.1 K-Fold Cross-Validation",
+    "old_category": "validation",
+    "old_subcategory": "validation"
+  },
+  {
+    "id": 26,
+    "name": "leave-one-out",
+    "description": "Figures 7.14 and 7.15 examine the question of whether cross-validation does\na good job in estimating ErrT , the error conditional on a given training set\nT (expression (7.15) on page 228), as opposed to the expected test error.\nFor each of 100 training sets generated from the \u201creg/linear\u201d setting in\nthe top-right panel of Figure 7.3, Figure 7.14 shows the conditional error\ncurves ErrT as a function of subset size (top left). The next two panels show\n10-fold and N-fold cross-validation, the latter also known as leave-one-out\n(LOO). The thick red curve in each plot is the expected error Err, while\nthe thick black curves are the expected cross-validation curves. The lower\nright panel shows how well cross-validation approximates the conditional\nand expected error.\nOne might have expected N-fold CV to approximate ErrT well, since it\nalmost uses the full training sample to \ufb01t a new test point. 10-fold CV, on\nthe other hand, might be expected to estimate Err well, since it averages\nover somewhat di\ufb00erent training sets. From the \ufb01gure it appears 10-fold\ndoes a better job than N-fold in estimating ErrT , and estimates Err even\nbetter. Indeed, the similarity of the two black curves with the red curve\nsuggests both CV curves are approximately unbiased for Err, with 10-fold\nhaving less variance. Similar trends were reported by Efron (1983).\nFigure 7.15 shows scatterplots of both 10-fold and N-fold cross-validation\nerror estimates versus the true conditional error for the 100 simulations.\nAlthough the scatterplots do not indicate much correlation, the lower right\npanel shows that for the most part the correlations are negative, a curi-\nous phenomenon that has been observed before. This negative correlation\nexplains why neither form of CV estimates ErrT well. The broken lines in\neach plot are drawn at Err(p), the expected error for the best subset of\nsize p. We see again that both forms of CV are approximately unbiased for\nexpected error, but the variation in test error for di\ufb00erent training sets is\nquite substantial.\nAmong the four experimental conditions in 7.3, this \u201creg/linear\u201d scenario\nshowed the highest correlation between actual and predicted test error. This",
+    "section": "7.12 Conditional or Expected Test Error?",
+    "old_category": "validation",
+    "old_subcategory": "validation"
+  },
+  {
+    "id": 27,
+    "name": "nonparametric bootstrap",
+    "description": "The bootstrap method described above, in which we sample with re-\nplacement from the training data, is called the nonparametric bootstrap.\nThis really means that the method is \u201cmodel-free,\u201d since it uses the raw\ndata, not a speci\ufb01c parametric model, to generate new datasets. Consider\na variation of the bootstrap, called the parametric bootstrap, in which we\nsimulate new responses by adding Gaussian noise to the predicted values:",
+    "section": "8.2 The Bootstrap and Maximum Likelihood",
+    "old_category": "validation",
+    "old_subcategory": "validation"
+  },
+  {
+    "id": 28,
+    "name": "log-likelihood",
+    "description": "which we will sometimes abbreviate as \u2113(\u03b8). This expression is called the\nlog-likelihood, and each value \u2113(\u03b8; zi) = log g\u03b8(zi) is called a log-likelihood\ncomponent. The method of maximum likelihood chooses the value \u03b8 = \u02c6\u03b8\nto maximize \u2113(\u03b8; Z).\nThe likelihood function can be used to assess the precision of \u02c6\u03b8. We need\na few more de\ufb01nitions. The score function is de\ufb01ned by",
+    "section": "8.2.2 Maximum Likelihood Inference",
+    "old_category": "estimation",
+    "old_subcategory": "criteria"
+  },
+  {
+    "id": 29,
+    "name": "data augmentation",
+    "description": "The above procedure is an example of the EM (or Baum\u2013Welch) algorithm\nfor maximizing likelihoods in certain classes of problems. These problems\nare ones for which maximization of the likelihood is di\ufb03cult, but made\neasier by enlarging the sample with latent (unobserved) data. This is called\ndata augmentation. Here the latent data are the model memberships \u0394i.\nIn other problems, the latent data are actual data that should have been\nobserved but are missing.\nAlgorithm 8.2 gives the general formulation of the EM algorithm. Our\nobserved data is Z, having log-likelihood \u2113(\u03b8; Z) depending on parameters\n\u03b8. The latent or missing data is Zm, so that the complete data is T =\n(Z, Zm) with log-likelihood \u21130(\u03b8; T), \u21130 based on the complete density. In\nthe mixture problem (Z, Zm) = (y, \u0394), and \u21130(\u03b8; T) is given in (8.40).\nIn our mixture example, E(\u21130(\u03b8\u2032; T)|Z, \u02c6\u03b8(j)) is simply (8.40) with the \u0394i\nreplaced by the responsibilities \u02c6\u03b3i(\u02c6\u03b8), and the maximizers in step 3 are just\nweighted means and variances.\nWe now give an explanation of why the EM algorithm works in general.\nSince",
+    "section": "8.5.2 The EM Algorithm in General",
+    "old_category": "improvements",
+    "old_subcategory": "preprocessing"
+  },
+  {
+    "id": 30,
+    "name": "GEM (generalized EM) algorithms",
+    "description": "Hence the EM iteration never decreases the log-likelihood.\nThis argument also makes it clear that a full maximization in the M\nstep is not necessary: we need only to \ufb01nd a value \u02c6\u03b8(j+1) so that Q(\u03b8\u2032, \u02c6\u03b8(j))\nincreases as a function of the \ufb01rst argument, that is, Q(\u02c6\u03b8(j+1), \u02c6\u03b8(j)) >\nQ(\u02c6\u03b8(j), \u02c6\u03b8(j)). Such procedures are called GEM (generalized EM) algorithms.\nThe EM algorithm can also be viewed as a minorization procedure: see\nExercise 8.7.",
+    "section": "8.5 The EM Algorithm",
+    "old_category": "estimation",
+    "old_subcategory": "optimization"
+  },
+  {
+    "id": 31,
+    "name": "Algorithm 8.3 Gibbs Sampler",
+    "description": "For k = 1, 2, . . . , K generate U (t)\nk\nfrom\nPr(U (t)\nk |U (t)\n1 , . . . , U (t)\nk\u22121, U (t\u22121)\nk+1 , . . . , U (t\u22121)\nK\n).",
+    "section": "8.6 MCMC for Sampling from the Posterior",
+    "old_category": "estimation",
+    "old_subcategory": "optimization"
+  },
+  {
+    "id": 32,
+    "name": "Algorithm 8.4 Gibbs sampling for mixtures",
+    "description": "(a) For i = 1, 2, . . . , N generate \u0394(t)\ni\n\u2208{0, 1} with Pr(\u0394(t)\ni\n= 1) =\n\u02c6\u03b3i(\u03b8(t)), from equation (8.42).",
+    "section": "8.6 MCMC for Sampling from the Posterior",
+    "old_category": "estimation",
+    "old_subcategory": "optimization"
+  },
+  {
+    "id": 33,
+    "name": "MM algorithms",
+    "description": "There are analogous de\ufb01nitions for majorization, for minimizing a function\nf(x). The resulting algorithms are known as MM algorithms, for \u201cMinorize-\nMaximize\u201d or \u201cMajorize-Minimize.\u201d\nShow that the EM algorithm (Section 8.5.2) is an example of an MM al-\ngorithm, using Q(\u03b8\u2032, \u03b8)+log Pr(Z|\u03b8)\u2212Q(\u03b8, \u03b8) to minorize the observed data\nlog-likelihood \u2113(\u03b8\u2032; Z). (Note that only the \ufb01rst term involves the relevant\nparameter \u03b8\u2032).",
+    "section": "8.9 Stochastic Search: Bumping",
+    "old_category": "estimation",
+    "old_subcategory": "optimization"
+  },
+  {
+    "id": 34,
+    "name": "pasting",
+    "description": "ent as possible. The splitting rules de\ufb01ning the boxes are related to each\nthrough a binary tree, facilitating their interpretation.\nThe patient rule induction method (PRIM) also \ufb01nds boxes in the feature\nspace, but seeks boxes in which the response average is high. Hence it looks\nfor maxima in the target function, an exercise known as bump hunting. (If\nminima rather than maxima are desired, one simply works with the negative\nresponse values.)\nPRIM also di\ufb00ers from tree-based partitioning methods in that the box\nde\ufb01nitions are not described by a binary tree. This makes interpretation of\nthe collection of rules more di\ufb03cult; however, by removing the binary tree\nconstraint, the individual rules are often simpler.\nThe main box construction method in PRIM works from the top down,\nstarting with a box containing all of the data. The box is compressed along\none face by a small amount, and the observations then falling outside the\nbox are peeled o\ufb00. The face chosen for compression is the one resulting in\nthe largest box mean, after the compression is performed. Then the process\nis repeated, stopping when the current box contains some minimum number\nof data points.\nThis process is illustrated in Figure 9.7. There are 200 data points uni-\nformly distributed over the unit square. The color-coded plot indicates the\nresponse Y taking the value 1 (red) when 0.5 < X1 < 0.8 and 0.4 < X2 <\n0.6. and zero (blue) otherwise. The panels shows the successive boxes found\nby the top-down peeling procedure, peeling o\ufb00a proportion \u03b1 = 0.1 of the\nremaining data points at each stage.\nFigure 9.8 shows the mean of the response values in the box, as the box\nis compressed.\nAfter the top-down sequence is computed, PRIM reverses the process,\nexpanding along any edge, if such an expansion increases the box mean.\nThis is called pasting. Since the top-down procedure is greedy at each step,\nsuch an expansion is often possible.\nThe result of these steps is a sequence of boxes, with di\ufb00erent numbers\nof observation in each box. Cross-validation, combined with the judgment\nof the data analyst, is used to choose the optimal box size.\nDenote by B1 the indices of the observations in the box found in step 1.\nThe PRIM procedure then removes the observations in B1 from the training\nset, and the two-step process\u2014top down peeling, followed by bottom-up\npasting\u2014is repeated on the remaining dataset. This entire process is re-\npeated several times, producing a sequence of boxes B1, B2, . . . , Bk. Each\nbox is de\ufb01ned by a set of rules involving a subset of predictors like",
+    "section": "9.3 PRIM: Bump Hunting",
+    "old_category": "multi_model",
+    "old_subcategory": "aggregating"
+  },
+  {
+    "id": 35,
+    "name": "bump hunting",
+    "description": "ent as possible. The splitting rules de\ufb01ning the boxes are related to each\nthrough a binary tree, facilitating their interpretation.\nThe patient rule induction method (PRIM) also \ufb01nds boxes in the feature\nspace, but seeks boxes in which the response average is high. Hence it looks\nfor maxima in the target function, an exercise known as bump hunting. (If\nminima rather than maxima are desired, one simply works with the negative\nresponse values.)\nPRIM also di\ufb00ers from tree-based partitioning methods in that the box\nde\ufb01nitions are not described by a binary tree. This makes interpretation of\nthe collection of rules more di\ufb03cult; however, by removing the binary tree\nconstraint, the individual rules are often simpler.\nThe main box construction method in PRIM works from the top down,\nstarting with a box containing all of the data. The box is compressed along\none face by a small amount, and the observations then falling outside the\nbox are peeled o\ufb00. The face chosen for compression is the one resulting in\nthe largest box mean, after the compression is performed. Then the process\nis repeated, stopping when the current box contains some minimum number\nof data points.\nThis process is illustrated in Figure 9.7. There are 200 data points uni-\nformly distributed over the unit square. The color-coded plot indicates the\nresponse Y taking the value 1 (red) when 0.5 < X1 < 0.8 and 0.4 < X2 <\n0.6. and zero (blue) otherwise. The panels shows the successive boxes found\nby the top-down peeling procedure, peeling o\ufb00a proportion \u03b1 = 0.1 of the\nremaining data points at each stage.\nFigure 9.8 shows the mean of the response values in the box, as the box\nis compressed.\nAfter the top-down sequence is computed, PRIM reverses the process,\nexpanding along any edge, if such an expansion increases the box mean.\nThis is called pasting. Since the top-down procedure is greedy at each step,\nsuch an expansion is often possible.\nThe result of these steps is a sequence of boxes, with di\ufb00erent numbers\nof observation in each box. Cross-validation, combined with the judgment\nof the data analyst, is used to choose the optimal box size.\nDenote by B1 the indices of the observations in the box found in step 1.\nThe PRIM procedure then removes the observations in B1 from the training\nset, and the two-step process\u2014top down peeling, followed by bottom-up\npasting\u2014is repeated on the remaining dataset. This entire process is re-\npeated several times, producing a sequence of boxes B1, B2, . . . , Bk. Each\nbox is de\ufb01ned by a set of rules involving a subset of predictors like",
+    "section": "9.3 PRIM: Bump Hunting",
+    "old_category": "improvements",
+    "old_subcategory": "preprocessing"
+  },
+  {
+    "id": 37,
+    "name": "gating networks",
+    "description": "The hierarchical mixtures of experts (HME) procedure can be viewed as a\nvariant of tree-based methods. The main di\ufb00erence is that the tree splits\nare not hard decisions but rather soft probabilistic ones. At each node an\nobservation goes left or right with probabilities depending on its input val-\nues. This has some computational advantages since the resulting parameter\noptimization problem is smooth, unlike the discrete split point search in the\ntree-based approach. The soft splits might also help in prediction accuracy\nand provide a useful alternative description of the data.\nThere are other di\ufb00erences between HMEs and the CART implementa-\ntion of trees. In an HME, a linear (or logistic regression) model is \ufb01t in\neach terminal node, instead of a constant as in CART. The splits can be\nmultiway, not just binary, and the splits are probabilistic functions of a\nlinear combination of inputs, rather than a single input as in the standard\nuse of CART. However, the relative merits of these choices are not clear,\nand most were discussed at the end of Section 9.2.\nA simple two-level HME model in shown in Figure 9.13. It can be thought\nof as a tree with soft splits at each non-terminal node. However, the inven-\ntors of this methodology use a di\ufb00erent terminology. The terminal nodes\nare called experts, and the non-terminal nodes are called gating networks.\nThe idea is that each expert provides an opinion (prediction) about the\nresponse, and these are combined together by the gating networks. As we\nwill see, the model is formally a mixture model, and the two-level model\nin the \ufb01gure can be extend to multiple levels, hence the name hierarchical\nmixtures of experts.",
+    "section": "9.5 Hierarchical Mixtures of Experts",
+    "old_category": "multi_model",
+    "old_subcategory": "aggregating"
+  },
+  {
+    "id": 38,
+    "name": "single index model in econometrics",
+    "description": "2)(1, 1)T ,\nso that the function only varies in the direction X1 + X2. In the example\non the right, \u03c9 = (1, 0).\nThe PPR model (11.1) is very general, since the operation of forming\nnonlinear functions of linear combinations generates a surprisingly large\nclass of models. For example, the product X1 \u00b7X2 can be written as [(X1 +\nX2)2 \u2212(X1 \u2212X2)2]/4, and higher-order products can be represented simi-\nlarly.\nIn fact, if M is taken arbitrarily large, for appropriate choice of gm the\nPPR model can approximate any continuous function in IRp arbitrarily\nwell. Such a class of models is called a universal approximator. However\nthis generality comes at a price. Interpretation of the \ufb01tted model is usually\ndi\ufb03cult, because each input enters into the model in a complex and multi-\nfaceted way. As a result, the PPR model is most useful for prediction, and\nnot very useful for producing an understandable model for the data. The\nM = 1 model, known as the single index model in econometrics, is an\nexception. It is slightly more general than the linear regression model, and\no\ufb00ers a similar interpretation.\nHow do we \ufb01t a PPR model, given training data (xi, yi), i = 1, 2, . . . , N?\nWe seek the approximate minimizers of the error function",
+    "section": "11.2 Projection Pursuit Regression",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 39,
+    "name": "back-propagation equations",
+    "description": "known as the back-propagation equations. Using this, the updates in (11.13)\ncan be implemented with a two-pass algorithm. In the forward pass, the\ncurrent weights are \ufb01xed and the predicted values \u02c6fk(xi) are computed\nfrom formula (11.5). In the backward pass, the errors \u03b4ki are computed,\nand then back-propagated via (11.15) to give the errors smi. Both sets of\nerrors are then used to compute the gradients for the updates in (11.13),\nvia (11.14).",
+    "section": "11.4 Fitting Neural Networks",
+    "old_category": "estimation",
+    "old_subcategory": "optimization"
+  },
+  {
+    "id": 40,
+    "name": "back-propagation",
+    "description": "This two-pass procedure is what is known as back-propagation. It has\nalso been called the delta rule (Widrow and Ho\ufb00, 1960). The computational\ncomponents for cross-entropy have the same form as those for the sum of\nsquares error function, and are derived in Exercise 11.3.\nThe advantages of back-propagation are its simple, local nature. In the\nback propagation algorithm, each hidden unit passes and receives infor-\nmation only to and from units that share a connection. Hence it can be\nimplemented e\ufb03ciently on a parallel architecture computer.\nThe updates in (11.13) are a kind of batch learning, with the parame-\nter updates being a sum over all of the training cases. Learning can also\nbe carried out online\u2014processing each observation one at a time, updat-\ning the gradient after each training case, and cycling through the training\ncases many times. In this case, the sums in equations (11.13) are replaced\nby a single summand. A training epoch refers to one sweep through the\nentire training set. Online training allows the network to handle very large\ntraining sets, and also to update the weights as new observations come in.\nThe learning rate \u03b3r for batch learning is usually taken to be a con-\nstant, and can also be optimized by a line search that minimizes the error\nfunction at each update. With online learning \u03b3r should decrease to zero\nas the iteration r \u2192\u221e. This learning is a form of stochastic approxima-\ntion (Robbins and Munro, 1951); results in this \ufb01eld ensure convergence if\n\u03b3r \u21920, \t\nr \u03b3r = \u221e, and \t\nr \u03b32\nr < \u221e(satis\ufb01ed, for example, by \u03b3r = 1/r).\nBack-propagation can be very slow, and for that reason is usually not\nthe method of choice. Second-order techniques such as Newton\u2019s method\nare not attractive here, because the second derivative matrix of R (the\nHessian) can be very large. Better approaches to \ufb01tting include conjugate\ngradients and variable metric methods. These avoid explicit computation\nof the second derivative matrix while still providing faster convergence.",
+    "section": "11.5 Some Issues in Training Neural Networks",
+    "old_category": "estimation",
+    "old_subcategory": "optimization"
+  },
+  {
+    "id": 41,
+    "name": "weight elimination penalty",
+    "description": "known as the weight elimination penalty. This has the e\ufb00ect of shrinking\nsmaller weights more than (11.16) does.\nFigure 11.4 shows the result of training a neural network with ten hidden\nunits, without weight decay (upper panel) and with weight decay (lower\npanel), to the mixture example of Chapter 2. Weight decay has clearly\nimproved the prediction. Figure 11.5 shows heat maps of the estimated\nweights from the training (grayscale versions of these are called Hinton\ndiagrams.) We see that weight decay has dampened the weights in both\nlayers: the resulting weights are spread fairly evenly over the ten hidden\nunits.",
+    "section": "11.5.2 Over\ufb01tting",
+    "old_category": "multi_model",
+    "old_subcategory": "selection"
+  },
+  {
+    "id": 42,
+    "name": "convolutional networks",
+    "description": "reduces considerably the total number of weights. With many more hidden\nunits than Net-2, Net-3 has fewer links and hence weights (1226 vs. 3214),\nand achieves similar performance.\nNet-4 and Net-5 have local connectivity with shared weights. All units\nin a local feature map perform the same operation on di\ufb00erent parts of the\nimage, achieved by sharing the same weights. The \ufb01rst hidden layer of Net-\n4 has two 8\u00d78 arrays, and each unit takes input from a 3\u00d73 patch just like\nin Net-3. However, each of the units in a single 8\u00d78 feature map share the\nsame set of nine weights (but have their own bias parameter). This forces\nthe extracted features in di\ufb00erent parts of the image to be computed by\nthe same linear functional, and consequently these networks are sometimes\nknown as convolutional networks. The second hidden layer of Net-4 has\nno weight sharing, and is the same as in Net-3. The gradient of the error\nfunction R with respect to a shared weight is the sum of the gradients of\nR with respect to each connection controlled by the weights in question.\nTable 11.1 gives the number of links, the number of weights and the\noptimal test performance for each of the networks. We see that Net-4 has\nmore links but fewer weights than Net-3, and superior test performance.\nNet-5 has four 4 \u00d7 4 feature maps in the second hidden layer, each unit\nconnected to a 5 \u00d7 5 local patch in the layer below. Weights are shared\nin each of these feature maps. We see that Net-5 does the best, having\nerrors of only 1.6%, compared to 13% for the \u201cvanilla\u201d network Net-2.\nThe clever design of network Net-5, motivated by the fact that features of\nhandwriting style should appear in more than one part of a digit, was the\nresult of many person years of experimentation. This and similar networks\ngave better performance on ZIP code problems than any other learning\nmethod at that time (early 1990s). This example also shows that neural\nnetworks are not a fully automatic tool, as they are sometimes advertised.\nAs with all statistical models, subject matter knowledge can and should be\nused to improve their performance.\nThis network was later outperformed by the tangent distance approach\n(Simard et al., 1993) described in Section 13.3.3, which explicitly incorpo-\nrates natural a\ufb03ne invariances. At this point the digit recognition datasets\nbecome test beds for every new learning procedure, and researchers worked",
+    "section": "11.7 Example: ZIP Code Data",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 43,
+    "name": "support vectors",
+    "description": "with nonzero coe\ufb03cients \u02c6\u03b1i only for those observations i for which the\nconstraints in (12.16) are exactly met (due to (12.14)). These observations\nare called the support vectors, since \u02c6\u03b2 is represented in terms of them\nalone. Among these support points, some will lie on the edge of the margin\n(\u02c6\u03bei = 0), and hence from (12.15) and (12.12) will be characterized by\n0 < \u02c6\u03b1i < C; the remainder (\u02c6\u03bei > 0) have \u02c6\u03b1i = C. From (12.14) we can\nsee that any of these margin points (0 < \u02c6\u03b1i, \u02c6\u03bei = 0) can be used to solve\nfor \u03b20, and we typically use an average of all the solutions for numerical\nstability.\nMaximizing the dual (12.13) is a simpler convex quadratic programming\nproblem than the primal (12.9), and can be solved with standard techniques\n(Murray et al., 1981, for example).\nGiven the solutions \u02c6\u03b20 and \u02c6\u03b2, the decision function can be written as",
+    "section": "12.2 The Support Vector Classi\ufb01er",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 44,
+    "name": "FDA",
+    "description": "In the remainder of this chapter we describe a class of techniques that\nattend to all these issues by generalizing the LDA model. This is achieved\nlargely by three di\ufb00erent ideas.\nThe \ufb01rst idea is to recast the LDA problem as a linear regression problem.\nMany techniques exist for generalizing linear regression to more \ufb02exible,\nnonparametric forms of regression. This in turn leads to more \ufb02exible forms\nof discriminant analysis, which we call FDA. In most cases of interest, the",
+    "section": "12.4 Generalizing Linear Discriminant Analysis",
+    "old_category": "improvements",
+    "old_subcategory": "preprocessing"
+  },
+  {
+    "id": 45,
+    "name": "penalized discriminant analysis",
+    "description": "The choice of \u03a9 depends on the problem. If \u03b7\u2113(x) = h(x)\u03b2\u2113is an expansion\non spline basis functions, \u03a9 might constrain \u03b7\u2113to be smooth over IRp. In\nthe case of additive splines, there are N spline basis functions for each\ncoordinate, resulting in a total of Np basis functions in h(x); \u03a9 in this case\nis Np \u00d7 Np and block diagonal.\nThe steps in FDA can then be viewed as a generalized form of LDA,\nwhich we call penalized discriminant analysis, or PDA:",
+    "section": "12.6 Penalized Discriminant Analysis",
+    "old_category": "multi_model",
+    "old_subcategory": "selection"
+  },
+  {
+    "id": 47,
+    "name": "Algorithm 14.1 K-means Clustering",
+    "description": "1. For a given cluster assignment C, the total cluster variance (14.33) is\nminimized with respect to {m1, . . . , mK} yielding the means of the\ncurrently assigned clusters (14.32).",
+    "section": "14.3 Cluster Analysis",
+    "old_category": "estimation",
+    "old_subcategory": "optimization"
+  },
+  {
+    "id": 48,
+    "name": "Voronoi tessellation",
+    "description": "This can be minimized by an alternating optimization procedure given in\nAlgorithm 14.1.\nEach of steps 1 and 2 reduces the value of the criterion (14.33), so that\nconvergence is assured. However, the result may represent a suboptimal\nlocal minimum. The algorithm of Hartigan and Wong (1979) goes further,\nand ensures that there is no single switch of an observation from one group\nto another group that will decrease the objective. In addition, one should\nstart the algorithm with many di\ufb00erent random choices for the starting\nmeans, and choose the solution having smallest value of the objective func-\ntion.\nFigure 14.6 shows some of the K-means iterations for the simulated data\nof Figure 14.4. The centroids are depicted by \u201cO\u201ds. The straight lines show\nthe partitioning of points, each sector being the set of points closest to\neach centroid. This partitioning is called the Voronoi tessellation. After 20\niterations the procedure has converged.",
+    "section": "14.3 Cluster Analysis",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 49,
+    "name": "codebook",
+    "description": "numbers is regarded as a vector in IR4. A K-means clustering algorithm\n(also known as Lloyd\u2019s algorithm in this context) is run in this space.\nThe center image uses K = 200, while the right image K = 4. Each of\nthe 512 \u00d7 512 pixel blocks (or points) is approximated by its closest cluster\ncentroid, known as a codeword. The clustering process is called the encoding\nstep, and the collection of centroids is called the codebook.\nTo represent the approximated image, we need to supply for each block\nthe identity of the codebook entry that approximates it. This will require\nlog2(K) bits per block. We also need to supply the codebook itself, which\nis K \u00d7 4 real numbers (typically negligible). Overall, the storage for the\ncompressed image amounts to log2(K)/(4 \u00b7 8) of the original (0.239 for\nK = 200, 0.063 for K = 4). This is typically expressed as a rate in bits\nper pixel: log2(K)/4, which are 1.91 and 0.50, respectively. The process\nof constructing the approximate image from the centroids is called the\ndecoding step.\nWhy do we expect VQ to work at all? The reason is that for typical\neveryday images like photographs, many of the blocks look the same. In\nthis case there are many almost pure white blocks, and similarly pure gray\nblocks of various shades. These require only one block each to represent\nthem, and then multiple pointers to that block.\nWhat we have described is known as lossy compression, since our im-\nages are degraded versions of the original. The degradation or distortion is\nusually measured in terms of mean squared error. In this case D = 0.89\nfor K = 200 and D = 16.95 for K = 4. More generally a rate/distortion\ncurve would be used to assess the tradeo\ufb00. One can also perform lossless\ncompression using block clustering, and still capitalize on the repeated pat-\nterns. If you took the original image and losslessly compressed it, the best\nyou would do is 4.48 bits per pixel.\nWe claimed above that log2(K) bits were needed to identify each of the K\ncodewords in the codebook. This uses a \ufb01xed-length code, and is ine\ufb03cient\nif some codewords occur many more times than others in the image. Using\nShannon coding theory, we know that in general a variable length code\nwill do better, and the rate then becomes \u2212\tK\n\u2113=1 p\u2113log2(p\u2113)/4. The term\nin the numerator is the entropy of the distribution p\u2113of the codewords\nin the image. Using variable length coding our rates come down to 1.42\nand 0.39, respectively. Finally, there are many generalizations of VQ that\nhave been developed: for example, tree-structured VQ \ufb01nds the centroids\nwith a top-down, 2-means style algorithm, as alluded to in Section 14.3.12.\nThis allows successive re\ufb01nement of the compression. Further details may\nbe found in Gersho and Gray (1992).",
+    "section": "14.3 Cluster Analysis",
+    "old_category": "improvements",
+    "old_subcategory": "preprocessing"
+  },
+  {
+    "id": 50,
+    "name": "decoding step",
+    "description": "numbers is regarded as a vector in IR4. A K-means clustering algorithm\n(also known as Lloyd\u2019s algorithm in this context) is run in this space.\nThe center image uses K = 200, while the right image K = 4. Each of\nthe 512 \u00d7 512 pixel blocks (or points) is approximated by its closest cluster\ncentroid, known as a codeword. The clustering process is called the encoding\nstep, and the collection of centroids is called the codebook.\nTo represent the approximated image, we need to supply for each block\nthe identity of the codebook entry that approximates it. This will require\nlog2(K) bits per block. We also need to supply the codebook itself, which\nis K \u00d7 4 real numbers (typically negligible). Overall, the storage for the\ncompressed image amounts to log2(K)/(4 \u00b7 8) of the original (0.239 for\nK = 200, 0.063 for K = 4). This is typically expressed as a rate in bits\nper pixel: log2(K)/4, which are 1.91 and 0.50, respectively. The process\nof constructing the approximate image from the centroids is called the\ndecoding step.\nWhy do we expect VQ to work at all? The reason is that for typical\neveryday images like photographs, many of the blocks look the same. In\nthis case there are many almost pure white blocks, and similarly pure gray\nblocks of various shades. These require only one block each to represent\nthem, and then multiple pointers to that block.\nWhat we have described is known as lossy compression, since our im-\nages are degraded versions of the original. The degradation or distortion is\nusually measured in terms of mean squared error. In this case D = 0.89\nfor K = 200 and D = 16.95 for K = 4. More generally a rate/distortion\ncurve would be used to assess the tradeo\ufb00. One can also perform lossless\ncompression using block clustering, and still capitalize on the repeated pat-\nterns. If you took the original image and losslessly compressed it, the best\nyou would do is 4.48 bits per pixel.\nWe claimed above that log2(K) bits were needed to identify each of the K\ncodewords in the codebook. This uses a \ufb01xed-length code, and is ine\ufb03cient\nif some codewords occur many more times than others in the image. Using\nShannon coding theory, we know that in general a variable length code\nwill do better, and the rate then becomes \u2212\tK\n\u2113=1 p\u2113log2(p\u2113)/4. The term\nin the numerator is the entropy of the distribution p\u2113of the codewords\nin the image. Using variable length coding our rates come down to 1.42\nand 0.39, respectively. Finally, there are many generalizations of VQ that\nhave been developed: for example, tree-structured VQ \ufb01nds the centroids\nwith a top-down, 2-means style algorithm, as alluded to in Section 14.3.12.\nThis allows successive re\ufb01nement of the compression. Further details may\nbe found in Gersho and Gray (1992).",
+    "section": "14.3 Cluster Analysis",
+    "old_category": "estimation",
+    "old_subcategory": "optimization"
+  },
+  {
+    "id": 51,
+    "name": "lossy compression",
+    "description": "numbers is regarded as a vector in IR4. A K-means clustering algorithm\n(also known as Lloyd\u2019s algorithm in this context) is run in this space.\nThe center image uses K = 200, while the right image K = 4. Each of\nthe 512 \u00d7 512 pixel blocks (or points) is approximated by its closest cluster\ncentroid, known as a codeword. The clustering process is called the encoding\nstep, and the collection of centroids is called the codebook.\nTo represent the approximated image, we need to supply for each block\nthe identity of the codebook entry that approximates it. This will require\nlog2(K) bits per block. We also need to supply the codebook itself, which\nis K \u00d7 4 real numbers (typically negligible). Overall, the storage for the\ncompressed image amounts to log2(K)/(4 \u00b7 8) of the original (0.239 for\nK = 200, 0.063 for K = 4). This is typically expressed as a rate in bits\nper pixel: log2(K)/4, which are 1.91 and 0.50, respectively. The process\nof constructing the approximate image from the centroids is called the\ndecoding step.\nWhy do we expect VQ to work at all? The reason is that for typical\neveryday images like photographs, many of the blocks look the same. In\nthis case there are many almost pure white blocks, and similarly pure gray\nblocks of various shades. These require only one block each to represent\nthem, and then multiple pointers to that block.\nWhat we have described is known as lossy compression, since our im-\nages are degraded versions of the original. The degradation or distortion is\nusually measured in terms of mean squared error. In this case D = 0.89\nfor K = 200 and D = 16.95 for K = 4. More generally a rate/distortion\ncurve would be used to assess the tradeo\ufb00. One can also perform lossless\ncompression using block clustering, and still capitalize on the repeated pat-\nterns. If you took the original image and losslessly compressed it, the best\nyou would do is 4.48 bits per pixel.\nWe claimed above that log2(K) bits were needed to identify each of the K\ncodewords in the codebook. This uses a \ufb01xed-length code, and is ine\ufb03cient\nif some codewords occur many more times than others in the image. Using\nShannon coding theory, we know that in general a variable length code\nwill do better, and the rate then becomes \u2212\tK\n\u2113=1 p\u2113log2(p\u2113)/4. The term\nin the numerator is the entropy of the distribution p\u2113of the codewords\nin the image. Using variable length coding our rates come down to 1.42\nand 0.39, respectively. Finally, there are many generalizations of VQ that\nhave been developed: for example, tree-structured VQ \ufb01nds the centroids\nwith a top-down, 2-means style algorithm, as alluded to in Section 14.3.12.\nThis allows successive re\ufb01nement of the compression. Further details may\nbe found in Gersho and Gray (1992).",
+    "section": "14.3 Cluster Analysis",
+    "old_category": "improvements",
+    "old_subcategory": "preprocessing"
+  },
+  {
+    "id": 53,
+    "name": "chaining",
+    "description": "observations within them are relatively close together (small dissimilarities)\nas compared with observations in di\ufb00erent clusters. To the extent this is\nnot the case, results will di\ufb00er.\nSingle linkage (14.41) only requires that a single dissimilarity dii\u2032, i \u2208G\nand i\u2032 \u2208H, be small for two groups G and H to be considered close\ntogether, irrespective of the other observation dissimilarities between the\ngroups. It will therefore have a tendency to combine, at relatively low\nthresholds, observations linked by a series of close intermediate observa-\ntions. This phenomenon, referred to as chaining, is often considered a de-\nfect of the method. The clusters produced by single linkage can violate the\n\u201ccompactness\u201d property that all observations within each cluster tend to\nbe similar to one another, based on the supplied observation dissimilari-\nties {dii\u2032}. If we de\ufb01ne the diameter DG of a group of observations as the\nlargest dissimilarity among its members",
+    "section": "14.3 Cluster Analysis",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 54,
+    "name": "left singular vectors",
+    "description": "This is a standard decomposition in numerical analysis, and many algo-\nrithms exist for its computation (Golub and Van Loan, 1983, for example).\nHere U is an N \u00d7 p orthogonal matrix (UT U = Ip) whose columns uj are\ncalled the left singular vectors; V is a p\u00d7p orthogonal matrix (VT V = Ip)\nwith columns vj called the right singular vectors, and D is a p\u00d7p diagonal\nmatrix, with diagonal elements d1 \u2265d2 \u2265\u00b7 \u00b7 \u00b7 \u2265dp \u22650 known as the sin-\ngular values. For each rank q, the solution Vq to (14.53) consists of the \ufb01rst\nq columns of V. The columns of UD are called the principal components\nof X (see Section 3.5.1). The N optimal \u02c6\u03bbi in (14.52) are given by the \ufb01rst\nq principal components (the N rows of the N \u00d7 q matrix UqDq).\nThe one-dimensional principal component line in IR2 is illustrated in Fig-\nure 14.20. For each data point xi, there is a closest point on the line, given\nby ui1d1v1. Here v1 is the direction of the line and \u02c6\u03bbi = ui1d1 measures\ndistance along the line from the origin. Similarly Figure 14.21 shows the",
+    "section": "14.5 Principal Components, Curves and Surfaces",
+    "old_category": "improvements",
+    "old_subcategory": "efficiencies"
+  },
+  {
+    "id": 55,
+    "name": "principal components",
+    "description": "This is a standard decomposition in numerical analysis, and many algo-\nrithms exist for its computation (Golub and Van Loan, 1983, for example).\nHere U is an N \u00d7 p orthogonal matrix (UT U = Ip) whose columns uj are\ncalled the left singular vectors; V is a p\u00d7p orthogonal matrix (VT V = Ip)\nwith columns vj called the right singular vectors, and D is a p\u00d7p diagonal\nmatrix, with diagonal elements d1 \u2265d2 \u2265\u00b7 \u00b7 \u00b7 \u2265dp \u22650 known as the sin-\ngular values. For each rank q, the solution Vq to (14.53) consists of the \ufb01rst\nq columns of V. The columns of UD are called the principal components\nof X (see Section 3.5.1). The N optimal \u02c6\u03bbi in (14.52) are given by the \ufb01rst\nq principal components (the N rows of the N \u00d7 q matrix UqDq).\nThe one-dimensional principal component line in IR2 is illustrated in Fig-\nure 14.20. For each data point xi, there is a closest point on the line, given\nby ui1d1v1. Here v1 is the direction of the line and \u02c6\u03bbi = ui1d1 measures\ndistance along the line from the origin. Similarly Figure 14.21 shows the",
+    "section": "14.5 Principal Components, Curves and Surfaces",
+    "old_category": "improvements",
+    "old_subcategory": "preprocessing"
+  },
+  {
+    "id": 56,
+    "name": "Procrustes distance",
+    "description": "and the minimal distances is referred to as the Procrustes distance. From\nthe form of the solution, we can center each matrix at its column centroid,\nand then ignore location completely. Hereafter we assume this is the case.\nThe Procrustes distance with scaling solves a slightly more general\nproblem,\nmin\n\u03b2,R ||X2 \u2212\u03b2X1R||F ,\n(14.58)",
+    "section": "14.5 Principal Components, Curves and Surfaces",
+    "old_category": "validation",
+    "old_subcategory": "diagnostics"
+  },
+  {
+    "id": 57,
+    "name": "principal points of the distribution",
+    "description": "interested mainly in the smooth ones. A principal curve is illustrated in\nFigure 14.27.\nPrincipal points are an interesting related concept. Consider a set of k\nprototypes and for each point x in the support of a distribution, identify\nthe closest prototype, that is, the prototype that is responsible for it. This\ninduces a partition of the feature space into so-called Voronoi regions. The\nset of k points that minimize the expected distance from X to its prototype\nare called the principal points of the distribution. Each principal point is\nself-consistent, in that it equals the mean of X in its Voronoi region. For\nexample, with k = 1, the principal point of a circular normal distribution is\nthe mean vector; with k = 2 they are a pair of points symmetrically placed\non a ray through the mean vector. Principal points are the distributional\nanalogs of centroids found by K-means clustering. Principal curves can be\nviewed as k = \u221eprincipal points, but constrained to lie on a smooth curve,\nin a similar way that a SOM constrains K-means cluster centers to fall on\na smooth manifold.\nTo \ufb01nd a principal curve f(\u03bb) of a distribution, we consider its coordinate\nfunctions f(\u03bb) = [f1(\u03bb), f2(\u03bb), . . . , fp(\u03bb)] and let XT = (X1, X2, . . . , Xp).\nConsider the following alternating steps:",
+    "section": "14.5.2 Principal Curves and Surfaces",
+    "old_category": "model",
+    "old_subcategory": "dgp"
+  },
+  {
+    "id": 58,
+    "name": "adjacency matrix",
+    "description": "Alternatively, a fully connected graph includes all pairwise edges with\nweights wii\u2032 = sii\u2032, and the local behavior is controlled by the scale param-\neter c.\nThe matrix of edge weights W = {wii\u2032} from a similarity graph is called\nthe adjacency matrix. The degree of vertex i is gi = \t\ni\u2032 wii\u2032, the sum of\nthe weights of the edges connected to it. Let G be a diagonal matrix with\ndiagonal elements gi.\nFinally, the graph Laplacian is de\ufb01ned by",
+    "section": "14.5 Principal Components, Curves and Surfaces",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 59,
+    "name": "unnormalized graph Laplacian",
+    "description": "This is called the unnormalized graph Laplacian; a number of normalized\nversions have been proposed\u2014these standardize the Laplacian with respect\nto the node degrees gi, for example, \u02dcL = I \u2212G\u22121W.\nSpectral clustering \ufb01nds the m eigenvectors ZN\u00d7m corresponding to the\nm smallest eigenvalues of L (ignoring the trivial constant eigenvector).\nUsing a standard method like K-means, we then cluster the rows of Z to\nyield a clustering of the original data points.\nAn example is presented in Figure 14.29. The top left panel shows 450\nsimulated data points in three circular clusters indicated by the colors. K-\nmeans clustering would clearly have di\ufb03culty identifying the outer clusters.\nWe applied spectral clustering using a 10-nearest neighbor similarity graph,\nand display the eigenvector corresponding to the second and third smallest\neigenvalue of the graph Laplacian in the lower left. The 15 smallest eigen-\nvalues are shown in the top right panel. The two eigenvectors shown have\nidenti\ufb01ed the three clusters, and a scatterplot of the rows of the eigenvector\nmatrix Y in the bottom right clearly separates the clusters. A procedure\nsuch as K-means clustering applied to these transformed points would eas-\nily identify the three groups.\nWhy does spectral clustering work? For any vector f we have",
+    "section": "14.5 Principal Components, Curves and Surfaces",
+    "old_category": "improvements",
+    "old_subcategory": "efficiencies"
+  },
+  {
+    "id": 60,
+    "name": "factor loadings",
+    "description": "where D\u03b5 = diag[Var(\u03b51), . . . , Var(\u03b5p)]. The Sj being Gaussian and un-\ncorrelated makes them statistically independent random variables. Thus a\nbattery of educational test scores would be thought to be driven by the\nindependent underlying factors such as intelligence, drive and so on. The\ncolumns of A are referred to as the factor loadings, and are used to name\nand interpret the factors.",
+    "section": "14.7 Independent Component Analysisand Exploratory Projection Pursuit",
+    "old_category": "improvements",
+    "old_subcategory": "preprocessing"
+  },
+  {
+    "id": 61,
+    "name": "Local MDS",
+    "description": "FIGURE 14.44. The orange points show data lying on a parabola, while the blue\npoints shows multidimensional scaling representations in one dimension. Classical\nmultidimensional scaling (left panel) does not preserve the ordering of the points\nalong the curve, because it judges points on opposite ends of the curve to be close\ntogether. In contrast, local multidimensional scaling (right panel) does a good job\nof preserving the ordering of the points along the curve.",
+    "section": "14.9 Nonlinear Dimension Reduction and Local",
+    "old_category": "improvements",
+    "old_subcategory": "preprocessing"
+  },
+  {
+    "id": 62,
+    "name": "Gini",
+    "description": "!\nremove\n$\nCAPAVE\nhp\nfree\nCAPMAX\nedu\ngeorge\nCAPTOT\nyour\nour\n1999\nre\nyou\nhpl\nbusiness\n000\nmeeting\nmoney\n(\nwill\ninternet\n650\npm\nreceive\nover\nemail\n;\nfont\nmail\ntechnology\norder\nall\nlabs\n[\n85\naddress\noriginal\nlab\ntelnet\npeople\nproject\ndata\ncredit\nconference\n857\n#\n415\nmake\ncs\nreport\ndirect\naddresses\n3d\nparts\ntable",
+    "section": "15.3.2 Variable Importance",
+    "old_category": "estimation",
+    "old_subcategory": "criteria"
+  },
+  {
+    "id": 63,
+    "name": "pairwise Markov",
+    "description": "where \u201crest\u201d refers to all of the other vertices in the graph. For example\nin Figure 17.2(a) X \u22a5Z|Y . These are known as the pairwise Markov\nindependencies of G.\nIf A, B and C are subgraphs, then C is said to separate A and B if every\npath between A and B intersects a node in C. For example, Y separates\nX and Z in Figures 17.2(a) and (d), and Z separates Y and W in (d). In\nFigure 17.2(b) Z is not connected to X, Y, W so we say that the two sets\nare separated by the empty set. In Figure 17.2(c), C = {X, Z} separates\nY and W.\nSeparators have the nice property that they break the graph into con-\nditionally independent pieces. Speci\ufb01cally, in a Markov graph G with sub-\ngraphs A, B and C,",
+    "section": "17.2 Markov Graphs and Their Properties",
+    "old_category": "guarantees",
+    "old_subcategory": "assumptions"
+  },
+  {
+    "id": 64,
+    "name": "clique potentials",
+    "description": "where C is the set of maximal cliques, and the positive functions \u03c8C(\u00b7) are\ncalled clique potentials. These are not in general density functions1, but\nrather are a\ufb03nities that capture the dependence in XC by scoring certain\ninstances xC higher than others. The quantity",
+    "section": "17.2 Markov Graphs and Their Properties",
+    "old_category": "model",
+    "old_subcategory": "dgp"
+  },
+  {
+    "id": 65,
+    "name": "partition function",
+    "description": "is the normalizing constant, also known as the partition function. Alterna-\ntively, the representation (17.3) implies a graph with independence prop-\nerties de\ufb01ned by the cliques in the product. This result holds for Markov\nnetworks G with positive distributions, and is known as the Hammersley-\nCli\ufb00ord theorem (Hammersley and Cli\ufb00ord, 1971; Cli\ufb00ord, 1990).\nMany of the methods for estimation and computation on graphs \ufb01rst de-\ncompose the graph into its maximal cliques. Relevant quantities are com-\nputed in the individual cliques and then accumulated across the entire\ngraph. A prominent example is the join tree or junction tree algorithm for\ncomputing marginal and low order probabilities from the joint distribution\non a graph. Details can be found in Pearl (1986), Lauritzen and Spiegel-\nhalter (1988), Pearl (1988), Shenoy and Shafer (1988), Jensen et al. (1990),\nor Koller and Friedman (2007).",
+    "section": "17.2 Markov Graphs and Their Properties",
+    "old_category": "model",
+    "old_subcategory": "dgp"
+  },
+  {
+    "id": 67,
+    "name": "graphical lasso",
+    "description": "So up to a factor 1/N, ZT y is the analog of s12, and we replace ZT Z by\nW11, the estimated cross-product matrix from our current model.\nThe resulting procedure is called the graphical lasso, proposed by Fried-\nman et al. (2007a) building on the work of Banerjee et al. (2008). It is\nsummarized in Algorithm 17.2.\nFriedman et al. (2007a) use the pathwise coordinate descent method\n(Section 3.8.6) to solve the modi\ufb01ed lasso problem at each stage. Here are\nthe details of pathwise coordinate descent for the graphical lasso algorithm.\nLetting V = W11, the update has the form",
+    "section": "17.3.2 Estimation of the Graph Structure",
+    "old_category": "multi_model",
+    "old_subcategory": "selection"
+  },
+  {
+    "id": 68,
+    "name": "recursive feature elimination",
+    "description": "Feature selection is an important scienti\ufb01c requirement for a classi\ufb01er when\np is large. Neither discriminant analysis, logistic regression, nor the support-\nvector classi\ufb01er perform feature selection automatically, because all use\nquadratic regularization. All features have nonzero weights in both models.\nAd-hoc methods for feature selection have been proposed, for example,\nremoving genes with small coe\ufb03cients, and re\ufb01tting the classi\ufb01er. This is\ndone in a backward stepwise manner, starting with the smallest weights and\nmoving on to larger weights. This is known as recursive feature elimination\n(Guyon et al., 2002). It was not successful in this example; Ramaswamy\net al. (2001) report, for example, that the accuracy of the support-vector\nclassi\ufb01er starts to degrade as the number of genes is reduced from the full",
+    "section": "18.3.4 Feature Selection",
+    "old_category": "improvements",
+    "old_subcategory": "preprocessing"
+  },
+  {
+    "id": 70,
+    "name": "expected prediction error",
+    "description": "The expected test error averaging over both the randomness in test data and the randomness in the training set, denoted Err = E_T E_{X\u2070,Y\u2070}[L(Y\u2070, f\u0302(X\u2070)|T)].",
+    "section": "6.1 One-Dimensional Kernel Smoothers",
+    "old_category": "validation",
+    "old_subcategory": "validation"
+  },
+  {
+    "id": 71,
+    "name": "training error",
+    "description": "The average loss over the training sample, which consistently decreases with model complexity and is not a good estimate of test error because it is overly optimistic.",
+    "section": "6.1 One-Dimensional Kernel Smoothers",
+    "old_category": "validation",
+    "old_subcategory": "diagnostics"
+  },
+  {
+    "id": 72,
+    "name": "test error",
+    "description": "Prediction error over an independent test sample drawn from the same population as the training data.",
+    "section": "7.2 Bias, Variance and Model Complexity",
+    "old_category": "validation",
+    "old_subcategory": "validation"
+  },
+  {
+    "id": 73,
+    "name": "loss function",
+    "description": "Function L(Y, f(X)) that penalizes prediction errors, measuring cost of predicting f(X) when true value is Y.",
+    "section": "2.1 Introduction",
+    "old_category": "estimation",
+    "old_subcategory": "criteria"
+  },
+  {
+    "id": 74,
+    "name": "squared error loss",
+    "description": "Loss function L(Y, f(X)) = (Y - f(X))\u00b2, the most common choice for quantitative responses.",
+    "section": "2.1 Introduction",
+    "old_category": "estimation",
+    "old_subcategory": "criteria"
+  },
+  {
+    "id": 75,
+    "name": "absolute error loss",
+    "description": "Loss function L(Y, f(X)) = |Y - f(X)|, less sensitive to outliers than squared error.",
+    "section": "2.1 Introduction",
+    "old_category": "estimation",
+    "old_subcategory": "criteria"
+  },
+  {
+    "id": 76,
+    "name": "conditional expectation",
+    "description": "E[Y|X=x], the expected value of Y given X=x, which minimizes expected squared error loss.",
+    "section": "2.4 Statistical Decision Theory",
+    "old_category": "model",
+    "old_subcategory": "dgp"
+  },
+  {
+    "id": 77,
+    "name": "conditional median",
+    "description": "The median of Y given X=x, which minimizes expected absolute error loss.",
+    "section": "2.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "dgp"
+  },
+  {
+    "id": 79,
+    "name": "bayes decision boundary",
+    "description": "The boundary between regions where the Bayes classifier assigns different classes.",
+    "section": "2.4 Statistical Decision Theory",
+    "old_category": "guarantees",
+    "old_subcategory": "guarantees"
+  },
+  {
+    "id": 80,
+    "name": "least squares fitting",
+    "description": "Method for fitting linear models by minimizing residual sum of squares.",
+    "section": "2.1 Introduction",
+    "old_category": "estimation",
+    "old_subcategory": "optimization"
+  },
+  {
+    "id": 81,
+    "name": "residual sum of squares",
+    "description": "RSS(\u03b2) = \u03a3(yi - x\u1d62\u1d40\u03b2)\u00b2, the criterion minimized in least squares fitting.",
+    "section": "2.3.1 Linear Models and Least Squares",
+    "old_category": "estimation",
+    "old_subcategory": "criteria"
+  },
+  {
+    "id": 82,
+    "name": "fitted values",
+    "description": "Predictions \u0177 = X\u03b2\u0302 from a fitted linear model on the training data.",
+    "section": "2.1 Introduction",
+    "old_category": "validation",
+    "old_subcategory": "diagnostics"
+  },
+  {
+    "id": 83,
+    "name": "k-nearest neighbor averaging",
+    "description": "Method that predicts by averaging the response values of the k closest training points.",
+    "section": "2.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 84,
+    "name": "k-nearest neighbor classifier",
+    "description": "Classification method assigning to the majority class among k nearest training neighbors.",
+    "section": "2.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 85,
+    "name": "nearest neighbor decision boundary",
+    "description": "The piecewise linear or irregular boundary formed by nearest neighbor classification.",
+    "section": "2.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 86,
+    "name": "curse of dimensionality",
+    "description": "Phenomenon where nearest neighbors become far away in high dimensions, requiring exponentially more data for local methods.",
+    "section": "2.1 Introduction",
+    "old_category": "guarantees",
+    "old_subcategory": "guarantees"
+  },
+  {
+    "id": 87,
+    "name": "sampling density",
+    "description": "Density of observations per unit volume in input space, which decreases exponentially with dimension.",
+    "section": "2.1 Introduction",
+    "old_category": "guarantees",
+    "old_subcategory": "assumptions"
+  },
+  {
+    "id": 88,
+    "name": "empty space phenomenon",
+    "description": "In high dimensions, most of the volume of a hypercube is near the boundaries, leaving the interior nearly empty.",
+    "section": "2.1 Introduction",
+    "old_category": "guarantees",
+    "old_subcategory": "guarantees"
+  },
+  {
+    "id": 89,
+    "name": "structured regression model",
+    "description": "Regression model imposing constraints on the functional form to reduce complexity and avoid overfitting.",
+    "section": "2.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 90,
+    "name": "linear model assumption",
+    "description": "Assumption that regression function is linear in inputs: f(X) = X\u1d40\u03b2.",
+    "section": "2.3.1 Linear Models and Least Squares",
+    "old_category": "guarantees",
+    "old_subcategory": "assumptions"
+  },
+  {
+    "id": 91,
+    "name": "additive model",
+    "description": "Model where f(X) = \u03a3f\u2c7c(X\u2c7c), a sum of univariate functions of each predictor.",
+    "section": "2.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 92,
+    "name": "linear combination model",
+    "description": "Model where f(X) = g(\u03b1\u1d40X), applying a function to a linear combination of inputs.",
+    "section": "2.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 93,
+    "name": "interaction term",
+    "description": "Product or other combination of predictors, allowing departure from pure additivity.",
+    "section": "2.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 94,
+    "name": "roughness penalty",
+    "description": "A penalty term based on the integrated squared second derivative, penalizing curvature in the function.",
+    "section": "5.4 Smoothing Splines",
+    "old_category": "estimation",
+    "old_subcategory": "criteria"
+  },
+  {
+    "id": 95,
+    "name": "penalty functional",
+    "description": "Functional J(f) measuring function complexity, large for rapidly varying functions.",
+    "section": "2.8.2 Kernel Methods and Local Regression",
+    "old_category": "estimation",
+    "old_subcategory": "criteria"
+  },
+  {
+    "id": 96,
+    "name": "smoothing parameter",
+    "description": "Parameter \u03bb controlling tradeoff between fit to data and roughness penalty.",
+    "section": "2.1 Introduction",
+    "old_category": "multi_model",
+    "old_subcategory": "selection"
+  },
+  {
+    "id": 97,
+    "name": "kernel function",
+    "description": "A function K(x, x') that computes inner products in a transformed feature space without explicitly computing the transformation h(x).",
+    "section": "12.3.1 Computing the SVM for Classi\ufb01cation",
+    "old_category": "improvements",
+    "old_subcategory": "efficiencies"
+  },
+  {
+    "id": 98,
+    "name": "kernel width",
+    "description": "Parameter controlling the size of the neighborhood in kernel methods, analogous to k in k-NN.",
+    "section": "2.1 Introduction",
+    "old_category": "multi_model",
+    "old_subcategory": "selection"
+  },
+  {
+    "id": 99,
+    "name": "nadaraya-watson estimator",
+    "description": "Kernel-weighted average for regression: f\u0302(x) = \u03a3 K\u03bb(x, x\u1d62)y\u1d62 / \u03a3 K\u03bb(x, x\u1d62).",
+    "section": "2.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 100,
+    "name": "local linear regression",
+    "description": "A locally weighted regression technique that fits straight lines rather than constants locally by solving weighted least squares problems at each target point, which removes boundary bias exactly to first order.",
+    "section": "6.1.1 Local Linear Regression",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 101,
+    "name": "locally weighted regression",
+    "description": "Regression fit by weighted least squares with kernel weights based on distance from target point.",
+    "section": "2.4 Statistical Decision Theory",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 102,
+    "name": "basis function expansion",
+    "description": "Representing f(X) = \u03a3 h\u2098(X)\u03b2\u2098 as linear combination of fixed basis functions h\u2098.",
+    "section": "2.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 103,
+    "name": "radial basis function",
+    "description": "Basis function h\u2098(x) = D(||x - \u03bc\u2098||) depending only on distance from center \u03bc\u2098.",
+    "section": "1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 104,
+    "name": "sigmoid basis function",
+    "description": "Basis function h\u2098(x) = \u03c3(\u03b1\u2098\u1d40x + b\u2098) using sigmoid activation, as in neural networks.",
+    "section": "2.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  },
+  {
+    "id": 105,
+    "name": "dictionary",
+    "description": "Collection D of candidate basis functions from which to build a model.",
+    "section": "2.1 Introduction",
+    "old_category": "model",
+    "old_subcategory": "pseudo_model"
+  }
+]

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Subset Selection — ESL Ch. 3</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #21262d;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --accent2: #f78166;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --purple: #bc8cff;
+    --badge-comparison: #1f4068;
+    --badge-comparison-text: #58a6ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+  .header { border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+  .breadcrumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .breadcrumb span { color: var(--accent); }
+  h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .meta-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .badge { padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: var(--badge-comparison); color: var(--badge-comparison-text); border: 1px solid var(--badge-comparison-text); }
+  .section-ref { font-size: 0.85rem; color: var(--muted); }
+  .formula-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.5rem; margin-bottom: 2rem; font-size: 1.1rem; overflow-x: auto; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+  @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+  .card h2 { font-size: 1rem; font-weight: 600; color: var(--accent); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .card h3 { font-size: 0.9rem; font-weight: 600; color: var(--muted); margin-bottom: 0.4rem; }
+  .quote { border-left: 3px solid var(--accent); padding-left: 0.75rem; font-style: italic; color: var(--muted); font-size: 0.88rem; margin: 0.5rem 0 1rem; }
+  .prop-row { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+  .prop-row:last-child { border-bottom: none; }
+  .prop-indicator { width: 10px; height: 10px; border-radius: 50%; margin-top: 0.35rem; flex-shrink: 0; }
+  .prop-indicator.yes { background: var(--green); }
+  .prop-indicator.partial { background: var(--yellow); }
+  .prop-indicator.no { background: var(--accent2); }
+  .prop-label { font-weight: 600; font-size: 0.88rem; }
+  .prop-note { font-size: 0.8rem; color: var(--muted); }
+  .viz-section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem; }
+  .viz-section h2 { font-size: 1rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .viz-description { font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; }
+  .controls { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; padding: 0.75rem 1rem; background: var(--surface2); border-radius: 8px; }
+  .control-group { display: flex; align-items: center; gap: 0.5rem; }
+  .control-group label { font-size: 0.85rem; color: var(--muted); }
+  input[type=range] { accent-color: var(--accent); cursor: pointer; }
+  .control-value { font-size: 0.9rem; font-weight: 600; color: var(--accent); min-width: 1.5rem; }
+  #plotRSS, #plotSubsets { border-radius: 6px; }
+  .insight-box { background: var(--surface2); border-left: 3px solid var(--purple); border-radius: 0 6px 6px 0; padding: 0.75rem 1rem; font-size: 0.85rem; color: var(--text); margin-top: 1rem; }
+  .relations-list { list-style: none; }
+  .relations-list li { padding: 0.35rem 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; color: var(--muted); }
+  .relations-list li:last-child { border-bottom: none; }
+  .relations-list a { color: var(--accent); text-decoration: none; }
+  .tag { display: inline-block; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.75rem; color: var(--muted); margin-right: 0.25rem; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="breadcrumb">ESL / Chapter 3 / <span>3.3.1 Best-Subset Selection</span></div>
+    <h1>Best Subset Selection</h1>
+    <div class="meta-row">
+      <span class="badge">Comparison / Selection</span>
+      <span class="section-ref">§3.3.1 — Elements of Statistical Learning</span>
+    </div>
+    <div class="formula-box">
+      \[ \hat{\beta}^{\text{best-k}} = \arg\min_{|\mathcal{S}|=k} \sum_{i=1}^{N} \left(y_i - \beta_0 - \sum_{j \in \mathcal{S}} x_{ij}\beta_j\right)^2 \]
+    </div>
+  </div>
+
+  <div class="viz-section">
+    <h2>Interactive: All 2<sup>p</sup> Subsets (p = 5)</h2>
+    <p class="viz-description">Every subset of predictors is shown as a dot (RSS vs subset size). The red envelope is the <strong>best-subset curve</strong> — the minimum RSS achievable for each k. Drag the slider to highlight a specific subset size. Notice best-2 need not include the variable from best-1.</p>
+    <div class="controls">
+      <div class="control-group">
+        <label>Highlight k =</label>
+        <input type="range" id="kSlider" min="0" max="5" value="3" step="1">
+        <span class="control-value" id="kVal">3</span>
+      </div>
+      <div class="control-group">
+        <label style="margin-right:.25rem">Best subset:</label>
+        <span id="bestSubsetLabel" style="font-size:0.85rem;color:var(--purple);font-weight:600;">X1, X3, X5</span>
+      </div>
+    </div>
+    <div id="plotSubsets" style="height:400px;"></div>
+    <div class="insight-box">
+      <strong>Key insight:</strong> The best subset of size k is not necessarily a subset of the best of size k+1. This non-monotone property distinguishes best-subset from greedy methods like forward stepwise.
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h2>Key Facts</h2>
+      <h3>Definition</h3>
+      <div class="quote">"Best subset regression finds for each k the subset of size k that gives smallest residual sum of squares."</div>
+      <h3>Complexity</h3>
+      <p style="font-size:0.88rem;color:var(--muted);">Requires evaluating all <strong style="color:var(--text)">2<sup>p</sup></strong> subsets. For p=40 this is ~10<sup>12</sup> subsets — infeasible by brute force, requiring algorithmic tricks (see Leaps & Bounds).</p>
+      <h3 style="margin-top:0.75rem;">Discrete nature</h3>
+      <p style="font-size:0.88rem;color:var(--muted);">The selection indicator is binary — a variable is either in or out. No shrinkage, no partial inclusion.</p>
+    </div>
+
+    <div class="card">
+      <h2>Guarantees &amp; Properties</h2>
+      <div class="prop-row">
+        <div class="prop-indicator yes"></div>
+        <div>
+          <div class="prop-label">Unbiased (within subset)</div>
+          <div class="prop-note">OLS on the selected subset is unbiased for the true coefficients of included variables.</div>
+        </div>
+      </div>
+      <div class="prop-row">
+        <div class="prop-indicator yes"></div>
+        <div>
+          <div class="prop-label">Model-selection consistent</div>
+          <div class="prop-note">Selects the correct model with probability → 1 as n → ∞ (given correct model in candidate set).</div>
+        </div>
+      </div>
+      <div class="prop-row">
+        <div class="prop-indicator partial"></div>
+        <div>
+          <div class="prop-label">Low variance</div>
+          <div class="prop-note">Lower than full model when truth is sparse, but discrete jumps can produce high variance in variable selection.</div>
+        </div>
+      </div>
+      <div class="prop-row">
+        <div class="prop-indicator no"></div>
+        <div>
+          <div class="prop-label">Prediction consistent</div>
+          <div class="prop-note">Not optimal for prediction. Ridge/Lasso often dominate in prediction MSE due to continuous shrinkage.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:2rem;">
+    <h2>Related Concepts</h2>
+    <ul class="relations-list">
+      <li><span class="tag">prerequisite</span> <a href="#">Ordinary Least Squares (OLS)</a> — best subset uses OLS on each candidate subset</li>
+      <li><span class="tag">alternative</span> <a href="143-leaps-and-bounds.html">Leaps and Bounds</a> — efficient algorithm enabling best-subset for p up to 30–40</li>
+      <li><span class="tag">alternative</span> <a href="144-forward-stepwise-selection.html">Forward Stepwise Selection</a> — greedy approximation, computationally cheaper</li>
+      <li><span class="tag">alternative</span> <a href="#">Ridge Regression</a> — continuous shrinkage, often better prediction</li>
+      <li><span class="tag">alternative</span> <a href="#">Lasso</a> — continuous + sparse, often preferred over best subset</li>
+      <li><span class="tag">uses</span> <a href="179-aic-criterion.html">AIC Criterion</a> — used to choose optimal k</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+// Simulate best-subset data for p=5 predictors
+// RSS values for all 2^5 = 32 subsets, generated to be realistic
+// Variable names
+const varNames = ['X1','X2','X3','X4','X5'];
+// True coefficients (X1, X3, X5 are the "real" predictors)
+const trueVars = [0,2,4]; // indices
+
+// Generate subset data
+function subsetSize(mask) {
+  let s = 0;
+  for(let i=0;i<5;i++) if(mask>>i&1) s++;
+  return s;
+}
+
+function subsetVars(mask) {
+  let v=[];
+  for(let i=0;i<5;i++) if(mask>>i&1) v.push(varNames[i]);
+  return v;
+}
+
+// Simulate RSS: true signal from X1,X3,X5. Noise vars X2,X4 add minimal improvement
+// RSS_full = 100 (baseline)
+// Each true var included reduces RSS by ~15, each noise var by ~1-2
+function computeRSS(mask) {
+  let rss = 180;
+  // True vars reduce RSS significantly
+  if(mask>>0&1) rss -= 42 + (Math.sin(mask)*3); // X1
+  if(mask>>2&1) rss -= 38 + (Math.sin(mask*1.3)*2); // X3
+  if(mask>>4&1) rss -= 35 + (Math.sin(mask*0.7)*2); // X5
+  // Noise vars reduce RSS slightly (overfitting)
+  if(mask>>1&1) rss -= 3 + Math.abs(Math.sin(mask*2)); // X2
+  if(mask>>3&1) rss -= 2 + Math.abs(Math.sin(mask*1.7)); // X4
+  // Some interaction noise
+  rss += (Math.abs(Math.sin(mask*3.7)))*2;
+  return Math.max(rss, 18);
+}
+
+const allSubsets = [];
+for(let mask=1; mask<32; mask++) {
+  allSubsets.push({mask, size: subsetSize(mask), rss: computeRSS(mask), vars: subsetVars(mask)});
+}
+// Add intercept-only
+allSubsets.push({mask:0, size:0, rss:185, vars:['(intercept)']});
+
+// Find best subset per size
+const bestPerSize = {};
+for(let s=0;s<=5;s++) {
+  let best = allSubsets.filter(d=>d.size===s).sort((a,b)=>a.rss-b.rss)[0];
+  bestPerSize[s] = best;
+}
+
+const bestSubsetLabels = {
+  0: '(intercept only)',
+  1: 'X1',
+  2: 'X1, X3',
+  3: 'X1, X3, X5',
+  4: 'X1, X3, X4, X5',
+  5: 'X1, X2, X3, X4, X5'
+};
+
+const kSlider = document.getElementById('kSlider');
+const kVal = document.getElementById('kVal');
+const bestLabel = document.getElementById('bestSubsetLabel');
+
+function buildTraces(k) {
+  // All subsets background
+  const traces = [];
+
+  for(let s=0;s<=5;s++) {
+    const subs = allSubsets.filter(d=>d.size===s);
+    const xs = subs.map(d=>d.size + (Math.random()-0.5)*0.18);
+    const ys = subs.map(d=>d.rss);
+    const labels = subs.map(d=>d.vars.join(', ')||'intercept');
+    const isHighlighted = s===k;
+    const isBest = subs.map(d=>bestPerSize[s]&&d.mask===bestPerSize[s].mask);
+
+    traces.push({
+      x: xs, y: ys,
+      mode: 'markers',
+      type: 'scatter',
+      name: `k=${s}`,
+      text: labels,
+      hovertemplate: '<b>%{text}</b><br>RSS: %{y:.1f}<extra></extra>',
+      marker: {
+        size: isHighlighted ? 10 : 7,
+        color: isHighlighted ? '#58a6ff' : '#30363d',
+        opacity: isHighlighted ? 0.9 : (k===0 ? 0.5 : 0.25),
+        line: {color: isHighlighted ? '#58a6ff' : '#444', width: isHighlighted ? 1.5 : 1}
+      },
+      showlegend: false
+    });
+  }
+
+  // Best-subset envelope curve
+  const envX = [0,1,2,3,4,5];
+  const envY = envX.map(s=>bestPerSize[s].rss);
+  traces.push({
+    x: envX, y: envY,
+    mode: 'lines+markers',
+    type: 'scatter',
+    name: 'Best Subset Envelope',
+    line: {color: '#f78166', width: 3, shape: 'spline'},
+    marker: {size: 10, color: '#f78166', symbol: 'diamond'},
+    hovertemplate: 'Best k=%{x}<br>RSS: %{y:.1f}<extra>Best Subset</extra>',
+    showlegend: true
+  });
+
+  // Highlight the best of current k
+  if(bestPerSize[k]) {
+    traces.push({
+      x: [k], y: [bestPerSize[k].rss],
+      mode: 'markers',
+      type: 'scatter',
+      name: 'Selected Best',
+      marker: {size: 18, color: '#3fb950', symbol: 'star', line:{color:'#fff',width:1.5}},
+      hovertemplate: `Best k=${k}: ${bestPerSize[k].vars.join(', ')}<br>RSS: ${bestPerSize[k].rss.toFixed(1)}<extra></extra>`,
+      showlegend: false
+    });
+  }
+
+  return traces;
+}
+
+function renderPlot(k) {
+  const traces = buildTraces(k);
+  const layout = {
+    paper_bgcolor: '#161b22',
+    plot_bgcolor: '#0d1117',
+    font: {color: '#e6edf3', family: 'Segoe UI, system-ui, sans-serif'},
+    xaxis: {title: 'Subset Size k', tickvals:[0,1,2,3,4,5], gridcolor:'#21262d', zerolinecolor:'#30363d'},
+    yaxis: {title: 'Residual Sum of Squares', gridcolor:'#21262d', zerolinecolor:'#30363d'},
+    legend: {bgcolor:'#161b22', bordercolor:'#30363d', borderwidth:1},
+    margin: {t:20, b:50, l:60, r:20},
+    hovermode: 'closest',
+    annotations: [{
+      x: 2.5, y: bestPerSize[0].rss * 1.01,
+      text: 'All 2⁵=32 subsets shown as dots',
+      showarrow: false,
+      font: {size: 11, color: '#8b949e'}
+    }]
+  };
+  Plotly.react('plotSubsets', traces, layout, {responsive:true, displayModeBar:false});
+}
+
+kSlider.addEventListener('input', () => {
+  const k = parseInt(kSlider.value);
+  kVal.textContent = k;
+  bestLabel.textContent = bestSubsetLabels[k];
+  renderPlot(k);
+});
+
+renderPlot(3);
+</script>
+</body>
+</html>

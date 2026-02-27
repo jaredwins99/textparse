@@ -1,0 +1,547 @@
+{
+  "concepts": [
+    {
+      "name": ".632 estimator",
+      "type": "metric",
+      "description": "A bootstrap estimate of prediction error designed to alleviate the upward bias of leave-one-out bootstrap by pulling it toward the training error rate using the constant .632.",
+      "quote": "The \".632 estimator\" is designed to alleviate this bias. It is defined by 0.368 × err + 0.632 × 0Err(1). The derivation of the .632 estimator is complex; intuitively it pulls the leave-one out bootstrap estimate down toward the training error rate, and hence reduces its upward bias.",
+      "paragraph_ids": [25661, 25663]
+    },
+    {
+      "name": ".632+ estimator",
+      "type": "metric",
+      "description": "An improved version of the .632 estimator that accounts for overfitting by adjusting the weight between leave-one-out bootstrap and training error based on the relative overfitting rate.",
+      "quote": "Using this, the relative overfitting rate is defined to be a quantity that ranges from 0 if there is no overfitting (0Err(1) = err) to 1 if the overfitting equals the no-information value γ̂−err. Finally, we define the \".632+\" estimator by The weight w ranges from .632 if R̂ = 0 to 1 if R̂ = 1, so 0Err(.632+) ranges from 0Err(.632) to 0Err(1).",
+      "paragraph_ids": [25673, 25675, 25679]
+    },
+    {
+      "name": "leave-one-out bootstrap",
+      "type": "method",
+      "description": "A bootstrap estimation method that only uses predictions from bootstrap samples not containing each observation, avoiding the overlap bias of naive bootstrap.",
+      "quote": "By mimicking cross-validation, a better bootstrap estimate can be obtained. For each observation, we only keep track of predictions from bootstrap samples not containing that observation. The leave-one-out bootstrap estimate of prediction error is defined by averaging over bootstrap samples C−i that do not contain observation i.",
+      "paragraph_ids": [25652, 25660]
+    },
+    {
+      "name": "no-information error rate",
+      "type": "metric",
+      "description": "The error rate of a prediction rule if the inputs and class labels were independent, used to assess the amount of overfitting in bootstrap estimates.",
+      "quote": "First we define γ to be the no-information error rate: this is the error rate of our prediction rule if the inputs and class labels were independent. An estimate of γ is obtained by evaluating the prediction rule on all possible combinations of targets yi and predictors xi'.",
+      "paragraph_ids": [25665, 25671]
+    },
+    {
+      "name": "relative overfitting rate",
+      "type": "metric",
+      "description": "A quantity measuring the degree of overfitting, ranging from 0 (no overfitting) to 1 (overfitting equals the no-information value), used in the .632+ estimator.",
+      "quote": "Using this, the relative overfitting rate is defined to be a quantity that ranges from 0 if there is no overfitting (0Err(1) = err) to 1 if the overfitting equals the no-information value γ̂−err.",
+      "paragraph_ids": [25673, 25675]
+    },
+    {
+      "name": "parametric bootstrap",
+      "type": "method",
+      "description": "A bootstrap method that simulates new responses by adding Gaussian noise to predicted values, rather than sampling from raw data.",
+      "quote": "Consider a variation of the bootstrap, called the parametric bootstrap, in which we simulate new responses by adding Gaussian noise to the predicted values: y∗i = μ̂(xi) + ε∗i; ε∗i ∼N(0, σ̂²); i = 1, 2, . . . , N.",
+      "paragraph_ids": [25936, 25937]
+    },
+    {
+      "name": "likelihood function",
+      "type": "metric",
+      "description": "The probability of the observed data under a parametric model, defined as the product of densities over all observations.",
+      "quote": "Maximum likelihood is based on the likelihood function, given by L(θ; Z) = ∏ᴺᵢ₌₁ gθ(zi), the probability of the observed data under the model gθ.",
+      "paragraph_ids": [25951, 25955]
+    },
+    {
+      "name": "score function",
+      "type": "metric",
+      "description": "The derivative of the log-likelihood with respect to parameters, which equals zero at the maximum likelihood estimate.",
+      "quote": "The score function is defined by ℓ̇(θ; Z) = ∑ᴺᵢ₌₁ ℓ̇(θ; zi) where ℓ̇(θ; zi) = ∂ℓ(θ; zi)/∂θ. Assuming that the likelihood takes its maximum in the interior of the parameter space, ℓ̇(θ̂; Z) = 0.",
+      "paragraph_ids": [25962, 25967]
+    },
+    {
+      "name": "information matrix",
+      "type": "metric",
+      "description": "The negative second derivative matrix of the log-likelihood, used to assess precision of maximum likelihood estimates.",
+      "quote": "The information matrix is I(θ) = −∂²ℓ(θ; Z)/∂θ∂θᵀ. When I(θ) is evaluated at θ = θ̂, it is often called the observed information.",
+      "paragraph_ids": [25967, 25973]
+    },
+    {
+      "name": "observed information",
+      "type": "metric",
+      "description": "The information matrix evaluated at the maximum likelihood estimate.",
+      "quote": "When I(θ) is evaluated at θ = θ̂, it is often called the observed information.",
+      "paragraph_ids": [25973]
+    },
+    {
+      "name": "fisher information",
+      "type": "metric",
+      "description": "The expected value of the information matrix, also called expected information.",
+      "quote": "The Fisher information (or expected information) is i(θ) = Eθ₀[I(θ)].",
+      "paragraph_ids": [25973, 25975]
+    },
+    {
+      "name": "noninformative prior",
+      "type": "technique",
+      "description": "A constant or very diffuse prior distribution that has minimal influence on the posterior, allowing data to dominate inference.",
+      "quote": "The distribution (8.25) with τ→∞ is called a noninformative prior for θ. In Gaussian models, maximum likelihood and parametric bootstrap analyses tend to agree with Bayesian analyses that use a noninformative prior for the free parameters.",
+      "paragraph_ids": [26076]
+    },
+    {
+      "name": "posterior distribution",
+      "type": "metric",
+      "description": "In Bayesian inference, the updated distribution of parameters after observing data, computed via Bayes rule from the prior and likelihood.",
+      "quote": "In the Bayesian approach to inference, we specify a sampling model Pr(Z|θ) (density or probability mass function) for our data given the parameters, and a prior distribution for the parameters Pr(θ) reflecting our knowledge about θ before we see the data. We then compute the posterior distribution Pr(θ|Z) = Pr(Z|θ)·Pr(θ) / ∫Pr(Z|θ)·Pr(θ)dθ.",
+      "paragraph_ids": [26007, 26009, 26010]
+    },
+    {
+      "name": "predictive distribution",
+      "type": "metric",
+      "description": "The Bayesian distribution for future observations, integrating over the posterior distribution of parameters.",
+      "quote": "The posterior distribution also provides the basis for predicting the values of a future observation znew, via the predictive distribution: Pr(znew|Z) = ∫Pr(znew|θ)Pr(θ|Z)dθ.",
+      "paragraph_ids": [26011, 26013]
+    },
+    {
+      "name": "gaussian process prior",
+      "type": "technique",
+      "description": "A prior distribution on functions specified by defining the covariance between any two function values.",
+      "quote": "Distributions on functions are fairly complex entities: one approach is to use a Gaussian process prior in which we specify the prior covariance between any two function values μ(x) and μ(x').",
+      "paragraph_ids": [26013]
+    },
+    {
+      "name": "covariance kernel",
+      "type": "metric",
+      "description": "A function defining the covariance structure of a Gaussian process prior.",
+      "quote": "The implicit process prior for μ(x) is hence Gaussian, with covariance kernel K(x, x') = cov[μ(x), μ(x')] = τ·h(x)ᵀΣh(x').",
+      "paragraph_ids": [26015, 26016]
+    },
+    {
+      "name": "responsibility",
+      "type": "metric",
+      "description": "In mixture models, the conditional probability that an observation belongs to a particular component, given current parameter estimates.",
+      "quote": "also called the responsibility of model 2 for observation i. We use a procedure called the EM algorithm, given in Algorithm 8.1 for the special case of Gaussian mixtures. In the expectation step, we do a soft assignment of each observation to each model: the current estimates of the parameters are used to assign responsibilities according to the relative density of the training points under each model.",
+      "paragraph_ids": [26135, 26137]
+    },
+    {
+      "name": "expectation-maximization algorithm",
+      "type": "algorithm",
+      "description": "An iterative algorithm for maximum likelihood estimation in problems with latent variables, alternating between computing expected values of latent data (E-step) and maximizing likelihood (M-step).",
+      "quote": "The EM algorithm is a popular tool for simplifying difficult maximum likelihood problems. These problems are ones for which maximization of the likelihood is difficult, but made easier by enlarging the sample with latent (unobserved) data. This is called data augmentation.",
+      "paragraph_ids": [26101, 26168]
+    },
+    {
+      "name": "latent data",
+      "type": "technique",
+      "description": "Unobserved or missing data that, if known, would simplify likelihood maximization in the EM algorithm.",
+      "quote": "These problems are ones for which maximization of the likelihood is difficult, but made easier by enlarging the sample with latent (unobserved) data. This is called data augmentation. Here the latent data are the model memberships Δi.",
+      "paragraph_ids": [26168]
+    },
+    {
+      "name": "complete data log-likelihood",
+      "type": "metric",
+      "description": "The log-likelihood based on both observed and latent data, used in the EM algorithm framework.",
+      "quote": "Our observed data is Z, having log-likelihood ℓ(θ; Z) depending on parameters θ. The latent or missing data is Zm, so that the complete data is T = (Z, Zm) with log-likelihood ℓ0(θ; T), ℓ0 based on the complete density.",
+      "paragraph_ids": [26168]
+    },
+    {
+      "name": "generalized em algorithms",
+      "type": "algorithm",
+      "description": "Variants of EM that only require increasing (not maximizing) the Q function in the M-step.",
+      "quote": "This argument also makes it clear that a full maximization in the M step is not necessary: we need only to find a value θ̂(j+1) so that Q(θ', θ̂(j)) increases as a function of the first argument, that is, Q(θ̂(j+1), θ̂(j)) > Q(θ̂(j), θ̂(j)). Such procedures are called GEM (generalized EM) algorithms.",
+      "paragraph_ids": [26186]
+    },
+    {
+      "name": "markov chain monte carlo",
+      "type": "algorithm",
+      "description": "A class of algorithms for sampling from probability distributions by constructing a Markov chain with the desired distribution as its stationary distribution.",
+      "quote": "Having defined a Bayesian model, one would like to draw samples from the resulting posterior distribution, in order to make inferences about the parameters. In this section we discuss the Markov chain Monte Carlo (MCMC) approach to posterior sampling.",
+      "paragraph_ids": [26215]
+    },
+    {
+      "name": "gibbs sampling",
+      "type": "algorithm",
+      "description": "An MCMC method that generates samples from a joint distribution by iteratively sampling from conditional distributions of each variable given the others.",
+      "quote": "The Gibbs sampling procedure alternatively simulates from each of these distributions and when the process stabilizes, provides a sample from the desired joint distribution. Under regularity conditions it can be shown that this procedure eventually stabilizes, and the resulting random variables are indeed a sample from the joint distribution.",
+      "paragraph_ids": [26215]
+    },
+    {
+      "name": "stationary distribution",
+      "type": "property",
+      "description": "In MCMC, the limiting distribution of the Markov chain, which is the target distribution from which we wish to sample.",
+      "quote": "More formally, Gibbs sampling produces a Markov chain whose stationary distribution is the true joint distribution, and hence the term \"Markov chain Monte Carlo.\"",
+      "paragraph_ids": [26215]
+    },
+    {
+      "name": "burn-in period",
+      "type": "technique",
+      "description": "The initial iterations of MCMC that are discarded before the chain reaches stationarity.",
+      "quote": "Here we have averaged over the last M−m+1 members of the sequence, to allow for an initial \"burn-in\" period before stationarity is reached.",
+      "paragraph_ids": [26217]
+    },
+    {
+      "name": "bagging",
+      "type": "method",
+      "description": "Bootstrap aggregation: a method that averages predictions over bootstrap samples to reduce variance and improve prediction accuracy.",
+      "quote": "Bootstrap aggregation or bagging averages this prediction over a collection of bootstrap samples, thereby reducing its variance. For each bootstrap sample Z*b, b = 1, 2, . . . , B, we fit our model, giving prediction f̂*b(x). The bagging estimate is defined by f̂bag(x) = (1/B)∑ᴮb=1 f̂*b(x).",
+      "paragraph_ids": [26246]
+    },
+    {
+      "name": "empirical distribution",
+      "type": "technique",
+      "description": "A distribution putting equal probability on each observed data point, used as the sampling distribution in nonparametric bootstrap.",
+      "quote": "Denote by P̂ the empirical distribution putting equal probability 1/N on each of the data points (xi, yi). In fact the \"true\" bagging estimate is defined by EP̂f̂*(x), where Z* consists of observations sampled from P̂.",
+      "paragraph_ids": [26251]
+    },
+    {
+      "name": "consensus vote",
+      "type": "technique",
+      "description": "In bagging for classification, combining predictions by majority voting across bootstrap samples.",
+      "quote": "For classification we can understand the bagging effect in terms of a consensus of independent weak learners. Let the Bayes optimal decision at x be G(x) = 1 in a two-class example. Suppose each of the weak learners G*b have an error-rate eb = e < 0.5, and let S1(x) = ∑ᴮb=1 I(G*b(x) = 1) be the consensus vote for class 1.",
+      "paragraph_ids": [26348]
+    },
+    {
+      "name": "weak learners",
+      "type": "technique",
+      "description": "Classifiers with error rate better than random but not necessarily strong, which can be combined to form a strong classifier.",
+      "quote": "For classification we can understand the bagging effect in terms of a consensus of independent weak learners. Suppose each of the weak learners G*b have an error-rate eb = e < 0.5.",
+      "paragraph_ids": [26348]
+    },
+    {
+      "name": "bayesian model averaging",
+      "type": "method",
+      "description": "A Bayesian approach to combining predictions from multiple models, weighting each by its posterior probability.",
+      "quote": "We have a set of candidate models Mm, m = 1, . . . , M for our training set Z. The posterior distribution of ζ is Pr(ζ|Z) = ∑ᴹm=1 Pr(ζ|Mm, Z)Pr(Mm|Z). This Bayesian prediction is a weighted average of the individual predictions, with weights proportional to the posterior probability of each model.",
+      "paragraph_ids": [26673, 26682]
+    },
+    {
+      "name": "committee methods",
+      "type": "method",
+      "description": "Model averaging strategies that take a simple unweighted average of predictions from multiple models.",
+      "quote": "This formulation leads to a number of different model-averaging strategies. Committee methods take a simple unweighted average of the predictions from each model, essentially giving equal probability to each model.",
+      "paragraph_ids": [26682]
+    },
+    {
+      "name": "stacking",
+      "type": "method",
+      "description": "Stacked generalization: a model averaging method that uses cross-validated predictions to learn optimal weights for combining models, accounting for model complexity.",
+      "quote": "Stacked generalization, or stacking, is a way of doing this. Let f̂(−i)m(x) be the prediction at x, using model m, applied to the dataset with the ith training observation removed. The stacking estimate of the weights is obtained from the least squares linear regression of yi on f̂(−i)m(xi), m = 1, 2, . . . , M.",
+      "paragraph_ids": [26702, 26712]
+    },
+    {
+      "name": "bumping",
+      "type": "method",
+      "description": "Bootstrap-based model improvement that fits models to multiple bootstrap samples and selects the one with best training set performance, helping escape poor local minima.",
+      "quote": "Bumping uses bootstrap sampling to move randomly through model space. For problems where fitting method finds many local minima, bumping can help the method to avoid getting stuck in poor solutions. We draw bootstrap samples and fit a model to each. But rather than average the predictions, we choose the model estimated from a bootstrap sample that best fits the training data.",
+      "paragraph_ids": [26714, 27395]
+    },
+    {
+      "name": "generalized additive model",
+      "type": "method",
+      "description": "A regression model where the response is related to predictors through a sum of smooth nonparametric functions, extending linear models to allow flexible nonlinear effects.",
+      "quote": "In the regression setting, a generalized additive model has the form E(Y|X1, X2, . . ., Xp) = α + f1(X1) + f2(X2) + · · · + fp(Xp). As usual X1, X2, . . ., Xp represent predictors and Y is the outcome; the fj's are unspecified smooth (\"nonparametric\") functions.",
+      "paragraph_ids": [27428, 27431]
+    },
+    {
+      "name": "additive logistic regression",
+      "type": "method",
+      "description": "A generalized additive model for binary outcomes using the logit link, replacing linear terms with smooth functions.",
+      "quote": "The additive logistic regression model replaces each linear term by a more general functional form log[μ(X)/(1−μ(X))] = α + f1(X1) + · · · + fp(Xp) where again each fj is an unspecified smooth function.",
+      "paragraph_ids": [27434, 27437]
+    },
+    {
+      "name": "link function",
+      "type": "technique",
+      "description": "A function relating the conditional mean of a response to an additive function of predictors in generalized models.",
+      "quote": "In general, the conditional mean μ(X) of a response Y is related to an additive function of the predictors via a link function g: g[μ(X)] = α + f1(X1) + · · · + fp(Xp).",
+      "paragraph_ids": [27437]
+    },
+    {
+      "name": "identity link",
+      "type": "technique",
+      "description": "The link function g(μ) = μ, used for linear and additive models with Gaussian responses.",
+      "quote": "g(μ) = μ is the identity link, used for linear and additive models for Gaussian response data.",
+      "paragraph_ids": [27439]
+    },
+    {
+      "name": "logit link",
+      "type": "technique",
+      "description": "The link function g(μ) = log[μ/(1−μ)] for modeling binomial probabilities.",
+      "quote": "g(μ) = logit(μ) as above, or g(μ) = probit(μ), the probit link function, for modeling binomial probabilities.",
+      "paragraph_ids": [27440]
+    },
+    {
+      "name": "probit link",
+      "type": "technique",
+      "description": "The inverse Gaussian CDF as a link function for modeling binomial probabilities.",
+      "quote": "g(μ) = logit(μ) as above, or g(μ) = probit(μ), the probit link function, for modeling binomial probabilities. The probit function is the inverse Gaussian cumulative distribution function: probit(μ) = Φ⁻¹(μ).",
+      "paragraph_ids": [27440]
+    },
+    {
+      "name": "log link",
+      "type": "technique",
+      "description": "The link function g(μ) = log(μ) for log-linear or log-additive models with Poisson count data.",
+      "quote": "g(μ) = log(μ) for log-linear or log-additive models for Poisson count data.",
+      "paragraph_ids": [27441]
+    },
+    {
+      "name": "backfitting algorithm",
+      "type": "algorithm",
+      "description": "An iterative procedure for fitting additive models by cycling through predictors, applying a smoother to partial residuals for each predictor while holding others fixed.",
+      "quote": "We apply a cubic smoothing spline Sj to the targets {yi−α̂−∑k≠j f̂k(xik)}ᴺ₁, as a function of xij, to obtain a new estimate f̂j. This is done for each predictor in turn, using the current estimates of the other functions f̂k when computing yi−α̂−∑k≠j f̂k(xik). The process is continued until the estimates f̂j stabilize. This procedure is known as \"backfitting\".",
+      "paragraph_ids": [27486]
+    },
+    {
+      "name": "local scoring algorithm",
+      "type": "algorithm",
+      "description": "An iteratively reweighted least squares algorithm for fitting generalized additive models, combining backfitting with Newton-Raphson optimization.",
+      "quote": "For the logistic regression model and other generalized additive models, the appropriate criterion is a penalized log-likelihood. To maximize it, the backfitting procedure is used in conjunction with a likelihood maximizer. The Newton–Raphson routine for maximizing log-likelihoods can be recast as an IRLS (iteratively reweighted least squares) algorithm.",
+      "paragraph_ids": [27491, 27498]
+    },
+    {
+      "name": "working response",
+      "type": "technique",
+      "description": "In IRLS algorithms, an adjusted response variable computed at each iteration for fitting weighted regression.",
+      "quote": "This involves repeatedly fitting a weighted linear regression of a working response variable on the covariates; each regression yields a new value of the parameter estimates, which in turn give new working responses and weights.",
+      "paragraph_ids": [27491]
+    }
+  ],
+  "relationships": [
+    {
+      "source": ".632+ estimator",
+      "target": ".632 estimator",
+      "type": "generalizes",
+      "quote": "One can improve the .632 estimator by taking into account the amount of overfitting. The weight w ranges from .632 if R̂ = 0 to 1 if R̂ = 1, so 0Err(.632+) ranges from 0Err(.632) to 0Err(1)."
+    },
+    {
+      "source": ".632+ estimator",
+      "target": "relative overfitting rate",
+      "type": "uses",
+      "quote": "Using this, the relative overfitting rate is defined to be a quantity that ranges from 0 if there is no overfitting to 1. Finally, we define the \".632+\" estimator by a formula using the overfitting rate."
+    },
+    {
+      "source": ".632 estimator",
+      "target": "leave-one-out bootstrap",
+      "type": "uses",
+      "quote": "The \".632 estimator\" is designed to alleviate this bias. It is defined by 0.368 × err + 0.632 × 0Err(1), pulling the leave-one out bootstrap estimate down toward the training error rate."
+    },
+    {
+      "source": "leave-one-out bootstrap",
+      "target": "nonparametric bootstrap",
+      "type": "special_case_of",
+      "quote": "By mimicking cross-validation, a better bootstrap estimate can be obtained. For each observation, we only keep track of predictions from bootstrap samples not containing that observation."
+    },
+    {
+      "source": "relative overfitting rate",
+      "target": "no-information error rate",
+      "type": "uses",
+      "quote": "First we define γ to be the no-information error rate. Using this, the relative overfitting rate is defined based on how close overfitting is to the no-information value."
+    },
+    {
+      "source": "parametric bootstrap",
+      "target": "nonparametric bootstrap",
+      "type": "contrasts_with",
+      "quote": "The bootstrap method described above, in which we sample with replacement from the training data, is called the nonparametric bootstrap. Consider a variation of the bootstrap, called the parametric bootstrap, in which we simulate new responses by adding Gaussian noise."
+    },
+    {
+      "source": "parametric bootstrap",
+      "target": "noninformative prior",
+      "type": "equivalent_to",
+      "quote": "As τ→∞, the posterior distribution and the bootstrap distribution coincide. The bootstrap distribution represents an (approximate) nonparametric, noninformative posterior distribution."
+    },
+    {
+      "source": "score function",
+      "target": "likelihood function",
+      "type": "uses",
+      "quote": "The score function is defined by the derivative of the log-likelihood ℓ̇(θ; Z) = ∑ᴺᵢ₌₁ ℓ̇(θ; zi) where ℓ̇(θ; zi) = ∂ℓ(θ; zi)/∂θ."
+    },
+    {
+      "source": "information matrix",
+      "target": "likelihood function",
+      "type": "uses",
+      "quote": "The information matrix is I(θ) = −∂²ℓ(θ; Z)/∂θ∂θᵀ, the negative second derivative of the log-likelihood."
+    },
+    {
+      "source": "observed information",
+      "target": "information matrix",
+      "type": "special_case_of",
+      "quote": "When I(θ) is evaluated at θ = θ̂, it is often called the observed information."
+    },
+    {
+      "source": "fisher information",
+      "target": "information matrix",
+      "type": "generalizes",
+      "quote": "The Fisher information (or expected information) is i(θ) = Eθ₀[I(θ)], the expected value of the information matrix."
+    },
+    {
+      "source": "posterior distribution",
+      "target": "noninformative prior",
+      "type": "uses",
+      "quote": "We specify a prior distribution for the parameters Pr(θ) reflecting our knowledge about θ before we see the data. With a constant prior, the posterior distribution is proportional to the likelihood."
+    },
+    {
+      "source": "predictive distribution",
+      "target": "posterior distribution",
+      "type": "uses",
+      "quote": "The posterior distribution also provides the basis for predicting the values of a future observation znew, via the predictive distribution: Pr(znew|Z) = ∫Pr(znew|θ)Pr(θ|Z)dθ."
+    },
+    {
+      "source": "gaussian process prior",
+      "target": "covariance kernel",
+      "type": "uses",
+      "quote": "One approach is to use a Gaussian process prior in which we specify the prior covariance between any two function values. The implicit process prior is Gaussian, with covariance kernel K(x, x')."
+    },
+    {
+      "source": "expectation-maximization algorithm",
+      "target": "latent data",
+      "type": "uses",
+      "quote": "The EM algorithm is a popular tool for simplifying difficult maximum likelihood problems. These problems are ones for which maximization of the likelihood is difficult, but made easier by enlarging the sample with latent (unobserved) data."
+    },
+    {
+      "source": "expectation-maximization algorithm",
+      "target": "responsibility",
+      "type": "uses",
+      "quote": "We use a procedure called the EM algorithm. In the expectation step, we do a soft assignment of each observation to each model: the current estimates of the parameters are used to assign responsibilities according to the relative density."
+    },
+    {
+      "source": "expectation-maximization algorithm",
+      "target": "complete data log-likelihood",
+      "type": "uses",
+      "quote": "Our observed data is Z, having log-likelihood ℓ(θ; Z). The latent or missing data is Zm, so that the complete data is T = (Z, Zm) with log-likelihood ℓ0(θ; T). The EM algorithm works by maximizing the complete data likelihood."
+    },
+    {
+      "source": "generalized em algorithms",
+      "target": "expectation-maximization algorithm",
+      "type": "generalizes",
+      "quote": "This argument also makes it clear that a full maximization in the M step is not necessary: we need only to find a value that increases Q. Such procedures are called GEM (generalized EM) algorithms."
+    },
+    {
+      "source": "gibbs sampling",
+      "target": "markov chain monte carlo",
+      "type": "special_case_of",
+      "quote": "We discuss the Markov chain Monte Carlo (MCMC) approach to posterior sampling. Gibbs sampling, an MCMC procedure, is closely related to the EM algorithm."
+    },
+    {
+      "source": "gibbs sampling",
+      "target": "expectation-maximization algorithm",
+      "type": "contrasts_with",
+      "quote": "Gibbs sampling is closely related to the EM algorithm: the main difference is that it samples from the conditional distributions rather than maximizing over them."
+    },
+    {
+      "source": "gibbs sampling",
+      "target": "stationary distribution",
+      "type": "uses",
+      "quote": "More formally, Gibbs sampling produces a Markov chain whose stationary distribution is the true joint distribution."
+    },
+    {
+      "source": "gibbs sampling",
+      "target": "burn-in period",
+      "type": "uses",
+      "quote": "We have averaged over the last M−m+1 members of the sequence, to allow for an initial \"burn-in\" period before stationarity is reached."
+    },
+    {
+      "source": "bagging",
+      "target": "nonparametric bootstrap",
+      "type": "uses",
+      "quote": "Bootstrap aggregation or bagging averages this prediction over a collection of bootstrap samples, thereby reducing its variance."
+    },
+    {
+      "source": "bagging",
+      "target": "empirical distribution",
+      "type": "uses",
+      "quote": "Denote by P̂ the empirical distribution putting equal probability 1/N on each of the data points. The \"true\" bagging estimate is defined by sampling from P̂."
+    },
+    {
+      "source": "bagging",
+      "target": "consensus vote",
+      "type": "uses",
+      "quote": "For classification we can understand the bagging effect in terms of a consensus of independent weak learners. Let S1(x) = ∑ᴮb=1 I(G*b(x) = 1) be the consensus vote for class 1."
+    },
+    {
+      "source": "consensus vote",
+      "target": "weak learners",
+      "type": "uses",
+      "quote": "For classification we can understand the bagging effect in terms of a consensus of independent weak learners. Suppose each of the weak learners G*b have an error-rate eb = e < 0.5."
+    },
+    {
+      "source": "bayesian model averaging",
+      "target": "posterior distribution",
+      "type": "uses",
+      "quote": "This Bayesian prediction is a weighted average of the individual predictions, with weights proportional to the posterior probability of each model."
+    },
+    {
+      "source": "stacking",
+      "target": "leave-one-out cross-validation",
+      "type": "generalizes",
+      "quote": "There is a close connection between stacking and model selection via leave-one-out cross-validation. Rather than choose a single model, stacking combines them with estimated optimal weights."
+    },
+    {
+      "source": "stacking",
+      "target": "committee methods",
+      "type": "contrasts_with",
+      "quote": "Committee methods take a simple unweighted average of the predictions from each model. Stacking learns optimal weights using cross-validated predictions to account for model complexity."
+    },
+    {
+      "source": "bumping",
+      "target": "bagging",
+      "type": "contrasts_with",
+      "quote": "As in bagging, we draw bootstrap samples and fit a model to each. But rather than average the predictions, we choose the model estimated from a bootstrap sample that best fits the training data."
+    },
+    {
+      "source": "generalized additive model",
+      "target": "additive logistic regression",
+      "type": "generalizes",
+      "quote": "The additive logistic regression model is an example of a generalized additive model."
+    },
+    {
+      "source": "generalized additive model",
+      "target": "link function",
+      "type": "uses",
+      "quote": "In general, the conditional mean μ(X) of a response Y is related to an additive function of the predictors via a link function g."
+    },
+    {
+      "source": "additive logistic regression",
+      "target": "logit link",
+      "type": "uses",
+      "quote": "The additive logistic regression model replaces each linear term by a more general functional form using the logit: log[μ(X)/(1−μ(X))] = α + f1(X1) + · · · + fp(Xp)."
+    },
+    {
+      "source": "identity link",
+      "target": "link function",
+      "type": "special_case_of",
+      "quote": "g(μ) = μ is the identity link, used for linear and additive models for Gaussian response data."
+    },
+    {
+      "source": "logit link",
+      "target": "link function",
+      "type": "special_case_of",
+      "quote": "g(μ) = logit(μ) as above, for modeling binomial probabilities."
+    },
+    {
+      "source": "probit link",
+      "target": "link function",
+      "type": "special_case_of",
+      "quote": "g(μ) = probit(μ), the probit link function, for modeling binomial probabilities."
+    },
+    {
+      "source": "log link",
+      "target": "link function",
+      "type": "special_case_of",
+      "quote": "g(μ) = log(μ) for log-linear or log-additive models for Poisson count data."
+    },
+    {
+      "source": "backfitting algorithm",
+      "target": "generalized additive model",
+      "type": "uses",
+      "quote": "A simple iterative procedure exists for finding the solution. This procedure is known as \"backfitting\" and the resulting fit is analogous to a multiple regression for linear models."
+    },
+    {
+      "source": "local scoring algorithm",
+      "target": "backfitting algorithm",
+      "type": "uses",
+      "quote": "To maximize the penalized log-likelihood, the backfitting procedure is used in conjunction with a likelihood maximizer. In the generalized additive model, the weighted linear regression is simply replaced by a weighted backfitting algorithm."
+    },
+    {
+      "source": "local scoring algorithm",
+      "target": "working response",
+      "type": "uses",
+      "quote": "The Newton–Raphson routine can be recast as an IRLS (iteratively reweighted least squares) algorithm. This involves repeatedly fitting a weighted linear regression of a working response variable on the covariates."
+    }
+  ]
+}

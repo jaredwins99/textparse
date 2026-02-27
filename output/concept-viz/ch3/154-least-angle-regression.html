@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Least Angle Regression — ESL Ch 3.4.4</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; }
+  .page-header { background: linear-gradient(135deg, #161b22 0%, #1c2a3a 100%); border-bottom: 1px solid #30363d; padding: 2rem 3rem; }
+  .page-header h1 { font-size: 2rem; font-weight: 700; color: #e6edf3; margin-bottom: 0.4rem; }
+  .meta-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+  .badge { padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .badge-estimation { background: #1f3a5f; color: #79b8ff; border: 1px solid #1f6feb; }
+  .section-label { color: #8b949e; font-size: 0.9rem; }
+  .formula-block { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.5rem; margin-top: 0.8rem; font-size: 1.05rem; color: #d2a679; }
+  .main-content { max-width: 1400px; margin: 0 auto; padding: 2rem 3rem; display: grid; grid-template-columns: 1fr 380px; gap: 2rem; }
+  .viz-section { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 1.5rem; }
+  .viz-section h2 { font-size: 1.1rem; font-weight: 600; color: #e6edf3; margin-bottom: 1rem; border-bottom: 1px solid #30363d; padding-bottom: 0.5rem; }
+  .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+  .panel { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 1.5rem; }
+  .panel h3 { font-size: 0.95rem; font-weight: 600; color: #e6edf3; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .quote-block { background: #0d1117; border-left: 3px solid #1f6feb; padding: 0.8rem 1rem; border-radius: 0 6px 6px 0; margin-bottom: 0.8rem; font-style: italic; font-size: 0.875rem; color: #8b949e; }
+  .fact-item { display: flex; gap: 0.6rem; padding: 0.5rem 0; border-bottom: 1px solid #21262d; font-size: 0.875rem; }
+  .fact-item:last-child { border-bottom: none; }
+  .fact-dot { color: #1f6feb; flex-shrink: 0; margin-top: 0.15rem; }
+  .guarantee-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #21262d; font-size: 0.875rem; }
+  .guarantee-row:last-child { border-bottom: none; }
+  .tag-yes { background: #1a3a2a; color: #56d364; border: 1px solid #238636; padding: 0.1rem 0.5rem; border-radius: 10px; font-size: 0.75rem; }
+  .tag-no { background: #3a1a1a; color: #f85149; border: 1px solid #da3633; padding: 0.1rem 0.5rem; border-radius: 10px; font-size: 0.75rem; }
+  .tag-na { background: #21262d; color: #8b949e; border: 1px solid #30363d; padding: 0.1rem 0.5rem; border-radius: 10px; font-size: 0.75rem; }
+  .rel-chip { display: inline-block; background: #1c2a3a; border: 1px solid #1f6feb; color: #79b8ff; padding: 0.2rem 0.7rem; border-radius: 12px; font-size: 0.8rem; margin: 0.2rem; }
+  .controls { display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
+  .btn { background: #1f6feb; color: #fff; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: background 0.2s; }
+  .btn:hover { background: #388bfd; }
+  .btn:disabled { background: #30363d; color: #8b949e; cursor: not-allowed; }
+  .btn-secondary { background: #21262d; border: 1px solid #30363d; }
+  .btn-secondary:hover { background: #30363d; }
+  .step-info { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 0.8rem 1rem; font-size: 0.875rem; min-height: 3.5rem; }
+  .step-info .step-num { color: #1f6feb; font-weight: 700; }
+  #plotDiv { width: 100%; height: 420px; }
+  #corrPlot { width: 100%; height: 220px; margin-top: 1rem; }
+  @media (max-width: 900px) { .main-content { grid-template-columns: 1fr; padding: 1rem; } }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Least Angle Regression (LAR)</h1>
+  <div class="meta-row">
+    <span class="badge badge-estimation">estimation / optimization</span>
+    <span class="section-label">ESL Section 3.4.4</span>
+  </div>
+  <div class="formula-block">
+    \( \hat{\mu}_{k+1} = \hat{\mu}_k + \gamma_k \mathbf{u}_k \quad \text{where } \mathbf{u}_k \text{ is the equiangular direction}\)
+  </div>
+</div>
+
+<div class="main-content">
+  <div style="display:flex;flex-direction:column;gap:1.5rem;">
+    <div class="viz-section">
+      <h2>Interactive LAR Algorithm — Animated Coefficient Paths</h2>
+      <div class="controls">
+        <button class="btn" id="btnPlay">Play</button>
+        <button class="btn btn-secondary" id="btnReset">Reset</button>
+        <button class="btn btn-secondary" id="btnStep">Step</button>
+        <span style="font-size:0.85rem;color:#8b949e;">Step: <span id="stepLabel">0 / 0</span></span>
+      </div>
+      <div class="step-info" id="stepInfo"><span class="step-num">Ready.</span> Press Play or Step to animate the LAR algorithm.</div>
+      <div id="plotDiv"></div>
+    </div>
+    <div class="viz-section">
+      <h2>Residual Correlations with Predictors at Each Step</h2>
+      <div id="corrPlot"></div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="panel">
+      <h3>Key Facts</h3>
+      <div class="quote-block">"Least angle regression uses a similar strategy, but only enters 'as much' of a predictor as it deserves."</div>
+      <div class="fact-item"><span class="fact-dot">&#9679;</span><span>Requires only <strong>p</strong> steps (one per predictor) to compute full solution path</span></div>
+      <div class="fact-item"><span class="fact-dot">&#9679;</span><span>At each step, the active predictor has equal correlation with the residual as all others in the active set</span></div>
+      <div class="fact-item"><span class="fact-dot">&#9679;</span><span>Move in the equiangular direction — bisector of all active predictors</span></div>
+      <div class="fact-item"><span class="fact-dot">&#9679;</span><span>Coefficients change piecewise-linearly; breakpoints mark when a new predictor enters</span></div>
+      <div class="fact-item"><span class="fact-dot">&#9679;</span><span>Closely related to Lasso: a small modification gives the full lasso path</span></div>
+    </div>
+
+    <div class="panel">
+      <h3>Properties</h3>
+      <div class="guarantee-row"><span>Unbiased (full model)</span><span class="tag-yes">Yes</span></div>
+      <div class="guarantee-row"><span>Produces sparse solutions</span><span class="tag-yes">Yes</span></div>
+      <div class="guarantee-row"><span>Computationally efficient</span><span class="tag-yes">O(p) steps</span></div>
+      <div class="guarantee-row"><span>Coefficient paths piecewise-linear</span><span class="tag-yes">Yes</span></div>
+      <div class="guarantee-row"><span>Low variance (regularized)</span><span class="tag-yes">Yes</span></div>
+    </div>
+
+    <div class="panel">
+      <h3>Related Concepts</h3>
+      <span class="rel-chip">Forward Stepwise</span>
+      <span class="rel-chip">Lasso</span>
+      <span class="rel-chip">Homotopy Algorithm</span>
+      <span class="rel-chip">FS0 / Infinitesimal Stagewise</span>
+      <span class="rel-chip">Equiangular Direction</span>
+      <span class="rel-chip">L1 Arc Length</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- Synthetic data for LAR demo ----
+// We'll simulate the LAR coefficient paths for 4 predictors
+// using pre-computed knot positions to show the key behavior
+
+const N_PRED = 4;
+const PRED_NAMES = ['X1', 'X2', 'X3', 'X4'];
+const COLORS = ['#79b8ff', '#56d364', '#f0883e', '#f778ba'];
+
+// Pre-computed LAR path (normalized, illustrative)
+// Format: [step, [b1, b2, b3, b4]]
+const larPath = [
+  [0.00, [0.000, 0.000, 0.000, 0.000]],
+  [0.22, [0.220, 0.000, 0.000, 0.000]],
+  [0.41, [0.350, 0.000, 0.190, 0.000]],
+  [0.58, [0.420, 0.000, 0.320, 0.000]],
+  [0.72, [0.460, 0.070, 0.380, 0.000]],
+  [0.85, [0.490, 0.180, 0.420, 0.000]],
+  [0.95, [0.510, 0.250, 0.450, 0.050]],
+  [1.00, [0.520, 0.290, 0.460, 0.090]],
+];
+
+// Active sets at each step
+const activeSets = [
+  [],
+  ['X1'],
+  ['X1', 'X3'],
+  ['X1', 'X3'],
+  ['X1', 'X2', 'X3'],
+  ['X1', 'X2', 'X3'],
+  ['X1', 'X2', 'X3', 'X4'],
+  ['X1', 'X2', 'X3', 'X4'],
+];
+
+// Residual correlations at each step (simulated)
+const corrHistory = [
+  [0.82, 0.35, 0.67, 0.22],
+  [0.42, 0.35, 0.67, 0.22],
+  [0.28, 0.28, 0.38, 0.15],
+  [0.24, 0.26, 0.28, 0.14],
+  [0.18, 0.18, 0.18, 0.10],
+  [0.12, 0.12, 0.13, 0.09],
+  [0.06, 0.07, 0.06, 0.06],
+  [0.02, 0.02, 0.02, 0.02],
+];
+
+const stepMessages = [
+  'Initialization: all coefficients = 0. Find the predictor most correlated with y.',
+  'Step 1: X1 enters active set (highest correlation = 0.82). Move along X1 direction until X3 ties.',
+  'Step 2: X3 enters active set. Both X1, X3 have equal correlation. Move in equiangular direction.',
+  'Step 3: Continuing in equiangular direction of {X1, X3}.',
+  'Step 4: X2 enters active set. Equal correlation with X1, X2, X3. New equiangular direction.',
+  'Step 5: Moving in equiangular direction of {X1, X2, X3}.',
+  'Step 6: X4 enters — all predictors now active.',
+  'Step 7: Final step — OLS solution reached.',
+];
+
+let currentStep = 0;
+let animTimer = null;
+let isPlaying = false;
+
+function buildCoeffTraces(upToStep) {
+  const traces = [];
+  for (let p = 0; p < N_PRED; p++) {
+    const xs = larPath.slice(0, upToStep + 1).map(r => r[0]);
+    const ys = larPath.slice(0, upToStep + 1).map(r => r[1][p]);
+    traces.push({
+      x: xs, y: ys,
+      mode: 'lines+markers',
+      name: PRED_NAMES[p],
+      line: { color: COLORS[p], width: 2.5, shape: 'linear' },
+      marker: { size: 5, color: COLORS[p] },
+    });
+  }
+  // Vertical lines for knot points
+  const knots = [0.22, 0.41, 0.72, 0.95];
+  knots.forEach((k, i) => {
+    if (larPath[upToStep][0] >= k) {
+      traces.push({
+        x: [k, k], y: [-0.05, 0.62],
+        mode: 'lines', name: `Knot ${i+1}`,
+        line: { color: '#30363d', width: 1.5, dash: 'dot' },
+        showlegend: false,
+        hoverinfo: 'skip',
+      });
+    }
+  });
+  return traces;
+}
+
+function buildCorrTrace(step) {
+  const corrs = corrHistory[step];
+  const absCorrs = corrs.map(Math.abs);
+  return [{
+    x: PRED_NAMES,
+    y: absCorrs,
+    type: 'bar',
+    marker: {
+      color: PRED_NAMES.map((n, i) => activeSets[step].includes(n) ? COLORS[i] : '#30363d'),
+      line: { color: '#0d1117', width: 1 },
+    },
+    name: 'Correlation',
+    hovertemplate: '%{x}: %{y:.3f}<extra></extra>',
+  }];
+}
+
+const layoutCoeff = {
+  paper_bgcolor: '#0d1117',
+  plot_bgcolor: '#0d1117',
+  font: { color: '#c9d1d9', size: 12 },
+  xaxis: {
+    title: 'L1 Arc Length (s)',
+    range: [-0.02, 1.05],
+    gridcolor: '#21262d',
+    zerolinecolor: '#30363d',
+  },
+  yaxis: {
+    title: 'Coefficient Value',
+    range: [-0.05, 0.62],
+    gridcolor: '#21262d',
+    zerolinecolor: '#30363d',
+  },
+  legend: { orientation: 'h', y: 1.08, x: 0, bgcolor: 'transparent' },
+  margin: { l: 55, r: 20, t: 30, b: 50 },
+  hovermode: 'x unified',
+};
+
+const layoutCorr = {
+  paper_bgcolor: '#0d1117',
+  plot_bgcolor: '#0d1117',
+  font: { color: '#c9d1d9', size: 11 },
+  xaxis: { gridcolor: '#21262d', zerolinecolor: '#30363d' },
+  yaxis: {
+    title: '|Correlation with Residual|',
+    range: [0, 0.95],
+    gridcolor: '#21262d',
+    zerolinecolor: '#30363d',
+  },
+  margin: { l: 60, r: 20, t: 20, b: 40 },
+  annotations: [{
+    x: 0.5, y: 0.95,
+    xref: 'paper', yref: 'paper',
+    text: 'Active set predictors are colored; inactive are grey',
+    showarrow: false,
+    font: { color: '#8b949e', size: 10 },
+  }],
+};
+
+Plotly.newPlot('plotDiv', buildCoeffTraces(0), layoutCoeff, { responsive: true, displayModeBar: false });
+Plotly.newPlot('corrPlot', buildCorrTrace(0), layoutCorr, { responsive: true, displayModeBar: false });
+
+function updateStep(step) {
+  currentStep = Math.max(0, Math.min(step, larPath.length - 1));
+  Plotly.react('plotDiv', buildCoeffTraces(currentStep), layoutCoeff);
+  Plotly.react('corrPlot', buildCorrTrace(currentStep), layoutCorr);
+  document.getElementById('stepLabel').textContent = `${currentStep} / ${larPath.length - 1}`;
+  const info = document.getElementById('stepInfo');
+  const active = activeSets[currentStep].length > 0 ? activeSets[currentStep].join(', ') : 'none';
+  info.innerHTML = `<span class="step-num">Step ${currentStep}:</span> ${stepMessages[currentStep]} <br><small style="color:#8b949e">Active set: {${active}}</small>`;
+}
+
+document.getElementById('btnPlay').addEventListener('click', () => {
+  if (isPlaying) {
+    isPlaying = false;
+    clearInterval(animTimer);
+    document.getElementById('btnPlay').textContent = 'Play';
+    return;
+  }
+  isPlaying = true;
+  document.getElementById('btnPlay').textContent = 'Pause';
+  if (currentStep >= larPath.length - 1) updateStep(0);
+  animTimer = setInterval(() => {
+    if (currentStep >= larPath.length - 1) {
+      clearInterval(animTimer);
+      isPlaying = false;
+      document.getElementById('btnPlay').textContent = 'Play';
+      return;
+    }
+    updateStep(currentStep + 1);
+  }, 900);
+});
+
+document.getElementById('btnStep').addEventListener('click', () => {
+  if (currentStep < larPath.length - 1) updateStep(currentStep + 1);
+});
+
+document.getElementById('btnReset').addEventListener('click', () => {
+  clearInterval(animTimer);
+  isPlaying = false;
+  document.getElementById('btnPlay').textContent = 'Play';
+  updateStep(0);
+});
+
+updateStep(0);
+</script>
+</body>
+</html>

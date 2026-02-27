@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIC Criterion — ESL §3.3.2</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  header {
+    background: linear-gradient(135deg, #161b22 0%, #1c2128 100%);
+    border-bottom: 1px solid #30363d; padding: 28px 40px 24px;
+  }
+  .header-meta { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+  .badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .badge-id { background: #1f6feb33; color: #58a6ff; border: 1px solid #1f6feb; }
+  .badge-section { background: #388bfd22; color: #79c0ff; border: 1px solid #388bfd44; }
+  .badge-cat { background: #bc8cff22; color: #bc8cff; border: 1px solid #bc8cff44; }
+  h1 { font-size: 28px; font-weight: 700; color: #f0f6fc; margin-bottom: 8px; }
+  .formula { font-size: 14px; color: #8b949e; padding: 6px 0; line-height: 1.8; }
+  .main { display: grid; grid-template-columns: 1fr 360px; gap: 24px; padding: 28px 40px; max-width: 1400px; }
+  .viz-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; overflow: hidden; }
+  .viz-title { padding: 16px 20px 12px; border-bottom: 1px solid #30363d; font-size: 13px; font-weight: 600; color: #8b949e; text-transform: uppercase; letter-spacing: 0.6px; }
+  .controls { padding: 16px 20px; border-top: 1px solid #30363d; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .slider-row { display: flex; align-items: center; gap: 10px; }
+  label { font-size: 13px; color: #8b949e; white-space: nowrap; }
+  input[type=range] { width: 130px; accent-color: #58a6ff; }
+  .slider-val { font-size: 14px; font-weight: 700; color: #58a6ff; width: 44px; }
+  .sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 20px; }
+  .panel-title { font-size: 11px; font-weight: 700; color: #8b949e; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 14px; display: flex; align-items: center; }
+  .panel-title::before { content: ''; display: inline-block; width: 3px; height: 14px; border-radius: 2px; margin-right: 8px; }
+  .panel-title.blue::before { background: #58a6ff; }
+  .panel-title.green::before { background: #56d364; }
+  .panel-title.orange::before { background: #f0883e; }
+  .panel-title.purple::before { background: #bc8cff; }
+  blockquote { border-left: 3px solid #1f6feb; padding-left: 14px; color: #c9d1d9; font-size: 13px; line-height: 1.7; font-style: italic; }
+  blockquote cite { display: block; margin-top: 8px; font-size: 11px; color: #58a6ff; font-style: normal; font-weight: 600; }
+  .guarantee-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+  .g-icon { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin-top: 1px; }
+  .g-yes { background: #1e3a2f; color: #56d364; }
+  .g-no { background: #3d1a1a; color: #f85149; }
+  .g-na { background: #2d2a1e; color: #f0883e; }
+  .g-label { font-size: 13px; font-weight: 600; color: #c9d1d9; }
+  .g-desc { font-size: 12px; color: #8b949e; margin-top: 2px; }
+  .related-tag { display: inline-block; background: #21262d; border: 1px solid #30363d; border-radius: 6px; padding: 5px 12px; font-size: 12px; color: #79c0ff; margin: 4px; }
+  .info-bar {
+    padding: 12px 20px; border-top: 1px solid #30363d;
+    font-size: 13px; color: #8b949e; min-height: 44px;
+  }
+  .info-bar span { color: #bc8cff; font-weight: 600; }
+  #chart-main { height: 320px; }
+  #chart-decomp { height: 200px; }
+  .optimal-badge {
+    display: inline-block; background: #2a1d4a; border: 1px solid #bc8cff;
+    color: #bc8cff; font-size: 12px; font-weight: 600; border-radius: 6px;
+    padding: 4px 12px; margin-left: 8px;
+  }
+  .formula-box {
+    background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+    padding: 14px 18px; margin-top: 12px; font-size: 13px; color: #c9d1d9; line-height: 2;
+  }
+  .formula-box .term { color: #58a6ff; }
+  .formula-box .penalty { color: #f0883e; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-meta">
+    <span class="badge badge-id">ID 179</span>
+    <span class="badge badge-section">§ 3.3.2 — Subset Selection</span>
+    <span class="badge badge-cat">Assessment / Validation</span>
+  </div>
+  <h1>AIC Criterion</h1>
+  <div class="formula">
+    \(\text{AIC} = -2\ell(\hat{\theta}) + 2d\) &nbsp; (general) &nbsp;|&nbsp;
+    For Gaussian linear model: &nbsp;\(\text{AIC} = \frac{1}{N\hat{\sigma}^2_\varepsilon}\Bigl[\text{RSS} + 2d\hat{\sigma}^2_\varepsilon\Bigr]\)
+    &nbsp; where \(d\) = number of parameters
+  </div>
+</header>
+
+<div class="main">
+  <div>
+    <div class="viz-card">
+      <div class="viz-title">AIC vs Model Complexity — Training Error + Penalty Decomposition</div>
+      <div id="chart-main"></div>
+      <div id="chart-decomp"></div>
+      <div class="info-bar" id="info-bar">
+        Use the sliders to explore how the penalty weight and noise level shift the optimal model complexity selected by AIC.
+      </div>
+      <div class="controls">
+        <div class="slider-row">
+          <label>Penalty weight \(c\):</label>
+          <input type="range" id="penalty-slider" min="0.5" max="4" step="0.1" value="2" oninput="updatePlot()">
+          <span class="slider-val" id="penalty-val">2.0</span>
+        </div>
+        <div class="slider-row">
+          <label>Noise \(\sigma\):</label>
+          <input type="range" id="noise-slider" min="1" max="5" step="0.5" value="2" oninput="updatePlot()">
+          <span class="slider-val" id="noise-val">2.0</span>
+        </div>
+        <div class="slider-row">
+          <label>n (samples):</label>
+          <input type="range" id="n-slider" min="20" max="200" step="10" value="100" oninput="updatePlot()">
+          <span class="slider-val" id="n-val">100</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="panel">
+      <div class="panel-title blue">Book Quote</div>
+      <blockquote>
+        "cross-validation to estimate prediction error and select <em>k</em>; the AIC criterion is a popular alternative."
+        <cite>— ESL §3.3.2, Hastie, Tibshirani &amp; Friedman</cite>
+      </blockquote>
+      <div class="formula-box">
+        \(\text{AIC}\) = <span class="term">Training fit</span> + <span class="penalty">Complexity penalty</span><br>
+        \(= \frac{\text{RSS}}{N\hat\sigma^2}\) &nbsp;+&nbsp; \(\frac{2d}{N}\)<br><br>
+        <span style="color:#8b949e;font-size:12px;">
+          Derived from Kullback-Leibler divergence between true and fitted distribution.
+          Penalizes each additional parameter by \(2\hat\sigma^2\).
+        </span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title green">Guarantees</div>
+      <div class="guarantee-row">
+        <div class="g-icon g-yes">✓</div>
+        <div>
+          <div class="g-label">Consistent (asymptotically)</div>
+          <div class="g-desc">Selects true model as n → ∞ when true model is in candidate set (under mild conditions).</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-na">~</div>
+        <div>
+          <div class="g-label">Unbiased estimate of pred. error</div>
+          <div class="g-desc">Cp / AIC are approximately unbiased for in-sample prediction error under Gaussian model. May be biased in small n.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-no">✗</div>
+        <div>
+          <div class="g-label">Consistent for model selection (vs BIC)</div>
+          <div class="g-desc">AIC tends to overfit — selects larger models than the truth in finite samples. BIC is consistent for model selection.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-yes">✓</div>
+        <div>
+          <div class="g-label">No re-fitting needed</div>
+          <div class="g-desc">Computed from training fit — no held-out data required, unlike cross-validation.</div>
+        </div>
+      </div>
+      <div class="guarantee-row">
+        <div class="g-icon g-yes">✓</div>
+        <div>
+          <div class="g-label">Prediction consistent</div>
+          <div class="g-desc">In predictive use: selects models with good expected prediction error, balancing bias-variance.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title purple">AIC vs BIC vs Cp vs CV</div>
+      <table style="width:100%;font-size:12px;border-collapse:collapse;">
+        <thead>
+          <tr style="color:#8b949e;border-bottom:1px solid #30363d;">
+            <th style="padding:5px 4px;text-align:left;">Criterion</th>
+            <th style="padding:5px 4px;text-align:center;">Penalty</th>
+            <th style="padding:5px 4px;text-align:center;">Consistent</th>
+          </tr>
+        </thead>
+        <tbody style="color:#c9d1d9;">
+          <tr style="border-bottom:1px solid #21262d;">
+            <td style="padding:6px 4px;color:#bc8cff;font-weight:600;">AIC</td>
+            <td style="padding:6px 4px;text-align:center;">2d</td>
+            <td style="padding:6px 4px;text-align:center;color:#f0883e;">No</td>
+          </tr>
+          <tr style="border-bottom:1px solid #21262d;">
+            <td style="padding:6px 4px;color:#58a6ff;font-weight:600;">BIC</td>
+            <td style="padding:6px 4px;text-align:center;">d·log(n)</td>
+            <td style="padding:6px 4px;text-align:center;color:#56d364;">Yes</td>
+          </tr>
+          <tr style="border-bottom:1px solid #21262d;">
+            <td style="padding:6px 4px;color:#f0883e;font-weight:600;">Mallow's Cp</td>
+            <td style="padding:6px 4px;text-align:center;">2dσ²</td>
+            <td style="padding:6px 4px;text-align:center;color:#f0883e;">No</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 4px;color:#56d364;font-weight:600;">Cross-Val</td>
+            <td style="padding:6px 4px;text-align:center;">data-driven</td>
+            <td style="padding:6px 4px;text-align:center;color:#56d364;">Yes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title orange">Related Concepts</div>
+      <div>
+        <span class="related-tag">Forward Stepwise (ID 144)</span>
+        <span class="related-tag">Backward Stepwise (ID 145)</span>
+        <span class="related-tag">BIC Criterion</span>
+        <span class="related-tag">Mallow's Cp</span>
+        <span class="related-tag">Cross-Validation</span>
+        <span class="related-tag">Bias-Variance Tradeoff</span>
+        <span class="related-tag">KL Divergence</span>
+        <span class="related-tag">Effective df</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const maxK = 15;
+
+function computeCurves(penaltyWeight, sigma, n) {
+  const ks = Array.from({ length: maxK }, (_, i) => i + 1);
+
+  // Training error: decreases then flattens (true signal has ~5 relevant predictors)
+  const trueK = 5;
+  const trainRSS = ks.map(k => {
+    if (k <= trueK) return 1.0 - 0.15 * k + 0.005 * k * k;
+    return 1.0 - 0.15 * trueK + 0.005 * trueK * trueK - 0.002 * (k - trueK);
+  });
+
+  // Noise term: collapses to zero as k increases (overfitting captures noise)
+  // AIC penalty: 2*k*sigma^2 / (n * sigma^2) = 2k/n * penaltyWeight
+  const penalty = ks.map(k => (penaltyWeight * 2 * k * sigma * sigma) / (n * sigma * sigma));
+
+  // AIC = train_RSS + penalty (normalized)
+  const aic = ks.map((k, i) => trainRSS[i] + penalty[i]);
+
+  // True prediction error: U-shaped (bias decreases, variance increases)
+  const predError = ks.map(k => {
+    const bias2 = k <= trueK ? 0.6 * Math.exp(-0.5 * k) : 0.01;
+    const variance = 0.05 + (k / n) * sigma * sigma * 0.5;
+    const noise = (sigma * sigma) / n;
+    return bias2 + variance + noise;
+  });
+
+  const optAIC = aic.indexOf(Math.min(...aic)) + 1;
+  const optPred = predError.indexOf(Math.min(...predError)) + 1;
+
+  return { ks, trainRSS, penalty, aic, predError, optAIC, optPred };
+}
+
+function updatePlot() {
+  const penaltyWeight = parseFloat(document.getElementById('penalty-slider').value);
+  const sigma = parseFloat(document.getElementById('noise-slider').value);
+  const n = parseInt(document.getElementById('n-slider').value);
+
+  document.getElementById('penalty-val').textContent = penaltyWeight.toFixed(1);
+  document.getElementById('noise-val').textContent = sigma.toFixed(1);
+  document.getElementById('n-val').textContent = n;
+
+  const { ks, trainRSS, penalty, aic, predError, optAIC, optPred } = computeCurves(penaltyWeight, sigma, n);
+
+  // Main chart: AIC, train error, prediction error
+  const mainData = [
+    {
+      x: ks, y: trainRSS, mode: 'lines+markers', name: 'Training Error (RSS/Nσ²)',
+      line: { color: '#58a6ff', width: 2, dash: 'dot' },
+      marker: { size: 6 },
+      hovertemplate: 'k=%{x}, Train=%{y:.3f}<extra></extra>',
+    },
+    {
+      x: ks, y: aic, mode: 'lines+markers', name: 'AIC',
+      line: { color: '#bc8cff', width: 2.5 },
+      marker: { size: 7, color: ks.map((k, i) => i + 1 === optAIC ? '#f0883e' : '#bc8cff'), symbol: ks.map((k, i) => i + 1 === optAIC ? 'star' : 'circle') },
+      hovertemplate: 'k=%{x}, AIC=%{y:.3f}<extra></extra>',
+    },
+    {
+      x: ks, y: predError, mode: 'lines+markers', name: 'True Pred. Error (unknown)',
+      line: { color: '#56d364', width: 2, dash: 'dash' },
+      marker: { size: 6, color: ks.map((k, i) => i + 1 === optPred ? '#56d364' : '#56d36466'), symbol: ks.map((k, i) => i + 1 === optPred ? 'diamond' : 'circle') },
+      hovertemplate: 'k=%{x}, PredErr=%{y:.3f}<extra></extra>',
+    },
+  ];
+
+  const mainShapes = [
+    {
+      type: 'line', x0: optAIC, x1: optAIC, y0: 0, y1: 2,
+      line: { color: '#f0883e', width: 1.5, dash: 'dash' },
+    },
+    {
+      type: 'line', x0: optPred, x1: optPred, y0: 0, y1: 2,
+      line: { color: '#56d36466', width: 1.5, dash: 'dot' },
+    },
+  ];
+
+  const mainAnnotations = [
+    {
+      x: optAIC, y: Math.min(...aic),
+      text: `AIC min<br>k* = ${optAIC}`,
+      showarrow: true, arrowhead: 2, arrowcolor: '#f0883e',
+      ax: optAIC > 8 ? -40 : 40, ay: -35,
+      font: { color: '#f0883e', size: 11 },
+      bgcolor: '#1a1225', bordercolor: '#f0883e', borderwidth: 1, borderpad: 3,
+    },
+    {
+      x: optPred, y: Math.min(...predError),
+      text: `True opt<br>k* = ${optPred}`,
+      showarrow: true, arrowhead: 2, arrowcolor: '#56d364',
+      ax: optPred > 8 ? -40 : 35, ay: -55,
+      font: { color: '#56d364', size: 11 },
+      bgcolor: '#0d1f15', bordercolor: '#56d364', borderwidth: 1, borderpad: 3,
+    },
+  ];
+
+  const mainLayout = {
+    paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+    margin: { l: 55, r: 20, t: 16, b: 48 },
+    xaxis: {
+      range: [0.5, maxK + 0.5], dtick: 1,
+      color: '#8b949e', gridcolor: '#21262d', zeroline: false,
+      title: { text: 'Number of predictors k', font: { color: '#8b949e', size: 12 } },
+    },
+    yaxis: {
+      color: '#8b949e', gridcolor: '#21262d', zeroline: false,
+      title: { text: 'Criterion value', font: { color: '#8b949e', size: 12 } },
+    },
+    shapes: mainShapes,
+    annotations: mainAnnotations,
+    legend: { font: { color: '#8b949e', size: 11 }, bgcolor: 'transparent', orientation: 'h', x: 0, y: 1.08 },
+  };
+
+  Plotly.react('chart-main', mainData, mainLayout, { responsive: true, displayModeBar: false });
+
+  // Decomposition chart: stack train error + penalty = AIC
+  const decompData = [
+    {
+      x: ks, y: trainRSS, mode: 'lines', name: 'Training Error',
+      fill: 'tozeroy', fillcolor: '#1a2d4530',
+      line: { color: '#58a6ff', width: 1.5 },
+    },
+    {
+      x: ks, y: aic, mode: 'lines', name: 'Penalty (2d/N)',
+      fill: 'tonexty', fillcolor: '#f0883e22',
+      line: { color: '#f0883e', width: 1.5 },
+    },
+  ];
+
+  const decompLayout = {
+    paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+    margin: { l: 55, r: 20, t: 10, b: 46 },
+    xaxis: {
+      range: [0.5, maxK + 0.5], dtick: 1,
+      color: '#8b949e', gridcolor: '#21262d', zeroline: false,
+      title: { text: 'k', font: { color: '#8b949e', size: 12 } },
+    },
+    yaxis: {
+      color: '#8b949e', gridcolor: '#21262d',
+      title: { text: 'AIC decomposed', font: { color: '#8b949e', size: 12 } },
+    },
+    legend: { font: { color: '#8b949e', size: 10 }, bgcolor: 'transparent', orientation: 'h', x: 0, y: 1.12 },
+    annotations: [{
+      x: (maxK + 2) / 2, y: (Math.min(...aic) + Math.max(...trainRSS)) / 2,
+      text: 'Blue: fit quality<br>Orange: penalty',
+      showarrow: false, font: { color: '#8b949e', size: 10 },
+    }],
+  };
+
+  Plotly.react('chart-decomp', decompData, decompLayout, { responsive: true, displayModeBar: false });
+
+  // Info bar
+  const gap = Math.abs(optAIC - optPred);
+  const gapText = gap === 0
+    ? 'AIC selects the same size as the true optimum — well-calibrated for this n and σ.'
+    : `AIC selects k=${optAIC}, true optimum is k=${optPred} — AIC ${optAIC > optPred ? 'overfits' : 'underfits'} by ${gap} variable${gap > 1 ? 's' : ''} (n=${n}, σ=${sigma}).`;
+
+  document.getElementById('info-bar').innerHTML =
+    `<span>Penalty weight c=${penaltyWeight.toFixed(1)}</span> — ${gapText} BIC uses c·log(n) = ${(penaltyWeight * Math.log(n)).toFixed(1)}, selecting smaller models.`;
+}
+
+updatePlot();
+</script>
+</body>
+</html>

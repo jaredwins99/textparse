@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCAD Penalty — ESL Ch3</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0f1117;
+    color: #e2e8f0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    padding: 0 0 40px 0;
+  }
+  header {
+    background: linear-gradient(135deg, #1a1d2e 0%, #16213e 100%);
+    border-bottom: 2px solid #2d3561;
+    padding: 28px 40px;
+  }
+  header .breadcrumb { font-size: 12px; color: #64748b; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+  header h1 { font-size: 2rem; font-weight: 700; color: #fb923c; letter-spacing: -0.02em; }
+  header .meta { display: flex; gap: 12px; margin-top: 8px; font-size: 13px; color: #64748b; flex-wrap: wrap; }
+  header .meta span { background: #1e2235; padding: 3px 10px; border-radius: 12px; border: 1px solid #2d3561; }
+  .formula-bar {
+    background: #13151f;
+    border-left: 4px solid #fb923c;
+    padding: 16px 40px;
+    font-size: 0.88rem;
+    color: #fdba74;
+    border-bottom: 1px solid #1e2235;
+    line-height: 2.2;
+  }
+  main {
+    max-width: 1100px;
+    margin: 32px auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+  }
+  .card {
+    background: #13151f;
+    border: 1px solid #1e2235;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .card:last-child { margin-bottom: 0; }
+  .card h2 {
+    font-size: 14px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #64748b;
+    margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #1e2235;
+  }
+  .sidebar { display: flex; flex-direction: column; gap: 20px; }
+  #viz-penalty { width: 100%; height: 380px; }
+  #viz-solution { width: 100%; height: 280px; }
+  .tab-bar {
+    display: flex; gap: 8px; margin-bottom: 14px;
+  }
+  .tab-btn {
+    padding: 7px 16px; border-radius: 8px; border: 1px solid #2d3561;
+    background: #0f1117; color: #64748b; font-size: 0.83rem; cursor: pointer; transition: all 0.15s;
+  }
+  .tab-btn.active {
+    background: #fb923c22; border-color: #fb923c; color: #fb923c;
+  }
+  .slider-row {
+    display: flex; align-items: center; gap: 14px; margin: 10px 0 8px 0;
+    padding: 12px 16px; background: #0f1117; border-radius: 8px; border: 1px solid #1e2235;
+  }
+  .slider-row label { font-size: 0.88rem; color: #94a3b8; min-width: 60px; }
+  .slider-row input[type=range] {
+    flex: 1; -webkit-appearance: none; height: 4px; border-radius: 2px; background: #2d3561; outline: none;
+  }
+  .slider-row input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #fb923c; cursor: pointer;
+  }
+  .slider-row .val-display { font-size: 1rem; font-weight: 700; color: #fb923c; min-width: 40px; text-align: right; }
+  .quote-block {
+    background: #0f1117; border-left: 3px solid #fb923c; padding: 14px 16px;
+    border-radius: 0 8px 8px 0; font-style: italic; font-size: 0.92rem; line-height: 1.7; color: #94a3b8; margin-bottom: 14px;
+  }
+  .quote-block cite { display: block; margin-top: 8px; font-style: normal; font-size: 0.8rem; color: #475569; }
+  .guarantee-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .g-item { border-radius: 8px; padding: 10px 12px; font-size: 0.82rem; font-weight: 500; }
+  .g-yes  { background: #0d2b1a; border: 1px solid #166534; color: #4ade80; }
+  .g-no   { background: #2b0d0d; border: 1px solid #991b1b; color: #f87171; }
+  .g-cond { background: #1a1a0d; border: 1px solid #713f12; color: #fbbf24; }
+  .g-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.7; display: block; margin-bottom: 2px; }
+  .related-list { list-style: none; }
+  .related-list li { padding: 8px 0; border-bottom: 1px solid #1e2235; font-size: 0.88rem; color: #94a3b8; }
+  .related-list li:last-child { border-bottom: none; }
+  .related-list a { color: #fb923c; text-decoration: none; }
+  .related-list a:hover { text-decoration: underline; }
+  .scad-zones {
+    display: flex; gap: 0; margin-top: 12px; border-radius: 8px; overflow: hidden; border: 1px solid #1e2235;
+  }
+  .scad-zone {
+    flex: 1; padding: 10px 12px; font-size: 0.78rem; line-height: 1.5;
+  }
+  .zone-1 { background: #1a0d0d; border-right: 1px solid #1e2235; }
+  .zone-2 { background: #1a150d; border-right: 1px solid #1e2235; }
+  .zone-3 { background: #0d1a0d; }
+  .zone-title { font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .zone-1 .zone-title { color: #f87171; }
+  .zone-2 .zone-title { color: #fbbf24; }
+  .zone-3 .zone-title { color: #4ade80; }
+  .zone-body { color: #94a3b8; }
+</style>
+</head>
+<body>
+<header>
+  <div class="breadcrumb">ESL &rsaquo; Chapter 3 &rsaquo; Section 3.1 &rsaquo; comparison / selection</div>
+  <h1>SCAD Penalty</h1>
+  <div class="meta">
+    <span>ID 169</span>
+    <span>Section 3.1</span>
+    <span>comparison / selection</span>
+    <span>Smoothly Clipped Absolute Deviation</span>
+  </div>
+</header>
+
+<div class="formula-bar">
+  SCAD penalty: &nbsp; \( p'_\lambda(|\beta|) = \lambda \left[ \mathbf{1}(|\beta| \leq \lambda) + \frac{(a\lambda - |\beta|)_+}{(a-1)\lambda}\,\mathbf{1}(|\beta| > \lambda) \right], \quad a > 2 \)
+  &nbsp; (Fan &amp; Li 2001, typical \(a = 3.7\))
+</div>
+
+<main>
+  <div>
+    <div class="card">
+      <h2>Penalty Function Comparison</h2>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="showView('penalty', this)">Penalty p(β)</button>
+        <button class="tab-btn" onclick="showView('solution', this)">Solution β̂(z)</button>
+      </div>
+      <div class="slider-row">
+        <label>\(\lambda =\)</label>
+        <input type="range" id="lambda-slider" min="0.2" max="2" step="0.05" value="0.8">
+        <span class="val-display" id="lambda-val">0.80</span>
+        &nbsp;&nbsp;
+        <label style="min-width:40px;">\(a =\)</label>
+        <input type="range" id="a-slider" min="2.1" max="6" step="0.1" value="3.7">
+        <span class="val-display" id="a-val" style="color:#60a5fa;">3.7</span>
+      </div>
+      <div id="viz-penalty"></div>
+      <div id="viz-solution" style="display:none;"></div>
+      <div class="scad-zones" id="zone-info"></div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="card">
+      <h2>Book Quote</h2>
+      <div class="quote-block">
+        "One can modify the lasso penalty function so that larger coefficients are shrunken less severely."
+        <cite>— ESL, Section 3.1</cite>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Guarantees</h2>
+      <div class="guarantee-grid">
+        <div class="g-item g-yes"><span class="g-label">Oracle</span>Yes — asymptotically unbiased for large coefs</div>
+        <div class="g-item g-yes"><span class="g-label">Sparse</span>Yes — exact zeros for small coefs</div>
+        <div class="g-item g-no"><span class="g-label">Convex</span>No — non-convex penalty</div>
+        <div class="g-item g-yes"><span class="g-label">Continuous</span>Yes — solution is continuous in z</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Three SCAD Regions</h2>
+      <div style="font-size:0.83rem; color:#94a3b8; line-height:1.7; background:#0f1117; border-radius:8px; padding:12px; border:1px solid #1e2235;">
+        <strong style="color:#f87171;">|β| ≤ λ</strong>: Full L1 penalty, same as Lasso<br>
+        <strong style="color:#fbbf24;">λ &lt; |β| ≤ aλ</strong>: Reduced penalty, smoothly tapered<br>
+        <strong style="color:#4ade80;">|β| &gt; aλ</strong>: Constant penalty, no shrinkage (unbiased)
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Related Concepts</h2>
+      <ul class="related-list">
+        <li><a href="151-soft-thresholding.html">Soft Thresholding</a> — Lasso solution (zone 1 only)</li>
+        <li><a href="170-adaptive-lasso.html">Adaptive Lasso</a> — alternative oracle method</li>
+        <li><a href="168-relaxed-lasso.html">Relaxed Lasso</a> — two-stage debiasing</li>
+        <li><a href="150-basis-pursuit.html">Basis Pursuit / Lasso</a> — basis for comparison</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<script>
+let currentView = 'penalty';
+let lam = 0.8, a = 3.7;
+
+function scadPenalty(b, lam, a) {
+  const ab = Math.abs(b);
+  if (ab <= lam) return lam * ab;
+  if (ab <= a * lam) return -(ab * ab - 2 * a * lam * ab + lam * lam) / (2 * (a - 1));
+  return lam * lam * (a + 1) / 2;
+}
+
+function scadSolution(z, lam, a) {
+  const az = Math.abs(z);
+  const s = Math.sign(z);
+  if (az <= 2 * lam) return s * Math.max(az - lam, 0);
+  if (az <= a * lam) return ((a - 1) * z - s * a * lam) / (a - 2);
+  return z;
+}
+
+function l1Penalty(b, lam) { return lam * Math.abs(b); }
+function l2Penalty(b, lam) { return lam * b * b; }
+function l1Solution(z, lam) { return Math.sign(z) * Math.max(Math.abs(z) - lam, 0); }
+function l2Solution(z, lam) { return z / (1 + 2 * lam); }
+
+const N = 400;
+const bRange = Array.from({length: N}, (_, i) => -4 + 8 * i / (N - 1));
+
+function buildPenaltyTraces(lam, a) {
+  return [
+    { x: bRange, y: bRange.map(b => scadPenalty(b, lam, a)), mode: 'lines', name: 'SCAD', line: { color: '#fb923c', width: 2.5 } },
+    { x: bRange, y: bRange.map(b => l1Penalty(b, lam)), mode: 'lines', name: 'L1 (Lasso)', line: { color: '#34d399', width: 2, dash: 'dash' } },
+    { x: bRange, y: bRange.map(b => l2Penalty(b, lam)), mode: 'lines', name: 'L2 (Ridge)', line: { color: '#60a5fa', width: 2, dash: 'dot' } },
+    // Zone boundaries
+    {
+      x: [-a*lam, -lam, -lam, -a*lam, -a*lam], y: [0, 0, 5, 5, 0],
+      fill: 'toself', fillcolor: 'rgba(251,191,36,0.05)', line: { color: 'rgba(251,191,36,0.2)', width:1 },
+      name: 'Transition zone', hoverinfo: 'none', showlegend: true
+    },
+    {
+      x: [lam, a*lam, a*lam, lam, lam], y: [0, 0, 5, 5, 0],
+      fill: 'toself', fillcolor: 'rgba(251,191,36,0.05)', line: { color: 'rgba(251,191,36,0.2)', width:1 },
+      name: '', hoverinfo: 'none', showlegend: false
+    }
+  ];
+}
+
+function buildSolutionTraces(lam, a) {
+  return [
+    { x: bRange, y: bRange.map(z => scadSolution(z, lam, a)), mode: 'lines', name: 'SCAD solution', line: { color: '#fb923c', width: 2.5 } },
+    { x: bRange, y: bRange.map(z => l1Solution(z, lam)), mode: 'lines', name: 'Soft-thresh (Lasso)', line: { color: '#34d399', width: 2, dash: 'dash' } },
+    { x: bRange, y: bRange.map(z => l2Solution(z, lam)), mode: 'lines', name: 'Ridge', line: { color: '#60a5fa', width: 2, dash: 'dot' } },
+    { x: bRange, y: bRange, mode: 'lines', name: 'Identity', line: { color: '#475569', width: 1, dash: 'dot' } }
+  ];
+}
+
+const penaltyLayout = {
+  paper_bgcolor: '#0f1117', plot_bgcolor: '#0f1117',
+  font: { color: '#94a3b8', family: 'Segoe UI, system-ui, sans-serif', size: 12 },
+  margin: { t: 20, b: 50, l: 55, r: 20 },
+  xaxis: { title: 'β', gridcolor: '#1e2235', zerolinecolor: '#2d3561', range: [-4, 4] },
+  yaxis: { title: 'Penalty p(β)', gridcolor: '#1e2235', zerolinecolor: '#2d3561', range: [0, 5] },
+  legend: { orientation: 'h', y: -0.22, font: { size: 11 } }
+};
+
+const solutionLayout = {
+  paper_bgcolor: '#0f1117', plot_bgcolor: '#0f1117',
+  font: { color: '#94a3b8', family: 'Segoe UI, system-ui, sans-serif', size: 12 },
+  margin: { t: 20, b: 50, l: 55, r: 20 },
+  xaxis: { title: 'OLS z', gridcolor: '#1e2235', zerolinecolor: '#2d3561', range: [-4, 4] },
+  yaxis: { title: 'β̂(z)', gridcolor: '#1e2235', zerolinecolor: '#2d3561', range: [-4, 4] },
+  legend: { orientation: 'h', y: -0.22, font: { size: 11 } }
+};
+
+Plotly.newPlot('viz-penalty', buildPenaltyTraces(lam, a), penaltyLayout, { responsive: true, displayModeBar: false });
+Plotly.newPlot('viz-solution', buildSolutionTraces(lam, a), solutionLayout, { responsive: true, displayModeBar: false });
+
+function updateZoneInfo() {
+  document.getElementById('zone-info').innerHTML = `
+    <div class="scad-zone zone-1"><div class="zone-title">Zone 1: Full L1</div><div class="zone-body">|β| ≤ ${lam.toFixed(2)}<br>Same as Lasso</div></div>
+    <div class="scad-zone zone-2"><div class="zone-title">Zone 2: Tapered</div><div class="zone-body">${lam.toFixed(2)} &lt; |β| ≤ ${(a*lam).toFixed(2)}<br>Reduced shrinkage</div></div>
+    <div class="scad-zone zone-3"><div class="zone-title">Zone 3: Unpenalized</div><div class="zone-body">|β| &gt; ${(a*lam).toFixed(2)}<br>No shrinkage</div></div>
+  `;
+}
+updateZoneInfo();
+
+function showView(view, btn) {
+  currentView = view;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('viz-penalty').style.display = view === 'penalty' ? '' : 'none';
+  document.getElementById('viz-solution').style.display = view === 'solution' ? '' : 'none';
+}
+
+function update() {
+  Plotly.react('viz-penalty', buildPenaltyTraces(lam, a), penaltyLayout);
+  Plotly.react('viz-solution', buildSolutionTraces(lam, a), solutionLayout);
+  updateZoneInfo();
+}
+
+document.getElementById('lambda-slider').addEventListener('input', function() {
+  lam = parseFloat(this.value);
+  document.getElementById('lambda-val').textContent = lam.toFixed(2);
+  update();
+});
+document.getElementById('a-slider').addEventListener('input', function() {
+  a = parseFloat(this.value);
+  document.getElementById('a-val').textContent = a.toFixed(1);
+  update();
+});
+</script>
+</body>
+</html>

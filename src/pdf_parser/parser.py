@@ -6,12 +6,31 @@ from pathlib import Path
 
 
 @dataclass
+class SpanData:
+    """Font-level metadata for a single text span."""
+    text: str
+    font: str
+    size: float
+    flags: int  # bit 0=superscript, 1=italic, 2=serif, 3=monospace, 4=bold
+    color: int
+    bbox: tuple[float, float, float, float]
+
+
+@dataclass
+class LineData:
+    """A line of text composed of spans with font metadata."""
+    spans: list[SpanData]
+    bbox: tuple[float, float, float, float]
+
+
+@dataclass
 class ExtractedParagraph:
     """A paragraph extracted from a PDF."""
     text: str
     page_number: int
     sequence_index: int  # Order within the page
     bbox: tuple[float, float, float, float] | None = None  # Bounding box (x0, y0, x1, y1)
+    lines: list[LineData] | None = None  # Rich line/span data with font metadata
 
 
 @dataclass
@@ -51,10 +70,24 @@ class PDFParser:
         for block in blocks:
             if block["type"] == 0:  # Text block
                 text = ""
+                line_data_list = []
                 for line in block["lines"]:
+                    span_data_list = []
                     for span in line["spans"]:
                         text += span["text"]
+                        span_data_list.append(SpanData(
+                            text=span["text"],
+                            font=span["font"],
+                            size=span["size"],
+                            flags=span["flags"],
+                            color=span["color"],
+                            bbox=tuple(span["bbox"]),
+                        ))
                     text += "\n"
+                    line_data_list.append(LineData(
+                        spans=span_data_list,
+                        bbox=tuple(line["bbox"]),
+                    ))
 
                 text = text.strip()
                 if text:
@@ -62,7 +95,8 @@ class PDFParser:
                         text=text,
                         page_number=page_number,
                         sequence_index=sequence_index,
-                        bbox=tuple(block["bbox"])
+                        bbox=tuple(block["bbox"]),
+                        lines=line_data_list,
                     ))
                     sequence_index += 1
 

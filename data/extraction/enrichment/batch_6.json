@@ -1,0 +1,1953 @@
+{
+  "batch_number": 6,
+  "concepts": [
+    {
+      "id": 161,
+      "name": "reduced-rank regression",
+      "description": "Regression method that constrains coefficient matrix to have low rank, borrowing strength among multiple responses via CCA truncation.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "Reduced-rank regression (Izenman, 1975; van der Merwe and Zidek, 1980) formalizes this approach in terms of a regression model that explicitly pools information.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5321,
+          "text": "84\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 102
+        },
+        {
+          "id": 5323,
+          "text": "As noted in Section 3.2.4, the least squares estimates in a multiple-output\nlinear model are simply the individual least squares estimates for each of\nthe outputs.\nTo apply selection and shrinkage methods in the multiple output case,\none could apply a univariate technique individually to each outcome or si-\nmultaneously to all outcomes. With ridge regression, for example, we could\napply formula (3.44) to each of the K columns of the outcome matrix Y ,\nusing possibly di\ufb00erent parameters \u03bb, or apply it to all columns using the\nsame value of \u03bb. The former strategy would allow di\ufb00erent amounts of\nregularization to be applied to di\ufb00erent outcomes but require estimation\nof k separate regularization parameters \u03bb1, . . . , \u03bbk, while the latter would\npermit all k outputs to be used in estimating the sole regularization pa-\nrameter \u03bb.\nOther more sophisticated shrinkage and selection strategies that exploit\ncorrelations in the di\ufb00erent responses can be helpful in the multiple output\ncase. Suppose for example that among the outputs we have",
+          "type": "narrative",
+          "page": 102
+        },
+        {
+          "id": 5324,
+          "text": "Yk\n=\nf(X) + \u03b5k\n(3.65)",
+          "type": "narrative",
+          "page": 102
+        },
+        {
+          "id": 5325,
+          "text": "Y\u2113\n=\nf(X) + \u03b5\u2113;\n(3.66)",
+          "type": "narrative",
+          "page": 102
+        },
+        {
+          "id": 5326,
+          "text": "i.e., (3.65) and (3.66) share the same structural part f(X) in their models.\nIt is clear in this case that we should pool our observations on Yk and Yl\nto estimate the common f.\nCombining responses is at the heart of canonical correlation analysis\n(CCA), a data reduction technique developed for the multiple output case.\nSimilar to PCA, CCA \ufb01nds a sequence of uncorrelated linear combina-\ntions Xvm, m = 1, . . . , M of the xj, and a corresponding sequence of\nuncorrelated linear combinations Yum of the responses yk, such that the\ncorrelations",
+          "type": "narrative",
+          "page": 102
+        },
+        {
+          "id": 5327,
+          "text": "Corr2(Yum, Xvm)\n(3.67)",
+          "type": "narrative",
+          "page": 102
+        },
+        {
+          "id": 5328,
+          "text": "are successively maximized. Note that at most M = min(K, p) directions\ncan be found. The leading canonical response variates are those linear com-\nbinations (derived responses) best predicted by the xj; in contrast, the\ntrailing canonical variates can be poorly predicted by the xj, and are can-\ndidates for being dropped. The CCA solution is computed using a general-\nized SVD of the sample cross-covariance matrix YT X/N (assuming Y and\nX are centered; Exercise 3.20).\nReduced-rank regression (Izenman, 1975; van der Merwe and Zidek, 1980)\nformalizes this approach in terms of a regression model that explicitly pools\ninformation. Given an error covariance Cov(\u03b5) = \u03a3, we solve the following",
+          "type": "narrative",
+          "page": 102
+        },
+        {
+          "id": 5330,
+          "text": "restricted multivariate regression problem:",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5331,
+          "text": "\u02c6Brr(m) =\nargmin\nrank(B)=m",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5332,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5333,
+          "text": "i=1\n(yi \u2212BT xi)T \u03a3\u22121(yi \u2212BT xi).\n(3.68)",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5334,
+          "text": "With \u03a3 replaced by the estimate YT Y/N, one can show (Exercise 3.21)\nthat the solution is given by a CCA of Y and X:",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5335,
+          "text": "\u02c6Brr(m) = \u02c6BUmU\u2212\nm,\n(3.69)",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5336,
+          "text": "where Um is the K \u00d7 m sub-matrix of U consisting of the \ufb01rst m columns,\nand U is the K \u00d7 M matrix of left canonical vectors u1, u2, . . . , uM. U\u2212\nm\nis its generalized inverse. Writing the solution as",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5337,
+          "text": "\u02c6Brr(M) = (XT X)\u22121XT (YUm)U\u2212\nm,\n(3.70)",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5338,
+          "text": "we see that reduced-rank regression performs a linear regression on the\npooled response matrix YUm, and then maps the coe\ufb03cients (and hence\nthe \ufb01ts as well) back to the original response space. The reduced-rank \ufb01ts\nare given by",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5339,
+          "text": "\u02c6Yrr(m) = X(XT X)\u22121XT YUmU\u2212\nm\n= HYPm,\n(3.71)",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5340,
+          "text": "where H is the usual linear regression projection operator, and Pm is the\nrank-m CCA response projection operator. Although a better estimate of\n\u03a3 would be (Y\u2212X \u02c6B)T (Y\u2212X \u02c6B)/(N \u2212pK), one can show that the solution\nremains the same (Exercise 3.22).\nReduced-rank regression borrows strength among responses by truncat-\ning the CCA. Breiman and Friedman (1997) explored with some success\nshrinkage of the canonical variates between X and Y, a smooth version of\nreduced rank regression. Their proposal has the form (compare (3.69))",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5341,
+          "text": "\u02c6Bc+w = \u02c6BU\u039bU\u22121,\n(3.72)",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5342,
+          "text": "where \u039b is a diagonal shrinkage matrix (the \u201cc+w\u201d stands for \u201cCurds\nand Whey,\u201d the name they gave to their procedure). Based on optimal\nprediction in the population setting, they show that \u039b has diagonal entries",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5343,
+          "text": "\u03bbm =\nc2\nm\nc2m + p",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5344,
+          "text": "N (1 \u2212c2m), m = 1, . . . , M,\n(3.73)",
+          "type": "equation",
+          "page": 103
+        },
+        {
+          "id": 5345,
+          "text": "where cm is the mth canonical correlation coe\ufb03cient. Note that as the ratio\nof the number of input variables to sample size p/N gets small, the shrink-\nage factors approach 1. Breiman and Friedman (1997) proposed modi\ufb01ed\nversions of \u039b based on training data and cross-validation, but the general\nform is the same. Here the \ufb01tted response has the form",
+          "type": "narrative",
+          "page": 103
+        },
+        {
+          "id": 5346,
+          "text": "\u02c6Yc+w = HYSc+w,\n(3.74)",
+          "type": "narrative",
+          "page": 103
+        }
+      ]
+    },
+    {
+      "id": 140,
+      "name": "qr decomposition",
+      "description": "A matrix factorization that decomposes a matrix into an orthogonal matrix Q and an upper triangular matrix R, used as a numerically stable method for least squares.",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "the so-called QR decomposition of X. Here Q is an N \u00d7 (p + 1) orthogonal matrix, Q^T Q = I, and R is a (p + 1) \u00d7 (p + 1) upper triangular matrix.",
+      "existing_formula": "X = QR",
+      "paragraphs": [
+        {
+          "id": 5458,
+          "text": "\u03bb. We can rearrange (3.52) to isolate \u03b2j,",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5459,
+          "text": "R(\u02dc\u03b2(\u03bb), \u03b2j) = 1",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5460,
+          "text": "2",
+          "type": "equation",
+          "page": 111
+        },
+        {
+          "id": 5461,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5462,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5463,
+          "text": "\u0011",
+          "type": "equation",
+          "page": 111
+        },
+        {
+          "id": 5464,
+          "text": "yi \u2212\n\u0002",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5465,
+          "text": "k\u0338=j\nxik \u02dc\u03b2k(\u03bb) \u2212xij\u03b2j",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5466,
+          "text": "\u00122",
+          "type": "equation",
+          "page": 111
+        },
+        {
+          "id": 5467,
+          "text": "+ \u03bb\n\u0002",
+          "type": "equation",
+          "page": 111
+        },
+        {
+          "id": 5468,
+          "text": "k\u0338=j\n|\u02dc\u03b2k(\u03bb)| + \u03bb|\u03b2j|,",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5469,
+          "text": "(3.83)\nwhere we have suppressed the intercept and introduced a factor 1",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5470,
+          "text": "2 for con-\nvenience. This can be viewed as a univariate lasso problem with response\nvariable the partial residual yi \u2212\u02dcy(j)\ni\n= yi \u2212\t\nk\u0338=j xik \u02dc\u03b2k(\u03bb). This has an\nexplicit solution, resulting in the update",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5471,
+          "text": "\u02dc\u03b2j(\u03bb) \u2190S",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5472,
+          "text": "\u0011 N\n\u0002",
+          "type": "equation",
+          "page": 111
+        },
+        {
+          "id": 5473,
+          "text": "i=1\nxij(yi \u2212\u02dcy(j)\ni ), \u03bb",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5474,
+          "text": "\u0012",
+          "type": "equation",
+          "page": 111
+        },
+        {
+          "id": 5475,
+          "text": ".\n(3.84)",
+          "type": "equation",
+          "page": 111
+        },
+        {
+          "id": 5476,
+          "text": "Here S(t, \u03bb) = sign(t)(|t|\u2212\u03bb)+ is the soft-thresholding operator in Table 3.4\non page 71. The \ufb01rst argument to S(\u00b7) is the simple least-squares coe\ufb03cient\nof the partial residual on the standardized variable xij. Repeated iteration\nof (3.84)\u2014cycling through each variable in turn until convergence\u2014yields\nthe lasso estimate \u02c6\u03b2(\u03bb).\nWe can also use this simple algorithm to e\ufb03ciently compute the lasso\nsolutions at a grid of values of \u03bb. We start with the smallest value \u03bbmax\nfor which \u02c6\u03b2(\u03bbmax) = 0, decrease it a little and cycle through the variables\nuntil convergence. Then \u03bb is decreased again and the process is repeated,\nusing the previous solution as a \u201cwarm start\u201d for the new value of \u03bb. This\ncan be faster than the LARS algorithm, especially in large problems. A\nkey to its speed is the fact that the quantities in (3.84) can be updated\nquickly as j varies, and often the update is to leave \u02dc\u03b2j = 0. On the other\nhand, it delivers solutions over a grid of \u03bb values, rather than the entire\nsolution path. The same kind of algorithm can be applied to the elastic\nnet, the grouped lasso and many other models in which the penalty is a\nsum of functions of the individual parameters (Friedman et al., 2008a). It\ncan also be applied, with some substantial modi\ufb01cations, to the fused lasso\n(Section 18.4.2); details are in Friedman et al. (2007b).",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5478,
+          "text": "Least squares \ufb01tting is usually done via the Cholesky decomposition of\nthe matrix XT X or a QR decomposition of X. With N observations and p\nfeatures, the Cholesky decomposition requires p3+Np2/2 operations, while\nthe QR decomposition requires Np2 operations. Depending on the relative\nsize of N and p, the Cholesky can sometimes be faster; on the other hand,\nit can be less numerically stable (Lawson and Hansen, 1974). Computation\nof the lasso via the LAR algorithm has the same order of computation as\na least squares \ufb01t.",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5479,
+          "text": "94\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 5481,
+          "text": "Linear regression is discussed in many statistics books, for example, Seber\n(1984), Weisberg (1980) and Mardia et al. (1979). Ridge regression was\nintroduced by Hoerl and Kennard (1970), while the lasso was proposed by\nTibshirani (1996). Around the same time, lasso-type penalties were pro-\nposed in the basis pursuit method for signal processing (Chen et al., 1998).\nThe least angle regression procedure was proposed in Efron et al. (2004);\nrelated to this is the earlier homotopy procedure of Osborne et al. (2000a)\nand Osborne et al. (2000b). Their algorithm also exploits the piecewise\nlinearity used in the LAR/lasso algorithm, but lacks its transparency. The\ncriterion for the forward stagewise criterion is discussed in Hastie et al.\n(2007). Park and Hastie (2007) develop a path algorithm similar to least\nangle regression for generalized regression models. Partial least squares\nwas introduced by Wold (1975). Comparisons of shrinkage methods may\nbe found in Copas (1983) and Frank and Friedman (1993).",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 5485,
+          "text": "1. At each point x0, form a 95% con\ufb01dence interval for the linear func-\ntion aT \u03b2 = \t3\nj=0 \u03b2jxj\n0.",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 5486,
+          "text": "2. Form a 95% con\ufb01dence set for \u03b2 as in (3.15), which in turn generates\ncon\ufb01dence intervals for f(x0).",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 5487,
+          "text": "How do these approaches di\ufb00er? Which band is likely to be wider? Conduct\na small simulation experiment to compare the two methods.",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 5489,
+          "text": "(a) Prove the Gauss\u2013Markov theorem: the least squares estimate of a\nparameter aT \u03b2 has variance no bigger than that of any other linear\nunbiased estimate of aT \u03b2 (Section 3.2.2).",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 5490,
+          "text": "(b) The matrix inequality B \u2aafA holds if A \u2212B is positive semide\ufb01nite.\nShow that if \u02c6V is the variance-covariance matrix of the least squares\nestimate of \u03b2 and \u02dcV is the variance-covariance matrix of any other\nlinear unbiased estimate, then \u02c6V \u2aaf\u02dcV.",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 5491,
+          "text": "Exercises\n95",
+          "type": "narrative",
+          "page": 113
+        },
+        {
+          "id": 5494,
+          "text": "\u02c6\u03b2c = argmin\n\u03b2c",
+          "type": "narrative",
+          "page": 113
+        },
+        {
+          "id": 5495,
+          "text": "\u0003 N\n\u0002",
+          "type": "equation",
+          "page": 113
+        }
+      ]
+    },
+    {
+      "id": 183,
+      "name": "soft-thresholding operator",
+      "description": "An operator S(t, \u03bb) = sign(t)(|t|\u2212\u03bb)+ used in coordinate descent for lasso, which shrinks coefficients toward zero by the amount \u03bb and sets them to zero if below the threshold.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "",
+      "existing_formula": "S(t, \\lambda) = \\text{sign}(t)(|t| - \\lambda)_+",
+      "paragraphs": [
+        {
+          "id": 5458,
+          "text": "\u03bb. We can rearrange (3.52) to isolate \u03b2j,",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5459,
+          "text": "R(\u02dc\u03b2(\u03bb), \u03b2j) = 1",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5460,
+          "text": "2",
+          "type": "equation",
+          "page": 111
+        },
+        {
+          "id": 5461,
+          "text": "N\n\u0002",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5462,
+          "text": "i=1",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5463,
+          "text": "\u0011",
+          "type": "equation",
+          "page": 111
+        },
+        {
+          "id": 5464,
+          "text": "yi \u2212\n\u0002",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5465,
+          "text": "k\u0338=j\nxik \u02dc\u03b2k(\u03bb) \u2212xij\u03b2j",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5466,
+          "text": "\u00122",
+          "type": "equation",
+          "page": 111
+        },
+        {
+          "id": 5467,
+          "text": "+ \u03bb\n\u0002",
+          "type": "equation",
+          "page": 111
+        },
+        {
+          "id": 5468,
+          "text": "k\u0338=j\n|\u02dc\u03b2k(\u03bb)| + \u03bb|\u03b2j|,",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5469,
+          "text": "(3.83)\nwhere we have suppressed the intercept and introduced a factor 1",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5470,
+          "text": "2 for con-\nvenience. This can be viewed as a univariate lasso problem with response\nvariable the partial residual yi \u2212\u02dcy(j)\ni\n= yi \u2212\t\nk\u0338=j xik \u02dc\u03b2k(\u03bb). This has an\nexplicit solution, resulting in the update",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5471,
+          "text": "\u02dc\u03b2j(\u03bb) \u2190S",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5472,
+          "text": "\u0011 N\n\u0002",
+          "type": "equation",
+          "page": 111
+        },
+        {
+          "id": 5473,
+          "text": "i=1\nxij(yi \u2212\u02dcy(j)\ni ), \u03bb",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5474,
+          "text": "\u0012",
+          "type": "equation",
+          "page": 111
+        },
+        {
+          "id": 5475,
+          "text": ".\n(3.84)",
+          "type": "equation",
+          "page": 111
+        },
+        {
+          "id": 5476,
+          "text": "Here S(t, \u03bb) = sign(t)(|t|\u2212\u03bb)+ is the soft-thresholding operator in Table 3.4\non page 71. The \ufb01rst argument to S(\u00b7) is the simple least-squares coe\ufb03cient\nof the partial residual on the standardized variable xij. Repeated iteration\nof (3.84)\u2014cycling through each variable in turn until convergence\u2014yields\nthe lasso estimate \u02c6\u03b2(\u03bb).\nWe can also use this simple algorithm to e\ufb03ciently compute the lasso\nsolutions at a grid of values of \u03bb. We start with the smallest value \u03bbmax\nfor which \u02c6\u03b2(\u03bbmax) = 0, decrease it a little and cycle through the variables\nuntil convergence. Then \u03bb is decreased again and the process is repeated,\nusing the previous solution as a \u201cwarm start\u201d for the new value of \u03bb. This\ncan be faster than the LARS algorithm, especially in large problems. A\nkey to its speed is the fact that the quantities in (3.84) can be updated\nquickly as j varies, and often the update is to leave \u02dc\u03b2j = 0. On the other\nhand, it delivers solutions over a grid of \u03bb values, rather than the entire\nsolution path. The same kind of algorithm can be applied to the elastic\nnet, the grouped lasso and many other models in which the penalty is a\nsum of functions of the individual parameters (Friedman et al., 2008a). It\ncan also be applied, with some substantial modi\ufb01cations, to the fused lasso\n(Section 18.4.2); details are in Friedman et al. (2007b).",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5478,
+          "text": "Least squares \ufb01tting is usually done via the Cholesky decomposition of\nthe matrix XT X or a QR decomposition of X. With N observations and p\nfeatures, the Cholesky decomposition requires p3+Np2/2 operations, while\nthe QR decomposition requires Np2 operations. Depending on the relative\nsize of N and p, the Cholesky can sometimes be faster; on the other hand,\nit can be less numerically stable (Lawson and Hansen, 1974). Computation\nof the lasso via the LAR algorithm has the same order of computation as\na least squares \ufb01t.",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 5479,
+          "text": "94\n3. Linear Methods for Regression",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 5481,
+          "text": "Linear regression is discussed in many statistics books, for example, Seber\n(1984), Weisberg (1980) and Mardia et al. (1979). Ridge regression was\nintroduced by Hoerl and Kennard (1970), while the lasso was proposed by\nTibshirani (1996). Around the same time, lasso-type penalties were pro-\nposed in the basis pursuit method for signal processing (Chen et al., 1998).\nThe least angle regression procedure was proposed in Efron et al. (2004);\nrelated to this is the earlier homotopy procedure of Osborne et al. (2000a)\nand Osborne et al. (2000b). Their algorithm also exploits the piecewise\nlinearity used in the LAR/lasso algorithm, but lacks its transparency. The\ncriterion for the forward stagewise criterion is discussed in Hastie et al.\n(2007). Park and Hastie (2007) develop a path algorithm similar to least\nangle regression for generalized regression models. Partial least squares\nwas introduced by Wold (1975). Comparisons of shrinkage methods may\nbe found in Copas (1983) and Frank and Friedman (1993).",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 5485,
+          "text": "1. At each point x0, form a 95% con\ufb01dence interval for the linear func-\ntion aT \u03b2 = \t3\nj=0 \u03b2jxj\n0.",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 5486,
+          "text": "2. Form a 95% con\ufb01dence set for \u03b2 as in (3.15), which in turn generates\ncon\ufb01dence intervals for f(x0).",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 5487,
+          "text": "How do these approaches di\ufb00er? Which band is likely to be wider? Conduct\na small simulation experiment to compare the two methods.",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 5489,
+          "text": "(a) Prove the Gauss\u2013Markov theorem: the least squares estimate of a\nparameter aT \u03b2 has variance no bigger than that of any other linear\nunbiased estimate of aT \u03b2 (Section 3.2.2).",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 5490,
+          "text": "(b) The matrix inequality B \u2aafA holds if A \u2212B is positive semide\ufb01nite.\nShow that if \u02c6V is the variance-covariance matrix of the least squares\nestimate of \u03b2 and \u02dcV is the variance-covariance matrix of any other\nlinear unbiased estimate, then \u02c6V \u2aaf\u02dcV.",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 5491,
+          "text": "Exercises\n95",
+          "type": "narrative",
+          "page": 113
+        },
+        {
+          "id": 5494,
+          "text": "\u02c6\u03b2c = argmin\n\u03b2c",
+          "type": "narrative",
+          "page": 113
+        },
+        {
+          "id": 5495,
+          "text": "\u0003 N\n\u0002",
+          "type": "equation",
+          "page": 113
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "canonical variates",
+      "description": "This is a generalized eigenvalue problem, with a given by the largest\neigenvalue of W\u22121B. It is not hard to show (Exercise 4.1) that the optimal\na1 is identical to v1 de\ufb01ned above. Similarly one can \ufb01nd the next direction\na2, orthogonal in W to a1, such that aT\n2 Ba2/aT\n2 Wa2 is maximized; the\nsolution is a2 = v2, and so on. The a\u2113are referred to as discriminant\ncoordinates, not to be confused with discriminant functions. They are also\nreferred to as canonical variates, since an alternative derivation of these\nresults is through a canonical correlation analysis of the indicator response\nmatrix Y on the predictor matrix X. This line is pursued in Section 12.5.\nTo summarize the developments so far:",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "The a\u2113 are referred to as discriminant coordinates, not to be confused with discriminant functions. They are also referred to as canonical variates, since an alternative derivation of these results is through a canonical correlation analysis of the indicator response matrix Y on the predictor matrix X.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 184,
+      "name": "warm start",
+      "description": "An initialization technique where the solution from a previous optimization problem is used as the starting point for a new similar problem, commonly used in pathwise optimization algorithms.",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "Then \u03bb is decreased again and the process is repeated, using the previous solution as a 'warm start' for the new value of \u03bb.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 185,
+      "name": "cholesky decomposition",
+      "description": "A matrix decomposition that factors a positive-definite matrix into the product of a lower triangular matrix and its transpose, used in least squares fitting.",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "Least squares fitting is usually done via the Cholesky decomposition of the matrix XT X or a QR decomposition of X. With N observations and p features, the Cholesky decomposition requires p3+Np2/2 operations",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 188,
+      "name": "class-conditional density",
+      "description": "The probability density function of the input features X conditional on belonging to a specific class k, denoted fk(x).",
+      "category": "model",
+      "subcategory": "dgp",
+      "existing_quote": "Suppose fk(x) is the class-conditional density of X in class G = k, and let \u03c0k be the prior probability of class k",
+      "existing_formula": "f_k(x)",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 189,
+      "name": "linear discriminant function",
+      "description": "A linear function \u03b4k(x) = x^T \u03a3^(-1)\u03bck - (1/2)\u03bck^T \u03a3^(-1)\u03bck + log \u03c0k used in LDA to classify observations by finding the maximum discriminant value.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "From (4.9) we see that the linear discriminant functions \u03b4k(x) = x^T \u03a3^(-1)\u03bck - (1/2)\u03bck^T \u03a3^(-1)\u03bck + log \u03c0k are an equivalent description of the decision rule",
+      "existing_formula": "\\delta_k(x) = x^T \\Sigma^{-1}\\mu_k - \\frac{1}{2}\\mu_k^T \\Sigma^{-1}\\mu_k + \\log \\pi_k",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 190,
+      "name": "pooled covariance matrix",
+      "description": "A weighted average of the within-class covariance matrices used in LDA when assuming a common covariance across all classes.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "where \u03a3\u0302 is the pooled covariance matrix as used in LDA.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 191,
+      "name": "quadratic discriminant function",
+      "description": "A discriminant function that includes quadratic terms in x, arising when different classes have different covariance matrices in Gaussian classification.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "if the \u03a3k are not assumed to be equal, then the convenient cancellations in (4.9) do not occur; in particular the pieces quadratic in x remain. We then get quadratic discriminant functions (QDA)",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 194,
+      "name": "reduced-rank lda",
+      "description": "A dimension reduction technique in LDA that projects data onto a lower-dimensional subspace spanned by the class centroids, preserving classification information while enabling visualization.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "The K centroids in p-dimensional input space lie in an affine subspace of dimension \u2264 K \u2212 1, and if p is much larger than K, this will be a considerable drop in dimension.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 195,
+      "name": "fisher's linear discriminant",
+      "description": "A method that finds linear combinations of features that maximize the ratio of between-class variance to within-class variance, providing optimal low-dimensional projections for classification.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "Find the linear combination Z = a^T X such that the between-class variance is maximized relative to the within-class variance.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 196,
+      "name": "rayleigh quotient",
+      "description": "The ratio a^T Ba / a^T Wa used in Fisher's discriminant analysis, measuring the between-class to within-class variance ratio for a linear combination.",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "Fisher's problem therefore amounts to maximizing the Rayleigh quotient, max_a a^T Ba / a^T Wa",
+      "existing_formula": "\\frac{a^T B a}{a^T W a}",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 197,
+      "name": "discriminant coordinates",
+      "description": "The vectors a\u2113 that maximize the Rayleigh quotient successively, providing optimal directions for discriminating between classes.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "The a\u2113 are referred to as discriminant coordinates, not to be confused with discriminant functions.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 198,
+      "name": "between-class covariance",
+      "description": "The covariance matrix B measuring the spread of class means around the overall mean, used in Fisher's discriminant analysis.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "compute B*, the covariance matrix of M* (B for between-class covariance)",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 200,
+      "name": "logit transformation",
+      "description": "A monotone transformation log[p/(1\u2212p)] that maps probabilities from [0,1] to the real line, used in logistic regression to model posterior probabilities.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)]",
+      "existing_formula": "\\log\\left[\\frac{p}{1-p}\\right]",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 201,
+      "name": "log-odds",
+      "description": "The logarithm of the odds ratio, equal to the logit transformation, representing the linear component in logistic regression models.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "The model is specified in terms of K \u2212 1 log-odds or logit transformations (reflecting the constraint that the probabilities sum to one).",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 204,
+      "name": "iteratively reweighted least squares",
+      "description": "An iterative algorithm (IRLS) for fitting generalized linear models like logistic regression, where each iteration solves a weighted least squares problem with data-dependent weights.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "These equations get solved repeatedly, since at each iteration p changes, and hence so does W and z. This algorithm is referred to as iteratively reweighted least squares or IRLS",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 207,
+      "name": "residual deviance",
+      "description": "Minus twice the log-likelihood of a fitted model, used to measure model fit and compare nested models in generalized linear models.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "The residual deviance of a fitted model is minus twice its log-likelihood, and the deviance between two models is the difference of their individual residual deviances",
+      "existing_formula": "-2 \\cdot \\log\\text{lik}",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    },
+    {
+      "id": 209,
+      "name": "rao score test",
+      "description": "A hypothesis test for including a term in a model based on the score function at the current parameter estimates, not requiring iterative fitting.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "Popular shortcuts are the Rao score test which tests for inclusion of a term, and the Wald test which can be used to test for exclusion of a term.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 5583,
+          "text": "This is page 101\nPrinter: Opaque this\n4\nLinear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5585,
+          "text": "In this chapter we revisit the classi\ufb01cation problem and focus on linear\nmethods for classi\ufb01cation. Since our predictor G(x) takes values in a dis-\ncrete set G, we can always divide the input space into a collection of regions\nlabeled according to the classi\ufb01cation. We saw in Chapter 2 that the bound-\naries of these regions can be rough or smooth, depending on the prediction\nfunction. For an important class of procedures, these decision boundaries\nare linear; this is what we will mean by linear methods for classi\ufb01cation.\nThere are several di\ufb00erent ways in which linear decision boundaries can\nbe found. In Chapter 2 we \ufb01t linear regression models to the class indicator\nvariables, and classify to the largest \ufb01t. Suppose there are K classes, for\nconvenience labeled 1, 2, . . . , K, and the \ufb01tted linear model for the kth\nindicator response variable is \u02c6fk(x) = \u02c6\u03b2k0 + \u02c6\u03b2T\nk x. The decision boundary\nbetween class k and \u2113is that set of points for which \u02c6fk(x) = \u02c6f\u2113(x), that is,\nthe set {x : (\u02c6\u03b2k0 \u2212\u02c6\u03b2\u21130) + (\u02c6\u03b2k \u2212\u02c6\u03b2\u2113)T x = 0}, an a\ufb03ne set or hyperplane1",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5586,
+          "text": "Since the same is true for any pair of classes, the input space is divided\ninto regions of constant classi\ufb01cation, with piecewise hyperplanar decision\nboundaries. This regression approach is a member of a class of methods\nthat model discriminant functions \u03b4k(x) for each class, and then classify x\nto the class with the largest value for its discriminant function. Methods",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5587,
+          "text": "1Strictly speaking, a hyperplane passes through the origin, while an a\ufb03ne set need\nnot. We sometimes ignore the distinction and refer in general to hyperplanes.",
+          "type": "narrative",
+          "page": 119
+        },
+        {
+          "id": 5588,
+          "text": "102\n4. Linear Methods for Classi\ufb01cation",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5589,
+          "text": "that model the posterior probabilities Pr(G = k|X = x) are also in this\nclass. Clearly, if either the \u03b4k(x) or Pr(G = k|X = x) are linear in x, then\nthe decision boundaries will be linear.\nActually, all we require is that some monotone transformation of \u03b4k or\nPr(G = k|X = x) be linear for the decision boundaries to be linear. For\nexample, if there are two classes, a popular model for the posterior proba-\nbilities is",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5590,
+          "text": "Pr(G = 1|X = x) =\nexp(\u03b20 + \u03b2T x)\n1 + exp(\u03b20 + \u03b2T x),",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5591,
+          "text": "Pr(G = 2|X = x) =\n1\n1 + exp(\u03b20 + \u03b2T x).\n(4.1)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5592,
+          "text": "Here the monotone transformation is the logit transformation: log[p/(1\u2212p)],\nand in fact we see that",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5593,
+          "text": "log Pr(G = 1|X = x)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5594,
+          "text": "Pr(G = 2|X = x) = \u03b20 + \u03b2T x.\n(4.2)",
+          "type": "narrative",
+          "page": 120
+        },
+        {
+          "id": 5595,
+          "text": "The decision boundary is the set of points for which the log-odds are zero,\nand this is a hyperplane de\ufb01ned by\n\u0016\nx|\u03b20 + \u03b2T x = 0\n\u0017\n. We discuss two very\npopular but di\ufb00erent methods that result in linear log-odds or logits: linear\ndiscriminant analysis and linear logistic regression. Although they di\ufb00er in\ntheir derivation, the essential di\ufb00erence between them is in the way the\nlinear function is \ufb01t to the training data.\nA more direct approach is to explicitly model the boundaries between\nthe classes as linear. For a two-class problem in a p-dimensional input\nspace, this amounts to modeling the decision boundary as a hyperplane\u2014in\nother words, a normal vector and a cut-point. We will look at two methods\nthat explicitly look for \u201cseparating hyperplanes.\u201d The \ufb01rst is the well-\nknown perceptron model of Rosenblatt (1958), with an algorithm that \ufb01nds\na separating hyperplane in the training data, if one exists. The second\nmethod, due to Vapnik (1996), \ufb01nds an optimally separating hyperplane if\none exists, else \ufb01nds a hyperplane that minimizes some measure of overlap\nin the training data. We treat the separable case here, and defer treatment\nof the nonseparable case to Chapter 12.\nWhile this entire chapter is devoted to linear decision boundaries, there is\nconsiderable scope for generalization. For example, we can expand our vari-\nable set X1, . . . , Xp by including their squares and cross-products X2\n1, X2\n2, . . . ,\nX1X2, . . ., thereby adding p(p + 1)/2 additional variables. Linear functions\nin the augmented space map down to quadratic functions in the original\nspace\u2014hence linear decision boundaries to quadratic decision boundaries.\nFigure 4.1 illustrates the idea. The data are the same: the left plot uses\nlinear decision boundaries in the two-dimensional space shown, while the\nright plot uses linear decision boundaries in the augmented \ufb01ve-dimensional\nspace described above. This approach can be used with any basis transfor-",
+          "type": "narrative",
+          "page": 120
+        }
+      ]
+    }
+  ]
+}

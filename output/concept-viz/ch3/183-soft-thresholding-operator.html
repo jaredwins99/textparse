@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soft-Thresholding Operator S(t, λ) — ESL Ch3</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0f1117;
+    color: #e2e8f0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    padding: 0 0 40px 0;
+  }
+  header {
+    background: linear-gradient(135deg, #1a1d2e 0%, #16213e 100%);
+    border-bottom: 2px solid #2d3561;
+    padding: 28px 40px;
+  }
+  header .breadcrumb { font-size: 12px; color: #64748b; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+  header h1 { font-size: 2rem; font-weight: 700; color: #2dd4bf; letter-spacing: -0.02em; }
+  header .meta { display: flex; gap: 12px; margin-top: 8px; font-size: 13px; color: #64748b; flex-wrap: wrap; }
+  header .meta span { background: #1e2235; padding: 3px 10px; border-radius: 12px; border: 1px solid #2d3561; }
+  .formula-bar {
+    background: #13151f;
+    border-left: 4px solid #2dd4bf;
+    padding: 20px 40px;
+    font-size: 1.1rem;
+    color: #5eead4;
+    border-bottom: 1px solid #1e2235;
+    line-height: 2;
+  }
+  main {
+    max-width: 1100px;
+    margin: 32px auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+  }
+  .card {
+    background: #13151f;
+    border: 1px solid #1e2235;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .card:last-child { margin-bottom: 0; }
+  .card h2 {
+    font-size: 14px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #64748b;
+    margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #1e2235;
+  }
+  .sidebar { display: flex; flex-direction: column; gap: 20px; }
+  #viz-main { width: 100%; height: 420px; }
+  #viz-deriv { width: 100%; height: 200px; }
+  .slider-row {
+    display: flex; align-items: center; gap: 14px; margin: 14px 0 8px 0;
+    padding: 14px 18px; background: #0f1117; border-radius: 8px; border: 1px solid #1e2235;
+  }
+  .slider-row label { font-size: 0.9rem; color: #94a3b8; min-width: 60px; }
+  .slider-row input[type=range] {
+    flex: 1; -webkit-appearance: none; height: 4px; border-radius: 2px; background: #2d3561; outline: none;
+  }
+  .slider-row input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #2dd4bf; cursor: pointer;
+  }
+  .slider-row .val-display { font-size: 1.1rem; font-weight: 700; color: #2dd4bf; min-width: 50px; text-align: right; }
+  .readout-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 14px;
+  }
+  .readout-cell {
+    background: #0f1117; border: 1px solid #1e2235; border-radius: 8px;
+    padding: 12px 14px; text-align: center;
+  }
+  .readout-cell .r-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b; margin-bottom: 6px; }
+  .readout-cell .r-val { font-size: 1.1rem; font-weight: 700; color: #2dd4bf; }
+  .piecewise-box {
+    background: #0f1117; border-radius: 10px; padding: 18px; border: 1px solid #1e2235;
+    font-size: 0.88rem; line-height: 2;
+  }
+  .pw-case { display: flex; align-items: baseline; gap: 14px; padding: 4px 0; border-bottom: 1px solid #1a1d2e; }
+  .pw-case:last-child { border-bottom: none; }
+  .pw-expr { color: #2dd4bf; font-weight: 600; min-width: 100px; }
+  .pw-cond { color: #64748b; font-size: 0.82rem; }
+  .guarantee-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .g-item { border-radius: 8px; padding: 10px 12px; font-size: 0.82rem; font-weight: 500; }
+  .g-yes  { background: #0d2b1a; border: 1px solid #166534; color: #4ade80; }
+  .g-no   { background: #2b0d0d; border: 1px solid #991b1b; color: #f87171; }
+  .g-cond { background: #1a1a0d; border: 1px solid #713f12; color: #fbbf24; }
+  .g-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.7; display: block; margin-bottom: 2px; }
+  .related-list { list-style: none; }
+  .related-list li { padding: 8px 0; border-bottom: 1px solid #1e2235; font-size: 0.88rem; color: #94a3b8; }
+  .related-list li:last-child { border-bottom: none; }
+  .related-list a { color: #2dd4bf; text-decoration: none; }
+  .related-list a:hover { text-decoration: underline; }
+  .hover-dot {
+    width: 10px; height: 10px; border-radius: 50%; background: #2dd4bf;
+    display: inline-block; vertical-align: middle; margin-right: 6px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="breadcrumb">ESL &rsaquo; Chapter 3 &rsaquo; Section 3.9 &rsaquo; estimation / optimization</div>
+  <h1>Soft-Thresholding Operator</h1>
+  <div class="meta">
+    <span>ID 183</span>
+    <span>Section 3.9</span>
+    <span>estimation / optimization</span>
+    <span>Proximal Operator of L1</span>
+  </div>
+</header>
+
+<div class="formula-bar">
+  \( S(t, \lambda) = \text{sign}(t)\,(|t| - \lambda)_+ \)
+  &nbsp;&nbsp;&mdash;&nbsp;&nbsp;
+  \( = \begin{cases} t - \lambda & t > \lambda \\ 0 & |t| \leq \lambda \\ t + \lambda & t < -\lambda \end{cases} \)
+</div>
+
+<main>
+  <div>
+    <div class="card">
+      <h2>Interactive: S(t, λ) Function</h2>
+      <div class="slider-row">
+        <label>\(\lambda =\)</label>
+        <input type="range" id="lambda-slider" min="0" max="3" step="0.05" value="1.0">
+        <span class="val-display" id="lambda-val">1.00</span>
+      </div>
+      <div id="viz-main"></div>
+      <div class="readout-grid">
+        <div class="readout-cell">
+          <div class="r-label">Dead Zone</div>
+          <div class="r-val" id="dead-zone-display">[-1.00, 1.00]</div>
+        </div>
+        <div class="readout-cell">
+          <div class="r-label">Shrinkage</div>
+          <div class="r-val" id="shrink-display">λ = 1.00</div>
+        </div>
+        <div class="readout-cell">
+          <div class="r-label">Sparsity Rate</div>
+          <div class="r-val" id="sparsity-display">33.3%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Derivative (Subgradient)</h2>
+      <div id="viz-deriv"></div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="card">
+      <h2>Piecewise Definition</h2>
+      <div class="piecewise-box">
+        <div class="pw-case">
+          <div class="pw-expr">t &minus; λ</div>
+          <div class="pw-cond">if t &gt; λ &nbsp;(positive region)</div>
+        </div>
+        <div class="pw-case">
+          <div class="pw-expr">0</div>
+          <div class="pw-cond">if |t| &le; λ &nbsp;(dead zone)</div>
+        </div>
+        <div class="pw-case">
+          <div class="pw-expr">t + λ</div>
+          <div class="pw-cond">if t &lt; &minus;λ &nbsp;(negative region)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Guarantees</h2>
+      <div class="guarantee-grid">
+        <div class="g-item g-yes"><span class="g-label">Exact Zeros</span>Yes — dead zone produces true zeros</div>
+        <div class="g-item g-yes"><span class="g-label">Monotone</span>Yes — S(t,λ) is non-decreasing in t</div>
+        <div class="g-item g-no"><span class="g-label">Unbiased</span>No — shifts non-zero values by λ</div>
+        <div class="g-item g-yes"><span class="g-label">Proximal Op.</span>Yes — prox of λ|·| applied to t</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Proximal Interpretation</h2>
+      <div style="background:#0f1117; border-radius:8px; padding:14px; font-size:0.84rem; color:#94a3b8; line-height:1.7; border:1px solid #1e2235;">
+        \(S(t, \lambda) = \text{prox}_{\lambda|\cdot|}(t) = \arg\min_\beta \left\{ \tfrac{1}{2}(\beta - t)^2 + \lambda|\beta| \right\}\)<br><br>
+        The soft-thresholding operator is the <em>proximal operator</em> of the L1 norm. This makes it the fundamental building block for ISTA, ADMM, and coordinate descent Lasso solvers.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Related Concepts</h2>
+      <ul class="related-list">
+        <li><a href="151-soft-thresholding.html">Soft Thresholding (regression)</a> — Lasso solution for β</li>
+        <li><a href="150-basis-pursuit.html">Basis Pursuit / Lasso</a> — uses S as solution op</li>
+        <li><a href="170-adaptive-lasso.html">Adaptive Lasso</a> — weighted S(t, λw_j)</li>
+        <li><a href="169-scad-penalty.html">SCAD Penalty</a> — modifies S for large |t|</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<script>
+const N = 600;
+const tRange = Array.from({length: N}, (_, i) => -4 + 8 * i / (N - 1));
+
+function S(t, lam) { return Math.sign(t) * Math.max(Math.abs(t) - lam, 0); }
+function dS(t, lam) {
+  if (Math.abs(t) < lam) return 0;
+  return 1;
+}
+
+function buildMainTraces(lam) {
+  const yS = tRange.map(t => S(t, lam));
+
+  // Slope lines (outside dead zone)
+  const tPos = tRange.filter(t => t > lam);
+  const tNeg = tRange.filter(t => t < -lam);
+
+  return [
+    // Identity reference
+    { x: tRange, y: tRange, mode: 'lines', name: 'Identity (no shrinkage)', line: { color: '#475569', width: 1, dash: 'dot' }, hoverinfo: 'none' },
+    // Dead zone shading
+    {
+      x: [-lam, lam, lam, -lam, -lam],
+      y: [-0.2, -0.2, 0.2, 0.2, -0.2],
+      fill: 'toself',
+      fillcolor: 'rgba(45, 212, 191, 0.08)',
+      line: { color: 'rgba(45,212,191,0.3)', width: 1, dash: 'dot' },
+      name: `Dead zone [−λ, λ]`,
+      hoverinfo: 'none'
+    },
+    // Vertical boundary lines
+    {
+      x: [lam, lam], y: [-4, 4],
+      mode: 'lines', name: '', showlegend: false,
+      line: { color: 'rgba(45,212,191,0.4)', width: 1, dash: 'dash' }, hoverinfo: 'none'
+    },
+    {
+      x: [-lam, -lam], y: [-4, 4],
+      mode: 'lines', name: '', showlegend: false,
+      line: { color: 'rgba(45,212,191,0.4)', width: 1, dash: 'dash' }, hoverinfo: 'none'
+    },
+    // Main S(t, lambda) curve
+    {
+      x: tRange, y: yS,
+      mode: 'lines', name: `S(t, ${lam.toFixed(2)})`,
+      line: { color: '#2dd4bf', width: 3 },
+      hovertemplate: 't = %{x:.3f}<br>S(t, λ) = %{y:.3f}<extra></extra>'
+    }
+  ];
+}
+
+function buildDerivTraces(lam) {
+  const yD = tRange.map(t => dS(t, lam));
+  return [{
+    x: tRange, y: yD,
+    mode: 'lines', name: "S'(t, λ)",
+    line: { color: '#f59e0b', width: 2 },
+    fill: 'tozeroy',
+    fillcolor: 'rgba(245,158,11,0.08)'
+  }];
+}
+
+function updateReadouts(lam) {
+  document.getElementById('dead-zone-display').textContent = `[−${lam.toFixed(2)}, ${lam.toFixed(2)}]`;
+  document.getElementById('shrink-display').textContent = `λ = ${lam.toFixed(2)}`;
+  const range = 6;
+  const pct = (2 * lam / range * 100).toFixed(1);
+  document.getElementById('sparsity-display').textContent = `${Math.min(pct, 100)}%`;
+}
+
+const mainLayout = {
+  paper_bgcolor: '#0f1117', plot_bgcolor: '#0f1117',
+  font: { color: '#94a3b8', family: 'Segoe UI, system-ui, sans-serif', size: 12 },
+  margin: { t: 20, b: 50, l: 55, r: 20 },
+  xaxis: { title: 't', gridcolor: '#1e2235', zerolinecolor: '#2d3561', range: [-4, 4] },
+  yaxis: { title: 'S(t, λ)', gridcolor: '#1e2235', zerolinecolor: '#2d3561', range: [-4, 4] },
+  legend: { orientation: 'h', y: -0.22, font: { size: 11 } },
+  showlegend: true
+};
+
+const derivLayout = {
+  paper_bgcolor: '#0f1117', plot_bgcolor: '#0f1117',
+  font: { color: '#94a3b8', family: 'Segoe UI, system-ui, sans-serif', size: 11 },
+  margin: { t: 10, b: 40, l: 55, r: 20 },
+  xaxis: { title: 't', gridcolor: '#1e2235', zerolinecolor: '#2d3561', range: [-4, 4] },
+  yaxis: { title: "dS/dt", gridcolor: '#1e2235', zerolinecolor: '#2d3561', range: [-0.2, 1.4] },
+  showlegend: false,
+  annotations: [{
+    text: 'Subgradient = 0 in dead zone, = 1 outside',
+    x: 0.5, y: 1.08, xref: 'paper', yref: 'paper',
+    showarrow: false, font: { color: '#94a3b8', size: 10 }
+  }]
+};
+
+let lam = 1.0;
+Plotly.newPlot('viz-main', buildMainTraces(lam), mainLayout, { responsive: true, displayModeBar: false });
+Plotly.newPlot('viz-deriv', buildDerivTraces(lam), derivLayout, { responsive: true, displayModeBar: false });
+updateReadouts(lam);
+
+document.getElementById('lambda-slider').addEventListener('input', function() {
+  lam = parseFloat(this.value);
+  document.getElementById('lambda-val').textContent = lam.toFixed(2);
+  Plotly.react('viz-main', buildMainTraces(lam), mainLayout);
+  Plotly.react('viz-deriv', buildDerivTraces(lam), derivLayout);
+  updateReadouts(lam);
+});
+</script>
+</body>
+</html>

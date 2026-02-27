@@ -1,0 +1,1723 @@
+{
+  "batch_number": 34,
+  "concepts": [
+    {
+      "id": 647,
+      "name": "cox proportional hazards model",
+      "description": "A regression model widely used for survival problems, used in supervised principal components for score tests and multivariate modeling with censored outcomes.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "For survival problems, Cox's proportional hazards regression model is widely used; hence we use the score test from this model in step (1) and the multivariate Cox model in step (2b).",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48856,
+          "text": "678\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 696
+        },
+        {
+          "id": 48857,
+          "text": "Algorithm 18.1 Supervised Principal Components.",
+          "type": "narrative",
+          "page": 696
+        },
+        {
+          "id": 48858,
+          "text": "1. Compute the standardized univariate regression coe\ufb03cients for the\noutcome as a function of each feature separately.",
+          "type": "narrative",
+          "page": 696
+        },
+        {
+          "id": 48859,
+          "text": "2. For each value of the threshold \u03b8 from the list 0 \u2264\u03b81 < \u03b82 < \u00b7 \u00b7 \u00b7 < \u03b8K:",
+          "type": "narrative",
+          "page": 696
+        },
+        {
+          "id": 48860,
+          "text": "(a) Form a reduced data matrix consisting of only those features\nwhose univariate coe\ufb03cient exceeds \u03b8 in absolute value, and\ncompute the \ufb01rst m principal components of this matrix.",
+          "type": "narrative",
+          "page": 696
+        },
+        {
+          "id": 48861,
+          "text": "(b) Use these principal components in a regression model to predict\nthe outcome.",
+          "type": "narrative",
+          "page": 696
+        },
+        {
+          "id": 48862,
+          "text": "3. Pick \u03b8 (and m) by cross-validation.",
+          "type": "narrative",
+          "page": 696
+        },
+        {
+          "id": 48863,
+          "text": "step (2b). For survival problems, Cox\u2019s proportional hazards regression\nmodel is widely used; hence we use the score test from this model in step (1)\nand the multivariate Cox model in step (2b). The details are not essential\nfor understanding the basic method; they may be found in Bair et al. (2006).\nFigure 18.14 shows the results of supervised principal components in this\nexample. We used a Cox-score cuto\ufb00of 3.53, yielding 27 genes, where the\nvalue 3.53 was found through 10-fold cross-validation. We then computed\nthe \ufb01rst principal component (m = 1) using just this subset of the data,\nas well as its value for each of the test observations. We included this as\na quantitative predictor in a Cox regression model, and its likelihood-ratio\nsigni\ufb01cance was p = 0.005. When dichotomized (using the mean score on\nthe training data as a threshold), it clearly separates the patients in the\ntest set into low and high risk groups (middle-right panel of Figure 18.14,\np = 0.006).\nThe top-right panel of Figure 18.14 uses the top scoring gene (dichot-\nomized) alone as a predictor of survival. It is not signi\ufb01cant on the test set.\nLikewise, the lower-right panel shows the dichotomized principal compo-\nnent using all the training data, which is also not signi\ufb01cant.\nOur procedure allows m > 1 principal components in step (2a). However,\nthe supervision in step (1) encourages the principal components to align\nwith the outcome, and thus in most cases only the \ufb01rst or \ufb01rst few com-\nponents tend to be useful for prediction. In the mathematical development\nbelow, we consider only the \ufb01rst component, but extensions to more than\none component can be derived in a similar way.",
+          "type": "narrative",
+          "page": 696
+        },
+        {
+          "id": 48865,
+          "text": "A formal connection between supervised principal components and the un-\nderlying cell type model (Figure 18.13) can be seen through a latent variable\nmodel for the data. Suppose we have a response variable Y which is related",
+          "type": "narrative",
+          "page": 696
+        },
+        {
+          "id": 48867,
+          "text": "to an underlying latent variable U by a linear model",
+          "type": "narrative",
+          "page": 697
+        },
+        {
+          "id": 48868,
+          "text": "Y = \u03b20 + \u03b21U + \u03b5.\n(18.32)",
+          "type": "equation",
+          "page": 697
+        },
+        {
+          "id": 48869,
+          "text": "In addition, we have measurements on a set of features Xj indexed by j \u2208P\n(for pathway), for which",
+          "type": "narrative",
+          "page": 697
+        },
+        {
+          "id": 48870,
+          "text": "Xj = \u03b10j + \u03b11jU + \u03f5j,\nj \u2208P.\n(18.33)",
+          "type": "narrative",
+          "page": 697
+        },
+        {
+          "id": 48871,
+          "text": "The errors \u03b5 and \u03f5j are assumed to have mean zero and are independent of\nall other random variables in their respective models.\nWe also have many additional features Xk, k \u0338\u2208P which are independent\nof U. We would like to identify P, estimate U, and hence \ufb01t the predic-\ntion model (18.32). This is a special case of a latent-structure model, or\nsingle-component factor-analysis model (Mardia et al., 1979, see also Sec-\ntion 14.7). The latent factor U is a continuous version of the cell type\nconceptualized in Figure 18.13.\nThe supervised principal component algorithm can be seen as a method\nfor \ufb01tting this model:",
+          "type": "narrative",
+          "page": 697
+        },
+        {
+          "id": 48872,
+          "text": "\u2022 The screening step (1) estimates the set P.",
+          "type": "narrative",
+          "page": 697
+        },
+        {
+          "id": 48873,
+          "text": "\u2022 Given 2P, the largest principal component in step (2) estimates the\nlatent factor U.",
+          "type": "narrative",
+          "page": 697
+        },
+        {
+          "id": 48874,
+          "text": "\u2022 Finally, the regression \ufb01t in step (3) estimates the coe\ufb03cient in model\n(18.32).",
+          "type": "narrative",
+          "page": 697
+        },
+        {
+          "id": 48875,
+          "text": "Step (1) is natural, since on average the regression coe\ufb03cient is nonzero\nonly if \u03b11j is non-zero. Hence this step should select the features j \u2208P.\nStep (2) is natural if we assume that the errors \u03f5j have a Gaussian dis-\ntribution, with the same variance. In this case the principal component is\nthe maximum likelihood estimate for the single factor model (Mardia et\nal., 1979). The regression in (3) is an obvious \ufb01nal step.\nSuppose there are a total of p features, with p1 features in the relevant set\nP. Then if p and p1 grow but p1 is small relative to p, one can show (under\nreasonable conditions) that the leading supervised principal component\nis consistent for the underlying latent factor. The usual leading principal\ncomponent may not be consistent, since it can be contaminated by the\npresence of a large number of \u201cnoise\u201d features.\nFinally, suppose that the threshold used in step (1) of the supervised\nprincipal component procedure yields a large number of features for com-\nputation of the principal component. Then for interpretational purposes, as\nwell as for practical uses, we would like some way of \ufb01nding a reduced a set\nof features that approximates the model. Pre-conditioning (Section 18.6.3)\nis one way of doing this.",
+          "type": "narrative",
+          "page": 697
+        }
+      ]
+    },
+    {
+      "id": 669,
+      "name": "supervised principal components for feature selection",
+      "description": "A method that thresholds features based on univariate association with outcome, then performs principal components analysis on retained features and uses components in supervised learning.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "Supervised principal components can yield lower test errors than competing methods, as shown in Figure 18.16. However, it does not always produce a sparse model involving only a small number of features (genes).",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48892,
+          "text": "xij\n=",
+          "type": "narrative",
+          "page": 699
+        },
+        {
+          "id": 48893,
+          "text": "\u0003\n3 + \u03f5ij\nif i \u226450,\n4 + \u03f5ij\nif i > 50\nj = 1, . . . , 50",
+          "type": "narrative",
+          "page": 699
+        },
+        {
+          "id": 48894,
+          "text": "xij\n=",
+          "type": "narrative",
+          "page": 699
+        },
+        {
+          "id": 48895,
+          "text": "\u0003\n1.5 + \u03f5ij\nif 1 \u2264i \u226425 or 51 \u2264i \u226475\n5.5 + \u03f5ij\nif 26 \u2264i \u226450 or 76 \u2264i \u2264100\nj = 51, . . . , 250",
+          "type": "narrative",
+          "page": 699
+        },
+        {
+          "id": 48896,
+          "text": "xij\n=\n\u03f5ij\nj = 251, . . . , 5000\nyi\n=\n2 \u00b7 1",
+          "type": "equation",
+          "page": 699
+        },
+        {
+          "id": 48897,
+          "text": "50\n\t50\nj=1 xij + \u03b5i",
+          "type": "narrative",
+          "page": 699
+        },
+        {
+          "id": 48898,
+          "text": "(18.37)",
+          "type": "equation",
+          "page": 699
+        },
+        {
+          "id": 48899,
+          "text": "where \u03f5ij and \u03b5i are independent normal random variables with mean 0 and\nstandard deviations 1 and 1.5, respectively. Thus in the \ufb01rst 50 genes, there\nis an average di\ufb00erence of 1 unit between samples 1\u201350 and 51\u2013100, and this\ndi\ufb00erence correlates with the outcome y. The next 200 genes have a large\naverage di\ufb00erence of 4 units between samples (1\u201325, 51\u201375) and (26\u201350,\n76\u2013100), but this di\ufb00erence is uncorrelated with the outcome. The rest of\nthe genes are noise. Figure 18.15 shows a heatmap of a typical realization,\nwith the outcome at the left, and the \ufb01rst 500 genes to the right.\nWe generated 100 simulations from this model, and summarize the test\nerror results in Figure 18.16. The test errors of principal components and\npartial least squares are shown at the right of the plot; both are badly\na\ufb00ected by the noisy features in the data. Supervised principal components\nand thresholded PLS work best over a wide range of the number of selected\nfeatures, with the former showing consistently lower test errors.\nWhile this example seems \u201ctailor-made\u201d for supervised principal com-\nponents, its good performance seems to hold in other simulated and real\ndatasets (Bair et al., 2006).",
+          "type": "narrative",
+          "page": 699
+        },
+        {
+          "id": 48901,
+          "text": "Supervised principal components can yield lower test errors than competing\nmethods, as shown in Figure 18.16. However, it does not always produce a\nsparse model involving only a small number of features (genes). Even if the\nthresholding in Step (1) of the algorithm yields a relatively small number",
+          "type": "narrative",
+          "page": 699
+        },
+        {
+          "id": 48902,
+          "text": "682\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 700
+        },
+        {
+          "id": 48903,
+          "text": "1.00\n1.05\n1.10\n1.15\n1.20\n1.25",
+          "type": "equation",
+          "page": 700
+        },
+        {
+          "id": 48904,
+          "text": "Number of Features",
+          "type": "narrative",
+          "page": 700
+        },
+        {
+          "id": 48905,
+          "text": "Relative Root Mean Square Test Error",
+          "type": "narrative",
+          "page": 700
+        },
+        {
+          "id": 48906,
+          "text": "0\n50\n100\n150\n200\n250\n300\n...\n5000",
+          "type": "equation",
+          "page": 700
+        },
+        {
+          "id": 48907,
+          "text": "Thresholded PLS\nSupervised Principal Components",
+          "type": "narrative",
+          "page": 700
+        },
+        {
+          "id": 48909,
+          "text": "of features, it may be that some of the omitted features have sizable inner\nproducts with the supervised principal component (and could act as a good\nsurrogate). In addition, highly correlated features will tend to be chosen\ntogether, and there may be great deal of redundancy in the set of selected\nfeatures.\nThe lasso (Sections 18.4 and 3.4.2), on the other hand, produces a sparse\nmodel from the data. How do the test errors of the two methods compare on\nthe simulated example of the last section? Figure 18.17 shows the test errors\nfor one realization from model (18.37) for the lasso, supervised principal\ncomponents, and the pre-conditioned lasso (described below).\nWe see that supervised principal components (orange curve) reaches its\nlowest error when about 50 features are included in the model, which is\nthe correct number for the simulation. Although a linear model in the \ufb01rst\n50 features is optimal, the lasso (green) is adversely a\ufb00ected by the large\nnumber of noisy features, and starts over\ufb01tting when far fewer are in the\nmodel.\nCan we get the low test error of supervised principal components along\nwith the sparsity of the lasso? This is the goal of pre-conditioning (Paul\net al., 2008). In this approach, one \ufb01rst computes the supervised principal\ncomponent predictor \u02c6yi for each observation in the training set (with the",
+          "type": "narrative",
+          "page": 700
+        },
+        {
+          "id": 48911,
+          "text": "0\n50\n100\n150\n200\n250",
+          "type": "equation",
+          "page": 701
+        },
+        {
+          "id": 48912,
+          "text": "3.0\n3.2\n3.4\n3.6\n3.8\n4.0\n4.2\n4.4",
+          "type": "equation",
+          "page": 701
+        },
+        {
+          "id": 48913,
+          "text": "Number of Features in Model",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48914,
+          "text": "Mean Test Error",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48915,
+          "text": "Lasso\nSupervised Principal Components\nPreconditioned Lasso",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48917,
+          "text": "threshold selected by cross-validation). Then we apply the lasso with \u02c6yi as\nthe outcome variable, in place of the usual outcome yi. All features are used\nin the lasso \ufb01t, not just those that were retained in the thresholding step\nin supervised principal components. The idea is that by \ufb01rst denoising the\noutcome variable, the lasso should not be as adversely a\ufb00ected by the large\nnumber of noise features. Figure 18.17 shows that pre-conditioning (purple\ncurve) has been successful here, yielding much lower test error than the\nusual lasso, and as low (in this case) as for supervised principal components.\nIt also can achieve this using less features. The usual lasso, applied to\nthe raw outcome, starts to over\ufb01t more quickly than the pre-conditioned\nversion. Over\ufb01tting is not a problem, since the outcome variable has been\ndenoised. We usually select the tuning parameter for the pre-conditioned\nlasso on more subjective grounds, like parsimony.\nPre-conditioning can be applied in a variety of settings, using initial\nestimates other than supervised principal components and post-processors\nother than the lasso. More details may be found in Paul et al. (2008).",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48919,
+          "text": "In the \ufb01rst part of this chapter we discuss prediction models in the p \u226bN\nsetting. Here we consider the more basic problem of assessing the signif-",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48920,
+          "text": "684\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48921,
+          "text": "icance of each of the p features. Consider the protein mass spectrometry\nexample of Section 18.4.1. In that problem, the scientist might not be inter-\nested in predicting whether a given patient has prostate cancer. Rather the\ngoal might be to identify proteins whose abundance di\ufb00ers between nor-\nmal and cancer samples, in order to enhance understanding of the disease\nand suggest targets for drug development. Thus our goal is to assess the\nsigni\ufb01cance of individual features. This assessment is usually done without\nthe use of a multivariate predictive model like those in the \ufb01rst part of this\nchapter. The feature assessment problem moves our focus from prediction\nto the traditional statistical topic of multiple hypothesis testing. For the\nremainder of this chapter we will use M instead of p to denote the number\nof features, since we will frequently be referring to p-values.",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48923,
+          "text": "Normal\nRadiation Sensitive\nGene 1\n7.85\n29.74\n29.50\n. . .\n17.20\n-50.75\n-18.89\n. . .\nGene 2\n15.44\n2.70\n19.37\n. . .\n6.57\n-7.41\n79.18\n. . .\nGene 3\n-1.79\n15.52\n-3.13\n. . .\n-8.32\n12.64\n4.75\n. . .\nGene 4\n-11.74\n22.35\n-36.11\n. . .\n-52.17\n7.24\n-2.32\n. . .\n...",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48924,
+          "text": "...\n...\n...\n...",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48925,
+          "text": "...\n...\n...\n...\nGene 12,625\n-14.09\n32.77\n57.78\n. . .\n-32.84\n24.09\n-101.44\n. . .",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48926,
+          "text": "Consider, for example, the microarray data in Table 18.4, taken from a\nstudy on the sensitivity of cancer patients to ionizing radiation treatment\n(Rieger et al., 2004). Each row consists of the expression of genes in 58\npatient samples: 44 samples were from patients with a normal reaction, and\n14 from patients who had a severe reaction to radiation. The measurements\nwere made on oligo-nucleotide microarrays. The object of the experiment\nwas to \ufb01nd genes whose expression was di\ufb00erent in the radiation sensitive\ngroup of patients. There are M = 12, 625 genes altogether; the table shows\nthe data for some of the genes and samples for illustration.\nTo identify informative genes, we construct a two-sample t-statistic for\neach gene.",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48927,
+          "text": "tj = \u00afx2j \u2212\u00afx1j",
+          "type": "narrative",
+          "page": 702
+        }
+      ]
+    },
+    {
+      "id": 654,
+      "name": "two-sample t-statistic for genes",
+      "description": "A standardized measure of differential expression between two groups for each gene, computed as the difference in mean expression divided by pooled standard error.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "To identify informative genes, we construct a two-sample t-statistic for each gene.",
+      "existing_formula": "t_j = \\frac{\\bar{x}_{2j} - \\bar{x}_{1j}}{se_j(s_0 + s_j)}",
+      "paragraphs": [
+        {
+          "id": 48911,
+          "text": "0\n50\n100\n150\n200\n250",
+          "type": "equation",
+          "page": 701
+        },
+        {
+          "id": 48912,
+          "text": "3.0\n3.2\n3.4\n3.6\n3.8\n4.0\n4.2\n4.4",
+          "type": "equation",
+          "page": 701
+        },
+        {
+          "id": 48913,
+          "text": "Number of Features in Model",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48914,
+          "text": "Mean Test Error",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48915,
+          "text": "Lasso\nSupervised Principal Components\nPreconditioned Lasso",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48917,
+          "text": "threshold selected by cross-validation). Then we apply the lasso with \u02c6yi as\nthe outcome variable, in place of the usual outcome yi. All features are used\nin the lasso \ufb01t, not just those that were retained in the thresholding step\nin supervised principal components. The idea is that by \ufb01rst denoising the\noutcome variable, the lasso should not be as adversely a\ufb00ected by the large\nnumber of noise features. Figure 18.17 shows that pre-conditioning (purple\ncurve) has been successful here, yielding much lower test error than the\nusual lasso, and as low (in this case) as for supervised principal components.\nIt also can achieve this using less features. The usual lasso, applied to\nthe raw outcome, starts to over\ufb01t more quickly than the pre-conditioned\nversion. Over\ufb01tting is not a problem, since the outcome variable has been\ndenoised. We usually select the tuning parameter for the pre-conditioned\nlasso on more subjective grounds, like parsimony.\nPre-conditioning can be applied in a variety of settings, using initial\nestimates other than supervised principal components and post-processors\nother than the lasso. More details may be found in Paul et al. (2008).",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48919,
+          "text": "In the \ufb01rst part of this chapter we discuss prediction models in the p \u226bN\nsetting. Here we consider the more basic problem of assessing the signif-",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48920,
+          "text": "684\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48921,
+          "text": "icance of each of the p features. Consider the protein mass spectrometry\nexample of Section 18.4.1. In that problem, the scientist might not be inter-\nested in predicting whether a given patient has prostate cancer. Rather the\ngoal might be to identify proteins whose abundance di\ufb00ers between nor-\nmal and cancer samples, in order to enhance understanding of the disease\nand suggest targets for drug development. Thus our goal is to assess the\nsigni\ufb01cance of individual features. This assessment is usually done without\nthe use of a multivariate predictive model like those in the \ufb01rst part of this\nchapter. The feature assessment problem moves our focus from prediction\nto the traditional statistical topic of multiple hypothesis testing. For the\nremainder of this chapter we will use M instead of p to denote the number\nof features, since we will frequently be referring to p-values.",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48923,
+          "text": "Normal\nRadiation Sensitive\nGene 1\n7.85\n29.74\n29.50\n. . .\n17.20\n-50.75\n-18.89\n. . .\nGene 2\n15.44\n2.70\n19.37\n. . .\n6.57\n-7.41\n79.18\n. . .\nGene 3\n-1.79\n15.52\n-3.13\n. . .\n-8.32\n12.64\n4.75\n. . .\nGene 4\n-11.74\n22.35\n-36.11\n. . .\n-52.17\n7.24\n-2.32\n. . .\n...",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48924,
+          "text": "...\n...\n...\n...",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48925,
+          "text": "...\n...\n...\n...\nGene 12,625\n-14.09\n32.77\n57.78\n. . .\n-32.84\n24.09\n-101.44\n. . .",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48926,
+          "text": "Consider, for example, the microarray data in Table 18.4, taken from a\nstudy on the sensitivity of cancer patients to ionizing radiation treatment\n(Rieger et al., 2004). Each row consists of the expression of genes in 58\npatient samples: 44 samples were from patients with a normal reaction, and\n14 from patients who had a severe reaction to radiation. The measurements\nwere made on oligo-nucleotide microarrays. The object of the experiment\nwas to \ufb01nd genes whose expression was di\ufb00erent in the radiation sensitive\ngroup of patients. There are M = 12, 625 genes altogether; the table shows\nthe data for some of the genes and samples for illustration.\nTo identify informative genes, we construct a two-sample t-statistic for\neach gene.",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48927,
+          "text": "tj = \u00afx2j \u2212\u00afx1j",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48928,
+          "text": "sej\n,\n(18.38)",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48929,
+          "text": "where \u00afxkj =",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48930,
+          "text": "i\u2208C\u2113xij/N\u2113. Here C\u2113are the indices of the N\u2113samples in\ngroup \u2113, where \u2113= 1 is the untreated group and \u2113= 2 is the treated group.\nThe quantity sej is the pooled within-group standard error for gene j:",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48932,
+          "text": "\u22124\n\u22122\n0\n2\n4",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48933,
+          "text": "0\n200\n400\n600\n800",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48934,
+          "text": "t\u2212statistics",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48936,
+          "text": "sej =\n\u02c6\u03c3j\n\u0015",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48938,
+          "text": "; \u02c6\u03c32\nj =\n1\nN1 + N2 \u22122",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48939,
+          "text": "\u0011 \u0002",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48940,
+          "text": "i\u2208C1\n(xij\u2212\u00afx1j)2+\n\u0002",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48941,
+          "text": "i\u2208C2\n(xij\u2212\u00afx2j)2\n\u0012",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48942,
+          "text": ".",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48943,
+          "text": "(18.39)\nA histogram of the 12,625 t-statistics is shown in orange in Figure 18.18,\nranging in value from \u22124.7 to 5.0. If the tj values were normally distributed\nwe could consider any value greater than two in absolute value to be sig-\nni\ufb01cantly large. This would correspond to a signi\ufb01cance level of about 5%.\nHere there are 1189 genes with |tj| \u22652. However with 12,625 genes we\nwould expect many large values to occur by chance, even if the treatment\nhad no e\ufb00ect on any gene. For example, if the genes were independent\n(which they are surely not), the number of falsely signi\ufb01cant genes would\nhave a binomial distribution with mean 12, 625 \u00b7 0.05 = 631.3 and standard\ndeviation 24.5; the actual 1189 is way out of range.\nHow do we assess the results for all 12,625 genes? This is called the mul-\ntiple testing problem. We can start as above by computing a p-value for\neach gene. This can be done using the theoretical t-distribution probabil-\nities, which assumes the features are normally distributed. An attractive\nalternative approach is to use the permutation distribution, since it avoids\nassumptions about the distribution of the data. We compute (in principle)\nall K =\n\u000558\n14\n\u0006\npermutations of the sample labels, and for each permutation\nk compute the t-statistics tk\nj . Then the p-value for gene j is",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48944,
+          "text": "686\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 704
+        },
+        {
+          "id": 48945,
+          "text": "pj = 1",
+          "type": "narrative",
+          "page": 704
+        },
+        {
+          "id": 48946,
+          "text": "K",
+          "type": "narrative",
+          "page": 704
+        }
+      ]
+    },
+    {
+      "id": 655,
+      "name": "pooled within-group standard error",
+      "description": "The standard error estimate for a gene computed by pooling variance estimates across both treatment groups.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "The quantity sej is the pooled within-group standard error for gene j:",
+      "existing_formula": "se_j = \\sqrt{\\frac{1}{n_1} + \\frac{1}{n_2}}",
+      "paragraphs": [
+        {
+          "id": 48911,
+          "text": "0\n50\n100\n150\n200\n250",
+          "type": "equation",
+          "page": 701
+        },
+        {
+          "id": 48912,
+          "text": "3.0\n3.2\n3.4\n3.6\n3.8\n4.0\n4.2\n4.4",
+          "type": "equation",
+          "page": 701
+        },
+        {
+          "id": 48913,
+          "text": "Number of Features in Model",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48914,
+          "text": "Mean Test Error",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48915,
+          "text": "Lasso\nSupervised Principal Components\nPreconditioned Lasso",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48917,
+          "text": "threshold selected by cross-validation). Then we apply the lasso with \u02c6yi as\nthe outcome variable, in place of the usual outcome yi. All features are used\nin the lasso \ufb01t, not just those that were retained in the thresholding step\nin supervised principal components. The idea is that by \ufb01rst denoising the\noutcome variable, the lasso should not be as adversely a\ufb00ected by the large\nnumber of noise features. Figure 18.17 shows that pre-conditioning (purple\ncurve) has been successful here, yielding much lower test error than the\nusual lasso, and as low (in this case) as for supervised principal components.\nIt also can achieve this using less features. The usual lasso, applied to\nthe raw outcome, starts to over\ufb01t more quickly than the pre-conditioned\nversion. Over\ufb01tting is not a problem, since the outcome variable has been\ndenoised. We usually select the tuning parameter for the pre-conditioned\nlasso on more subjective grounds, like parsimony.\nPre-conditioning can be applied in a variety of settings, using initial\nestimates other than supervised principal components and post-processors\nother than the lasso. More details may be found in Paul et al. (2008).",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48919,
+          "text": "In the \ufb01rst part of this chapter we discuss prediction models in the p \u226bN\nsetting. Here we consider the more basic problem of assessing the signif-",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48920,
+          "text": "684\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48921,
+          "text": "icance of each of the p features. Consider the protein mass spectrometry\nexample of Section 18.4.1. In that problem, the scientist might not be inter-\nested in predicting whether a given patient has prostate cancer. Rather the\ngoal might be to identify proteins whose abundance di\ufb00ers between nor-\nmal and cancer samples, in order to enhance understanding of the disease\nand suggest targets for drug development. Thus our goal is to assess the\nsigni\ufb01cance of individual features. This assessment is usually done without\nthe use of a multivariate predictive model like those in the \ufb01rst part of this\nchapter. The feature assessment problem moves our focus from prediction\nto the traditional statistical topic of multiple hypothesis testing. For the\nremainder of this chapter we will use M instead of p to denote the number\nof features, since we will frequently be referring to p-values.",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48923,
+          "text": "Normal\nRadiation Sensitive\nGene 1\n7.85\n29.74\n29.50\n. . .\n17.20\n-50.75\n-18.89\n. . .\nGene 2\n15.44\n2.70\n19.37\n. . .\n6.57\n-7.41\n79.18\n. . .\nGene 3\n-1.79\n15.52\n-3.13\n. . .\n-8.32\n12.64\n4.75\n. . .\nGene 4\n-11.74\n22.35\n-36.11\n. . .\n-52.17\n7.24\n-2.32\n. . .\n...",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48924,
+          "text": "...\n...\n...\n...",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48925,
+          "text": "...\n...\n...\n...\nGene 12,625\n-14.09\n32.77\n57.78\n. . .\n-32.84\n24.09\n-101.44\n. . .",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48926,
+          "text": "Consider, for example, the microarray data in Table 18.4, taken from a\nstudy on the sensitivity of cancer patients to ionizing radiation treatment\n(Rieger et al., 2004). Each row consists of the expression of genes in 58\npatient samples: 44 samples were from patients with a normal reaction, and\n14 from patients who had a severe reaction to radiation. The measurements\nwere made on oligo-nucleotide microarrays. The object of the experiment\nwas to \ufb01nd genes whose expression was di\ufb00erent in the radiation sensitive\ngroup of patients. There are M = 12, 625 genes altogether; the table shows\nthe data for some of the genes and samples for illustration.\nTo identify informative genes, we construct a two-sample t-statistic for\neach gene.",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48927,
+          "text": "tj = \u00afx2j \u2212\u00afx1j",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48928,
+          "text": "sej\n,\n(18.38)",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48929,
+          "text": "where \u00afxkj =",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48930,
+          "text": "i\u2208C\u2113xij/N\u2113. Here C\u2113are the indices of the N\u2113samples in\ngroup \u2113, where \u2113= 1 is the untreated group and \u2113= 2 is the treated group.\nThe quantity sej is the pooled within-group standard error for gene j:",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48932,
+          "text": "\u22124\n\u22122\n0\n2\n4",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48933,
+          "text": "0\n200\n400\n600\n800",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48934,
+          "text": "t\u2212statistics",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48936,
+          "text": "sej =\n\u02c6\u03c3j\n\u0015",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48938,
+          "text": "; \u02c6\u03c32\nj =\n1\nN1 + N2 \u22122",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48939,
+          "text": "\u0011 \u0002",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48940,
+          "text": "i\u2208C1\n(xij\u2212\u00afx1j)2+\n\u0002",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48941,
+          "text": "i\u2208C2\n(xij\u2212\u00afx2j)2\n\u0012",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48942,
+          "text": ".",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48943,
+          "text": "(18.39)\nA histogram of the 12,625 t-statistics is shown in orange in Figure 18.18,\nranging in value from \u22124.7 to 5.0. If the tj values were normally distributed\nwe could consider any value greater than two in absolute value to be sig-\nni\ufb01cantly large. This would correspond to a signi\ufb01cance level of about 5%.\nHere there are 1189 genes with |tj| \u22652. However with 12,625 genes we\nwould expect many large values to occur by chance, even if the treatment\nhad no e\ufb00ect on any gene. For example, if the genes were independent\n(which they are surely not), the number of falsely signi\ufb01cant genes would\nhave a binomial distribution with mean 12, 625 \u00b7 0.05 = 631.3 and standard\ndeviation 24.5; the actual 1189 is way out of range.\nHow do we assess the results for all 12,625 genes? This is called the mul-\ntiple testing problem. We can start as above by computing a p-value for\neach gene. This can be done using the theoretical t-distribution probabil-\nities, which assumes the features are normally distributed. An attractive\nalternative approach is to use the permutation distribution, since it avoids\nassumptions about the distribution of the data. We compute (in principle)\nall K =\n\u000558\n14\n\u0006\npermutations of the sample labels, and for each permutation\nk compute the t-statistics tk\nj . Then the p-value for gene j is",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48944,
+          "text": "686\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 704
+        },
+        {
+          "id": 48945,
+          "text": "pj = 1",
+          "type": "narrative",
+          "page": 704
+        },
+        {
+          "id": 48946,
+          "text": "K",
+          "type": "narrative",
+          "page": 704
+        }
+      ]
+    },
+    {
+      "id": 657,
+      "name": "pooled permutation p-values",
+      "description": "P-values computed by pooling test statistic results across all genes rather than computing separate permutation distributions for each gene, yielding more granular p-values.",
+      "category": "validation",
+      "subcategory": "validation",
+      "existing_quote": "To exploit the fact that the genes are similar (e.g., measured on the same scale), we can instead pool the results for all genes in computing the p-values.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48911,
+          "text": "0\n50\n100\n150\n200\n250",
+          "type": "equation",
+          "page": 701
+        },
+        {
+          "id": 48912,
+          "text": "3.0\n3.2\n3.4\n3.6\n3.8\n4.0\n4.2\n4.4",
+          "type": "equation",
+          "page": 701
+        },
+        {
+          "id": 48913,
+          "text": "Number of Features in Model",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48914,
+          "text": "Mean Test Error",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48915,
+          "text": "Lasso\nSupervised Principal Components\nPreconditioned Lasso",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48917,
+          "text": "threshold selected by cross-validation). Then we apply the lasso with \u02c6yi as\nthe outcome variable, in place of the usual outcome yi. All features are used\nin the lasso \ufb01t, not just those that were retained in the thresholding step\nin supervised principal components. The idea is that by \ufb01rst denoising the\noutcome variable, the lasso should not be as adversely a\ufb00ected by the large\nnumber of noise features. Figure 18.17 shows that pre-conditioning (purple\ncurve) has been successful here, yielding much lower test error than the\nusual lasso, and as low (in this case) as for supervised principal components.\nIt also can achieve this using less features. The usual lasso, applied to\nthe raw outcome, starts to over\ufb01t more quickly than the pre-conditioned\nversion. Over\ufb01tting is not a problem, since the outcome variable has been\ndenoised. We usually select the tuning parameter for the pre-conditioned\nlasso on more subjective grounds, like parsimony.\nPre-conditioning can be applied in a variety of settings, using initial\nestimates other than supervised principal components and post-processors\nother than the lasso. More details may be found in Paul et al. (2008).",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48919,
+          "text": "In the \ufb01rst part of this chapter we discuss prediction models in the p \u226bN\nsetting. Here we consider the more basic problem of assessing the signif-",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48920,
+          "text": "684\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48921,
+          "text": "icance of each of the p features. Consider the protein mass spectrometry\nexample of Section 18.4.1. In that problem, the scientist might not be inter-\nested in predicting whether a given patient has prostate cancer. Rather the\ngoal might be to identify proteins whose abundance di\ufb00ers between nor-\nmal and cancer samples, in order to enhance understanding of the disease\nand suggest targets for drug development. Thus our goal is to assess the\nsigni\ufb01cance of individual features. This assessment is usually done without\nthe use of a multivariate predictive model like those in the \ufb01rst part of this\nchapter. The feature assessment problem moves our focus from prediction\nto the traditional statistical topic of multiple hypothesis testing. For the\nremainder of this chapter we will use M instead of p to denote the number\nof features, since we will frequently be referring to p-values.",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48923,
+          "text": "Normal\nRadiation Sensitive\nGene 1\n7.85\n29.74\n29.50\n. . .\n17.20\n-50.75\n-18.89\n. . .\nGene 2\n15.44\n2.70\n19.37\n. . .\n6.57\n-7.41\n79.18\n. . .\nGene 3\n-1.79\n15.52\n-3.13\n. . .\n-8.32\n12.64\n4.75\n. . .\nGene 4\n-11.74\n22.35\n-36.11\n. . .\n-52.17\n7.24\n-2.32\n. . .\n...",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48924,
+          "text": "...\n...\n...\n...",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48925,
+          "text": "...\n...\n...\n...\nGene 12,625\n-14.09\n32.77\n57.78\n. . .\n-32.84\n24.09\n-101.44\n. . .",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48926,
+          "text": "Consider, for example, the microarray data in Table 18.4, taken from a\nstudy on the sensitivity of cancer patients to ionizing radiation treatment\n(Rieger et al., 2004). Each row consists of the expression of genes in 58\npatient samples: 44 samples were from patients with a normal reaction, and\n14 from patients who had a severe reaction to radiation. The measurements\nwere made on oligo-nucleotide microarrays. The object of the experiment\nwas to \ufb01nd genes whose expression was di\ufb00erent in the radiation sensitive\ngroup of patients. There are M = 12, 625 genes altogether; the table shows\nthe data for some of the genes and samples for illustration.\nTo identify informative genes, we construct a two-sample t-statistic for\neach gene.",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48927,
+          "text": "tj = \u00afx2j \u2212\u00afx1j",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48928,
+          "text": "sej\n,\n(18.38)",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48929,
+          "text": "where \u00afxkj =",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48930,
+          "text": "i\u2208C\u2113xij/N\u2113. Here C\u2113are the indices of the N\u2113samples in\ngroup \u2113, where \u2113= 1 is the untreated group and \u2113= 2 is the treated group.\nThe quantity sej is the pooled within-group standard error for gene j:",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48932,
+          "text": "\u22124\n\u22122\n0\n2\n4",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48933,
+          "text": "0\n200\n400\n600\n800",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48934,
+          "text": "t\u2212statistics",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48936,
+          "text": "sej =\n\u02c6\u03c3j\n\u0015",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48938,
+          "text": "; \u02c6\u03c32\nj =\n1\nN1 + N2 \u22122",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48939,
+          "text": "\u0011 \u0002",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48940,
+          "text": "i\u2208C1\n(xij\u2212\u00afx1j)2+\n\u0002",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48941,
+          "text": "i\u2208C2\n(xij\u2212\u00afx2j)2\n\u0012",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48942,
+          "text": ".",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48943,
+          "text": "(18.39)\nA histogram of the 12,625 t-statistics is shown in orange in Figure 18.18,\nranging in value from \u22124.7 to 5.0. If the tj values were normally distributed\nwe could consider any value greater than two in absolute value to be sig-\nni\ufb01cantly large. This would correspond to a signi\ufb01cance level of about 5%.\nHere there are 1189 genes with |tj| \u22652. However with 12,625 genes we\nwould expect many large values to occur by chance, even if the treatment\nhad no e\ufb00ect on any gene. For example, if the genes were independent\n(which they are surely not), the number of falsely signi\ufb01cant genes would\nhave a binomial distribution with mean 12, 625 \u00b7 0.05 = 631.3 and standard\ndeviation 24.5; the actual 1189 is way out of range.\nHow do we assess the results for all 12,625 genes? This is called the mul-\ntiple testing problem. We can start as above by computing a p-value for\neach gene. This can be done using the theoretical t-distribution probabil-\nities, which assumes the features are normally distributed. An attractive\nalternative approach is to use the permutation distribution, since it avoids\nassumptions about the distribution of the data. We compute (in principle)\nall K =\n\u000558\n14\n\u0006\npermutations of the sample labels, and for each permutation\nk compute the t-statistics tk\nj . Then the p-value for gene j is",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48944,
+          "text": "686\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 704
+        },
+        {
+          "id": 48945,
+          "text": "pj = 1",
+          "type": "narrative",
+          "page": 704
+        },
+        {
+          "id": 48946,
+          "text": "K",
+          "type": "narrative",
+          "page": 704
+        }
+      ]
+    },
+    {
+      "id": 659,
+      "name": "bonferroni method",
+      "description": "A multiple testing correction that controls family-wise error rate by testing each hypothesis at significance level \u03b1/M, where M is the number of tests.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "One of the simplest approaches to multiple testing is the Bonferroni method. It makes each individual test more stringent, in order to make the FWER equal to at most \u03b1: we reject H0j if pj < \u03b1/M.",
+      "existing_formula": "p_j < \\alpha/M",
+      "paragraphs": [
+        {
+          "id": 48911,
+          "text": "0\n50\n100\n150\n200\n250",
+          "type": "equation",
+          "page": 701
+        },
+        {
+          "id": 48912,
+          "text": "3.0\n3.2\n3.4\n3.6\n3.8\n4.0\n4.2\n4.4",
+          "type": "equation",
+          "page": 701
+        },
+        {
+          "id": 48913,
+          "text": "Number of Features in Model",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48914,
+          "text": "Mean Test Error",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48915,
+          "text": "Lasso\nSupervised Principal Components\nPreconditioned Lasso",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48917,
+          "text": "threshold selected by cross-validation). Then we apply the lasso with \u02c6yi as\nthe outcome variable, in place of the usual outcome yi. All features are used\nin the lasso \ufb01t, not just those that were retained in the thresholding step\nin supervised principal components. The idea is that by \ufb01rst denoising the\noutcome variable, the lasso should not be as adversely a\ufb00ected by the large\nnumber of noise features. Figure 18.17 shows that pre-conditioning (purple\ncurve) has been successful here, yielding much lower test error than the\nusual lasso, and as low (in this case) as for supervised principal components.\nIt also can achieve this using less features. The usual lasso, applied to\nthe raw outcome, starts to over\ufb01t more quickly than the pre-conditioned\nversion. Over\ufb01tting is not a problem, since the outcome variable has been\ndenoised. We usually select the tuning parameter for the pre-conditioned\nlasso on more subjective grounds, like parsimony.\nPre-conditioning can be applied in a variety of settings, using initial\nestimates other than supervised principal components and post-processors\nother than the lasso. More details may be found in Paul et al. (2008).",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48919,
+          "text": "In the \ufb01rst part of this chapter we discuss prediction models in the p \u226bN\nsetting. Here we consider the more basic problem of assessing the signif-",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48920,
+          "text": "684\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48921,
+          "text": "icance of each of the p features. Consider the protein mass spectrometry\nexample of Section 18.4.1. In that problem, the scientist might not be inter-\nested in predicting whether a given patient has prostate cancer. Rather the\ngoal might be to identify proteins whose abundance di\ufb00ers between nor-\nmal and cancer samples, in order to enhance understanding of the disease\nand suggest targets for drug development. Thus our goal is to assess the\nsigni\ufb01cance of individual features. This assessment is usually done without\nthe use of a multivariate predictive model like those in the \ufb01rst part of this\nchapter. The feature assessment problem moves our focus from prediction\nto the traditional statistical topic of multiple hypothesis testing. For the\nremainder of this chapter we will use M instead of p to denote the number\nof features, since we will frequently be referring to p-values.",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48923,
+          "text": "Normal\nRadiation Sensitive\nGene 1\n7.85\n29.74\n29.50\n. . .\n17.20\n-50.75\n-18.89\n. . .\nGene 2\n15.44\n2.70\n19.37\n. . .\n6.57\n-7.41\n79.18\n. . .\nGene 3\n-1.79\n15.52\n-3.13\n. . .\n-8.32\n12.64\n4.75\n. . .\nGene 4\n-11.74\n22.35\n-36.11\n. . .\n-52.17\n7.24\n-2.32\n. . .\n...",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48924,
+          "text": "...\n...\n...\n...",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48925,
+          "text": "...\n...\n...\n...\nGene 12,625\n-14.09\n32.77\n57.78\n. . .\n-32.84\n24.09\n-101.44\n. . .",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48926,
+          "text": "Consider, for example, the microarray data in Table 18.4, taken from a\nstudy on the sensitivity of cancer patients to ionizing radiation treatment\n(Rieger et al., 2004). Each row consists of the expression of genes in 58\npatient samples: 44 samples were from patients with a normal reaction, and\n14 from patients who had a severe reaction to radiation. The measurements\nwere made on oligo-nucleotide microarrays. The object of the experiment\nwas to \ufb01nd genes whose expression was di\ufb00erent in the radiation sensitive\ngroup of patients. There are M = 12, 625 genes altogether; the table shows\nthe data for some of the genes and samples for illustration.\nTo identify informative genes, we construct a two-sample t-statistic for\neach gene.",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48927,
+          "text": "tj = \u00afx2j \u2212\u00afx1j",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48928,
+          "text": "sej\n,\n(18.38)",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48929,
+          "text": "where \u00afxkj =",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48930,
+          "text": "i\u2208C\u2113xij/N\u2113. Here C\u2113are the indices of the N\u2113samples in\ngroup \u2113, where \u2113= 1 is the untreated group and \u2113= 2 is the treated group.\nThe quantity sej is the pooled within-group standard error for gene j:",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48932,
+          "text": "\u22124\n\u22122\n0\n2\n4",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48933,
+          "text": "0\n200\n400\n600\n800",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48934,
+          "text": "t\u2212statistics",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48936,
+          "text": "sej =\n\u02c6\u03c3j\n\u0015",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48938,
+          "text": "; \u02c6\u03c32\nj =\n1\nN1 + N2 \u22122",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48939,
+          "text": "\u0011 \u0002",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48940,
+          "text": "i\u2208C1\n(xij\u2212\u00afx1j)2+\n\u0002",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48941,
+          "text": "i\u2208C2\n(xij\u2212\u00afx2j)2\n\u0012",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48942,
+          "text": ".",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48943,
+          "text": "(18.39)\nA histogram of the 12,625 t-statistics is shown in orange in Figure 18.18,\nranging in value from \u22124.7 to 5.0. If the tj values were normally distributed\nwe could consider any value greater than two in absolute value to be sig-\nni\ufb01cantly large. This would correspond to a signi\ufb01cance level of about 5%.\nHere there are 1189 genes with |tj| \u22652. However with 12,625 genes we\nwould expect many large values to occur by chance, even if the treatment\nhad no e\ufb00ect on any gene. For example, if the genes were independent\n(which they are surely not), the number of falsely signi\ufb01cant genes would\nhave a binomial distribution with mean 12, 625 \u00b7 0.05 = 631.3 and standard\ndeviation 24.5; the actual 1189 is way out of range.\nHow do we assess the results for all 12,625 genes? This is called the mul-\ntiple testing problem. We can start as above by computing a p-value for\neach gene. This can be done using the theoretical t-distribution probabil-\nities, which assumes the features are normally distributed. An attractive\nalternative approach is to use the permutation distribution, since it avoids\nassumptions about the distribution of the data. We compute (in principle)\nall K =\n\u000558\n14\n\u0006\npermutations of the sample labels, and for each permutation\nk compute the t-statistics tk\nj . Then the p-value for gene j is",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48944,
+          "text": "686\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 704
+        },
+        {
+          "id": 48945,
+          "text": "pj = 1",
+          "type": "narrative",
+          "page": 704
+        },
+        {
+          "id": 48946,
+          "text": "K",
+          "type": "narrative",
+          "page": 704
+        }
+      ]
+    },
+    {
+      "id": 678,
+      "name": "radiation sensitivity gene expression study",
+      "description": "A microarray study with 58 patient samples (44 normal, 14 radiation-sensitive) and 12,625 genes, used to identify genes associated with adverse radiation response.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "Consider, for example, the microarray data in Table 18.4, taken from a study on the sensitivity of cancer patients to ionizing radiation treatment (Rieger et al., 2004). Each row consists of the expression of genes in 58 patient samples: 44 samples were from patients with a normal reaction, and 14 from patients who had a severe reaction to radiation.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 48911,
+          "text": "0\n50\n100\n150\n200\n250",
+          "type": "equation",
+          "page": 701
+        },
+        {
+          "id": 48912,
+          "text": "3.0\n3.2\n3.4\n3.6\n3.8\n4.0\n4.2\n4.4",
+          "type": "equation",
+          "page": 701
+        },
+        {
+          "id": 48913,
+          "text": "Number of Features in Model",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48914,
+          "text": "Mean Test Error",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48915,
+          "text": "Lasso\nSupervised Principal Components\nPreconditioned Lasso",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48917,
+          "text": "threshold selected by cross-validation). Then we apply the lasso with \u02c6yi as\nthe outcome variable, in place of the usual outcome yi. All features are used\nin the lasso \ufb01t, not just those that were retained in the thresholding step\nin supervised principal components. The idea is that by \ufb01rst denoising the\noutcome variable, the lasso should not be as adversely a\ufb00ected by the large\nnumber of noise features. Figure 18.17 shows that pre-conditioning (purple\ncurve) has been successful here, yielding much lower test error than the\nusual lasso, and as low (in this case) as for supervised principal components.\nIt also can achieve this using less features. The usual lasso, applied to\nthe raw outcome, starts to over\ufb01t more quickly than the pre-conditioned\nversion. Over\ufb01tting is not a problem, since the outcome variable has been\ndenoised. We usually select the tuning parameter for the pre-conditioned\nlasso on more subjective grounds, like parsimony.\nPre-conditioning can be applied in a variety of settings, using initial\nestimates other than supervised principal components and post-processors\nother than the lasso. More details may be found in Paul et al. (2008).",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48919,
+          "text": "In the \ufb01rst part of this chapter we discuss prediction models in the p \u226bN\nsetting. Here we consider the more basic problem of assessing the signif-",
+          "type": "narrative",
+          "page": 701
+        },
+        {
+          "id": 48920,
+          "text": "684\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48921,
+          "text": "icance of each of the p features. Consider the protein mass spectrometry\nexample of Section 18.4.1. In that problem, the scientist might not be inter-\nested in predicting whether a given patient has prostate cancer. Rather the\ngoal might be to identify proteins whose abundance di\ufb00ers between nor-\nmal and cancer samples, in order to enhance understanding of the disease\nand suggest targets for drug development. Thus our goal is to assess the\nsigni\ufb01cance of individual features. This assessment is usually done without\nthe use of a multivariate predictive model like those in the \ufb01rst part of this\nchapter. The feature assessment problem moves our focus from prediction\nto the traditional statistical topic of multiple hypothesis testing. For the\nremainder of this chapter we will use M instead of p to denote the number\nof features, since we will frequently be referring to p-values.",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48923,
+          "text": "Normal\nRadiation Sensitive\nGene 1\n7.85\n29.74\n29.50\n. . .\n17.20\n-50.75\n-18.89\n. . .\nGene 2\n15.44\n2.70\n19.37\n. . .\n6.57\n-7.41\n79.18\n. . .\nGene 3\n-1.79\n15.52\n-3.13\n. . .\n-8.32\n12.64\n4.75\n. . .\nGene 4\n-11.74\n22.35\n-36.11\n. . .\n-52.17\n7.24\n-2.32\n. . .\n...",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48924,
+          "text": "...\n...\n...\n...",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48925,
+          "text": "...\n...\n...\n...\nGene 12,625\n-14.09\n32.77\n57.78\n. . .\n-32.84\n24.09\n-101.44\n. . .",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48926,
+          "text": "Consider, for example, the microarray data in Table 18.4, taken from a\nstudy on the sensitivity of cancer patients to ionizing radiation treatment\n(Rieger et al., 2004). Each row consists of the expression of genes in 58\npatient samples: 44 samples were from patients with a normal reaction, and\n14 from patients who had a severe reaction to radiation. The measurements\nwere made on oligo-nucleotide microarrays. The object of the experiment\nwas to \ufb01nd genes whose expression was di\ufb00erent in the radiation sensitive\ngroup of patients. There are M = 12, 625 genes altogether; the table shows\nthe data for some of the genes and samples for illustration.\nTo identify informative genes, we construct a two-sample t-statistic for\neach gene.",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48927,
+          "text": "tj = \u00afx2j \u2212\u00afx1j",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48928,
+          "text": "sej\n,\n(18.38)",
+          "type": "equation",
+          "page": 702
+        },
+        {
+          "id": 48929,
+          "text": "where \u00afxkj =",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48930,
+          "text": "i\u2208C\u2113xij/N\u2113. Here C\u2113are the indices of the N\u2113samples in\ngroup \u2113, where \u2113= 1 is the untreated group and \u2113= 2 is the treated group.\nThe quantity sej is the pooled within-group standard error for gene j:",
+          "type": "narrative",
+          "page": 702
+        },
+        {
+          "id": 48932,
+          "text": "\u22124\n\u22122\n0\n2\n4",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48933,
+          "text": "0\n200\n400\n600\n800",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48934,
+          "text": "t\u2212statistics",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48936,
+          "text": "sej =\n\u02c6\u03c3j\n\u0015",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48938,
+          "text": "; \u02c6\u03c32\nj =\n1\nN1 + N2 \u22122",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48939,
+          "text": "\u0011 \u0002",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48940,
+          "text": "i\u2208C1\n(xij\u2212\u00afx1j)2+\n\u0002",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48941,
+          "text": "i\u2208C2\n(xij\u2212\u00afx2j)2\n\u0012",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48942,
+          "text": ".",
+          "type": "equation",
+          "page": 703
+        },
+        {
+          "id": 48943,
+          "text": "(18.39)\nA histogram of the 12,625 t-statistics is shown in orange in Figure 18.18,\nranging in value from \u22124.7 to 5.0. If the tj values were normally distributed\nwe could consider any value greater than two in absolute value to be sig-\nni\ufb01cantly large. This would correspond to a signi\ufb01cance level of about 5%.\nHere there are 1189 genes with |tj| \u22652. However with 12,625 genes we\nwould expect many large values to occur by chance, even if the treatment\nhad no e\ufb00ect on any gene. For example, if the genes were independent\n(which they are surely not), the number of falsely signi\ufb01cant genes would\nhave a binomial distribution with mean 12, 625 \u00b7 0.05 = 631.3 and standard\ndeviation 24.5; the actual 1189 is way out of range.\nHow do we assess the results for all 12,625 genes? This is called the mul-\ntiple testing problem. We can start as above by computing a p-value for\neach gene. This can be done using the theoretical t-distribution probabil-\nities, which assumes the features are normally distributed. An attractive\nalternative approach is to use the permutation distribution, since it avoids\nassumptions about the distribution of the data. We compute (in principle)\nall K =\n\u000558\n14\n\u0006\npermutations of the sample labels, and for each permutation\nk compute the t-statistics tk\nj . Then the p-value for gene j is",
+          "type": "narrative",
+          "page": 703
+        },
+        {
+          "id": 48944,
+          "text": "686\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 704
+        },
+        {
+          "id": 48945,
+          "text": "pj = 1",
+          "type": "narrative",
+          "page": 704
+        },
+        {
+          "id": 48946,
+          "text": "K",
+          "type": "narrative",
+          "page": 704
+        }
+      ]
+    },
+    {
+      "id": 660,
+      "name": "false discovery rate",
+      "description": "The expected proportion of false positives among all features called significant, defined as E[V/max(R,1)] where V is false positives and R is total rejections.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "In the microarray setting, this is the expected proportion of genes that are incorrectly called significant, among the R genes that are called significant.",
+      "existing_formula": "\\text{FDR} = E\\left[\\frac{V}{\\max(R,1)}\\right]",
+      "paragraphs": [
+        {
+          "id": 48960,
+          "text": "There are variations to this approach that adjust the individual p-values\nto achieve an FWER of at most \u03b1, with some approaches avoiding the\nassumption of independence; see, e.g., Dudoit et al. (2002b).",
+          "type": "narrative",
+          "page": 705
+        },
+        {
+          "id": 48962,
+          "text": "A di\ufb00erent approach to multiple testing does not try to control the FWER,\nbut focuses instead on the proportion of falsely signi\ufb01cant genes. As we will\nsee, this approach has a strong practical appeal.\nTable 18.5 summarizes the theoretical outcomes of M hypothesis tests.\nNote that the family-wise error rate is Pr(V \u22651). Here we instead focus",
+          "type": "narrative",
+          "page": 705
+        },
+        {
+          "id": 48964,
+          "text": "Called\nCalled\nNot Signi\ufb01cant\nSigni\ufb01cant\nTotal\nH0 True\nU\nV\nM0\nH0 False\nT\nS\nM1\nTotal\nM \u2212R\nR\nM",
+          "type": "narrative",
+          "page": 705
+        },
+        {
+          "id": 48965,
+          "text": "on the false discovery rate",
+          "type": "narrative",
+          "page": 705
+        },
+        {
+          "id": 48966,
+          "text": "FDR = E(V/R).\n(18.43)",
+          "type": "narrative",
+          "page": 705
+        },
+        {
+          "id": 48967,
+          "text": "In the microarray setting, this is the expected proportion of genes that\nare incorrectly called signi\ufb01cant, among the R genes that are called signif-\nicant. The expectation is taken over the population from which the data\nare generated. Benjamini and Hochberg (1995) \ufb01rst proposed the notion of\nfalse discovery rate, and gave a testing procedure (Algorithm 18.2) whose\nFDR is bounded by a user-de\ufb01ned level \u03b1. The Benjamini\u2013Hochberg (BH)\nprocedure is based on p-values; these can be obtained from an asymptotic\napproximation to the test statistic (e.g., Gaussian), or a permutation dis-\ntribution, as is done here.\nIf the hypotheses are independent, Benjamini and Hochberg (1995) show\nthat regardless of how many null hypotheses are true and regardless of the\ndistribution of the p-values when the null hypothesis is false, this procedure\nhas the property",
+          "type": "narrative",
+          "page": 705
+        },
+        {
+          "id": 48968,
+          "text": "FDR \u2264M0",
+          "type": "narrative",
+          "page": 705
+        },
+        {
+          "id": 48969,
+          "text": "M \u03b1 \u2264\u03b1.\n(18.45)",
+          "type": "equation",
+          "page": 705
+        },
+        {
+          "id": 48970,
+          "text": "For illustration we chose \u03b1 = 0.15. The bottom left panel of Figure 18.18\nshows a plot of the ordered p-values p(j), and the line with slope 0.15/12625.",
+          "type": "narrative",
+          "page": 705
+        },
+        {
+          "id": 48971,
+          "text": "688\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 706
+        },
+        {
+          "id": 48972,
+          "text": "Algorithm 18.2 Benjamini\u2013Hochberg (BH) Method.",
+          "type": "narrative",
+          "page": 706
+        },
+        {
+          "id": 48973,
+          "text": "1. Fix the false discovery rate \u03b1 and let p(1) \u2264p(2) \u2264\u00b7 \u00b7 \u00b7 \u2264p(M) denote\nthe ordered p-values",
+          "type": "narrative",
+          "page": 706
+        },
+        {
+          "id": 48974,
+          "text": "2. De\ufb01ne",
+          "type": "narrative",
+          "page": 706
+        },
+        {
+          "id": 48975,
+          "text": "L = max\n\u0018\nj : p(j) < \u03b1 \u00b7 j",
+          "type": "narrative",
+          "page": 706
+        },
+        {
+          "id": 48976,
+          "text": "M",
+          "type": "narrative",
+          "page": 706
+        },
+        {
+          "id": 48977,
+          "text": "\u0019\n.\n(18.44)",
+          "type": "equation",
+          "page": 706
+        },
+        {
+          "id": 48978,
+          "text": "3. Reject all hypotheses H0j for which pj \u2264p(L), the BH rejection\nthreshold.",
+          "type": "narrative",
+          "page": 706
+        },
+        {
+          "id": 48979,
+          "text": "Genes ordered by p\u2212value",
+          "type": "narrative",
+          "page": 706
+        },
+        {
+          "id": 48980,
+          "text": "p\u2212value",
+          "type": "narrative",
+          "page": 706
+        },
+        {
+          "id": 48981,
+          "text": "1\n5\n10\n50\n100",
+          "type": "equation",
+          "page": 706
+        },
+        {
+          "id": 48982,
+          "text": "5*10^\u22126\n5*10^\u22125\n5*10^\u22124\n5*10^\u22123",
+          "type": "equation",
+          "page": 706
+        },
+        {
+          "id": 48983,
+          "text": "\u2022\n\u2022\n\u2022 \u2022 \u2022 \u2022 \u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "type": "narrative",
+          "page": 706
+        },
+        {
+          "id": 48986,
+          "text": "Algorithm 18.3 The Plug-in Estimate of the False Discovery Rate.",
+          "type": "narrative",
+          "page": 707
+        },
+        {
+          "id": 48987,
+          "text": "1. Create K permutations of the data, producing t-statistics tk\nj for fea-\ntures j = 1, 2, . . . , M and permutations k = 1, 2, . . . , K.",
+          "type": "narrative",
+          "page": 707
+        },
+        {
+          "id": 48988,
+          "text": "2. For a range of values of the cut-point C, let",
+          "type": "narrative",
+          "page": 707
+        },
+        {
+          "id": 48989,
+          "text": "Robs =",
+          "type": "narrative",
+          "page": 707
+        },
+        {
+          "id": 48990,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 707
+        },
+        {
+          "id": 48991,
+          "text": "j=1\nI(|tj| > C),\n\u0002\nE(V ) = 1",
+          "type": "narrative",
+          "page": 707
+        },
+        {
+          "id": 48992,
+          "text": "K",
+          "type": "narrative",
+          "page": 707
+        },
+        {
+          "id": 48993,
+          "text": "M\n\u0002",
+          "type": "narrative",
+          "page": 707
+        }
+      ]
+    },
+    {
+      "id": 664,
+      "name": "asymmetric cutpoints in multiple testing",
+      "description": "Using different significance thresholds for positive and negative test statistics when most differentially expressed features change in one direction.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "In the testing methods described above, we used the absolute value of the test statistic tj, and hence applied the same cut-points to both positive and negative values of the statistic. In some experiments, it might happen that most or all of the differentially expressed genes change in the positive direction (or all in the negative direction). For this situation it is advantageous to derive separate cut-points for the two cases.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 49004,
+          "text": "690\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 708
+        },
+        {
+          "id": 49005,
+          "text": "since the permutation distribution uses M rather M0 null hypotheses.\nHence if an estimate of M0 is available, a better estimate of FDR can be\nobtained from ( \u02c6\nM0/M) \u00b7 \u0002\nFDR. Exercise 18.19 shows a way to estimate M0.\nThe most conservative (upwardly biased) estimate of FDR uses M0 = M.\nEquivalently, an estimate of M0 can be used to improve the BH method,\nthrough relation (18.45).\nThe reader might be surprised that we chose a value as large as 0.15 for\n\u03b1, the FDR bound. We must remember that the FDR is not the same as\ntype-I error, for which 0.05 is the customary choice. For the scientist, the\nfalse discovery rate is the expected proportion of false positive genes among\nthe list of genes that the statistician tells him are signi\ufb01cant. Microarray\nexperiments with FDRs as high as 0.15 might still be useful, especially if\nthey are exploratory in nature.",
+          "type": "narrative",
+          "page": 708
+        },
+        {
+          "id": 49007,
+          "text": "In the testing methods described above, we used the absolute value of the\ntest statistic tj, and hence applied the same cut-points to both positive and\nnegative values of the statistic. In some experiments, it might happen that\nmost or all of the di\ufb00erentially expressed genes change in the positive direc-\ntion (or all in the negative direction). For this situation it is advantageous\nto derive separate cut-points for the two cases.\nThe signi\ufb01cance analysis of microarrays (SAM) approach o\ufb00ers a way of\ndoing this. The basis of the SAM method is shown in Figure 18.20. On the\nvertical axis we have plotted the ordered test statistics t(1) \u2264t(2) \u2264\u00b7 \u00b7 \u00b7 \u2264\nt(M), while the horizontal axis shows the expected order statistics from the\npermutations of the data: \u02dct(j) = (1/K) \tK\nk=1 tk\n(j), where tk\n(1) \u2264tk\n(2) \u2264\u00b7 \u00b7 \u00b7 \u2264\ntk\n(M) are the ordered test statistics from permutation k.\nTwo lines are drawn, parallel to the 45\u25e6line, \u0394 units away. Starting at\nthe origin and moving to the right, we \ufb01nd the \ufb01rst place that the genes\nleave the band. This de\ufb01nes the upper cutpoint Chi and all genes beyond\nthat point are called signi\ufb01cant (marked red). Similarly we \ufb01nd the lower\ncutpoint Clow for genes in the bottom left corner. Thus each value of the\ntuning parameter \u0394 de\ufb01nes upper and lower cutpoints, and the plug-in\nestimate \u0002\nFDR for each of these cutpoints is estimated as before. Typically\na range of values of \u0394 and associated \u0002\nFDR values are computed, from which\na particular pair are chosen on subjective grounds.\nThe advantage of the SAM approach lies in the possible asymmetry of\nthe cutpoints. In the example of Figure 18.20, with \u0394 = 0.71 we obtain\n11 signi\ufb01cant genes; they are all in the upper right. The data points in the\nbottom left never leave the band, and hence Clow = \u2212\u221e. Hence for this\nvalue of \u0394, no genes are called signi\ufb01cant on the left (negative) side. We\ndo not impose symmetry on the cutpoints, as was done in Section 18.7.1,\nas there is no reason to assume similar behavior at the two ends.",
+          "type": "narrative",
+          "page": 708
+        },
+        {
+          "id": 49009,
+          "text": "Expected Order Statistics",
+          "type": "narrative",
+          "page": 709
+        },
+        {
+          "id": 49010,
+          "text": "t\u2212statistic",
+          "type": "narrative",
+          "page": 709
+        },
+        {
+          "id": 49011,
+          "text": "\u22124\n\u22122\n0\n2\n4",
+          "type": "equation",
+          "page": 709
+        },
+        {
+          "id": 49012,
+          "text": "\u22124\n\u22122\n0\n2\n4",
+          "type": "equation",
+          "page": 709
+        },
+        {
+          "id": 49013,
+          "text": "\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022",
+          "type": "narrative",
+          "page": 709
+        },
+        {
+          "id": 49014,
+          "text": "\u2022\u2022\u2022\u2022\n\u2022\u2022\u2022\u2022\u2022\u2022 \u2022\n\u0394",
+          "type": "equation",
+          "page": 709
+        },
+        {
+          "id": 49015,
+          "text": "Chi",
+          "type": "narrative",
+          "page": 709
+        }
+      ]
+    },
+    {
+      "id": 677,
+      "name": "bayesian interpretation of fdr",
+      "description": "Under a mixture model, the pFDR equals the posterior probability that the null hypothesis is true given the test statistic falls in the rejection region.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "Hence under the mixture model (18.51), the pFDR is the posterior probability that the null hypothesis it true, given that test statistic falls in the rejection region for the test; that is, given that we reject the null hypothesis",
+      "existing_formula": "\\text{pFDR} = \\text{Pr}(Z_j = 0 | t_j \\in \\Gamma)",
+      "paragraphs": [
+        {
+          "id": 49033,
+          "text": "pFDR(\u0393) = Pr(Zj = 0|tj \u2208\u0393).\n(18.53)",
+          "type": "narrative",
+          "page": 711
+        },
+        {
+          "id": 49034,
+          "text": "Hence under the mixture model (18.51), the pFDR is the posterior proba-\nbility that the null hypothesis it true, given that test statistic falls in the\nrejection region for the test; that is, given that we reject the null hypothesis\n(Exercise 18.20).\nThe false discovery rate provides a measure of accuracy for tests based\non an entire rejection region, such as |tj| \u22652. But if the FDR of such a test\nis say 10%, then a gene with say tj = 5 will be more signi\ufb01cant than a gene\nwith tj = 2. Thus it is of interest to derive a local (gene-speci\ufb01c) version\nof the FDR. The q-value (Storey, 2003) of a test statistic tj is de\ufb01ned to\nbe the smallest FDR over all rejection regions that reject tj. That is, for\nsymmetric rejection regions, the q-value for tj = 2 is de\ufb01ned to be the\nFDR for the rejection region \u0393 = {\u2212(\u221e, \u22122) \u222a(2, \u221e)}. Thus the q-value\nfor tj = 5 will be smaller than that for tj = 2, re\ufb02ecting the fact that tj = 5\nis more signi\ufb01cant than tj = 2. The local false discovery rate (Efron and\nTibshirani, 2002) at t = t0 is de\ufb01ned to be",
+          "type": "narrative",
+          "page": 711
+        },
+        {
+          "id": 49035,
+          "text": "Pr(Zj = 0|tj = t0).\n(18.54)",
+          "type": "narrative",
+          "page": 711
+        },
+        {
+          "id": 49036,
+          "text": "This is the (positive) FDR for an in\ufb01nitesimal rejection region surrounding\nthe value tj = t0.",
+          "type": "narrative",
+          "page": 711
+        },
+        {
+          "id": 49038,
+          "text": "Many references were given at speci\ufb01c points in this chapter; we give some\nadditional ones here. Dudoit et al. (2002a) give an overview and compar-\nison of discrimination methods for gene expression data. Levina (2002)\ndoes some mathematical analysis comparing diagonal LDA to full LDA, as\np, N \u2192\u221ewith p > N. She shows that with reasonable assumptions diago-\nnal LDA has a lower asymptotic error rate than full LDA. Tibshirani et al.\n(2001a) and Tibshirani et al. (2003) proposed the nearest shrunken-centroid\nclassi\ufb01er. Zhu and Hastie (2004) study regularized logistic regression. High-\ndimensional regression and the lasso are very active areas of research, and\nmany references are given in Section 3.8.5. The fused lasso was proposed\nby Tibshirani et al. (2005), while Zou and Hastie (2005) introduced the\nelastic net. Supervised principal components is discussed in Bair and Tib-\nshirani (2004) and Bair et al. (2006). For an introduction to the analysis\nof censored survival data, see Kalb\ufb02eisch and Prentice (1980).\nMicroarray technology has led to a \ufb02urry of statistical research: see for\nexample the books by Speed (2003), Parmigiani et al. (2003), Simon et al.\n(2004), and Lee (2004).\nThe false discovery rate was proposed by Benjamini and Hochberg (1995),\nand studied and generalized in subsequent papers by these authors and",
+          "type": "narrative",
+          "page": 711
+        },
+        {
+          "id": 49039,
+          "text": "694\n18. High-Dimensional Problems: p \u226bN",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49040,
+          "text": "many others. A partial list of papers on FDR may be found on Yoav Ben-\njamini\u2019s homepage. Some more recent papers include Efron and Tibshirani\n(2002), Storey (2002), Genovese and Wasserman (2004), Storey and Tib-\nshirani (2003) and Benjamini and Yekutieli (2005). Dudoit et al. (2002b)\nreview methods for identifying di\ufb00erentially expressed genes in microarray\nstudies.",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49044,
+          "text": "min\n{\u03bcj,\u03bcjk}",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49045,
+          "text": "\u23a7\n\u23a8",
+          "type": "equation",
+          "page": 712
+        },
+        {
+          "id": 49046,
+          "text": "\u23a9\n1\n2",
+          "type": "equation",
+          "page": 712
+        },
+        {
+          "id": 49047,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49048,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49049,
+          "text": "K\n\u0002",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49050,
+          "text": "k=1",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49051,
+          "text": "\u0002",
+          "type": "equation",
+          "page": 712
+        },
+        {
+          "id": 49052,
+          "text": "i\u2208Ck",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49053,
+          "text": "(xij \u2212\u03bcj \u2212\u03bcjk)2",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49054,
+          "text": "s2\nj\n+ \u03bb\n\"",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49055,
+          "text": "Nk",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49056,
+          "text": "p\n\u0002",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49057,
+          "text": "j=1",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49058,
+          "text": "K\n\u0002",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49059,
+          "text": "k=1\n|\u03bcjk|",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49060,
+          "text": "sj\n.",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49061,
+          "text": "\u23ab\n\u23ac",
+          "type": "equation",
+          "page": 712
+        },
+        {
+          "id": 49062,
+          "text": "\u23ad(18.55)",
+          "type": "equation",
+          "page": 712
+        },
+        {
+          "id": 49063,
+          "text": "Show that the solution is equivalent to the nearest shrunken centroid es-\ntimator (18.5), with s0 set to zero, and Mk equal to 1/Nk instead of\n1/Nk \u22121/N as before.",
+          "type": "narrative",
+          "page": 712
+        },
+        {
+          "id": 49068,
+          "text": "Exercises\n695",
+          "type": "narrative",
+          "page": 713
+        },
+        {
+          "id": 49070,
+          "text": "(a) Show that there are in\ufb01nitely many least-squares solutions all with\nzero residuals.",
+          "type": "narrative",
+          "page": 713
+        },
+        {
+          "id": 49071,
+          "text": "(b) Show that the ridge-regression estimate for \u03b2 can be written",
+          "type": "narrative",
+          "page": 713
+        }
+      ]
+    }
+  ]
+}

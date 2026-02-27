@@ -1,0 +1,2169 @@
+{
+  "batch_number": 26,
+  "concepts": [
+    {
+      "id": 558,
+      "name": "sparse principal components",
+      "description": "PCA variant using L1 penalties to encourage sparse loadings, making principal components easier to interpret.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "In this section we briefly discuss some methods for deriving principal components with sparse loadings. They are all based on lasso (L1) penalties.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 559,
+      "name": "scotlass",
+      "description": "Sparse PCA method maximizing variance subject to L1 constraint on loadings: max v^T(X^TX)v subject to \u2211|vj| \u2264 t, v^Tv = 1.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "The SCoTLASS procedure of Jolliffe et al. (2003) takes the first approach",
+      "existing_formula": "\\max v^T(X^TX)v \\quad \\text{subject to} \\quad \\sum |v_j| \\leq t, \\quad v^Tv = 1",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 565,
+      "name": "blind source separation",
+      "description": "Recovery of independent source signals from mixed observations, classical application of ICA in cocktail party problem.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "ICA is able to perform blind source separation, by exploiting the independence and non-Gaussianity of the original sources.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 566,
+      "name": "differential entropy",
+      "description": "Entropy H(Y) = \u2212\u222bg(y)log g(y)dy measuring randomness of continuous variable; Gaussian has maximum entropy for fixed variance.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "The differential entropy H of a random variable Y with density g(y) is given by",
+      "existing_formula": "H(Y) = -\\int g(y) \\log g(y) dy",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 567,
+      "name": "mutual information",
+      "description": "Kullback-Leibler distance between joint density and product of marginals, measuring dependence between components of random vector.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "Finally, the mutual information I(Y) between the components of the random vector Y is a natural measure of dependence",
+      "existing_formula": "I(Y) = \\sum_{j=1}^{p} H(Y_j) - H(Y)",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 568,
+      "name": "negentropy",
+      "description": "Non-negative measure J(Yj) = H(Zj) \u2212 H(Yj) quantifying departure from Gaussianity, where Zj is Gaussian with same variance as Yj.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "For convenience, rather than using the entropy H(Yj), Hyv\u00e4rinen and Oja (2000) use the negentropy measure J(Yj) defined by",
+      "existing_formula": "J(Y_j) = H(Z_j) - H(Y_j)",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 570,
+      "name": "projection indices",
+      "description": "Measures focusing on different departures from Gaussianity for optimization in projection pursuit, similar to negentropy.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "They proposed a number of projection indices for optimization, each focusing on a different departure from Gaussianity.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 572,
+      "name": "prodeniica",
+      "description": "ICA algorithm estimating product density directly using generalized additive models with penalized Poisson log-likelihood and smoothing splines.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "Full details can be found in Hastie and Tibshirani (2003), and the method is implemented in the R package ProDenICA",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 574,
+      "name": "multidimensional scaling",
+      "description": "Finding low-dimensional representation zi \u2208 R^k preserving pairwise dissimilarities dij, requiring only dissimilarities not data points.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "Multidimensional scaling seeks values z1, z2, . . . , zN \u2208 R^k to minimize the so-called stress function",
+      "existing_formula": "S_M = \\sum_{i \\neq i'} (d_{ii'} - ||z_i - z_{i'}||)^2",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 579,
+      "name": "shephard-kruskal nonmetric scaling",
+      "description": "MDS using only ranks, minimizing stress over zi and arbitrary increasing function \u03b8 via isotonic regression.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "Shephard\u2013Kruskal nonmetric scaling effectively uses only ranks. Nonmetric scaling seeks to minimize the stress function",
+      "existing_formula": "\\min_{z_i, \\theta} \\sum_{i \\neq i'} (\\theta(d_{ii'}) - ||z_i - z_{i'}||)^2",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 580,
+      "name": "isotonic regression",
+      "description": "Method finding best monotonic approximation \u03b8(dii\u2032) to ||zi \u2212 zi\u2032|| with zi fixed in nonmetric scaling.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "With the zi fixed, the method of isotonic regression is used to find the best monotonic approximation \u03b8(dii\u2032) to ||zi \u2212 zi\u2032||.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 583,
+      "name": "geodesic distance on manifold",
+      "description": "Distance along manifold surface approximated by shortest path through neighbor graph in ISOMAP.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "The geodesic distance between any two points is then approximated by the shortest path between points on the graph.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38026,
+          "text": "This is page 485\nPrinter: Opaque this\n14\nUnsupervised Learning",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38028,
+          "text": "The previous chapters have been concerned with predicting the values\nof one or more outputs or response variables Y\n= (Y1, . . . , Ym) for a\ngiven set of input or predictor variables XT = (X1, . . . , Xp). Denote by\nxT\ni\n= (xi1, . . . , xip) the inputs for the ith training case, and let yi be a\nresponse measurement. The predictions are based on the training sample\n(x1, y1), . . . , (xN, yN) of previously solved cases, where the joint values of\nall of the variables are known. This is called supervised learning or \u201clearn-\ning with a teacher.\u201d Under this metaphor the \u201cstudent\u201d presents an an-\nswer \u02c6yi for each xi in the training sample, and the supervisor or \u201cteacher\u201d\nprovides either the correct answer and/or an error associated with the stu-\ndent\u2019s answer. This is usually characterized by some loss function L(y, \u02c6y),\nfor example, L(y, \u02c6y) = (y \u2212\u02c6y)2.\nIf one supposes that (X, Y ) are random variables represented by some\njoint probability density Pr(X, Y ), then supervised learning can be formally\ncharacterized as a density estimation problem where one is concerned with\ndetermining properties of the conditional density Pr(Y |X). Usually the\nproperties of interest are the \u201clocation\u201d parameters \u03bc that minimize the\nexpected error at each x,",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38029,
+          "text": "\u03bc(x) = argmin\n\u03b8\nEY |XL(Y, \u03b8).\n(14.1)",
+          "type": "narrative",
+          "page": 503
+        },
+        {
+          "id": 38030,
+          "text": "486\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38031,
+          "text": "Conditioning one has",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38032,
+          "text": "Pr(X, Y ) = Pr(Y |X) \u00b7 Pr(X),",
+          "type": "narrative",
+          "page": 504
+        },
+        {
+          "id": 38033,
+          "text": "where Pr(X) is the joint marginal density of the X values alone. In su-\npervised learning Pr(X) is typically of no direct concern. One is interested\nmainly in the properties of the conditional density Pr(Y |X). Since Y is of-\nten of low dimension (usually one), and only its location \u03bc(x) is of interest,\nthe problem is greatly simpli\ufb01ed. As discussed in the previous chapters,\nthere are many approaches for successfully addressing supervised learning\nin a variety of contexts.\nIn this chapter we address unsupervised learning or \u201clearning without a\nteacher.\u201d In this case one has a set of N observations (x1, x2, . . . , xN) of a\nrandom p-vector X having joint density Pr(X). The goal is to directly infer\nthe properties of this probability density without the help of a supervisor or\nteacher providing correct answers or degree-of-error for each observation.\nThe dimension of X is sometimes much higher than in supervised learn-\ning, and the properties of interest are often more complicated than simple\nlocation estimates. These factors are somewhat mitigated by the fact that\nX represents all of the variables under consideration; one is not required\nto infer how the properties of Pr(X) change, conditioned on the changing\nvalues of another set of variables.\nIn low-dimensional problems (say p \u22643), there are a variety of e\ufb00ective\nnonparametric methods for directly estimating the density Pr(X) itself at\nall X-values, and representing it graphically (Silverman, 1986, e.g.). Owing\nto the curse of dimensionality, these methods fail in high dimensions. One\nmust settle for estimating rather crude global models, such as Gaussian\nmixtures or various simple descriptive statistics that characterize Pr(X).\nGenerally, these descriptive statistics attempt to characterize X-values,\nor collections of such values, where Pr(X) is relatively large. Principal\ncomponents, multidimensional scaling, self-organizing maps, and principal\ncurves, for example, attempt to identify low-dimensional manifolds within\nthe X-space that represent high data density. This provides information\nabout the associations among the variables and whether or not they can be\nconsidered as functions of a smaller set of \u201clatent\u201d variables. Cluster anal-\nysis attempts to \ufb01nd multiple convex regions of the X-space that contain\nmodes of Pr(X). This can tell whether or not Pr(X) can be represented by\na mixture of simpler densities representing distinct types or classes of ob-\nservations. Mixture modeling has a similar goal. Association rules attempt\nto construct simple descriptions (conjunctive rules) that describe regions\nof high density in the special case of very high dimensional binary-valued\ndata.\nWith supervised learning there is a clear measure of success, or lack\nthereof, that can be used to judge adequacy in particular situations and\nto compare the e\ufb00ectiveness of di\ufb00erent methods over various situations.",
+          "type": "narrative",
+          "page": 504
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "name": "Algorithm 14.1 K-means Clustering",
+      "description": "1. For a given cluster assignment C, the total cluster variance (14.33) is\nminimized with respect to {m1, . . . , mK} yielding the means of the\ncurrently assigned clusters (14.32).",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "",
+      "existing_formula": "m_k = \\frac{1}{N_k}\\sum_{C(i)=k} x_i",
+      "paragraphs": [
+        {
+          "id": 38667,
+          "text": "Association rule 4: Support 15%, con\ufb01dence 95.4% and lift 1.50.\n\u23a1",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38668,
+          "text": "\u23a2\u23a2\u23a2\u23a2\u23a3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38669,
+          "text": "householder status\n=\nrent\ntype of home\n\u0338=\nhouse\nnumber in household\n\u2264\n2\noccupation\n/\u2208\n{homemaker, student, unemployed}\nincome\n\u2208\n[$20,000, $150,000]",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38670,
+          "text": "\u23a4",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38671,
+          "text": "\u23a5\u23a5\u23a5\u23a5\u23a6",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38672,
+          "text": "\u21d3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38673,
+          "text": "number of children = 0",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38674,
+          "text": "There are no great surprises among these particular rules. For the most\npart they verify intuition. In other contexts where there is less prior in-\nformation available, unexpected results have a greater chance to emerge.\nThese results do illustrate the type of information generalized association\nrules can provide, and that the supervised learning approach, coupled with\na ruled induction method such as CART or PRIM, can uncover item sets\nexhibiting high associations among their constituents.\nHow do these generalized association rules compare to those found earlier\nby the Apriori algorithm? Since the Apriori procedure gives thousands of\nrules, it is di\ufb03cult to compare them. However some general points can be\nmade. The Apriori algorithm is exhaustive\u2014it \ufb01nds all rules with support\ngreater than a speci\ufb01ed amount. In contrast, PRIM is a greedy algorithm\nand is not guaranteed to give an \u201coptimal\u201d set of rules. On the other hand,\nthe Apriori algorithm can deal only with dummy variables and hence could\nnot \ufb01nd some of the above rules. For example, since type of home is a\ncategorical input, with a dummy variable for each level, Apriori could not\n\ufb01nd a rule involving the set",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38675,
+          "text": "type of home \u0338= apartment.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38676,
+          "text": "To \ufb01nd this set, we would have to code a dummy variable for apartment\nversus the other categories of type of home. It will not generally be feasible\nto precode all such potentially interesting comparisons.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38678,
+          "text": "Cluster analysis, also called data segmentation, has a variety of goals. All\nrelate to grouping or segmenting a collection of objects into subsets or\n\u201cclusters,\u201d such that those within each cluster are more closely related to\none another than objects assigned to di\ufb00erent clusters. An object can be\ndescribed by a set of measurements, or by its relation to other objects.\nIn addition, the goal is sometimes to arrange the clusters into a natural\nhierarchy. This involves successively grouping the clusters themselves so",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38679,
+          "text": "502\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 520
+        },
+        {
+          "id": 38680,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38681,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38682,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38683,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38684,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38685,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38686,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38687,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38688,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38689,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38690,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38691,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38692,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38693,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38694,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38695,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38696,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38697,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "name": "Voronoi tessellation",
+      "description": "This can be minimized by an alternating optimization procedure given in\nAlgorithm 14.1.\nEach of steps 1 and 2 reduces the value of the criterion (14.33), so that\nconvergence is assured. However, the result may represent a suboptimal\nlocal minimum. The algorithm of Hartigan and Wong (1979) goes further,\nand ensures that there is no single switch of an observation from one group\nto another group that will decrease the objective. In addition, one should\nstart the algorithm with many di\ufb00erent random choices for the starting\nmeans, and choose the solution having smallest value of the objective func-\ntion.\nFigure 14.6 shows some of the K-means iterations for the simulated data\nof Figure 14.4. The centroids are depicted by \u201cO\u201ds. The straight lines show\nthe partitioning of points, each sector being the set of points closest to\neach centroid. This partitioning is called the Voronoi tessellation. After 20\niterations the procedure has converged.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "The straight lines show the partitioning of points, each sector being the set of points closest to each centroid. This partitioning is called the Voronoi tessellation.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38667,
+          "text": "Association rule 4: Support 15%, con\ufb01dence 95.4% and lift 1.50.\n\u23a1",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38668,
+          "text": "\u23a2\u23a2\u23a2\u23a2\u23a3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38669,
+          "text": "householder status\n=\nrent\ntype of home\n\u0338=\nhouse\nnumber in household\n\u2264\n2\noccupation\n/\u2208\n{homemaker, student, unemployed}\nincome\n\u2208\n[$20,000, $150,000]",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38670,
+          "text": "\u23a4",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38671,
+          "text": "\u23a5\u23a5\u23a5\u23a5\u23a6",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38672,
+          "text": "\u21d3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38673,
+          "text": "number of children = 0",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38674,
+          "text": "There are no great surprises among these particular rules. For the most\npart they verify intuition. In other contexts where there is less prior in-\nformation available, unexpected results have a greater chance to emerge.\nThese results do illustrate the type of information generalized association\nrules can provide, and that the supervised learning approach, coupled with\na ruled induction method such as CART or PRIM, can uncover item sets\nexhibiting high associations among their constituents.\nHow do these generalized association rules compare to those found earlier\nby the Apriori algorithm? Since the Apriori procedure gives thousands of\nrules, it is di\ufb03cult to compare them. However some general points can be\nmade. The Apriori algorithm is exhaustive\u2014it \ufb01nds all rules with support\ngreater than a speci\ufb01ed amount. In contrast, PRIM is a greedy algorithm\nand is not guaranteed to give an \u201coptimal\u201d set of rules. On the other hand,\nthe Apriori algorithm can deal only with dummy variables and hence could\nnot \ufb01nd some of the above rules. For example, since type of home is a\ncategorical input, with a dummy variable for each level, Apriori could not\n\ufb01nd a rule involving the set",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38675,
+          "text": "type of home \u0338= apartment.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38676,
+          "text": "To \ufb01nd this set, we would have to code a dummy variable for apartment\nversus the other categories of type of home. It will not generally be feasible\nto precode all such potentially interesting comparisons.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38678,
+          "text": "Cluster analysis, also called data segmentation, has a variety of goals. All\nrelate to grouping or segmenting a collection of objects into subsets or\n\u201cclusters,\u201d such that those within each cluster are more closely related to\none another than objects assigned to di\ufb00erent clusters. An object can be\ndescribed by a set of measurements, or by its relation to other objects.\nIn addition, the goal is sometimes to arrange the clusters into a natural\nhierarchy. This involves successively grouping the clusters themselves so",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38679,
+          "text": "502\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 520
+        },
+        {
+          "id": 38680,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38681,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38682,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38683,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38684,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38685,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38686,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38687,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38688,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38689,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38690,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38691,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38692,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38693,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38694,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38695,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38696,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38697,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "name": "codebook",
+      "description": "numbers is regarded as a vector in IR4. A K-means clustering algorithm\n(also known as Lloyd\u2019s algorithm in this context) is run in this space.\nThe center image uses K = 200, while the right image K = 4. Each of\nthe 512 \u00d7 512 pixel blocks (or points) is approximated by its closest cluster\ncentroid, known as a codeword. The clustering process is called the encoding\nstep, and the collection of centroids is called the codebook.\nTo represent the approximated image, we need to supply for each block\nthe identity of the codebook entry that approximates it. This will require\nlog2(K) bits per block. We also need to supply the codebook itself, which\nis K \u00d7 4 real numbers (typically negligible). Overall, the storage for the\ncompressed image amounts to log2(K)/(4 \u00b7 8) of the original (0.239 for\nK = 200, 0.063 for K = 4). This is typically expressed as a rate in bits\nper pixel: log2(K)/4, which are 1.91 and 0.50, respectively. The process\nof constructing the approximate image from the centroids is called the\ndecoding step.\nWhy do we expect VQ to work at all? The reason is that for typical\neveryday images like photographs, many of the blocks look the same. In\nthis case there are many almost pure white blocks, and similarly pure gray\nblocks of various shades. These require only one block each to represent\nthem, and then multiple pointers to that block.\nWhat we have described is known as lossy compression, since our im-\nages are degraded versions of the original. The degradation or distortion is\nusually measured in terms of mean squared error. In this case D = 0.89\nfor K = 200 and D = 16.95 for K = 4. More generally a rate/distortion\ncurve would be used to assess the tradeo\ufb00. One can also perform lossless\ncompression using block clustering, and still capitalize on the repeated pat-\nterns. If you took the original image and losslessly compressed it, the best\nyou would do is 4.48 bits per pixel.\nWe claimed above that log2(K) bits were needed to identify each of the K\ncodewords in the codebook. This uses a \ufb01xed-length code, and is ine\ufb03cient\nif some codewords occur many more times than others in the image. Using\nShannon coding theory, we know that in general a variable length code\nwill do better, and the rate then becomes \u2212\tK\n\u2113=1 p\u2113log2(p\u2113)/4. The term\nin the numerator is the entropy of the distribution p\u2113of the codewords\nin the image. Using variable length coding our rates come down to 1.42\nand 0.39, respectively. Finally, there are many generalizations of VQ that\nhave been developed: for example, tree-structured VQ \ufb01nds the centroids\nwith a top-down, 2-means style algorithm, as alluded to in Section 14.3.12.\nThis allows successive re\ufb01nement of the compression. Further details may\nbe found in Gersho and Gray (1992).",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "The clustering process is called the encoding step, and the collection of centroids is called the codebook.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38667,
+          "text": "Association rule 4: Support 15%, con\ufb01dence 95.4% and lift 1.50.\n\u23a1",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38668,
+          "text": "\u23a2\u23a2\u23a2\u23a2\u23a3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38669,
+          "text": "householder status\n=\nrent\ntype of home\n\u0338=\nhouse\nnumber in household\n\u2264\n2\noccupation\n/\u2208\n{homemaker, student, unemployed}\nincome\n\u2208\n[$20,000, $150,000]",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38670,
+          "text": "\u23a4",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38671,
+          "text": "\u23a5\u23a5\u23a5\u23a5\u23a6",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38672,
+          "text": "\u21d3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38673,
+          "text": "number of children = 0",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38674,
+          "text": "There are no great surprises among these particular rules. For the most\npart they verify intuition. In other contexts where there is less prior in-\nformation available, unexpected results have a greater chance to emerge.\nThese results do illustrate the type of information generalized association\nrules can provide, and that the supervised learning approach, coupled with\na ruled induction method such as CART or PRIM, can uncover item sets\nexhibiting high associations among their constituents.\nHow do these generalized association rules compare to those found earlier\nby the Apriori algorithm? Since the Apriori procedure gives thousands of\nrules, it is di\ufb03cult to compare them. However some general points can be\nmade. The Apriori algorithm is exhaustive\u2014it \ufb01nds all rules with support\ngreater than a speci\ufb01ed amount. In contrast, PRIM is a greedy algorithm\nand is not guaranteed to give an \u201coptimal\u201d set of rules. On the other hand,\nthe Apriori algorithm can deal only with dummy variables and hence could\nnot \ufb01nd some of the above rules. For example, since type of home is a\ncategorical input, with a dummy variable for each level, Apriori could not\n\ufb01nd a rule involving the set",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38675,
+          "text": "type of home \u0338= apartment.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38676,
+          "text": "To \ufb01nd this set, we would have to code a dummy variable for apartment\nversus the other categories of type of home. It will not generally be feasible\nto precode all such potentially interesting comparisons.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38678,
+          "text": "Cluster analysis, also called data segmentation, has a variety of goals. All\nrelate to grouping or segmenting a collection of objects into subsets or\n\u201cclusters,\u201d such that those within each cluster are more closely related to\none another than objects assigned to di\ufb00erent clusters. An object can be\ndescribed by a set of measurements, or by its relation to other objects.\nIn addition, the goal is sometimes to arrange the clusters into a natural\nhierarchy. This involves successively grouping the clusters themselves so",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38679,
+          "text": "502\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 520
+        },
+        {
+          "id": 38680,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38681,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38682,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38683,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38684,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38685,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38686,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38687,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38688,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38689,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38690,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38691,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38692,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38693,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38694,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38695,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38696,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38697,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "name": "decoding step",
+      "description": "numbers is regarded as a vector in IR4. A K-means clustering algorithm\n(also known as Lloyd\u2019s algorithm in this context) is run in this space.\nThe center image uses K = 200, while the right image K = 4. Each of\nthe 512 \u00d7 512 pixel blocks (or points) is approximated by its closest cluster\ncentroid, known as a codeword. The clustering process is called the encoding\nstep, and the collection of centroids is called the codebook.\nTo represent the approximated image, we need to supply for each block\nthe identity of the codebook entry that approximates it. This will require\nlog2(K) bits per block. We also need to supply the codebook itself, which\nis K \u00d7 4 real numbers (typically negligible). Overall, the storage for the\ncompressed image amounts to log2(K)/(4 \u00b7 8) of the original (0.239 for\nK = 200, 0.063 for K = 4). This is typically expressed as a rate in bits\nper pixel: log2(K)/4, which are 1.91 and 0.50, respectively. The process\nof constructing the approximate image from the centroids is called the\ndecoding step.\nWhy do we expect VQ to work at all? The reason is that for typical\neveryday images like photographs, many of the blocks look the same. In\nthis case there are many almost pure white blocks, and similarly pure gray\nblocks of various shades. These require only one block each to represent\nthem, and then multiple pointers to that block.\nWhat we have described is known as lossy compression, since our im-\nages are degraded versions of the original. The degradation or distortion is\nusually measured in terms of mean squared error. In this case D = 0.89\nfor K = 200 and D = 16.95 for K = 4. More generally a rate/distortion\ncurve would be used to assess the tradeo\ufb00. One can also perform lossless\ncompression using block clustering, and still capitalize on the repeated pat-\nterns. If you took the original image and losslessly compressed it, the best\nyou would do is 4.48 bits per pixel.\nWe claimed above that log2(K) bits were needed to identify each of the K\ncodewords in the codebook. This uses a \ufb01xed-length code, and is ine\ufb03cient\nif some codewords occur many more times than others in the image. Using\nShannon coding theory, we know that in general a variable length code\nwill do better, and the rate then becomes \u2212\tK\n\u2113=1 p\u2113log2(p\u2113)/4. The term\nin the numerator is the entropy of the distribution p\u2113of the codewords\nin the image. Using variable length coding our rates come down to 1.42\nand 0.39, respectively. Finally, there are many generalizations of VQ that\nhave been developed: for example, tree-structured VQ \ufb01nds the centroids\nwith a top-down, 2-means style algorithm, as alluded to in Section 14.3.12.\nThis allows successive re\ufb01nement of the compression. Further details may\nbe found in Gersho and Gray (1992).",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "The process of constructing the approximate image from the centroids is called the decoding step.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38667,
+          "text": "Association rule 4: Support 15%, con\ufb01dence 95.4% and lift 1.50.\n\u23a1",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38668,
+          "text": "\u23a2\u23a2\u23a2\u23a2\u23a3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38669,
+          "text": "householder status\n=\nrent\ntype of home\n\u0338=\nhouse\nnumber in household\n\u2264\n2\noccupation\n/\u2208\n{homemaker, student, unemployed}\nincome\n\u2208\n[$20,000, $150,000]",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38670,
+          "text": "\u23a4",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38671,
+          "text": "\u23a5\u23a5\u23a5\u23a5\u23a6",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38672,
+          "text": "\u21d3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38673,
+          "text": "number of children = 0",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38674,
+          "text": "There are no great surprises among these particular rules. For the most\npart they verify intuition. In other contexts where there is less prior in-\nformation available, unexpected results have a greater chance to emerge.\nThese results do illustrate the type of information generalized association\nrules can provide, and that the supervised learning approach, coupled with\na ruled induction method such as CART or PRIM, can uncover item sets\nexhibiting high associations among their constituents.\nHow do these generalized association rules compare to those found earlier\nby the Apriori algorithm? Since the Apriori procedure gives thousands of\nrules, it is di\ufb03cult to compare them. However some general points can be\nmade. The Apriori algorithm is exhaustive\u2014it \ufb01nds all rules with support\ngreater than a speci\ufb01ed amount. In contrast, PRIM is a greedy algorithm\nand is not guaranteed to give an \u201coptimal\u201d set of rules. On the other hand,\nthe Apriori algorithm can deal only with dummy variables and hence could\nnot \ufb01nd some of the above rules. For example, since type of home is a\ncategorical input, with a dummy variable for each level, Apriori could not\n\ufb01nd a rule involving the set",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38675,
+          "text": "type of home \u0338= apartment.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38676,
+          "text": "To \ufb01nd this set, we would have to code a dummy variable for apartment\nversus the other categories of type of home. It will not generally be feasible\nto precode all such potentially interesting comparisons.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38678,
+          "text": "Cluster analysis, also called data segmentation, has a variety of goals. All\nrelate to grouping or segmenting a collection of objects into subsets or\n\u201cclusters,\u201d such that those within each cluster are more closely related to\none another than objects assigned to di\ufb00erent clusters. An object can be\ndescribed by a set of measurements, or by its relation to other objects.\nIn addition, the goal is sometimes to arrange the clusters into a natural\nhierarchy. This involves successively grouping the clusters themselves so",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38679,
+          "text": "502\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 520
+        },
+        {
+          "id": 38680,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38681,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38682,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38683,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38684,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38685,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38686,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38687,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38688,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38689,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38690,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38691,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38692,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38693,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38694,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38695,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38696,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38697,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "name": "lossy compression",
+      "description": "numbers is regarded as a vector in IR4. A K-means clustering algorithm\n(also known as Lloyd\u2019s algorithm in this context) is run in this space.\nThe center image uses K = 200, while the right image K = 4. Each of\nthe 512 \u00d7 512 pixel blocks (or points) is approximated by its closest cluster\ncentroid, known as a codeword. The clustering process is called the encoding\nstep, and the collection of centroids is called the codebook.\nTo represent the approximated image, we need to supply for each block\nthe identity of the codebook entry that approximates it. This will require\nlog2(K) bits per block. We also need to supply the codebook itself, which\nis K \u00d7 4 real numbers (typically negligible). Overall, the storage for the\ncompressed image amounts to log2(K)/(4 \u00b7 8) of the original (0.239 for\nK = 200, 0.063 for K = 4). This is typically expressed as a rate in bits\nper pixel: log2(K)/4, which are 1.91 and 0.50, respectively. The process\nof constructing the approximate image from the centroids is called the\ndecoding step.\nWhy do we expect VQ to work at all? The reason is that for typical\neveryday images like photographs, many of the blocks look the same. In\nthis case there are many almost pure white blocks, and similarly pure gray\nblocks of various shades. These require only one block each to represent\nthem, and then multiple pointers to that block.\nWhat we have described is known as lossy compression, since our im-\nages are degraded versions of the original. The degradation or distortion is\nusually measured in terms of mean squared error. In this case D = 0.89\nfor K = 200 and D = 16.95 for K = 4. More generally a rate/distortion\ncurve would be used to assess the tradeo\ufb00. One can also perform lossless\ncompression using block clustering, and still capitalize on the repeated pat-\nterns. If you took the original image and losslessly compressed it, the best\nyou would do is 4.48 bits per pixel.\nWe claimed above that log2(K) bits were needed to identify each of the K\ncodewords in the codebook. This uses a \ufb01xed-length code, and is ine\ufb03cient\nif some codewords occur many more times than others in the image. Using\nShannon coding theory, we know that in general a variable length code\nwill do better, and the rate then becomes \u2212\tK\n\u2113=1 p\u2113log2(p\u2113)/4. The term\nin the numerator is the entropy of the distribution p\u2113of the codewords\nin the image. Using variable length coding our rates come down to 1.42\nand 0.39, respectively. Finally, there are many generalizations of VQ that\nhave been developed: for example, tree-structured VQ \ufb01nds the centroids\nwith a top-down, 2-means style algorithm, as alluded to in Section 14.3.12.\nThis allows successive re\ufb01nement of the compression. Further details may\nbe found in Gersho and Gray (1992).",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "What we have described is known as lossy compression, since our images are degraded versions of the original. The degradation or distortion is usually measured in terms of mean squared error.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38667,
+          "text": "Association rule 4: Support 15%, con\ufb01dence 95.4% and lift 1.50.\n\u23a1",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38668,
+          "text": "\u23a2\u23a2\u23a2\u23a2\u23a3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38669,
+          "text": "householder status\n=\nrent\ntype of home\n\u0338=\nhouse\nnumber in household\n\u2264\n2\noccupation\n/\u2208\n{homemaker, student, unemployed}\nincome\n\u2208\n[$20,000, $150,000]",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38670,
+          "text": "\u23a4",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38671,
+          "text": "\u23a5\u23a5\u23a5\u23a5\u23a6",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38672,
+          "text": "\u21d3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38673,
+          "text": "number of children = 0",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38674,
+          "text": "There are no great surprises among these particular rules. For the most\npart they verify intuition. In other contexts where there is less prior in-\nformation available, unexpected results have a greater chance to emerge.\nThese results do illustrate the type of information generalized association\nrules can provide, and that the supervised learning approach, coupled with\na ruled induction method such as CART or PRIM, can uncover item sets\nexhibiting high associations among their constituents.\nHow do these generalized association rules compare to those found earlier\nby the Apriori algorithm? Since the Apriori procedure gives thousands of\nrules, it is di\ufb03cult to compare them. However some general points can be\nmade. The Apriori algorithm is exhaustive\u2014it \ufb01nds all rules with support\ngreater than a speci\ufb01ed amount. In contrast, PRIM is a greedy algorithm\nand is not guaranteed to give an \u201coptimal\u201d set of rules. On the other hand,\nthe Apriori algorithm can deal only with dummy variables and hence could\nnot \ufb01nd some of the above rules. For example, since type of home is a\ncategorical input, with a dummy variable for each level, Apriori could not\n\ufb01nd a rule involving the set",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38675,
+          "text": "type of home \u0338= apartment.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38676,
+          "text": "To \ufb01nd this set, we would have to code a dummy variable for apartment\nversus the other categories of type of home. It will not generally be feasible\nto precode all such potentially interesting comparisons.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38678,
+          "text": "Cluster analysis, also called data segmentation, has a variety of goals. All\nrelate to grouping or segmenting a collection of objects into subsets or\n\u201cclusters,\u201d such that those within each cluster are more closely related to\none another than objects assigned to di\ufb00erent clusters. An object can be\ndescribed by a set of measurements, or by its relation to other objects.\nIn addition, the goal is sometimes to arrange the clusters into a natural\nhierarchy. This involves successively grouping the clusters themselves so",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38679,
+          "text": "502\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 520
+        },
+        {
+          "id": 38680,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38681,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38682,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38683,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38684,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38685,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38686,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38687,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38688,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38689,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38690,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38691,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38692,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38693,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38694,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38695,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38696,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38697,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "name": "chaining",
+      "description": "observations within them are relatively close together (small dissimilarities)\nas compared with observations in di\ufb00erent clusters. To the extent this is\nnot the case, results will di\ufb00er.\nSingle linkage (14.41) only requires that a single dissimilarity dii\u2032, i \u2208G\nand i\u2032 \u2208H, be small for two groups G and H to be considered close\ntogether, irrespective of the other observation dissimilarities between the\ngroups. It will therefore have a tendency to combine, at relatively low\nthresholds, observations linked by a series of close intermediate observa-\ntions. This phenomenon, referred to as chaining, is often considered a de-\nfect of the method. The clusters produced by single linkage can violate the\n\u201ccompactness\u201d property that all observations within each cluster tend to\nbe similar to one another, based on the supplied observation dissimilari-\nties {dii\u2032}. If we de\ufb01ne the diameter DG of a group of observations as the\nlargest dissimilarity among its members",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "Single linkage (14.41) only requires that a single dissimilarity dii\u2032, i \u2208G and i\u2032 \u2208H, be small for two groups G and H to be considered close together, irrespective of the other observation dissimilarities between the groups. It will therefore have a tendency to combine, at relatively low thresholds, observations linked by a series of close intermediate observations. This phenomenon, referred to as chaining, is often considered a defect of the method.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38667,
+          "text": "Association rule 4: Support 15%, con\ufb01dence 95.4% and lift 1.50.\n\u23a1",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38668,
+          "text": "\u23a2\u23a2\u23a2\u23a2\u23a3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38669,
+          "text": "householder status\n=\nrent\ntype of home\n\u0338=\nhouse\nnumber in household\n\u2264\n2\noccupation\n/\u2208\n{homemaker, student, unemployed}\nincome\n\u2208\n[$20,000, $150,000]",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38670,
+          "text": "\u23a4",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38671,
+          "text": "\u23a5\u23a5\u23a5\u23a5\u23a6",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38672,
+          "text": "\u21d3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38673,
+          "text": "number of children = 0",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38674,
+          "text": "There are no great surprises among these particular rules. For the most\npart they verify intuition. In other contexts where there is less prior in-\nformation available, unexpected results have a greater chance to emerge.\nThese results do illustrate the type of information generalized association\nrules can provide, and that the supervised learning approach, coupled with\na ruled induction method such as CART or PRIM, can uncover item sets\nexhibiting high associations among their constituents.\nHow do these generalized association rules compare to those found earlier\nby the Apriori algorithm? Since the Apriori procedure gives thousands of\nrules, it is di\ufb03cult to compare them. However some general points can be\nmade. The Apriori algorithm is exhaustive\u2014it \ufb01nds all rules with support\ngreater than a speci\ufb01ed amount. In contrast, PRIM is a greedy algorithm\nand is not guaranteed to give an \u201coptimal\u201d set of rules. On the other hand,\nthe Apriori algorithm can deal only with dummy variables and hence could\nnot \ufb01nd some of the above rules. For example, since type of home is a\ncategorical input, with a dummy variable for each level, Apriori could not\n\ufb01nd a rule involving the set",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38675,
+          "text": "type of home \u0338= apartment.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38676,
+          "text": "To \ufb01nd this set, we would have to code a dummy variable for apartment\nversus the other categories of type of home. It will not generally be feasible\nto precode all such potentially interesting comparisons.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38678,
+          "text": "Cluster analysis, also called data segmentation, has a variety of goals. All\nrelate to grouping or segmenting a collection of objects into subsets or\n\u201cclusters,\u201d such that those within each cluster are more closely related to\none another than objects assigned to di\ufb00erent clusters. An object can be\ndescribed by a set of measurements, or by its relation to other objects.\nIn addition, the goal is sometimes to arrange the clusters into a natural\nhierarchy. This involves successively grouping the clusters themselves so",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38679,
+          "text": "502\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 520
+        },
+        {
+          "id": 38680,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38681,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38682,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38683,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38684,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38685,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38686,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38687,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38688,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38689,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38690,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38691,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38692,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38693,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38694,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38695,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38696,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38697,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        }
+      ]
+    },
+    {
+      "id": 495,
+      "name": "cluster analysis",
+      "description": "Methods for finding groups or clusters in data such that observations within each group are more similar to each other than to observations in other groups.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "Cluster analysis, also called data segmentation, has a variety of goals. All relate to grouping or segmenting a collection of objects into subsets or clusters, such that those within each cluster are more closely related to one another than objects assigned to different clusters.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38667,
+          "text": "Association rule 4: Support 15%, con\ufb01dence 95.4% and lift 1.50.\n\u23a1",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38668,
+          "text": "\u23a2\u23a2\u23a2\u23a2\u23a3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38669,
+          "text": "householder status\n=\nrent\ntype of home\n\u0338=\nhouse\nnumber in household\n\u2264\n2\noccupation\n/\u2208\n{homemaker, student, unemployed}\nincome\n\u2208\n[$20,000, $150,000]",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38670,
+          "text": "\u23a4",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38671,
+          "text": "\u23a5\u23a5\u23a5\u23a5\u23a6",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38672,
+          "text": "\u21d3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38673,
+          "text": "number of children = 0",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38674,
+          "text": "There are no great surprises among these particular rules. For the most\npart they verify intuition. In other contexts where there is less prior in-\nformation available, unexpected results have a greater chance to emerge.\nThese results do illustrate the type of information generalized association\nrules can provide, and that the supervised learning approach, coupled with\na ruled induction method such as CART or PRIM, can uncover item sets\nexhibiting high associations among their constituents.\nHow do these generalized association rules compare to those found earlier\nby the Apriori algorithm? Since the Apriori procedure gives thousands of\nrules, it is di\ufb03cult to compare them. However some general points can be\nmade. The Apriori algorithm is exhaustive\u2014it \ufb01nds all rules with support\ngreater than a speci\ufb01ed amount. In contrast, PRIM is a greedy algorithm\nand is not guaranteed to give an \u201coptimal\u201d set of rules. On the other hand,\nthe Apriori algorithm can deal only with dummy variables and hence could\nnot \ufb01nd some of the above rules. For example, since type of home is a\ncategorical input, with a dummy variable for each level, Apriori could not\n\ufb01nd a rule involving the set",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38675,
+          "text": "type of home \u0338= apartment.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38676,
+          "text": "To \ufb01nd this set, we would have to code a dummy variable for apartment\nversus the other categories of type of home. It will not generally be feasible\nto precode all such potentially interesting comparisons.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38678,
+          "text": "Cluster analysis, also called data segmentation, has a variety of goals. All\nrelate to grouping or segmenting a collection of objects into subsets or\n\u201cclusters,\u201d such that those within each cluster are more closely related to\none another than objects assigned to di\ufb00erent clusters. An object can be\ndescribed by a set of measurements, or by its relation to other objects.\nIn addition, the goal is sometimes to arrange the clusters into a natural\nhierarchy. This involves successively grouping the clusters themselves so",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38679,
+          "text": "502\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 520
+        },
+        {
+          "id": 38680,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38681,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38682,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38683,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38684,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38685,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38686,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38687,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38688,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38689,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38690,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38691,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38692,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38693,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38694,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38695,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38696,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38697,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        }
+      ]
+    },
+    {
+      "id": 496,
+      "name": "data segmentation",
+      "description": "Another name for cluster analysis, the process of grouping data into meaningful subsets.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "Cluster analysis, also called data segmentation, has a variety of goals.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 38667,
+          "text": "Association rule 4: Support 15%, con\ufb01dence 95.4% and lift 1.50.\n\u23a1",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38668,
+          "text": "\u23a2\u23a2\u23a2\u23a2\u23a3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38669,
+          "text": "householder status\n=\nrent\ntype of home\n\u0338=\nhouse\nnumber in household\n\u2264\n2\noccupation\n/\u2208\n{homemaker, student, unemployed}\nincome\n\u2208\n[$20,000, $150,000]",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38670,
+          "text": "\u23a4",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38671,
+          "text": "\u23a5\u23a5\u23a5\u23a5\u23a6",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38672,
+          "text": "\u21d3",
+          "type": "equation",
+          "page": 519
+        },
+        {
+          "id": 38673,
+          "text": "number of children = 0",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38674,
+          "text": "There are no great surprises among these particular rules. For the most\npart they verify intuition. In other contexts where there is less prior in-\nformation available, unexpected results have a greater chance to emerge.\nThese results do illustrate the type of information generalized association\nrules can provide, and that the supervised learning approach, coupled with\na ruled induction method such as CART or PRIM, can uncover item sets\nexhibiting high associations among their constituents.\nHow do these generalized association rules compare to those found earlier\nby the Apriori algorithm? Since the Apriori procedure gives thousands of\nrules, it is di\ufb03cult to compare them. However some general points can be\nmade. The Apriori algorithm is exhaustive\u2014it \ufb01nds all rules with support\ngreater than a speci\ufb01ed amount. In contrast, PRIM is a greedy algorithm\nand is not guaranteed to give an \u201coptimal\u201d set of rules. On the other hand,\nthe Apriori algorithm can deal only with dummy variables and hence could\nnot \ufb01nd some of the above rules. For example, since type of home is a\ncategorical input, with a dummy variable for each level, Apriori could not\n\ufb01nd a rule involving the set",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38675,
+          "text": "type of home \u0338= apartment.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38676,
+          "text": "To \ufb01nd this set, we would have to code a dummy variable for apartment\nversus the other categories of type of home. It will not generally be feasible\nto precode all such potentially interesting comparisons.",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38678,
+          "text": "Cluster analysis, also called data segmentation, has a variety of goals. All\nrelate to grouping or segmenting a collection of objects into subsets or\n\u201cclusters,\u201d such that those within each cluster are more closely related to\none another than objects assigned to di\ufb00erent clusters. An object can be\ndescribed by a set of measurements, or by its relation to other objects.\nIn addition, the goal is sometimes to arrange the clusters into a natural\nhierarchy. This involves successively grouping the clusters themselves so",
+          "type": "narrative",
+          "page": 519
+        },
+        {
+          "id": 38679,
+          "text": "502\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 520
+        },
+        {
+          "id": 38680,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38681,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38682,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38683,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38684,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38685,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38686,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38687,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38688,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38689,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38690,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38691,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38692,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38693,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38694,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38695,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38696,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        },
+        {
+          "id": 38697,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 520
+        }
+      ]
+    }
+  ]
+}

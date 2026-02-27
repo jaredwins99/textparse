@@ -2,9 +2,9 @@
 
 from pathlib import Path
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker, Session, joinedload
 
-from .models import Base, Textbook, Page, Paragraph, Concept
+from .models import Base, Textbook, Page, Paragraph, Concept, Section, ConceptRelationship
 
 
 class DatabaseManager:
@@ -17,36 +17,82 @@ class DatabaseManager:
         self.engine = create_engine(f"sqlite:///{self.db_path}")
         Base.metadata.create_all(self.engine)
         self.SessionLocal = sessionmaker(bind=self.engine)
+        self._session: Session | None = None
 
-    def get_session(self) -> Session:
-        """Get a new database session."""
-        return self.SessionLocal()
+    def __enter__(self):
+        self._session = self.SessionLocal()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is not None:
+            self._session.rollback()
+        else:
+            self._session.commit()
+        self._session.close()
+        self._session = None
+        return False
+
+    def _get_session(self) -> tuple[Session, bool]:
+        """Return (session, is_standalone).
+
+        If a context-managed session exists, return it with is_standalone=False.
+        Otherwise create a new session with is_standalone=True.
+        """
+        if self._session is not None:
+            return self._session, False
+        return self.SessionLocal(), True
 
     def add_textbook(self, title: str, file_path: str, total_pages: int) -> Textbook:
-        """Add a new textbook to the database."""
-        with self.get_session() as session:
+        """Add a new textbook to the database, or return existing one if file_path matches."""
+        session, standalone = self._get_session()
+        try:
+            existing = session.query(Textbook).filter_by(file_path=file_path).first()
+            if existing:
+                session.refresh(existing)
+                return existing
             textbook = Textbook(
                 title=title,
                 file_path=file_path,
                 total_pages=total_pages
             )
             session.add(textbook)
-            session.commit()
+            if standalone:
+                session.commit()
+            else:
+                session.flush()
             session.refresh(textbook)
             return textbook
+        except Exception:
+            if standalone:
+                session.rollback()
+            raise
+        finally:
+            if standalone:
+                session.close()
 
     def add_page(self, textbook_id: int, page_number: int, raw_text: str) -> Page:
         """Add a page to a textbook."""
-        with self.get_session() as session:
+        session, standalone = self._get_session()
+        try:
             page = Page(
                 textbook_id=textbook_id,
                 page_number=page_number,
                 raw_text=raw_text
             )
             session.add(page)
-            session.commit()
+            if standalone:
+                session.commit()
+            else:
+                session.flush()
             session.refresh(page)
             return page
+        except Exception:
+            if standalone:
+                session.rollback()
+            raise
+        finally:
+            if standalone:
+                session.close()
 
     def add_paragraph(
         self,
@@ -56,7 +102,8 @@ class DatabaseManager:
         bbox: tuple[float, float, float, float] | None = None
     ) -> Paragraph:
         """Add a paragraph to a page."""
-        with self.get_session() as session:
+        session, standalone = self._get_session()
+        try:
             paragraph = Paragraph(
                 page_id=page_id,
                 sequence_index=sequence_index,
@@ -67,39 +114,175 @@ class DatabaseManager:
                 bbox_y1=bbox[3] if bbox else None
             )
             session.add(paragraph)
-            session.commit()
+            if standalone:
+                session.commit()
+            else:
+                session.flush()
             session.refresh(paragraph)
             return paragraph
+        except Exception:
+            if standalone:
+                session.rollback()
+            raise
+        finally:
+            if standalone:
+                session.close()
 
     def get_or_create_concept(self, name: str, description: str = None, category: str = None) -> Concept:
         """Get an existing concept or create a new one."""
-        with self.get_session() as session:
+        session, standalone = self._get_session()
+        try:
             concept = session.query(Concept).filter_by(name=name).first()
             if not concept:
                 concept = Concept(name=name, description=description, category=category)
                 session.add(concept)
-                session.commit()
+                if standalone:
+                    session.commit()
+                else:
+                    session.flush()
                 session.refresh(concept)
             return concept
+        except Exception:
+            if standalone:
+                session.rollback()
+            raise
+        finally:
+            if standalone:
+                session.close()
 
     def link_paragraph_to_concept(self, paragraph_id: int, concept_id: int):
         """Link a paragraph to a concept."""
-        with self.get_session() as session:
-            paragraph = session.query(Paragraph).get(paragraph_id)
-            concept = session.query(Concept).get(concept_id)
-            if paragraph and concept:
+        session, standalone = self._get_session()
+        try:
+            paragraph = session.get(Paragraph, paragraph_id)
+            concept = session.get(Concept, concept_id)
+            if not paragraph or not concept:
+                return
+            if concept not in paragraph.concepts:
                 paragraph.concepts.append(concept)
-                session.commit()
+                if standalone:
+                    session.commit()
+                else:
+                    session.flush()
+        except Exception:
+            if standalone:
+                session.rollback()
+            raise
+        finally:
+            if standalone:
+                session.close()
 
     def get_paragraphs_by_concept(self, concept_name: str) -> list[Paragraph]:
         """Get all paragraphs related to a concept."""
-        with self.get_session() as session:
-            concept = session.query(Concept).filter_by(name=concept_name).first()
+        session, standalone = self._get_session()
+        try:
+            concept = (
+                session.query(Concept)
+                .options(joinedload(Concept.paragraphs))
+                .filter_by(name=concept_name)
+                .first()
+            )
             if concept:
-                return concept.paragraphs
+                paragraphs = list(concept.paragraphs)
+                if standalone:
+                    session.expunge_all()
+                return paragraphs
             return []
+        finally:
+            if standalone:
+                session.close()
 
     def get_all_concepts(self) -> list[Concept]:
         """Get all concepts in the database."""
-        with self.get_session() as session:
-            return session.query(Concept).all()
+        session, standalone = self._get_session()
+        try:
+            concepts = session.query(Concept).all()
+            if standalone:
+                session.expunge_all()
+            return concepts
+        finally:
+            if standalone:
+                session.close()
+
+    def add_section(
+        self,
+        textbook_id: int,
+        title: str,
+        number: str = None,
+        parent_id: int = None,
+        page_start: int = None,
+        page_end: int = None
+    ) -> Section:
+        """Add a section to a textbook."""
+        session, standalone = self._get_session()
+        try:
+            section = Section(
+                textbook_id=textbook_id,
+                title=title,
+                number=number,
+                parent_id=parent_id,
+                page_start=page_start,
+                page_end=page_end
+            )
+            session.add(section)
+            if standalone:
+                session.commit()
+            else:
+                session.flush()
+            session.refresh(section)
+            return section
+        except Exception:
+            if standalone:
+                session.rollback()
+            raise
+        finally:
+            if standalone:
+                session.close()
+
+    def add_concept_relationship(
+        self,
+        source_id: int,
+        target_id: int,
+        relationship_type: str
+    ) -> ConceptRelationship:
+        """Add a relationship between two concepts."""
+        session, standalone = self._get_session()
+        try:
+            rel = ConceptRelationship(
+                source_id=source_id,
+                target_id=target_id,
+                relationship_type=relationship_type
+            )
+            session.add(rel)
+            if standalone:
+                session.commit()
+            else:
+                session.flush()
+            session.refresh(rel)
+            return rel
+        except Exception:
+            if standalone:
+                session.rollback()
+            raise
+        finally:
+            if standalone:
+                session.close()
+
+    def update_paragraph_type(self, paragraph_id: int, paragraph_type: str):
+        """Set the paragraph_type on an existing paragraph."""
+        session, standalone = self._get_session()
+        try:
+            paragraph = session.get(Paragraph, paragraph_id)
+            if paragraph:
+                paragraph.paragraph_type = paragraph_type
+                if standalone:
+                    session.commit()
+                else:
+                    session.flush()
+        except Exception:
+            if standalone:
+                session.rollback()
+            raise
+        finally:
+            if standalone:
+                session.close()

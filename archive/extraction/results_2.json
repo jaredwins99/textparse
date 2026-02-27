@@ -1,0 +1,667 @@
+{
+  "concepts": [
+    {
+      "name": "gauss-markov theorem",
+      "type": "theorem",
+      "description": "States that the least squares estimates of parameters have the smallest variance among all linear unbiased estimates.",
+      "quote": "The Gauss\u2013Markov theorem states that if we have any other linear estimator \u02dc\u03b8 = cT y that is unbiased for aT \u03b2, that is, E(cT y) = aT \u03b2, then Var(aT \u02c6\u03b2) \u2264Var(cT y).",
+      "paragraph_ids": [4670]
+    },
+    {
+      "name": "hat matrix",
+      "type": "technique",
+      "description": "The matrix H = X(XT X)^-1 XT that puts the hat on y by computing the orthogonal projection onto the column space of X.",
+      "quote": "The matrix H = X(XT X)\u22121XT appearing in equation (3.7) is sometimes called the \u201chat\u201d matrix because it puts the hat on y.",
+      "paragraph_ids": [4611]
+    },
+    {
+      "name": "orthogonal projection",
+      "type": "technique",
+      "description": "The projection of y onto the column space of X, minimizing the residual sum of squares.",
+      "quote": "We minimize RSS(\u03b2) = \u2225y \u2212X\u03b2\u22252 by choosing \u02c6\u03b2 so that the residual vector y \u2212\u02c6y is orthogonal to this subspace. This orthogonality is expressed in (3.5), and the resulting estimate \u02c6y is hence the orthogonal projection of y onto this subspace.",
+      "paragraph_ids": [4611]
+    },
+    {
+      "name": "qr decomposition",
+      "type": "technique",
+      "description": "A decomposition X = QR where Q is orthogonal and R is upper triangular, providing a numerically stable basis for solving least squares.",
+      "quote": "the so-called QR decomposition of X. Here Q is an N \u00d7 (p + 1) orthogonal matrix, QT Q = I, and R is a (p + 1) \u00d7 (p + 1) upper triangular matrix.",
+      "paragraph_ids": [4734]
+    },
+    {
+      "name": "gram-schmidt orthogonalization",
+      "type": "algorithm",
+      "description": "A procedure for constructing an orthogonal basis from a set of vectors by sequential orthogonalization.",
+      "quote": "Algorithm 3.1 is known as the Gram\u2013Schmidt procedure for multiple regression, and is also a useful numerical strategy for computing the estimates.",
+      "paragraph_ids": [4730]
+    },
+    {
+      "name": "best subset selection",
+      "type": "method",
+      "description": "For each k, finds the subset of size k that gives the smallest residual sum of squares.",
+      "quote": "Best subset regression \ufb01nds for each k \u2208{0, 1, 2, . . . , p} the subset of size k that gives smallest residual sum of squares (3.2).",
+      "paragraph_ids": [4767]
+    },
+    {
+      "name": "leaps and bounds procedure",
+      "type": "algorithm",
+      "description": "An efficient algorithm for best subset selection that makes it feasible for p as large as 30 or 40.",
+      "quote": "An e\ufb03cient algorithm\u2014the leaps and bounds procedure (Furnival and Wilson, 1974)\u2014makes this feasible for p as large as 30 or 40.",
+      "paragraph_ids": [4767]
+    },
+    {
+      "name": "forward stepwise selection",
+      "type": "method",
+      "description": "Starts with the intercept and sequentially adds the predictor that most improves the fit, producing a greedy nested sequence of models.",
+      "quote": "Forward-stepwise selection starts with the intercept, and then sequentially adds into the model the predictor that most improves the \ufb01t.",
+      "paragraph_ids": [4789]
+    },
+    {
+      "name": "backward stepwise selection",
+      "type": "method",
+      "description": "Starts with the full model and sequentially deletes the predictor with the smallest Z-score (least impact on fit).",
+      "quote": "Backward-stepwise selection starts with the full model, and sequentially deletes the predictor that has the least impact on the \ufb01t. The candidate for dropping is the variable with the smallest Z-score",
+      "paragraph_ids": [4799]
+    },
+    {
+      "name": "forward stagewise regression",
+      "type": "method",
+      "description": "Starts with all coefficients zero, identifies the variable most correlated with residual, computes simple linear regression coefficient of residual on that variable, and adds it to current coefficient without adjusting other variables.",
+      "quote": "At each step the algorithm identi\ufb01es the variable most correlated with the current residual. It then computes the simple linear regression coe\ufb03cient of the residual on this chosen variable, and then adds it to the current coe\ufb03cient for that variable.",
+      "paragraph_ids": [4803]
+    },
+    {
+      "name": "ridge regression",
+      "type": "method",
+      "description": "Shrinks regression coefficients by imposing an L2 penalty on their size, controlled by parameter lambda.",
+      "quote": "Ridge regression shrinks the regression coe\ufb03cients by imposing a penalty on their size. The ridge coe\ufb03cients minimize a penalized residual sum of squares",
+      "paragraph_ids": [4810, 4863]
+    },
+    {
+      "name": "weight decay",
+      "type": "technique",
+      "description": "The neural network name for L2 regularization penalty on parameters.",
+      "quote": "The idea of penalizing by the sum-of-squares of the parameters is also used in neural networks, where it is known as weight decay (Chapter 11).",
+      "paragraph_ids": [4863]
+    },
+    {
+      "name": "singular value decomposition",
+      "type": "technique",
+      "description": "A decomposition X = UDV^T where U and V are orthogonal matrices and D is diagonal, providing insight into variance structure of inputs.",
+      "quote": "The singular value decomposition (SVD) of the centered input matrix X gives us some additional insight into the nature of ridge regression.",
+      "paragraph_ids": [4880, 4912]
+    },
+    {
+      "name": "principal components",
+      "type": "technique",
+      "description": "The columns of UD from SVD, representing orthogonal directions of maximum variance in the input space.",
+      "quote": "The eigenvectors vj (columns of V) are also called the principal components (or Karhunen\u2013Loeve) directions of X.",
+      "paragraph_ids": [4922]
+    },
+    {
+      "name": "effective degrees of freedom",
+      "type": "metric",
+      "description": "For ridge regression, df(lambda) = sum of d_j^2/(d_j^2 + lambda), measuring the number of parameters effectively used in a regularized fit.",
+      "quote": "This monotone decreasing function of \u03bb is the e\ufb00ective degrees of freedom of the ridge regression \ufb01t.",
+      "paragraph_ids": [5106]
+    },
+    {
+      "name": "lasso",
+      "type": "method",
+      "description": "Shrinkage method using L1 penalty on coefficients, which can set some coefficients exactly to zero, performing continuous subset selection.",
+      "quote": "Because of the nature of the constraint, making t su\ufb03ciently small will cause some of the coe\ufb03cients to be exactly zero. Thus the lasso does a kind of continuous subset selection.",
+      "paragraph_ids": [5129]
+    },
+    {
+      "name": "basis pursuit",
+      "type": "method",
+      "description": "The signal processing name for the lasso method.",
+      "quote": "In the signal processing literature, the lasso is also known as basis pursuit (Chen et al., 1998).",
+      "paragraph_ids": [5118]
+    },
+    {
+      "name": "soft thresholding",
+      "type": "technique",
+      "description": "Lasso's coefficient shrinkage rule that translates each coefficient by a constant, truncating at zero.",
+      "quote": "Lasso translates each coe\ufb03cient by a constant factor \u03bb, truncating at zero. This is called \u201csoft thresholding,\u201d and is used in the context of wavelet-based smoothing",
+      "paragraph_ids": [5131]
+    },
+    {
+      "name": "hard thresholding",
+      "type": "technique",
+      "description": "Best subset selection's rule that drops all variables with coefficients smaller than the Mth largest.",
+      "quote": "Best-subset selection drops all variables with coe\ufb03cients smaller than the Mth largest; this is a form of \u201chard-thresholding.\u201d",
+      "paragraph_ids": [5131]
+    },
+    {
+      "name": "elastic net penalty",
+      "type": "technique",
+      "description": "A penalty combining L1 and L2 norms: alpha*beta^2 + (1-alpha)*|beta|, compromising between ridge and lasso.",
+      "quote": "Zou and Hastie (2005) introduced the elastic-net penalty... a di\ufb00erent compromise between ridge and lasso.",
+      "paragraph_ids": [5182, 5187]
+    },
+    {
+      "name": "least angle regression",
+      "type": "algorithm",
+      "description": "A democratic version of forward stepwise that enters 'as much' of a predictor as it deserves, moving coefficients toward least squares continuously while keeping correlations tied.",
+      "quote": "Least angle regression uses a similar strategy, but only enters \u201cas much\u201d of a predictor as it deserves. At the \ufb01rst step it identi\ufb01es the variable most correlated with the response. Rather than \ufb01t this variable completely, LAR moves the coe\ufb03cient of this variable continuously toward its least-squares value",
+      "paragraph_ids": [5189]
+    },
+    {
+      "name": "lar-lasso connection",
+      "type": "property",
+      "description": "LAR with a simple modification produces the entire lasso path: drop variables when their coefficients hit zero.",
+      "quote": "These observations lead to a simple modi\ufb01cation of the LAR algorithm that gives the entire lasso path, which is also piecewise-linear.",
+      "paragraph_ids": [5220, 5221]
+    },
+    {
+      "name": "homotopy algorithm",
+      "type": "algorithm",
+      "description": "An algorithm for computing piecewise-linear lasso path discovered by Osborne et al.",
+      "quote": "Osborne et al. (2000a) also discovered a piecewise-linear path for computing the lasso, which they called a homotopy algorithm.",
+      "paragraph_ids": [5223]
+    },
+    {
+      "name": "degrees of freedom for adaptive fit",
+      "type": "metric",
+      "description": "df(y-hat) = sum of Cov(y-hat_i, y_i) / sigma^2, measuring how hard a model fits the data.",
+      "quote": "We de\ufb01ne the degrees of freedom of the \ufb01tted vector \u02c6y = (\u02c6y1, \u02c6y2, . . . , \u02c6yN) as df(\u02c6y) = sum Cov(\u02c6yi, yi)/\u03c32. This makes intuitive sense: the harder that we \ufb01t to the data, the larger this covariance and hence df(\u02c6y).",
+      "paragraph_ids": [5240]
+    },
+    {
+      "name": "principal components regression",
+      "type": "method",
+      "description": "Forms derived inputs as principal components of X, then regresses y on the first M components.",
+      "quote": "Principal component regression forms the derived input columns zm = Xvm, and then regresses y on z1, z2, . . . , zM for some M \u2264p.",
+      "paragraph_ids": [5254]
+    },
+    {
+      "name": "partial least squares",
+      "type": "method",
+      "description": "Constructs linear combinations of inputs for regression using both X and y, weighting inputs by their univariate effect on y.",
+      "quote": "Like principal component regression, partial least squares (PLS) is not scale invariant, so we assume that each xj is standardized to have mean 0 and variance 1. PLS begins by computing \u02c6\u03d51j = \u27e8xj, y\u27e9for each j.",
+      "paragraph_ids": [5275]
+    },
+    {
+      "name": "canonical correlation analysis",
+      "type": "method",
+      "description": "Finds uncorrelated linear combinations of inputs and outputs with successively maximized correlations.",
+      "quote": "Similar to PCA, CCA \ufb01nds a sequence of uncorrelated linear combinations Xvm, m = 1, . . . , M of the xj, and a corresponding sequence of uncorrelated linear combinations Yum of the responses yk, such that the correlations are successively maximized.",
+      "paragraph_ids": [5326]
+    },
+    {
+      "name": "reduced-rank regression",
+      "type": "method",
+      "description": "Regression method that constrains coefficient matrix to have low rank, borrowing strength among multiple responses via CCA truncation.",
+      "quote": "Reduced-rank regression (Izenman, 1975; van der Merwe and Zidek, 1980) formalizes this approach in terms of a regression model that explicitly pools information.",
+      "paragraph_ids": [5328]
+    },
+    {
+      "name": "curds and whey",
+      "type": "method",
+      "description": "A shrinkage method for multiple outputs that shrinks canonical variates between X and Y, a smooth version of reduced rank regression.",
+      "quote": "Breiman and Friedman (1997) explored with some success shrinkage of the canonical variates between X and Y, a smooth version of reduced rank regression. Their proposal has the form... (the \u201cc+w\u201d stands for \u201cCurds and Whey,\u201d the name they gave to their procedure).",
+      "paragraph_ids": [5340, 5342]
+    },
+    {
+      "name": "incremental forward stagewise regression",
+      "type": "algorithm",
+      "description": "Forward stagewise with small step size epsilon, updating coefficient of most correlated variable by epsilon*sign(correlation) repeatedly.",
+      "quote": "It generates a coe\ufb03cient pro\ufb01le by repeatedly updating (by a small amount \u03f5) the coe\ufb03cient of the variable most correlated with the current residuals.",
+      "paragraph_ids": [5389]
+    },
+    {
+      "name": "infinitesimal forward stagewise regression",
+      "type": "algorithm",
+      "description": "The limiting procedure as step size epsilon approaches zero in incremental forward stagewise, also called FS0 or L2boost.",
+      "quote": "Letting \u03f5 \u21920 gives... We call this limiting procedure in\ufb01nitesimal forward stagewise regression or FS0.",
+      "paragraph_ids": [5389]
+    },
+    {
+      "name": "l2boost",
+      "type": "algorithm",
+      "description": "Another name for infinitesimal forward stagewise regression due to its connections to boosting.",
+      "quote": "B\u00a8uhlmann and Hothorn (2008) refer to the same procedure as \u201cL2boost\u201d, because of its connections to boosting.",
+      "paragraph_ids": [5389]
+    },
+    {
+      "name": "dantzig selector",
+      "type": "method",
+      "description": "Minimizes L1 norm of coefficients subject to maximum absolute correlation of residuals with predictors being bounded.",
+      "quote": "Candes and Tao (2007) proposed the following criterion: minimize ||\u03b2||1 subject to ||XT(y \u2212X\u03b2)||\u221e\u2264s. They call the solution the Dantzig selector (DS).",
+      "paragraph_ids": [5411, 5413]
+    },
+    {
+      "name": "grouped lasso",
+      "type": "method",
+      "description": "Lasso variant for pre-defined groups of predictors that encourages sparsity at both group and individual levels using group-wise L2 norms.",
+      "quote": "The grouped-lasso minimizes the convex criterion [with] sqrt(p_ell) terms accounts for the varying group sizes, and Euclidean norm. Since the Euclidean norm of a vector \u03b2\u2113is zero only if all of its components are zero, this procedure encourages sparsity at both the group and individual levels.",
+      "paragraph_ids": [5419, 5430]
+    },
+    {
+      "name": "relaxed lasso",
+      "type": "method",
+      "description": "Two-stage lasso: first run lasso to select predictors, then apply lasso again only to selected predictors with separate penalty parameter to reduce bias.",
+      "quote": "Alternatively, one can use the lasso to select the set of non-zero predictors, and then apply the lasso again, but using only the selected predictors from the \ufb01rst step. This is known as the relaxed lasso (Meinshausen, 2007).",
+      "paragraph_ids": [5436]
+    },
+    {
+      "name": "scad penalty",
+      "type": "technique",
+      "description": "Smoothly clipped absolute deviation penalty that shrinks large coefficients less severely than lasso to reduce bias.",
+      "quote": "one can modify the lasso penalty function so that larger coe\ufb03cients are shrunken less severely; the smoothly clipped absolute deviation (SCAD) penalty of Fan and Li (2005) replaces \u03bb|\u03b2| by Ja(\u03b2, \u03bb)",
+      "paragraph_ids": [5439, 5443]
+    },
+    {
+      "name": "adaptive lasso",
+      "type": "method",
+      "description": "Weighted lasso penalty using weights w_j = 1/|beta-hat_j|^nu from OLS, yielding consistent parameter estimates while maintaining convexity.",
+      "quote": "The adaptive lasso (Zou, 2006) uses a weighted penalty of the form sum w_j|\u03b2j| where wj = 1/|\u02c6\u03b2j|\u03bd, \u02c6\u03b2j is the ordinary least squares estimate and \u03bd > 0... yields consistent estimates of the parameters while retaining the attractive convexity property of the lasso.",
+      "paragraph_ids": [5454]
+    },
+    {
+      "name": "pathwise coordinate descent",
+      "type": "algorithm",
+      "description": "Algorithm for computing lasso solution by fixing penalty parameter and optimizing successively over each parameter while holding others fixed.",
+      "quote": "The idea is to \ufb01x the penalty parameter \u03bb in the Lagrangian form (3.52) and optimize successively over each parameter, holding the other parameters \ufb01xed at their current values.",
+      "paragraph_ids": [5456]
+    },
+    {
+      "name": "z-score for regression coefficients",
+      "type": "metric",
+      "description": "The standardized coefficient z_j = beta-hat_j / se(beta-hat_j) used for hypothesis testing, distributed as t_{N-p-1} under null hypothesis.",
+      "quote": "To test the hypothesis that a particular coe\ufb03cient \u03b2j = 0, we form the standardized coe\ufb03cient or Z-score z_j = \u02c6\u03b2j/sqrt(vj\u02c6\u03c32) where vj is the jth diagonal element of (XT X)\u22121.",
+      "paragraph_ids": [4636, 4638]
+    },
+    {
+      "name": "f-statistic for nested models",
+      "type": "metric",
+      "description": "Test statistic for comparing nested linear models, measuring change in RSS per additional parameter normalized by error variance estimate.",
+      "quote": "The F statistic measures the change in residual sum-of-squares per additional parameter in the bigger model, and it is normalized by an estimate of \u03c32.",
+      "paragraph_ids": [4641, 4643]
+    },
+    {
+      "name": "variance-covariance matrix of least squares estimates",
+      "type": "property",
+      "description": "Var(beta-hat) = (X^T X)^{-1} sigma^2, giving the sampling variability of parameter estimates.",
+      "quote": "The variance\u2013covariance matrix of the least squares parameter estimates is easily derived from (3.6) and is given by Var(\u02c6\u03b2) = (XT X)\u22121\u03c32.",
+      "paragraph_ids": [4613]
+    },
+    {
+      "name": "multiple regression coefficient interpretation",
+      "type": "property",
+      "description": "The jth coefficient represents the additional contribution of x_j on y after x_j has been adjusted for all other predictors.",
+      "quote": "The multiple regression coe\ufb03cient \u02c6\u03b2j represents the additional contribution of xj on y, after xj has been adjusted for x0, x1, . . . , xj\u22121, xj+1, . . . , xp.",
+      "paragraph_ids": [4725]
+    },
+    {
+      "name": "multicollinearity",
+      "type": "property",
+      "description": "When predictors are highly correlated, coefficients become unstable with high variance, as small residual vectors lead to imprecise estimates.",
+      "quote": "If xp is highly correlated with some of the other xk\u2019s, the residual vector zp will be close to zero, and from (3.28) the coe\ufb03cient \u02c6\u03b2p will be very unstable.",
+      "paragraph_ids": [4726]
+    },
+    {
+      "name": "bias-variance tradeoff in model selection",
+      "type": "property",
+      "description": "Shrinkage and selection methods sacrifice some bias to reduce variance, potentially improving overall prediction accuracy.",
+      "quote": "Prediction accuracy can sometimes be improved by shrinking or setting some coe\ufb03cients to zero. By doing so we sacri\ufb01ce a little bit of bias to reduce the variance of the predicted values, and hence may improve the overall prediction accuracy.",
+      "paragraph_ids": [4763]
+    },
+    {
+      "name": "mean squared error decomposition",
+      "type": "property",
+      "description": "MSE = variance + (bias)^2, showing tradeoff between variance and bias in estimation.",
+      "quote": "MSE(\u02dc\u03b8) = E[(\u02dc\u03b8 \u2212\u03b8)2] = Var(\u02dc\u03b8) + [E(\u02dc\u03b8) \u2212\u03b8]2. The \ufb01rst term is the variance, while the second term is the squared bias.",
+      "paragraph_ids": [4676]
+    },
+    {
+      "name": "aic criterion",
+      "type": "metric",
+      "description": "A criterion for model selection that accounts for the number of parameters fit, used to choose tuning parameters.",
+      "quote": "cross-validation to estimate prediction error and select k; the AIC criterion is a popular alternative.",
+      "paragraph_ids": [4787]
+    },
+    {
+      "name": "universal approximator",
+      "type": "property",
+      "description": "A class of models that can approximate any continuous function arbitrarily well (e.g., projection pursuit regression with enough terms).",
+      "quote": "In fact, if M is taken arbitrarily large, for appropriate choice of gm the PPR model can approximate any continuous function in IRp arbitrarily well. Such a class of models is called a universal approximator.",
+      "paragraph_ids": [5172]
+    },
+    {
+      "name": "l1 arc length",
+      "type": "metric",
+      "description": "The total L1 distance traveled along a coefficient path, summing L1 norms of coefficient changes at each step.",
+      "quote": "The L1 arc-length of a di\ufb00erentiable curve \u03b2(s) for s \u2208[0, S] is given by TV(\u03b2, S) = integral || dot-beta(s)||1 ds. For the piecewise-linear LAR coe\ufb03cient pro\ufb01le, this amounts to summing the L1 norms of the changes in coe\ufb03cients from step to step.",
+      "paragraph_ids": [5201]
+    },
+    {
+      "name": "piecewise-linear solution path",
+      "type": "property",
+      "description": "Property of LAR and lasso where coefficient profiles are piecewise linear as tuning parameter varies, enabling efficient computation.",
+      "quote": "By construction the coe\ufb03cients in LAR change in a piecewise linear fashion.",
+      "paragraph_ids": [5200]
+    }
+  ],
+  "relationships": [
+    {
+      "source": "gauss-markov theorem",
+      "target": "ridge regression",
+      "type": "contrasts_with",
+      "quote": "The Gauss-Markov theorem implies that the least squares estimator has the smallest mean squared error of all linear estimators with no bias. However, there may well exist a biased estimator with smaller mean squared error."
+    },
+    {
+      "source": "hat matrix",
+      "target": "orthogonal projection",
+      "type": "equivalent_to",
+      "quote": "The hat matrix H computes the orthogonal projection, and hence it is also known as a projection matrix."
+    },
+    {
+      "source": "qr decomposition",
+      "target": "gram-schmidt orthogonalization",
+      "type": "equivalent_to",
+      "quote": "Algorithm 3.1 is known as the Gram\u2013Schmidt procedure for multiple regression... Introducing the diagonal matrix D with jth diagonal entry Djj = \u2225zj\u2225, we get the so-called QR decomposition of X."
+    },
+    {
+      "source": "forward stepwise selection",
+      "target": "best subset selection",
+      "type": "contrasts_with",
+      "quote": "Forward-stepwise selection is a greedy algorithm, producing a nested sequence of models. In this sense it might seem sub-optimal compared to best-subset selection."
+    },
+    {
+      "source": "backward stepwise selection",
+      "target": "forward stepwise selection",
+      "type": "contrasts_with",
+      "quote": "Backward selection can only be used when N > p, while forward stepwise can always be used."
+    },
+    {
+      "source": "forward stagewise regression",
+      "target": "forward stepwise selection",
+      "type": "contrasts_with",
+      "quote": "Forward-stagewise regression (FS) is even more constrained than forward-stepwise regression... Unlike forward-stepwise regression, none of the other variables are adjusted when a term is added to the model."
+    },
+    {
+      "source": "ridge regression",
+      "target": "weight decay",
+      "type": "equivalent_to",
+      "quote": "The idea of penalizing by the sum-of-squares of the parameters is also used in neural networks, where it is known as weight decay"
+    },
+    {
+      "source": "ridge regression",
+      "target": "singular value decomposition",
+      "type": "uses",
+      "quote": "The singular value decomposition (SVD) of the centered input matrix X gives us some additional insight into the nature of ridge regression."
+    },
+    {
+      "source": "principal components",
+      "target": "singular value decomposition",
+      "type": "uses",
+      "quote": "The SVD of the centered matrix X is another way of expressing the principal components of the variables in X."
+    },
+    {
+      "source": "ridge regression",
+      "target": "principal components",
+      "type": "uses",
+      "quote": "Like linear regression, ridge regression computes the coordinates of y with respect to the orthonormal basis U. It then shrinks these coordinates by the factors d2j/(d2j + \u03bb)."
+    },
+    {
+      "source": "lasso",
+      "target": "basis pursuit",
+      "type": "equivalent_to",
+      "quote": "In the signal processing literature, the lasso is also known as basis pursuit"
+    },
+    {
+      "source": "lasso",
+      "target": "ridge regression",
+      "type": "contrasts_with",
+      "quote": "The lasso is a shrinkage method like ridge, with subtle but important differences... the L2 ridge penalty is replaced by the L1 lasso penalty"
+    },
+    {
+      "source": "soft thresholding",
+      "target": "lasso",
+      "type": "example_of",
+      "quote": "Lasso translates each coe\ufb03cient by a constant factor \u03bb, truncating at zero. This is called \u201csoft thresholding\u201d"
+    },
+    {
+      "source": "hard thresholding",
+      "target": "best subset selection",
+      "type": "example_of",
+      "quote": "Best-subset selection drops all variables with coe\ufb03cients smaller than the Mth largest; this is a form of \u201chard-thresholding.\u201d"
+    },
+    {
+      "source": "elastic net penalty",
+      "target": "lasso",
+      "type": "generalizes",
+      "quote": "Zou and Hastie (2005) introduced the elastic-net penalty... a di\ufb00erent compromise between ridge and lasso."
+    },
+    {
+      "source": "elastic net penalty",
+      "target": "ridge regression",
+      "type": "generalizes",
+      "quote": "The elastic-net selects variables like the lasso, and shrinks together the coe\ufb03cients of correlated predictors like ridge."
+    },
+    {
+      "source": "least angle regression",
+      "target": "forward stepwise selection",
+      "type": "generalizes",
+      "quote": "Least angle regression (LAR) is a relative newcomer (Efron et al., 2004), and can be viewed as a kind of \u201cdemocratic\u201d version of forward stepwise regression"
+    },
+    {
+      "source": "least angle regression",
+      "target": "lasso",
+      "type": "uses",
+      "quote": "LAR is intimately connected with the lasso, and in fact provides an extremely e\ufb03cient algorithm for computing the entire lasso path"
+    },
+    {
+      "source": "lar-lasso connection",
+      "target": "least angle regression",
+      "type": "uses",
+      "quote": "These observations lead to a simple modi\ufb01cation of the LAR algorithm that gives the entire lasso path"
+    },
+    {
+      "source": "homotopy algorithm",
+      "target": "lasso",
+      "type": "uses",
+      "quote": "Osborne et al. (2000a) also discovered a piecewise-linear path for computing the lasso, which they called a homotopy algorithm."
+    },
+    {
+      "source": "principal components regression",
+      "target": "principal components",
+      "type": "uses",
+      "quote": "Principal component regression forms the derived input columns zm = Xvm, and then regresses y on z1, z2, . . . , zM"
+    },
+    {
+      "source": "principal components regression",
+      "target": "ridge regression",
+      "type": "contrasts_with",
+      "quote": "We see that principal components regression is very similar to ridge regression: both operate via the principal components of the input matrix. Ridge regression shrinks the coe\ufb03cients of the principal components... principal components regression discards the p \u2212M smallest eigenvalue components."
+    },
+    {
+      "source": "partial least squares",
+      "target": "principal components regression",
+      "type": "contrasts_with",
+      "quote": "Like principal component regression, partial least squares (PLS) is not scale invariant... unlike principal components regression it uses y (in addition to X) for this construction."
+    },
+    {
+      "source": "partial least squares",
+      "target": "ridge regression",
+      "type": "contrasts_with",
+      "quote": "Further analysis reveals that the variance aspect tends to dominate, and so partial least squares behaves much like ridge regression and principal components regression."
+    },
+    {
+      "source": "canonical correlation analysis",
+      "target": "principal components regression",
+      "type": "contrasts_with",
+      "quote": "Similar to PCA, CCA \ufb01nds a sequence of uncorrelated linear combinations... The leading canonical response variates are those linear combinations (derived responses) best predicted by the xj"
+    },
+    {
+      "source": "reduced-rank regression",
+      "target": "canonical correlation analysis",
+      "type": "uses",
+      "quote": "one can show (Exercise 3.21) that the solution is given by a CCA of Y and X"
+    },
+    {
+      "source": "curds and whey",
+      "target": "reduced-rank regression",
+      "type": "generalizes",
+      "quote": "Breiman and Friedman (1997) explored with some success shrinkage of the canonical variates between X and Y, a smooth version of reduced rank regression."
+    },
+    {
+      "source": "incremental forward stagewise regression",
+      "target": "forward stagewise regression",
+      "type": "generalizes",
+      "quote": "Consider the linear-regression version of the forward-stagewise boosting algorithm 16.1... It generates a coe\ufb03cient pro\ufb01le by repeatedly updating (by a small amount \u03f5) the coe\ufb03cient"
+    },
+    {
+      "source": "infinitesimal forward stagewise regression",
+      "target": "incremental forward stagewise regression",
+      "type": "special_case_of",
+      "quote": "Letting \u03f5 \u21920 gives the right panel of Figure 3.19... We call this limiting procedure in\ufb01nitesimal forward stagewise regression or FS0."
+    },
+    {
+      "source": "l2boost",
+      "target": "infinitesimal forward stagewise regression",
+      "type": "equivalent_to",
+      "quote": "B\u00a8uhlmann and Hothorn (2008) refer to the same procedure as \u201cL2boost\u201d, because of its connections to boosting."
+    },
+    {
+      "source": "infinitesimal forward stagewise regression",
+      "target": "lasso",
+      "type": "contrasts_with",
+      "quote": "Since FS0 is di\ufb00erent from the lasso, it is natural to ask if it optimizes a criterion... While the lasso makes optimal progress in terms of reducing the residual sum-of-squares per unit increase in L1-norm of the coe\ufb03cient vector \u03b2, FS0 is optimal per unit increase in L1 arc-length traveled along the coe\ufb03cient path."
+    },
+    {
+      "source": "dantzig selector",
+      "target": "lasso",
+      "type": "contrasts_with",
+      "quote": "In this form it resembles the lasso, replacing squared error loss by the maximum absolute value of its gradient... for smaller values of t, the DS procedure produces a di\ufb00erent path of solutions than the lasso."
+    },
+    {
+      "source": "grouped lasso",
+      "target": "lasso",
+      "type": "generalizes",
+      "quote": "The grouped lasso is one way to achieve this... Since the Euclidean norm of a vector \u03b2\u2113is zero only if all of its components are zero, this procedure encourages sparsity at both the group and individual levels."
+    },
+    {
+      "source": "relaxed lasso",
+      "target": "lasso",
+      "type": "uses",
+      "quote": "one can use the lasso to select the set of non-zero predictors, and then apply the lasso again, but using only the selected predictors from the \ufb01rst step. This is known as the relaxed lasso"
+    },
+    {
+      "source": "scad penalty",
+      "target": "lasso",
+      "type": "generalizes",
+      "quote": "one can modify the lasso penalty function so that larger coe\ufb03cients are shrunken less severely; the smoothly clipped absolute deviation (SCAD) penalty of Fan and Li (2005) replaces \u03bb|\u03b2| by Ja(\u03b2, \u03bb)"
+    },
+    {
+      "source": "adaptive lasso",
+      "target": "lasso",
+      "type": "generalizes",
+      "quote": "The adaptive lasso (Zou, 2006) uses a weighted penalty of the form sum w_j|\u03b2j|... This is a practical approximation to the |\u03b2|q penalties"
+    },
+    {
+      "source": "pathwise coordinate descent",
+      "target": "lasso",
+      "type": "uses",
+      "quote": "An alternate approach to the LARS algorithm for computing the lasso solution is simple coordinate descent."
+    },
+    {
+      "source": "pathwise coordinate descent",
+      "target": "least angle regression",
+      "type": "contrasts_with",
+      "quote": "An alternate approach to the LARS algorithm for computing the lasso solution is simple coordinate descent."
+    },
+    {
+      "source": "bias-variance tradeoff in model selection",
+      "target": "ridge regression",
+      "type": "uses",
+      "quote": "By doing so we sacri\ufb01ce a little bit of bias to reduce the variance of the predicted values... biased estimates such as ridge regression later in the chapter."
+    },
+    {
+      "source": "bias-variance tradeoff in model selection",
+      "target": "lasso",
+      "type": "uses",
+      "quote": "By doing so we sacri\ufb01ce a little bit of bias to reduce the variance of the predicted values... The lasso falls somewhere between ridge regression and best subset regression"
+    },
+    {
+      "source": "mean squared error decomposition",
+      "target": "bias-variance tradeoff in model selection",
+      "type": "prerequisite",
+      "quote": "MSE(\u02dc\u03b8) = Var(\u02dc\u03b8) + [E(\u02dc\u03b8) \u2212\u03b8]2. The \ufb01rst term is the variance, while the second term is the squared bias."
+    },
+    {
+      "source": "effective degrees of freedom",
+      "target": "ridge regression",
+      "type": "uses",
+      "quote": "This monotone decreasing function of \u03bb is the e\ufb00ective degrees of freedom of the ridge regression \ufb01t."
+    },
+    {
+      "source": "degrees of freedom for adaptive fit",
+      "target": "effective degrees of freedom",
+      "type": "generalizes",
+      "quote": "We need a more general de\ufb01nition for the e\ufb00ective degrees of freedom of an adaptively \ufb01tted model. We de\ufb01ne the degrees of freedom of the \ufb01tted vector"
+    },
+    {
+      "source": "degrees of freedom for adaptive fit",
+      "target": "lasso",
+      "type": "uses",
+      "quote": "for the lasso, at any stage df(\u02c6y) approximately equals the number of predictors in the model."
+    },
+    {
+      "source": "degrees of freedom for adaptive fit",
+      "target": "least angle regression",
+      "type": "uses",
+      "quote": "For LAR and lasso, something magical happens... it can be shown that after the kth step of the LAR procedure, the e\ufb00ective degrees of freedom of the \ufb01t vector is exactly k."
+    },
+    {
+      "source": "multicollinearity",
+      "target": "ridge regression",
+      "type": "uses",
+      "quote": "When there are many correlated variables in a linear regression model, their coe\ufb03cients can become poorly determined and exhibit high variance... By imposing a size constraint on the coe\ufb03cients, as in (3.42), this problem is alleviated."
+    },
+    {
+      "source": "leaps and bounds procedure",
+      "target": "best subset selection",
+      "type": "uses",
+      "quote": "An e\ufb03cient algorithm\u2014the leaps and bounds procedure (Furnival and Wilson, 1974)\u2014makes this feasible for p as large as 30 or 40."
+    },
+    {
+      "source": "f-statistic for nested models",
+      "target": "z-score for regression coefficients",
+      "type": "generalizes",
+      "quote": "It can be shown (Exercise 3.1) that the zj in (3.12) are equivalent to the F statistic for dropping the single coe\ufb03cient \u03b2j from the model."
+    },
+    {
+      "source": "piecewise-linear solution path",
+      "target": "least angle regression",
+      "type": "uses",
+      "quote": "By construction the coe\ufb03cients in LAR change in a piecewise linear fashion."
+    },
+    {
+      "source": "piecewise-linear solution path",
+      "target": "lasso",
+      "type": "uses",
+      "quote": "These observations lead to a simple modi\ufb01cation of the LAR algorithm that gives the entire lasso path, which is also piecewise-linear."
+    },
+    {
+      "source": "l1 arc length",
+      "target": "least angle regression",
+      "type": "uses",
+      "quote": "For the piecewise-linear LAR coe\ufb03cient pro\ufb01le, this amounts to summing the L1 norms of the changes in coe\ufb03cients from step to step."
+    },
+    {
+      "source": "l1 arc length",
+      "target": "infinitesimal forward stagewise regression",
+      "type": "uses",
+      "quote": "While the lasso makes optimal progress in terms of reducing the residual sum-of-squares per unit increase in L1-norm of the coe\ufb03cient vector \u03b2, FS0 is optimal per unit increase in L1 arc-length traveled along the coe\ufb03cient path."
+    },
+    {
+      "source": "aic criterion",
+      "target": "best subset selection",
+      "type": "uses",
+      "quote": "The question of how to choose k involves the tradeo\ufb00between bias and variance... cross-validation to estimate prediction error and select k; the AIC criterion is a popular alternative."
+    }
+  ]
+}

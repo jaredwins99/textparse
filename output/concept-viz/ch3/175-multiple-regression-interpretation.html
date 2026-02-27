@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multiple Regression Coefficient Interpretation — ESL §3.2.3</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f1117; color: #e0e0e0; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  .header { background: #1a1d27; border-bottom: 1px solid #2a2d3e; padding: 24px 32px; }
+  .header-meta { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .header-meta span { color: #818cf8; }
+  h1 { font-size: 22px; font-weight: 600; color: #f0f0f8; margin-bottom: 10px; }
+  .subtitle { font-size: 14px; color: #6b7280; margin-top: 6px; }
+  .main { display: grid; grid-template-columns: 1fr 340px; gap: 20px; padding: 24px 32px; max-width: 1400px; }
+  .viz-col { display: flex; flex-direction: column; gap: 16px; }
+  .viz-panel { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 10px; padding: 20px; }
+  .viz-title { font-size: 13px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+  .tab-row { display: flex; gap: 8px; margin-bottom: 16px; }
+  .tab { background: #12151f; border: 1px solid #2a2d3e; border-radius: 6px; padding: 7px 16px; font-size: 13px; color: #6b7280; cursor: pointer; transition: all 0.15s; }
+  .tab.active { background: #818cf8; border-color: #818cf8; color: #fff; }
+  .tab:hover:not(.active) { border-color: #818cf8; color: #818cf8; }
+  .side-panels { display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: #1a1d27; border: 1px solid #2a2d3e; border-radius: 10px; padding: 18px; }
+  .panel-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #2a2d3e; }
+  .facts .panel-title { color: #34d399; }
+  .guarantees .panel-title { color: #f59e0b; }
+  .related .panel-title { color: #818cf8; }
+  blockquote { font-style: italic; color: #9ca3af; font-size: 13px; line-height: 1.6; border-left: 2px solid #34d399; padding-left: 12px; margin: 0; }
+  .cite { font-style: normal; color: #6b7280; font-size: 11px; margin-top: 6px; display: block; }
+  .guarantee-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+  .badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px; }
+  .badge-yes { background: #064e3b; color: #34d399; }
+  .badge-no { background: #450a0a; color: #f87171; }
+  .badge-cond { background: #451a03; color: #fb923c; }
+  .related-list { list-style: none; }
+  .related-list li { font-size: 13px; color: #9ca3af; padding: 4px 0; border-bottom: 1px solid #1f2937; }
+  .related-list li:last-child { border-bottom: none; }
+  .related-list a { color: #818cf8; text-decoration: none; }
+  .related-list a:hover { text-decoration: underline; }
+  .controls { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; }
+  label { font-size: 13px; color: #9ca3af; }
+  input[type=range] { accent-color: #818cf8; width: 120px; }
+  .val-display { font-size: 13px; color: #e0e0e0; font-weight: 600; min-width: 40px; }
+  .plots-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .beta-readout { background: #12151f; border: 1px solid #2a2d3e; border-radius: 8px; padding: 12px 16px; display: flex; gap: 28px; flex-wrap: wrap; margin-bottom: 14px; }
+  .beta-item { text-align: center; }
+  .beta-label { font-size: 11px; color: #6b7280; margin-bottom: 4px; }
+  .beta-val { font-size: 16px; font-weight: 700; color: #34d399; }
+  .note { font-size: 12px; color: #6b7280; margin-top: 8px; line-height: 1.6; }
+  .algo-box { background: #12151f; border: 1px solid #2a2d3e; border-left: 3px solid #f59e0b; border-radius: 6px; padding: 12px 16px; font-size: 13px; color: #9ca3af; line-height: 1.7; }
+  .algo-box .step { color: #f59e0b; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-meta">ESL <span>§3.2.3</span> · ID 175 · Category: <span>Principles / Guarantees</span></div>
+  <h1>Multiple Regression Coefficient Interpretation</h1>
+  <div class="subtitle">β̂ⱼ = additional contribution of xⱼ on y, after adjusting for all other predictors</div>
+</div>
+
+<div class="main">
+  <div class="viz-col">
+    <div class="viz-panel">
+      <div class="viz-title">Original vs Residualized Scatter — Gram-Schmidt Intuition</div>
+
+      <div class="tab-row">
+        <div class="tab active" id="tab-orig" onclick="setTab('orig')">Original x₁ vs y</div>
+        <div class="tab" id="tab-resid" onclick="setTab('resid')">Residualized: x₁⊥ vs y⊥</div>
+        <div class="tab" id="tab-both" onclick="setTab('both')">Both overlaid</div>
+      </div>
+
+      <div class="controls">
+        <label>Correlation x₁,x₂: ρ =
+          <input type="range" id="rhoSlider" min="-0.95" max="0.95" step="0.05" value="0.6">
+          <span class="val-display" id="rhoVal">0.60</span>
+        </label>
+        <label>β₁ (true):
+          <input type="range" id="beta1Slider" min="-2" max="2" step="0.1" value="1.2">
+          <span class="val-display" id="beta1Val">1.20</span>
+        </label>
+        <label>β₂ (true):
+          <input type="range" id="beta2Slider" min="-2" max="2" step="0.1" value="0.5">
+          <span class="val-display" id="beta2Val">0.50</span>
+        </label>
+      </div>
+
+      <div class="beta-readout">
+        <div class="beta-item">
+          <div class="beta-label">Simple β̂₁ (ignoring x₂)</div>
+          <div class="beta-val" id="simpleB1">—</div>
+        </div>
+        <div class="beta-item">
+          <div class="beta-label">Multiple β̂₁ (adjusted for x₂)</div>
+          <div class="beta-val" id="multipleB1" style="color:#818cf8;">—</div>
+        </div>
+        <div class="beta-item">
+          <div class="beta-label">Difference</div>
+          <div class="beta-val" id="diffB1" style="color:#f59e0b;">—</div>
+        </div>
+        <div class="beta-item">
+          <div class="beta-label">True β₁</div>
+          <div class="beta-val" id="trueB1" style="color:#6b7280;">—</div>
+        </div>
+      </div>
+
+      <div id="scatterplot" style="width:100%;height:380px;"></div>
+
+      <div class="note">
+        <b>Left scatter</b>: raw x₁ vs y — slope confounded by x₂.
+        <b>Right scatter (residualized)</b>: regress x₁ on x₂, take residuals z₁ = x₁ − x̂₁; regress y on x₂, take residuals r = y − ŷ. The slope of r on z₁ equals the multiple regression β̂₁ exactly.
+      </div>
+    </div>
+
+    <div class="viz-panel">
+      <div class="algo-box">
+        <div style="color:#f59e0b;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Gram-Schmidt / Orthogonalization Algorithm (ESL §3.2.3)</div>
+        <div><span class="step">Step 1:</span> Regress x₁ on [1]: z₁ = x₁ − γ₁₀·1</div>
+        <div><span class="step">Step 2:</span> Regress x₂ on [1, z₁]: z₂ = x₂ − γ₂₀·1 − γ₂₁·z₁</div>
+        <div><span class="step">Step p:</span> Regress xₚ on [1, z₁, ..., z_{p-1}]: zₚ = xₚ − Σγⱼ·zⱼ</div>
+        <div><span class="step">Final:</span> β̂ₚ = ⟨zₚ, y⟩ / ⟨zₚ, zₚ⟩</div>
+        <div style="margin-top:8px;font-size:12px;color:#6b7280;">The residual zₚ is orthogonal to all previous zⱼ, so β̂ₚ is the unique contribution of xₚ after removing all other predictors' influence.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="side-panels">
+    <div class="panel facts">
+      <div class="panel-title">Book Quotes</div>
+      <blockquote>
+        "The multiple regression coefficient β̂_j represents the additional contribution of x_j on y, after x_j has been adjusted for all other predictors."
+        <span class="cite">— ESL §3.2.3</span>
+      </blockquote>
+      <blockquote style="margin-top:12px;">
+        "If x_p is orthogonal to the other predictors, then it has no effect on them, and the least squares coefficient of x_p is the same as the simple linear regression coefficient."
+        <span class="cite">— ESL §3.2.3</span>
+      </blockquote>
+    </div>
+
+    <div class="panel guarantees">
+      <div class="panel-title">Statistical Properties</div>
+      <div class="guarantee-row"><span class="badge badge-yes">YES</span> Causal interpretation only with RCT</div>
+      <div class="guarantee-row"><span class="badge badge-yes">YES</span> Partial correlation interpretation</div>
+      <div class="guarantee-row"><span class="badge badge-no">WARN</span> Simple ≠ multiple when predictors correlated</div>
+      <div class="guarantee-row"><span class="badge badge-cond">NOTE</span> Order-independent (unlike forward selection)</div>
+      <div style="margin-top:10px;font-size:12px;color:#6b7280;line-height:1.6;">
+        Simple regression β̂₁ = ρ_{xy}·(σy/σx). Multiple regression β̂₁ adjusts for shared variance with other predictors. The gap between them grows with predictor correlation.
+      </div>
+    </div>
+
+    <div class="panel related">
+      <div class="panel-title">Related Concepts</div>
+      <ul class="related-list">
+        <li><a href="176-multicollinearity.html">Multicollinearity (ID 176)</a></li>
+        <li><a href="174-var-cov-matrix.html">Var-covariance matrix (ID 174)</a></li>
+        <li>QR decomposition of X</li>
+        <li>Partial regression plots</li>
+        <li>Added variable plots</li>
+        <li>Frisch-Waugh-Lovell theorem</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentTab = 'orig';
+function setTab(t) {
+  currentTab = t;
+  ['orig','resid','both'].forEach(id => {
+    document.getElementById('tab-' + id).classList.toggle('active', id === t);
+  });
+  update();
+}
+
+// Generate data
+function generateData(rho, beta1, beta2, N = 120) {
+  // x1, x2 correlated with rho
+  const x1 = [], x2 = [], y = [];
+  for (let i = 0; i < N; i++) {
+    const u = randn(), v = randn();
+    const a = u;
+    const b = rho * u + Math.sqrt(1 - rho*rho) * v;
+    x1.push(a);
+    x2.push(b);
+    y.push(beta1 * a + beta2 * b + 0.7 * randn());
+  }
+  return { x1, x2, y };
+}
+
+let rng = 42;
+function randn() {
+  // Box-Muller
+  rng = (rng * 1664525 + 1013904223) & 0xffffffff;
+  const u1 = ((rng >>> 0) / 0xffffffff);
+  rng = (rng * 1664525 + 1013904223) & 0xffffffff;
+  const u2 = ((rng >>> 0) / 0xffffffff);
+  return Math.sqrt(-2 * Math.log(u1 + 1e-10)) * Math.cos(2 * Math.PI * u2);
+}
+
+function linearReg(x, y) {
+  const n = x.length;
+  const mx = x.reduce((a,b) => a+b, 0) / n;
+  const my = y.reduce((a,b) => a+b, 0) / n;
+  let sxy = 0, sxx = 0;
+  for (let i = 0; i < n; i++) { sxy += (x[i]-mx)*(y[i]-my); sxx += (x[i]-mx)**2; }
+  const beta = sxy / sxx;
+  const alpha = my - beta * mx;
+  const resids = y.map((yi, i) => yi - alpha - beta * x[i]);
+  return { beta, alpha, resids };
+}
+
+function buildPlot(rho, beta1, beta2) {
+  rng = 42;
+  const { x1, x2, y } = generateData(rho, beta1, beta2, 120);
+
+  // Simple regression of y on x1
+  const simpleReg = linearReg(x1, y);
+
+  // Multiple regression: regress out x2 from x1 and y
+  const reg1on2 = linearReg(x2, x1);
+  const z1 = reg1on2.resids; // x1 orthogonalized to x2
+
+  const regYon2 = linearReg(x2, y);
+  const ry = regYon2.resids; // y orthogonalized to x2
+
+  const multipleReg = linearReg(z1, ry);
+
+  document.getElementById('simpleB1').textContent   = simpleReg.beta.toFixed(3);
+  document.getElementById('multipleB1').textContent = multipleReg.beta.toFixed(3);
+  document.getElementById('diffB1').textContent     = (simpleReg.beta - multipleReg.beta).toFixed(3);
+  document.getElementById('trueB1').textContent     = beta1.toFixed(2);
+
+  const xRange = [Math.min(...x1), Math.max(...x1)];
+  const zRange = [Math.min(...z1), Math.max(...z1)];
+
+  const fitLineOrig = {
+    x: xRange,
+    y: xRange.map(xi => simpleReg.alpha + simpleReg.beta * xi),
+    mode: 'lines', type: 'scatter', name: `Simple slope = ${simpleReg.beta.toFixed(2)}`,
+    line: { color: '#f59e0b', width: 2 }, showlegend: true
+  };
+  const fitLineResid = {
+    x: zRange,
+    y: zRange.map(zi => multipleReg.alpha + multipleReg.beta * zi),
+    mode: 'lines', type: 'scatter', name: `Multiple slope = ${multipleReg.beta.toFixed(2)}`,
+    line: { color: '#818cf8', width: 2 }, showlegend: true
+  };
+  const scatterOrig = {
+    x: x1, y: y, mode: 'markers', type: 'scatter', name: 'Original data',
+    marker: { color: 'rgba(245,158,11,0.4)', size: 6, line: { color: '#f59e0b', width: 0.5 } }
+  };
+  const scatterResid = {
+    x: z1, y: ry, mode: 'markers', type: 'scatter', name: 'Residualized data',
+    marker: { color: 'rgba(129,140,248,0.4)', size: 6, line: { color: '#818cf8', width: 0.5 } }
+  };
+
+  let traces = [];
+  let xTitle = '', yTitle = '';
+
+  if (currentTab === 'orig') {
+    traces = [scatterOrig, fitLineOrig];
+    xTitle = 'x₁ (raw)'; yTitle = 'y';
+  } else if (currentTab === 'resid') {
+    traces = [scatterResid, fitLineResid];
+    xTitle = 'z₁ = x₁ − x̂₁|x₂ (residualized)'; yTitle = 'r = y − ŷ|x₂ (residualized)';
+  } else {
+    traces = [
+      {...scatterOrig, xaxis: 'x', yaxis: 'y'},
+      {...fitLineOrig, xaxis: 'x', yaxis: 'y'},
+      {...scatterResid, xaxis: 'x2', yaxis: 'y2'},
+      {...fitLineResid, xaxis: 'x2', yaxis: 'y2'}
+    ];
+  }
+
+  let layout;
+  if (currentTab === 'both') {
+    layout = {
+      paper_bgcolor: '#1a1d27', plot_bgcolor: '#12151f',
+      font: { color: '#e0e0e0', family: 'Segoe UI, system-ui, sans-serif' },
+      grid: { rows: 1, columns: 2, pattern: 'independent' },
+      xaxis:  { title: 'x₁ (raw)', gridcolor: '#2a2d3e', color: '#9ca3af' },
+      yaxis:  { title: 'y', gridcolor: '#2a2d3e', color: '#9ca3af' },
+      xaxis2: { title: 'z₁ (residualized)', gridcolor: '#2a2d3e', color: '#9ca3af' },
+      yaxis2: { title: 'r (residualized y)', gridcolor: '#2a2d3e', color: '#9ca3af' },
+      margin: { l: 55, r: 20, t: 20, b: 60 },
+      legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(0,0,0,0)', font: { size: 11 } },
+      hoverlabel: { bgcolor: '#1a1d27', bordercolor: '#2a2d3e', font: { color: '#e0e0e0' } }
+    };
+  } else {
+    layout = {
+      paper_bgcolor: '#1a1d27', plot_bgcolor: '#12151f',
+      font: { color: '#e0e0e0', family: 'Segoe UI, system-ui, sans-serif' },
+      xaxis: { title: xTitle, gridcolor: '#2a2d3e', color: '#9ca3af' },
+      yaxis: { title: yTitle, gridcolor: '#2a2d3e', color: '#9ca3af' },
+      margin: { l: 55, r: 20, t: 20, b: 60 },
+      legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(0,0,0,0)', font: { size: 11 } },
+      hoverlabel: { bgcolor: '#1a1d27', bordercolor: '#2a2d3e', font: { color: '#e0e0e0' } }
+    };
+  }
+
+  Plotly.react('scatterplot', traces, layout, { responsive: true, displayModeBar: false });
+}
+
+const rhoSlider   = document.getElementById('rhoSlider');
+const beta1Slider = document.getElementById('beta1Slider');
+const beta2Slider = document.getElementById('beta2Slider');
+
+function update() {
+  const rho   = parseFloat(rhoSlider.value);
+  const beta1 = parseFloat(beta1Slider.value);
+  const beta2 = parseFloat(beta2Slider.value);
+  document.getElementById('rhoVal').textContent   = rho.toFixed(2);
+  document.getElementById('beta1Val').textContent = beta1.toFixed(2);
+  document.getElementById('beta2Val').textContent = beta2.toFixed(2);
+  buildPlot(rho, beta1, beta2);
+}
+
+rhoSlider.addEventListener('input', update);
+beta1Slider.addEventListener('input', update);
+beta2Slider.addEventListener('input', update);
+update();
+</script>
+</body>
+</html>

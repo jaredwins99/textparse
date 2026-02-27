@@ -1,0 +1,629 @@
+{
+  "concepts": [
+    {
+      "name": "local linear regression",
+      "type": "method",
+      "description": "A locally weighted regression technique that fits straight lines rather than constants locally by solving weighted least squares problems at each target point, which removes boundary bias exactly to first order.",
+      "quote": "Locally weighted regression solves a separate weighted least squares problem at each target point x0",
+      "paragraph_ids": [24245, 24249]
+    },
+    {
+      "name": "local polynomial regression",
+      "type": "method",
+      "description": "An extension of local linear regression that fits polynomials of degree d locally, providing bias reduction at the cost of increased variance. Local quadratic regression (d=2) can correct curvature bias in the interior of the domain.",
+      "quote": "We can fit local polynomial fits of any degree d, with solution f̂(x0) = α̂(x0) + Σⱼ₌₁ᵈ β̂ⱼ(x0)xⱼ₀. In fact, an expansion such as (6.10) will tell us that the bias will only have components of degree d+1 and higher",
+      "paragraph_ids": [24732, 24744]
+    },
+    {
+      "name": "automatic kernel carpentry",
+      "type": "property",
+      "description": "The phenomenon whereby local linear regression automatically modifies the kernel to correct the bias exactly to first order, without requiring manual kernel modifications based on asymptotic theory.",
+      "quote": "Local linear regression automatically modifies the kernel to correct the bias exactly to first order, a phenomenon dubbed as automatic kernel carpentry.",
+      "paragraph_ids": [24479]
+    },
+    {
+      "name": "trimming the hills and filling the valleys",
+      "type": "property",
+      "description": "A bias phenomenon in local linear fits where the estimator tends to be biased in regions of curvature of the true function, underestimating peaks and overestimating valleys.",
+      "quote": "Local linear fits tend to be biased in regions of curvature of the true function, a phenomenon referred to as trimming the hills and filling the valleys.",
+      "paragraph_ids": [24744]
+    },
+    {
+      "name": "nadaraya-watson kernel smoother",
+      "type": "method",
+      "description": "A kernel smoothing method that fits a constant locally with weights supplied by a kernel, which suffers from boundary bias that can be corrected by local linear regression.",
+      "quote": "The Nadaraya–Watson kernel smoother fits a constant locally with weights supplied by a p-dimensional kernel.",
+      "paragraph_ids": [24776, 24479]
+    },
+    {
+      "name": "varying coefficient models",
+      "type": "method",
+      "description": "A class of structured regression models where the model is conditionally linear for some predictors, but the coefficients are allowed to vary smoothly as a function of other covariates, fit using locally weighted least squares.",
+      "quote": "For given Z, this is a linear model, but each of the coefficients can vary with Z. It is natural to fit such a model by locally weighted least squares",
+      "paragraph_ids": [24867, 24914, 24917]
+    },
+    {
+      "name": "local likelihood",
+      "type": "method",
+      "description": "A method that generalizes local regression by using likelihood-based models fit locally, allowing parametric models to be made locally flexible. Any parametric model can be made local if the fitting method accommodates observation weights.",
+      "quote": "Local likelihood allows a relaxation from a globally linear model to one that is locally linear.",
+      "paragraph_ids": [24932, 24937]
+    },
+    {
+      "name": "parzen density estimate",
+      "type": "method",
+      "description": "A smooth kernel density estimator that counts observations close to a point with weights that decrease with distance, using a kernel such as the Gaussian. It is the convolution of the empirical distribution with a smoothing kernel.",
+      "quote": "The Parzen density estimate is preferred because it counts observations close to x0 with weights that decrease with distance from x0.",
+      "paragraph_ids": [24989, 25009]
+    },
+    {
+      "name": "naive bayes classifier",
+      "type": "method",
+      "description": "A classification method that assumes features are independent given the class, dramatically simplifying density estimation by estimating only univariate marginal densities. Despite strong assumptions, it often outperforms more sophisticated alternatives.",
+      "quote": "The naive Bayes model assumes that given a class G = j, the features Xk are independent. Despite these rather optimistic assumptions, naive Bayes classifiers often outperform far more sophisticated alternatives.",
+      "paragraph_ids": [25027, 25031, 25034]
+    },
+    {
+      "name": "radial basis functions",
+      "type": "method",
+      "description": "A method that treats kernel functions as basis functions indexed by location parameters ξⱼ and scale parameters λⱼ, combining ideas from kernel methods and basis function expansions to model f(x) = Σⱼ βⱼ D(||x-ξⱼ||/λⱼ).",
+      "quote": "Radial basis functions combine these ideas, by treating the kernel functions Kλ(ξ, x) as basis functions.",
+      "paragraph_ids": [25051, 25060]
+    },
+    {
+      "name": "rbf network",
+      "type": "method",
+      "description": "A neural network alternative where all parameters (locations ξⱼ, scales λⱼ, and coefficients βⱼ) are optimized jointly via sum-of-squares minimization, though the criterion is nonconvex with multiple local minima.",
+      "quote": "This model is commonly referred to as an RBF network, an alternative to the sigmoidal neural network discussed in Chapter 11; the ξⱼ and λⱼ playing the role of the weights. This criterion is nonconvex with multiple local minima",
+      "paragraph_ids": [25076, 25080]
+    },
+    {
+      "name": "renormalized radial basis functions",
+      "type": "method",
+      "description": "A modification of radial basis functions that normalizes each basis function by the sum of all basis functions, avoiding holes (regions where no kernel has appreciable support) when using constant scale parameters.",
+      "quote": "Renormalized radial basis functions hⱼ(x) = D(||x-ξⱼ||/λ) / Σₖ D(||x-ξₖ||/λ) avoid this problem.",
+      "paragraph_ids": [25082, 25083]
+    },
+    {
+      "name": "gaussian mixture model",
+      "type": "method",
+      "description": "A density estimation method representing a distribution as a weighted sum of Gaussian densities with mixing proportions αₘ, means μₘ, and covariance matrices Σₘ, typically fit by maximum likelihood using the EM algorithm.",
+      "quote": "The Gaussian mixture model has the form f(x) = Σₘ αₘ φ(x; μₘ, Σₘ) with mixing proportions αₘ, Σₘ αₘ = 1, and each Gaussian density has a mean μₘ and covariance matrix Σₘ.",
+      "paragraph_ids": [25090, 25094]
+    },
+    {
+      "name": "memory-based methods",
+      "type": "property",
+      "description": "Learning methods where the model is the entire training data set and fitting is done at evaluation or prediction time, leading to O(N) computational cost per evaluation but making them infeasible for real-time applications.",
+      "quote": "Kernel and local regression and density estimation are memory-based methods: the model is the entire training data set, and the fitting is done at evaluation or prediction time.",
+      "paragraph_ids": [25137]
+    },
+    {
+      "name": "training error",
+      "type": "metric",
+      "description": "The average loss over the training sample, which consistently decreases with model complexity and is not a good estimate of test error because it is overly optimistic.",
+      "quote": "Training error is not a good estimate of the test error. Training error consistently decreases with model complexity, typically dropping to zero if we increase the model complexity enough.",
+      "paragraph_ids": [25184, 25189]
+    },
+    {
+      "name": "expected prediction error",
+      "type": "metric",
+      "description": "The expected test error averaging over both the randomness in test data and the randomness in the training set, denoted Err = E_T E_{X⁰,Y⁰}[L(Y⁰, f̂(X⁰)|T)].",
+      "quote": "A related quantity is the expected prediction error (or expected test error) where this expectation averages over everything that is random, including the randomness in the training set that produced f̂.",
+      "paragraph_ids": [25180, 25182]
+    },
+    {
+      "name": "model selection",
+      "type": "technique",
+      "description": "The task of estimating the performance of different models in order to choose the best one, typically by estimating prediction error for various tuning parameters.",
+      "quote": "Model selection: estimating the performance of different models in order to choose the best one.",
+      "paragraph_ids": [25204]
+    },
+    {
+      "name": "model assessment",
+      "type": "technique",
+      "description": "The task of estimating the prediction error (generalization error) of a final chosen model on new data, ideally using a held-out test set kept in a vault.",
+      "quote": "Model assessment: having chosen a final model, estimating its prediction error (generalization error) on new data.",
+      "paragraph_ids": [25205]
+    },
+    {
+      "name": "bias-variance decomposition",
+      "type": "property",
+      "description": "The decomposition of expected prediction error into irreducible error σ²_ε, squared bias [Ef̂(x₀)-f(x₀)]², and variance E[f̂(x₀)-Ef̂(x₀)]². More complex models have lower bias but higher variance.",
+      "quote": "Err(x₀) = σ²_ε + [Ef̂(x₀) - f(x₀)]² + E[f̂(x₀) - Ef̂(x₀)]². The first term is the variance of the target around its true mean f(x₀), and cannot be avoided no matter how well we estimate f(x₀). The second term is the squared bias, the amount by which the average of our estimate differs from the true mean; the last term is the variance",
+      "paragraph_ids": [25212, 25214, 25217]
+    },
+    {
+      "name": "model bias",
+      "type": "property",
+      "description": "The error between the best-fitting model in a restricted class and the true function, representing limitations of the model family itself rather than estimation error.",
+      "quote": "The first term on the right-hand side is the average squared model bias, the error between the best-fitting linear approximation and the true function.",
+      "paragraph_ids": [25245]
+    },
+    {
+      "name": "estimation bias",
+      "type": "property",
+      "description": "The error between the average estimate and the best-fitting model within a class. Zero for ordinary least squares but positive for restricted fits like ridge regression.",
+      "quote": "The second term is the average squared estimation bias, the error between the average estimate E(x₀ᵀβ̂) and the best-fitting linear approximation. For linear models fit by ordinary least squares, the estimation bias is zero. For restricted fits, such as ridge regression, it is positive",
+      "paragraph_ids": [25245]
+    },
+    {
+      "name": "in-sample error",
+      "type": "metric",
+      "description": "The expected prediction error for N new response values at each of the training input points, denoted Err_in = (1/N)Σᵢ E_Y⁰[L(Yᵢ⁰, f̂(xᵢ))|T], used to measure optimism of training error.",
+      "quote": "The nature of the optimism in err is easiest to understand when we focus instead on the in-sample error Err_in = (1/N)Σᵢ E_Y⁰[L(Yᵢ⁰, f̂(xᵢ))|T]",
+      "paragraph_ids": [25297, 25302]
+    },
+    {
+      "name": "optimism",
+      "type": "property",
+      "description": "The difference between in-sample error and training error, representing how much training error underestimates true error. For many loss functions, optimism = (2/N)Σᵢ Cov(ŷᵢ, yᵢ).",
+      "quote": "We define the optimism as the difference between Err_in and the training error err. The amount by which err underestimates the true error depends on how strongly yᵢ affects its own prediction.",
+      "paragraph_ids": [25303, 25305, 25314]
+    },
+    {
+      "name": "cp statistic",
+      "type": "metric",
+      "description": "An estimate of expected prediction error for linear models under squared error loss, equal to training error plus (2d/N)σ̂²_ε where d is the number of parameters, adjusting for optimism.",
+      "quote": "Using expression (7.24), applicable when d parameters are fit under squared error loss, leads to a version of the so-called Cₚ statistic: Ĉₚ = err + 2(d/N)σ̂²_ε",
+      "paragraph_ids": [25331, 25334]
+    },
+    {
+      "name": "akaike information criterion",
+      "type": "metric",
+      "description": "A general estimate of expected prediction error for log-likelihood loss, using the formula -2·loglik + 2·d, relying on the asymptotic relationship ω = (2/N)Σᵢ Cov(ŷᵢ, yᵢ).",
+      "quote": "The Akaike information criterion is a similar but more generally applicable estimate of Err_in when a log-likelihood loss function is used. It relies on a relationship similar to (7.24) that holds asymptotically as N→∞",
+      "paragraph_ids": [25334, 25338]
+    },
+    {
+      "name": "effective number of parameters",
+      "type": "metric",
+      "description": "For linear fitting methods ŷ = Sy, defined as trace(S), generalizing the concept of number of parameters to regularized models. Replaces d in the Cₚ statistic for non-standard fits.",
+      "quote": "The effective number of parameters is defined as df(S) = trace(S), the sum of the diagonal elements of S (also known as the effective degrees-of-freedom).",
+      "paragraph_ids": [25394, 25396, 25398]
+    },
+    {
+      "name": "bayesian information criterion",
+      "type": "metric",
+      "description": "A model selection criterion with the form -2·loglik + log(N)·d, also known as the Schwarz criterion. Motivated by Bayesian posterior probability and equivalent to choosing the model with largest approximate posterior probability.",
+      "quote": "The Bayesian information criterion (BIC), like AIC, is applicable in settings where the fitting is carried out by maximization of a log-likelihood. The generic form of BIC is BIC = -2·loglik + log(N)·d",
+      "paragraph_ids": [25410, 25412]
+    },
+    {
+      "name": "laplace approximation",
+      "type": "technique",
+      "description": "An approximation technique used to approximate the integral Pr(Z|Mₘ) in Bayesian model comparison, leading to the BIC criterion after simplifications.",
+      "quote": "A so-called Laplace approximation to the integral followed by some other simplifications (Ripley, 1996, page 64) to (7.37) gives log Pr(Z|Mₘ) = log Pr(Z|θ̂ₘ, Mₘ) - (dₘ/2)log N",
+      "paragraph_ids": [25430, 25433]
+    },
+    {
+      "name": "asymptotic consistency",
+      "type": "property",
+      "description": "A property of a model selection criterion whereby the probability of selecting the correct model approaches one as sample size N→∞. BIC is asymptotically consistent while AIC is not.",
+      "quote": "BIC is asymptotically consistent as a selection criterion. What this means is that given a family of models, including the true model, the probability that BIC will select the correct model approaches one as the sample size N→∞. This is not the case for AIC",
+      "paragraph_ids": [25441]
+    },
+    {
+      "name": "minimum description length",
+      "type": "technique",
+      "description": "A model selection approach formally identical to BIC but motivated from optimal coding and data compression theory. The principle states that one should choose the model minimizing the total message length for transmitting both parameters and data.",
+      "quote": "The minimum description length (MDL) approach gives a selection criterion formally identical to the BIC approach, but is motivated from an optimal coding viewpoint. The MDL principle says that we should choose the model that minimizes message_length = -log Pr(y|θ,M,X) - log Pr(θ|M)",
+      "paragraph_ids": [25443, 25451, 25457]
+    },
+    {
+      "name": "shannon entropy",
+      "type": "property",
+      "description": "A measure of information content in a distribution, equal to -Σᵢ Pr(zᵢ)log₂ Pr(zᵢ) for discrete distributions. Optimal code lengths achieve this lower bound when probabilities satisfy pᵢ = A^(-lᵢ).",
+      "quote": "A famous theorem due to Shannon says we should use code lengths lᵢ = -log₂ Pr(zᵢ) and the average message length satisfies average_length ≥ Σᵢ Pr(zᵢ)log₂ Pr(zᵢ). The right-hand side above is also called the entropy of the distribution",
+      "paragraph_ids": [25447, 25449]
+    },
+    {
+      "name": "vapnik-chervonenkis dimension",
+      "type": "metric",
+      "description": "A measure of model complexity defined as the largest number of points (in some configuration) that can be shattered by members of a function class. A set of points is shattered if the class can perfectly separate any binary labeling of them.",
+      "quote": "The VC dimension of the class {f(x,α)} is defined to be the largest number of points (in some configuration) that can be shattered by members of {f(x,α)}. A set of points is said to be shattered by a class of functions if, no matter how we assign a binary label to each point, a member of the class can perfectly separate them.",
+      "paragraph_ids": [25469, 25470, 25471]
+    },
+    {
+      "name": "structural risk minimization",
+      "type": "technique",
+      "description": "Vapnik's approach to model selection that fits a nested sequence of models of increasing VC dimensions and chooses the model minimizing an upper bound on test error based on VC theory.",
+      "quote": "Vapnik's structural risk minimization (SRM) approach fits a nested sequence of models of increasing VC dimensions h₁ < h₂ < ··· , and then chooses the model with the smallest value of the upper bound.",
+      "paragraph_ids": [25495]
+    },
+    {
+      "name": "k-fold cross-validation",
+      "type": "technique",
+      "description": "A method for estimating prediction error by splitting data into K parts, fitting the model to K-1 parts and testing on the remaining part, then averaging the K prediction errors. Typical choices are K=5 or K=10.",
+      "quote": "We split the data into K roughly equal-sized parts; for the kth part, we fit the model to the other K−1 parts of the data, and calculate the prediction error of the fitted model when predicting the kth part of the data. We do this for k=1,2,...,K and combine the K estimates of prediction error.",
+      "paragraph_ids": [25519, 25524, 25529]
+    },
+    {
+      "name": "leave-one-out cross-validation",
+      "type": "technique",
+      "description": "A special case of K-fold cross-validation with K=N, where for each observation the fit is computed using all data except that observation. Approximately unbiased for expected prediction error but can have high variance.",
+      "quote": "The case K=N is known as leave-one-out cross-validation. In this case κ(i)=i, and for the ith observation the fit is computed using all the data except the ith. With K=N, the cross-validation estimator is approximately unbiased for the true (expected) prediction error, but can have high variance",
+      "paragraph_ids": [25529, 25534]
+    },
+    {
+      "name": "generalized cross-validation",
+      "type": "technique",
+      "description": "A convenient approximation to leave-one-out cross-validation for linear fitting under squared-error loss, using GCV = (1/N)Σᵢ[yᵢ - f̂(xᵢ)]²/(1 - trace(S)/N)² instead of computing individual diagonal elements Sᵢᵢ.",
+      "quote": "Generalized cross-validation provides a convenient approximation to leave-one out cross-validation, for linear fitting under squared-error loss. The GCV approximation is GCV = (1/N)Σᵢ[yᵢ - f̂(xᵢ)]²/(1 - trace(S)/N)²",
+      "paragraph_ids": [25552, 25563, 25572]
+    },
+    {
+      "name": "one-standard-error rule",
+      "type": "technique",
+      "description": "A model selection heuristic used with cross-validation that chooses the most parsimonious model whose error is no more than one standard error above the error of the best model.",
+      "quote": "Often a 'one-standard error' rule is used with cross-validation, in which we choose the most parsimonious model whose error is no more than one standard error above the error of the best model.",
+      "paragraph_ids": [25552]
+    },
+    {
+      "name": "epanechnikov kernel",
+      "type": "method",
+      "description": "A compact support kernel function used in local regression, flatter on top like nearest-neighbor box kernels and requiring careful choice of window size.",
+      "quote": "The Epanechnikov kernel has compact support (needed when used with nearest-neighbor window size). Another popular compact kernel is based on the tri-cube function",
+      "paragraph_ids": [24032]
+    },
+    {
+      "name": "tri-cube kernel",
+      "type": "method",
+      "description": "A popular compact support kernel function that is flatter on top than the Epanechnikov kernel and is differentiable at the boundary of its support, used in local regression.",
+      "quote": "Another popular compact kernel is based on the tri-cube function. This is flatter on the top (like the nearest-neighbor box) and is differentiable at the boundary of its support.",
+      "paragraph_ids": [24032, 24034]
+    },
+    {
+      "name": "boundary bias in kernel methods",
+      "type": "property",
+      "description": "A bias problem in kernel smoothing where locally-weighted averages are badly biased on the boundaries of the domain because of kernel asymmetry. Local linear regression corrects this bias exactly to first order.",
+      "quote": "Locally-weighted averages can be badly biased on the boundaries of the domain, because of the asymmetry of the kernel in that region. By fitting straight lines rather than constants locally, we can remove this bias exactly to first order",
+      "paragraph_ids": [24036, 24245]
+    },
+    {
+      "name": "curse of dimensionality in local regression",
+      "type": "property",
+      "description": "The phenomenon that in high dimensions, it becomes impossible to simultaneously maintain localness (low bias) and a sizable neighborhood sample (low variance) without exponential sample size growth. The fraction of boundary points approaches one as dimension grows.",
+      "quote": "One of the manifestations of the curse of dimensionality is that the fraction of points close to the boundary increases to one as the dimension grows. It is impossible to simultaneously maintain localness (⇒low bias) and a sizable sample in the neighborhood (⇒low variance) as the dimension increases, without the total sample size increasing exponentially in p.",
+      "paragraph_ids": [24784]
+    },
+    {
+      "name": "anova decomposition in regression",
+      "type": "technique",
+      "description": "A decomposition of the regression function into main effects, two-way interactions, and higher-order interactions: f(X) = α + Σⱼ gⱼ(Xⱼ) + Σⱼ<ₖ gⱼₖ(Xⱼ,Xₖ) + ···, used to introduce structure by eliminating higher-order terms.",
+      "quote": "It is natural to consider analysis-of-variance (ANOVA) decompositions of the form f(X) = α + Σⱼ gⱼ(Xⱼ) + Σⱼ<ₖ gⱼₖ(Xⱼ,Xₖ) + ··· and then introduce structure by eliminating some of the higher-order terms.",
+      "paragraph_ids": [24863, 24867]
+    },
+    {
+      "name": "trellis display",
+      "type": "technique",
+      "description": "A visualization method showing the response as a function of one variable, conditioned on ranges of other variables, implemented as a grid of panels each showing a slice of the data.",
+      "quote": "The trellis display here shows ozone as a function of radiation, conditioned on the other two variables, temperature and wind speed. Above each of the panels is an indication of the range of values present in that panel for each of the conditioning values.",
+      "paragraph_ids": [24793]
+    },
+    {
+      "name": "structured kernels",
+      "type": "technique",
+      "description": "Kernels using a positive semidefinite matrix A to weight different coordinates: Kλ,A(x₀,x) = D(||(x-x₀)ᵀA||/λ), allowing individual predictors to be downgraded or entire directions to be omitted.",
+      "quote": "A more general approach is to use a positive semidefinite matrix A to weigh the different coordinates: Kλ,A(x₀,x) = D(||(x-x₀)ᵀA||/λ). Entire coordinates or directions can be downgraded or omitted by imposing appropriate restrictions on A.",
+      "paragraph_ids": [24857, 24861]
+    },
+    {
+      "name": "instantaneous prefix code",
+      "type": "technique",
+      "description": "A coding scheme where no code is the prefix of any other, allowing the receiver to know exactly when a message has been completely sent without requiring delimiters.",
+      "quote": "This code is known as an instantaneous prefix code: no code is the prefix of any other, and the receiver (who knows all of the possible codes), knows exactly when the message has been completely sent.",
+      "paragraph_ids": [25445]
+    },
+    {
+      "name": "huffman coding",
+      "type": "technique",
+      "description": "A practical coding procedure that can get close to the Shannon entropy lower bound for average message length.",
+      "quote": "In general the lower bound cannot be achieved, but procedures like the Huffmann coding scheme can get close to the bound.",
+      "paragraph_ids": [25449]
+    },
+    {
+      "name": "learning curve",
+      "type": "metric",
+      "description": "A plot of prediction performance (e.g., 1-Err) versus training set size N, showing how classifier performance improves with more data and used to assess cross-validation bias.",
+      "quote": "Figure 7.8 shows a hypothetical 'learning curve' for a classifier on a given task, a plot of 1−Err versus the size of the training set N. The performance of the classifier improves as the training set size increases",
+      "paragraph_ids": [25541]
+    }
+  ],
+  "relationships": [
+    {
+      "source": "local linear regression",
+      "target": "nadaraya-watson kernel smoother",
+      "type": "generalizes",
+      "quote": "The Nadaraya–Watson kernel smoother fits a constant locally with weights supplied by a p-dimensional kernel. Local linear regression will fit a hyperplane locally in X, by weighted least squares"
+    },
+    {
+      "source": "local polynomial regression",
+      "target": "local linear regression",
+      "type": "generalizes",
+      "quote": "We can fit local polynomial fits of any degree d. Local linear fits tend to be biased in regions of curvature of the true function"
+    },
+    {
+      "source": "local linear regression",
+      "target": "boundary bias in kernel methods",
+      "type": "uses",
+      "quote": "By fitting straight lines rather than constants locally, we can remove this bias exactly to first order"
+    },
+    {
+      "source": "automatic kernel carpentry",
+      "target": "local linear regression",
+      "type": "example_of",
+      "quote": "Local linear regression automatically modifies the kernel to correct the bias exactly to first order, a phenomenon dubbed as automatic kernel carpentry."
+    },
+    {
+      "source": "trimming the hills and filling the valleys",
+      "target": "local linear regression",
+      "type": "example_of",
+      "quote": "Local linear fits tend to be biased in regions of curvature of the true function, a phenomenon referred to as trimming the hills and filling the valleys."
+    },
+    {
+      "source": "local polynomial regression",
+      "target": "trimming the hills and filling the valleys",
+      "type": "uses",
+      "quote": "Local quadratic regression is generally able to correct this bias."
+    },
+    {
+      "source": "varying coefficient models",
+      "target": "local linear regression",
+      "type": "uses",
+      "quote": "It is natural to fit such a model by locally weighted least squares"
+    },
+    {
+      "source": "local likelihood",
+      "target": "local linear regression",
+      "type": "generalizes",
+      "quote": "Local likelihood allows a relaxation from a globally linear model to one that is locally linear."
+    },
+    {
+      "source": "naive bayes classifier",
+      "target": "kernel density estimation",
+      "type": "uses",
+      "quote": "The individual class-conditional marginal densities fjk can each be estimated separately using one-dimensional kernel density estimates. This is in fact a generalization of the original naive Bayes procedures"
+    },
+    {
+      "source": "parzen density estimate",
+      "target": "kernel density estimation",
+      "type": "example_of",
+      "quote": "The Parzen density estimate is preferred because it counts observations close to x0 with weights that decrease with distance from x0."
+    },
+    {
+      "source": "radial basis functions",
+      "target": "kernel methods",
+      "type": "uses",
+      "quote": "Radial basis functions combine these ideas, by treating the kernel functions Kλ(ξ, x) as basis functions."
+    },
+    {
+      "source": "rbf network",
+      "target": "radial basis functions",
+      "type": "uses",
+      "quote": "This model is commonly referred to as an RBF network, an alternative to the sigmoidal neural network"
+    },
+    {
+      "source": "renormalized radial basis functions",
+      "target": "radial basis functions",
+      "type": "special_case_of",
+      "quote": "Renormalized radial basis functions avoid this problem (of holes)."
+    },
+    {
+      "source": "nadaraya-watson kernel smoother",
+      "target": "renormalized radial basis functions",
+      "type": "equivalent_to",
+      "quote": "The Nadaraya–Watson kernel regression estimator can be viewed as an expansion in renormalized radial basis functions"
+    },
+    {
+      "source": "gaussian mixture model",
+      "target": "kernel density estimation",
+      "type": "generalizes",
+      "quote": "If in addition σₘ = σ > 0 is fixed, and M↑N, then the maximum likelihood estimate for (6.32) approaches the kernel density estimate"
+    },
+    {
+      "source": "gaussian mixture model",
+      "target": "radial basis functions",
+      "type": "contrasts_with",
+      "quote": "If the covariance matrices are constrained to be scalar: Σₘ = σₘI, then (6.32) has the form of a radial basis expansion."
+    },
+    {
+      "source": "training error",
+      "target": "generalization error",
+      "type": "contrasts_with",
+      "quote": "Training error is not a good estimate of the test error. Training error consistently decreases with model complexity, typically dropping to zero if we increase the model complexity enough."
+    },
+    {
+      "source": "expected prediction error",
+      "target": "generalization error",
+      "type": "equivalent_to",
+      "quote": "A related quantity is the expected prediction error (or expected test error)"
+    },
+    {
+      "source": "model selection",
+      "target": "model assessment",
+      "type": "contrasts_with",
+      "quote": "It is important to note that there are in fact two separate goals that we might have in mind: Model selection: estimating the performance of different models in order to choose the best one. Model assessment: having chosen a final model, estimating its prediction error"
+    },
+    {
+      "source": "bias-variance decomposition",
+      "target": "expected prediction error",
+      "type": "uses",
+      "quote": "We can derive an expression for the expected prediction error of a regression fit f̂(X) at an input point X = x0: Err(x0) = σ²_ε + [Ef̂(x0) - f(x0)]² + E[f̂(x0) - Ef̂(x0)]²"
+    },
+    {
+      "source": "model bias",
+      "target": "bias-variance decomposition",
+      "type": "example_of",
+      "quote": "The first term on the right-hand side is the average squared model bias"
+    },
+    {
+      "source": "estimation bias",
+      "target": "bias-variance decomposition",
+      "type": "example_of",
+      "quote": "The second term is the average squared estimation bias"
+    },
+    {
+      "source": "estimation bias",
+      "target": "ridge regression",
+      "type": "uses",
+      "quote": "For restricted fits, such as ridge regression, it is positive, and we trade it off with the benefits of a reduced variance."
+    },
+    {
+      "source": "optimism",
+      "target": "training error",
+      "type": "uses",
+      "quote": "We define the optimism as the difference between Err_in and the training error err"
+    },
+    {
+      "source": "optimism",
+      "target": "in-sample error",
+      "type": "uses",
+      "quote": "We define the optimism as the difference between Err_in and the training error err"
+    },
+    {
+      "source": "cp statistic",
+      "target": "optimism",
+      "type": "uses",
+      "quote": "An obvious way to estimate prediction error is to estimate the optimism and then add it to the training error err. Using expression (7.24), applicable when d parameters are fit under squared error loss, leads to a version of the so-called Cₚ statistic"
+    },
+    {
+      "source": "akaike information criterion",
+      "target": "cp statistic",
+      "type": "generalizes",
+      "quote": "The Akaike information criterion is a similar but more generally applicable estimate of Err_in when a log-likelihood loss function is used. For the Gaussian model (with variance σ²_ε = σ̂²_ε assumed known), the AIC statistic is equivalent to Cₚ"
+    },
+    {
+      "source": "effective number of parameters",
+      "target": "cp statistic",
+      "type": "uses",
+      "quote": "It turns out that trace(S) is exactly the correct quantity to replace d as the number of parameters in the Cₚ statistic"
+    },
+    {
+      "source": "bayesian information criterion",
+      "target": "akaike information criterion",
+      "type": "contrasts_with",
+      "quote": "Therefore BIC is proportional to AIC (Cₚ), with the factor 2 replaced by log N. Assuming N > e² ≈7.4, BIC tends to penalize complex models more heavily"
+    },
+    {
+      "source": "laplace approximation",
+      "target": "bayesian information criterion",
+      "type": "uses",
+      "quote": "A so-called Laplace approximation to the integral followed by some other simplifications to (7.37) gives the BIC criterion"
+    },
+    {
+      "source": "asymptotic consistency",
+      "target": "bayesian information criterion",
+      "type": "example_of",
+      "quote": "BIC is asymptotically consistent as a selection criterion"
+    },
+    {
+      "source": "minimum description length",
+      "target": "bayesian information criterion",
+      "type": "equivalent_to",
+      "quote": "The minimum description length (MDL) approach gives a selection criterion formally identical to the BIC approach, but is motivated from an optimal coding viewpoint"
+    },
+    {
+      "source": "shannon entropy",
+      "target": "minimum description length",
+      "type": "uses",
+      "quote": "A famous theorem due to Shannon says we should use code lengths lᵢ = -log₂ Pr(zᵢ) and the average message length satisfies the entropy lower bound"
+    },
+    {
+      "source": "huffman coding",
+      "target": "shannon entropy",
+      "type": "uses",
+      "quote": "In general the lower bound cannot be achieved, but procedures like the Huffmann coding scheme can get close to the bound."
+    },
+    {
+      "source": "structural risk minimization",
+      "target": "vapnik-chervonenkis dimension",
+      "type": "uses",
+      "quote": "Vapnik's structural risk minimization (SRM) approach fits a nested sequence of models of increasing VC dimensions h₁ < h₂ < ··· , and then chooses the model with the smallest value of the upper bound."
+    },
+    {
+      "source": "leave-one-out cross-validation",
+      "target": "k-fold cross-validation",
+      "type": "special_case_of",
+      "quote": "The case K=N is known as leave-one-out cross-validation."
+    },
+    {
+      "source": "generalized cross-validation",
+      "target": "leave-one-out cross-validation",
+      "type": "uses",
+      "quote": "Generalized cross-validation provides a convenient approximation to leave-one out cross-validation, for linear fitting under squared-error loss"
+    },
+    {
+      "source": "generalized cross-validation",
+      "target": "akaike information criterion",
+      "type": "contrasts_with",
+      "quote": "The similarity between GCV and AIC can be seen from the approximation 1/(1−x)² ≈ 1 + 2x"
+    },
+    {
+      "source": "one-standard-error rule",
+      "target": "k-fold cross-validation",
+      "type": "uses",
+      "quote": "Often a 'one-standard error' rule is used with cross-validation, in which we choose the most parsimonious model whose error is no more than one standard error above the error of the best model."
+    },
+    {
+      "source": "epanechnikov kernel",
+      "target": "kernel methods",
+      "type": "example_of",
+      "quote": "The Epanechnikov kernel has compact support (needed when used with nearest-neighbor window size)."
+    },
+    {
+      "source": "tri-cube kernel",
+      "target": "epanechnikov kernel",
+      "type": "contrasts_with",
+      "quote": "Another popular compact kernel is based on the tri-cube function. This is flatter on the top (like the nearest-neighbor box) and is differentiable at the boundary of its support."
+    },
+    {
+      "source": "curse of dimensionality in local regression",
+      "target": "local linear regression",
+      "type": "uses",
+      "quote": "Local regression becomes less useful in dimensions much higher than two or three. It is impossible to simultaneously maintain localness (⇒low bias) and a sizable sample in the neighborhood (⇒low variance) as the dimension increases"
+    },
+    {
+      "source": "anova decomposition in regression",
+      "target": "varying coefficient models",
+      "type": "generalizes",
+      "quote": "We are trying to fit a regression function E(Y|X) = f(X1, X2, ..., Xp) in IRp. It is natural to consider analysis-of-variance (ANOVA) decompositions"
+    },
+    {
+      "source": "structured kernels",
+      "target": "kernel methods",
+      "type": "special_case_of",
+      "quote": "A more general approach is to use a positive semidefinite matrix A to weigh the different coordinates"
+    },
+    {
+      "source": "instantaneous prefix code",
+      "target": "minimum description length",
+      "type": "uses",
+      "quote": "This code is known as an instantaneous prefix code: no code is the prefix of any other, and the receiver knows exactly when the message has been completely sent."
+    },
+    {
+      "source": "learning curve",
+      "target": "k-fold cross-validation",
+      "type": "uses",
+      "quote": "Figure 7.8 shows a hypothetical 'learning curve' for a classifier on a given task. If our training set had 200 observations, fivefold cross-validation would estimate the performance of our classifier over training sets of size 160"
+    },
+    {
+      "source": "local likelihood",
+      "target": "logistic regression",
+      "type": "generalizes",
+      "quote": "The local log-likelihood for this J class model can be written using the logistic regression framework"
+    },
+    {
+      "source": "memory-based methods",
+      "target": "kernel methods",
+      "type": "example_of",
+      "quote": "Kernel and local regression and density estimation are memory-based methods: the model is the entire training data set"
+    },
+    {
+      "source": "trellis display",
+      "target": "local linear regression",
+      "type": "uses",
+      "quote": "The trellis display here shows ozone as a function of radiation, conditioned on the other two variables. In the panel itself the data subsets are displayed and a one-dimensional local linear regression is fit to the data."
+    }
+  ]
+}

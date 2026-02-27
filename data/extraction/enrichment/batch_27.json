@@ -1,0 +1,3717 @@
+{
+  "batch_number": 27,
+  "concepts": [
+    {
+      "id": 513,
+      "name": "vector quantization",
+      "description": "Image and signal compression technique using K-means clustering to approximate blocks of pixels by cluster centroids (codewords), with applications in lossy compression.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "The K-means clustering algorithm represents a key tool in the apparently unrelated area of image and signal compression, particularly in vector quantization or VQ",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 39274,
+          "text": "514\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 532
+        },
+        {
+          "id": 39276,
+          "text": "We see that the procedure is successful at grouping together samples of\nthe same cancer. In fact, the two breast cancers in the second cluster were\nlater found to be misdiagnosed and were melanomas that had metastasized.\nHowever, K-means clustering has shortcomings in this application. For one,\nit does not give a linear ordering of objects within a cluster: we have simply\nlisted them in alphabetic order above. Secondly, as the number of clusters\nK is changed, the cluster memberships can change in arbitrary ways. That\nis, with say four clusters, the clusters need not be nested within the three\nclusters above. For these reasons, hierarchical clustering (described later),\nis probably preferable for this application.",
+          "type": "narrative",
+          "page": 532
+        },
+        {
+          "id": 39278,
+          "text": "The K-means clustering algorithm represents a key tool in the apparently\nunrelated area of image and signal compression, particularly in vector quan-\ntization or VQ (Gersho and Gray, 1992). The left image in Figure 14.92 is a\ndigitized photograph of a famous statistician, Sir Ronald Fisher. It consists\nof 1024 \u00d7 1024 pixels, where each pixel is a grayscale value ranging from 0\nto 255, and hence requires 8 bits of storage per pixel. The entire image oc-\ncupies 1 megabyte of storage. The center image is a VQ-compressed version\nof the left panel, and requires 0.239 of the storage (at some loss in quality).\nThe right image is compressed even more, and requires only 0.0625 of the\nstorage (at a considerable loss in quality).\nThe version of VQ implemented here \ufb01rst breaks the image into small\nblocks, in this case 2\u00d72 blocks of pixels. Each of the 512\u00d7512 blocks of four",
+          "type": "narrative",
+          "page": 532
+        },
+        {
+          "id": 39279,
+          "text": "2This example was prepared by Maya Gupta.",
+          "type": "narrative",
+          "page": 532
+        },
+        {
+          "id": 74,
+          "text": "13 Prototype Methods and Nearest-Neighbors\n459\n13.1\nIntroduction\n. . . . . . . . . . . . . . . . . . . . . . . . .\n459\n13.2\nPrototype Methods\n. . . . . . . . . . . . . . . . . . . . .\n459\n13.2.1\nK-means Clustering . . . . . . . . . . . . . . . .\n460\n13.2.2\nLearning Vector Quantization\n. . . . . . . . . .\n462\n13.2.3\nGaussian Mixtures . . . . . . . . . . . . . . . . .\n463\n13.3\nk-Nearest-Neighbor Classi\ufb01ers\n. . . . . . . . . . . . . . .\n463\n13.3.1\nExample: A Comparative Study . . . . . . . . .\n468\n13.3.2\nExample: k-Nearest-Neighbors\nand Image Scene Classi\ufb01cation . . . . . . . . . .\n470\n13.3.3\nInvariant Metrics and Tangent Distance . . . . .\n471\n13.4\nAdaptive Nearest-Neighbor Methods . . . . . . . . . . . .\n475\n13.4.1\nExample\n. . . . . . . . . . . . . . . . . . . . . .\n478\n13.4.2\nGlobal Dimension Reduction\nfor Nearest-Neighbors . . . . . . . . . . . . . . .\n479\n13.5\nComputational Considerations . . . . . . . . . . . . . . .\n480\nBibliographic Notes . . . . . . . . . . . . . . . . . . . . . . . . .\n481\nExercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n481",
+          "type": "narrative",
+          "page": 15
+        },
+        {
+          "id": 76,
+          "text": "14 Unsupervised Learning\n485\n14.1\nIntroduction\n. . . . . . . . . . . . . . . . . . . . . . . . .\n485\n14.2\nAssociation Rules\n. . . . . . . . . . . . . . . . . . . . . .\n487\n14.2.1\nMarket Basket Analysis . . . . . . . . . . . . . .\n488\n14.2.2\nThe Apriori Algorithm\n. . . . . . . . . . . . . .\n489\n14.2.3\nExample: Market Basket Analysis . . . . . . . .\n492\n14.2.4\nUnsupervised as Supervised Learning . . . . . .\n495\n14.2.5\nGeneralized Association Rules . . . . . . . . . .\n497\n14.2.6\nChoice of Supervised Learning Method\n. . . . .\n499\n14.2.7\nExample: Market Basket Analysis (Continued) .\n499\n14.3\nCluster Analysis . . . . . . . . . . . . . . . . . . . . . . .\n501\n14.3.1\nProximity Matrices\n. . . . . . . . . . . . . . . .\n503\n14.3.2\nDissimilarities Based on Attributes\n. . . . . . .\n503\n14.3.3\nObject Dissimilarity . . . . . . . . . . . . . . . .\n505\n14.3.4\nClustering Algorithms . . . . . . . . . . . . . . .\n507\n14.3.5\nCombinatorial Algorithms\n. . . . . . . . . . . .\n507\n14.3.6\nK-means . . . . . . . . . . . . . . . . . . . . . .\n509\n14.3.7\nGaussian Mixtures as Soft K-means Clustering .\n510\n14.3.8\nExample: Human Tumor Microarray Data\n. . .\n512\n14.3.9\nVector Quantization . . . . . . . . . . . . . . . .\n514\n14.3.10\nK-medoids . . . . . . . . . . . . . . . . . . . . .\n515\n14.3.11\nPractical Issues\n. . . . . . . . . . . . . . . . . .\n518\n14.3.12\nHierarchical Clustering\n. . . . . . . . . . . . . .\n520\n14.4\nSelf-Organizing Maps\n. . . . . . . . . . . . . . . . . . . .\n528\n14.5\nPrincipal Components, Curves and Surfaces . . . . . . . .\n534\n14.5.1\nPrincipal Components . . . . . . . . . . . . . . .\n534\n14.5.2\nPrincipal Curves and Surfaces\n. . . . . . . . . .\n541\n14.5.3\nSpectral Clustering\n. . . . . . . . . . . . . . . .\n544\n14.5.4\nKernel Principal Components . . . . . . . . . . .\n547\n14.5.5\nSparse Principal Components . . . . . . . . . . .\n550\n14.6\nNon-negative Matrix Factorization . . . . . . . . . . . . .\n553\n14.6.1\nArchetypal Analysis . . . . . . . . . . . . . . . .\n554\n14.7\nIndependent Component Analysis\nand Exploratory Projection Pursuit\n. . . . . . . . . . . .\n557\n14.7.1\nLatent Variables and Factor Analysis\n. . . . . .\n558\n14.7.2\nIndependent Component Analysis . . . . . . . .\n560\n14.7.3\nExploratory Projection Pursuit . . . . . . . . . .\n565\n14.7.4\nA Direct Approach to ICA . . . . . . . . . . . .\n565\n14.8\nMultidimensional Scaling . . . . . . . . . . . . . . . . . .\n570\n14.9\nNonlinear Dimension Reduction\nand Local Multidimensional Scaling . . . . . . . . . . . .\n572\n14.10 The Google PageRank Algorithm\n. . . . . . . . . . . . .\n576\nBibliographic Notes . . . . . . . . . . . . . . . . . . . . . . . . .\n578\nExercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n579",
+          "type": "narrative",
+          "page": 16
+        },
+        {
+          "id": 36486,
+          "text": "Algorithm 13.1 Learning Vector Quantization\u2014LVQ.",
+          "type": "narrative",
+          "page": 480
+        },
+        {
+          "id": 36497,
+          "text": "In this technique due to Kohonen (1989), prototypes are placed strategically\nwith respect to the decision boundaries in an ad-hoc way. LVQ is an online\nalgorithm\u2014observations are processed one at a time.\nThe idea is that the training points attract prototypes of the correct class,\nand repel other prototypes. When the iterations settle down, prototypes\nshould be close to the training points in their class. The learning rate \u03f5 is\ndecreased to zero with each iteration, following the guidelines for stochastic\napproximation learning rates (Section 11.4.)\nFigure 13.1 (lower panel) shows the result of LVQ, using the K-means\nsolution as starting values. The prototypes have tended to move away from\nthe decision boundaries, and away from prototypes of competing classes.\nThe procedure just described is actually called LVQ1. Modi\ufb01cations\n(LVQ2, LVQ3, etc.) have been proposed, that can sometimes improve per-\nformance. A drawback of learning vector quantization methods is the fact",
+          "type": "narrative",
+          "page": 480
+        },
+        {
+          "id": 37981,
+          "text": "The nearest-neighbor method goes back at least to Fix and Hodges (1951).\nThe extensive literature on the topic is reviewed by Dasarathy (1991);\nChapter 6 of Ripley (1996) contains a good summary. K-means cluster-\ning is due to Lloyd (1957) and MacQueen (1967). Kohonen (1989) intro-\nduced learning vector quantization. The tangent distance method is due to\nSimard et al. (1993). Hastie and Tibshirani (1996a) proposed the discrim-\ninant adaptive nearest-neighbor technique.",
+          "type": "narrative",
+          "page": 499
+        },
+        {
+          "id": 40557,
+          "text": "This algorithm can be derived as a minorization procedure for maximizing\nL(W, H) (Exercise 14.23) and is also related to the iterative-proportional-\nscaling algorithm for log-linear models (Exercise 14.24).\nFigure 14.33 shows an example taken from Lee and Seung (1999)9, com-\nparing non-negative matrix factorization (NMF), vector quantization (VQ,\nequivalent to k-means clustering) and principal components analysis (PCA).\nThe three learning methods were applied to a database of N = 2, 429 fa-\ncial images, each consisting of 19 \u00d7 19 pixels, resulting in a 2, 429 \u00d7 381\nmatrix X. As shown in the 7 \u00d7 7 array of montages (each a 19 \u00d7 19 image),\neach method has learned a set of r = 49 basis images. Positive values are\nillustrated with black pixels and negative values with red pixels. A par-\nticular instance of a face, shown at top right, is approximated by a linear\nsuperposition of basis images. The coe\ufb03cients of the linear superposition\nare shown next to each montage, in a 7 \u00d7 7 array10, and the resulting su-\nperpositions are shown to the right of the equality sign. The authors point",
+          "type": "narrative",
+          "page": 571
+        },
+        {
+          "id": 49629,
+          "text": "fused, 666\nLatent\nfactor, 674\nvariable, 678\nLearning, 1\nLearning rate, 396\nLearning vector quantization, 462\nLeast angle regression, 73\u201379, 86,\n610\nLeast squares, 11, 32\nLeave-one-out cross-validation, 243\nLeNet, 406\nLikelihood function, 265, 273\nLinear basis expansion, 139\u2013148\nLinear combination splits, 312\nLinear discriminant function, 106\u2013\n119\nLinear methods\nfor classi\ufb01cation, 101\u2013137\nfor regression, 43\u201399\nLinear models and least squares,\n11\nLinear regression of an indicator\nmatrix, 103\nLinear separability, 129\nLinear smoother, 153\nLink function, 296\nLLE, see Local linear embedding\nLocal false discovery rate, 693\nLocal likelihood, 205\nLocal linear embedding, 572\nLocal methods in high dimensions,\n22\u201327\nLocal minima, 400\nLocal polynomial regression, 197\nLocal regression, 194, 200\nLocalization in time/frequency, 175\nLoess (local regression), 194, 200\nLog-linear model, 639\nLog-odds ratio (logit), 119\nLogistic (sigmoid) function, 393\nLogistic regression, 119\u2013128, 299\nLogit (log-odds ratio), 119\nLoss function, 18, 21, 219\u2013223, 346\nLoss matrix, 310",
+          "type": "narrative",
+          "page": 759
+        },
+        {
+          "id": 49650,
+          "text": "Validation set, 222\nVapnik-Chervonenkis (VC) dimen-\nsion, 237\u2013239\nVariable importance plot, 594\nVariable types and terminology, 9\nVariance, 16, 25, 37, 158\u2013161, 219\nbetween, 114\nwithin, 114, 446\nVariance reduction, 588\nVarying coe\ufb03cient models, 203\u2013\n204\nVC dimension, see Vapnik\u2013Chervon-\nenkis dimension\nVector quantization, 514\u2013515\nVoronoi regions, 510",
+          "type": "narrative",
+          "page": 763
+        }
+      ]
+    },
+    {
+      "id": 523,
+      "name": "gap statistic",
+      "description": "Method for estimating optimal number of clusters by comparing log WK curve to that from uniformly distributed data, finding where gap is largest.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "The recently proposed Gap statistic (Tibshirani et al., 2001b) compares the curve log WK to the curve obtained from data uniformly distributed over a rectangle containing the data.",
+      "existing_formula": "\\text{Gap}(k) = E_0[\\log W_k] - \\log W_k",
+      "paragraphs": [
+        {
+          "id": 39307,
+          "text": "518\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39308,
+          "text": "CHI",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39309,
+          "text": "CUB",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39310,
+          "text": "USS",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39311,
+          "text": "YUG",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39312,
+          "text": "BRA",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39313,
+          "text": "IND",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39314,
+          "text": "ZAI",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39315,
+          "text": "BEL",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39316,
+          "text": "EGY",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39317,
+          "text": "FRA",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39318,
+          "text": "ISR",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39319,
+          "text": "CUB",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39320,
+          "text": "USS",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39321,
+          "text": "YUG",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39322,
+          "text": "BRA",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39323,
+          "text": "IND",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39324,
+          "text": "ZAI",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39325,
+          "text": "BEL",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39326,
+          "text": "EGY",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39327,
+          "text": "FRA",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39328,
+          "text": "ISR",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39329,
+          "text": "USA",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39330,
+          "text": "Reordered Dissimilarity Matrix\nFirst MDS Coordinate",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39331,
+          "text": "Second MDS Coordinate",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39332,
+          "text": "-2\n0\n2\n4",
+          "type": "equation",
+          "page": 536
+        },
+        {
+          "id": 39333,
+          "text": "-2\n-1\n0\n1\n2\n3",
+          "type": "equation",
+          "page": 536
+        },
+        {
+          "id": 39334,
+          "text": "CHI\nCUB",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39335,
+          "text": "USS",
+          "type": "narrative",
+          "page": 536
+        },
+        {
+          "id": 39336,
+          "text": "YUG",
+          "type": "narrative",
+          "page": 536
+        }
+      ]
+    },
+    {
+      "id": 506,
+      "name": "dendrogram",
+      "description": "A tree diagram representing the hierarchical clustering structure showing how observations and clusters are merged or split at different levels.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "A dendrogram provides a highly interpretable complete description of the hierarchical clustering in a graphical format.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 39350,
+          "text": "520\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39351,
+          "text": "Number of Clusters",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39352,
+          "text": "2\n4\n6\n8",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39353,
+          "text": "-3.0\n-2.5\n-2.0\n-1.5\n-1.0\n-0.5\n0.0",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39354,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39355,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39356,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39357,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39358,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39359,
+          "text": "Number of Clusters",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39360,
+          "text": "Gap",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39361,
+          "text": "2\n4\n6\n8",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39362,
+          "text": "-0.5\n0.0\n0.5\n1.0",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39363,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39364,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39365,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39366,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39367,
+          "text": "log WK",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39369,
+          "text": "This gives K\u2217= 2, which looks reasonable from Figure 14.4.",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39371,
+          "text": "The results of applying K-means or K-medoids clustering algorithms de-\npend on the choice for the number of clusters to be searched and a starting\ncon\ufb01guration assignment. In contrast, hierarchical clustering methods do\nnot require such speci\ufb01cations. Instead, they require the user to specify a\nmeasure of dissimilarity between (disjoint) groups of observations, based\non the pairwise dissimilarities among the observations in the two groups.\nAs the name suggests, they produce hierarchical representations in which\nthe clusters at each level of the hierarchy are created by merging clusters\nat the next lower level. At the lowest level, each cluster contains a single\nobservation. At the highest level there is only one cluster containing all of\nthe data.\nStrategies for hierarchical clustering divide into two basic paradigms: ag-\nglomerative (bottom-up) and divisive (top-down). Agglomerative strategies\nstart at the bottom and at each level recursively merge a selected pair of\nclusters into a single cluster. This produces a grouping at the next higher\nlevel with one less cluster. The pair chosen for merging consist of the two\ngroups with the smallest intergroup dissimilarity. Divisive methods start\nat the top and at each level recursively split one of the existing clusters at",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39373,
+          "text": "that level into two new clusters. The split is chosen to produce two new\ngroups with the largest between-group dissimilarity. With both paradigms\nthere are N \u22121 levels in the hierarchy.\nEach level of the hierarchy represents a particular grouping of the data\ninto disjoint clusters of observations. The entire hierarchy represents an\nordered sequence of such groupings. It is up to the user to decide which\nlevel (if any) actually represents a \u201cnatural\u201d clustering in the sense that\nobservations within each of its groups are su\ufb03ciently more similar to each\nother than to observations assigned to di\ufb00erent groups at that level. The\nGap statistic described earlier can be used for this purpose.\nRecursive binary splitting/agglomeration can be represented by a rooted\nbinary tree. The nodes of the trees represent groups. The root node repre-\nsents the entire data set. The N terminal nodes each represent one of the\nindividual observations (singleton clusters). Each nonterminal node (\u201cpar-\nent\u201d) has two daughter nodes. For divisive clustering the two daughters\nrepresent the two groups resulting from the split of the parent; for agglom-\nerative clustering the daughters represent the two groups that were merged\nto form the parent.\nAll agglomerative and some divisive methods (when viewed bottom-up)\npossess a monotonicity property. That is, the dissimilarity between merged\nclusters is monotone increasing with the level of the merger. Thus the\nbinary tree can be plotted so that the height of each node is proportional\nto the value of the intergroup dissimilarity between its two daughters. The\nterminal nodes representing individual observations are all plotted at zero\nheight. This type of graphical display is called a dendrogram.\nA dendrogram provides a highly interpretable complete description of\nthe hierarchical clustering in a graphical format. This is one of the main\nreasons for the popularity of hierarchical clustering methods.\nFor the microarray data, Figure 14.12 shows the dendrogram resulting\nfrom agglomerative clustering with average linkage; agglomerative cluster-\ning and this example are discussed in more detail later in this chapter.\nCutting the dendrogram horizontally at a particular height partitions the\ndata into disjoint clusters represented by the vertical lines that intersect\nit. These are the clusters that would be produced by terminating the pro-\ncedure when the optimal intergroup dissimilarity exceeds that threshold\ncut value. Groups that merge at high values, relative to the merger values\nof the subgroups contained within them lower in the tree, are candidates\nfor natural clusters. Note that this may occur at several di\ufb00erent levels,\nindicating a clustering hierarchy: that is, clusters nested within clusters.\nSuch a dendrogram is often viewed as a graphical summary of the data\nitself, rather than a description of the results of the algorithm. However,\nsuch interpretations should be treated with caution. First, di\ufb00erent hierar-\nchical methods (see below), as well as small changes in the data, can lead\nto quite di\ufb00erent dendrograms. Also, such a summary will be valid only to\nthe extent that the pairwise observation dissimilarities possess the hierar-",
+          "type": "narrative",
+          "page": 539
+        },
+        {
+          "id": 39374,
+          "text": "522\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39375,
+          "text": "CNS\nCNS",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39376,
+          "text": "CNS\nRENAL",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39377,
+          "text": "BREAST",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39378,
+          "text": "CNS\nCNS",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39379,
+          "text": "BREAST",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39380,
+          "text": "NSCLC",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39381,
+          "text": "NSCLC",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39382,
+          "text": "RENAL\nRENAL\nRENAL",
+          "type": "narrative",
+          "page": 540
+        }
+      ]
+    },
+    {
+      "id": 535,
+      "name": "cophenetic correlation coefficient",
+      "description": "Correlation between pairwise observation dissimilarities and their cophenetic dissimilarities from the dendrogram, measuring how well hierarchy represents data.",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "The extent to which the hierarchical structure produced by a dendrogram actually represents the data itself can be judged by the cophenetic correlation coefficient.",
+      "existing_formula": "r = \\text{corr}(d_{ii'}, C_{ii'})",
+      "paragraphs": [
+        {
+          "id": 39350,
+          "text": "520\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39351,
+          "text": "Number of Clusters",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39352,
+          "text": "2\n4\n6\n8",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39353,
+          "text": "-3.0\n-2.5\n-2.0\n-1.5\n-1.0\n-0.5\n0.0",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39354,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39355,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39356,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39357,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39358,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39359,
+          "text": "Number of Clusters",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39360,
+          "text": "Gap",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39361,
+          "text": "2\n4\n6\n8",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39362,
+          "text": "-0.5\n0.0\n0.5\n1.0",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39363,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39364,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39365,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39366,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39367,
+          "text": "log WK",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39369,
+          "text": "This gives K\u2217= 2, which looks reasonable from Figure 14.4.",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39371,
+          "text": "The results of applying K-means or K-medoids clustering algorithms de-\npend on the choice for the number of clusters to be searched and a starting\ncon\ufb01guration assignment. In contrast, hierarchical clustering methods do\nnot require such speci\ufb01cations. Instead, they require the user to specify a\nmeasure of dissimilarity between (disjoint) groups of observations, based\non the pairwise dissimilarities among the observations in the two groups.\nAs the name suggests, they produce hierarchical representations in which\nthe clusters at each level of the hierarchy are created by merging clusters\nat the next lower level. At the lowest level, each cluster contains a single\nobservation. At the highest level there is only one cluster containing all of\nthe data.\nStrategies for hierarchical clustering divide into two basic paradigms: ag-\nglomerative (bottom-up) and divisive (top-down). Agglomerative strategies\nstart at the bottom and at each level recursively merge a selected pair of\nclusters into a single cluster. This produces a grouping at the next higher\nlevel with one less cluster. The pair chosen for merging consist of the two\ngroups with the smallest intergroup dissimilarity. Divisive methods start\nat the top and at each level recursively split one of the existing clusters at",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39373,
+          "text": "that level into two new clusters. The split is chosen to produce two new\ngroups with the largest between-group dissimilarity. With both paradigms\nthere are N \u22121 levels in the hierarchy.\nEach level of the hierarchy represents a particular grouping of the data\ninto disjoint clusters of observations. The entire hierarchy represents an\nordered sequence of such groupings. It is up to the user to decide which\nlevel (if any) actually represents a \u201cnatural\u201d clustering in the sense that\nobservations within each of its groups are su\ufb03ciently more similar to each\nother than to observations assigned to di\ufb00erent groups at that level. The\nGap statistic described earlier can be used for this purpose.\nRecursive binary splitting/agglomeration can be represented by a rooted\nbinary tree. The nodes of the trees represent groups. The root node repre-\nsents the entire data set. The N terminal nodes each represent one of the\nindividual observations (singleton clusters). Each nonterminal node (\u201cpar-\nent\u201d) has two daughter nodes. For divisive clustering the two daughters\nrepresent the two groups resulting from the split of the parent; for agglom-\nerative clustering the daughters represent the two groups that were merged\nto form the parent.\nAll agglomerative and some divisive methods (when viewed bottom-up)\npossess a monotonicity property. That is, the dissimilarity between merged\nclusters is monotone increasing with the level of the merger. Thus the\nbinary tree can be plotted so that the height of each node is proportional\nto the value of the intergroup dissimilarity between its two daughters. The\nterminal nodes representing individual observations are all plotted at zero\nheight. This type of graphical display is called a dendrogram.\nA dendrogram provides a highly interpretable complete description of\nthe hierarchical clustering in a graphical format. This is one of the main\nreasons for the popularity of hierarchical clustering methods.\nFor the microarray data, Figure 14.12 shows the dendrogram resulting\nfrom agglomerative clustering with average linkage; agglomerative cluster-\ning and this example are discussed in more detail later in this chapter.\nCutting the dendrogram horizontally at a particular height partitions the\ndata into disjoint clusters represented by the vertical lines that intersect\nit. These are the clusters that would be produced by terminating the pro-\ncedure when the optimal intergroup dissimilarity exceeds that threshold\ncut value. Groups that merge at high values, relative to the merger values\nof the subgroups contained within them lower in the tree, are candidates\nfor natural clusters. Note that this may occur at several di\ufb00erent levels,\nindicating a clustering hierarchy: that is, clusters nested within clusters.\nSuch a dendrogram is often viewed as a graphical summary of the data\nitself, rather than a description of the results of the algorithm. However,\nsuch interpretations should be treated with caution. First, di\ufb00erent hierar-\nchical methods (see below), as well as small changes in the data, can lead\nto quite di\ufb00erent dendrograms. Also, such a summary will be valid only to\nthe extent that the pairwise observation dissimilarities possess the hierar-",
+          "type": "narrative",
+          "page": 539
+        },
+        {
+          "id": 39374,
+          "text": "522\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39375,
+          "text": "CNS\nCNS",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39376,
+          "text": "CNS\nRENAL",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39377,
+          "text": "BREAST",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39378,
+          "text": "CNS\nCNS",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39379,
+          "text": "BREAST",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39380,
+          "text": "NSCLC",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39381,
+          "text": "NSCLC",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39382,
+          "text": "RENAL\nRENAL\nRENAL",
+          "type": "narrative",
+          "page": 540
+        }
+      ]
+    },
+    {
+      "id": 538,
+      "name": "single linkage agglomerative clustering",
+      "description": "Hierarchical clustering taking intergroup dissimilarity as minimum dissimilarity between groups; tends to chain clusters via intermediate observations.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "Single linkage (SL) agglomerative clustering takes the intergroup dissimilarity to be that of the closest (least dissimilar) pair",
+      "existing_formula": "d_{SL}(G, H) = \\min_{i \\in G, i' \\in H} d_{ii'}",
+      "paragraphs": [
+        {
+          "id": 39350,
+          "text": "520\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39351,
+          "text": "Number of Clusters",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39352,
+          "text": "2\n4\n6\n8",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39353,
+          "text": "-3.0\n-2.5\n-2.0\n-1.5\n-1.0\n-0.5\n0.0",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39354,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39355,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39356,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39357,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39358,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39359,
+          "text": "Number of Clusters",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39360,
+          "text": "Gap",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39361,
+          "text": "2\n4\n6\n8",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39362,
+          "text": "-0.5\n0.0\n0.5\n1.0",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39363,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39364,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39365,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39366,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39367,
+          "text": "log WK",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39369,
+          "text": "This gives K\u2217= 2, which looks reasonable from Figure 14.4.",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39371,
+          "text": "The results of applying K-means or K-medoids clustering algorithms de-\npend on the choice for the number of clusters to be searched and a starting\ncon\ufb01guration assignment. In contrast, hierarchical clustering methods do\nnot require such speci\ufb01cations. Instead, they require the user to specify a\nmeasure of dissimilarity between (disjoint) groups of observations, based\non the pairwise dissimilarities among the observations in the two groups.\nAs the name suggests, they produce hierarchical representations in which\nthe clusters at each level of the hierarchy are created by merging clusters\nat the next lower level. At the lowest level, each cluster contains a single\nobservation. At the highest level there is only one cluster containing all of\nthe data.\nStrategies for hierarchical clustering divide into two basic paradigms: ag-\nglomerative (bottom-up) and divisive (top-down). Agglomerative strategies\nstart at the bottom and at each level recursively merge a selected pair of\nclusters into a single cluster. This produces a grouping at the next higher\nlevel with one less cluster. The pair chosen for merging consist of the two\ngroups with the smallest intergroup dissimilarity. Divisive methods start\nat the top and at each level recursively split one of the existing clusters at",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39373,
+          "text": "that level into two new clusters. The split is chosen to produce two new\ngroups with the largest between-group dissimilarity. With both paradigms\nthere are N \u22121 levels in the hierarchy.\nEach level of the hierarchy represents a particular grouping of the data\ninto disjoint clusters of observations. The entire hierarchy represents an\nordered sequence of such groupings. It is up to the user to decide which\nlevel (if any) actually represents a \u201cnatural\u201d clustering in the sense that\nobservations within each of its groups are su\ufb03ciently more similar to each\nother than to observations assigned to di\ufb00erent groups at that level. The\nGap statistic described earlier can be used for this purpose.\nRecursive binary splitting/agglomeration can be represented by a rooted\nbinary tree. The nodes of the trees represent groups. The root node repre-\nsents the entire data set. The N terminal nodes each represent one of the\nindividual observations (singleton clusters). Each nonterminal node (\u201cpar-\nent\u201d) has two daughter nodes. For divisive clustering the two daughters\nrepresent the two groups resulting from the split of the parent; for agglom-\nerative clustering the daughters represent the two groups that were merged\nto form the parent.\nAll agglomerative and some divisive methods (when viewed bottom-up)\npossess a monotonicity property. That is, the dissimilarity between merged\nclusters is monotone increasing with the level of the merger. Thus the\nbinary tree can be plotted so that the height of each node is proportional\nto the value of the intergroup dissimilarity between its two daughters. The\nterminal nodes representing individual observations are all plotted at zero\nheight. This type of graphical display is called a dendrogram.\nA dendrogram provides a highly interpretable complete description of\nthe hierarchical clustering in a graphical format. This is one of the main\nreasons for the popularity of hierarchical clustering methods.\nFor the microarray data, Figure 14.12 shows the dendrogram resulting\nfrom agglomerative clustering with average linkage; agglomerative cluster-\ning and this example are discussed in more detail later in this chapter.\nCutting the dendrogram horizontally at a particular height partitions the\ndata into disjoint clusters represented by the vertical lines that intersect\nit. These are the clusters that would be produced by terminating the pro-\ncedure when the optimal intergroup dissimilarity exceeds that threshold\ncut value. Groups that merge at high values, relative to the merger values\nof the subgroups contained within them lower in the tree, are candidates\nfor natural clusters. Note that this may occur at several di\ufb00erent levels,\nindicating a clustering hierarchy: that is, clusters nested within clusters.\nSuch a dendrogram is often viewed as a graphical summary of the data\nitself, rather than a description of the results of the algorithm. However,\nsuch interpretations should be treated with caution. First, di\ufb00erent hierar-\nchical methods (see below), as well as small changes in the data, can lead\nto quite di\ufb00erent dendrograms. Also, such a summary will be valid only to\nthe extent that the pairwise observation dissimilarities possess the hierar-",
+          "type": "narrative",
+          "page": 539
+        },
+        {
+          "id": 39374,
+          "text": "522\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39375,
+          "text": "CNS\nCNS",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39376,
+          "text": "CNS\nRENAL",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39377,
+          "text": "BREAST",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39378,
+          "text": "CNS\nCNS",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39379,
+          "text": "BREAST",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39380,
+          "text": "NSCLC",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39381,
+          "text": "NSCLC",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39382,
+          "text": "RENAL\nRENAL\nRENAL",
+          "type": "narrative",
+          "page": 540
+        }
+      ]
+    },
+    {
+      "id": 540,
+      "name": "group average clustering",
+      "description": "Hierarchical clustering using average dissimilarity between groups; compromise between single and complete linkage, attempts compact and well-separated clusters.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "Group average (GA) clustering uses the average dissimilarity between the groups",
+      "existing_formula": "d_{GA}(G, H) = \\frac{1}{N_G N_H} \\sum_{i \\in G} \\sum_{i' \\in H} d_{ii'}",
+      "paragraphs": [
+        {
+          "id": 39350,
+          "text": "520\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39351,
+          "text": "Number of Clusters",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39352,
+          "text": "2\n4\n6\n8",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39353,
+          "text": "-3.0\n-2.5\n-2.0\n-1.5\n-1.0\n-0.5\n0.0",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39354,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39355,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39356,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39357,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39358,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39359,
+          "text": "Number of Clusters",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39360,
+          "text": "Gap",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39361,
+          "text": "2\n4\n6\n8",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39362,
+          "text": "-0.5\n0.0\n0.5\n1.0",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39363,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39364,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39365,
+          "text": "\u2022\n\u2022\n\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39366,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 538
+        },
+        {
+          "id": 39367,
+          "text": "log WK",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39369,
+          "text": "This gives K\u2217= 2, which looks reasonable from Figure 14.4.",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39371,
+          "text": "The results of applying K-means or K-medoids clustering algorithms de-\npend on the choice for the number of clusters to be searched and a starting\ncon\ufb01guration assignment. In contrast, hierarchical clustering methods do\nnot require such speci\ufb01cations. Instead, they require the user to specify a\nmeasure of dissimilarity between (disjoint) groups of observations, based\non the pairwise dissimilarities among the observations in the two groups.\nAs the name suggests, they produce hierarchical representations in which\nthe clusters at each level of the hierarchy are created by merging clusters\nat the next lower level. At the lowest level, each cluster contains a single\nobservation. At the highest level there is only one cluster containing all of\nthe data.\nStrategies for hierarchical clustering divide into two basic paradigms: ag-\nglomerative (bottom-up) and divisive (top-down). Agglomerative strategies\nstart at the bottom and at each level recursively merge a selected pair of\nclusters into a single cluster. This produces a grouping at the next higher\nlevel with one less cluster. The pair chosen for merging consist of the two\ngroups with the smallest intergroup dissimilarity. Divisive methods start\nat the top and at each level recursively split one of the existing clusters at",
+          "type": "narrative",
+          "page": 538
+        },
+        {
+          "id": 39373,
+          "text": "that level into two new clusters. The split is chosen to produce two new\ngroups with the largest between-group dissimilarity. With both paradigms\nthere are N \u22121 levels in the hierarchy.\nEach level of the hierarchy represents a particular grouping of the data\ninto disjoint clusters of observations. The entire hierarchy represents an\nordered sequence of such groupings. It is up to the user to decide which\nlevel (if any) actually represents a \u201cnatural\u201d clustering in the sense that\nobservations within each of its groups are su\ufb03ciently more similar to each\nother than to observations assigned to di\ufb00erent groups at that level. The\nGap statistic described earlier can be used for this purpose.\nRecursive binary splitting/agglomeration can be represented by a rooted\nbinary tree. The nodes of the trees represent groups. The root node repre-\nsents the entire data set. The N terminal nodes each represent one of the\nindividual observations (singleton clusters). Each nonterminal node (\u201cpar-\nent\u201d) has two daughter nodes. For divisive clustering the two daughters\nrepresent the two groups resulting from the split of the parent; for agglom-\nerative clustering the daughters represent the two groups that were merged\nto form the parent.\nAll agglomerative and some divisive methods (when viewed bottom-up)\npossess a monotonicity property. That is, the dissimilarity between merged\nclusters is monotone increasing with the level of the merger. Thus the\nbinary tree can be plotted so that the height of each node is proportional\nto the value of the intergroup dissimilarity between its two daughters. The\nterminal nodes representing individual observations are all plotted at zero\nheight. This type of graphical display is called a dendrogram.\nA dendrogram provides a highly interpretable complete description of\nthe hierarchical clustering in a graphical format. This is one of the main\nreasons for the popularity of hierarchical clustering methods.\nFor the microarray data, Figure 14.12 shows the dendrogram resulting\nfrom agglomerative clustering with average linkage; agglomerative cluster-\ning and this example are discussed in more detail later in this chapter.\nCutting the dendrogram horizontally at a particular height partitions the\ndata into disjoint clusters represented by the vertical lines that intersect\nit. These are the clusters that would be produced by terminating the pro-\ncedure when the optimal intergroup dissimilarity exceeds that threshold\ncut value. Groups that merge at high values, relative to the merger values\nof the subgroups contained within them lower in the tree, are candidates\nfor natural clusters. Note that this may occur at several di\ufb00erent levels,\nindicating a clustering hierarchy: that is, clusters nested within clusters.\nSuch a dendrogram is often viewed as a graphical summary of the data\nitself, rather than a description of the results of the algorithm. However,\nsuch interpretations should be treated with caution. First, di\ufb00erent hierar-\nchical methods (see below), as well as small changes in the data, can lead\nto quite di\ufb00erent dendrograms. Also, such a summary will be valid only to\nthe extent that the pairwise observation dissimilarities possess the hierar-",
+          "type": "narrative",
+          "page": 539
+        },
+        {
+          "id": 39374,
+          "text": "522\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39375,
+          "text": "CNS\nCNS",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39376,
+          "text": "CNS\nRENAL",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39377,
+          "text": "BREAST",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39378,
+          "text": "CNS\nCNS",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39379,
+          "text": "BREAST",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39380,
+          "text": "NSCLC",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39381,
+          "text": "NSCLC",
+          "type": "narrative",
+          "page": 540
+        },
+        {
+          "id": 39382,
+          "text": "RENAL\nRENAL\nRENAL",
+          "type": "narrative",
+          "page": 540
+        }
+      ]
+    },
+    {
+      "id": 524,
+      "name": "self-organizing map",
+      "description": "A constrained version of K-means clustering where prototypes lie in a low-dimensional manifold (usually 1D or 2D grid), preserving topological relationships.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "Self-organizing maps (SOMs) can be viewed as constrained versions of K-means clustering, in which the prototypes are encouraged to lie in a one- or two-dimensional manifold in the feature space. The original motivation was to produce low-dimensional views of high-dimensional data, in a way similar to principal components and multidimensional scaling.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 39447,
+          "text": "528\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39448,
+          "text": "the observations transferred to H, and those remaining in G. These two\nclusters represent the second level of the hierarchy. Each successive level\nis produced by applying this splitting procedure to one of the clusters at\nthe previous level. Kaufman and Rousseeuw (1990) suggest choosing the\ncluster at each level with the largest diameter (14.44) for splitting. An al-\nternative would be to choose the one with the largest average dissimilarity\namong its members\n\u00afdG =\n1\nNG",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39449,
+          "text": "\u0002",
+          "type": "equation",
+          "page": 546
+        },
+        {
+          "id": 39450,
+          "text": "i\u2208G",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39451,
+          "text": "\u0002",
+          "type": "equation",
+          "page": 546
+        },
+        {
+          "id": 39452,
+          "text": "i\u2032\u2208G\ndii\u2032.",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39453,
+          "text": "The recursive splitting continues until all clusters either become singletons\nor all members of each one have zero dissimilarity from one another.",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39455,
+          "text": "This method can be viewed as a constrained version of K-means clustering,\nin which the prototypes are encouraged to lie in a one- or two-dimensional\nmanifold in the feature space. The resulting manifold is also referred to\nas a constrained topological map, since the original high-dimensional obser-\nvations can be mapped down onto the two-dimensional coordinate system.\nThe original SOM algorithm was online\u2014observations are processed one at\na time\u2014and later a batch version was proposed. The technique also bears\na close relationship to principal curves and surfaces, which are discussed in\nthe next section.\nWe consider a SOM with a two-dimensional rectangular grid of K proto-\ntypes mj \u2208IRp (other choices, such as hexagonal grids, can also be used).\nEach of the K prototypes are parametrized with respect to an integer\ncoordinate pair \u2113j \u2208Q1 \u00d7 Q2. Here Q1 = {1, 2, . . . , q1}, similarly Q2, and\nK = q1\u00b7q2. The mj are initialized, for example, to lie in the two-dimensional\nprincipal component plane of the data (next section). We can think of the\nprototypes as \u201cbuttons,\u201d \u201csewn\u201d on the principal component plane in a\nregular pattern. The SOM procedure tries to bend the plane so that the\nbuttons approximate the data points as well as possible. Once the model is\n\ufb01t, the observations can be mapped down onto the two-dimensional grid.\nThe observations xi are processed one at a time. We \ufb01nd the closest\nprototype mj to xi in Euclidean distance in IRp, and then for all neighbors\nmk of mj, move mk toward xi via the update",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39456,
+          "text": "mk \u2190mk + \u03b1(xi \u2212mk).\n(14.46)",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39457,
+          "text": "The \u201cneighbors\u201d of mj are de\ufb01ned to be all mk such that the distance\nbetween \u2113j and \u2113k is small. The simplest approach uses Euclidean distance,\nand \u201csmall\u201d is determined by a threshold r. This neighborhood always\nincludes the closest prototype mj itself.",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39459,
+          "text": "Notice that distance is de\ufb01ned in the space Q1\u00d7Q2 of integer topological\ncoordinates of the prototypes, rather than in the feature space IRp. The\ne\ufb00ect of the update (14.46) is to move the prototypes closer to the data,\nbut also to maintain a smooth two-dimensional spatial relationship between\nthe prototypes.\nThe performance of the SOM algorithm depends on the learning rate\n\u03b1 and the distance threshold r. Typically \u03b1 is decreased from say 1.0 to\n0.0 over a few thousand iterations (one per observation). Similarly r is\ndecreased linearly from starting value R to 1 over a few thousand iterations.\nWe illustrate a method for choosing R in the example below.\nWe have described the simplest version of the SOM. More sophisticated\nversions modify the update step according to distance:",
+          "type": "narrative",
+          "page": 547
+        },
+        {
+          "id": 39460,
+          "text": "mk \u2190mk + \u03b1h(\u2225\u2113j \u2212\u2113k\u2225)(xi \u2212mk),\n(14.47)",
+          "type": "narrative",
+          "page": 547
+        },
+        {
+          "id": 39461,
+          "text": "where the neighborhood function h gives more weight to prototypes mk with\nindices \u2113k closer to \u2113j than to those further away.\nIf we take the distance r small enough so that each neighborhood contains\nonly one point, then the spatial connection between prototypes is lost. In\nthat case one can show that the SOM algorithm is an online version of\nK-means clustering, and eventually stabilizes at one of the local minima\nfound by K-means. Since the SOM is a constrained version of K-means\nclustering, it is important to check whether the constraint is reasonable\nin any given problem. One can do this by computing the reconstruction\nerror \u2225x \u2212mj\u22252, summed over observations, for both methods. This will\nnecessarily be smaller for K-means, but should not be much smaller if the\nSOM is a reasonable approximation.\nAs an illustrative example, we generated 90 data points in three dimen-\nsions, near the surface of a half sphere of radius 1. The points were in each\nof three clusters\u2014red, green, and blue\u2014located near (0, 1, 0), (0, 0, 1) and\n(1, 0, 0). The data are shown in Figure 14.15\nBy design, the red cluster was much tighter than the green or blue ones.\n(Full details of the data generation are given in Exercise 14.5.) A 5\u00d75 grid\nof prototypes was used, with initial grid size R = 2; this meant that about\na third of the prototypes were initially in each neighborhood. We did a\ntotal of 40 passes through the dataset of 90 observations, and let r and \u03b1\ndecrease linearly over the 3600 iterations.\nIn Figure 14.16 the prototypes are indicated by circles, and the points\nthat project to each prototype are plotted randomly within the correspond-\ning circle. The left panel shows the initial con\ufb01guration, while the right\npanel shows the \ufb01nal one. The algorithm has succeeded in separating the\nclusters; however, the separation of the red cluster indicates that the man-\nifold has folded back on itself (see Figure 14.17). Since the distances in the\ntwo-dimensional display are not used, there is little indication in the SOM\nprojection that the red cluster is tighter than the others.",
+          "type": "narrative",
+          "page": 547
+        },
+        {
+          "id": 39462,
+          "text": "530\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 548
+        },
+        {
+          "id": 39463,
+          "text": "\u22121",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39464,
+          "text": "\u22120.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39465,
+          "text": "0",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39466,
+          "text": "0.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39467,
+          "text": "1",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39468,
+          "text": "1.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39469,
+          "text": "\u22121",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39470,
+          "text": "\u22120.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39471,
+          "text": "0",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39472,
+          "text": "0.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39473,
+          "text": "1",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39474,
+          "text": "1.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39475,
+          "text": "\u22121",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39476,
+          "text": "\u22120.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39477,
+          "text": "0",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39478,
+          "text": "0.5",
+          "type": "equation",
+          "page": 548
+        }
+      ]
+    },
+    {
+      "id": 542,
+      "name": "batch som",
+      "description": "Batch version of self-organizing maps processing all observations together rather than one at a time.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "The original SOM algorithm was online\u2014observations are processed one at a time\u2014and later a batch version was proposed.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 39447,
+          "text": "528\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39448,
+          "text": "the observations transferred to H, and those remaining in G. These two\nclusters represent the second level of the hierarchy. Each successive level\nis produced by applying this splitting procedure to one of the clusters at\nthe previous level. Kaufman and Rousseeuw (1990) suggest choosing the\ncluster at each level with the largest diameter (14.44) for splitting. An al-\nternative would be to choose the one with the largest average dissimilarity\namong its members\n\u00afdG =\n1\nNG",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39449,
+          "text": "\u0002",
+          "type": "equation",
+          "page": 546
+        },
+        {
+          "id": 39450,
+          "text": "i\u2208G",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39451,
+          "text": "\u0002",
+          "type": "equation",
+          "page": 546
+        },
+        {
+          "id": 39452,
+          "text": "i\u2032\u2208G\ndii\u2032.",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39453,
+          "text": "The recursive splitting continues until all clusters either become singletons\nor all members of each one have zero dissimilarity from one another.",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39455,
+          "text": "This method can be viewed as a constrained version of K-means clustering,\nin which the prototypes are encouraged to lie in a one- or two-dimensional\nmanifold in the feature space. The resulting manifold is also referred to\nas a constrained topological map, since the original high-dimensional obser-\nvations can be mapped down onto the two-dimensional coordinate system.\nThe original SOM algorithm was online\u2014observations are processed one at\na time\u2014and later a batch version was proposed. The technique also bears\na close relationship to principal curves and surfaces, which are discussed in\nthe next section.\nWe consider a SOM with a two-dimensional rectangular grid of K proto-\ntypes mj \u2208IRp (other choices, such as hexagonal grids, can also be used).\nEach of the K prototypes are parametrized with respect to an integer\ncoordinate pair \u2113j \u2208Q1 \u00d7 Q2. Here Q1 = {1, 2, . . . , q1}, similarly Q2, and\nK = q1\u00b7q2. The mj are initialized, for example, to lie in the two-dimensional\nprincipal component plane of the data (next section). We can think of the\nprototypes as \u201cbuttons,\u201d \u201csewn\u201d on the principal component plane in a\nregular pattern. The SOM procedure tries to bend the plane so that the\nbuttons approximate the data points as well as possible. Once the model is\n\ufb01t, the observations can be mapped down onto the two-dimensional grid.\nThe observations xi are processed one at a time. We \ufb01nd the closest\nprototype mj to xi in Euclidean distance in IRp, and then for all neighbors\nmk of mj, move mk toward xi via the update",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39456,
+          "text": "mk \u2190mk + \u03b1(xi \u2212mk).\n(14.46)",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39457,
+          "text": "The \u201cneighbors\u201d of mj are de\ufb01ned to be all mk such that the distance\nbetween \u2113j and \u2113k is small. The simplest approach uses Euclidean distance,\nand \u201csmall\u201d is determined by a threshold r. This neighborhood always\nincludes the closest prototype mj itself.",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39459,
+          "text": "Notice that distance is de\ufb01ned in the space Q1\u00d7Q2 of integer topological\ncoordinates of the prototypes, rather than in the feature space IRp. The\ne\ufb00ect of the update (14.46) is to move the prototypes closer to the data,\nbut also to maintain a smooth two-dimensional spatial relationship between\nthe prototypes.\nThe performance of the SOM algorithm depends on the learning rate\n\u03b1 and the distance threshold r. Typically \u03b1 is decreased from say 1.0 to\n0.0 over a few thousand iterations (one per observation). Similarly r is\ndecreased linearly from starting value R to 1 over a few thousand iterations.\nWe illustrate a method for choosing R in the example below.\nWe have described the simplest version of the SOM. More sophisticated\nversions modify the update step according to distance:",
+          "type": "narrative",
+          "page": 547
+        },
+        {
+          "id": 39460,
+          "text": "mk \u2190mk + \u03b1h(\u2225\u2113j \u2212\u2113k\u2225)(xi \u2212mk),\n(14.47)",
+          "type": "narrative",
+          "page": 547
+        },
+        {
+          "id": 39461,
+          "text": "where the neighborhood function h gives more weight to prototypes mk with\nindices \u2113k closer to \u2113j than to those further away.\nIf we take the distance r small enough so that each neighborhood contains\nonly one point, then the spatial connection between prototypes is lost. In\nthat case one can show that the SOM algorithm is an online version of\nK-means clustering, and eventually stabilizes at one of the local minima\nfound by K-means. Since the SOM is a constrained version of K-means\nclustering, it is important to check whether the constraint is reasonable\nin any given problem. One can do this by computing the reconstruction\nerror \u2225x \u2212mj\u22252, summed over observations, for both methods. This will\nnecessarily be smaller for K-means, but should not be much smaller if the\nSOM is a reasonable approximation.\nAs an illustrative example, we generated 90 data points in three dimen-\nsions, near the surface of a half sphere of radius 1. The points were in each\nof three clusters\u2014red, green, and blue\u2014located near (0, 1, 0), (0, 0, 1) and\n(1, 0, 0). The data are shown in Figure 14.15\nBy design, the red cluster was much tighter than the green or blue ones.\n(Full details of the data generation are given in Exercise 14.5.) A 5\u00d75 grid\nof prototypes was used, with initial grid size R = 2; this meant that about\na third of the prototypes were initially in each neighborhood. We did a\ntotal of 40 passes through the dataset of 90 observations, and let r and \u03b1\ndecrease linearly over the 3600 iterations.\nIn Figure 14.16 the prototypes are indicated by circles, and the points\nthat project to each prototype are plotted randomly within the correspond-\ning circle. The left panel shows the initial con\ufb01guration, while the right\npanel shows the \ufb01nal one. The algorithm has succeeded in separating the\nclusters; however, the separation of the red cluster indicates that the man-\nifold has folded back on itself (see Figure 14.17). Since the distances in the\ntwo-dimensional display are not used, there is little indication in the SOM\nprojection that the red cluster is tighter than the others.",
+          "type": "narrative",
+          "page": 547
+        },
+        {
+          "id": 39462,
+          "text": "530\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 548
+        },
+        {
+          "id": 39463,
+          "text": "\u22121",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39464,
+          "text": "\u22120.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39465,
+          "text": "0",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39466,
+          "text": "0.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39467,
+          "text": "1",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39468,
+          "text": "1.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39469,
+          "text": "\u22121",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39470,
+          "text": "\u22120.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39471,
+          "text": "0",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39472,
+          "text": "0.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39473,
+          "text": "1",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39474,
+          "text": "1.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39475,
+          "text": "\u22121",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39476,
+          "text": "\u22120.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39477,
+          "text": "0",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39478,
+          "text": "0.5",
+          "type": "equation",
+          "page": 548
+        }
+      ]
+    },
+    {
+      "id": 543,
+      "name": "neighborhood function in som",
+      "description": "Function h giving more weight to prototypes closer in topological coordinate space, used in sophisticated SOM updates.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "where the neighborhood function h gives more weight to prototypes mk with indices \u2113k closer to \u2113j than to those further away.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 39447,
+          "text": "528\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39448,
+          "text": "the observations transferred to H, and those remaining in G. These two\nclusters represent the second level of the hierarchy. Each successive level\nis produced by applying this splitting procedure to one of the clusters at\nthe previous level. Kaufman and Rousseeuw (1990) suggest choosing the\ncluster at each level with the largest diameter (14.44) for splitting. An al-\nternative would be to choose the one with the largest average dissimilarity\namong its members\n\u00afdG =\n1\nNG",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39449,
+          "text": "\u0002",
+          "type": "equation",
+          "page": 546
+        },
+        {
+          "id": 39450,
+          "text": "i\u2208G",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39451,
+          "text": "\u0002",
+          "type": "equation",
+          "page": 546
+        },
+        {
+          "id": 39452,
+          "text": "i\u2032\u2208G\ndii\u2032.",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39453,
+          "text": "The recursive splitting continues until all clusters either become singletons\nor all members of each one have zero dissimilarity from one another.",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39455,
+          "text": "This method can be viewed as a constrained version of K-means clustering,\nin which the prototypes are encouraged to lie in a one- or two-dimensional\nmanifold in the feature space. The resulting manifold is also referred to\nas a constrained topological map, since the original high-dimensional obser-\nvations can be mapped down onto the two-dimensional coordinate system.\nThe original SOM algorithm was online\u2014observations are processed one at\na time\u2014and later a batch version was proposed. The technique also bears\na close relationship to principal curves and surfaces, which are discussed in\nthe next section.\nWe consider a SOM with a two-dimensional rectangular grid of K proto-\ntypes mj \u2208IRp (other choices, such as hexagonal grids, can also be used).\nEach of the K prototypes are parametrized with respect to an integer\ncoordinate pair \u2113j \u2208Q1 \u00d7 Q2. Here Q1 = {1, 2, . . . , q1}, similarly Q2, and\nK = q1\u00b7q2. The mj are initialized, for example, to lie in the two-dimensional\nprincipal component plane of the data (next section). We can think of the\nprototypes as \u201cbuttons,\u201d \u201csewn\u201d on the principal component plane in a\nregular pattern. The SOM procedure tries to bend the plane so that the\nbuttons approximate the data points as well as possible. Once the model is\n\ufb01t, the observations can be mapped down onto the two-dimensional grid.\nThe observations xi are processed one at a time. We \ufb01nd the closest\nprototype mj to xi in Euclidean distance in IRp, and then for all neighbors\nmk of mj, move mk toward xi via the update",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39456,
+          "text": "mk \u2190mk + \u03b1(xi \u2212mk).\n(14.46)",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39457,
+          "text": "The \u201cneighbors\u201d of mj are de\ufb01ned to be all mk such that the distance\nbetween \u2113j and \u2113k is small. The simplest approach uses Euclidean distance,\nand \u201csmall\u201d is determined by a threshold r. This neighborhood always\nincludes the closest prototype mj itself.",
+          "type": "narrative",
+          "page": 546
+        },
+        {
+          "id": 39459,
+          "text": "Notice that distance is de\ufb01ned in the space Q1\u00d7Q2 of integer topological\ncoordinates of the prototypes, rather than in the feature space IRp. The\ne\ufb00ect of the update (14.46) is to move the prototypes closer to the data,\nbut also to maintain a smooth two-dimensional spatial relationship between\nthe prototypes.\nThe performance of the SOM algorithm depends on the learning rate\n\u03b1 and the distance threshold r. Typically \u03b1 is decreased from say 1.0 to\n0.0 over a few thousand iterations (one per observation). Similarly r is\ndecreased linearly from starting value R to 1 over a few thousand iterations.\nWe illustrate a method for choosing R in the example below.\nWe have described the simplest version of the SOM. More sophisticated\nversions modify the update step according to distance:",
+          "type": "narrative",
+          "page": 547
+        },
+        {
+          "id": 39460,
+          "text": "mk \u2190mk + \u03b1h(\u2225\u2113j \u2212\u2113k\u2225)(xi \u2212mk),\n(14.47)",
+          "type": "narrative",
+          "page": 547
+        },
+        {
+          "id": 39461,
+          "text": "where the neighborhood function h gives more weight to prototypes mk with\nindices \u2113k closer to \u2113j than to those further away.\nIf we take the distance r small enough so that each neighborhood contains\nonly one point, then the spatial connection between prototypes is lost. In\nthat case one can show that the SOM algorithm is an online version of\nK-means clustering, and eventually stabilizes at one of the local minima\nfound by K-means. Since the SOM is a constrained version of K-means\nclustering, it is important to check whether the constraint is reasonable\nin any given problem. One can do this by computing the reconstruction\nerror \u2225x \u2212mj\u22252, summed over observations, for both methods. This will\nnecessarily be smaller for K-means, but should not be much smaller if the\nSOM is a reasonable approximation.\nAs an illustrative example, we generated 90 data points in three dimen-\nsions, near the surface of a half sphere of radius 1. The points were in each\nof three clusters\u2014red, green, and blue\u2014located near (0, 1, 0), (0, 0, 1) and\n(1, 0, 0). The data are shown in Figure 14.15\nBy design, the red cluster was much tighter than the green or blue ones.\n(Full details of the data generation are given in Exercise 14.5.) A 5\u00d75 grid\nof prototypes was used, with initial grid size R = 2; this meant that about\na third of the prototypes were initially in each neighborhood. We did a\ntotal of 40 passes through the dataset of 90 observations, and let r and \u03b1\ndecrease linearly over the 3600 iterations.\nIn Figure 14.16 the prototypes are indicated by circles, and the points\nthat project to each prototype are plotted randomly within the correspond-\ning circle. The left panel shows the initial con\ufb01guration, while the right\npanel shows the \ufb01nal one. The algorithm has succeeded in separating the\nclusters; however, the separation of the red cluster indicates that the man-\nifold has folded back on itself (see Figure 14.17). Since the distances in the\ntwo-dimensional display are not used, there is little indication in the SOM\nprojection that the red cluster is tighter than the others.",
+          "type": "narrative",
+          "page": 547
+        },
+        {
+          "id": 39462,
+          "text": "530\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 548
+        },
+        {
+          "id": 39463,
+          "text": "\u22121",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39464,
+          "text": "\u22120.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39465,
+          "text": "0",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39466,
+          "text": "0.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39467,
+          "text": "1",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39468,
+          "text": "1.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39469,
+          "text": "\u22121",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39470,
+          "text": "\u22120.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39471,
+          "text": "0",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39472,
+          "text": "0.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39473,
+          "text": "1",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39474,
+          "text": "1.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39475,
+          "text": "\u22121",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39476,
+          "text": "\u22120.5",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39477,
+          "text": "0",
+          "type": "equation",
+          "page": 548
+        },
+        {
+          "id": 39478,
+          "text": "0.5",
+          "type": "equation",
+          "page": 548
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "name": "left singular vectors",
+      "description": "This is a standard decomposition in numerical analysis, and many algo-\nrithms exist for its computation (Golub and Van Loan, 1983, for example).\nHere U is an N \u00d7 p orthogonal matrix (UT U = Ip) whose columns uj are\ncalled the left singular vectors; V is a p\u00d7p orthogonal matrix (VT V = Ip)\nwith columns vj called the right singular vectors, and D is a p\u00d7p diagonal\nmatrix, with diagonal elements d1 \u2265d2 \u2265\u00b7 \u00b7 \u00b7 \u2265dp \u22650 known as the sin-\ngular values. For each rank q, the solution Vq to (14.53) consists of the \ufb01rst\nq columns of V. The columns of UD are called the principal components\nof X (see Section 3.5.1). The N optimal \u02c6\u03bbi in (14.52) are given by the \ufb01rst\nq principal components (the N rows of the N \u00d7 q matrix UqDq).\nThe one-dimensional principal component line in IR2 is illustrated in Fig-\nure 14.20. For each data point xi, there is a closest point on the line, given\nby ui1d1v1. Here v1 is the direction of the line and \u02c6\u03bbi = ui1d1 measures\ndistance along the line from the origin. Similarly Figure 14.21 shows the",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "Here U is an N \u00d7 p orthogonal matrix (UT U = Ip) whose columns uj are called the left singular vectors",
+      "existing_formula": "U^T U = I_p",
+      "paragraphs": [
+        {
+          "id": 39629,
+          "text": "534\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 552
+        },
+        {
+          "id": 39630,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39631,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39632,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39633,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39634,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39635,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39636,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39637,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39638,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39639,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39640,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39641,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39642,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39643,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39644,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39645,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39646,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39647,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39648,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39649,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39650,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39651,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39652,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39653,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39654,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39655,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39656,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39657,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39658,
+          "text": "v1\nv1\nv1\nv1\nv1\nv1\nv1\nv1",
+          "type": "narrative",
+          "page": 552
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "name": "principal components",
+      "description": "This is a standard decomposition in numerical analysis, and many algo-\nrithms exist for its computation (Golub and Van Loan, 1983, for example).\nHere U is an N \u00d7 p orthogonal matrix (UT U = Ip) whose columns uj are\ncalled the left singular vectors; V is a p\u00d7p orthogonal matrix (VT V = Ip)\nwith columns vj called the right singular vectors, and D is a p\u00d7p diagonal\nmatrix, with diagonal elements d1 \u2265d2 \u2265\u00b7 \u00b7 \u00b7 \u2265dp \u22650 known as the sin-\ngular values. For each rank q, the solution Vq to (14.53) consists of the \ufb01rst\nq columns of V. The columns of UD are called the principal components\nof X (see Section 3.5.1). The N optimal \u02c6\u03bbi in (14.52) are given by the \ufb01rst\nq principal components (the N rows of the N \u00d7 q matrix UqDq).\nThe one-dimensional principal component line in IR2 is illustrated in Fig-\nure 14.20. For each data point xi, there is a closest point on the line, given\nby ui1d1v1. Here v1 is the direction of the line and \u02c6\u03bbi = ui1d1 measures\ndistance along the line from the origin. Similarly Figure 14.21 shows the",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "The columns of UD are called the principal components of X (see Section 3.5.1). The N optimal \u03bb\u0302i in (14.52) are given by the first q principal components (the N rows of the N \u00d7 q matrix UqDq).",
+      "existing_formula": "Z = UD",
+      "paragraphs": [
+        {
+          "id": 39629,
+          "text": "534\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 552
+        },
+        {
+          "id": 39630,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39631,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39632,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39633,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39634,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39635,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39636,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39637,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39638,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39639,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39640,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39641,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39642,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39643,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39644,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39645,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39646,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39647,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39648,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39649,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39650,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39651,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39652,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39653,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39654,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39655,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39656,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39657,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39658,
+          "text": "v1\nv1\nv1\nv1\nv1\nv1\nv1\nv1",
+          "type": "narrative",
+          "page": 552
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "name": "Procrustes distance",
+      "description": "and the minimal distances is referred to as the Procrustes distance. From\nthe form of the solution, we can center each matrix at its column centroid,\nand then ignore location completely. Hereafter we assume this is the case.\nThe Procrustes distance with scaling solves a slightly more general\nproblem,\nmin\n\u03b2,R ||X2 \u2212\u03b2X1R||F ,\n(14.58)",
+      "category": "validation",
+      "subcategory": "diagnostics",
+      "existing_quote": "and the minimal distances is referred to as the Procrustes distance.",
+      "existing_formula": "\\min_{R, \\mu} ||X_2 - X_1 R - 1\\mu^T||_F",
+      "paragraphs": [
+        {
+          "id": 39629,
+          "text": "534\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 552
+        },
+        {
+          "id": 39630,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39631,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39632,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39633,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39634,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39635,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39636,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39637,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39638,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39639,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39640,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39641,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39642,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39643,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39644,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39645,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39646,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39647,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39648,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39649,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39650,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39651,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39652,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39653,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39654,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39655,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39656,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39657,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39658,
+          "text": "v1\nv1\nv1\nv1\nv1\nv1\nv1\nv1",
+          "type": "narrative",
+          "page": 552
+        }
+      ]
+    },
+    {
+      "id": 58,
+      "name": "adjacency matrix",
+      "description": "Alternatively, a fully connected graph includes all pairwise edges with\nweights wii\u2032 = sii\u2032, and the local behavior is controlled by the scale param-\neter c.\nThe matrix of edge weights W = {wii\u2032} from a similarity graph is called\nthe adjacency matrix. The degree of vertex i is gi = \t\ni\u2032 wii\u2032, the sum of\nthe weights of the edges connected to it. Let G be a diagonal matrix with\ndiagonal elements gi.\nFinally, the graph Laplacian is de\ufb01ned by",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "The matrix of edge weights W = {wii\u2032} from a similarity graph is called the adjacency matrix.",
+      "existing_formula": "W = \\{w_{ii'}\\}",
+      "paragraphs": [
+        {
+          "id": 39629,
+          "text": "534\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 552
+        },
+        {
+          "id": 39630,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39631,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39632,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39633,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39634,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39635,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39636,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39637,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39638,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39639,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39640,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39641,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39642,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39643,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39644,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39645,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39646,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39647,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39648,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39649,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39650,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39651,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39652,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39653,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39654,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39655,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39656,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39657,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39658,
+          "text": "v1\nv1\nv1\nv1\nv1\nv1\nv1\nv1",
+          "type": "narrative",
+          "page": 552
+        }
+      ]
+    },
+    {
+      "id": 59,
+      "name": "unnormalized graph Laplacian",
+      "description": "This is called the unnormalized graph Laplacian; a number of normalized\nversions have been proposed\u2014these standardize the Laplacian with respect\nto the node degrees gi, for example, \u02dcL = I \u2212G\u22121W.\nSpectral clustering \ufb01nds the m eigenvectors ZN\u00d7m corresponding to the\nm smallest eigenvalues of L (ignoring the trivial constant eigenvector).\nUsing a standard method like K-means, we then cluster the rows of Z to\nyield a clustering of the original data points.\nAn example is presented in Figure 14.29. The top left panel shows 450\nsimulated data points in three circular clusters indicated by the colors. K-\nmeans clustering would clearly have di\ufb03culty identifying the outer clusters.\nWe applied spectral clustering using a 10-nearest neighbor similarity graph,\nand display the eigenvector corresponding to the second and third smallest\neigenvalue of the graph Laplacian in the lower left. The 15 smallest eigen-\nvalues are shown in the top right panel. The two eigenvectors shown have\nidenti\ufb01ed the three clusters, and a scatterplot of the rows of the eigenvector\nmatrix Y in the bottom right clearly separates the clusters. A procedure\nsuch as K-means clustering applied to these transformed points would eas-\nily identify the three groups.\nWhy does spectral clustering work? For any vector f we have",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "This is called the unnormalized graph Laplacian; a number of normalized versions have been proposed\u2014these standardize the Laplacian with respect to the node degrees gi, for example, L\u0303 = I \u2212 G\u22121W.",
+      "existing_formula": "L = G - W",
+      "paragraphs": [
+        {
+          "id": 39629,
+          "text": "534\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 552
+        },
+        {
+          "id": 39630,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39631,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39632,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39633,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39634,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39635,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39636,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39637,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39638,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39639,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39640,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39641,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39642,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39643,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39644,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39645,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39646,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39647,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39648,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39649,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39650,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39651,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39652,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39653,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39654,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39655,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39656,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39657,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39658,
+          "text": "v1\nv1\nv1\nv1\nv1\nv1\nv1\nv1",
+          "type": "narrative",
+          "page": 552
+        }
+      ]
+    },
+    {
+      "id": 546,
+      "name": "principal component analysis",
+      "description": "Sequence of best linear approximations to data of all ranks q \u2264 p, providing uncorrelated projections ordered by variance.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "The principal components of a set of data in IRp provide a sequence of best linear approximations to that data, of all ranks q \u2264 p.",
+      "existing_formula": "X = UDV^T",
+      "paragraphs": [
+        {
+          "id": 39629,
+          "text": "534\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 552
+        },
+        {
+          "id": 39630,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39631,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39632,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39633,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39634,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39635,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39636,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39637,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39638,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39639,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39640,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39641,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39642,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39643,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39644,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39645,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39646,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39647,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39648,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39649,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39650,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39651,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39652,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39653,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39654,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39655,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39656,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39657,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39658,
+          "text": "v1\nv1\nv1\nv1\nv1\nv1\nv1\nv1",
+          "type": "narrative",
+          "page": 552
+        }
+      ]
+    },
+    {
+      "id": 550,
+      "name": "procrustes transformation",
+      "description": "Finding optimal rotation R and location \u03bc to match two sets of corresponding points by minimizing ||X2 \u2212 X1R \u2212 1\u03bc^T||F.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "with X1 and X2 both N \u00d7 p matrices of corresponding points, R an orthonormal p \u00d7 p matrix, and \u03bc a p-vector of location coordinates.",
+      "existing_formula": "\\min_{R, \\mu} ||X_2 - X_1 R - 1\\mu^T||_F",
+      "paragraphs": [
+        {
+          "id": 39629,
+          "text": "534\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 552
+        },
+        {
+          "id": 39630,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39631,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39632,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39633,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39634,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39635,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39636,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39637,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39638,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39639,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39640,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39641,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39642,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39643,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39644,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39645,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39646,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39647,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39648,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39649,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39650,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39651,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39652,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39653,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39654,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39655,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39656,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39657,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39658,
+          "text": "v1\nv1\nv1\nv1\nv1\nv1\nv1\nv1",
+          "type": "narrative",
+          "page": 552
+        }
+      ]
+    },
+    {
+      "id": 551,
+      "name": "procrustes average",
+      "description": "Shape M minimizing average squared Procrustes distance to collection of L shapes, found by alternating algorithm.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "Related to Procrustes distance is the Procrustes average of a collection of L shapes",
+      "existing_formula": "\\min_M \\sum_{\\ell=1}^{L} ||M - M_{\\ell} R_{\\ell}||_F^2",
+      "paragraphs": [
+        {
+          "id": 39629,
+          "text": "534\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 552
+        },
+        {
+          "id": 39630,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39631,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39632,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39633,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39634,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39635,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39636,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39637,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39638,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39639,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39640,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39641,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39642,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39643,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39644,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39645,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39646,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39647,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39648,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39649,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39650,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39651,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39652,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39653,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39654,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39655,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39656,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39657,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 552
+        },
+        {
+          "id": 39658,
+          "text": "v1\nv1\nv1\nv1\nv1\nv1\nv1\nv1",
+          "type": "narrative",
+          "page": 552
+        }
+      ]
+    },
+    {
+      "id": 57,
+      "name": "principal points of the distribution",
+      "description": "interested mainly in the smooth ones. A principal curve is illustrated in\nFigure 14.27.\nPrincipal points are an interesting related concept. Consider a set of k\nprototypes and for each point x in the support of a distribution, identify\nthe closest prototype, that is, the prototype that is responsible for it. This\ninduces a partition of the feature space into so-called Voronoi regions. The\nset of k points that minimize the expected distance from X to its prototype\nare called the principal points of the distribution. Each principal point is\nself-consistent, in that it equals the mean of X in its Voronoi region. For\nexample, with k = 1, the principal point of a circular normal distribution is\nthe mean vector; with k = 2 they are a pair of points symmetrically placed\non a ray through the mean vector. Principal points are the distributional\nanalogs of centroids found by K-means clustering. Principal curves can be\nviewed as k = \u221eprincipal points, but constrained to lie on a smooth curve,\nin a similar way that a SOM constrains K-means cluster centers to fall on\na smooth manifold.\nTo \ufb01nd a principal curve f(\u03bb) of a distribution, we consider its coordinate\nfunctions f(\u03bb) = [f1(\u03bb), f2(\u03bb), . . . , fp(\u03bb)] and let XT = (X1, X2, . . . , Xp).\nConsider the following alternating steps:",
+      "category": "model",
+      "subcategory": "dgp",
+      "existing_quote": "The set of k points that minimize the expected distance from X to its prototype are called the principal points of the distribution. Each principal point is self-consistent, in that it equals the mean of X in its Voronoi region.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 40304,
+          "text": "min\n{A\u2113}L\n1 ,M",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40305,
+          "text": "L\n\u0002",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40306,
+          "text": "\u2113=1\n||X\u2113A\u2113\u2212M||2\nF ,\n(14.60)",
+          "type": "equation",
+          "page": 559
+        },
+        {
+          "id": 40307,
+          "text": "where the A\u2113are any p \u00d7 p nonsingular matrices. Here we require a stan-\ndardization, such as MT M = I, to avoid a trivial solution. The solution is\nattractive, and can be computed without iteration (Exercise 14.10):",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40308,
+          "text": "1. Let H\u2113= X\u2113(XT\n\u2113X\u2113)\u22121X\u2113be the rank-p projection matrix de\ufb01ned\nby X\u2113.",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40309,
+          "text": "2. M is the N\u00d7p matrix formed from the p largest eigenvectors of \u00afH =\n1\nL\n\tL\n\u2113=1 H\u2113.",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40311,
+          "text": "Principal curves generalize the principal component line, providing a smooth\none-dimensional curved approximation to a set of data points in IRp. A prin-\ncipal surface is more general, providing a curved manifold approximation\nof dimension 2 or more.\nWe will \ufb01rst de\ufb01ne principal curves for random variables X \u2208IRp, and\nthen move to the \ufb01nite data case. Let f(\u03bb) be a parameterized smooth\ncurve in IRp. Hence f(\u03bb) is a vector function with p coordinates, each a\nsmooth function of the single parameter \u03bb. The parameter \u03bb can be chosen,\nfor example, to be arc-length along the curve from some \ufb01xed origin. For\neach data value x, let \u03bbf(x) de\ufb01ne the closest point on the curve to x. Then\nf(\u03bb) is called a principal curve for the distribution of the random vector\nX if",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40312,
+          "text": "f(\u03bb) = E(X|\u03bbf(X) = \u03bb).\n(14.61)",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40313,
+          "text": "This says f(\u03bb) is the average of all data points that project to it, that is, the\npoints for which it is \u201cresponsible.\u201d This is also known as a self-consistency\nproperty. Although in practice, continuous multivariate distributes have\nin\ufb01nitely many principal curves (Duchamp and Stuetzle, 1996), we are",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40314,
+          "text": "542\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 560
+        },
+        {
+          "id": 40315,
+          "text": ".",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40316,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40317,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40318,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40319,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40320,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40321,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40322,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40323,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40324,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40325,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40326,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40327,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40328,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40329,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40330,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40331,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40332,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40333,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40334,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        }
+      ]
+    },
+    {
+      "id": 552,
+      "name": "principal curve",
+      "description": "Smooth one-dimensional curved approximation to data satisfying self-consistency: f(\u03bb) = E(X|\u03bbf(X) = \u03bb), generalizing principal component line.",
+      "category": "model",
+      "subcategory": "pseudo_model",
+      "existing_quote": "This says f(\u03bb) is the average of all data points that project to it, that is, the points for which it is 'responsible.' This is also known as a self-consistency property.",
+      "existing_formula": "f(\\lambda) = E[X | \\lambda_f(X) = \\lambda]",
+      "paragraphs": [
+        {
+          "id": 40304,
+          "text": "min\n{A\u2113}L\n1 ,M",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40305,
+          "text": "L\n\u0002",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40306,
+          "text": "\u2113=1\n||X\u2113A\u2113\u2212M||2\nF ,\n(14.60)",
+          "type": "equation",
+          "page": 559
+        },
+        {
+          "id": 40307,
+          "text": "where the A\u2113are any p \u00d7 p nonsingular matrices. Here we require a stan-\ndardization, such as MT M = I, to avoid a trivial solution. The solution is\nattractive, and can be computed without iteration (Exercise 14.10):",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40308,
+          "text": "1. Let H\u2113= X\u2113(XT\n\u2113X\u2113)\u22121X\u2113be the rank-p projection matrix de\ufb01ned\nby X\u2113.",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40309,
+          "text": "2. M is the N\u00d7p matrix formed from the p largest eigenvectors of \u00afH =\n1\nL\n\tL\n\u2113=1 H\u2113.",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40311,
+          "text": "Principal curves generalize the principal component line, providing a smooth\none-dimensional curved approximation to a set of data points in IRp. A prin-\ncipal surface is more general, providing a curved manifold approximation\nof dimension 2 or more.\nWe will \ufb01rst de\ufb01ne principal curves for random variables X \u2208IRp, and\nthen move to the \ufb01nite data case. Let f(\u03bb) be a parameterized smooth\ncurve in IRp. Hence f(\u03bb) is a vector function with p coordinates, each a\nsmooth function of the single parameter \u03bb. The parameter \u03bb can be chosen,\nfor example, to be arc-length along the curve from some \ufb01xed origin. For\neach data value x, let \u03bbf(x) de\ufb01ne the closest point on the curve to x. Then\nf(\u03bb) is called a principal curve for the distribution of the random vector\nX if",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40312,
+          "text": "f(\u03bb) = E(X|\u03bbf(X) = \u03bb).\n(14.61)",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40313,
+          "text": "This says f(\u03bb) is the average of all data points that project to it, that is, the\npoints for which it is \u201cresponsible.\u201d This is also known as a self-consistency\nproperty. Although in practice, continuous multivariate distributes have\nin\ufb01nitely many principal curves (Duchamp and Stuetzle, 1996), we are",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40314,
+          "text": "542\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 560
+        },
+        {
+          "id": 40315,
+          "text": ".",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40316,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40317,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40318,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40319,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40320,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40321,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40322,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40323,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40324,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40325,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40326,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40327,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40328,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40329,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40330,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40331,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40332,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40333,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40334,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        }
+      ]
+    },
+    {
+      "id": 553,
+      "name": "self-consistency property",
+      "description": "Property of principal curves where f(\u03bb) equals the average of all data points projecting to it.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "This says f(\u03bb) is the average of all data points that project to it, that is, the points for which it is 'responsible.' This is also known as a self-consistency property.",
+      "existing_formula": "f(\\lambda) = E[X | \\lambda_f(X) = \\lambda]",
+      "paragraphs": [
+        {
+          "id": 40304,
+          "text": "min\n{A\u2113}L\n1 ,M",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40305,
+          "text": "L\n\u0002",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40306,
+          "text": "\u2113=1\n||X\u2113A\u2113\u2212M||2\nF ,\n(14.60)",
+          "type": "equation",
+          "page": 559
+        },
+        {
+          "id": 40307,
+          "text": "where the A\u2113are any p \u00d7 p nonsingular matrices. Here we require a stan-\ndardization, such as MT M = I, to avoid a trivial solution. The solution is\nattractive, and can be computed without iteration (Exercise 14.10):",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40308,
+          "text": "1. Let H\u2113= X\u2113(XT\n\u2113X\u2113)\u22121X\u2113be the rank-p projection matrix de\ufb01ned\nby X\u2113.",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40309,
+          "text": "2. M is the N\u00d7p matrix formed from the p largest eigenvectors of \u00afH =\n1\nL\n\tL\n\u2113=1 H\u2113.",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40311,
+          "text": "Principal curves generalize the principal component line, providing a smooth\none-dimensional curved approximation to a set of data points in IRp. A prin-\ncipal surface is more general, providing a curved manifold approximation\nof dimension 2 or more.\nWe will \ufb01rst de\ufb01ne principal curves for random variables X \u2208IRp, and\nthen move to the \ufb01nite data case. Let f(\u03bb) be a parameterized smooth\ncurve in IRp. Hence f(\u03bb) is a vector function with p coordinates, each a\nsmooth function of the single parameter \u03bb. The parameter \u03bb can be chosen,\nfor example, to be arc-length along the curve from some \ufb01xed origin. For\neach data value x, let \u03bbf(x) de\ufb01ne the closest point on the curve to x. Then\nf(\u03bb) is called a principal curve for the distribution of the random vector\nX if",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40312,
+          "text": "f(\u03bb) = E(X|\u03bbf(X) = \u03bb).\n(14.61)",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40313,
+          "text": "This says f(\u03bb) is the average of all data points that project to it, that is, the\npoints for which it is \u201cresponsible.\u201d This is also known as a self-consistency\nproperty. Although in practice, continuous multivariate distributes have\nin\ufb01nitely many principal curves (Duchamp and Stuetzle, 1996), we are",
+          "type": "narrative",
+          "page": 559
+        },
+        {
+          "id": 40314,
+          "text": "542\n14. Unsupervised Learning",
+          "type": "narrative",
+          "page": 560
+        },
+        {
+          "id": 40315,
+          "text": ".",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40316,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40317,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40318,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40319,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40320,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40321,
+          "text": "\u2022\n\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40322,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40323,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40324,
+          "text": "\u2022\n\u2022\n\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40325,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40326,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40327,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40328,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40329,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40330,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40331,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40332,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40333,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        },
+        {
+          "id": 40334,
+          "text": "\u2022",
+          "type": "equation",
+          "page": 560
+        }
+      ]
+    }
+  ]
+}

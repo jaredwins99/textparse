@@ -1,0 +1,801 @@
+{
+  "batch_number": 4,
+  "concepts": [
+    {
+      "id": 135,
+      "name": "squared bias",
+      "description": "Component of prediction error equal to squared difference between expected prediction and true function, decreases with model complexity.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "the squared bias tends to decrease",
+      "existing_formula": "\\text{Bias}^2(\\hat{f}(x)) = [E(\\hat{f}(x)) - f(x)]^2",
+      "paragraphs": [
+        {
+          "id": 4460,
+          "text": "All the models described above and many others discussed in later chapters\nhave a smoothing or complexity parameter that has to be determined:",
+          "type": "narrative",
+          "page": 55
+        },
+        {
+          "id": 4461,
+          "text": "\u2022 the multiplier of the penalty term;",
+          "type": "narrative",
+          "page": 55
+        },
+        {
+          "id": 4462,
+          "text": "\u2022 the width of the kernel;",
+          "type": "narrative",
+          "page": 55
+        },
+        {
+          "id": 4463,
+          "text": "\u2022 or the number of basis functions.",
+          "type": "narrative",
+          "page": 55
+        },
+        {
+          "id": 4464,
+          "text": "In the case of the smoothing spline, the parameter \u03bb indexes models ranging\nfrom a straight line \ufb01t to the interpolating model. Similarly a local degree-\nm polynomial model ranges between a degree-m global polynomial when\nthe window size is in\ufb01nitely large, to an interpolating \ufb01t when the window\nsize shrinks to zero. This means that we cannot use residual sum-of-squares\non the training data to determine these parameters as well, since we would\nalways pick those that gave interpolating \ufb01ts and hence zero residuals. Such\na model is unlikely to predict future data well at all.\nThe k-nearest-neighbor regression \ufb01t \u02c6fk(x0) usefully illustrates the com-\npeting forces that e\ufb00ect the predictive ability of such approximations. Sup-\npose the data arise from a model Y = f(X) + \u03b5, with E(\u03b5) = 0 and\nVar(\u03b5) = \u03c32. For simplicity here we assume that the values of xi in the\nsample are \ufb01xed in advance (nonrandom). The expected prediction error\nat x0, also known as test or generalization error, can be decomposed:",
+          "type": "narrative",
+          "page": 55
+        },
+        {
+          "id": 4465,
+          "text": "EPEk(x0)\n=\nE[(Y \u2212\u02c6fk(x0))2|X = x0]",
+          "type": "narrative",
+          "page": 55
+        },
+        {
+          "id": 4466,
+          "text": "=\n\u03c32 + [Bias2( \u02c6fk(x0)) + VarT ( \u02c6fk(x0))]\n(2.46)",
+          "type": "narrative",
+          "page": 55
+        },
+        {
+          "id": 4467,
+          "text": "=\n\u03c32 +\n\f\nf(x0) \u22121",
+          "type": "equation",
+          "page": 55
+        },
+        {
+          "id": 4468,
+          "text": "k",
+          "type": "narrative",
+          "page": 55
+        },
+        {
+          "id": 4469,
+          "text": "k\n\u0002",
+          "type": "narrative",
+          "page": 55
+        },
+        {
+          "id": 4470,
+          "text": "\u2113=1\nf(x(\u2113))\n\r2\n+ \u03c32",
+          "type": "equation",
+          "page": 55
+        },
+        {
+          "id": 4471,
+          "text": "k .\n(2.47)",
+          "type": "equation",
+          "page": 55
+        },
+        {
+          "id": 4472,
+          "text": "The subscripts in parentheses (\u2113) indicate the sequence of nearest neighbors\nto x0.\nThere are three terms in this expression. The \ufb01rst term \u03c32 is the ir-\nreducible error\u2014the variance of the new test target\u2014and is beyond our\ncontrol, even if we know the true f(x0).\nThe second and third terms are under our control, and make up the\nmean squared error of \u02c6fk(x0) in estimating f(x0), which is broken down\ninto a bias component and a variance component. The bias term is the\nsquared di\ufb00erence between the true mean f(x0) and the expected value of\nthe estimate\u2014[ET ( \u02c6fk(x0)) \u2212f(x0)]2\u2014where the expectation averages the\nrandomness in the training data. This term will most likely increase with\nk, if the true function is reasonably smooth. For small k the few closest\nneighbors will have values f(x(\u2113)) close to f(x0), so their average should",
+          "type": "narrative",
+          "page": 55
+        },
+        {
+          "id": 4473,
+          "text": "38\n2. Overview of Supervised Learning",
+          "type": "narrative",
+          "page": 56
+        },
+        {
+          "id": 4474,
+          "text": "High Bias\nLow Variance\nLow Bias\nHigh Variance",
+          "type": "narrative",
+          "page": 56
+        },
+        {
+          "id": 4475,
+          "text": "Prediction Error",
+          "type": "narrative",
+          "page": 56
+        },
+        {
+          "id": 4476,
+          "text": "Model Complexity",
+          "type": "narrative",
+          "page": 56
+        },
+        {
+          "id": 4477,
+          "text": "Training Sample",
+          "type": "narrative",
+          "page": 56
+        },
+        {
+          "id": 4478,
+          "text": "Test Sample",
+          "type": "narrative",
+          "page": 56
+        },
+        {
+          "id": 4479,
+          "text": "Low\nHigh",
+          "type": "narrative",
+          "page": 56
+        },
+        {
+          "id": 4481,
+          "text": "be close to f(x0). As k grows, the neighbors are further away, and then\nanything can happen.\nThe variance term is simply the variance of an average here, and de-\ncreases as the inverse of k. So as k varies, there is a bias\u2013variance tradeo\ufb00.\nMore generally, as the model complexity of our procedure is increased,\nthe variance tends to increase and the squared bias tends to decreases.\nThe opposite behavior occurs as the model complexity is decreased. For\nk-nearest neighbors, the model complexity is controlled by k.\nTypically we would like to choose our model complexity to trade bias\no\ufb00with variance in such a way as to minimize the test error. An obvious\nestimate of test error is the training error\n1\nN\n\t\ni(yi \u2212\u02c6yi)2. Unfortunately\ntraining error is not a good estimate of test error, as it does not properly\naccount for model complexity.\nFigure 2.11 shows the typical behavior of the test and training error, as\nmodel complexity is varied. The training error tends to decrease whenever\nwe increase the model complexity, that is, whenever we \ufb01t the data harder.\nHowever with too much \ufb01tting, the model adapts itself too closely to the\ntraining data, and will not generalize well (i.e., have large test error). In\nthat case the predictions \u02c6f(x0) will have large variance, as re\ufb02ected in the\nlast term of expression (2.46). In contrast, if the model is not complex\nenough, it will under\ufb01t and may have large bias, again resulting in poor\ngeneralization. In Chapter 7 we discuss methods for estimating the test\nerror of a prediction method, and hence estimating the optimal amount of\nmodel complexity for a given prediction method and training set.",
+          "type": "narrative",
+          "page": 56
+        }
+      ]
+    },
+    {
+      "id": 139,
+      "name": "orthogonal projection",
+      "description": "The projection of y onto the column space of X, minimizing the residual sum of squares.",
+      "category": "improvements",
+      "subcategory": "efficiencies",
+      "existing_quote": "We minimize RSS(\u03b2) = ||y \u2212 X\u03b2||^2 by choosing \u03b2\u0302 so that the residual vector y \u2212 \u0177 is orthogonal to this subspace. This orthogonality is expressed in (3.5), and the resulting estimate \u0177 is hence the orthogonal projection of y onto this subspace.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 21589,
+          "text": "There is a Bayesian interpretation of this class of models, in which f\nis interpreted as a realization of a zero-mean stationary Gaussian process,\nwith prior covariance function K. The eigen-decomposition produces a se-\nries of orthogonal eigen-functions \u03c6j(x) with associated variances \u03b3j. The\ntypical scenario is that \u201csmooth\u201d functions \u03c6j have large prior variance,\nwhile \u201crough\u201d \u03c6j have small prior variances. The penalty in (5.48) is the\ncontribution of the prior to the joint likelihood, and penalizes more those\ncomponents with smaller prior variance (compare with (5.43)).\nFor simplicity we have dealt with the case here where all members of H\nare penalized, as in (5.48). More generally, there may be some components\nin H that we wish to leave alone, such as the linear functions for cubic\nsmoothing splines in Section 5.4. The multidimensional thin-plate splines\nof Section 5.7 and tensor product splines fall into this category as well.\nIn these cases there is a more convenient representation H = H0 \u2295H1,\nwith the null space H0 consisting of, for example, low degree polynomi-\nals in x that do not get penalized. The penalty becomes J(f) = \u2225P1f\u2225,\nwhere P1 is the orthogonal projection of f onto H1. The solution has the\nform f(x) = \tM\nj=1 \u03b2jhj(x) + \tN\ni=1 \u03b1iK(x, xi), where the \ufb01rst term repre-\nsents an expansion in H0. From a Bayesian perspective, the coe\ufb03cients of\ncomponents in H0 have improper priors, with in\ufb01nite variance.",
+          "type": "narrative",
+          "page": 188
+        },
+        {
+          "id": 39679,
+          "text": "For convenience we assume that \u00afx = 0 (otherwise we simply replace the\nobservations by their centered versions \u02dcxi = xi \u2212\u00afx). The p \u00d7 p matrix\nHq = VqVT\nq is a projection matrix, and maps each point xi onto its rank-\nq reconstruction Hqxi, the orthogonal projection of xi onto the subspace\nspanned by the columns of Vq. The solution can be expressed as follows.\nStack the (centered) observations into the rows of an N \u00d7 p matrix X. We\nconstruct the singular value decomposition of X:",
+          "type": "narrative",
+          "page": 553
+        },
+        {
+          "id": 42205,
+          "text": "where G(u) =\n1\na log cosh(au) for 1 \u2264a \u22642. When applied to a sample\nof xi, the expectations are replaced by data averages. This is one of the\noptions in the FastICA software provided by these authors. More classical\n(and less robust) measures are based on fourth moments, and hence look for\ndepartures from the Gaussian via kurtosis. See Hyv\u00a8arinen and Oja (2000)\nfor more details. In Section 14.7.4 we describe their approximate Newton\nalgorithm for \ufb01nding the optimal directions.\nIn summary then, ICA applied to multivariate data looks for a sequence\nof orthogonal projections such that the projected data look as far from",
+          "type": "narrative",
+          "page": 580
+        }
+      ]
+    },
+    {
+      "id": 143,
+      "name": "leaps and bounds procedure",
+      "description": "An efficient algorithm for best subset selection that makes it feasible for p as large as 30 or 40.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "An efficient algorithm\u2014the leaps and bounds procedure (Furnival and Wilson, 1974)\u2014makes this feasible for p as large as 30 or 40.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4767,
+          "text": "Best subset regression \ufb01nds for each k \u2208{0, 1, 2, . . . , p} the subset of size k\nthat gives smallest residual sum of squares (3.2). An e\ufb03cient algorithm\u2014\nthe leaps and bounds procedure (Furnival and Wilson, 1974)\u2014makes this\nfeasible for p as large as 30 or 40. Figure 3.5 shows all the subset models\nfor the prostate cancer example. The lower boundary represents the models\nthat are eligible for selection by the best-subsets approach. Note that the\nbest subset of size 2, for example, need not include the variable that was\nin the best subset of size 1 (for this example all the subsets are nested).\nThe best-subset curve (red lower boundary in Figure 3.5) is necessarily\ndecreasing, so cannot be used to select the subset size k. The question of\nhow to choose k involves the tradeo\ufb00between bias and variance, along with\nthe more subjective desire for parsimony. There are a number of criteria\nthat one may use; typically we choose the smallest model that minimizes\nan estimate of the expected prediction error.\nMany of the other approaches that we discuss in this chapter are similar,\nin that they use the training data to produce a sequence of models varying\nin complexity and indexed by a single parameter. In the next section we use",
+          "type": "narrative",
+          "page": 75
+        }
+      ]
+    },
+    {
+      "id": 144,
+      "name": "forward stepwise selection",
+      "description": "Starts with the intercept and sequentially adds the predictor that most improves the fit, producing a greedy nested sequence of models.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "Forward-stepwise selection starts with the intercept, and then sequentially adds into the model the predictor that most improves the fit.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        }
+      ]
+    },
+    {
+      "id": 150,
+      "name": "basis pursuit",
+      "description": "The signal processing name for the lasso method.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "In the signal processing literature, the lasso is also known as basis pursuit (Chen et al., 1998).",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 5118,
+          "text": "Just as in ridge regression, we can re-parametrize the constant \u03b20 by stan-\ndardizing the predictors; the solution for \u02c6\u03b20 is \u00afy, and thereafter we \ufb01t a\nmodel without an intercept (Exercise 3.5). In the signal processing litera-\nture, the lasso is also known as basis pursuit (Chen et al., 1998).\nWe can also write the lasso problem in the equivalent Lagrangian form",
+          "type": "narrative",
+          "page": 86
+        },
+        {
+          "id": 5481,
+          "text": "Linear regression is discussed in many statistics books, for example, Seber\n(1984), Weisberg (1980) and Mardia et al. (1979). Ridge regression was\nintroduced by Hoerl and Kennard (1970), while the lasso was proposed by\nTibshirani (1996). Around the same time, lasso-type penalties were pro-\nposed in the basis pursuit method for signal processing (Chen et al., 1998).\nThe least angle regression procedure was proposed in Efron et al. (2004);\nrelated to this is the earlier homotopy procedure of Osborne et al. (2000a)\nand Osborne et al. (2000b). Their algorithm also exploits the piecewise\nlinearity used in the LAR/lasso algorithm, but lacks its transparency. The\ncriterion for the forward stagewise criterion is discussed in Hastie et al.\n(2007). Park and Hastie (2007) develop a path algorithm similar to least\nangle regression for generalized regression models. Partial least squares\nwas introduced by Wold (1975). Comparisons of shrinkage methods may\nbe found in Copas (1983) and Frank and Friedman (1993).",
+          "type": "narrative",
+          "page": 112
+        }
+      ]
+    },
+    {
+      "id": 151,
+      "name": "soft thresholding",
+      "description": "Lasso's coefficient shrinkage rule that translates each coefficient by a constant, truncating at zero.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "Lasso translates each coefficient by a constant factor \u03bb, truncating at zero. This is called \"soft thresholding,\" and is used in the context of wavelet-based smoothing",
+      "existing_formula": "\\hat{\\beta}_j = \\text{sign}(\\hat{\\beta}_j^{OLS})(|\\hat{\\beta}_j^{OLS}| - \\lambda)_+",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 48536,
+          "text": "This constant guards against large dkj values that arise from expression\nvalues near zero. With constant within-class variance \u03c32, the variance of\nthe contrast \u00afxkj \u2212\u00afxj in the numerator is m2\nk\u03c32, and hence the form of the\nstandardization in the denominator. We shrink the dkj toward zero using\nsoft thresholding\nd\u2032\nkj = sign(dkj)(|dkj| \u2212\u0394)+;\n(18.5)",
+          "type": "narrative",
+          "page": 671
+        }
+      ]
+    },
+    {
+      "id": 155,
+      "name": "lar-lasso connection",
+      "description": "LAR with a simple modification produces the entire lasso path: drop variables when their coefficients hit zero.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "These observations lead to a simple modification of the LAR algorithm that gives the entire lasso path, which is also piecewise-linear.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        }
+      ]
+    },
+    {
+      "id": 157,
+      "name": "degrees of freedom for adaptive fit",
+      "description": "df(y-hat) = sum of Cov(y-hat_i, y_i) / sigma^2, measuring how hard a model fits the data.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "We define the degrees of freedom of the fitted vector \u0177 = (\u0177_1, \u0177_2, . . . , \u0177_N) as df(\u0177) = sum Cov(\u0177_i, y_i)/\u03c3^2. This makes intuitive sense: the harder that we fit to the data, the larger this covariance and hence df(\u0177).",
+      "existing_formula": "df(\\hat{y}) = \\frac{1}{\\sigma^2}\\sum_{i=1}^N \\text{Cov}(\\hat{y}_i, y_i)",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        }
+      ]
+    },
+    {
+      "id": 159,
+      "name": "partial least squares",
+      "description": "Constructs linear combinations of inputs for regression using both X and y, weighting inputs by their univariate effect on y.",
+      "category": "improvements",
+      "subcategory": "preprocessing",
+      "existing_quote": "Like principal component regression, partial least squares (PLS) is not scale invariant, so we assume that each x_j is standardized to have mean 0 and variance 1. PLS begins by computing \u03c6\u0302_1j = \u27e8x_j, y\u27e9for each j.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 56,
+          "text": "3\nLinear Methods for Regression\n43\n3.1\nIntroduction\n. . . . . . . . . . . . . . . . . . . . . . . . .\n43\n3.2\nLinear Regression Models and Least Squares . . . . . . .\n44\n3.2.1\nExample: Prostate Cancer\n. . . . . . . . . . . .\n49\n3.2.2\nThe Gauss\u2013Markov Theorem . . . . . . . . . . .\n51\n3.2.3\nMultiple Regression\nfrom Simple Univariate Regression . . . . . . . .\n52\n3.2.4\nMultiple Outputs\n. . . . . . . . . . . . . . . . .\n56\n3.3\nSubset Selection . . . . . . . . . . . . . . . . . . . . . . .\n57\n3.3.1\nBest-Subset Selection . . . . . . . . . . . . . . .\n57\n3.3.2\nForward- and Backward-Stepwise Selection . . .\n58\n3.3.3\nForward-Stagewise Regression\n. . . . . . . . . .\n60\n3.3.4\nProstate Cancer Data Example (Continued)\n. .\n61\n3.4\nShrinkage Methods . . . . . . . . . . . . . . . . . . . . . .\n61\n3.4.1\nRidge Regression . . . . . . . . . . . . . . . . .\n61\n3.4.2\nThe Lasso\n. . . . . . . . . . . . . . . . . . . . .\n68\n3.4.3\nDiscussion: Subset Selection, Ridge Regression\nand the Lasso\n. . . . . . . . . . . . . . . . . . .\n69\n3.4.4\nLeast Angle Regression . . . . . . . . . . . . . .\n73\n3.5\nMethods Using Derived Input Directions\n. . . . . . . . .\n79\n3.5.1\nPrincipal Components Regression\n. . . . . . . .\n79\n3.5.2\nPartial Least Squares . . . . . . . . . . . . . . .\n80\n3.6\nDiscussion: A Comparison of the Selection\nand Shrinkage Methods . . . . . . . . . . . . . . . . . . .\n82\n3.7\nMultiple Outcome Shrinkage and Selection\n. . . . . . . .\n84\n3.8\nMore on the Lasso and Related Path Algorithms . . . . .\n86\n3.8.1\nIncremental Forward Stagewise Regression\n. . .\n86\n3.8.2\nPiecewise-Linear Path Algorithms . . . . . . . .\n89\n3.8.3\nThe Dantzig Selector\n. . . . . . . . . . . . . . .\n89\n3.8.4\nThe Grouped Lasso . . . . . . . . . . . . . . . .\n90\n3.8.5\nFurther Properties of the Lasso . . . . . . . . . .\n91\n3.8.6\nPathwise Coordinate Optimization . . . . . . . .\n92\n3.9\nComputational Considerations . . . . . . . . . . . . . . .\n93\nBibliographic Notes . . . . . . . . . . . . . . . . . . . . . . . . .\n94\nExercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n94",
+          "type": "narrative",
+          "page": 10
+        },
+        {
+          "id": 83,
+          "text": "18.2\nDiagonal Linear Discriminant Analysis\nand Nearest Shrunken Centroids . . . . . . . . . . . . . .\n651\n18.3\nLinear Classi\ufb01ers with Quadratic Regularization . . . . .\n654\n18.3.1\nRegularized Discriminant Analysis . . . . . . . .\n656\n18.3.2\nLogistic Regression\nwith Quadratic Regularization . . . . . . . . . .\n657\n18.3.3\nThe Support Vector Classi\ufb01er\n. . . . . . . . . .\n657\n18.3.4\nFeature Selection . . . . . . . . . . . . . . . . . .\n658\n18.3.5\nComputational Shortcuts When p \u226bN . . . . .\n659\n18.4\nLinear Classi\ufb01ers with L1 Regularization\n. . . . . . . . .\n661\n18.4.1\nApplication of Lasso\nto Protein Mass Spectroscopy\n. . . . . . . . . .\n664\n18.4.2\nThe Fused Lasso for Functional Data\n. . . . . .\n666\n18.5\nClassi\ufb01cation When Features are Unavailable . . . . . . .\n668\n18.5.1\nExample: String Kernels\nand Protein Classi\ufb01cation . . . . . . . . . . . . .\n668\n18.5.2\nClassi\ufb01cation and Other Models Using\nInner-Product Kernels and Pairwise Distances .\n670\n18.5.3\nExample: Abstracts Classi\ufb01cation\n. . . . . . . .\n672\n18.6\nHigh-Dimensional Regression:\nSupervised Principal Components\n. . . . . . . . . . . . .\n674\n18.6.1\nConnection to Latent-Variable Modeling\n. . . .\n678\n18.6.2\nRelationship with Partial Least Squares . . . . .\n680\n18.6.3\nPre-Conditioning for Feature Selection\n. . . . .\n681\n18.7\nFeature Assessment and the Multiple-Testing Problem . .\n683\n18.7.1\nThe False Discovery Rate . . . . . . . . . . . . .\n687\n18.7.2\nAsymmetric Cutpoints and the SAM Procedure\n690\n18.7.3\nA Bayesian Interpretation of the FDR . . . . . .\n692\n18.8\nBibliographic Notes\n. . . . . . . . . . . . . . . . . . . . .\n693\nExercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n694",
+          "type": "narrative",
+          "page": 18
+        },
+        {
+          "id": 4848,
+          "text": "Partial Least Squares",
+          "type": "narrative",
+          "page": 80
+        },
+        {
+          "id": 5275,
+          "text": "This technique also constructs a set of linear combinations of the inputs\nfor regression, but unlike principal components regression it uses y (in ad-\ndition to X) for this construction. Like principal component regression,\npartial least squares (PLS) is not scale invariant, so we assume that each\nxj is standardized to have mean 0 and variance 1. PLS begins by com-\nputing \u02c6\u03d51j = \u27e8xj, y\u27e9for each j. From this we construct the derived input\nz1 = \t\nj \u02c6\u03d51jxj, which is the \ufb01rst partial least squares direction. Hence\nin the construction of each zm, the inputs are weighted by the strength\nof their univariate e\ufb00ect on y3. The outcome y is regressed on z1 giving\ncoe\ufb03cient \u02c6\u03b81, and then we orthogonalize x1, . . . , xp with respect to z1. We\ncontinue this process, until M \u2264p directions have been obtained. In this\nmanner, partial least squares produces a sequence of derived, orthogonal\ninputs or directions z1, z2, . . . , zM. As with principal-component regres-\nsion, if we were to construct all M = p directions, we would get back a\nsolution equivalent to the usual least squares estimates; using M < p di-\nrections produces a reduced regression. The procedure is described fully in\nAlgorithm 3.3.",
+          "type": "narrative",
+          "page": 98
+        },
+        {
+          "id": 5278,
+          "text": "Algorithm 3.3 Partial Least Squares.",
+          "type": "narrative",
+          "page": 99
+        },
+        {
+          "id": 5287,
+          "text": "In the prostate cancer example, cross-validation chose M = 2 PLS direc-\ntions in Figure 3.7. This produced the model given in the rightmost column\nof Table 3.3.\nWhat optimization problem is partial least squares solving? Since it uses\nthe response y to construct its directions, its solution path is a nonlinear\nfunction of y. It can be shown (Exercise 3.15) that partial least squares\nseeks directions that have high variance and have high correlation with the\nresponse, in contrast to principal components regression which keys only\non high variance (Stone and Brooks, 1990; Frank and Friedman, 1993). In\nparticular, the mth principal component direction vm solves:",
+          "type": "narrative",
+          "page": 99
+        },
+        {
+          "id": 5291,
+          "text": "Further analysis reveals that the variance aspect tends to dominate, and\nso partial least squares behaves much like ridge regression and principal\ncomponents regression. We discuss this further in the next section.\nIf the input matrix X is orthogonal, then partial least squares \ufb01nds the\nleast squares estimates after m = 1 steps. Subsequent steps have no e\ufb00ect",
+          "type": "narrative",
+          "page": 99
+        },
+        {
+          "id": 5295,
+          "text": "There are some simple settings where we can understand better the rela-\ntionship between the di\ufb00erent methods described above. Consider an exam-\nple with two correlated inputs X1 and X2, with correlation \u03c1. We assume\nthat the true regression coe\ufb03cients are \u03b21 = 4 and \u03b22 = 2. Figure 3.18\nshows the coe\ufb03cient pro\ufb01les for the di\ufb00erent methods, as their tuning pa-\nrameters are varied. The top panel has \u03c1 = 0.5, the bottom panel \u03c1 = \u22120.5.\nThe tuning parameters for ridge and lasso vary over a continuous range,\nwhile best subset, PLS and PCR take just two discrete steps to the least\nsquares solution. In the top panel, starting at the origin, ridge regression\nshrinks the coe\ufb03cients together until it \ufb01nally converges to least squares.\nPLS and PCR show similar behavior to ridge, although are discrete and\nmore extreme. Best subset overshoots the solution and then backtracks.\nThe behavior of the lasso is intermediate to the other methods. When the\ncorrelation is negative (lower panel), again PLS and PCR roughly track\nthe ridge path, while all of the methods are more similar to one another.\nIt is interesting to compare the shrinkage behavior of these di\ufb00erent\nmethods. Recall that ridge regression shrinks all directions, but shrinks\nlow-variance directions more. Principal components regression leaves M\nhigh-variance directions alone, and discards the rest. Interestingly, it can\nbe shown that partial least squares also tends to shrink the low-variance\ndirections, but can actually in\ufb02ate some of the higher variance directions.\nThis can make PLS a little unstable, and cause it to have slightly higher\nprediction error compared to ridge regression. A full study is given in Frank\nand Friedman (1993). These authors conclude that for minimizing predic-\ntion error, ridge regression is generally preferable to variable subset selec-\ntion, principal components regression and partial least squares. However\nthe improvement over the latter two methods was only slight.\nTo summarize, PLS, PCR and ridge regression tend to behave similarly.\nRidge regression may be preferred because it shrinks smoothly, rather than\nin discrete steps. Lasso falls somewhere between ridge regression and best\nsubset regression, and enjoys some of the properties of each.",
+          "type": "narrative",
+          "page": 100
+        },
+        {
+          "id": 5481,
+          "text": "Linear regression is discussed in many statistics books, for example, Seber\n(1984), Weisberg (1980) and Mardia et al. (1979). Ridge regression was\nintroduced by Hoerl and Kennard (1970), while the lasso was proposed by\nTibshirani (1996). Around the same time, lasso-type penalties were pro-\nposed in the basis pursuit method for signal processing (Chen et al., 1998).\nThe least angle regression procedure was proposed in Efron et al. (2004);\nrelated to this is the earlier homotopy procedure of Osborne et al. (2000a)\nand Osborne et al. (2000b). Their algorithm also exploits the piecewise\nlinearity used in the LAR/lasso algorithm, but lacks its transparency. The\ncriterion for the forward stagewise criterion is discussed in Hastie et al.\n(2007). Park and Hastie (2007) develop a path algorithm similar to least\nangle regression for generalized regression models. Partial least squares\nwas introduced by Wold (1975). Comparisons of shrinkage methods may\nbe found in Copas (1983) and Frank and Friedman (1993).",
+          "type": "narrative",
+          "page": 112
+        },
+        {
+          "id": 48878,
+          "text": "Supervised principal components is closely related to partial least squares\nregression (Section 3.5.2). Bair et al. (2006) found that the key to the good\nperformance of supervised principal components was the \ufb01ltering out of\nnoisy features in step (2a). Partial least squares (Section 3.5.2) downweights\nnoisy features, but does not throw them away; as a result a large number\nof noisy features can contaminate the predictions. However, a modi\ufb01cation\nof the partial least squares procedure has been proposed that has a similar\n\ufb02avor to supervised principal components [Brown et al. (1991),Nadler and\nCoifman (2005), for example]. We select the features as in steps (1) and\n(2a) of supervised principal components, but then apply PLS (rather than\nprincipal components) to these features. For our current discussion, we call\nthis \u201cthresholded PLS.\u201d\nThresholded PLS can be viewed as a noisy version of supervised principal\ncomponents, and hence we might not expect it to work as well in practice.\nAssume the variables are all standardized. The \ufb01rst PLS variate has the\nform",
+          "type": "narrative",
+          "page": 698
+        },
+        {
+          "id": 48899,
+          "text": "where \u03f5ij and \u03b5i are independent normal random variables with mean 0 and\nstandard deviations 1 and 1.5, respectively. Thus in the \ufb01rst 50 genes, there\nis an average di\ufb00erence of 1 unit between samples 1\u201350 and 51\u2013100, and this\ndi\ufb00erence correlates with the outcome y. The next 200 genes have a large\naverage di\ufb00erence of 4 units between samples (1\u201325, 51\u201375) and (26\u201350,\n76\u2013100), but this di\ufb00erence is uncorrelated with the outcome. The rest of\nthe genes are noise. Figure 18.15 shows a heatmap of a typical realization,\nwith the outcome at the left, and the \ufb01rst 500 genes to the right.\nWe generated 100 simulations from this model, and summarize the test\nerror results in Figure 18.16. The test errors of principal components and\npartial least squares are shown at the right of the plot; both are badly\na\ufb00ected by the noisy features in the data. Supervised principal components\nand thresholded PLS work best over a wide range of the number of selected\nfeatures, with the former showing consistently lower test errors.\nWhile this example seems \u201ctailor-made\u201d for supervised principal com-\nponents, its good performance seems to hold in other simulated and real\ndatasets (Bair et al., 2006).",
+          "type": "narrative",
+          "page": 699
+        },
+        {
+          "id": 49638,
+          "text": "PageRank, 576\nPairwise distance, 668\nPairwise Markov property, 628\nParametric bootstrap, 264\nPartial dependence plots, 369\u2013370\nPartial least squares, 80\u201382, 680\nPartition function, 638\nParzen window, 208\nPasting, 318\nPath algorithm, 73\u201379, 86\u201389, 432\nPatient rule induction method(PRIM),\n317\u2013321, 499\u2013501\nPeeling, 318\nPenalization, 607, see regulariza-\ntion\nPenalized discriminant analysis, 446\u2013\n449\nPenalized polynomial regression,\n171\nPenalized regression, 34, 61\u201369, 171\nPenalty matrix, 152, 189",
+          "type": "narrative",
+          "page": 761
+        }
+      ]
+    },
+    {
+      "id": 162,
+      "name": "curds and whey",
+      "description": "A shrinkage method for multiple outputs that shrinks canonical variates between X and Y, a smooth version of reduced rank regression.",
+      "category": "multi_model",
+      "subcategory": "aggregating",
+      "existing_quote": "Breiman and Friedman (1997) explored with some success shrinkage of the canonical variates between X and Y, a smooth version of reduced rank regression. Their proposal has the form... (the \"c+w\" stands for \"Curds and Whey,\" the name they gave to their procedure).",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        }
+      ]
+    },
+    {
+      "id": 163,
+      "name": "incremental forward stagewise regression",
+      "description": "Forward stagewise with small step size epsilon, updating coefficient of most correlated variable by epsilon*sign(correlation) repeatedly.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "It generates a coefficient profile by repeatedly updating (by a small amount \u03b5) the coefficient of the variable most correlated with the current residuals.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 56,
+          "text": "3\nLinear Methods for Regression\n43\n3.1\nIntroduction\n. . . . . . . . . . . . . . . . . . . . . . . . .\n43\n3.2\nLinear Regression Models and Least Squares . . . . . . .\n44\n3.2.1\nExample: Prostate Cancer\n. . . . . . . . . . . .\n49\n3.2.2\nThe Gauss\u2013Markov Theorem . . . . . . . . . . .\n51\n3.2.3\nMultiple Regression\nfrom Simple Univariate Regression . . . . . . . .\n52\n3.2.4\nMultiple Outputs\n. . . . . . . . . . . . . . . . .\n56\n3.3\nSubset Selection . . . . . . . . . . . . . . . . . . . . . . .\n57\n3.3.1\nBest-Subset Selection . . . . . . . . . . . . . . .\n57\n3.3.2\nForward- and Backward-Stepwise Selection . . .\n58\n3.3.3\nForward-Stagewise Regression\n. . . . . . . . . .\n60\n3.3.4\nProstate Cancer Data Example (Continued)\n. .\n61\n3.4\nShrinkage Methods . . . . . . . . . . . . . . . . . . . . . .\n61\n3.4.1\nRidge Regression . . . . . . . . . . . . . . . . .\n61\n3.4.2\nThe Lasso\n. . . . . . . . . . . . . . . . . . . . .\n68\n3.4.3\nDiscussion: Subset Selection, Ridge Regression\nand the Lasso\n. . . . . . . . . . . . . . . . . . .\n69\n3.4.4\nLeast Angle Regression . . . . . . . . . . . . . .\n73\n3.5\nMethods Using Derived Input Directions\n. . . . . . . . .\n79\n3.5.1\nPrincipal Components Regression\n. . . . . . . .\n79\n3.5.2\nPartial Least Squares . . . . . . . . . . . . . . .\n80\n3.6\nDiscussion: A Comparison of the Selection\nand Shrinkage Methods . . . . . . . . . . . . . . . . . . .\n82\n3.7\nMultiple Outcome Shrinkage and Selection\n. . . . . . . .\n84\n3.8\nMore on the Lasso and Related Path Algorithms . . . . .\n86\n3.8.1\nIncremental Forward Stagewise Regression\n. . .\n86\n3.8.2\nPiecewise-Linear Path Algorithms . . . . . . . .\n89\n3.8.3\nThe Dantzig Selector\n. . . . . . . . . . . . . . .\n89\n3.8.4\nThe Grouped Lasso . . . . . . . . . . . . . . . .\n90\n3.8.5\nFurther Properties of the Lasso . . . . . . . . . .\n91\n3.8.6\nPathwise Coordinate Optimization . . . . . . . .\n92\n3.9\nComputational Considerations . . . . . . . . . . . . . . .\n93\nBibliographic Notes . . . . . . . . . . . . . . . . . . . . . . . . .\n94\nExercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n94",
+          "type": "narrative",
+          "page": 10
+        },
+        {
+          "id": 5355,
+          "text": "Algorithm 3.4 Incremental Forward Stagewise Regression\u2014FS\u03f5.",
+          "type": "narrative",
+          "page": 104
+        },
+        {
+          "id": 5389,
+          "text": "linear models, one could explicitly construct the piecewise-linear lasso paths\nof Figure 3.10. This led him to propose the LAR procedure of Section 3.4.4,\nas well as the incremental version of forward-stagewise regression presented\nhere.\nConsider the linear-regression version of the forward-stagewise boosting\nalgorithm 16.1 proposed in Section 16.1 (page 608). It generates a coe\ufb03cient\npro\ufb01le by repeatedly updating (by a small amount \u03f5) the coe\ufb03cient of the\nvariable most correlated with the current residuals. Algorithm 3.4 gives\nthe details. Figure 3.19 (left panel) shows the progress of the algorithm on\nthe prostate data with step size \u03f5 = 0.01. If \u03b4j = \u27e8xj, r\u27e9(the least-squares\ncoe\ufb03cient of the residual on jth predictor), then this is exactly the usual\nforward stagewise procedure (FS) outlined in Section 3.3.3.\nHere we are mainly interested in small values of \u03f5. Letting \u03f5 \u21920 gives\nthe right panel of Figure 3.19, which in this case is identical to the lasso\npath in Figure 3.10. We call this limiting procedure in\ufb01nitesimal forward\nstagewise regression or FS0. This procedure plays an important role in\nnon-linear, adaptive methods like boosting (Chapters 10 and 16) and is the\nversion of incremental forward stagewise regression that is most amenable\nto theoretical analysis. B\u00a8uhlmann and Hothorn (2008) refer to the same\nprocedure as \u201cL2boost\u201d, because of its connections to boosting.",
+          "type": "narrative",
+          "page": 105
+        }
+      ]
+    },
+    {
+      "id": 164,
+      "name": "infinitesimal forward stagewise regression",
+      "description": "The limiting procedure as step size epsilon approaches zero in incremental forward stagewise, also called FS0 or L2boost.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "Letting \u03b5 \u2192 0 gives... We call this limiting procedure infinitesimal forward stagewise regression or FS0.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        }
+      ]
+    },
+    {
+      "id": 165,
+      "name": "l2boost",
+      "description": "Another name for infinitesimal forward stagewise regression due to its connections to boosting.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "B\u00fchlmann and Hothorn (2008) refer to the same procedure as \"L2boost\", because of its connections to boosting.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 5389,
+          "text": "linear models, one could explicitly construct the piecewise-linear lasso paths\nof Figure 3.10. This led him to propose the LAR procedure of Section 3.4.4,\nas well as the incremental version of forward-stagewise regression presented\nhere.\nConsider the linear-regression version of the forward-stagewise boosting\nalgorithm 16.1 proposed in Section 16.1 (page 608). It generates a coe\ufb03cient\npro\ufb01le by repeatedly updating (by a small amount \u03f5) the coe\ufb03cient of the\nvariable most correlated with the current residuals. Algorithm 3.4 gives\nthe details. Figure 3.19 (left panel) shows the progress of the algorithm on\nthe prostate data with step size \u03f5 = 0.01. If \u03b4j = \u27e8xj, r\u27e9(the least-squares\ncoe\ufb03cient of the residual on jth predictor), then this is exactly the usual\nforward stagewise procedure (FS) outlined in Section 3.3.3.\nHere we are mainly interested in small values of \u03f5. Letting \u03f5 \u21920 gives\nthe right panel of Figure 3.19, which in this case is identical to the lasso\npath in Figure 3.10. We call this limiting procedure in\ufb01nitesimal forward\nstagewise regression or FS0. This procedure plays an important role in\nnon-linear, adaptive methods like boosting (Chapters 10 and 16) and is the\nversion of incremental forward stagewise regression that is most amenable\nto theoretical analysis. B\u00a8uhlmann and Hothorn (2008) refer to the same\nprocedure as \u201cL2boost\u201d, because of its connections to boosting.",
+          "type": "narrative",
+          "page": 105
+        }
+      ]
+    },
+    {
+      "id": 166,
+      "name": "dantzig selector",
+      "description": "Minimizes L1 norm of coefficients subject to maximum absolute correlation of residuals with predictors being bounded.",
+      "category": "estimation",
+      "subcategory": "criteria",
+      "existing_quote": "Candes and Tao (2007) proposed the following criterion: minimize ||\u03b2||_1 subject to ||X^T(y \u2212 X\u03b2)||_\u221e \u2264 s. They call the solution the Dantzig selector (DS).",
+      "existing_formula": "\\min_\\beta \\|\\beta\\|_1 \\text{ subject to } \\|X^T(y - X\\beta)\\|_\\infty \\leq s",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 56,
+          "text": "3\nLinear Methods for Regression\n43\n3.1\nIntroduction\n. . . . . . . . . . . . . . . . . . . . . . . . .\n43\n3.2\nLinear Regression Models and Least Squares . . . . . . .\n44\n3.2.1\nExample: Prostate Cancer\n. . . . . . . . . . . .\n49\n3.2.2\nThe Gauss\u2013Markov Theorem . . . . . . . . . . .\n51\n3.2.3\nMultiple Regression\nfrom Simple Univariate Regression . . . . . . . .\n52\n3.2.4\nMultiple Outputs\n. . . . . . . . . . . . . . . . .\n56\n3.3\nSubset Selection . . . . . . . . . . . . . . . . . . . . . . .\n57\n3.3.1\nBest-Subset Selection . . . . . . . . . . . . . . .\n57\n3.3.2\nForward- and Backward-Stepwise Selection . . .\n58\n3.3.3\nForward-Stagewise Regression\n. . . . . . . . . .\n60\n3.3.4\nProstate Cancer Data Example (Continued)\n. .\n61\n3.4\nShrinkage Methods . . . . . . . . . . . . . . . . . . . . . .\n61\n3.4.1\nRidge Regression . . . . . . . . . . . . . . . . .\n61\n3.4.2\nThe Lasso\n. . . . . . . . . . . . . . . . . . . . .\n68\n3.4.3\nDiscussion: Subset Selection, Ridge Regression\nand the Lasso\n. . . . . . . . . . . . . . . . . . .\n69\n3.4.4\nLeast Angle Regression . . . . . . . . . . . . . .\n73\n3.5\nMethods Using Derived Input Directions\n. . . . . . . . .\n79\n3.5.1\nPrincipal Components Regression\n. . . . . . . .\n79\n3.5.2\nPartial Least Squares . . . . . . . . . . . . . . .\n80\n3.6\nDiscussion: A Comparison of the Selection\nand Shrinkage Methods . . . . . . . . . . . . . . . . . . .\n82\n3.7\nMultiple Outcome Shrinkage and Selection\n. . . . . . . .\n84\n3.8\nMore on the Lasso and Related Path Algorithms . . . . .\n86\n3.8.1\nIncremental Forward Stagewise Regression\n. . .\n86\n3.8.2\nPiecewise-Linear Path Algorithms . . . . . . . .\n89\n3.8.3\nThe Dantzig Selector\n. . . . . . . . . . . . . . .\n89\n3.8.4\nThe Grouped Lasso . . . . . . . . . . . . . . . .\n90\n3.8.5\nFurther Properties of the Lasso . . . . . . . . . .\n91\n3.8.6\nPathwise Coordinate Optimization . . . . . . . .\n92\n3.9\nComputational Considerations . . . . . . . . . . . . . . .\n93\nBibliographic Notes . . . . . . . . . . . . . . . . . . . . . . . . .\n94\nExercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n94",
+          "type": "narrative",
+          "page": 10
+        },
+        {
+          "id": 5413,
+          "text": "They call the solution the Dantzig selector (DS). It can be written equiva-\nlently as",
+          "type": "narrative",
+          "page": 107
+        },
+        {
+          "id": 5415,
+          "text": "Here || \u00b7 ||\u221edenotes the L\u221enorm, the maximum absolute value of the\ncomponents of the vector. In this form it resembles the lasso, replacing\nsquared error loss by the maximum absolute value of its gradient. Note\nthat as t gets large, both procedures yield the least squares solution if\nN < p. If p \u2265N, they both yield the least squares solution with minimum\nL1 norm. However for smaller values of t, the DS procedure produces a\ndi\ufb00erent path of solutions than the lasso.\nCandes and Tao (2007) show that the solution to DS is a linear pro-\ngramming problem; hence the name Dantzig selector, in honor of the late",
+          "type": "narrative",
+          "page": 107
+        },
+        {
+          "id": 5417,
+          "text": "George Dantzig, the inventor of the simplex method for linear program-\nming. They also prove a number of interesting mathematical properties for\nthe method, related to its ability to recover an underlying sparse coe\ufb03-\ncient vector. These same properties also hold for the lasso, as shown later\nby Bickel et al. (2008).\nUnfortunately the operating properties of the DS method are somewhat\nunsatisfactory. The method seems similar in spirit to the lasso, especially\nwhen we look at the lasso\u2019s stationary conditions (3.58). Like the LAR al-\ngorithm, the lasso maintains the same inner product (and correlation) with\nthe current residual for all variables in the active set, and moves their co-\ne\ufb03cients to optimally decrease the residual sum of squares. In the process,\nthis common correlation is decreased monotonically (Exercise 3.23), and at\nall times this correlation is larger than that for non-active variables. The\nDantzig selector instead tries to minimize the maximum inner product of\nthe current residual with all the predictors. Hence it can achieve a smaller\nmaximum than the lasso, but in the process a curious phenomenon can\noccur. If the size of the active set is m, there will be m variables tied with\nmaximum correlation. However, these need not coincide with the active set!\nHence it can include a variable in the model that has smaller correlation\nwith the current residual than some of the excluded variables (Efron et\nal., 2007). This seems unreasonable and may be responsible for its some-\ntimes inferior prediction accuracy. Efron et al. (2007) also show that DS\ncan yield extremely erratic coe\ufb03cient paths as the regularization parameter\ns is varied.",
+          "type": "narrative",
+          "page": 108
+        },
+        {
+          "id": 49614,
+          "text": "Dantzig selector, 89\nData augmentation, 276\nDaubechies symmlet-8 wavelets,\n176\nDe-correlation, 597\nDecision boundary, 13\u201315, 21\nDecision trees, 305\u2013317\nDecoder, 515, see encoder\nDecomposable models, 641\nDegrees of freedom\nin an additive model, 302\nin ridge regression, 68\nof a tree, 336\nof smoother matrices, 153\u2013154,\n158\nDelta rule, 397\nDemmler-Reinsch basis for splines,\n156\nDensity estimation, 208\u2013215\nDeviance, 124, 309\nDiagonal linear discriminant anal-\nysis, 651\u2013654\nDimension reduction, 658\nfor nearest neighbors, 479\nDiscrete variables, 10, 310\u2013311",
+          "type": "narrative",
+          "page": 757
+        }
+      ]
+    },
+    {
+      "id": 167,
+      "name": "grouped lasso",
+      "description": "Lasso variant for pre-defined groups of predictors that encourages sparsity at both group and individual levels using group-wise L2 norms.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "Since the Euclidean norm of a vector \u03b2_\u2113 is zero only if all of its components are zero, this procedure encourages sparsity at both the group and individual levels.",
+      "existing_formula": "\\min_\\beta \\left\\{\\frac{1}{2}\\|y - \\beta_0\\mathbf{1} - \\sum_{\\ell=1}^L X_\\ell\\beta_\\ell\\|^2 + \\lambda\\sum_{\\ell=1}^L \\sqrt{p_\\ell}\\|\\beta_\\ell\\|_2\\right\\}",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 56,
+          "text": "3\nLinear Methods for Regression\n43\n3.1\nIntroduction\n. . . . . . . . . . . . . . . . . . . . . . . . .\n43\n3.2\nLinear Regression Models and Least Squares . . . . . . .\n44\n3.2.1\nExample: Prostate Cancer\n. . . . . . . . . . . .\n49\n3.2.2\nThe Gauss\u2013Markov Theorem . . . . . . . . . . .\n51\n3.2.3\nMultiple Regression\nfrom Simple Univariate Regression . . . . . . . .\n52\n3.2.4\nMultiple Outputs\n. . . . . . . . . . . . . . . . .\n56\n3.3\nSubset Selection . . . . . . . . . . . . . . . . . . . . . . .\n57\n3.3.1\nBest-Subset Selection . . . . . . . . . . . . . . .\n57\n3.3.2\nForward- and Backward-Stepwise Selection . . .\n58\n3.3.3\nForward-Stagewise Regression\n. . . . . . . . . .\n60\n3.3.4\nProstate Cancer Data Example (Continued)\n. .\n61\n3.4\nShrinkage Methods . . . . . . . . . . . . . . . . . . . . . .\n61\n3.4.1\nRidge Regression . . . . . . . . . . . . . . . . .\n61\n3.4.2\nThe Lasso\n. . . . . . . . . . . . . . . . . . . . .\n68\n3.4.3\nDiscussion: Subset Selection, Ridge Regression\nand the Lasso\n. . . . . . . . . . . . . . . . . . .\n69\n3.4.4\nLeast Angle Regression . . . . . . . . . . . . . .\n73\n3.5\nMethods Using Derived Input Directions\n. . . . . . . . .\n79\n3.5.1\nPrincipal Components Regression\n. . . . . . . .\n79\n3.5.2\nPartial Least Squares . . . . . . . . . . . . . . .\n80\n3.6\nDiscussion: A Comparison of the Selection\nand Shrinkage Methods . . . . . . . . . . . . . . . . . . .\n82\n3.7\nMultiple Outcome Shrinkage and Selection\n. . . . . . . .\n84\n3.8\nMore on the Lasso and Related Path Algorithms . . . . .\n86\n3.8.1\nIncremental Forward Stagewise Regression\n. . .\n86\n3.8.2\nPiecewise-Linear Path Algorithms . . . . . . . .\n89\n3.8.3\nThe Dantzig Selector\n. . . . . . . . . . . . . . .\n89\n3.8.4\nThe Grouped Lasso . . . . . . . . . . . . . . . .\n90\n3.8.5\nFurther Properties of the Lasso . . . . . . . . . .\n91\n3.8.6\nPathwise Coordinate Optimization . . . . . . . .\n92\n3.9\nComputational Considerations . . . . . . . . . . . . . . .\n93\nBibliographic Notes . . . . . . . . . . . . . . . . . . . . . . . . .\n94\nExercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n94",
+          "type": "narrative",
+          "page": 10
+        },
+        {
+          "id": 5419,
+          "text": "In some problems, the predictors belong to pre-de\ufb01ned groups; for example\ngenes that belong to the same biological pathway, or collections of indicator\n(dummy) variables for representing the levels of a categorical predictor. In\nthis situation it may be desirable to shrink and select the members of a\ngroup together. The grouped lasso is one way to achieve this. Suppose that\nthe p predictors are divided into L groups, with p\u2113the number in group\n\u2113. For ease of notation, we use a matrix X\u2113to represent the predictors\ncorresponding to the \u2113th group, with corresponding coe\ufb03cient vector \u03b2\u2113.\nThe grouped-lasso minimizes the convex criterion",
+          "type": "narrative",
+          "page": 108
+        },
+        {
+          "id": 5476,
+          "text": "Here S(t, \u03bb) = sign(t)(|t|\u2212\u03bb)+ is the soft-thresholding operator in Table 3.4\non page 71. The \ufb01rst argument to S(\u00b7) is the simple least-squares coe\ufb03cient\nof the partial residual on the standardized variable xij. Repeated iteration\nof (3.84)\u2014cycling through each variable in turn until convergence\u2014yields\nthe lasso estimate \u02c6\u03b2(\u03bb).\nWe can also use this simple algorithm to e\ufb03ciently compute the lasso\nsolutions at a grid of values of \u03bb. We start with the smallest value \u03bbmax\nfor which \u02c6\u03b2(\u03bbmax) = 0, decrease it a little and cycle through the variables\nuntil convergence. Then \u03bb is decreased again and the process is repeated,\nusing the previous solution as a \u201cwarm start\u201d for the new value of \u03bb. This\ncan be faster than the LARS algorithm, especially in large problems. A\nkey to its speed is the fact that the quantities in (3.84) can be updated\nquickly as j varies, and often the update is to leave \u02dc\u03b2j = 0. On the other\nhand, it delivers solutions over a grid of \u03bb values, rather than the entire\nsolution path. The same kind of algorithm can be applied to the elastic\nnet, the grouped lasso and many other models in which the penalty is a\nsum of functions of the individual parameters (Friedman et al., 2008a). It\ncan also be applied, with some substantial modi\ufb01cations, to the fused lasso\n(Section 18.4.2); details are in Friedman et al. (2007b).",
+          "type": "narrative",
+          "page": 111
+        },
+        {
+          "id": 49621,
+          "text": "Global Markov property, 628\nGradient Boosting, 359\u2013361\nGradient descent, 358, 395\u2013397\nGraph Laplacian, 545\nGraphical lasso, 636\nGrouped lasso, 90",
+          "type": "narrative",
+          "page": 758
+        }
+      ]
+    },
+    {
+      "id": 168,
+      "name": "relaxed lasso",
+      "description": "Two-stage lasso: first run lasso to select predictors, then apply lasso again only to selected predictors with separate penalty parameter to reduce bias.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "Alternatively, one can use the lasso to select the set of non-zero predictors, and then apply the lasso again, but using only the selected predictors from the first step. This is known as the relaxed lasso (Meinshausen, 2007).",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 5436,
+          "text": "Here S indexes the subset of features with non-zero coe\ufb03cients in the true\nunderlying model, and XS are the columns of X corresponding to those\nfeatures. Similarly Sc are the features with true coe\ufb03cients equal to zero,\nand XSc the corresponding columns. This says that the least squares coef-\n\ufb01cients for the columns of XSc on XS are not too large, that is, the \u201cgood\u201d\nvariables S are not too highly correlated with the nuisance variables Sc.\nRegarding the coe\ufb03cients themselves, the lasso shrinkage causes the esti-\nmates of the non-zero coe\ufb03cients to be biased towards zero, and in general\nthey are not consistent5. One approach for reducing this bias is to run\nthe lasso to identify the set of non-zero coe\ufb03cients, and then \ufb01t an un-\nrestricted linear model to the selected set of features. This is not always\nfeasible, if the selected set is large. Alternatively, one can use the lasso to\nselect the set of non-zero predictors, and then apply the lasso again, but\nusing only the selected predictors from the \ufb01rst step. This is known as the\nrelaxed lasso (Meinshausen, 2007). The idea is to use cross-validation to\nestimate the initial penalty parameter for the lasso, and then again for a\nsecond penalty parameter applied to the selected set of predictors. Since",
+          "type": "narrative",
+          "page": 109
+        }
+      ]
+    },
+    {
+      "id": 169,
+      "name": "scad penalty",
+      "description": "Smoothly clipped absolute deviation penalty that shrinks large coefficients less severely than lasso to reduce bias.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "one can modify the lasso penalty function so that larger coefficients are shrunken less severely; the smoothly clipped absolute deviation (SCAD) penalty of Fan and Li (2005) replaces \u03bb|\u03b2| by J_a(\u03b2, \u03bb)",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 5443,
+          "text": "for some a \u22652. The second term in square-braces reduces the amount of\nshrinkage in the lasso for larger values of \u03b2, with ultimately no shrinkage\nas a \u2192\u221e. Figure 3.20 shows the SCAD penalty, along with the lasso and",
+          "type": "narrative",
+          "page": 110
+        }
+      ]
+    },
+    {
+      "id": 170,
+      "name": "adaptive lasso",
+      "description": "Weighted lasso penalty using weights w_j = 1/|beta-hat_j|^nu from OLS, yielding consistent parameter estimates while maintaining convexity.",
+      "category": "multi_model",
+      "subcategory": "selection",
+      "existing_quote": "The adaptive lasso (Zou, 2006) uses a weighted penalty of the form sum w_j|\u03b2_j| where w_j = 1/|\u03b2\u0302_j|^\u03bd, \u03b2\u0302_j is the ordinary least squares estimate and \u03bd > 0... yields consistent estimates of the parameters while retaining the attractive convexity property of the lasso.",
+      "existing_formula": "\\min_\\beta \\left\\{\\|y - X\\beta\\|^2 + \\lambda\\sum_{j=1}^p w_j|\\beta_j|\\right\\}, \\quad w_j = \\frac{1}{|\\hat{\\beta}_j^{OLS}|^\\nu}",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 5454,
+          "text": "|\u03b2|1\u2212\u03bd. However this criterion is non-convex, which is a drawback since it\nmakes the computation much more di\ufb03cult. The adaptive lasso (Zou, 2006)\nuses a weighted penalty of the form \tp\nj=1 wj|\u03b2j| where wj = 1/|\u02c6\u03b2j|\u03bd, \u02c6\u03b2j is\nthe ordinary least squares estimate and \u03bd > 0. This is a practical approxi-\nmation to the |\u03b2|q penalties (q = 1\u2212\u03bd here) discussed in Section 3.4.3. The\nadaptive lasso yields consistent estimates of the parameters while retaining\nthe attractive convexity property of the lasso.",
+          "type": "narrative",
+          "page": 110
+        },
+        {
+          "id": 49605,
+          "text": "Activation function, 392\u2013395\nAdaBoost, 337\u2013346\nAdaptive lasso, 92\nAdaptive methods, 429\nAdaptive nearest neighbor meth-\nods, 475\u2013478\nAdaptive wavelet \ufb01ltering, 181\nAdditive model, 295\u2013304\nAdjusted response, 297\nA\ufb03ne set, 130\nA\ufb03ne-invariant average, 482, 540\nAIC, see Akaike information cri-\nterion\nAkaike information criterion (AIC),\n230\nAnalysis of deviance, 124\nApplications\nabstracts, 672\naorta, 204\nbone, 152\nCalifornia housing, 371\u2013372,\n591\ncountries, 517",
+          "type": "narrative",
+          "page": 755
+        }
+      ]
+    },
+    {
+      "id": 171,
+      "name": "pathwise coordinate descent",
+      "description": "Algorithm for computing lasso solution by fixing penalty parameter and optimizing successively over each parameter while holding others fixed.",
+      "category": "estimation",
+      "subcategory": "optimization",
+      "existing_quote": "The idea is to fix the penalty parameter \u03bb in the Lagrangian form (3.52) and optimize successively over each parameter, holding the other parameters fixed at their current values.",
+      "existing_formula": "",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 48290,
+          "text": "So up to a factor 1/N, ZT y is the analog of s12, and we replace ZT Z by\nW11, the estimated cross-product matrix from our current model.\nThe resulting procedure is called the graphical lasso, proposed by Fried-\nman et al. (2007a) building on the work of Banerjee et al. (2008). It is\nsummarized in Algorithm 17.2.\nFriedman et al. (2007a) use the pathwise coordinate descent method\n(Section 3.8.6) to solve the modi\ufb01ed lasso problem at each stage. Here are\nthe details of pathwise coordinate descent for the graphical lasso algorithm.\nLetting V = W11, the update has the form",
+          "type": "narrative",
+          "page": 654
+        }
+      ]
+    },
+    {
+      "id": 174,
+      "name": "variance-covariance matrix of least squares estimates",
+      "description": "Var(beta-hat) = (X^T X)^{-1} sigma^2, giving the sampling variability of parameter estimates.",
+      "category": "guarantees",
+      "subcategory": "guarantees",
+      "existing_quote": "The variance\u2013covariance matrix of the least squares parameter estimates is easily derived from (3.6) and is given by Var(\u03b2\u0302) = (X^T X)^{-1}\u03c3^2.",
+      "existing_formula": "\\text{Var}(\\hat{\\beta}) = (X^TX)^{-1}\\sigma^2",
+      "paragraphs": [
+        {
+          "id": 4518,
+          "text": "This is page 43\nPrinter: Opaque this\n3\nLinear Methods for Regression",
+          "type": "narrative",
+          "page": 61
+        },
+        {
+          "id": 4520,
+          "text": "A linear regression model assumes that the regression function E(Y |X) is\nlinear in the inputs X1, . . . , Xp. Linear models were largely developed in\nthe precomputer age of statistics, but even in today\u2019s computer era there\nare still good reasons to study and use them. They are simple and often\nprovide an adequate and interpretable description of how the inputs a\ufb00ect\nthe output. For prediction purposes they can sometimes outperform fancier\nnonlinear models, especially in situations with small numbers of training\ncases, low signal-to-noise ratio or sparse data. Finally, linear methods can be\napplied to transformations of the inputs and this considerably expands their\nscope. These generalizations are sometimes called basis-function methods,\nand are discussed in Chapter 5.\nIn this chapter we describe linear methods for regression, while in the\nnext chapter we discuss linear methods for classi\ufb01cation. On some topics we\ngo into considerable detail, as it is our \ufb01rm belief that an understanding\nof linear methods is essential for understanding nonlinear ones. In fact,\nmany nonlinear techniques are direct generalizations of the linear methods\ndiscussed here.",
+          "type": "narrative",
+          "page": 61
+        }
+      ]
+    }
+  ]
+}
