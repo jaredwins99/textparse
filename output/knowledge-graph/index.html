@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ESL Knowledge Graph</title>
+    <script src="https://unpkg.com/cytoscape@3.30.4/dist/cytoscape.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; display: flex; height: 100vh; background: #1a1a2e; color: #e0e0e0; overflow: hidden; }
+        #cy { flex: 1; height: 100vh; position: relative; min-width: 300px; }
+        #sidebar { width: 350px; flex-shrink: 0; background: #16213e; overflow-y: auto; padding: 16px; border-left: 1px solid #0f3460; height: 100vh; }
+        #viz-panel { display: none; width: 55vw; max-width: 900px; flex-shrink: 0; background: #0d1117; border-left: 1px solid #0f3460; height: 100vh; position: relative; }
+        #viz-panel.open { display: flex; flex-direction: column; }
+        #viz-panel iframe { flex: 1; border: none; width: 100%; }
+        #viz-panel-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #16213e; border-bottom: 1px solid #0f3460; flex-shrink: 0; }
+        #viz-panel-header span { font-size: 13px; color: #888; }
+        #viz-close-btn { background: #C44E52; color: white; border: none; border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 12px; }
+        #viz-close-btn:hover { background: #e05555; }
+        #btn-viz { margin-top: 12px; background: #0f3460; color: #64B5CD; border: 1px solid #64B5CD; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; width: 100%; display: none; }
+        #btn-viz:hover { background: #1a1a6e; }
+        #search-bar { position: absolute; top: 16px; left: 16px; z-index: 10; }
+        #search-bar input { width: 300px; padding: 10px 14px; border-radius: 6px; border: 1px solid #0f3460; background: #16213e; color: #e0e0e0; font-size: 14px; }
+        #controls { position: absolute; top: 16px; right: 366px; z-index: 10; display: flex; gap: 8px; flex-wrap: wrap; }
+        .filter-group { background: #16213e; padding: 8px 12px; border-radius: 6px; border: 1px solid #0f3460; }
+        .filter-group label { display: block; font-size: 12px; cursor: pointer; }
+        .filter-group h4 { font-size: 11px; text-transform: uppercase; margin-bottom: 4px; color: #888; }
+        #concept-detail { display: none; }
+        #concept-detail.active { display: block; }
+        #concept-detail h2 { font-size: 18px; margin-bottom: 8px; }
+        #concept-detail .category-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-bottom: 12px; }
+        #concept-detail .description { font-size: 14px; line-height: 1.5; margin-bottom: 16px; }
+        #concept-detail .connections { font-size: 13px; }
+        #concept-detail .connections li { cursor: pointer; padding: 4px 0; }
+        #concept-detail .connections li:hover { color: #64B5CD; }
+        #stats { font-size: 12px; color: #888; padding: 8px 0; border-bottom: 1px solid #0f3460; margin-bottom: 12px; }
+        .legend { margin-top: 16px; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; margin: 2px 0; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+        button { background: #0f3460; color: #e0e0e0; border: 1px solid #1a1a6e; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        button:hover { background: #1a1a6e; }
+        #error-banner { display: none; position: absolute; bottom: 16px; left: 16px; z-index: 20; background: #C44E52; color: white; padding: 10px 16px; border-radius: 6px; font-size: 13px; max-width: 500px; }
+        #loading-banner { display: block; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; background: #16213e; color: #e0e0e0; padding: 16px 24px; border-radius: 8px; border: 1px solid #0f3460; font-size: 14px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div id="search-bar">
+        <input type="text" id="search-input" placeholder="Search concepts..." autocomplete="off">
+    </div>
+
+    <div id="controls">
+        <div class="filter-group" id="category-filters">
+            <h4>Categories</h4>
+        </div>
+        <div class="filter-group" id="edge-filters">
+            <h4>Relationships</h4>
+        </div>
+        <div class="filter-group">
+            <button id="btn-show-isolated">Show Isolated</button>
+            <button id="btn-reset">Reset View</button>
+            <button id="btn-fit">Fit All</button>
+        </div>
+        <div class="filter-group">
+            <h4>Color By</h4>
+            <button id="btn-color-cat" style="font-size:11px;border:2px solid #64B5CD;">7 Categories</button>
+            <button id="btn-color-sub" style="font-size:11px;">12 Subcategories</button>
+        </div>
+        <div class="filter-group">
+            <a href="../chapter-prereqs/index.html" style="color: #64B5CD; text-decoration: none; font-size: 12px;">Open Chapter View</a>
+            <a href="index-classic.html" style="color: #888; text-decoration: none; font-size: 12px; margin-left: 8px;">Classic View</a>
+        </div>
+    </div>
+
+    <div id="cy">
+        <div id="loading-banner">Loading knowledge graph...</div>
+        <div id="error-banner"></div>
+    </div>
+
+    <div id="viz-panel">
+        <div id="viz-panel-header">
+            <span id="viz-panel-title">Visualization</span>
+            <button id="viz-close-btn">Close</button>
+        </div>
+        <iframe id="viz-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+    </div>
+
+    <div id="sidebar">
+        <div id="stats">
+            <span id="node-count">0</span> concepts, <span id="edge-count">0</span> relationships
+        </div>
+        <div id="concept-detail">
+            <h2 id="detail-name"></h2>
+            <span class="category-badge" id="detail-category"></span>
+            <span class="category-badge" id="detail-subcategory" style="display:none;margin-left:4px;background:#333;font-size:11px;"></span>
+            <p id="detail-section" style="font-size:12px;color:#888;margin-bottom:8px;"></p>
+            <div class="description" id="detail-description"></div>
+            <blockquote id="detail-quote" style="border-left: 3px solid #64B5CD; padding: 8px 12px; margin: 12px 0; font-size: 13px; font-style: italic; color: #aaa; display: none;"></blockquote>
+            <div id="detail-formula" style="margin: 12px 0; padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 4px; font-size: 14px; display: none;"></div>
+            <div id="detail-facts" style="display:none;margin-top:12px;">
+                <h3 style="font-size:14px;margin-bottom:8px;">Key Facts</h3>
+                <div id="facts-list"></div>
+            </div>
+            <h3 style="font-size:14px;margin-bottom:8px;">Connections</h3>
+            <ul class="connections" id="detail-connections"></ul>
+            <button id="btn-focus" style="margin-top:12px;">Focus Neighborhood</button>
+            <button id="btn-viz">View Interactive Visualization</button>
+        </div>
+        <div id="welcome-msg">
+            <p style="color:#888;font-size:14px;margin-top:20px;">Click a concept node to see its details, or use the search bar to find a specific concept.</p>
+        </div>
+        <div class="legend" id="legend">
+            <h4 style="font-size:11px;text-transform:uppercase;color:#888;margin-bottom:4px;">Node Colors (Category)</h4>
+        </div>
+        <div class="legend" id="edge-legend" style="margin-top:12px;">
+            <h4 style="font-size:11px;text-transform:uppercase;color:#888;margin-bottom:4px;">Edge Types</h4>
+            <div class="legend-item" style="display:flex;align-items:center;gap:6px;font-size:12px;margin:4px 0;">
+                <span style="display:inline-block;width:24px;height:3px;background:#E85D3A;border-radius:2px;"></span>
+                <span style="color:#E85D3A;font-weight:600;">prerequisite</span>
+                <span style="color:#666;font-size:11px;">— learning path</span>
+            </div>
+            <div class="legend-item" style="display:flex;align-items:center;gap:6px;font-size:12px;margin:2px 0;">
+                <span style="display:inline-block;width:24px;height:1px;background:#666;"></span>
+                <span style="color:#888;">uses / generalizes / etc.</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="graph-data.js"></script>
+    <script>
+    (function() {
+        "use strict";
+
+        var loadingBanner = document.getElementById('loading-banner');
+        var errorBanner = document.getElementById('error-banner');
+
+        function showError(msg) {
+            errorBanner.textContent = msg;
+            errorBanner.style.display = 'block';
+            loadingBanner.style.display = 'none';
+            console.error('[KnowledgeGraph] ' + msg);
+        }
+
+        // Validate graph data loaded
+        if (typeof GRAPH_DATA === 'undefined') {
+            showError('graph-data.js failed to load. Make sure it is in the same directory as index.html.');
+            return;
+        }
+        if (!GRAPH_DATA.nodes || !GRAPH_DATA.edges) {
+            showError('GRAPH_DATA is malformed: missing nodes or edges array.');
+            return;
+        }
+
+        // Validate Cytoscape loaded
+        if (typeof cytoscape === 'undefined') {
+            showError('Cytoscape.js failed to load from CDN. Check your internet connection.');
+            return;
+        }
+
+        var CATEGORY_COLORS = {
+            model: '#4C72B0',
+            estimation: '#DD8452',
+            assessment: '#55A868',
+            comparison: '#8172B2',
+            principles: '#C44E52',
+            implementation: '#64B5CD',
+            math: '#E6C75D',
+            other: '#999999'
+        };
+
+
+        var SUBCATEGORY_COLORS = {
+            dgp: '#2c5282', proxy: '#6b9bd2',
+            objective: '#c46a28', optimization: '#e8a050',
+            diagnostics: '#3d8a50', validation: '#7cc48a',
+            selection: '#6b4e9e', aggregation: '#b09cd6',
+            assumptions: '#a83030', guarantees: '#e07070',
+            representation: '#3a8fa0', computation: '#8cd0de',
+            algebra: '#d4b030', geometry: '#f0d860',
+            other: '#999999'
+        };
+
+        var currentColorLevel = 'category'; // 'super', 'category', 'subcategory'
+
+        function getNodeColor(ele) {
+            if (currentColorLevel === 'subcategory') {
+                return SUBCATEGORY_COLORS[ele.data('subcategory')] || SUBCATEGORY_COLORS.other;
+            } else {
+                return CATEGORY_COLORS[ele.data('category')] || CATEGORY_COLORS.other;
+            }
+        }
+
+        var EDGE_COLORS = {
+            uses: '#666666',
+            prerequisite: '#C44E52',
+            generalizes: '#4C72B0',
+            special_case_of: '#55A868',
+            example_of: '#CCB974',
+            contrasts_with: '#8172B2'
+        };
+
+        // Compute degree for each concept node (skip parent nodes)
+        var degreeMap = {};
+        GRAPH_DATA.edges.forEach(function(e) {
+            degreeMap[e.data.source] = (degreeMap[e.data.source] || 0) + 1;
+            degreeMap[e.data.target] = (degreeMap[e.data.target] || 0) + 1;
+        });
+        GRAPH_DATA.nodes.forEach(function(n) {
+            if (!n.data.isParent) {
+                n.data.degree = degreeMap[n.data.id] || 0;
+            }
+        });
+
+        // Concept nodes with connections (exclude parent nodes)
+        var conceptNodes = GRAPH_DATA.nodes.filter(function(n) { return !n.data.isParent; });
+        var connectedConceptNodes = conceptNodes.filter(function(n) { return n.data.degree > 0; });
+
+        // Parent nodes for connected concepts (include a parent if it has at least one connected child)
+        var connectedParentIds = {};
+        connectedConceptNodes.forEach(function(n) {
+            if (n.data.parent) { connectedParentIds[n.data.parent] = true; }
+        });
+        var connectedParentNodes = GRAPH_DATA.nodes.filter(function(n) {
+            return n.data.isParent && connectedParentIds[n.data.id];
+        });
+
+        // Update stats (concept nodes only)
+        document.getElementById('node-count').textContent = connectedConceptNodes.length;
+        document.getElementById('edge-count').textContent = GRAPH_DATA.edges.length;
+
+        var connectedElements = {
+            nodes: connectedParentNodes.concat(connectedConceptNodes),
+            edges: GRAPH_DATA.edges
+        };
+
+        // Pre-compute positions for concept nodes using concentric rings per chapter
+        var chapterGroups = {};
+        connectedConceptNodes.forEach(function(n) {
+            var parent = n.data.parent || 'ch-0';
+            if (!chapterGroups[parent]) chapterGroups[parent] = [];
+            chapterGroups[parent].push(n);
+        });
+
+        var chapterIds = Object.keys(chapterGroups).sort(function(a, b) {
+            return parseInt(a.replace('ch-', '')) - parseInt(b.replace('ch-', ''));
+        });
+
+        var COLS = 6;
+        var CH_GAP = 200;
+        var RING_RADIUS = 55; // px between concentric rings
+        var CH_PADDING = 80;  // padding around outermost ring
+
+        // ─── Ch3 subsection parsing ───
+        // For each Ch3 concept, extract the top-level subsection (e.g., "3.2" from "3.2.3 ...")
+        var ch3Subsections = {}; // subsection string -> array of node data objects
+        var ch3SubsectionOrder = []; // sorted list of subsection keys
+        connectedConceptNodes.forEach(function(n) {
+            if (n.data.parent !== 'ch-3') return;
+            var sec = n.data.section || '';
+            var m = sec.match(/^(\d+\.\d+)/);
+            var sub = m ? m[1] : '3.0';
+            if (!ch3Subsections[sub]) {
+                ch3Subsections[sub] = [];
+                ch3SubsectionOrder.push(sub);
+            }
+            ch3Subsections[sub].push(n);
+        });
+        ch3SubsectionOrder.sort(function(a, b) { return parseFloat(a) - parseFloat(b); });
+
+        // ─── Layout constants for Ch3 column layout ───
+        var CH3_COL_WIDTH = 130;    // width per subsection column
+        var CH3_NODE_VGAP = 55;     // vertical gap between stacked nodes
+        var CH3_TOP_MARGIN = 50;    // space above first node (for labels)
+        var CH3_COL_PAD = 30;       // padding on left/right of column area
+
+        // Compute Ch3 box size based on columns
+        var ch3NumCols = ch3SubsectionOrder.length;
+        var ch3MaxNodesInCol = 0;
+        ch3SubsectionOrder.forEach(function(sub) {
+            ch3MaxNodesInCol = Math.max(ch3MaxNodesInCol, ch3Subsections[sub].length);
+        });
+        var ch3Width = ch3NumCols * CH3_COL_WIDTH + 2 * CH3_COL_PAD;
+        var ch3Height = CH3_TOP_MARGIN + ch3MaxNodesInCol * CH3_NODE_VGAP + CH3_COL_PAD;
+
+        // First pass: compute max ring per chapter to determine chapter box sizes
+        var chapterMaxRing = {};
+        chapterIds.forEach(function(chId) {
+            if (chId === 'ch-3') return; // Ch3 uses column layout
+            var n = chapterGroups[chId].length;
+            var placed = 0;
+            var ring = 0;
+            while (placed < n) {
+                if (ring === 0) {
+                    placed++;
+                } else {
+                    var capacity = Math.floor(2 * Math.PI * ring * 1.2);
+                    placed += Math.min(capacity, n - placed);
+                }
+                ring++;
+            }
+            chapterMaxRing[chId] = Math.max(ring - 1, 0);
+        });
+
+        // Compute per-chapter box size from max ring radius
+        var chapterSizes = {};
+        chapterIds.forEach(function(chId) {
+            if (chId === 'ch-3') {
+                chapterSizes[chId] = { w: ch3Width, h: ch3Height };
+                return;
+            }
+            var maxR = chapterMaxRing[chId] * RING_RADIUS;
+            var side = Math.max(200, 2 * maxR + 2 * CH_PADDING);
+            chapterSizes[chId] = { w: side, h: side };
+        });
+
+        // Store Ch3 origin for overlay positioning later
+        var ch3Origin = { x: 0, y: 0 }; // top-left of ch3 box in model coords
+
+        chapterIds.forEach(function(chId, idx) {
+            var col = idx % COLS;
+            var row = Math.floor(idx / COLS);
+
+            // Compute cx/cy from accumulated sizes (use max in each col/row for alignment)
+            var cx = 0;
+            for (var c = 0; c < col; c++) {
+                var maxW = 0;
+                for (var ci = c; ci < chapterIds.length; ci += COLS) {
+                    maxW = Math.max(maxW, chapterSizes[chapterIds[ci]].w);
+                }
+                cx += maxW + CH_GAP;
+            }
+            cx += chapterSizes[chId].w / 2;
+
+            var cy_pos = 0;
+            for (var r = 0; r < row; r++) {
+                var maxH = 0;
+                for (var ri = r * COLS; ri < Math.min((r + 1) * COLS, chapterIds.length); ri++) {
+                    maxH = Math.max(maxH, chapterSizes[chapterIds[ri]].h);
+                }
+                cy_pos += maxH + CH_GAP;
+            }
+            cy_pos += chapterSizes[chId].h / 2;
+
+            // ─── Ch3: column-based layout ───
+            if (chId === 'ch-3') {
+                // Store the center for overlay use
+                ch3Origin.cx = cx;
+                ch3Origin.cy = cy_pos;
+                ch3Origin.x = cx - ch3Width / 2;
+                ch3Origin.y = cy_pos - ch3Height / 2;
+
+                ch3SubsectionOrder.forEach(function(sub, colIdx) {
+                    var colNodes = ch3Subsections[sub];
+                    // Sort by degree descending within each column
+                    colNodes.sort(function(a, b) { return (b.data.degree || 0) - (a.data.degree || 0); });
+
+                    var colCx = ch3Origin.x + CH3_COL_PAD + colIdx * CH3_COL_WIDTH + CH3_COL_WIDTH / 2;
+                    var startY = ch3Origin.y + CH3_TOP_MARGIN;
+
+                    colNodes.forEach(function(n, nodeIdx) {
+                        n.position = {
+                            x: colCx,
+                            y: startY + nodeIdx * CH3_NODE_VGAP
+                        };
+                    });
+                });
+                return;
+            }
+
+            var nodes = chapterGroups[chId];
+            // Sort by degree descending: highest-degree nodes at center
+            nodes.sort(function(a, b) { return (b.data.degree || 0) - (a.data.degree || 0); });
+
+            // Place in concentric rings: ring 0 = center (1 node), ring k = ~2*pi*k nodes
+            var placed = 0;
+            var ring = 0;
+
+            while (placed < nodes.length) {
+                if (ring === 0) {
+                    nodes[placed].position = { x: cx, y: cy_pos };
+                    placed++;
+                } else {
+                    var capacity = Math.floor(2 * Math.PI * ring * 1.2);
+                    var count = Math.min(capacity, nodes.length - placed);
+                    for (var j = 0; j < count; j++) {
+                        var angle = (j / count) * 2 * Math.PI - Math.PI / 2;
+                        nodes[placed].position = {
+                            x: cx + ring * RING_RADIUS * Math.cos(angle),
+                            y: cy_pos + ring * RING_RADIUS * Math.sin(angle)
+                        };
+                        placed++;
+                    }
+                }
+                ring++;
+            }
+        });
+
+        // Build Cytoscape style array
+        var cyStyle = [
+            {
+                selector: 'node',
+                style: {
+                    'label': 'data(name)',
+                    'text-valign': 'center',
+                    'font-size': '8px',
+                    'color': '#e0e0e0',
+                    'text-outline-color': '#1a1a2e',
+                    'text-outline-width': 1,
+                    'background-color': function(ele) { return getNodeColor(ele); },
+                    'width': function(ele) {
+                        var tier = ele.data('tier');
+                        if (tier) {
+                            if (tier === 1) return 50;
+                            if (tier === 2) return 38;
+                            if (tier === 3) return 28;
+                            return 20;
+                        }
+                        return Math.max(15, Math.min(60, 10 + ele.data('degree') * 3));
+                    },
+                    'height': function(ele) {
+                        var tier = ele.data('tier');
+                        if (tier) {
+                            if (tier === 1) return 50;
+                            if (tier === 2) return 38;
+                            if (tier === 3) return 28;
+                            return 20;
+                        }
+                        return Math.max(15, Math.min(60, 10 + ele.data('degree') * 3));
+                    },
+                    'text-opacity': function(ele) {
+                        var tier = ele.data('tier');
+                        if (tier) {
+                            return (tier <= 2) ? 1 : 0;
+                        }
+                        return ele.data('degree') >= 5 ? 1 : 0;
+                    },
+                    'border-width': 0
+                }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    'width': 1,
+                    'line-color': function(ele) {
+                        return EDGE_COLORS[ele.data('relationship_type')] || '#666';
+                    },
+                    'target-arrow-color': function(ele) {
+                        return EDGE_COLORS[ele.data('relationship_type')] || '#666';
+                    },
+                    'target-arrow-shape': 'triangle',
+                    'arrow-scale': 0.8,
+                    'curve-style': 'bezier',
+                    'opacity': 0.4,
+                    'line-style': function(ele) {
+                        return ele.data('relationship_type') === 'contrasts_with' ? 'dashed' : 'solid';
+                    }
+                }
+            },
+            {
+                selector: 'edge[relationship_type="prerequisite"]',
+                style: {
+                    'width': 3,
+                    'line-color': '#E85D3A',
+                    'target-arrow-color': '#E85D3A',
+                    'target-arrow-shape': 'triangle',
+                    'arrow-scale': 1.2,
+                    'opacity': 0.8,
+                    'line-style': 'solid',
+                    'z-index': 10
+                }
+            },
+            {
+                selector: 'node:selected',
+                style: {
+                    'border-width': 3,
+                    'border-color': '#ffffff',
+                    'text-opacity': 1,
+                    'font-size': '12px'
+                }
+            },
+            { selector: '.dimmed', style: { 'opacity': 0.15 } },
+            {
+                selector: '.highlighted',
+                style: {
+                    'opacity': 1,
+                    'text-opacity': 1,
+                    'font-size': '10px',
+                    'border-width': 2,
+                    'border-color': '#ffffff'
+                }
+            },
+            { selector: 'edge.highlighted', style: { 'width': 3, 'opacity': 0.9 } },
+            {
+                selector: '.search-match',
+                style: {
+                    'border-width': 4,
+                    'border-color': '#FFD700',
+                    'text-opacity': 1,
+                    'font-size': '14px',
+                    'z-index': 999
+                }
+            },
+            {
+                selector: ':parent',
+                style: {
+                    'background-color': 'rgba(15, 52, 96, 0.3)',
+                    'background-opacity': 0.3,
+                    'border-color': '#0f3460',
+                    'border-width': 1,
+                    'border-opacity': 0.5,
+                    'label': 'data(name)',
+                    'text-valign': 'top',
+                    'text-halign': 'center',
+                    'font-size': '14px',
+                    'color': '#888',
+                    'padding': '20px',
+                    'shape': 'roundrectangle'
+                }
+            }
+        ];
+
+        // Initialize Cytoscape with preset layout (positions pre-computed above)
+        var cy;
+        try {
+            cy = cytoscape({
+                container: document.getElementById('cy'),
+                elements: connectedElements,
+                style: cyStyle,
+                layout: { name: 'preset' },
+                minZoom: 0.1,
+                maxZoom: 5,
+                wheelSensitivity: 0.3
+            });
+        } catch(e) {
+            showError('Failed to initialize Cytoscape: ' + e.message);
+            return;
+        }
+
+        // Preset layout is synchronous — fit and finish immediately
+        cy.fit(undefined, 30);
+        loadingBanner.style.display = 'none';
+        document.getElementById('node-count').textContent = cy.nodes().filter(function(n) { return !n.isParent(); }).length;
+        document.getElementById('edge-count').textContent = cy.edges().length;
+
+        // ─── Ch3 Subsection Dividers (HTML Overlay) ───
+        var ch3OverlayContainer = document.createElement('div');
+        ch3OverlayContainer.id = 'ch3-subsection-overlay';
+        ch3OverlayContainer.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;z-index:5;';
+        document.getElementById('cy').appendChild(ch3OverlayContainer);
+
+        // Subsection full names for tooltips
+        var ch3SubsectionNames = {};
+        connectedConceptNodes.forEach(function(n) {
+            if (n.data.parent !== 'ch-3') return;
+            var sec = n.data.section || '';
+            var m = sec.match(/^(\d+\.\d+)/);
+            var sub = m ? m[1] : '3.0';
+            if (!ch3SubsectionNames[sub]) {
+                // Extract full subsection title (e.g., "3.2 Linear Regression Models and Least Squares")
+                var titleMatch = sec.match(/^(\d+\.\d+)\s+(.*)/);
+                // For deeper sections like "3.2.3 ...", use just the top-level prefix
+                var topMatch = sec.match(/^(\d+\.\d+)(?:\.\d+)?\s+(.*)/);
+                ch3SubsectionNames[sub] = topMatch ? topMatch[2].substring(0, 30) : sub;
+            }
+        });
+
+        function updateCh3Overlay() {
+            ch3OverlayContainer.innerHTML = '';
+            var cyContainer = document.getElementById('cy');
+            var cyRect = cyContainer.getBoundingClientRect();
+
+            ch3SubsectionOrder.forEach(function(sub, colIdx) {
+                // Compute the model-space x for this column boundary
+                var colLeftX = ch3Origin.x + CH3_COL_PAD + colIdx * CH3_COL_WIDTH;
+                var colRightX = colLeftX + CH3_COL_WIDTH;
+                var topY = ch3Origin.y;
+                var bottomY = ch3Origin.y + ch3Height;
+
+                // Convert model coords to rendered (screen) coords
+                var pan = cy.pan();
+                var zoom = cy.zoom();
+
+                // Draw divider line on the LEFT edge of each column (skip first)
+                if (colIdx > 0) {
+                    var screenX = colLeftX * zoom + pan.x;
+                    var screenTopY = topY * zoom + pan.y;
+                    var screenBottomY = bottomY * zoom + pan.y;
+                    var lineHeight = screenBottomY - screenTopY;
+
+                    // Skip if completely off-screen
+                    if (screenX > -50 && screenX < cyRect.width + 50 && screenBottomY > 0 && screenTopY < cyRect.height) {
+                        var line = document.createElement('div');
+                        line.style.cssText = 'position:absolute;width:1px;background:rgba(100,181,205,0.25);' +
+                            'left:' + screenX + 'px;top:' + screenTopY + 'px;height:' + lineHeight + 'px;';
+                        ch3OverlayContainer.appendChild(line);
+                    }
+                }
+
+                // Draw subsection label at top center of each column
+                var colCenterX = colLeftX + CH3_COL_WIDTH / 2;
+                var labelScreenX = colCenterX * zoom + pan.x;
+                var labelScreenY = (topY + 5) * zoom + pan.y;
+
+                if (labelScreenX > -100 && labelScreenX < cyRect.width + 100 && labelScreenY > -50 && labelScreenY < cyRect.height) {
+                    var label = document.createElement('div');
+                    var fontSize = Math.max(8, Math.min(13, 10 * zoom));
+                    label.style.cssText = 'position:absolute;color:rgba(100,181,205,0.7);font-size:' + fontSize + 'px;' +
+                        'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;white-space:nowrap;' +
+                        'transform:translateX(-50%);' +
+                        'left:' + labelScreenX + 'px;top:' + labelScreenY + 'px;';
+                    label.textContent = sub;
+                    ch3OverlayContainer.appendChild(label);
+                }
+            });
+        }
+
+        // Initial draw + redraw on pan/zoom
+        updateCh3Overlay();
+        cy.on('pan zoom resize', updateCh3Overlay);
+
+        // Search functionality
+        var searchInput = document.getElementById('search-input');
+        var searchTimeout;
+
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() {
+                var query = searchInput.value.trim().toLowerCase();
+                cy.elements().removeClass('search-match dimmed highlighted');
+                if (query.length < 2) return;
+
+                var matches = cy.nodes().filter(function(n) {
+                    return !n.isParent() && n.data('name').toLowerCase().includes(query);
+                });
+
+                if (matches.length > 0) {
+                    cy.elements().addClass('dimmed');
+                    matches.removeClass('dimmed').addClass('search-match');
+                    matches.connectedEdges().removeClass('dimmed');
+                    matches.neighborhood().nodes().removeClass('dimmed');
+                    if (matches.length <= 5) {
+                        cy.animate({ fit: { eles: matches, padding: 80 }, duration: 500 });
+                    }
+                }
+            }, 300);
+        });
+
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                cy.elements().removeClass('search-match dimmed highlighted');
+            }
+        });
+
+        // Node click -> detail panel (skip parent/compound nodes)
+        cy.on('tap', 'node', function(evt) {
+            var node = evt.target;
+            if (node.isParent()) return;
+            var data = node.data();
+
+            document.getElementById('concept-detail').classList.add('active');
+            document.getElementById('welcome-msg').style.display = 'none';
+            document.getElementById('detail-name').textContent = data.name;
+
+            var badge = document.getElementById('detail-category');
+            badge.textContent = data.category;
+            badge.style.backgroundColor = getNodeColor(node);
+
+            var subcatEl = document.getElementById('detail-subcategory');
+            if (data.subcategory) {
+                subcatEl.textContent = data.subcategory.replace(/_/g, ' ');
+                subcatEl.style.display = 'inline-block';
+            } else {
+                subcatEl.style.display = 'none';
+            }
+
+            document.getElementById('detail-section').textContent = data.section || '';
+            document.getElementById('detail-description').textContent = data.description;
+
+            var quoteEl = document.getElementById('detail-quote');
+            if (data.quote) {
+                quoteEl.textContent = '"' + data.quote + '"';
+                quoteEl.style.display = 'block';
+            } else {
+                quoteEl.style.display = 'none';
+            }
+
+            var formulaEl = document.getElementById('detail-formula');
+            if (data.formula) {
+                formulaEl.style.display = 'block';
+                try {
+                    katex.render(data.formula, formulaEl, { throwOnError: false, displayMode: true });
+                } catch(e) {
+                    formulaEl.textContent = data.formula;
+                }
+            } else {
+                formulaEl.style.display = 'none';
+            }
+
+            var factsEl = document.getElementById('detail-facts');
+            var factsList = document.getElementById('facts-list');
+            var facts = data.facts || [];
+            if (facts.length > 0) {
+                factsEl.style.display = 'block';
+                factsList.innerHTML = '';
+                facts.forEach(function(fact) {
+                    var div = document.createElement('div');
+                    div.style.cssText = 'margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-radius:4px;border-left:2px solid ' +
+                        (fact.type === 'definition' ? '#64B5CD' : fact.type === 'formula' ? '#DD8452' : fact.type === 'property' ? '#55A868' : '#888');
+                    var typeSpan = document.createElement('span');
+                    typeSpan.style.cssText = 'font-size:10px;text-transform:uppercase;color:#666;display:block;margin-bottom:2px;';
+                    typeSpan.textContent = fact.type + (fact.page ? ' (p.' + fact.page + ')' : '');
+                    div.appendChild(typeSpan);
+                    var textSpan = document.createElement('span');
+                    textSpan.style.cssText = 'font-size:13px;font-style:italic;color:#bbb;';
+                    textSpan.textContent = '"' + fact.text + '"';
+                    div.appendChild(textSpan);
+                    factsList.appendChild(div);
+                });
+            } else {
+                factsEl.style.display = 'none';
+            }
+
+            var connList = document.getElementById('detail-connections');
+            connList.innerHTML = '';
+            node.connectedEdges().forEach(function(edge) {
+                var otherNode = edge.source().id() === node.id() ? edge.target() : edge.source();
+                var direction = edge.source().id() === node.id() ? '\u2192' : '\u2190';
+                var li = document.createElement('li');
+                li.textContent = direction + ' ' + edge.data('relationship_type') + ': ' + otherNode.data('name');
+                li.addEventListener('click', function() {
+                    cy.getElementById(otherNode.id()).emit('tap');
+                    cy.animate({ center: { eles: otherNode }, duration: 300 });
+                });
+                connList.appendChild(li);
+            });
+
+            cy.elements().removeClass('highlighted dimmed search-match');
+            cy.elements().addClass('dimmed');
+            node.removeClass('dimmed');
+            node.neighborhood().removeClass('dimmed').addClass('highlighted');
+            node.connectedEdges().removeClass('dimmed').addClass('highlighted');
+            cy._selectedNode = node;
+
+            // Show/hide visualization button
+            if (VIZ_FILES[data.id]) {
+                btnViz.style.display = 'block';
+                btnViz.textContent = 'View Interactive Visualization';
+            } else {
+                btnViz.style.display = 'none';
+            }
+        });
+
+        cy.on('tap', function(evt) {
+            if (evt.target === cy) {
+                cy.elements().removeClass('dimmed highlighted search-match');
+                document.getElementById('concept-detail').classList.remove('active');
+                document.getElementById('welcome-msg').style.display = 'block';
+                btnViz.style.display = 'none';
+                closeVizPanel();
+            }
+        });
+
+        // Focus neighborhood button
+        document.getElementById('btn-focus').addEventListener('click', function() {
+            var node = cy._selectedNode;
+            if (!node) return;
+            cy.animate({ fit: { eles: node.closedNeighborhood(), padding: 60 }, duration: 500 });
+        });
+
+        // Category filter checkboxes (skip parent nodes)
+        var catFilters = document.getElementById('category-filters');
+        var categories = [];
+        var catSet = {};
+        GRAPH_DATA.nodes.forEach(function(n) {
+            if (n.data.isParent) return;
+            if (!catSet[n.data.category]) { catSet[n.data.category] = true; categories.push(n.data.category); }
+        });
+        categories.sort().forEach(function(cat) {
+            var label = document.createElement('label');
+            var cb = document.createElement('input');
+            cb.type = 'checkbox'; cb.checked = true; cb.value = cat;
+            cb.addEventListener('change', applyFilters);
+            label.appendChild(cb);
+            label.appendChild(document.createTextNode(' ' + cat));
+            catFilters.appendChild(label);
+        });
+
+        // Edge filter checkboxes
+        var edgeFilters = document.getElementById('edge-filters');
+        var edgeTypes = [];
+        var edgeSet = {};
+        GRAPH_DATA.edges.forEach(function(e) {
+            if (!edgeSet[e.data.relationship_type]) { edgeSet[e.data.relationship_type] = true; edgeTypes.push(e.data.relationship_type); }
+        });
+        edgeTypes.sort().forEach(function(type) {
+            var label = document.createElement('label');
+            var cb = document.createElement('input');
+            cb.type = 'checkbox'; cb.checked = true; cb.value = type;
+            cb.addEventListener('change', applyFilters);
+            label.appendChild(cb);
+            label.appendChild(document.createTextNode(' ' + type));
+            edgeFilters.appendChild(label);
+        });
+
+        function applyFilters() {
+            var activeCats = {};
+            catFilters.querySelectorAll('input:checked').forEach(function(cb) { activeCats[cb.value] = true; });
+            var activeEdges = {};
+            edgeFilters.querySelectorAll('input:checked').forEach(function(cb) { activeEdges[cb.value] = true; });
+            cy.batch(function() {
+                cy.nodes().forEach(function(n) {
+                    if (n.isParent()) return; // parent nodes are always visible
+                    n.style('display', activeCats[n.data('category')] ? 'element' : 'none');
+                });
+                cy.edges().forEach(function(e) { e.style('display', activeEdges[e.data('relationship_type')] ? 'element' : 'none'); });
+            });
+        }
+
+        // Show/hide isolated nodes
+        var showingIsolated = false;
+        document.getElementById('btn-show-isolated').addEventListener('click', function() {
+            showingIsolated = !showingIsolated;
+            this.textContent = showingIsolated ? 'Hide Isolated' : 'Show Isolated';
+            if (showingIsolated) {
+                cy.add(GRAPH_DATA.nodes.filter(function(n) { return !n.data.isParent && n.data.degree === 0; }));
+                cy.nodes().filter(function(n) { return !n.isParent() && n.data('degree') === 0; })
+                    .layout({ name: 'grid', boundingBox: { x1: -500, y1: -500, x2: -100, y2: 500 } }).run();
+            } else {
+                cy.nodes().filter(function(n) { return !n.isParent() && n.data('degree') === 0; }).remove();
+            }
+            document.getElementById('node-count').textContent = cy.nodes().filter(function(n) { return !n.isParent(); }).length;
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', function() {
+            cy.elements().removeClass('dimmed highlighted search-match');
+            searchInput.value = '';
+            catFilters.querySelectorAll('input').forEach(function(cb) { cb.checked = true; });
+            edgeFilters.querySelectorAll('input').forEach(function(cb) { cb.checked = true; });
+            applyFilters();
+            cy.fit(undefined, 30);
+        });
+
+        document.getElementById('btn-fit').addEventListener('click', function() {
+            cy.animate({ fit: { padding: 30 }, duration: 500 });
+        });
+
+        // Color level toggle
+        function updateColors() {
+            cy.batch(function() {
+                cy.nodes().forEach(function(n) {
+                    if (!n.isParent()) {
+                        n.style('background-color', getNodeColor(n));
+                    }
+                });
+            });
+            // Update button borders to show active
+            document.getElementById('btn-color-cat').style.border = currentColorLevel === 'category' ? '2px solid #64B5CD' : '1px solid #1a1a6e';
+            document.getElementById('btn-color-sub').style.border = currentColorLevel === 'subcategory' ? '2px solid #64B5CD' : '1px solid #1a1a6e';
+            // Update legend
+            updateLegend();
+        }
+
+        function updateLegend() {
+            var legend = document.getElementById('legend');
+            legend.innerHTML = '<h4 style="font-size:11px;text-transform:uppercase;color:#888;margin-bottom:4px;">Node Colors</h4>';
+            var colors = currentColorLevel === 'subcategory' ? SUBCATEGORY_COLORS : CATEGORY_COLORS;
+            Object.keys(colors).forEach(function(cat) {
+                if (cat === 'other') return;
+                var item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = '<span class="legend-dot" style="background:' + colors[cat] + '"></span>' + cat.replace(/_/g, ' ');
+                legend.appendChild(item);
+            });
+        }
+
+        document.getElementById('btn-color-cat').addEventListener('click', function() { currentColorLevel = 'category'; updateColors(); });
+        document.getElementById('btn-color-sub').addEventListener('click', function() { currentColorLevel = 'subcategory'; updateColors(); });
+
+        // Legend (initial render)
+        var legend = document.getElementById('legend');
+        Object.keys(CATEGORY_COLORS).forEach(function(cat) {
+            var item = document.createElement('div');
+            item.className = 'legend-item';
+            item.innerHTML = '<span class="legend-dot" style="background:' + CATEGORY_COLORS[cat] + '"></span>' + cat;
+            legend.appendChild(item);
+        });
+
+        // ─── Visualization Panel Integration ───
+        var VIZ_FILES = {
+            "9": "9-lasso.html","138": "138-gauss-markov-theorem.html","139": "139-orthogonal-projection.html",
+            "140": "140-qr-decomposition.html","141": "141-gram-schmidt.html","142": "142-best-subset-selection.html",
+            "143": "143-leaps-and-bounds.html","144": "144-forward-stepwise-selection.html",
+            "145": "145-backward-stepwise-selection.html","146": "146-forward-stagewise-regression.html",
+            "147": "147-ridge-regression.html","150": "150-basis-pursuit.html",
+            "154": "154-least-angle-regression.html","155": "155-lar-lasso-connection.html",
+            "156": "156-homotopy-algorithm.html","157": "157-degrees-of-freedom-adaptive.html",
+            "158": "158-principal-components-regression.html","159": "159-partial-least-squares.html",
+            "160": "160-canonical-correlation-analysis.html","161": "161-reduced-rank-regression.html",
+            "162": "162-curds-and-whey.html","163": "163-incremental-forward-stagewise.html",
+            "164": "164-infinitesimal-forward-stagewise.html","165": "165-l2boost.html",
+            "166": "166-dantzig-selector.html","167": "167-grouped-lasso.html","168": "168-relaxed-lasso.html",
+            "169": "169-scad-penalty.html","170": "170-adaptive-lasso.html",
+            "171": "171-pathwise-coordinate-descent.html",
+            "173": "173-f-statistic-nested.html","174": "174-var-cov-matrix.html",
+            "175": "175-multiple-regression-interpretation.html","176": "176-multicollinearity.html",
+            "177": "177-bias-variance-tradeoff.html","178": "178-mse-decomposition.html",
+            "179": "179-aic-criterion.html","181": "181-l1-arc-length.html",
+            "182": "182-piecewise-linear-solution-path.html"
+        };
+
+        var vizPanel = document.getElementById('viz-panel');
+        var vizIframe = document.getElementById('viz-iframe');
+        var vizTitle = document.getElementById('viz-panel-title');
+        var btnViz = document.getElementById('btn-viz');
+        var currentVizId = null;
+
+        function openVizPanel(conceptId, conceptName) {
+            var file = VIZ_FILES[conceptId];
+            if (!file) return;
+            vizIframe.src = '../concept-viz/ch3/' + file;
+            vizTitle.textContent = conceptName;
+            vizPanel.classList.add('open');
+            currentVizId = conceptId;
+            // Resize graph after layout change
+            setTimeout(function() { cy.resize(); }, 50);
+        }
+
+        function closeVizPanel() {
+            vizPanel.classList.remove('open');
+            vizIframe.src = 'about:blank';
+            currentVizId = null;
+            setTimeout(function() { cy.resize(); }, 50);
+        }
+
+        document.getElementById('viz-close-btn').addEventListener('click', closeVizPanel);
+
+        btnViz.addEventListener('click', function() {
+            var node = cy._selectedNode;
+            if (!node) return;
+            openVizPanel(node.data('id'), node.data('name'));
+        });
+
+        // Update btn-viz visibility when a concept is tapped (hook into existing tap handler)
+        // Zoom-dependent label visibility (skip parent nodes)
+        cy.on('zoom', function() {
+            var zoom = cy.zoom();
+            cy.batch(function() {
+                cy.nodes().forEach(function(n) {
+                    if (n.isParent()) return;
+                    if (n.hasClass('search-match') || n.hasClass('highlighted')) return;
+                    var tier = n.data('tier');
+                    if (tier) {
+                        // Tier 1-2 always visible; tier 3-4 only on zoom
+                        if (tier <= 2) { n.style('text-opacity', 1); }
+                        else if (zoom > 1.5) { n.style('text-opacity', 1); n.style('font-size', '8px'); }
+                        else { n.style('text-opacity', 0); }
+                    } else {
+                        if (zoom > 1.5) { n.style('text-opacity', 1); n.style('font-size', '8px'); }
+                        else if (zoom > 0.8) { n.style('text-opacity', n.data('degree') >= 3 ? 1 : 0); }
+                        else { n.style('text-opacity', n.data('degree') >= 5 ? 1 : 0); }
+                    }
+                });
+            });
+        });
+
+    })();
+    </script>
+</body>
+</html>
