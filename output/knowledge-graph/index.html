@@ -233,6 +233,8 @@
             nodes: connectedParentNodes.concat(connectedConceptNodes),
             edges: GRAPH_DATA.edges
         };
+        // ch3DividerElements placeholder — populated after layout computation, before cy init
+        var ch3DividerElements = [];
 
         // Pre-compute positions for concept nodes using concentric rings per chapter
         var chapterGroups = {};
@@ -258,12 +260,12 @@
         // Order within each array IS the reading order (top-to-bottom in column).
         var CH3_SUBSECTION_CONCEPTS = {
             '3.1': ['bias-variance tradeoff'],
-            '3.2': ['orthogonal projection', 'collinearity', 'variance-covariance matrix',
+            '3.2': ['least squares', 'design matrix', 'orthogonal projection', 'collinearity', 'variance-covariance matrix',
                      'f statistic', 'gauss-markov theorem', 'mse decomposition',
                      'multiple regression interpretation', 'gram-schmidt', 'qr decomposition'],
             '3.3': ['best subset selection', 'leaps and bounds', 'forward stepwise selection',
                      'backward stepwise selection', 'aic criterion', 'forward stagewise regression'],
-            '3.4': ['ridge regression', 'degrees of freedom', 'lasso', 'basis pursuit',
+            '3.4': ['ridge regression', 'degrees of freedom', 'lasso', 'elastic net', 'svd', 'basis pursuit',
                      'least angle regression', 'lar-lasso connection', 'homotopy algorithm',
                      'l1 arc length', 'piecewise linear solution path'],
             '3.5': ['principal components regression', 'partial least squares'],
@@ -272,7 +274,7 @@
             '3.8': ['incremental forward stagewise regression', 'infinitesimal forward stagewise regression',
                      'l2boost', 'dantzig selector', 'grouped lasso', 'relaxed lasso',
                      'adaptive lasso', 'scad penalty', 'pathwise coordinate descent'],
-            '3.9': []
+            '3.9': ['cholesky decomposition']
         };
 
         // Build reverse lookup: lowercase name -> subsection
@@ -285,8 +287,8 @@
             });
         });
 
-        var ch3SubsectionOrder = ['3.1', '3.2', '3.3', '3.4', '3.5', '3.7', '3.8'];
-        // (3.6 and 3.9 are empty — omit from layout)
+        var ch3SubsectionOrder = ['3.1', '3.2', '3.3', '3.4', '3.5', '3.7', '3.8', '3.9'];
+        // (3.6 is empty — omit from layout)
 
         var ch3Subsections = {};
         ch3SubsectionOrder.forEach(function(sub) { ch3Subsections[sub] = []; });
@@ -438,6 +440,49 @@
             }
         });
 
+        // ─── Ch3 Subsection Dividers & Labels (built before cy init so they're part of initial elements) ───
+        ch3SubsectionOrder.forEach(function(sub, colIdx) {
+            var colLeftX = ch3Origin.x + CH3_COL_PAD + colIdx * CH3_COL_WIDTH;
+            var colCenterX = colLeftX + CH3_COL_WIDTH / 2;
+            var topY = ch3Origin.y;
+
+            // Divider line node on the LEFT edge of each column (skip first)
+            if (colIdx > 0) {
+                ch3DividerElements.push({
+                    group: 'nodes',
+                    data: {
+                        id: 'ch3-div-' + sub,
+                        parent: 'ch-3',
+                        isDivider: true
+                    },
+                    position: { x: colLeftX, y: topY + ch3Height / 2 },
+                    locked: true,
+                    grabbable: false,
+                    selectable: false,
+                    pannable: true
+                });
+            }
+
+            // Subsection label node at top center of each column
+            ch3DividerElements.push({
+                group: 'nodes',
+                data: {
+                    id: 'ch3-lbl-' + sub,
+                    parent: 'ch-3',
+                    isLabel: true,
+                    labelText: sub
+                },
+                position: { x: colCenterX, y: topY + 12 },
+                locked: true,
+                grabbable: false,
+                selectable: false,
+                pannable: true
+            });
+        });
+
+        // Add divider/label elements to connectedElements so they're included in initial render
+        connectedElements.nodes = connectedElements.nodes.concat(ch3DividerElements);
+
         // Build Cytoscape style array
         var cyStyle = [
             {
@@ -582,8 +627,8 @@
                 selector: 'node[?isLabel]',
                 style: {
                     'shape': 'rectangle',
-                    'width': 1,
-                    'height': 1,
+                    'width': 40,
+                    'height': 20,
                     'background-opacity': 0,
                     'border-width': 0,
                     'label': 'data(labelText)',
@@ -592,6 +637,8 @@
                     'font-size': '10px',
                     'color': 'rgba(100, 181, 205, 0.7)',
                     'text-outline-width': 0,
+                    'text-wrap': 'wrap',
+                    'text-max-width': 60,
                     'events': 'no',
                     'z-index': 0
                 }
@@ -621,52 +668,7 @@
         document.getElementById('node-count').textContent = cy.nodes().filter(function(n) { return !n.isParent() && !n.data('isDivider') && !n.data('isLabel'); }).length;
         document.getElementById('edge-count').textContent = cy.edges().length;
 
-        // ─── Ch3 Subsection Dividers & Labels (Cytoscape nodes inside ch-3 compound) ───
-        // These are locked, non-interactive nodes that move with the ch-3 parent.
-        var ch3DividerElements = [];
-
-        ch3SubsectionOrder.forEach(function(sub, colIdx) {
-            var colLeftX = ch3Origin.x + CH3_COL_PAD + colIdx * CH3_COL_WIDTH;
-            var colCenterX = colLeftX + CH3_COL_WIDTH / 2;
-            var topY = ch3Origin.y;
-
-            // Divider line node on the LEFT edge of each column (skip first)
-            if (colIdx > 0) {
-                ch3DividerElements.push({
-                    group: 'nodes',
-                    data: {
-                        id: 'ch3-div-' + sub,
-                        parent: 'ch-3',
-                        isDivider: true
-                    },
-                    position: { x: colLeftX, y: topY + ch3Height / 2 },
-                    locked: true,
-                    grabbable: false,
-                    selectable: false,
-                    pannable: true
-                });
-            }
-
-            // Subsection label node at top center of each column
-            ch3DividerElements.push({
-                group: 'nodes',
-                data: {
-                    id: 'ch3-lbl-' + sub,
-                    parent: 'ch-3',
-                    isLabel: true,
-                    labelText: sub
-                },
-                position: { x: colCenterX, y: topY + 12 },
-                locked: true,
-                grabbable: false,
-                selectable: false,
-                pannable: true
-            });
-        });
-
-        cy.add(ch3DividerElements);
-
-        // Lock divider/label nodes so they stay put
+        // Lock divider/label nodes so they stay put (they were added to initial elements above)
         cy.nodes('[?isDivider], [?isLabel]').lock();
 
         // Search functionality
