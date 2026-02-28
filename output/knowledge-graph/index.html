@@ -290,6 +290,25 @@
         var ch3SubsectionOrder = ['3.1', '3.2', '3.3', '3.4', '3.5', '3.7', '3.8', '3.9'];
         // (3.6 is empty — omit from layout)
 
+        // ─── Include disconnected Ch3 concepts that are in the subsection map ───
+        var connectedIdSet = {};
+        connectedConceptNodes.forEach(function(n) { connectedIdSet[n.data.id] = true; });
+
+        var ch3DisconnectedNodes = conceptNodes.filter(function(n) {
+            if (n.data.parent !== 'ch-3') return false;
+            if (connectedIdSet[n.data.id]) return false;
+            var nameLower = (n.data.name || '').toLowerCase();
+            return !!ch3NameToSub[nameLower];
+        });
+
+        ch3DisconnectedNodes.forEach(function(n) {
+            connectedConceptNodes.push(n);
+        });
+        if (ch3DisconnectedNodes.length > 0) {
+            connectedParentIds['ch-3'] = true;
+        }
+        connectedElements.nodes = connectedElements.nodes.concat(ch3DisconnectedNodes);
+
         var ch3Subsections = {};
         ch3SubsectionOrder.forEach(function(sub) { ch3Subsections[sub] = []; });
 
