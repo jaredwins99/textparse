@@ -251,22 +251,65 @@
         var RING_RADIUS = 55; // px between concentric rings
         var CH_PADDING = 80;  // padding around outermost ring
 
-        // ─── Ch3 subsection parsing ───
-        // For each Ch3 concept, extract the top-level subsection (e.g., "3.2" from "3.2.3 ...")
-        var ch3Subsections = {}; // subsection string -> array of node data objects
-        var ch3SubsectionOrder = []; // sorted list of subsection keys
+        // ─── Ch3 hardcoded subsection assignments (reading order) ───
+        // The section field in graph-data.js is unreliable; many concepts are
+        // dumped into "3.1 Introduction". This map overrides with correct assignments.
+        // Keys are lowercase concept names, values are top-level subsection strings.
+        // Order within each array IS the reading order (top-to-bottom in column).
+        var CH3_SUBSECTION_CONCEPTS = {
+            '3.1': ['bias-variance tradeoff'],
+            '3.2': ['orthogonal projection', 'collinearity', 'variance-covariance matrix',
+                     'f statistic', 'gauss-markov theorem', 'mse decomposition',
+                     'multiple regression interpretation', 'gram-schmidt', 'qr decomposition'],
+            '3.3': ['best subset selection', 'leaps and bounds', 'forward stepwise selection',
+                     'backward stepwise selection', 'aic criterion', 'forward stagewise regression'],
+            '3.4': ['ridge regression', 'degrees of freedom', 'lasso', 'basis pursuit',
+                     'least angle regression', 'lar-lasso connection', 'homotopy algorithm',
+                     'l1 arc length', 'piecewise linear solution path'],
+            '3.5': ['principal components regression', 'partial least squares'],
+            '3.6': [],
+            '3.7': ['canonical correlation analysis', 'reduced rank regression', 'curds and whey'],
+            '3.8': ['incremental forward stagewise regression', 'infinitesimal forward stagewise regression',
+                     'l2boost', 'dantzig selector', 'grouped lasso', 'relaxed lasso',
+                     'adaptive lasso', 'scad penalty', 'pathwise coordinate descent'],
+            '3.9': []
+        };
+
+        // Build reverse lookup: lowercase name -> subsection
+        var ch3NameToSub = {};
+        var ch3NameToOrder = {};
+        Object.keys(CH3_SUBSECTION_CONCEPTS).forEach(function(sub) {
+            CH3_SUBSECTION_CONCEPTS[sub].forEach(function(name, idx) {
+                ch3NameToSub[name] = sub;
+                ch3NameToOrder[name] = idx;
+            });
+        });
+
+        var ch3SubsectionOrder = ['3.1', '3.2', '3.3', '3.4', '3.5', '3.7', '3.8'];
+        // (3.6 and 3.9 are empty — omit from layout)
+
+        var ch3Subsections = {};
+        ch3SubsectionOrder.forEach(function(sub) { ch3Subsections[sub] = []; });
+
         connectedConceptNodes.forEach(function(n) {
             if (n.data.parent !== 'ch-3') return;
-            var sec = n.data.section || '';
-            var m = sec.match(/^(\d+\.\d+)/);
-            var sub = m ? m[1] : '3.0';
-            if (!ch3Subsections[sub]) {
-                ch3Subsections[sub] = [];
-                ch3SubsectionOrder.push(sub);
+            var nameLower = (n.data.name || '').toLowerCase();
+            var sub = ch3NameToSub[nameLower];
+            if (sub && ch3Subsections[sub]) {
+                ch3Subsections[sub].push(n);
             }
-            ch3Subsections[sub].push(n);
         });
-        ch3SubsectionOrder.sort(function(a, b) { return parseFloat(a) - parseFloat(b); });
+
+        // Sort each column by reading order (from the hardcoded arrays)
+        ch3SubsectionOrder.forEach(function(sub) {
+            ch3Subsections[sub].sort(function(a, b) {
+                var aOrder = ch3NameToOrder[(a.data.name || '').toLowerCase()];
+                var bOrder = ch3NameToOrder[(b.data.name || '').toLowerCase()];
+                if (aOrder === undefined) aOrder = 999;
+                if (bOrder === undefined) bOrder = 999;
+                return aOrder - bOrder;
+            });
+        });
 
         // ─── Layout constants for Ch3 column layout ───
         var CH3_COL_WIDTH = 130;    // width per subsection column
@@ -352,8 +395,7 @@
 
                 ch3SubsectionOrder.forEach(function(sub, colIdx) {
                     var colNodes = ch3Subsections[sub];
-                    // Sort by degree descending within each column
-                    colNodes.sort(function(a, b) { return (b.data.degree || 0) - (a.data.degree || 0); });
+                    // Already sorted by reading order above
 
                     var colCx = ch3Origin.x + CH3_COL_PAD + colIdx * CH3_COL_WIDTH + CH3_COL_WIDTH / 2;
                     var startY = ch3Origin.y + CH3_TOP_MARGIN;
@@ -480,6 +522,7 @@
                 }
             },
             { selector: '.dimmed', style: { 'opacity': 0.15 } },
+            { selector: 'node[?isDivider].dimmed, node[?isLabel].dimmed', style: { 'opacity': 1 } },
             {
                 selector: '.highlighted',
                 style: {
@@ -517,6 +560,41 @@
                     'padding': '20px',
                     'shape': 'roundrectangle'
                 }
+            },
+            // Ch3 divider lines — thin vertical rectangles
+            {
+                selector: 'node[?isDivider]',
+                style: {
+                    'shape': 'rectangle',
+                    'width': 1,
+                    'height': ch3Height - 30,
+                    'background-color': 'rgba(100, 181, 205, 0.25)',
+                    'border-width': 0,
+                    'label': '',
+                    'events': 'no',
+                    'text-opacity': 0,
+                    'opacity': 1,
+                    'z-index': 0
+                }
+            },
+            // Ch3 subsection labels
+            {
+                selector: 'node[?isLabel]',
+                style: {
+                    'shape': 'rectangle',
+                    'width': 1,
+                    'height': 1,
+                    'background-opacity': 0,
+                    'border-width': 0,
+                    'label': 'data(labelText)',
+                    'text-valign': 'center',
+                    'text-halign': 'center',
+                    'font-size': '10px',
+                    'color': 'rgba(100, 181, 205, 0.7)',
+                    'text-outline-width': 0,
+                    'events': 'no',
+                    'z-index': 0
+                }
             }
         ];
 
@@ -540,84 +618,56 @@
         // Preset layout is synchronous — fit and finish immediately
         cy.fit(undefined, 30);
         loadingBanner.style.display = 'none';
-        document.getElementById('node-count').textContent = cy.nodes().filter(function(n) { return !n.isParent(); }).length;
+        document.getElementById('node-count').textContent = cy.nodes().filter(function(n) { return !n.isParent() && !n.data('isDivider') && !n.data('isLabel'); }).length;
         document.getElementById('edge-count').textContent = cy.edges().length;
 
-        // ─── Ch3 Subsection Dividers (HTML Overlay) ───
-        var ch3OverlayContainer = document.createElement('div');
-        ch3OverlayContainer.id = 'ch3-subsection-overlay';
-        ch3OverlayContainer.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;z-index:5;';
-        document.getElementById('cy').appendChild(ch3OverlayContainer);
+        // ─── Ch3 Subsection Dividers & Labels (Cytoscape nodes inside ch-3 compound) ───
+        // These are locked, non-interactive nodes that move with the ch-3 parent.
+        var ch3DividerElements = [];
 
-        // Subsection full names for tooltips
-        var ch3SubsectionNames = {};
-        connectedConceptNodes.forEach(function(n) {
-            if (n.data.parent !== 'ch-3') return;
-            var sec = n.data.section || '';
-            var m = sec.match(/^(\d+\.\d+)/);
-            var sub = m ? m[1] : '3.0';
-            if (!ch3SubsectionNames[sub]) {
-                // Extract full subsection title (e.g., "3.2 Linear Regression Models and Least Squares")
-                var titleMatch = sec.match(/^(\d+\.\d+)\s+(.*)/);
-                // For deeper sections like "3.2.3 ...", use just the top-level prefix
-                var topMatch = sec.match(/^(\d+\.\d+)(?:\.\d+)?\s+(.*)/);
-                ch3SubsectionNames[sub] = topMatch ? topMatch[2].substring(0, 30) : sub;
+        ch3SubsectionOrder.forEach(function(sub, colIdx) {
+            var colLeftX = ch3Origin.x + CH3_COL_PAD + colIdx * CH3_COL_WIDTH;
+            var colCenterX = colLeftX + CH3_COL_WIDTH / 2;
+            var topY = ch3Origin.y;
+
+            // Divider line node on the LEFT edge of each column (skip first)
+            if (colIdx > 0) {
+                ch3DividerElements.push({
+                    group: 'nodes',
+                    data: {
+                        id: 'ch3-div-' + sub,
+                        parent: 'ch-3',
+                        isDivider: true
+                    },
+                    position: { x: colLeftX, y: topY + ch3Height / 2 },
+                    locked: true,
+                    grabbable: false,
+                    selectable: false,
+                    pannable: true
+                });
             }
+
+            // Subsection label node at top center of each column
+            ch3DividerElements.push({
+                group: 'nodes',
+                data: {
+                    id: 'ch3-lbl-' + sub,
+                    parent: 'ch-3',
+                    isLabel: true,
+                    labelText: sub
+                },
+                position: { x: colCenterX, y: topY + 12 },
+                locked: true,
+                grabbable: false,
+                selectable: false,
+                pannable: true
+            });
         });
 
-        function updateCh3Overlay() {
-            ch3OverlayContainer.innerHTML = '';
-            var cyContainer = document.getElementById('cy');
-            var cyRect = cyContainer.getBoundingClientRect();
+        cy.add(ch3DividerElements);
 
-            ch3SubsectionOrder.forEach(function(sub, colIdx) {
-                // Compute the model-space x for this column boundary
-                var colLeftX = ch3Origin.x + CH3_COL_PAD + colIdx * CH3_COL_WIDTH;
-                var colRightX = colLeftX + CH3_COL_WIDTH;
-                var topY = ch3Origin.y;
-                var bottomY = ch3Origin.y + ch3Height;
-
-                // Convert model coords to rendered (screen) coords
-                var pan = cy.pan();
-                var zoom = cy.zoom();
-
-                // Draw divider line on the LEFT edge of each column (skip first)
-                if (colIdx > 0) {
-                    var screenX = colLeftX * zoom + pan.x;
-                    var screenTopY = topY * zoom + pan.y;
-                    var screenBottomY = bottomY * zoom + pan.y;
-                    var lineHeight = screenBottomY - screenTopY;
-
-                    // Skip if completely off-screen
-                    if (screenX > -50 && screenX < cyRect.width + 50 && screenBottomY > 0 && screenTopY < cyRect.height) {
-                        var line = document.createElement('div');
-                        line.style.cssText = 'position:absolute;width:1px;background:rgba(100,181,205,0.25);' +
-                            'left:' + screenX + 'px;top:' + screenTopY + 'px;height:' + lineHeight + 'px;';
-                        ch3OverlayContainer.appendChild(line);
-                    }
-                }
-
-                // Draw subsection label at top center of each column
-                var colCenterX = colLeftX + CH3_COL_WIDTH / 2;
-                var labelScreenX = colCenterX * zoom + pan.x;
-                var labelScreenY = (topY + 5) * zoom + pan.y;
-
-                if (labelScreenX > -100 && labelScreenX < cyRect.width + 100 && labelScreenY > -50 && labelScreenY < cyRect.height) {
-                    var label = document.createElement('div');
-                    var fontSize = Math.max(8, Math.min(13, 10 * zoom));
-                    label.style.cssText = 'position:absolute;color:rgba(100,181,205,0.7);font-size:' + fontSize + 'px;' +
-                        'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;white-space:nowrap;' +
-                        'transform:translateX(-50%);' +
-                        'left:' + labelScreenX + 'px;top:' + labelScreenY + 'px;';
-                    label.textContent = sub;
-                    ch3OverlayContainer.appendChild(label);
-                }
-            });
-        }
-
-        // Initial draw + redraw on pan/zoom
-        updateCh3Overlay();
-        cy.on('pan zoom resize', updateCh3Overlay);
+        // Lock divider/label nodes so they stay put
+        cy.nodes('[?isDivider], [?isLabel]').lock();
 
         // Search functionality
         var searchInput = document.getElementById('search-input');
@@ -631,7 +681,7 @@
                 if (query.length < 2) return;
 
                 var matches = cy.nodes().filter(function(n) {
-                    return !n.isParent() && n.data('name').toLowerCase().includes(query);
+                    return !n.isParent() && !n.data('isDivider') && !n.data('isLabel') && (n.data('name') || '').toLowerCase().includes(query);
                 });
 
                 if (matches.length > 0) {
@@ -653,10 +703,10 @@
             }
         });
 
-        // Node click -> detail panel (skip parent/compound nodes)
+        // Node click -> detail panel (skip parent/compound/divider/label nodes)
         cy.on('tap', 'node', function(evt) {
             var node = evt.target;
-            if (node.isParent()) return;
+            if (node.isParent() || node.data('isDivider') || node.data('isLabel')) return;
             var data = node.data();
 
             document.getElementById('concept-detail').classList.add('active');
@@ -811,7 +861,7 @@
             edgeFilters.querySelectorAll('input:checked').forEach(function(cb) { activeEdges[cb.value] = true; });
             cy.batch(function() {
                 cy.nodes().forEach(function(n) {
-                    if (n.isParent()) return; // parent nodes are always visible
+                    if (n.isParent() || n.data('isDivider') || n.data('isLabel')) return;
                     n.style('display', activeCats[n.data('category')] ? 'element' : 'none');
                 });
                 cy.edges().forEach(function(e) { e.style('display', activeEdges[e.data('relationship_type')] ? 'element' : 'none'); });
@@ -830,7 +880,7 @@
             } else {
                 cy.nodes().filter(function(n) { return !n.isParent() && n.data('degree') === 0; }).remove();
             }
-            document.getElementById('node-count').textContent = cy.nodes().filter(function(n) { return !n.isParent(); }).length;
+            document.getElementById('node-count').textContent = cy.nodes().filter(function(n) { return !n.isParent() && !n.data('isDivider') && !n.data('isLabel'); }).length;
         });
 
         document.getElementById('btn-reset').addEventListener('click', function() {
@@ -948,7 +998,7 @@
             var zoom = cy.zoom();
             cy.batch(function() {
                 cy.nodes().forEach(function(n) {
-                    if (n.isParent()) return;
+                    if (n.isParent() || n.data('isDivider') || n.data('isLabel')) return;
                     if (n.hasClass('search-match') || n.hasClass('highlighted')) return;
                     var tier = n.data('tier');
                     if (tier) {
