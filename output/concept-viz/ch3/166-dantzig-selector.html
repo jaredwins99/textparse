@@ -1,570 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dantzig Selector — ESL Ch. 3.1</title>
-  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg:       #0d1117;
-      --surface:  #161b22;
-      --border:   #30363d;
-      --accent:   #58a6ff;
-      --accent2:  #f78166;
-      --accent3:  #3fb950;
-      --accent4:  #e3b341;
-      --text:     #e6edf3;
-      --muted:    #8b949e;
-      --quote-bg: #1c2128;
-    }
-    body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dantzig Selector — ESL Ch. 3</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surface2: #1c2129;
+    --border: #30363d; --text: #e6edf3; --text-dim: #8b949e;
+    --green: #3fb950; --yellow: #d29922; --orange: #db6d28;
+    --red: #f85149; --blue: #58a6ff; --purple: #bc8cff;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
 
-    header {
-      padding: 2rem 2.5rem 1.5rem;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
-    }
-    .header-meta { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: .75rem; }
-    .badge {
-      font-size: .7rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
-      padding: .25rem .6rem; border-radius: 2rem; background: #1f2937; color: var(--accent);
-      border: 1px solid var(--accent);
-    }
-    .badge.cat  { color: var(--accent4); border-color: var(--accent4); }
-    .badge.sec  { color: var(--muted);   border-color: var(--border); }
-    h1 { font-size: 1.75rem; font-weight: 700; color: var(--text); margin-bottom: .6rem; }
-    .formula-block {
-      background: var(--quote-bg); border-left: 3px solid var(--accent4);
-      padding: .6rem 1rem; border-radius: 0 .4rem .4rem 0; display: inline-block;
-      font-family: 'Courier New', monospace; font-size: .9rem; color: var(--accent4);
-      line-height: 1.6;
-    }
+  header { padding: 1.5rem 2rem 1.2rem; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .header-meta { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; margin-bottom: .5rem; }
+  .badge {
+    font-size: .65rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+    padding: .2rem .55rem; border-radius: 2rem; background: var(--surface2);
+    border: 1px solid var(--border); color: var(--text-dim);
+  }
+  .badge.id { color: var(--yellow); border-color: var(--yellow); }
+  h1 { font-size: 1.5rem; font-weight: 700; }
 
-    .main { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; padding: 1.5rem 2.5rem; }
-    @media (max-width: 960px) { .main { grid-template-columns: 1fr; } }
+  .container { max-width: 900px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
 
-    .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: .6rem; padding: 1.25rem; margin-bottom: 1.25rem;
-    }
-    .card h2 { font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 1rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: .5rem; padding: 1.25rem; margin-bottom: 1.25rem; }
+  .card h2 { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); margin-bottom: 1rem; }
 
-    .tab-bar { display: flex; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
-    .tab {
-      padding: .35rem .9rem; border-radius: .35rem; border: 1px solid var(--border);
-      background: transparent; color: var(--muted); cursor: pointer; font-size: .85rem; transition: all .15s;
-    }
-    .tab.active, .tab:hover { background: var(--accent4); color: #0d1117; border-color: var(--accent4); font-weight: 600; }
+  /* Benefits / Tradeoffs two-column */
+  .bt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .bt-grid { grid-template-columns: 1fr; } }
+  .bt-col h3 { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .6rem; }
+  .bt-col.benefits h3 { color: var(--green); }
+  .bt-col.tradeoffs h3 { color: var(--red); }
+  .bt-item { font-size: .82rem; line-height: 1.6; color: var(--text); margin-bottom: .6rem; padding-left: .9rem; position: relative; }
+  .bt-item::before { position: absolute; left: 0; }
+  .benefits .bt-item::before { content: '+'; color: var(--green); font-weight: 700; }
+  .tradeoffs .bt-item::before { content: '-'; color: var(--red); font-weight: 700; }
 
-    #constraint-plot { width: 100%; height: 380px; }
-    #paths-plot      { width: 100%; height: 380px; }
-    #compare-plot    { width: 100%; height: 380px; }
+  blockquote {
+    border-left: 3px solid var(--orange); background: var(--surface2);
+    padding: .6rem .9rem; border-radius: 0 .4rem .4rem 0;
+    font-style: italic; font-size: .82rem; color: var(--text); line-height: 1.6; margin-top: .75rem;
+  }
+  blockquote cite { display: block; margin-top: .4rem; font-style: normal; font-size: .7rem; color: var(--text-dim); }
 
-    .ctrl-row { display: flex; align-items: center; gap: 1rem; margin-bottom: .75rem; flex-wrap: wrap; }
-    .ctrl-row label { font-size: .82rem; color: var(--muted); white-space: nowrap; }
-    input[type=range] { flex: 1; min-width: 100px; accent-color: var(--accent4); }
-    .ctrl-val { font-size: .82rem; color: var(--accent4); font-weight: 600; min-width: 3rem; text-align: right; }
+  /* Viz */
+  #viz-plot { width: 100%; height: 400px; }
+  .ctrl-row { display: flex; align-items: center; gap: .75rem; margin-bottom: .6rem; flex-wrap: wrap; }
+  .ctrl-row label { font-size: .8rem; color: var(--text-dim); white-space: nowrap; }
+  input[type=range] { flex: 1; min-width: 80px; accent-color: var(--yellow); }
+  .ctrl-val { font-size: .8rem; color: var(--yellow); font-weight: 600; min-width: 2.5rem; text-align: right; }
 
-    .step-box { background: var(--quote-bg); border: 1px solid var(--border); border-radius: .5rem; padding: 1rem; margin-top: .75rem; }
-    .step-box h3 { font-size: .8rem; font-weight: 700; color: var(--accent4); margin-bottom: .6rem; text-transform: uppercase; letter-spacing: .06em; }
-    .step-box p  { font-size: .82rem; color: var(--text); line-height: 1.7; }
-    .step-box code { background: #1f2937; padding: .1rem .35rem; border-radius: .25rem; font-family: monospace; color: var(--accent3); }
+  .explain { font-size: .82rem; color: var(--text-dim); line-height: 1.6; margin-top: .75rem; }
 
-    blockquote {
-      border-left: 3px solid var(--accent2); background: var(--quote-bg);
-      padding: .75rem 1rem; border-radius: 0 .4rem .4rem 0;
-      font-style: italic; font-size: .88rem; color: var(--text); line-height: 1.6;
-      margin-bottom: .75rem;
-    }
-    blockquote cite { display: block; margin-top: .5rem; font-style: normal; font-size: .75rem; color: var(--muted); }
+  /* Guarantees */
+  .g-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .g-item { border-radius: .4rem; padding: .5rem .7rem; font-size: .78rem; font-weight: 500; }
+  .g-yes { background: #0d2b1a; border: 1px solid #166534; color: #4ade80; }
+  .g-no  { background: #2b0d0d; border: 1px solid #991b1b; color: #f87171; }
+  .g-cond { background: #1a1a0d; border: 1px solid #713f12; color: #fbbf24; }
+  .g-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .04em; opacity: .7; display: block; margin-bottom: .15rem; }
 
-    .guarantee-grid { display: grid; gap: .6rem; }
-    .g-item { display: flex; align-items: flex-start; gap: .75rem; padding: .6rem; border-radius: .4rem; background: var(--quote-bg); }
-    .g-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: .05rem; }
-    .g-label { font-size: .8rem; font-weight: 700; color: var(--text); margin-bottom: .2rem; }
-    .g-desc  { font-size: .75rem; color: var(--muted); line-height: 1.5; }
-
-    .rel-list { display: flex; flex-wrap: wrap; gap: .5rem; }
-    .rel-chip {
-      padding: .3rem .75rem; border-radius: 2rem; border: 1px solid var(--border);
-      font-size: .78rem; color: var(--muted); background: var(--quote-bg); cursor: default; transition: all .15s;
-    }
-    .rel-chip:hover { border-color: var(--accent4); color: var(--accent4); }
-
-    .diff-table { width: 100%; border-collapse: collapse; font-size: .8rem; margin-top: .5rem; }
-    .diff-table th { color: var(--muted); font-weight: 600; text-align: left; padding: .4rem .6rem; border-bottom: 1px solid var(--border); }
-    .diff-table td { padding: .4rem .6rem; border-bottom: 1px solid #21262d; vertical-align: top; line-height: 1.5; }
-    .diff-table tr:last-child td { border-bottom: none; }
-    .lasso-col { color: var(--accent); }
-    .dantzig-col { color: var(--accent4); }
-  </style>
+  /* Formula reference */
+  .formula-ref {
+    background: var(--surface2); border-left: 3px solid var(--yellow);
+    padding: .6rem 1rem; border-radius: 0 .4rem .4rem 0;
+    font-size: .85rem; color: var(--yellow); line-height: 1.8;
+  }
+</style>
 </head>
 <body>
 
 <header>
   <div class="header-meta">
-    <span class="badge">ID 166</span>
-    <span class="badge sec">Section 3.1</span>
-    <span class="badge cat">Estimation / Objective</span>
+    <span class="badge id">ID 166</span>
+    <span class="badge">Section 3.8.5</span>
+    <span class="badge">Tier 4</span>
   </div>
   <h1>Dantzig Selector</h1>
-  <div class="formula-block">
-    min<sub>β</sub> ‖β‖₁ &nbsp; subject to &nbsp; ‖Xᵀ(y − Xβ)‖<sub>∞</sub> ≤ s
-  </div>
 </header>
 
-<div class="main">
-  <!-- Left column -->
-  <div>
-    <div class="card">
-      <h2>Visualization</h2>
-      <div class="tab-bar">
-        <button class="tab active" onclick="showTab('constraint')">Constraint Region</button>
-        <button class="tab" onclick="showTab('paths')">Coefficient Paths</button>
-        <button class="tab" onclick="showTab('compare')">Dantzig vs Lasso</button>
-      </div>
+<div class="container">
 
-      <!-- Tab: Constraint region -->
-      <div id="tab-constraint">
-        <div class="ctrl-row">
-          <label>Slack s:</label>
-          <input type="range" id="slider-s" min="0.05" max="2.0" value="0.8" step="0.05" oninput="updateConstraint()">
-          <span class="ctrl-val" id="val-s">0.80</span>
-          <label>Noise σ:</label>
-          <input type="range" id="slider-sigma" min="0.1" max="1.5" value="0.5" step="0.1" oninput="updateConstraint()">
-          <span class="ctrl-val" id="val-sigma">0.5</span>
-        </div>
-        <div id="constraint-plot"></div>
-        <div class="step-box">
-          <h3>The ℓ∞ constraint</h3>
-          <p>
-            The constraint <code>‖Xᵀr‖∞ ≤ s</code> (where <code>r = y − Xβ</code>) says each predictor's inner product with the residual is bounded by s.
-            Equivalently, <em>no predictor is too correlated with the residual</em>. The L₁ ball (rotated square) shows where the objective lives.
-            The solution is the smallest L₁ ball touching the feasible region.
-          </p>
-        </div>
+  <!-- 1. Benefits & Tradeoffs -->
+  <div class="card">
+    <h2>What this fixes vs. vanilla Lasso</h2>
+    <div class="bt-grid">
+      <div class="bt-col benefits">
+        <h3>Benefits</h3>
+        <div class="bt-item">Designed for the p >> n regime. The constraint bounds the max correlation of any predictor with the residual, which scales better than L2 residual loss when you have far more predictors than observations.</div>
+        <div class="bt-item">Near-oracle prediction risk under RIP (Restricted Isometry Property). Candes and Tao (2007) show that in compressed sensing settings, the Dantzig selector achieves near-optimal estimation.</div>
+        <div class="bt-item">Solved as a linear program -- no custom solvers needed, just off-the-shelf LP.</div>
       </div>
+      <div class="bt-col tradeoffs">
+        <h3>Tradeoffs</h3>
+        <div class="bt-item">Coefficient paths are non-monotone and erratic. Unlike Lasso's clean piecewise-linear paths via LARS, Dantzig paths can oscillate as the slack parameter changes.</div>
+        <div class="bt-item">RIP is nearly impossible to verify in practice for real design matrices. The theoretical guarantees are strong but hard to check.</div>
+        <div class="bt-item">Same L1 shrinkage bias as Lasso -- large true coefficients are still penalized toward zero.</div>
+      </div>
+    </div>
+    <blockquote>
+      "Candes and Tao (2007) proposed the Dantzig selector... They show that it has attractive theoretical properties... [but] coefficient profiles are not monotone, and may be erratic."
+      <cite>-- ESL, Section 3.8.5</cite>
+    </blockquote>
+  </div>
 
-      <!-- Tab: Coefficient paths -->
-      <div id="tab-paths" style="display:none;">
-        <div class="ctrl-row">
-          <label>Num. predictors:</label>
-          <input type="range" id="slider-p2" min="3" max="8" value="5" step="1" oninput="updatePaths()">
-          <span class="ctrl-val" id="val-p2">5</span>
-          <label>Noise σ:</label>
-          <input type="range" id="slider-sigma2" min="0.1" max="2.0" value="0.7" step="0.1" oninput="updatePaths()">
-          <span class="ctrl-val" id="val-sigma2">0.7</span>
-        </div>
-        <div id="paths-plot"></div>
-        <div class="step-box">
-          <h3>Erratic coefficient paths</h3>
-          <p>
-            Unlike Lasso (which has piecewise-linear, monotone paths), Dantzig selector paths can be <em>non-monotone</em>:
-            a coefficient that entered the model may shrink or change sign as s increases.
-            ESL notes this erratic behavior as a key difference.
-            Each colored line is one coefficient β̂ⱼ(s).
-          </p>
-        </div>
-      </div>
+  <!-- 2. Visualization: Feasible region comparison -->
+  <div class="card">
+    <h2>Constraint geometry: Dantzig vs. Lasso</h2>
+    <p class="explain" style="margin-top:0; margin-bottom:.75rem;">
+      Lasso minimizes residual sum of squares subject to an L1 ball constraint on coefficients.
+      The Dantzig selector flips the roles: minimize L1 norm of coefficients subject to no predictor being too correlated with the residual.
+      Drag the slack parameter to see how the feasible region (dashed box) changes relative to the L1 ball.
+    </p>
+    <div class="ctrl-row">
+      <label>Slack s:</label>
+      <input type="range" id="slider-s" min="0.1" max="2.0" value="0.8" step="0.05" oninput="update()">
+      <span class="ctrl-val" id="val-s">0.80</span>
+    </div>
+    <div id="viz-plot"></div>
+    <p class="explain">
+      The L1 ball (blue diamond) is the Lasso constraint. The dashed yellow box is the Dantzig feasible region: all coefficient vectors where no single predictor has correlation > s with the residual.
+      The Dantzig solution is the smallest L1 ball touching this box. As s shrinks, the box tightens and both solutions converge; as s grows, the Dantzig solution can differ substantially from Lasso.
+    </p>
+  </div>
 
-      <!-- Tab: Dantzig vs Lasso -->
-      <div id="tab-compare" style="display:none;">
-        <div class="ctrl-row">
-          <label>s / λ range:</label>
-          <input type="range" id="slider-range" min="10" max="60" value="30" step="5" oninput="updateCompare()">
-          <span class="ctrl-val" id="val-range">30</span>
-          <label>Seed:</label>
-          <input type="range" id="slider-seed" min="1" max="20" value="7" step="1" oninput="updateCompare()">
-          <span class="ctrl-val" id="val-seed">7</span>
-        </div>
-        <div id="compare-plot"></div>
-        <div class="step-box">
-          <h3>Key differences</h3>
-          <table class="diff-table">
-            <thead><tr><th>Property</th><th class="lasso-col">Lasso</th><th class="dantzig-col">Dantzig Selector</th></tr></thead>
-            <tbody>
-              <tr><td>Objective</td><td class="lasso-col">min ‖y−Xβ‖₂² + λ‖β‖₁</td><td class="dantzig-col">min ‖β‖₁ s.t. ‖Xᵀr‖∞≤s</td></tr>
-              <tr><td>Constraint type</td><td class="lasso-col">Penalty on residuals (L₂)</td><td class="dantzig-col">Bound on max correlation (L∞)</td></tr>
-              <tr><td>Coefficient paths</td><td class="lasso-col">Piecewise linear, monotone</td><td class="dantzig-col">Can be non-monotone / erratic</td></tr>
-              <tr><td>Oracle property</td><td class="lasso-col">Under conditions (irrepresentability)</td><td class="dantzig-col">Near-oracle under RIP (Candes-Tao)</td></tr>
-              <tr><td>Computation</td><td class="lasso-col">LARS / coordinate descent</td><td class="dantzig-col">Linear program (LP)</td></tr>
-              <tr><td>p &gt; n</td><td class="lasso-col">Works with modification</td><td class="dantzig-col">Designed for p &gt; n regime</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <!-- 3. Statistical guarantees -->
+  <div class="card">
+    <h2>Statistical guarantees</h2>
+    <div class="g-grid">
+      <div class="g-item g-cond"><span class="g-label">Near-Oracle Risk</span>Under RIP (Candes-Tao 2007). Hard to verify in practice.</div>
+      <div class="g-item g-yes"><span class="g-label">High-dimensional</span>Designed for p >> n. L-infinity constraint scales well.</div>
+      <div class="g-item g-yes"><span class="g-label">Sparsity</span>L1 objective drives most coefficients to zero.</div>
+      <div class="g-item g-no"><span class="g-label">Unbiased</span>L1 penalty induces shrinkage bias, same as Lasso.</div>
+      <div class="g-item g-no"><span class="g-label">Monotone paths</span>Paths are erratic / non-monotone in s.</div>
+      <div class="g-item g-cond"><span class="g-label">Consistent</span>Requires sparsity + incoherence conditions on X.</div>
     </div>
   </div>
 
-  <!-- Right column -->
-  <div>
-    <div class="card">
-      <h2>Book Quote</h2>
-      <blockquote>
-        "Candès and Tao (2007) proposed a criterion similar to the LAR/lasso, calling the solution the Dantzig selector. They show that it has attractive theoretical properties for high-dimensional problems."
-        <cite>— ESL, Section 3.1 / 3.8.1</cite>
-      </blockquote>
-      <blockquote>
-        "The Dantzig selector has some undesirable properties: for example, as the bound s is increased, the coefficient profiles are not monotone, and may be erratic."
-        <cite>— ESL, Chapter 3</cite>
-      </blockquote>
-      <blockquote>
-        "The constraint can be viewed as a bound on the inner product of each predictor with the residuals — a form of 'no predictor is too correlated with the residuals.'"
-        <cite>— ESL, Chapter 3</cite>
-      </blockquote>
+  <!-- 4. Formula (DEAD LAST) -->
+  <div class="card">
+    <h2>Formula reference</h2>
+    <div class="formula-ref">
+      \( \min_{\beta}\; \|\beta\|_1 \quad \text{subject to} \quad \|X^\top(y - X\beta)\|_\infty \le s \)
     </div>
-
-    <div class="card">
-      <h2>Guarantees</h2>
-      <div class="guarantee-grid">
-        <div class="g-item">
-          <div class="g-icon">~</div>
-          <div>
-            <div class="g-label">Near-Oracle Risk (RIP)</div>
-            <div class="g-desc">Candes-Tao show near-optimal prediction risk under the Restricted Isometry Property — but RIP is hard to verify in practice.</div>
-          </div>
-        </div>
-        <div class="g-item">
-          <div class="g-icon">✓</div>
-          <div>
-            <div class="g-label">Works for p &gt; n</div>
-            <div class="g-desc">Designed for high-dimensional settings where p &gg; n. The L∞ constraint scales better than L₂ residuals in this regime.</div>
-          </div>
-        </div>
-        <div class="g-item">
-          <div class="g-icon">✓</div>
-          <div>
-            <div class="g-label">Sparsity (L₁ objective)</div>
-            <div class="g-desc">Minimizing ‖β‖₁ promotes sparse solutions — most coefficients are driven to zero, like Lasso.</div>
-          </div>
-        </div>
-        <div class="g-item">
-          <div class="g-icon">✗</div>
-          <div>
-            <div class="g-label">Not Unbiased</div>
-            <div class="g-desc">The L₁ penalty introduces shrinkage bias, similar to Lasso. No guarantee of unbiasedness for selected variables.</div>
-          </div>
-        </div>
-        <div class="g-item">
-          <div class="g-icon">✗</div>
-          <div>
-            <div class="g-label">Erratic Paths</div>
-            <div class="g-desc">Coefficient paths as a function of s are non-monotone. Unlike Lasso (LARS), there is no clean piecewise-linear solution path.</div>
-          </div>
-        </div>
-        <div class="g-item">
-          <div class="g-icon">~</div>
-          <div>
-            <div class="g-label">Consistent (conditions)</div>
-            <div class="g-desc">Variable selection consistency requires sparsity conditions on the true β and incoherence conditions on X, similar to Lasso.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Related Concepts</h2>
-      <div class="rel-list">
-        <span class="rel-chip">Lasso (ID ~120)</span>
-        <span class="rel-chip">LARS algorithm</span>
-        <span class="rel-chip">Ridge regression</span>
-        <span class="rel-chip">Elastic Net</span>
-        <span class="rel-chip">Restricted Isometry Property</span>
-        <span class="rel-chip">Compressed sensing</span>
-        <span class="rel-chip">L₁ minimization</span>
-        <span class="rel-chip">Sparsity / oracle estimator</span>
-        <span class="rel-chip">Coordinate descent</span>
-      </div>
-    </div>
+    <p class="explain" style="margin-top:.6rem;">
+      Compare to Lasso: \(\min_\beta \frac{1}{2}\|y - X\beta\|_2^2 + \lambda\|\beta\|_1\).
+      Dantzig minimizes L1 norm (sparsity) subject to an L-infinity constraint (max gradient). Lasso minimizes squared error subject to (or penalized by) L1 norm.
+    </p>
   </div>
+
 </div>
 
 <script>
-// ─────────────────────────────────────────────────────────────
-// Utility
-// ─────────────────────────────────────────────────────────────
-function lcgRand(seed) {
-  let s = (seed * 1664525 + 1013904223) & 0xffffffff;
-  return function() { s = (1664525 * s + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
+const dark = { paper_bgcolor:'#161b22', plot_bgcolor:'#0d1117', font:{color:'#e6edf3',size:11} };
+const ax = { color:'#8b949e', gridcolor:'#21262d', zeroline:true, zerolinecolor:'#30363d', zerolinewidth:1 };
+const cfg = { responsive:true, displayModeBar:false };
+
+function lcg(seed) {
+  let s = (seed*1664525+1013904223)&0xffffffff;
+  return ()=>{ s=(1664525*s+1013904223)&0xffffffff; return(s>>>0)/0xffffffff; };
 }
 
-const darkBase = {
-  paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
-  font: { color: '#e6edf3', size: 11 },
-};
-const axStyle = { color: '#8b949e', gridcolor: '#21262d', zeroline: true, zerolinecolor: '#30363d', zerolinewidth: 1 };
-const cfg = { responsive: true, displayModeBar: false };
-
-// ─────────────────────────────────────────────────────────────
-// Tab 1: Constraint region (2D β space)
-// ─────────────────────────────────────────────────────────────
-function updateConstraint() {
+function update() {
   const s = +document.getElementById('slider-s').value;
-  const sigma = +document.getElementById('slider-sigma').value;
   document.getElementById('val-s').textContent = s.toFixed(2);
-  document.getElementById('val-sigma').textContent = sigma.toFixed(1);
 
   const traces = [];
-  const N = 200;
+  const t = 1.2; // fixed L1 ball radius
 
-  // L1 ball (rotated square): |β₁| + |β₂| ≤ t, t = s (rescaled)
-  const t = s * 1.2;
-  const l1Ball = [];
-  for (let a = 0; a <= 2 * Math.PI; a += 0.01) {
-    // Parameterize L1 ball surface
-    const c = Math.cos(a), ss = Math.sin(a);
-    const r = t / (Math.abs(c) + Math.abs(ss) + 1e-9);
-    l1Ball.push([r * c, r * ss]);
+  // L1 ball (diamond)
+  const l1 = [];
+  for (let a=0; a<=2*Math.PI; a+=0.02) {
+    const c=Math.cos(a), sn=Math.sin(a);
+    const r = t/(Math.abs(c)+Math.abs(sn)+1e-9);
+    l1.push([r*c, r*sn]);
   }
   traces.push({
-    x: l1Ball.map(p => p[0]), y: l1Ball.map(p => p[1]),
-    mode: 'lines', type: 'scatter', name: '‖β‖₁ = s (L₁ ball boundary)',
-    fill: 'toself', fillcolor: 'rgba(88,166,255,0.07)',
-    line: { color: '#58a6ff', width: 2 }, hoverinfo: 'none'
+    x:l1.map(p=>p[0]), y:l1.map(p=>p[1]),
+    mode:'lines', fill:'toself', fillcolor:'rgba(88,166,255,0.06)',
+    line:{color:'#58a6ff',width:2}, name:'L1 ball (Lasso constraint)', hoverinfo:'none'
   });
 
-  // L∞ constraint region: |Xᵀr|_∞ ≤ s
-  // In 2D visualization, approximate feasible region as a band around the unconstrained solution
-  // The feasible set is an L∞ "box" centered at the OLS estimate (β_ols)
-  // We'll show the OLS solution with noise and the Dantzig feasible box
-
-  // Simulated OLS solution
-  const rng = lcgRand(42);
-  const betaOLS = [0.8 + (rng() - 0.5) * sigma, 0.5 + (rng() - 0.5) * sigma];
-
-  // Feasible region: an L∞ box around β_ols with radius proportional to s
-  const boxSize = s * 0.6;
-  const bx = betaOLS[0], by = betaOLS[1];
+  // Dantzig feasible region: L-inf box centered near OLS
+  const rng = lcg(42);
+  const bOLS = [0.8+(rng()-.5)*.3, 0.5+(rng()-.5)*.3];
+  const box = s*0.55;
   traces.push({
-    x: [bx-boxSize, bx+boxSize, bx+boxSize, bx-boxSize, bx-boxSize],
-    y: [by-boxSize, by-boxSize, by+boxSize, by+boxSize, by-boxSize],
-    mode: 'lines', type: 'scatter', name: '‖Xᵀr‖∞ ≤ s (feasible region)',
-    fill: 'toself', fillcolor: 'rgba(227,179,65,0.08)',
-    line: { color: '#e3b341', width: 2, dash: 'dash' }, hoverinfo: 'none'
+    x:[bOLS[0]-box, bOLS[0]+box, bOLS[0]+box, bOLS[0]-box, bOLS[0]-box],
+    y:[bOLS[1]-box, bOLS[1]-box, bOLS[1]+box, bOLS[1]+box, bOLS[1]-box],
+    mode:'lines', fill:'toself', fillcolor:'rgba(210,153,34,0.06)',
+    line:{color:'#d29922',width:2,dash:'dash'}, name:'Dantzig feasible (||X^T r||_inf <= s)', hoverinfo:'none'
   });
 
   // OLS point
   traces.push({
-    x: [betaOLS[0]], y: [betaOLS[1]], mode: 'markers', type: 'scatter',
-    name: 'OLS β̂',
-    marker: { color: '#f78166', size: 10, symbol: 'star' },
-    hovertemplate: 'OLS: β₁=%.2f, β₂=%.2f<extra></extra>'
+    x:[bOLS[0]], y:[bOLS[1]], mode:'markers', name:'OLS estimate',
+    marker:{color:'#db6d28',size:9,symbol:'star'}, hovertemplate:'OLS: (%{x:.2f}, %{y:.2f})<extra></extra>'
   });
 
-  // Dantzig solution: intersection of L1 ball and feasible region — roughly the corner of L1 ball
-  // touching the feasible box (heuristic for visualization)
-  const sign1 = betaOLS[0] > 0 ? 1 : -1;
-  const sign2 = betaOLS[1] > 0 ? 1 : -1;
-  // The DS solution is at the corner of L1 ball nearest the OLS point
-  const dsMag = Math.min(t, Math.abs(betaOLS[0]) + Math.abs(betaOLS[1]));
-  const dsRatio = Math.abs(betaOLS[0]) / (Math.abs(betaOLS[0]) + Math.abs(betaOLS[1]) + 1e-9);
-  const dsB1 = sign1 * dsMag * dsRatio;
-  const dsB2 = sign2 * dsMag * (1 - dsRatio);
+  // Dantzig solution: corner of L1 ball nearest feasible box
+  const sign1 = bOLS[0]>0?1:-1, sign2 = bOLS[1]>0?1:-1;
+  const mag = Math.min(t, Math.abs(bOLS[0])+Math.abs(bOLS[1]));
+  const ratio = Math.abs(bOLS[0])/(Math.abs(bOLS[0])+Math.abs(bOLS[1])+1e-9);
   traces.push({
-    x: [dsB1], y: [dsB2], mode: 'markers', type: 'scatter',
-    name: 'Dantzig β̂',
-    marker: { color: '#e3b341', size: 12, symbol: 'diamond' },
-    hovertemplate: 'Dantzig: β₁=%{x:.2f}, β₂=%{y:.2f}<extra></extra>'
+    x:[sign1*mag*ratio], y:[sign2*mag*(1-ratio)], mode:'markers', name:'Dantzig solution',
+    marker:{color:'#d29922',size:11,symbol:'diamond'}, hovertemplate:'Dantzig: (%{x:.2f}, %{y:.2f})<extra></extra>'
   });
 
-  // Lasso solution (slightly different from Dantzig)
-  const lassoB1 = sign1 * Math.max(0, Math.abs(betaOLS[0]) - 0.3 * s);
-  const lassoB2 = sign2 * Math.max(0, Math.abs(betaOLS[1]) - 0.2 * s);
+  // Lasso solution
+  const lB1 = sign1*Math.max(0,Math.abs(bOLS[0])-.3*s);
+  const lB2 = sign2*Math.max(0,Math.abs(bOLS[1])-.2*s);
   traces.push({
-    x: [lassoB1], y: [lassoB2], mode: 'markers', type: 'scatter',
-    name: 'Lasso β̂',
-    marker: { color: '#58a6ff', size: 12, symbol: 'circle' },
-    hovertemplate: 'Lasso: β₁=%{x:.2f}, β₂=%{y:.2f}<extra></extra>'
+    x:[lB1], y:[lB2], mode:'markers', name:'Lasso solution',
+    marker:{color:'#58a6ff',size:11,symbol:'circle'}, hovertemplate:'Lasso: (%{x:.2f}, %{y:.2f})<extra></extra>'
   });
 
-  const R = 1.8;
-  Plotly.react('constraint-plot', traces, {
-    ...darkBase,
-    xaxis: { ...axStyle, range: [-R, R], title: 'β₁' },
-    yaxis: { ...axStyle, range: [-R, R], title: 'β₂', scaleanchor: 'x' },
-    margin: { l: 50, r: 20, t: 20, b: 50 },
-    legend: { bgcolor: '#161b22', bordercolor: '#30363d', borderwidth: 1 }
+  Plotly.react('viz-plot', traces, {
+    ...dark,
+    xaxis:{...ax,range:[-2,2],title:{text:'beta_1',font:{size:11}}},
+    yaxis:{...ax,range:[-2,2],title:{text:'beta_2',font:{size:11}},scaleanchor:'x'},
+    margin:{l:50,r:20,t:15,b:45},
+    legend:{bgcolor:'#161b22',bordercolor:'#30363d',borderwidth:1,font:{size:10}}
   }, cfg);
 }
 
-// ─────────────────────────────────────────────────────────────
-// Tab 2: Coefficient paths (Dantzig — simulated via LP heuristic)
-// ─────────────────────────────────────────────────────────────
-function updatePaths() {
-  const p = +document.getElementById('slider-p2').value;
-  const sigma = +document.getElementById('slider-sigma2').value;
-  document.getElementById('val-p2').textContent = p;
-  document.getElementById('val-sigma2').textContent = sigma.toFixed(1);
-
-  const rng = lcgRand(17);
-  const sVals = Array.from({length: 60}, (_, i) => i * 0.05);
-  const colors = ['#58a6ff','#f78166','#3fb950','#e3b341','#d2a8ff','#79c0ff','#ffa657','#56d364'];
-
-  // True betas (sparse)
-  const trueBeta = Array.from({length: p}, (_, i) => {
-    if (i < 2) return (rng() - 0.3) * 1.5;
-    return (rng() - 0.5) * 0.3;
-  });
-
-  // Simulate Dantzig paths — these are NOT exact LP solutions,
-  // but capture the qualitative behavior including non-monotone paths
-  // by adding noise that grows with sigma and varies sign by predictor
-  const traces = [];
-  for (let j = 0; j < p; j++) {
-    const rngJ = lcgRand(j * 13 + 99);
-    const base = trueBeta[j];
-    const freqA = 1.5 + rngJ() * 2;
-    const freqB = 2.0 + rngJ() * 3;
-    const phaseA = rngJ() * Math.PI;
-    const noiseAmp = sigma * (0.3 + rngJ() * 0.5) * Math.abs(base + 0.1);
-
-    const betas = sVals.map(s => {
-      // Soft-threshold base path + oscillatory noise (non-monotone character)
-      const thresh = Math.max(0, Math.abs(base) - Math.max(0, 1.2 - s)) * Math.sign(base);
-      const osc = noiseAmp * Math.sin(freqA * s + phaseA) * Math.exp(-0.3 * s);
-      return thresh + (s < 0.3 ? 0 : osc);
-    });
-
-    traces.push({
-      x: sVals, y: betas, mode: 'lines', type: 'scatter',
-      name: `β̂${j+1}`,
-      line: { color: colors[j % colors.length], width: j < 2 ? 2.5 : 1.5 },
-      hovertemplate: `β̂${j+1}(s=%{x:.2f}) = %{y:.3f}<extra></extra>`
-    });
-  }
-
-  // Lasso paths (monotone, for contrast — show as dashed reference for first coef)
-  const rng0 = lcgRand(1234);
-  const lassoB = [1.1, 0.7];
-  for (let j = 0; j < Math.min(2, p); j++) {
-    const bt = sVals.map(s => Math.max(0, lassoB[j] - Math.max(0, 1.0 - s * 0.9)) * Math.sign(lassoB[j]));
-    traces.push({
-      x: sVals, y: bt, mode: 'lines', type: 'scatter',
-      name: `Lasso β̂${j+1} (ref)`,
-      line: { color: colors[j % colors.length], width: 1.5, dash: 'dot' },
-      hovertemplate: `Lasso β̂${j+1}(λ=%{x:.2f}) = %{y:.3f}<extra></extra>`,
-      opacity: 0.5
-    });
-  }
-
-  // Zero line
-  traces.push({
-    x: [0, sVals[sVals.length-1]], y: [0, 0],
-    mode: 'lines', type: 'scatter', name: 'β = 0',
-    line: { color: '#30363d', width: 1 }, hoverinfo: 'none', showlegend: false
-  });
-
-  Plotly.react('paths-plot', traces, {
-    ...darkBase,
-    xaxis: { ...axStyle, title: 'Slack parameter s', range: [0, 3] },
-    yaxis: { ...axStyle, title: 'Coefficient value' },
-    margin: { l: 55, r: 20, t: 20, b: 50 },
-    legend: { bgcolor: '#161b22', bordercolor: '#30363d', borderwidth: 1, font: {size: 10} },
-    annotations: [{
-      x: 1.5, y: 0.02, xref: 'x', yref: 'paper',
-      text: 'Dantzig: non-monotone paths (solid) vs Lasso: monotone (dotted)',
-      showarrow: false, font: { size: 10, color: '#8b949e' }, xanchor: 'center'
-    }]
-  }, cfg);
-}
-
-// ─────────────────────────────────────────────────────────────
-// Tab 3: Dantzig vs Lasso coefficient comparison (bar chart at fixed s/λ)
-// ─────────────────────────────────────────────────────────────
-function updateCompare() {
-  const nSteps = +document.getElementById('slider-range').value;
-  const seed = +document.getElementById('slider-seed').value;
-  document.getElementById('val-range').textContent = nSteps;
-  document.getElementById('val-seed').textContent = seed;
-
-  const rng = lcgRand(seed * 17 + 31);
-  const p = 8;
-  const sVals = Array.from({length: nSteps}, (_, i) => (i / (nSteps - 1)) * 2.5);
-
-  // True sparse signal: 3 non-zero coefficients
-  const trueB = [1.2, -0.9, 0.6, 0, 0, 0.1, -0.05, 0];
-
-  // Simulate Lasso path (monotone soft-thresholding)
-  const lassoTraces = trueB.map((b, j) => {
-    const vals = sVals.map(s => {
-      const threshold = Math.max(0, Math.abs(b) - (2.5 - s) * 0.8);
-      return Math.sign(b) * threshold;
-    });
-    return vals;
-  });
-
-  // Simulate Dantzig path (with non-monotone oscillations)
-  const rngD = lcgRand(seed * 99);
-  const dantzigTraces = trueB.map((b, j) => {
-    const noiseAmp = (0.1 + rngD() * 0.25) * (Math.abs(b) + 0.05);
-    const freq = 1 + rngD() * 3;
-    const phase = rngD() * Math.PI * 2;
-    const vals = sVals.map(s => {
-      const threshold = Math.max(0, Math.abs(b) - (2.5 - s) * 0.75);
-      const base = Math.sign(b) * threshold;
-      const osc = noiseAmp * Math.sin(freq * s + phase) * Math.exp(-s * 0.4);
-      return base + (s > 0.2 ? osc : 0);
-    });
-    return vals;
-  });
-
-  const colors8 = ['#58a6ff','#f78166','#3fb950','#e3b341','#d2a8ff','#79c0ff','#ffa657','#56d364'];
-
-  const traces = [];
-  // Lasso lines
-  trueB.forEach((b, j) => {
-    if (Math.abs(b) < 0.001 && Math.abs(dantzigTraces[j][nSteps-1]) < 0.05) return;
-    traces.push({
-      x: sVals, y: lassoTraces[j], mode: 'lines', type: 'scatter',
-      name: `L β̂${j+1}`,
-      line: { color: colors8[j], width: 2, dash: 'solid' },
-      hovertemplate: `Lasso β̂${j+1} = %{y:.3f}<extra></extra>`,
-      legendgroup: `g${j}`
-    });
-    traces.push({
-      x: sVals, y: dantzigTraces[j], mode: 'lines', type: 'scatter',
-      name: `D β̂${j+1}`,
-      line: { color: colors8[j], width: 2, dash: 'dot' },
-      hovertemplate: `Dantzig β̂${j+1} = %{y:.3f}<extra></extra>`,
-      legendgroup: `g${j}`, showlegend: false
-    });
-  });
-
-  // Annotations for method labels
-  Plotly.react('compare-plot', traces, {
-    ...darkBase,
-    xaxis: { ...axStyle, title: 'Regularization parameter (s / λ)', range: [0, 2.5] },
-    yaxis: { ...axStyle, title: 'Coefficient value' },
-    margin: { l: 55, r: 20, t: 30, b: 50 },
-    legend: { bgcolor: '#161b22', bordercolor: '#30363d', borderwidth: 1, font: {size: 10} },
-    title: {
-      text: 'Solid = Lasso (monotone)   ·   Dotted = Dantzig (non-monotone)',
-      font: { size: 11, color: '#8b949e' }, x: 0.5, xanchor: 'center', y: 0.97
-    }
-  }, cfg);
-}
-
-// ─────────────────────────────────────────────────────────────
-// Tab switching
-// ─────────────────────────────────────────────────────────────
-function showTab(name) {
-  ['constraint','paths','compare'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t === name ? '' : 'none';
-  });
-  document.querySelectorAll('.tab').forEach((b, i) => {
-    b.classList.toggle('active', ['constraint','paths','compare'][i] === name);
-  });
-}
-
-// ─────────────────────────────────────────────────────────────
-// Init
-// ─────────────────────────────────────────────────────────────
-updateConstraint();
-updatePaths();
-updateCompare();
+update();
 </script>
 </body>
 </html>

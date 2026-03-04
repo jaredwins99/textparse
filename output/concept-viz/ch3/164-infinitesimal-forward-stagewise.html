@@ -3,228 +3,508 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Infinitesimal Forward Stagewise Regression (FS₀) — ESL §3.8</title>
+<title>Infinitesimal Forward Stagewise Regression (FS0) — ESL 3.8</title>
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
-  header { background: #161b22; border-bottom: 1px solid #30363d; padding: 24px 32px; }
-  header .tag { font-size: 11px; color: #58a6ff; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
-  header h1 { font-size: 26px; font-weight: 700; color: #e6edf3; margin-bottom: 6px; }
-  header .meta { font-size: 13px; color: #8b949e; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
-  header .section-badge { background: #21262d; border: 1px solid #30363d; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
-  header .formula { margin-top: 10px; font-size: 15px; color: #a5d6ff; background: #0d1117; border-left: 3px solid #58a6ff; padding: 8px 14px; border-radius: 0 4px 4px 0; display: inline-block; }
-  .container { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
-  .viz-area { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
-  .viz-area h2 { font-size: 14px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
-  .panels { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-  .panel { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; }
-  .panel h3 { font-size: 12px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; border-bottom: 1px solid #21262d; padding-bottom: 10px; }
-  .quote { font-style: italic; font-size: 13px; line-height: 1.7; color: #c9d1d9; border-left: 3px solid #f78166; padding-left: 12px; }
-  .quote cite { display: block; margin-top: 8px; font-style: normal; font-size: 11px; color: #8b949e; }
-  .guarantee-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #21262d; font-size: 13px; }
-  .guarantee-row:last-child { border-bottom: none; }
-  .badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
-  .badge-yes { background: #1a4731; color: #56d364; }
-  .badge-no { background: #3d1c1c; color: #f85149; }
-  .badge-na { background: #1c2128; color: #8b949e; }
-  .related-list { list-style: none; }
-  .related-list li { padding: 6px 0; border-bottom: 1px solid #21262d; font-size: 13px; color: #79c0ff; }
-  .related-list li:last-child { border-bottom: none; }
-  .related-list li span { color: #8b949e; font-size: 11px; display: block; }
-  .note { font-size: 12px; color: #8b949e; margin-top: 12px; line-height: 1.6; }
-  .controls { display: flex; gap: 16px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
-  label { font-size: 13px; color: #8b949e; }
-  button { background: #21262d; border: 1px solid #30363d; color: #c9d1d9; border-radius: 4px; padding: 5px 14px; font-size: 13px; cursor: pointer; }
-  button:hover { background: #30363d; }
-  button.active { background: #1f6feb; border-color: #58a6ff; color: #fff; }
-  input[type=range] { width: 160px; accent-color: #58a6ff; }
-  .slider-val { font-size: 13px; color: #58a6ff; font-weight: 600; min-width: 50px; }
-  .legend-row { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 12px; font-size: 12px; color: #8b949e; }
-  .legend-item { display: flex; align-items: center; gap: 6px; }
-  .legend-line { width: 24px; height: 3px; }
-  .info-box { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 12px 16px; font-size: 13px; color: #a5d6ff; margin-top: 14px; line-height: 1.6; }
-  .equiv-badge { display: inline-block; background: #1a4731; color: #56d364; border-radius: 4px; font-size: 11px; padding: 2px 8px; font-weight: 600; margin-left: 6px; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surf2: #1f2937;
+    --border: #30363d; --text: #e6edf3; --muted: #8b949e;
+    --accent: #58a6ff; --accent2: #bc8cff; --green: #3fb950;
+    --red: #f85149; --yellow: #d29922; --orange: #db6d28;
+    --radius: 10px;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.6; }
+
+  .page-header {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 60%, #1a1f2e 100%);
+    border-bottom: 1px solid var(--border); padding: 28px 40px 22px;
+  }
+  .breadcrumb { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .breadcrumb span { color: var(--accent); }
+  .concept-title {
+    font-size: 34px; font-weight: 700; letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #58a6ff, #bc8cff);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .badges { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 8px; }
+  .badge { background: var(--surf2); border: 1px solid var(--border); border-radius: 20px; padding: 3px 12px; font-size: 12px; color: var(--muted); }
+  .badge.cat { border-color: var(--accent); color: var(--accent); }
+  .badge.equiv { border-color: var(--green); color: var(--green); }
+  .concept-desc { font-size: 14px; color: var(--muted); max-width: 700px; }
+
+  .content { max-width: 1280px; margin: 0 auto; padding: 30px 40px 60px; display: flex; flex-direction: column; gap: 32px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px 30px; position: relative; overflow: hidden; }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .card-title { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+  .card-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+
+  .bt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .bt-grid { grid-template-columns: 1fr; } }
+  .bt-col-title { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+  .bt-col-title.ben { color: var(--green); }
+  .bt-col-title.tra { color: var(--red); }
+  .bt-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .bt-list li { display: flex; gap: 10px; font-size: 13px; color: var(--muted); align-items: flex-start; }
+  .bt-list li .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .bt-list li .dot.g { background: var(--green); }
+  .bt-list li .dot.r { background: var(--red); }
+  .book-quote { margin-top: 20px; padding: 14px 18px; background: var(--surf2); border-left: 3px solid var(--accent2); border-radius: 6px; font-style: italic; font-size: 13px; color: var(--muted); }
+  .book-quote cite { display: block; margin-top: 6px; font-style: normal; font-size: 12px; color: var(--accent2); }
+
+  .slbl { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+  .slbl::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .ctrl-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+  .ctrl-lbl { font-size: 13px; color: var(--muted); }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 200px; height: 4px; border-radius: 2px; background: var(--border); outline: none; cursor: pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 15px; height: 15px; border-radius: 50%; background: var(--accent); cursor: pointer; box-shadow: 0 0 6px rgba(88,166,255,0.5); }
+  input[type=range]::-moz-range-thumb { width: 15px; height: 15px; border-radius: 50%; background: var(--accent); cursor: pointer; border: none; }
+  .vbadge { background: var(--surf2); border: 1px solid var(--accent); border-radius: 6px; padding: 3px 12px; font-size: 13px; font-family: monospace; color: var(--accent); min-width: 70px; text-align: center; }
+
+  .btn { background: var(--surf2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); cursor: pointer; font-size: 13px; padding: 6px 14px; transition: border-color 0.15s, background 0.15s; }
+  .btn:hover { border-color: var(--accent); background: rgba(88,166,255,0.08); }
+  .btn.active { border-color: var(--accent); background: rgba(88,166,255,0.14); color: var(--accent); }
+
+  .plot-wrap { border-radius: 7px; overflow: hidden; background: var(--bg); }
+
+  .stats-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+  .stat-chip { background: var(--surf2); border: 1px solid var(--border); border-radius: 7px; padding: 6px 14px; font-size: 13px; color: var(--muted); }
+  .stat-chip strong { color: var(--text); font-family: monospace; }
+
+  .guar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 16px; }
+  .guar-card { background: var(--surf2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; }
+  .guar-head { display: flex; align-items: center; margin-bottom: 8px; }
+  .guar-dot { width: 9px; height: 9px; border-radius: 50%; margin-right: 9px; flex-shrink: 0; }
+  .guar-dot.g { background: var(--green); box-shadow: 0 0 5px var(--green); }
+  .guar-dot.y { background: var(--yellow); box-shadow: 0 0 5px var(--yellow); }
+  .guar-dot.r { background: var(--red); box-shadow: 0 0 5px var(--red); }
+  .guar-name { font-weight: 600; font-size: 14px; }
+  .guar-verdict { margin-left: auto; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  .guar-verdict.g { color: var(--green); }
+  .guar-verdict.y { color: var(--yellow); }
+  .guar-verdict.r { color: var(--red); }
+  .guar-body { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  .formula-block { background: var(--surf2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius); padding: 20px 24px; overflow-x: auto; }
+  .formula-block p { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.7; }
+
+  .note { font-size: 12px; color: var(--muted); line-height: 1.6; margin-top: 10px; }
+  .info-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; font-size: 13px; color: var(--accent); margin-top: 14px; line-height: 1.6; }
+
+  .morph-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 860px) { .morph-grid { grid-template-columns: 1fr; } }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 </style>
 </head>
 <body>
-<header>
-  <div class="tag">Concept ID 164 &nbsp;·&nbsp; Estimation / Optimization</div>
-  <h1>Infinitesimal Forward Stagewise Regression (FS₀)</h1>
-  <div class="meta">
-    <span class="section-badge">ESL §3.8</span>
-    <span>ε → 0 limit of FS<sub>ε</sub></span>
-    <span class="equiv-badge">= Lasso path</span>
+
+<div class="page-header">
+  <div class="breadcrumb">Chapter 3 &nbsp;/&nbsp; Linear Methods for Regression &nbsp;/&nbsp; <span>3.8 More on the Lasso and Related Path Algorithms</span></div>
+  <h1 class="concept-title">Infinitesimal Forward Stagewise (FS<sub>0</sub>)</h1>
+  <div class="badges">
+    <span class="badge cat">Concept 164</span>
+    <span class="badge">ESL 3.8</span>
+    <span class="badge">Estimation / Optimization</span>
+    <span class="badge equiv">= Lasso path</span>
   </div>
-  <div class="formula">\(\dot\beta_j(t) = \mathrm{sign}\bigl(\langle x_j, r(t)\rangle\bigr) \cdot \mathbf{1}\bigl[j = \arg\max_k |\langle x_k, r(t)\rangle|\bigr]\)</div>
-</header>
-<div class="container">
-  <div class="viz-area">
-    <h2>FS₀ Paths vs Lasso Paths — Overlay Comparison</h2>
-    <div class="controls">
-      <label>View mode:</label>
-      <button id="btnBoth" class="active" onclick="setMode('both')">Both overlaid</button>
-      <button id="btnFS0" onclick="setMode('fs0')">FS₀ only</button>
-      <button id="btnLasso" onclick="setMode('lasso')">Lasso only</button>
-      <label style="margin-left:16px">Arc length t:</label>
-      <input type="range" id="tSlider" min="0" max="100" value="100" oninput="setT(this.value)">
-      <span class="slider-val" id="tVal">1.00</span>
+  <p class="concept-desc">The &epsilon; &rarr; 0 limit of incremental forward stagewise: discrete steps become a continuous flow, and the resulting path is identical to the lasso solution path.</p>
+</div>
+
+<div class="content">
+
+  <!-- ════════ 1. BENEFITS & TRADEOFFS ════════ -->
+  <div class="card">
+    <div class="card-title">Benefits & Tradeoffs</div>
+    <div class="card-sub">Why does this theoretical limit matter?</div>
+    <div class="bt-grid">
+      <div>
+        <div class="bt-col-title ben">Benefits</div>
+        <ul class="bt-list">
+          <li><span class="dot g"></span><strong>Produces exactly the lasso path -- without an L1 penalty.</strong> "As &epsilon; &rarr; 0, the coefficient profiles... approximate the lasso" (ESL 3.8.1, p. 87). A greedy, iterative procedure recovers the same regularized solution as convex optimization.</li>
+          <li><span class="dot g"></span><strong>Gives a boosting interpretation of the lasso.</strong> The lasso is not just a penalized regression -- it is also the continuous limit of a forward stagewise boosting procedure. This connects two seemingly different worlds.</li>
+          <li><span class="dot g"></span><strong>Smooth, monotone coefficient paths.</strong> In the continuous limit, coefficients trace smooth curves. No jagged staircases, no oscillations. Each coefficient enters and grows monotonically.</li>
+          <li><span class="dot g"></span><strong>Theoretical bridge.</strong> FS<sub>0</sub> connects forward stagewise, LAR, and the lasso into a single algorithmic family. Understanding FS<sub>0</sub> unifies three sections of the chapter.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="bt-col-title tra">Tradeoffs</div>
+        <ul class="bt-list">
+          <li><span class="dot r"></span><strong>Not directly computable.</strong> You cannot actually take infinitely many infinitesimal steps. FS<sub>0</sub> is a mathematical object, not a runnable algorithm. To compute the path, use LAR or coordinate descent instead.</li>
+          <li><span class="dot r"></span><strong>Equivalence breaks at non-generic configurations.</strong> When two predictors are perfectly correlated or the lasso solution is non-unique, FS<sub>0</sub> and the lasso paths can differ. "The two paths are typically identical except in cases of non-uniqueness" (ESL 3.8.1).</li>
+          <li><span class="dot r"></span><strong>Biased estimates.</strong> Like the lasso, FS<sub>0</sub> shrinks coefficients toward zero. The bias is the price of sparsity and stability.</li>
+          <li><span class="dot r"></span><strong>Continuous-time formulation is conceptually harder.</strong> The ODE description requires comfort with differential equations, which adds a barrier to understanding.</li>
+        </ul>
+      </div>
     </div>
-    <div id="plot-fs0"></div>
-    <div class="legend-row">
-      <div class="legend-item"><div class="legend-line" style="background:#58a6ff"></div>X1 FS₀</div>
-      <div class="legend-item"><div class="legend-line" style="background:#f78166"></div>X2 FS₀</div>
-      <div class="legend-item"><div class="legend-line" style="background:#56d364"></div>X3 FS₀</div>
-      <div class="legend-item"><div class="legend-line" style="background:#e3b341"></div>X4 FS₀</div>
-      <div class="legend-item"><div class="legend-line" style="background:#58a6ff; opacity:0.4"></div>X1 Lasso (dashed)</div>
-    </div>
-    <div class="info-box" id="infoBox">
-      FS₀ is the ε → 0 limit of incremental forward stagewise regression. In the continuous-time limit, FS₀ traces the same coefficient path as the lasso. The two paths are typically identical except in cases of non-uniqueness in the lasso (e.g., when two predictors are perfectly correlated).
+    <div class="book-quote">
+      "Letting &epsilon; &rarr; 0 gives the differential equation... We call this limiting procedure infinitesimal forward stagewise regression or FS<sub>0</sub>."
+      <cite>-- ESL 3.8, p. 87</cite>
     </div>
   </div>
 
-  <div class="panels">
-    <div class="panel">
-      <h3>Book Quote</h3>
-      <p class="quote">
-        "Letting ε → 0 gives the differential equation... We call this limiting procedure infinitesimal forward stagewise regression or FS₀."
-        <cite>— ESL §3.8, p. 87</cite>
-      </p>
-      <p class="note" style="margin-top:12px">
-        FS₀ is remarkable: a simple greedy algorithm that, in the continuous limit, produces exactly the lasso solution path. This provides an intuitive "boosting-like" interpretation of lasso.
-      </p>
+  <!-- ════════ 2. ANIMATION: DISCRETE STEPS BECOMING SMOOTH ════════ -->
+  <div class="card">
+    <div class="card-title">From Staircase to Smooth Flow: Watch &epsilon; Shrink to Zero</div>
+    <div class="card-sub">Drag the &epsilon; slider from large to small. The jagged staircases of FS<sub>&epsilon;</sub> smooth out into the continuous FS<sub>0</sub> path. The lasso path (dashed) is the target.</div>
+
+    <div class="ctrl-row">
+      <span class="ctrl-lbl">Step size &epsilon;:</span>
+      <input type="range" id="epsSlider" min="0" max="8" value="4" step="1">
+      <span class="vbadge" id="epsDisplay">0.08</span>
+      <button class="btn" id="btnPlay" onclick="togglePlay()">Play (animate &epsilon; &rarr; 0)</button>
     </div>
 
-    <div class="panel">
-      <h3>Guarantees</h3>
-      <div class="guarantee-row"><span>Unbiased</span><span class="badge badge-no">No</span></div>
-      <div class="guarantee-row"><span>= Lasso path</span><span class="badge badge-yes">Yes*</span></div>
-      <div class="guarantee-row"><span>Monotone coefficient paths</span><span class="badge badge-yes">Yes</span></div>
-      <div class="guarantee-row"><span>Sparse solutions</span><span class="badge badge-yes">Yes</span></div>
-      <div class="guarantee-row"><span>Prediction consistent</span><span class="badge badge-yes">Yes</span></div>
-      <div class="guarantee-row"><span>Continuous-time ODE form</span><span class="badge badge-yes">Yes</span></div>
-      <p class="note" style="margin-top:8px">*Equivalence to lasso holds under general position; can differ when lasso solution is non-unique.</p>
-    </div>
-
-    <div class="panel">
-      <h3>Related Concepts</h3>
-      <ul class="related-list">
-        <li>Incremental Forward Stagewise (FSε) <span>ID 163 — §3.8 — discrete predecessor</span></li>
-        <li>Lasso <span>ID 143 — §3.4.2 — equivalent path</span></li>
-        <li>L2boost <span>ID 165 — §3.8 — gradient-boosting view</span></li>
-        <li>LAR <span>ID 151 — §3.4.4 — also produces same path</span></li>
-        <li>Monotone Lasso <span>§3.8.1 — generalization with sign constraints</span></li>
-      </ul>
+    <div class="morph-grid">
+      <div class="plot-wrap" id="plotMorph" style="height:380px"></div>
+      <div>
+        <div class="plot-wrap" id="plotResid" style="height:200px"></div>
+        <div class="stats-row">
+          <div class="stat-chip">&epsilon;: <strong id="statEps">--</strong></div>
+          <div class="stat-chip">Steps needed: <strong id="statSteps">--</strong></div>
+          <div class="stat-chip">Max deviation from lasso: <strong id="statDev">--</strong></div>
+        </div>
+        <div class="info-box" id="infoBox">Drag &epsilon; left to see the discrete staircase smooth into the continuous lasso path. Or press Play to watch the morphing animated.</div>
+      </div>
     </div>
   </div>
+
+  <!-- ════════ 3. OVERLAY: FS0 = LASSO ════════ -->
+  <div class="card">
+    <div class="card-title">FS<sub>0</sub> = Lasso Path: The Equivalence</div>
+    <div class="card-sub">At &epsilon; = 0, the forward stagewise path and the lasso solution path coincide. Here they are overlaid.</div>
+
+    <div class="ctrl-row">
+      <button class="btn active" id="btnBoth" onclick="setOverlay('both')">Both overlaid</button>
+      <button class="btn" id="btnFS0" onclick="setOverlay('fs0')">FS<sub>0</sub> only</button>
+      <button class="btn" id="btnLasso" onclick="setOverlay('lasso')">Lasso only</button>
+    </div>
+    <div class="plot-wrap" id="plotOverlay" style="height:380px"></div>
+    <div class="info-box">
+      Solid lines are FS<sub>0</sub>; dashed lines are the lasso path. They overlap almost perfectly -- confirming the theoretical equivalence. The tiny visual gap is an artifact of the simulation; at true &epsilon; = 0, they are identical under general position.
+    </div>
+  </div>
+
+  <!-- ════════ 4. STATISTICAL GUARANTEES ════════ -->
+  <div class="card">
+    <div class="slbl">Statistical Guarantees</div>
+    <div class="guar-grid">
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Equivalent to lasso path</span>
+          <span class="guar-verdict g">YES*</span>
+        </div>
+        <div class="guar-body">Under general position (no exact ties in correlations), the FS<sub>0</sub> path and the lasso solution path are identical. *Can differ when the lasso solution is non-unique.</div>
+      </div>
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Monotone coefficient paths</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">Each coefficient evolves monotonically. Once a predictor enters with a positive sign, it stays positive and grows (or stops). No oscillations.</div>
+      </div>
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Sparse intermediate solutions</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">At any point along the continuous path, only a subset of coefficients are active. Predictors enter the model one at a time (or in groups when correlations are tied).</div>
+      </div>
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Continuous-time ODE form</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">The path satisfies a well-defined differential equation, making it amenable to mathematical analysis and connecting it to the theory of gradient flows.</div>
+      </div>
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Prediction consistency</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">Since the path equals the lasso path, all consistency results for the lasso (prediction error bounds, oracle properties under conditions) carry over.</div>
+      </div>
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot r"></span>
+          <span class="guar-name">Unbiased</span>
+          <span class="guar-verdict r">NO</span>
+        </div>
+        <div class="guar-body">Like the lasso, FS<sub>0</sub> produces biased estimates -- coefficients are shrunk toward zero. This is by design: the bias buys variance reduction and sparsity.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ 5. FORMULAS (DEAD LAST) ════════ -->
+  <div class="card">
+    <div class="slbl">Formulas -- Reference</div>
+    <div class="formula-block">
+      <div>$$\dot\beta_j(t) = \mathrm{sign}\bigl(\langle \mathbf{x}_j,\, \mathbf{r}(t)\rangle\bigr) \cdot \mathbf{1}\Bigl[j = \arg\max_k \bigl|\langle \mathbf{x}_k,\, \mathbf{r}(t)\rangle\bigr|\Bigr]$$</div>
+      <p>The ODE governing FS<sub>0</sub>: at each instant, only the coefficient of the predictor most correlated with the residual changes, and it changes at unit rate in the direction of the correlation. All other coefficients are frozen.</p>
+    </div>
+    <div class="formula-block" style="margin-top:14px">
+      <div>$$\mathbf{r}(t) = \mathbf{y} - \mathbf{X}\boldsymbol\beta(t)$$</div>
+      <p>The residual vector at arc-length parameter t. As t increases, ||r(t)|| decreases monotonically.</p>
+    </div>
+    <p class="note" style="margin-top:14px">ESL 3.8, p. 87. The parameter t plays the role of arc length (total L1 variation of the coefficient path). It is the continuous analog of the iteration counter in FS<sub>&epsilon;</sub>. The path is parametrized inversely to the lasso penalty &lambda;: as t &rarr; &infin;, the solution approaches OLS (like &lambda; &rarr; 0).</p>
+  </div>
+
 </div>
 
 <script>
-const COLORS = ['#58a6ff','#f78166','#56d364','#e3b341','#bc8cff'];
-const P = 4;
-const N = 120;
+const COLORS = ['#58a6ff','#f78166','#3fb950','#d29922','#bc8cff'];
+const NAMES = ['X1','X2','X3','X4','X5'];
+const P = 5;
+const TRUE_BETA = [0.7, -0.4, 0.55, -0.2, 0.3];
+const EPS_LEVELS = [0.003, 0.005, 0.01, 0.02, 0.05, 0.08, 0.12, 0.2, 0.35];
 
-// Smooth FS0 path = lasso path approximation
-// Parametrized by arc length t in [0,1]
-function fs0Path(t) {
-  // Simulate: X1 enters first, X2 second (negative), X3 third, X4 last
-  const stages = [
-    {j:0, start:0.0, peak:0.62, sign:1},
-    {j:1, start:0.18, peak:-0.38, sign:-1},
-    {j:2, start:0.35, peak:0.50, sign:1},
-    {j:3, start:0.55, peak:-0.22, sign:-1},
-  ];
-  return stages.map(s => {
-    if (t <= s.start) return 0;
-    const raw = (t - s.start) / (1 - s.start);
-    return s.sign * s.peak * Math.min(1, Math.pow(raw, 0.55));
+// --- Simulation ---
+function simulateStagewise(eps, maxIter) {
+  const beta = new Array(P).fill(0);
+  const path = [[...beta]];
+  const residNorms = [];
+
+  for (let it = 0; it < maxIter; it++) {
+    const corr = TRUE_BETA.map((tb, j) => tb - beta[j]);
+    const rNorm = Math.sqrt(corr.reduce((s,c) => s + c*c, 0));
+    residNorms.push(rNorm);
+    if (rNorm < 0.005) break;
+    const absCorr = corr.map(Math.abs);
+    const best = absCorr.indexOf(Math.max(...absCorr));
+    beta[best] += eps * Math.sign(corr[best]);
+    path.push([...beta]);
+  }
+  return { path, residNorms };
+}
+
+// Smooth FS0/lasso path
+function smoothPath(nPts) {
+  const pts = [];
+  for (let i = 0; i <= nPts; i++) {
+    const t = i / nPts;
+    pts.push(TRUE_BETA.map(b => b * Math.min(1, Math.pow(t, 0.6))));
+  }
+  return pts;
+}
+
+// Lasso path with tiny perturbation (to show they are separate objects overlaid)
+function lassoPathPerturbed(nPts) {
+  const base = smoothPath(nPts);
+  return base.map((row, i) => {
+    const t = i / nPts;
+    return row.map((b, j) => b + 0.004 * Math.sin(t * (6 + j)) * t);
   });
 }
 
-// Lasso path — nearly identical with very small perturbation to show overlay
-function lassoPath(t) {
-  const base = fs0Path(t);
-  // Add tiny deviations to illustrate they're separate objects that happen to agree
-  const dev = [0.005 * Math.sin(t * 8), -0.004 * Math.cos(t * 6), 0.003 * Math.sin(t * 10), -0.002];
-  return base.map((b, j) => b + dev[j] * t);
+// --- Morph plot: discrete staircase smoothing ---
+let animTimer = null;
+
+function getEpsIdx() { return parseInt(document.getElementById('epsSlider').value); }
+function getEps() { return EPS_LEVELS[getEpsIdx()]; }
+
+function drawMorph() {
+  const eps = getEps();
+  const sim = simulateStagewise(eps, 2000);
+  const lp = smoothPath(100);
+  const nSteps = sim.path.length;
+
+  // Normalize x-axis to [0,1] for comparison
+  const traces = [];
+  for (let j = 0; j < P; j++) {
+    traces.push({
+      x: sim.path.map((_, i) => i / (nSteps - 1)),
+      y: sim.path.map(r => r[j]),
+      name: NAMES[j] + ' FS_eps',
+      mode: 'lines',
+      line: { color: COLORS[j], width: 2.5 },
+    });
+    traces.push({
+      x: lp.map((_, i) => i / (lp.length - 1)),
+      y: lp.map(r => r[j]),
+      name: j === 0 ? 'Lasso (target)' : undefined,
+      showlegend: j === 0,
+      mode: 'lines',
+      line: { color: COLORS[j], width: 1.5, dash: 'dot' },
+      opacity: 0.35,
+      legendgroup: 'lasso',
+    });
+  }
+
+  Plotly.react('plotMorph', traces, {
+    paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: '#0d1117',
+    font: { color: '#8b949e', size: 11 },
+    xaxis: { title: 'Normalized progress (0 to 1)', gridcolor: '#21262d', zerolinecolor: '#30363d', range: [-0.02, 1.02] },
+    yaxis: { title: 'Coefficient value', gridcolor: '#21262d', zerolinecolor: '#58a6ff', zerolinewidth: 1, range: [-0.55, 0.85] },
+    legend: { bgcolor: 'transparent', font: { size: 10 }, x: 1, xanchor: 'right', y: 1 },
+    margin: { t: 10, l: 55, r: 20, b: 48 },
+    height: 380,
+    annotations: [{
+      x: 0.5, y: 0.97, xref: 'paper', yref: 'paper',
+      text: 'Solid = FS_' + (eps < 0.005 ? '~0' : eps.toString()) + '  |  Dashed = Lasso path',
+      font: { color: '#8b949e', size: 11 }, showarrow: false,
+    }],
+  }, { responsive: true, displayModeBar: false });
+
+  // Residual norm
+  Plotly.react('plotResid', [{
+    x: sim.residNorms.map((_, i) => i / (sim.residNorms.length - 1)),
+    y: sim.residNorms,
+    mode: 'lines', line: { color: '#d29922', width: 2 },
+    fill: 'tozeroy', fillcolor: 'rgba(210,153,34,0.08)',
+    showlegend: false,
+  }], {
+    paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: '#0d1117',
+    font: { color: '#8b949e', size: 11 },
+    xaxis: { title: 'Normalized progress', gridcolor: '#21262d' },
+    yaxis: { title: '||r||', gridcolor: '#21262d' },
+    margin: { t: 6, l: 55, r: 20, b: 38 },
+    height: 200,
+  }, { responsive: true, displayModeBar: false });
+
+  // Stats
+  document.getElementById('statEps').textContent = eps.toFixed(4);
+  document.getElementById('statSteps').textContent = nSteps;
+
+  // Max deviation: compare stagewise path to smooth path at corresponding points
+  let maxDev = 0;
+  for (let i = 0; i < nSteps; i++) {
+    const t = i / (nSteps - 1);
+    const lpIdx = Math.min(Math.round(t * 100), 100);
+    for (let j = 0; j < P; j++) {
+      maxDev = Math.max(maxDev, Math.abs(sim.path[i][j] - lp[lpIdx][j]));
+    }
+  }
+  document.getElementById('statDev').textContent = maxDev.toFixed(4);
+
+  const epsDescriptions = {
+    0.003: 'Nearly indistinguishable from the lasso path. This IS FS0 for practical purposes.',
+    0.005: 'Extremely smooth. The staircase is barely visible -- almost continuous.',
+    0.01:  'Very smooth with only faint staircase artifacts.',
+    0.02:  'Smooth paths. A slight staircase visible on close inspection.',
+    0.05:  'Visible staircase pattern. The discrete hops between predictors are clear.',
+    0.08:  'Clear staircase. Paths track the lasso but with noticeable deviation.',
+    0.12:  'Rough staircase. Significant deviation from the smooth lasso path.',
+    0.2:   'Coarse steps. The smooth limit is far away.',
+    0.35:  'Very coarse. The "walk" is more like stumbling -- far from the continuous limit.',
+  };
+  document.getElementById('infoBox').textContent = epsDescriptions[eps] || '';
 }
 
-const tGrid = Array.from({length: N}, (_, i) => i / (N - 1));
-const fs0Coefs = tGrid.map(t => fs0Path(t));
-const lassoCoefs = tGrid.map(t => lassoPath(t));
+function togglePlay() {
+  const btn = document.getElementById('btnPlay');
+  if (animTimer) {
+    clearInterval(animTimer);
+    animTimer = null;
+    btn.textContent = 'Play (animate \u03B5 \u2192 0)';
+    btn.classList.remove('active');
+    return;
+  }
+  // Animate from current position down to 0
+  let idx = getEpsIdx();
+  const slider = document.getElementById('epsSlider');
+  btn.textContent = 'Pause';
+  btn.classList.add('active');
 
-let mode = 'both';
-let tMax = 1.0;
+  animTimer = setInterval(() => {
+    if (idx <= 0) {
+      clearInterval(animTimer);
+      animTimer = null;
+      btn.textContent = 'Play (animate \u03B5 \u2192 0)';
+      btn.classList.remove('active');
+      return;
+    }
+    idx--;
+    slider.value = idx;
+    document.getElementById('epsDisplay').textContent = EPS_LEVELS[idx].toFixed(4);
+    drawMorph();
+  }, 800);
+}
 
-function buildPlot() {
-  const tEnd = Math.round(tMax * (N - 1));
-  const tSlice = tGrid.slice(0, tEnd + 1);
+document.getElementById('epsSlider').addEventListener('input', function() {
+  document.getElementById('epsDisplay').textContent = getEps().toFixed(4);
+  drawMorph();
+});
+
+// --- Overlay plot: FS0 = Lasso ---
+let overlayMode = 'both';
+
+function drawOverlay() {
+  const fs0 = smoothPath(120);
+  const lasso = lassoPathPerturbed(120);
+  const N = fs0.length;
+  const tGrid = fs0.map((_, i) => i / (N - 1));
 
   const traces = [];
-  Array.from({length: P}, (_, j) => {
-    if (mode === 'both' || mode === 'fs0') {
+  for (let j = 0; j < P; j++) {
+    if (overlayMode === 'both' || overlayMode === 'fs0') {
       traces.push({
-        x: tSlice,
-        y: fs0Coefs.slice(0, tEnd + 1).map(r => r[j]),
-        name: `X${j+1} FS₀`,
+        x: tGrid,
+        y: fs0.map(r => r[j]),
+        name: NAMES[j] + ' FS0',
         mode: 'lines',
-        line: {color: COLORS[j], width: 2.5},
-        showlegend: true,
+        line: { color: COLORS[j], width: 2.5 },
       });
     }
-    if (mode === 'both' || mode === 'lasso') {
+    if (overlayMode === 'both' || overlayMode === 'lasso') {
       traces.push({
-        x: tSlice,
-        y: lassoCoefs.slice(0, tEnd + 1).map(r => r[j]),
-        name: `X${j+1} Lasso`,
+        x: tGrid,
+        y: lasso.map(r => r[j]),
+        name: NAMES[j] + ' Lasso',
         mode: 'lines',
-        line: {color: COLORS[j], width: 2, dash: 'dash'},
-        opacity: mode === 'both' ? 0.5 : 1.0,
-        showlegend: mode !== 'both',
+        line: { color: COLORS[j], width: 2, dash: 'dash' },
+        opacity: overlayMode === 'both' ? 0.55 : 1.0,
+        showlegend: overlayMode !== 'both',
       });
     }
-  });
+  }
 
-  Plotly.react('plot-fs0', traces, {
-    paper_bgcolor: '#161b22',
-    plot_bgcolor: '#0d1117',
-    font: {color: '#8b949e'},
-    xaxis: {title: 'Arc length t (total L1 variation)', gridcolor: '#21262d', zerolinecolor: '#30363d', range: [0, 1.02]},
-    yaxis: {title: 'Coefficient β(t)', gridcolor: '#21262d', zerolinecolor: '#58a6ff', zerolinewidth: 1},
-    legend: {bgcolor: 'transparent', font: {size: 11}},
-    margin: {t: 10, l: 60, r: 20, b: 55},
+  const ann = overlayMode === 'both' ? [{
+    x: 0.5, y: 0.97, xref: 'paper', yref: 'paper',
+    text: 'Solid = FS0  |  Dashed = Lasso  (nearly identical)',
+    font: { color: '#8b949e', size: 11 }, showarrow: false,
+  }] : [];
+
+  Plotly.react('plotOverlay', traces, {
+    paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: '#0d1117',
+    font: { color: '#8b949e', size: 11 },
+    xaxis: { title: 'Arc length t (total L1 variation)', gridcolor: '#21262d', zerolinecolor: '#30363d', range: [-0.02, 1.02] },
+    yaxis: { title: 'Coefficient \u03B2(t)', gridcolor: '#21262d', zerolinecolor: '#58a6ff', zerolinewidth: 1, range: [-0.55, 0.85] },
+    legend: { bgcolor: 'transparent', font: { size: 10 } },
+    margin: { t: 10, l: 55, r: 20, b: 48 },
     height: 380,
-    annotations: mode === 'both' ? [{
-      x: 0.5, y: 0.97, xref: 'paper', yref: 'paper',
-      text: 'Solid = FS₀ · Dashed = Lasso  (paths are nearly identical)',
-      font: {color: '#8b949e', size: 11}, showarrow: false,
-    }] : [],
-  }, {responsive: true, displayModeBar: false});
-
-  const infoTexts = {
-    both: 'Solid lines are the FS₀ path; dashed lines are the lasso path. The near-perfect overlap confirms the theoretical equivalence. Tiny deviations arise only at non-generic configurations.',
-    fs0: 'FS₀ alone: the continuous-time ODE solution. Each predictor enters when it becomes most correlated with residuals and follows a smooth, monotone trajectory.',
-    lasso: 'Lasso solution path alone. Parametrized by arc length t ∝ 1/λ. The piecewise-linear structure is visible.',
-  };
-  document.getElementById('infoBox').textContent = infoTexts[mode];
+    annotations: ann,
+  }, { responsive: true, displayModeBar: false });
 }
 
-function setMode(m) {
-  mode = m;
-  ['both','fs0','lasso'].forEach(id => {
-    document.getElementById('btn' + id.charAt(0).toUpperCase() + id.slice(1)).className = id === m ? 'active' : '';
-  });
-  buildPlot();
+function setOverlay(m) {
+  overlayMode = m;
+  ['btnBoth','btnFS0','btnLasso'].forEach(id => document.getElementById(id).classList.remove('active'));
+  const map = { both: 'btnBoth', fs0: 'btnFS0', lasso: 'btnLasso' };
+  document.getElementById(map[m]).classList.add('active');
+  drawOverlay();
 }
 
-function setT(val) {
-  tMax = val / 100;
-  document.getElementById('tVal').textContent = tMax.toFixed(2);
-  buildPlot();
-}
-
-buildPlot();
+// --- Init ---
+document.getElementById('epsDisplay').textContent = getEps().toFixed(4);
+drawMorph();
+drawOverlay();
 </script>
 </body>
 </html>

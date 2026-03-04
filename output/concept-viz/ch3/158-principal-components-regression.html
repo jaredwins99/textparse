@@ -3,82 +3,406 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Principal Components Regression — ESL Ch3</title>
+<title>Principal Components Regression — ESL §3.5.1</title>
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #0d1117;
     --surface: #161b22;
-    --surface2: #21262d;
+    --surface2: #1c2129;
     --border: #30363d;
     --text: #e6edf3;
-    --text-muted: #8b949e;
-    --accent: #58a6ff;
-    --accent2: #3fb950;
-    --accent3: #f78166;
-    --accent4: #d2a8ff;
-    --badge-model: #1f6feb;
+    --muted: #8b949e;
+    --blue: #58a6ff;
+    --purple: #bc8cff;
+    --green: #3fb950;
+    --red: #f85149;
+    --yellow: #d29922;
+    --orange: #db6d28;
+    --radius: 10px;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
-  .header { border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 2rem; }
-  .badge { display: inline-block; background: var(--badge-model); color: #fff; font-size: 0.72rem; font-weight: 600; padding: 0.2em 0.7em; border-radius: 2em; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
-  .section-tag { display: inline-block; color: var(--text-muted); font-size: 0.8rem; margin-left: 0.8rem; }
-  h1 { font-size: 2rem; font-weight: 700; color: var(--text); margin: 0.3rem 0; }
-  .formula-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.5rem; margin-top: 1rem; font-size: 1.05rem; }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
-  .card h2 { font-size: 0.95rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 1rem; }
-  .card ul { list-style: none; }
-  .card ul li { padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; color: var(--text-muted); }
-  .card ul li:last-child { border-bottom: none; }
-  blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: var(--text-muted); font-style: italic; font-size: 0.88rem; margin: 0.8rem 0; }
-  .viz-section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; margin-top: 1.5rem; }
-  .viz-section h2 { font-size: 0.95rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 1rem; }
-  .controls { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
-  .slider-wrap { display: flex; align-items: center; gap: 0.7rem; }
-  label { font-size: 0.85rem; color: var(--text-muted); }
-  input[type=range] { accent-color: var(--accent); width: 160px; cursor: pointer; }
-  .val-display { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.15em 0.6em; font-size: 0.85rem; min-width: 2.5rem; text-align: center; }
-  .prop-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
-  .prop-row:last-child { border-bottom: none; }
-  .pill { display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 0.15em 0.6em; border-radius: 1em; }
-  .pill-yes { background: #1a3a22; color: var(--accent2); }
-  .pill-no { background: #3a1a1a; color: var(--accent3); }
-  .pill-cond { background: #2a2210; color: #e3b341; }
-  .prop-label { font-size: 0.88rem; color: var(--text); min-width: 140px; }
-  .prop-note { font-size: 0.8rem; color: var(--text-muted); }
-  .tab-row { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
-  .tab-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 0.4em 1em; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
-  .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .related-tag { display: inline-block; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.2em 0.7em; font-size: 0.82rem; color: var(--accent4); margin: 0.2rem; }
-  .info-text { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; }
-  @media(max-width:700px){.grid{grid-template-columns:1fr;}}
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  /* Header */
+  .page-header {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 60%, #1a1f2e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 40px 22px;
+  }
+  .breadcrumb { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .breadcrumb span { color: var(--blue); }
+  .concept-title {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, var(--blue), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .badges { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 8px; }
+  .badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .badge.cat { border-color: var(--blue); color: var(--blue); }
+  .concept-desc { font-size: 14px; color: var(--muted); max-width: 700px; }
+  /* Layout */
+  .content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 30px 40px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--purple));
+  }
+  .card-title {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .card-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  /* Benefits / Tradeoffs */
+  .bt-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 700px) { .bt-grid { grid-template-columns: 1fr; } }
+  .bt-col-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .bt-col-title.ben { color: var(--green); }
+  .bt-col-title.tra { color: var(--red); }
+  .bt-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .bt-list li {
+    display: flex; gap: 10px; font-size: 13px; color: var(--muted); align-items: flex-start;
+  }
+  .bt-list li::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+  .bt-list.benefits li::before { background: var(--green); }
+  .bt-list.tradeoffs li::before { background: var(--red); }
+  .bt-list .cite { color: var(--blue); font-size: 11px; }
+  blockquote {
+    border-left: 3px solid var(--blue);
+    padding: 10px 16px;
+    color: var(--muted);
+    font-style: italic;
+    font-size: 13px;
+    margin-top: 16px;
+    background: rgba(88,166,255,0.04);
+    border-radius: 0 6px 6px 0;
+  }
+  blockquote .src { display: block; font-style: normal; color: var(--blue); margin-top: 6px; font-size: 11px; }
+  /* Viz sections */
+  .viz-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  .viz-section::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--purple));
+  }
+  .viz-title {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .viz-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .slider-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  label { font-size: 13px; color: var(--muted); }
+  input[type=range] { accent-color: var(--blue); width: 180px; cursor: pointer; }
+  .val-display {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 13px;
+    min-width: 2.5rem;
+    text-align: center;
+    color: var(--text);
+  }
+  .info-text {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+  /* Guarantees table */
+  .guarantee-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .guarantee-table th {
+    text-align: left; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--muted); padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .guarantee-table td {
+    padding: 10px 12px; font-size: 13px; color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .guarantee-table tr:last-child td { border-bottom: none; }
+  .pill {
+    display: inline-block;
+    font-size: 11px; font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 12px;
+  }
+  .pill-yes { background: #1a3a22; color: var(--green); }
+  .pill-no { background: #3a1a1a; color: var(--red); }
+  .pill-cond { background: #2a2210; color: var(--yellow); }
+  /* Formula reference */
+  .formula-ref {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  .formula-ref::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--muted), var(--border));
+  }
+  .formula-ref .card-title { color: var(--muted); }
+  .formula-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 12px 0;
+    font-size: 15px;
+  }
+  .formula-note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  /* Related */
+  .related-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .tag {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--purple);
+    padding: 3px 12px;
+    border-radius: 14px;
+    font-size: 12px;
+  }
+  /* Tab buttons */
+  .tab-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .tab-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab-btn:hover { border-color: var(--blue); color: var(--text); }
+  .tab-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+  /* Animation canvas */
+  .anim-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/10;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .anim-controls {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 12px;
+  }
+  .anim-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .anim-btn:hover { border-color: var(--blue); }
+  .anim-progress {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .anim-progress-bar {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 2px;
+    transition: width 0.05s linear;
+    width: 0%;
+  }
+  .anim-step-label {
+    font-size: 12px;
+    color: var(--muted);
+    min-width: 140px;
+    text-align: right;
+  }
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <span class="badge">model / proxy</span>
-    <span class="section-tag">§ 3.5.1 — Principal Components Regression</span>
-    <h1>Principal Components Regression</h1>
-    <div class="formula-box">
-      \[ \hat{y}^{\text{pcr}}_M = \bar{y}\mathbf{1} + \sum_{m=1}^{M} \hat{\theta}_m z_m \]
-      <div class="info-text">where \(z_m = Xv_m\) are the derived principal component columns, \(\hat{\theta}_m = \langle z_m, y \rangle / \langle z_m, z_m \rangle\)</div>
+
+<!-- Header -->
+<div class="page-header">
+  <div class="breadcrumb">ESL Chapter 3 &rsaquo; <span>Section 3.5.1</span></div>
+  <div class="concept-title">Principal Components Regression</div>
+  <div class="badges">
+    <span class="badge cat">Model / Proxy</span>
+    <span class="badge">Dimension Reduction</span>
+    <span class="badge">Derived Inputs</span>
+  </div>
+  <div class="concept-desc">
+    Reduce the predictor space to its highest-variance directions, then run ordinary regression in that lower-dimensional space.
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- 1. Benefits & Tradeoffs (FIRST) -->
+  <div class="card">
+    <div class="card-title">Benefits &amp; Tradeoffs</div>
+    <div class="card-sub">What does PCR buy you? What do you lose?</div>
+    <div class="bt-grid">
+      <div class="bt-col">
+        <div class="bt-col-title ben">Benefits</div>
+        <ul class="bt-list benefits">
+          <li>
+            <span>Variance reduction by discarding low-eigenvalue directions &mdash; the small principal components are those most affected by collinearity and contribute most to variance in OLS estimates. <span class="cite">(ESL &sect;3.5.1)</span></span>
+          </li>
+          <li>
+            <span>Avoids collinearity entirely: the retained principal components are orthogonal by construction, so the regression in the reduced space has no multicollinearity. <span class="cite">(ESL &sect;3.5.1)</span></span>
+          </li>
+          <li>
+            <span>When \(M = p\), recovers the full OLS solution &mdash; PCR nests OLS as a special case, so you never lose expressive power if you choose to keep all components. <span class="cite">(ESL &sect;3.5.1)</span></span>
+          </li>
+          <li>
+            <span>Works well when the response depends primarily on directions of high variance in X &mdash; which is common when predictors are correlated measurements of a few underlying factors.</span>
+          </li>
+        </ul>
+      </div>
+      <div class="bt-col">
+        <div class="bt-col-title tra">Tradeoffs</div>
+        <ul class="bt-list tradeoffs">
+          <li>
+            <span>Unsupervised dimension reduction &mdash; principal components are chosen based on variance of X alone, ignoring the response y. A high-variance direction of X may be irrelevant to y. <span class="cite">(ESL &sect;3.5.1)</span></span>
+          </li>
+          <li>
+            <span>Hard thresholding: each component is either fully kept or completely dropped. This is a discrete, non-smooth form of shrinkage. Ridge regression applies continuous shrinkage to the same components. <span class="cite">(ESL &sect;3.5.1)</span></span>
+          </li>
+          <li>
+            <span>Not scale invariant: results depend on the scaling of the predictors, so inputs must be standardized before computing components. <span class="cite">(ESL &sect;3.5.1)</span></span>
+          </li>
+          <li>
+            <span>Coefficient interpretation is lost &mdash; because the regression is in the principal component space, the relationship between original predictors and the response is indirect.</span>
+          </li>
+        </ul>
+      </div>
     </div>
+    <blockquote>
+      "Principal component regression forms the derived input columns \(z_m = Xv_m\), and then regresses y on \(z_1, z_2, \ldots, z_M\) for some \(M \le p\). Since the \(z_m\) are orthogonal, this regression is just a sum of univariate regressions."
+      <span class="src">&mdash; ESL &sect;3.5.1</span>
+    </blockquote>
   </div>
 
+  <!-- 2. Visualization 1: Projection animation (most concrete) -->
   <div class="viz-section">
-    <h2>Interactive Visualization</h2>
-    <div class="tab-row">
-      <button class="tab-btn active" onclick="showTab('eigenval')">Eigenvalue Spectrum</button>
-      <button class="tab-btn" onclick="showTab('shrinkage')">PCR vs Ridge Shrinkage</button>
-      <button class="tab-btn" onclick="showTab('bvtradeoff')">Bias-Variance Tradeoff</button>
+    <div class="viz-title">Visualization 1: Projecting Data onto Principal Components</div>
+    <div class="viz-sub">Watch how data gets projected from original space onto the principal component directions. The first PC captures the most variance; later PCs capture progressively less.</div>
+    <div id="projPlot" style="height: 440px;"></div>
+    <div class="anim-controls">
+      <button class="anim-btn" id="projPlayBtn" onclick="toggleProjAnim()">Play</button>
+      <div class="anim-progress"><div class="anim-progress-bar" id="projProgress"></div></div>
+      <span class="anim-step-label" id="projStepLabel">Click Play to start</span>
     </div>
+    <p class="info-text">
+      The animation shows 2D data (gray points) being projected onto the first principal component direction (blue arrow). The projected points (blue) lie along this direction &mdash; this is the dimension reduction step. The red dashed lines show what information is lost: the residual perpendicular to PC1.
+    </p>
+  </div>
 
-    <div id="tab-eigenval">
+  <!-- 3. Visualization 2: How many components to keep? (interactive slider) -->
+  <div class="viz-section">
+    <div class="viz-title">Visualization 2: How Many Components to Keep?</div>
+    <div class="viz-sub">PCR's tuning parameter is M &mdash; the number of principal components retained. Drag the slider to see how eigenvalue thresholding works.</div>
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="showTab2('eigen')">Eigenvalue Spectrum</button>
+      <button class="tab-btn" onclick="showTab2('shrinkage')">PCR vs Ridge Shrinkage</button>
+    </div>
+    <div id="tab2-eigen">
       <div class="controls">
         <div class="slider-wrap">
           <label>Components M:</label>
@@ -87,18 +411,19 @@
         </div>
         <div class="slider-wrap">
           <label>Condition number:</label>
-          <input type="range" id="condSlider" min="1" max="50" value="20" oninput="updateEigenPlot()">
-          <span class="val-display" id="condVal">20</span>
+          <input type="range" id="condSlider" min="2" max="80" value="25" oninput="updateEigenPlot()">
+          <span class="val-display" id="condVal">25</span>
         </div>
       </div>
-      <div id="eigenPlot" style="height:380px;"></div>
-      <p class="info-text">PCR hard-thresholds: components with index &gt; M are completely dropped. Contrast with ridge, which applies continuous shrinkage based on eigenvalue magnitude.</p>
+      <div id="eigenPlot" style="height: 380px;"></div>
+      <p class="info-text">
+        Blue bars = kept components. Gray bars = dropped. The dashed red line marks the cutoff. PCR hard-thresholds: everything to the right of the cutoff is discarded entirely. This is the key contrast with ridge regression, which shrinks all components continuously.
+      </p>
     </div>
-
-    <div id="tab-shrinkage" style="display:none;">
+    <div id="tab2-shrinkage" style="display:none;">
       <div class="controls">
         <div class="slider-wrap">
-          <label>Ridge λ:</label>
+          <label>Ridge \(\lambda\):</label>
           <input type="range" id="lambdaSlider" min="0" max="100" value="20" oninput="updateShrinkPlot()">
           <span class="val-display" id="lambdaVal">20</span>
         </div>
@@ -108,81 +433,286 @@
           <span class="val-display" id="mVal2">5</span>
         </div>
       </div>
-      <div id="shrinkPlot" style="height:380px;"></div>
-      <p class="info-text">Both methods shrink via eigenvalues of XᵀX. Ridge: factor \(d_j^2/(d_j^2+\lambda)\). PCR: 1 if kept, 0 if dropped.</p>
-    </div>
-
-    <div id="tab-bvtradeoff" style="display:none;">
-      <div id="bvPlot" style="height:380px;"></div>
-      <p class="info-text">As M increases, bias decreases (more signal captured) but variance increases (more directions, potentially noisy). Optimal M balances these.</p>
+      <div id="shrinkPlot" style="height: 380px;"></div>
+      <p class="info-text">
+        Both methods operate on the same eigenvalue decomposition of \(X^\top X\). Ridge applies smooth shrinkage: factor \(d_j^2/(d_j^2 + \lambda)\). PCR applies binary shrinkage: 1 if kept, 0 if dropped. Ridge is "softer" but PCR is more interpretable (you literally pick how many components to use).
+      </p>
     </div>
   </div>
 
-  <div class="grid">
-    <div class="card">
-      <h2>Key Facts</h2>
-      <blockquote>"Principal component regression forms the derived input columns z_m = Xv_m, and then regresses y on z_1, z_2, ..., z_M for some M ≤ p."</blockquote>
-      <ul>
-        <li>Uses SVD of X: X = UDVᵀ, principal components are columns of UD</li>
-        <li>Discards low-variance directions (small eigenvalues of XᵀX)</li>
-        <li>M is a tuning parameter chosen by cross-validation</li>
-        <li>Shrinkage is discrete (hard thresholding), not continuous</li>
-      </ul>
+  <!-- 4. Visualization 3: Bias-Variance as M changes (more abstract) -->
+  <div class="viz-section">
+    <div class="viz-title">Visualization 3: Bias-Variance Tradeoff</div>
+    <div class="viz-sub">As M increases, bias falls (more signal captured) but variance rises (noisier directions included). The optimal M balances these.</div>
+    <div id="bvPlot" style="height: 380px;"></div>
+    <p class="info-text">
+      At \(M = p\) (all components), PCR equals OLS &mdash; zero bias from dimension reduction, but maximum variance. At small M, you get aggressive variance reduction at the cost of potentially missing signal that lives in the dropped components.
+    </p>
+  </div>
+
+  <!-- 5. Statistical Guarantees -->
+  <div class="card">
+    <div class="card-title">Statistical Guarantees</div>
+    <div class="card-sub">Formal properties of the PCR estimator</div>
+    <table class="guarantee-table">
+      <thead>
+        <tr><th>Property</th><th>Status</th><th>Details</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Unbiased</td>
+          <td><span class="pill pill-cond">M = p only</span></td>
+          <td>Biased when \(M < p\); unbiased only when \(M = p\) (recovers OLS)</td>
+        </tr>
+        <tr>
+          <td>Variance Reduction</td>
+          <td><span class="pill pill-yes">Yes</span></td>
+          <td>Drops high-variance directions from low-eigenvalue components</td>
+        </tr>
+        <tr>
+          <td>Consistency</td>
+          <td><span class="pill pill-cond">Conditional</span></td>
+          <td>Consistent when M grows with n at an appropriate rate</td>
+        </tr>
+        <tr>
+          <td>Smooth Shrinkage</td>
+          <td><span class="pill pill-no">No</span></td>
+          <td>Hard 0/1 threshold on eigenvalue components &mdash; not continuous like ridge</td>
+        </tr>
+        <tr>
+          <td>Scale Invariant</td>
+          <td><span class="pill pill-no">No</span></td>
+          <td>Results depend on predictor scaling; standardize inputs first</td>
+        </tr>
+        <tr>
+          <td>Nests OLS</td>
+          <td><span class="pill pill-yes">Yes</span></td>
+          <td>At \(M = p\), the PCR fit is identical to the OLS fit</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 6. Formulas (DEAD LAST) -->
+  <div class="formula-ref">
+    <div class="card-title">Formula Reference</div>
+    <div class="card-sub">For lookup after understanding the concept</div>
+
+    <div class="formula-block">
+      \[ \hat{y}^{\text{pcr}}_M = \bar{y}\mathbf{1} + \sum_{m=1}^{M} \hat{\theta}_m z_m \]
     </div>
-    <div class="card">
-      <h2>Guarantees / Properties</h2>
-      <div class="prop-row">
-        <span class="pill pill-cond">Biased</span>
-        <span class="prop-label">Unbiased</span>
-        <span class="prop-note">Biased when M &lt; p; unbiased only if M = p (= OLS)</span>
-      </div>
-      <div class="prop-row">
-        <span class="pill pill-yes">Lower Var</span>
-        <span class="prop-label">Variance Reduction</span>
-        <span class="prop-note">Drops high-variance directions from low-eigenvalue components</span>
-      </div>
-      <div class="prop-row">
-        <span class="pill pill-cond">Conditional</span>
-        <span class="prop-label">Consistent</span>
-        <span class="prop-note">Consistent when M grows with n appropriately</span>
-      </div>
-      <div class="prop-row">
-        <span class="pill pill-no">Hard</span>
-        <span class="prop-label">Smooth Shrinkage</span>
-        <span class="prop-note">Hard 0/1 threshold — not smooth like ridge</span>
-      </div>
+    <div class="formula-note">
+      where \(z_m = Xv_m\) are the principal component columns derived from the SVD \(X = UDV^\top\), and \(\hat{\theta}_m = \langle z_m, y \rangle / \langle z_m, z_m \rangle\) is the univariate regression coefficient on each component.
+    </div>
+
+    <div class="formula-block" style="margin-top: 16px;">
+      \[ \hat{y}^{\text{pcr}}_M = \sum_{m=1}^{M} u_m u_m^\top y = H_M y \]
+    </div>
+    <div class="formula-note">
+      Equivalently, PCR projects y onto the subspace spanned by the first M columns of U (the left singular vectors of X). The hat matrix \(H_M = \sum_{m=1}^M u_m u_m^\top\) is an orthogonal projection.
+    </div>
+
+    <div class="formula-block" style="margin-top: 16px;">
+      <strong>Shrinkage factors (vs ridge):</strong><br>
+      PCR: \(s_j = \mathbf{1}[j \le M]\) &nbsp;&nbsp;&mdash;&nbsp;&nbsp; Ridge: \(s_j = \frac{d_j^2}{d_j^2 + \lambda}\)
+    </div>
+    <div class="formula-note">
+      Both methods shrink via eigenvalues of \(X^\top X\), but PCR applies discrete keep/drop while ridge applies continuous damping.
     </div>
   </div>
 
-  <div class="grid">
-    <div class="card">
-      <h2>Related Concepts</h2>
-      <span class="related-tag">Ridge Regression</span>
-      <span class="related-tag">Partial Least Squares</span>
-      <span class="related-tag">SVD</span>
-      <span class="related-tag">OLS</span>
-      <span class="related-tag">Subset Selection</span>
-      <span class="related-tag">Dimensionality Reduction</span>
-    </div>
-    <div class="card">
-      <h2>Algorithm Steps</h2>
-      <ul>
-        <li>1. Compute SVD of centered X: X = UDVᵀ</li>
-        <li>2. Form principal components z_m = Xv_m (columns of UD)</li>
-        <li>3. Choose M via cross-validation</li>
-        <li>4. OLS regression of y on z_1, ..., z_M</li>
-        <li>5. Map coefficients back to original space</li>
-      </ul>
+  <!-- 7. Algorithm Steps -->
+  <div class="card">
+    <div class="card-title">Algorithm</div>
+    <div class="card-sub">Step-by-step procedure</div>
+    <table class="guarantee-table">
+      <thead><tr><th>#</th><th>Step</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Standardize each column of X to mean 0, variance 1</td></tr>
+        <tr><td>2</td><td>Compute SVD of centered X: \(X = UDV^\top\)</td></tr>
+        <tr><td>3</td><td>Form principal components: \(z_m = Xv_m = u_m d_m\)</td></tr>
+        <tr><td>4</td><td>Choose M (number of components) by cross-validation</td></tr>
+        <tr><td>5</td><td>Regress y on \(z_1, \ldots, z_M\) by OLS (since orthogonal, this is M univariate regressions)</td></tr>
+        <tr><td>6</td><td>Map coefficients back to original space: \(\hat{\beta}^{\text{pcr}} = \sum_{m=1}^M \hat{\theta}_m v_m\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 8. Related Concepts -->
+  <div class="card">
+    <div class="card-title">Related Concepts</div>
+    <div class="related-tags">
+      <span class="tag">Ridge Regression (&sect;3.4.1)</span>
+      <span class="tag">Partial Least Squares (&sect;3.5.2)</span>
+      <span class="tag">Singular Value Decomposition</span>
+      <span class="tag">OLS (&sect;3.2)</span>
+      <span class="tag">Best Subset Selection (&sect;3.3.1)</span>
+      <span class="tag">Dimensionality Reduction</span>
     </div>
   </div>
+
 </div>
 
 <script>
-// Generate eigenvalues with given condition number
+// ── Projection Animation ──
+const projState = { playing: false, frame: 0, totalFrames: 120, animId: null };
+
+function randn() {
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+
+// Generate fixed data for projection animation
+const projData = (() => {
+  const n = 80;
+  const angle = Math.PI / 5; // ~36 degrees
+  const xs = [], ys = [];
+  for (let i = 0; i < n; i++) {
+    const t1 = randn() * 2.5;
+    const t2 = randn() * 0.6;
+    xs.push(Math.cos(angle) * t1 - Math.sin(angle) * t2);
+    ys.push(Math.sin(angle) * t1 + Math.cos(angle) * t2);
+  }
+  // Compute PC1 direction via power iteration on 2x2 cov
+  const mx = xs.reduce((a, b) => a + b, 0) / n;
+  const my = ys.reduce((a, b) => a + b, 0) / n;
+  let c11 = 0, c12 = 0, c22 = 0;
+  for (let i = 0; i < n; i++) {
+    const dx = xs[i] - mx, dy = ys[i] - my;
+    c11 += dx * dx; c12 += dx * dy; c22 += dy * dy;
+  }
+  c11 /= n; c12 /= n; c22 /= n;
+  let vx = 1, vy = 0;
+  for (let it = 0; it < 100; it++) {
+    const nx = c11 * vx + c12 * vy;
+    const ny = c12 * vx + c22 * vy;
+    const norm = Math.sqrt(nx * nx + ny * ny);
+    vx = nx / norm; vy = ny / norm;
+  }
+  // Projections of each point onto PC1
+  const projX = [], projY = [];
+  for (let i = 0; i < n; i++) {
+    const dot = (xs[i] - mx) * vx + (ys[i] - my) * vy;
+    projX.push(mx + dot * vx);
+    projY.push(my + dot * vy);
+  }
+  return { xs, ys, projX, projY, vx, vy, mx, my, n };
+})();
+
+function initProjPlot() {
+  const d = projData;
+  const pad = 1;
+  const allX = [...d.xs, ...d.projX];
+  const allY = [...d.ys, ...d.projY];
+  const xr = [Math.min(...allX) - pad, Math.max(...allX) + pad];
+  const yr = [Math.min(...allY) - pad, Math.max(...allY) + pad];
+  const arrowLen = 4;
+
+  const traces = [
+    // 0: original points
+    { x: d.xs, y: d.ys, mode: 'markers', type: 'scatter',
+      marker: { color: '#8b949e', size: 5, opacity: 0.5 }, name: 'Original data', hoverinfo: 'skip' },
+    // 1: PC1 direction line
+    { x: [d.mx - d.vx * arrowLen, d.mx + d.vx * arrowLen],
+      y: [d.my - d.vy * arrowLen, d.my + d.vy * arrowLen],
+      mode: 'lines', line: { color: '#58a6ff', width: 3 }, name: 'PC1 direction', hoverinfo: 'skip' },
+    // 2: projected points (start invisible)
+    { x: d.xs.slice(), y: d.ys.slice(), mode: 'markers', type: 'scatter',
+      marker: { color: '#58a6ff', size: 6, opacity: 0 }, name: 'Projected onto PC1', hoverinfo: 'skip' },
+    // 3: residual lines (start empty)
+    { x: [], y: [], mode: 'lines', type: 'scatter',
+      line: { color: '#f85149', width: 1, dash: 'dot' }, name: 'Lost information', hoverinfo: 'skip',
+      opacity: 0.5 }
+  ];
+
+  const layout = {
+    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
+    font: { color: '#e6edf3', size: 12 },
+    xaxis: { range: xr, gridcolor: '#21262d', zerolinecolor: '#30363d', color: '#8b949e', title: 'X\u2081', autorange: false },
+    yaxis: { range: yr, gridcolor: '#21262d', zerolinecolor: '#30363d', color: '#8b949e', title: 'X\u2082', scaleanchor: 'x', autorange: false },
+    legend: { bgcolor: '#21262d', bordercolor: '#30363d', borderwidth: 1, font: { size: 11 } },
+    margin: { t: 20, r: 20, b: 50, l: 60 },
+    showlegend: true
+  };
+  Plotly.newPlot('projPlot', traces, layout, { responsive: true, displayModeBar: false });
+}
+
+function animateProjFrame() {
+  const s = projState;
+  const d = projData;
+  const t = Math.min(s.frame / s.totalFrames, 1);
+  // Ease in-out
+  const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+
+  // Interpolate points from original to projected
+  const curX = [], curY = [];
+  const resX = [], resY = [];
+  for (let i = 0; i < d.n; i++) {
+    const cx = d.xs[i] + (d.projX[i] - d.xs[i]) * ease;
+    const cy = d.ys[i] + (d.projY[i] - d.ys[i]) * ease;
+    curX.push(cx);
+    curY.push(cy);
+    // Residual lines
+    resX.push(d.xs[i], cx, null);
+    resY.push(d.ys[i], cy, null);
+  }
+
+  Plotly.restyle('projPlot', {
+    x: [curX], y: [curY],
+    'marker.opacity': [Math.max(0.2, ease)]
+  }, [2]);
+  Plotly.restyle('projPlot', {
+    x: [resX], y: [resY],
+    opacity: [ease * 0.6]
+  }, [3]);
+
+  document.getElementById('projProgress').style.width = (t * 100) + '%';
+  if (t < 0.3) {
+    document.getElementById('projStepLabel').textContent = 'Identifying PC1 direction...';
+  } else if (t < 1) {
+    document.getElementById('projStepLabel').textContent = 'Projecting data onto PC1...';
+  } else {
+    document.getElementById('projStepLabel').textContent = 'Projection complete (residuals in red)';
+  }
+
+  if (s.frame < s.totalFrames) {
+    s.frame++;
+    s.animId = requestAnimationFrame(animateProjFrame);
+  } else {
+    s.playing = false;
+    document.getElementById('projPlayBtn').textContent = 'Replay';
+  }
+}
+
+function toggleProjAnim() {
+  const s = projState;
+  if (s.playing) {
+    cancelAnimationFrame(s.animId);
+    s.playing = false;
+    document.getElementById('projPlayBtn').textContent = 'Play';
+  } else {
+    if (s.frame >= s.totalFrames) {
+      s.frame = 0;
+      // Reset projected points
+      Plotly.restyle('projPlot', {
+        x: [projData.xs.slice()], y: [projData.ys.slice()],
+        'marker.opacity': [0]
+      }, [2]);
+      Plotly.restyle('projPlot', { x: [[]], y: [[]], opacity: [0] }, [3]);
+    }
+    s.playing = true;
+    document.getElementById('projPlayBtn').textContent = 'Pause';
+    animateProjFrame();
+  }
+}
+
+// ── Eigenvalue spectrum ──
 function makeEigenvalues(p, condNum) {
   const ev = [];
   for (let i = 0; i < p; i++) {
-    ev.push(Math.max(0.01, condNum * Math.exp(-i * Math.log(condNum) / (p - 1))));
+    ev.push(Math.max(0.05, condNum * Math.exp(-i * Math.log(condNum) / (p - 1))));
   }
   return ev;
 }
@@ -196,39 +726,42 @@ function updateEigenPlot() {
   const p = 10;
   const ev = makeEigenvalues(p, cond);
   const colors = ev.map((_, i) => i < M ? '#58a6ff' : '#30363d');
-  const textColors = ev.map((_, i) => i < M ? '#e6edf3' : '#8b949e');
+  const labels = ev.map((_, i) => 'PC' + (i + 1));
+  const cumVar = [];
+  const total = ev.reduce((a, b) => a + b, 0);
+  let running = 0;
+  for (let i = 0; i < p; i++) {
+    running += ev[i];
+    cumVar.push((running / total * 100).toFixed(1));
+  }
 
   const data = [{
     type: 'bar',
-    x: ev.map((_, i) => `PC${i+1}`),
+    x: labels,
     y: ev,
     marker: { color: colors },
-    textfont: { color: textColors },
-    hovertemplate: 'PC%{x}<br>Eigenvalue: %{y:.2f}<extra></extra>'
+    hovertemplate: '%{x}<br>Eigenvalue: %{y:.2f}<extra></extra>'
   }];
 
   const layout = {
     paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
     font: { color: '#e6edf3', size: 12 },
     xaxis: { title: 'Principal Component', gridcolor: '#21262d', color: '#8b949e' },
-    yaxis: { title: 'Eigenvalue (variance)', gridcolor: '#21262d', color: '#8b949e' },
+    yaxis: { title: 'Eigenvalue (variance captured)', gridcolor: '#21262d', color: '#8b949e' },
     shapes: [{
       type: 'line', x0: M - 0.5, x1: M - 0.5, y0: 0, y1: 1, yref: 'paper',
-      line: { color: '#f78166', dash: 'dash', width: 2 }
+      line: { color: '#f85149', dash: 'dash', width: 2 }
     }],
-    annotations: [{
-      x: M - 0.5, y: 1, yref: 'paper', text: 'Cutoff', showarrow: false,
-      font: { color: '#f78166', size: 11 }, xanchor: 'left', yanchor: 'top'
-    }, {
-      x: (M-1)/2, y: 1.05, yref: 'paper', text: 'Kept', showarrow: false,
-      font: { color: '#58a6ff', size: 11 }, xanchor: 'center'
-    }, {
-      x: (M + p - 1)/2, y: 1.05, yref: 'paper', text: 'Dropped', showarrow: false,
-      font: { color: '#8b949e', size: 11 }, xanchor: 'center'
-    }],
-    margin: { t: 30, r: 20, b: 60, l: 70 }
+    annotations: [
+      { x: M - 0.5, y: 1.02, yref: 'paper', text: 'Cutoff (M=' + M + ')', showarrow: false,
+        font: { color: '#f85149', size: 11 }, xanchor: 'left' },
+      { x: Math.min(M - 1, p - 1), y: -0.12, yref: 'paper',
+        text: 'Variance explained: ' + cumVar[M - 1] + '%',
+        showarrow: false, font: { color: '#58a6ff', size: 12 }, xanchor: 'center' }
+    ],
+    margin: { t: 30, r: 20, b: 70, l: 70 }
   };
-  Plotly.react('eigenPlot', data, layout, {responsive: true, displayModeBar: false});
+  Plotly.react('eigenPlot', data, layout, { responsive: true, displayModeBar: false });
 }
 
 function updateShrinkPlot() {
@@ -241,43 +774,42 @@ function updateShrinkPlot() {
   const ev = makeEigenvalues(p, 30);
   const ridgeShrink = ev.map(d2 => d2 / (d2 + lambda));
   const pcrShrink = ev.map((_, i) => i < M ? 1 : 0);
-  const labels = ev.map((_, i) => `PC${i+1}`);
+  const labels = ev.map((_, i) => 'PC' + (i + 1));
 
   const data = [
-    {
-      type: 'scatter', mode: 'lines+markers', name: 'Ridge',
+    { type: 'scatter', mode: 'lines+markers', name: 'Ridge (continuous)',
       x: labels, y: ridgeShrink,
-      line: { color: '#3fb950', width: 2 }, marker: { size: 8 }
-    },
-    {
-      type: 'scatter', mode: 'lines+markers', name: 'PCR',
+      line: { color: '#3fb950', width: 2.5 }, marker: { size: 8 } },
+    { type: 'scatter', mode: 'lines+markers', name: 'PCR (binary)',
       x: labels, y: pcrShrink,
-      line: { color: '#58a6ff', width: 2, shape: 'hv' }, marker: { size: 8 }
-    }
+      line: { color: '#58a6ff', width: 2.5, shape: 'hv' }, marker: { size: 8 } }
   ];
 
   const layout = {
     paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
     font: { color: '#e6edf3', size: 12 },
     xaxis: { title: 'Principal Component (decreasing eigenvalue)', gridcolor: '#21262d', color: '#8b949e' },
-    yaxis: { title: 'Shrinkage Factor', range: [-0.05, 1.1], gridcolor: '#21262d', color: '#8b949e' },
+    yaxis: { title: 'Shrinkage Factor', range: [-0.08, 1.15], gridcolor: '#21262d', color: '#8b949e' },
     legend: { bgcolor: '#21262d', bordercolor: '#30363d', borderwidth: 1 },
     margin: { t: 30, r: 20, b: 60, l: 70 }
   };
-  Plotly.react('shrinkPlot', data, layout, {responsive: true, displayModeBar: false});
+  Plotly.react('shrinkPlot', data, layout, { responsive: true, displayModeBar: false });
 }
 
+// ── Bias-Variance ──
 function drawBVPlot() {
-  const Ms = Array.from({length: 10}, (_, i) => i + 1);
-  // Simulated bias and variance curves
-  const bias2 = Ms.map(m => 2.0 * Math.exp(-0.5 * m));
-  const variance = Ms.map(m => 0.05 * m);
-  const mse = Ms.map((m, i) => bias2[i] + variance[i]);
+  const Ms = Array.from({ length: 10 }, (_, i) => i + 1);
+  const bias2 = Ms.map(m => 2.2 * Math.exp(-0.55 * m));
+  const variance = Ms.map(m => 0.04 * m + 0.01 * m * m * 0.02);
+  const mse = Ms.map((_, i) => bias2[i] + variance[i]);
 
   const data = [
-    { type: 'scatter', mode: 'lines+markers', name: 'Bias²', x: Ms, y: bias2, line: { color: '#f78166', width: 2 }, marker: { size: 7 } },
-    { type: 'scatter', mode: 'lines+markers', name: 'Variance', x: Ms, y: variance, line: { color: '#d2a8ff', width: 2 }, marker: { size: 7 } },
-    { type: 'scatter', mode: 'lines+markers', name: 'MSE (Bias²+Var)', x: Ms, y: mse, line: { color: '#58a6ff', width: 3 }, marker: { size: 9 } }
+    { type: 'scatter', mode: 'lines+markers', name: 'Bias\u00B2',
+      x: Ms, y: bias2, line: { color: '#f85149', width: 2 }, marker: { size: 7 } },
+    { type: 'scatter', mode: 'lines+markers', name: 'Variance',
+      x: Ms, y: variance, line: { color: '#bc8cff', width: 2 }, marker: { size: 7 } },
+    { type: 'scatter', mode: 'lines+markers', name: 'Test MSE',
+      x: Ms, y: mse, line: { color: '#58a6ff', width: 3 }, marker: { size: 9 } }
   ];
 
   const optM = Ms[mse.indexOf(Math.min(...mse))];
@@ -286,26 +818,36 @@ function drawBVPlot() {
     font: { color: '#e6edf3', size: 12 },
     xaxis: { title: 'Number of Components M', gridcolor: '#21262d', color: '#8b949e', dtick: 1 },
     yaxis: { title: 'Error', gridcolor: '#21262d', color: '#8b949e' },
-    shapes: [{ type: 'line', x0: optM, x1: optM, y0: 0, y1: 1, yref: 'paper', line: { color: '#e3b341', dash: 'dot', width: 2 } }],
-    annotations: [{ x: optM, y: 0.95, yref: 'paper', text: 'Optimal M', showarrow: false, font: { color: '#e3b341', size: 11 } }],
+    shapes: [{ type: 'line', x0: optM, x1: optM, y0: 0, y1: 1, yref: 'paper',
+      line: { color: '#d29922', dash: 'dot', width: 2 } }],
+    annotations: [
+      { x: optM, y: 0.95, yref: 'paper', text: 'Optimal M = ' + optM,
+        showarrow: false, font: { color: '#d29922', size: 12 } },
+      { x: 1, y: 0.5, yref: 'paper', text: 'High bias\nLow variance',
+        showarrow: false, font: { color: '#8b949e', size: 10 }, xanchor: 'left' },
+      { x: 10, y: 0.5, yref: 'paper', text: 'Low bias\nHigh variance',
+        showarrow: false, font: { color: '#8b949e', size: 10 }, xanchor: 'right' }
+    ],
     legend: { bgcolor: '#21262d', bordercolor: '#30363d', borderwidth: 1 },
-    margin: { t: 30, r: 20, b: 60, l: 70 }
+    margin: { t: 30, r: 30, b: 60, l: 70 }
   };
-  Plotly.newPlot('bvPlot', data, layout, {responsive: true, displayModeBar: false});
+  Plotly.newPlot('bvPlot', data, layout, { responsive: true, displayModeBar: false });
 }
 
-function showTab(name) {
-  document.getElementById('tab-eigenval').style.display = name === 'eigenval' ? '' : 'none';
-  document.getElementById('tab-shrinkage').style.display = name === 'shrinkage' ? '' : 'none';
-  document.getElementById('tab-bvtradeoff').style.display = name === 'bvtradeoff' ? '' : 'none';
-  document.querySelectorAll('.tab-btn').forEach((b, i) => {
-    b.classList.toggle('active', ['eigenval','shrinkage','bvtradeoff'][i] === name);
+// ── Tab switching ──
+function showTab2(name) {
+  document.getElementById('tab2-eigen').style.display = name === 'eigen' ? '' : 'none';
+  document.getElementById('tab2-shrinkage').style.display = name === 'shrinkage' ? '' : 'none';
+  document.querySelectorAll('.tab-row .tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['eigen', 'shrinkage'][i] === name);
   });
   if (name === 'shrinkage') updateShrinkPlot();
-  if (name === 'bvtradeoff') drawBVPlot();
 }
 
+// ── Init ──
+initProjPlot();
 updateEigenPlot();
+drawBVPlot();
 </script>
 </body>
 </html>

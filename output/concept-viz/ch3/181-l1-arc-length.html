@@ -7,274 +7,253 @@
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <style>
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surface2: #1c2129;
+    --border: #30363d; --text: #e6edf3; --text-dim: #8b949e;
+    --green: #3fb950; --yellow: #d29922; --orange: #db6d28;
+    --red: #f85149; --blue: #58a6ff; --purple: #bc8cff;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
-  header { background: #161b22; border-bottom: 1px solid #30363d; padding: 24px 32px; }
-  header .tag { font-size: 11px; color: #58a6ff; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
-  header h1 { font-size: 26px; font-weight: 700; color: #e6edf3; margin-bottom: 6px; }
-  header .meta { font-size: 13px; color: #8b949e; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
-  header .section-badge { background: #21262d; border: 1px solid #30363d; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
-  header .formula { margin-top: 10px; font-size: 15px; color: #a5d6ff; background: #0d1117; border-left: 3px solid #58a6ff; padding: 8px 14px; border-radius: 0 4px 4px 0; display: inline-block; }
-  .container { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
-  .viz-area { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
-  .viz-area h2 { font-size: 14px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
-  .panels { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-  .panel { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; }
-  .panel h3 { font-size: 12px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; border-bottom: 1px solid #21262d; padding-bottom: 10px; }
-  .quote { font-style: italic; font-size: 13px; line-height: 1.7; color: #c9d1d9; border-left: 3px solid #f78166; padding-left: 12px; }
-  .quote cite { display: block; margin-top: 8px; font-style: normal; font-size: 11px; color: #8b949e; }
-  .guarantee-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #21262d; font-size: 13px; }
-  .guarantee-row:last-child { border-bottom: none; }
-  .badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
-  .badge-yes { background: #1a4731; color: #56d364; }
-  .badge-no { background: #3d1c1c; color: #f85149; }
-  .badge-na { background: #1c2128; color: #8b949e; }
-  .related-list { list-style: none; }
-  .related-list li { padding: 6px 0; border-bottom: 1px solid #21262d; font-size: 13px; color: #79c0ff; }
-  .related-list li:last-child { border-bottom: none; }
-  .related-list li span { color: #8b949e; font-size: 11px; display: block; }
-  .note { font-size: 12px; color: #8b949e; margin-top: 12px; line-height: 1.6; }
-  .controls { display: flex; gap: 16px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
-  label { font-size: 13px; color: #8b949e; }
-  input[type=range] { width: 160px; accent-color: #58a6ff; }
-  .slider-val { font-size: 13px; color: #58a6ff; font-weight: 600; min-width: 50px; }
-  .two-col { display: grid; grid-template-columns: 3fr 2fr; gap: 20px; }
-  .info-box { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 12px 16px; font-size: 13px; color: #a5d6ff; margin-top: 14px; line-height: 1.6; }
-  .tv-bar { background: #21262d; border-radius: 6px; overflow: hidden; margin-top: 10px; }
-  .tv-fill { height: 18px; background: linear-gradient(90deg, #1f6feb, #58a6ff); border-radius: 6px; transition: width 0.3s; }
-  .tv-labels { display: flex; justify-content: space-between; font-size: 11px; color: #8b949e; margin-top: 4px; }
-  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
-  .stat { background: #0d1117; border: 1px solid #21262d; border-radius: 6px; padding: 10px 14px; }
-  .stat .val { font-size: 20px; font-weight: 700; color: #58a6ff; }
-  .stat .lbl { font-size: 11px; color: #8b949e; margin-top: 2px; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; padding-bottom: 40px; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 24px 32px; }
+  header .tag { font-size: 11px; color: var(--blue); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+  header h1 { font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  header .meta { font-size: 13px; color: var(--text-dim); display: flex; gap: 16px; flex-wrap: wrap; }
+  header .meta span { background: var(--surface2); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border); font-size: 12px; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 32px; }
+
+  /* Benefits & Tradeoffs */
+  .bt-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin-bottom: 24px; }
+  .bt-card h2 { font-size: 14px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .bt-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .bt-col h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+  .bt-col.benefits h3 { color: var(--green); }
+  .bt-col.tradeoffs h3 { color: var(--red); }
+  .bt-item { display: flex; gap: 8px; margin-bottom: 10px; font-size: 13px; line-height: 1.6; color: #c9d1d9; }
+  .bt-item .dot { flex-shrink: 0; width: 6px; height: 6px; border-radius: 50%; margin-top: 7px; }
+  .benefits .dot { background: var(--green); }
+  .tradeoffs .dot { background: var(--red); }
+  .bt-quote { border-left: 3px solid var(--orange); padding: 12px 14px; margin-top: 16px; font-style: italic; font-size: 13px; line-height: 1.7; color: #c9d1d9; background: var(--bg); border-radius: 0 6px 6px 0; }
+  .bt-quote cite { display: block; margin-top: 6px; font-style: normal; font-size: 11px; color: var(--text-dim); }
+
+  /* Viz */
+  .viz-area { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; }
+  .viz-area h2 { font-size: 14px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+  .viz-note { font-size: 13px; color: var(--text-dim); line-height: 1.6; margin-bottom: 16px; }
+
+  /* Formula */
+  .formula-section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; }
+  .formula-section h2 { font-size: 14px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .formula-block { background: var(--bg); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 0 6px 6px 0; font-size: 15px; color: #a5d6ff; margin-bottom: 10px; }
+  .formula-note { font-size: 12px; color: var(--text-dim); line-height: 1.6; margin-top: 8px; }
+
+  /* Properties inline */
+  .props-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+  .prop-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px; }
+  .prop-yes { background: #1a3a2a; color: var(--green); }
+  .prop-no { background: #3d1c1c; color: var(--red); }
 </style>
 </head>
 <body>
 <header>
-  <div class="tag">Concept ID 181 &nbsp;·&nbsp; Comparison / Selection</div>
+  <div class="tag">Concept 181 · Comparison / Selection · Tier 4</div>
   <h1>L1 Arc Length (Total Variation)</h1>
   <div class="meta">
-    <span class="section-badge">ESL §3.4.4</span>
+    <span>ESL §3.4.4</span>
     <span>Path complexity measure</span>
-    <span>Monotone lasso indicator</span>
   </div>
-  <div class="formula">\(\mathrm{TV}(\hat\beta, S) = \int_0^S \|\dot{\hat\beta}(s)\|_1\, ds\)</div>
 </header>
+
 <div class="container">
-  <div class="viz-area">
-    <h2>Coefficient Path with Accumulated L1 Arc Length</h2>
-    <div class="controls">
-      <label>Position along path (s):</label>
-      <input type="range" id="sSlider" min="0" max="100" value="100" oninput="setS(this.value)">
-      <span class="slider-val" id="sVal">1.00</span>
-      <label style="margin-left:12px">Show per-predictor TV:</label>
-      <input type="checkbox" id="chkBreakdown" onchange="redraw()" checked>
-    </div>
-    <div class="two-col">
-      <div id="plot-path"></div>
-      <div>
-        <div id="plot-tv"></div>
-        <div class="stat-grid">
-          <div class="stat"><div class="val" id="statTV">—</div><div class="lbl">Total TV(β, s)</div></div>
-          <div class="stat"><div class="val" id="statActive">—</div><div class="lbl">Active predictors</div></div>
-          <div class="stat"><div class="val" id="statS">—</div><div class="lbl">Arc length s</div></div>
-          <div class="stat"><div class="val" id="statMaxTV">—</div><div class="lbl">Max TV (full path)</div></div>
-        </div>
-        <div class="tv-bar">
-          <div class="tv-fill" id="tvFill" style="width:0%"></div>
-        </div>
-        <div class="tv-labels"><span>0</span><span>Max TV</span></div>
-        <p class="note" style="margin-top:8px">
-          The L1 arc length is a scale-free complexity measure for solution paths. It equals the total amount of "movement" in all coefficients measured by L1 norm. LAR paths have L1 arc length proportional to the number of steps taken.
-        </p>
+  <!-- 1. Benefits & Tradeoffs -->
+  <div class="bt-card">
+    <h2>Benefits & Tradeoffs</h2>
+    <div class="bt-cols">
+      <div class="bt-col benefits">
+        <h3>What it buys you</h3>
+        <div class="bt-item"><div class="dot"></div><div>A scale-free way to parametrize solution paths: instead of using lambda (which is problem-specific), arc length measures how far the coefficients have actually traveled.</div></div>
+        <div class="bt-item"><div class="dot"></div><div>Additive across predictors -- you can decompose the total path complexity into per-variable contributions and see which coefficients are "moving the most."</div></div>
+        <div class="bt-item"><div class="dot"></div><div>For monotone paths (LAR), arc length equals the L1 norm of the current coefficient vector, making it a natural measure of model complexity.</div></div>
+      </div>
+      <div class="bt-col tradeoffs">
+        <h3>Limitations</h3>
+        <div class="bt-item"><div class="dot"></div><div>Not monotone for lasso paths with sign changes -- when a variable exits and re-enters, arc length keeps accumulating but the coefficient backtracks.</div></div>
+        <div class="bt-item"><div class="dot"></div><div>Purely a descriptive measure of path geometry -- it does not directly inform model selection or prediction quality.</div></div>
       </div>
     </div>
-    <div class="info-box">
-      The L1 arc length (total variation) measures how much the coefficient vector moves along the solution path. For the lasso/LAR path, TV(β, S) = S_max (where S_max is the L1 arc length at the OLS solution) because coefficients move monotonically. This makes the arc length a natural x-axis for plotting coefficient profiles.
+    <div class="bt-quote">
+      "The L1 arc length of LAR is simply the sum of the absolute values of the coefficient changes at each step."
+      <cite>-- ESL §3.4.4, p. 76</cite>
     </div>
   </div>
 
-  <div class="panels">
-    <div class="panel">
-      <h3>Formula</h3>
-      <p class="quote" style="font-style:normal; border-left-color:#58a6ff">
-        \[\mathrm{TV}(\hat\beta, S) = \int_0^S \|\dot{\hat\beta}(s)\|_1\, ds = \sum_j \mathrm{TV}(\hat\beta_j, S)\]
-      </p>
-      <p class="note" style="margin-top:10px">
-        For a piecewise linear path, TV reduces to \(\sum_j \sum_k |\Delta\hat\beta_j^{(k)}|\) — the total absolute change per predictor. Monotone paths have TV = total L1 norm increase.
-      </p>
+  <!-- 2. Annotated Static Diagram -->
+  <div class="viz-area">
+    <h2>Annotated Coefficient Path with Arc Length</h2>
+    <p class="viz-note">
+      The colored segments show how each coefficient evolves. The thick gold overlay measures accumulated L1 arc length -- the total absolute movement across all coefficients. Arrows indicate the direction of the parametrization (decreasing lambda). Notice how arc length grows fastest where multiple coefficients are changing simultaneously.
+    </p>
+    <div id="plot-main" style="width:100%; height:420px;"></div>
+    <div class="props-row">
+      <span class="prop-tag prop-yes">Scale-free</span>
+      <span class="prop-tag prop-yes">Additive across predictors</span>
+      <span class="prop-tag prop-yes">Monotone for LAR</span>
+      <span class="prop-tag prop-no">Not monotone for lasso with sign changes</span>
     </div>
+  </div>
 
-    <div class="panel">
-      <h3>Properties</h3>
-      <div class="guarantee-row"><span>Scale-free path parametrization</span><span class="badge badge-yes">Yes</span></div>
-      <div class="guarantee-row"><span>Monotone for LAR</span><span class="badge badge-yes">Yes</span></div>
-      <div class="guarantee-row"><span>Monotone for lasso</span><span class="badge badge-na">No*</span></div>
-      <div class="guarantee-row"><span>Additive across predictors</span><span class="badge badge-yes">Yes</span></div>
-      <div class="guarantee-row"><span>Path complexity measure</span><span class="badge badge-yes">Yes</span></div>
-      <p class="note" style="margin-top:8px">*Lasso can have sign changes, so TV ≥ Δ||β||₁. For monotone lasso (FS₀), TV = Δ||β||₁.</p>
+  <!-- 3. Formula LAST -->
+  <div class="formula-section">
+    <h2>Reference: Definition</h2>
+    <div class="formula-block">
+      \(\displaystyle \mathrm{TV}(\hat\beta, S) = \int_0^S \|\dot{\hat\beta}(s)\|_1\, ds = \sum_{j=1}^{p} \mathrm{TV}(\hat\beta_j, S)\)
     </div>
-
-    <div class="panel">
-      <h3>Related Concepts</h3>
-      <ul class="related-list">
-        <li>Piecewise-Linear Solution Path <span>ID 182 — §3.4.4 — path structure</span></li>
-        <li>LAR-Lasso Connection <span>ID 155 — §3.4.4 — arc length = LAR steps</span></li>
-        <li>Lasso <span>ID 143 — §3.4.2 — TV parametrizes lasso path</span></li>
-        <li>FS₀ <span>ID 164 — §3.8 — monotone, TV = ||β||₁</span></li>
-        <li>Degrees of Freedom <span>§3.4.4 — related via Stein's lemma</span></li>
-      </ul>
+    <div class="formula-block">
+      \(\text{For piecewise linear paths: } \mathrm{TV} = \sum_j \sum_k |\Delta\hat\beta_j^{(k)}|\)
     </div>
+    <p class="formula-note">
+      The total variation reduces to a sum of absolute coefficient changes at each breakpoint. For monotone paths (like LAR), TV equals the total increase in L1 norm: TV = ||beta_hat||_1. For non-monotone lasso paths, TV >= ||beta_hat||_1 because backtracking accumulates additional arc length.
+    </p>
   </div>
 </div>
 
 <script>
-const COLORS = ['#58a6ff','#f78166','#56d364','#e3b341','#bc8cff'];
+const COLORS = ['#58a6ff','#f78166','#3fb950','#d29922','#bc8cff'];
 const P = 5;
-const N = 100;
+const NAMES = ['X1','X2','X3','X4','X5'];
 
-// Coefficient path parametrized by arc length s in [0,1]
-// Monotone path (LAR-like)
+// Coefficient path stages (LAR-like monotone path)
+const stages = [
+  {j:0, onset:0.0,  rate: 0.62},
+  {j:1, onset:0.15, rate:-0.42},
+  {j:2, onset:0.30, rate: 0.50},
+  {j:3, onset:0.52, rate:-0.28},
+  {j:4, onset:0.70, rate: 0.33},
+];
+
 function getCoefs(s) {
-  const stages = [
-    {j:0, onset:0.0, rate: 0.62},
-    {j:1, onset:0.15, rate:-0.42},
-    {j:2, onset:0.30, rate: 0.50},
-    {j:3, onset:0.52, rate:-0.28},
-    {j:4, onset:0.70, rate: 0.33},
-  ];
   return stages.map(st => {
     if (s < st.onset) return 0;
-    const progress = (s - st.onset) / (1 - st.onset);
-    return st.rate * Math.min(1, progress);
+    return st.rate * Math.min(1, (s - st.onset) / (1 - st.onset));
   });
 }
 
-// Compute TV at position s (arc length is s itself in [0, S_max])
-// For monotone path: TV(s) = sum of |d beta_j / ds| * ds integrated = s (since we normalize)
-// Per predictor: incremental contributions
-function computeTV(sGrid) {
-  const tv = new Array(P).fill(0);
-  const tvTotal = [];
-  const tvPerPredictor = Array.from({length:P}, () => []);
-  let prevCoefs = getCoefs(0);
-
-  tvTotal.push(0);
-  Array.from({length:P}, (_, j) => tvPerPredictor[j].push(0));
-
-  for (let i = 1; i < sGrid.length; i++) {
-    const c = getCoefs(sGrid[i]);
-    const pc = getCoefs(sGrid[i-1]);
-    let total = 0;
-    for (let j = 0; j < P; j++) {
-      const delta = Math.abs(c[j] - pc[j]);
-      tv[j] += delta;
-      tvPerPredictor[j].push(tv[j]);
-      total += delta;
-    }
-    tvTotal.push(tvTotal[tvTotal.length-1] + total);
-  }
-  return {tvTotal, tvPerPredictor};
-}
-
+const N = 200;
 const sGrid = Array.from({length:N}, (_, i) => i/(N-1));
-const {tvTotal, tvPerPredictor} = computeTV(sGrid);
-const maxTV = tvTotal[tvTotal.length - 1];
+const coefGrid = sGrid.map(s => getCoefs(s));
 
-let currentS = 1.0;
+// Compute cumulative L1 arc length
+const tvCum = [0];
+for (let i = 1; i < N; i++) {
+  let delta = 0;
+  for (let j = 0; j < P; j++) delta += Math.abs(coefGrid[i][j] - coefGrid[i-1][j]);
+  tvCum.push(tvCum[tvCum.length-1] + delta);
+}
+const maxTV = tvCum[N-1];
 
-function redraw() {
-  const sEnd = Math.max(1, Math.round(currentS * (N-1)));
-  const sSlice = sGrid.slice(0, sEnd+1);
-  const tvSlice = tvTotal.slice(0, sEnd+1);
-  const showBreakdown = document.getElementById('chkBreakdown').checked;
+// Per-predictor TV
+const tvPerPred = Array.from({length:P}, () => [0]);
+for (let i = 1; i < N; i++) {
+  for (let j = 0; j < P; j++) {
+    tvPerPred[j].push(tvPerPred[j][tvPerPred[j].length-1] + Math.abs(coefGrid[i][j] - coefGrid[i-1][j]));
+  }
+}
 
-  const coefTraces = Array.from({length:P}, (_, j) => ({
-    x: tvSlice,
-    y: sSlice.map(s => getCoefs(s)[j]),
-    name: `X${j+1}`,
-    mode: 'lines',
-    line: {color: COLORS[j], width: 2.5},
-    showlegend: true,
-  }));
+// Build the annotated plot
+function buildPlot() {
+  // Map lambda: s=0 -> lambda_max, s=1 -> lambda=0
+  // Use arc length as x-axis (the point of this concept)
+  const xData = tvCum;
 
-  // Vertical line at current position
-  const curTV = tvTotal[sEnd];
-  coefTraces.push({
-    x: [curTV, curTV],
-    y: [-0.5, 0.7],
-    mode: 'lines',
-    line: {color: '#56d364', width: 1.5, dash: 'dash'},
-    name: 's cursor',
-    showlegend: false,
-  });
+  const traces = [];
 
-  Plotly.react('plot-path', coefTraces, {
-    title: {text: 'Coefficient Path vs L1 Arc Length TV(β, s)', font:{color:'#8b949e', size:13}},
-    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
-    font: {color:'#8b949e'},
-    xaxis: {title:'Total variation TV(β, s)', gridcolor:'#21262d', zerolinecolor:'#30363d'},
-    yaxis: {title:'Coefficient β(s)', gridcolor:'#21262d', zerolinecolor:'#58a6ff', zerolinewidth:1},
-    legend: {bgcolor:'transparent', font:{size:11}},
-    margin: {t:40, l:60, r:20, b:55},
-    height: 380,
-  }, {responsive:true, displayModeBar:false});
-
-  // TV per predictor bar chart
-  const tvAtS = tvPerPredictor.map(tp => tp[sEnd]);
-  if (showBreakdown) {
-    Plotly.react('plot-tv', [{
-      x: Array.from({length:P}, (_,j) => `X${j+1}`),
-      y: tvAtS,
-      type: 'bar',
-      marker: {color: COLORS},
-      showlegend: false,
-    }], {
-      title: {text:'TV contribution by predictor at s', font:{color:'#8b949e', size:12}},
-      paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
-      font: {color:'#8b949e'},
-      xaxis: {gridcolor:'#21262d'},
-      yaxis: {title:'TV_j(β, s)', gridcolor:'#21262d'},
-      margin: {t:35, l:55, r:20, b:45},
-      height: 200,
-    }, {responsive:true, displayModeBar:false});
-  } else {
-    // Accumulated TV line
-    Plotly.react('plot-tv', [{
-      x: tvSlice,
-      y: tvSlice,
-      mode: 'lines', line: {color:'#e3b341', width:2},
-      fill:'tozeroy', fillcolor:'rgba(227,179,65,0.08)',
-      showlegend:false,
-      name:'TV accumulation',
-    }], {
-      title: {text:'Accumulated TV(β, s) vs s', font:{color:'#8b949e', size:12}},
-      paper_bgcolor:'#161b22', plot_bgcolor:'#0d1117',
-      font:{color:'#8b949e'},
-      xaxis:{title:'s', gridcolor:'#21262d'},
-      yaxis:{title:'TV(β, s)', gridcolor:'#21262d'},
-      margin:{t:35,l:55,r:20,b:45},
-      height:200,
-    }, {responsive:true, displayModeBar:false});
+  // Coefficient traces
+  for (let j = 0; j < P; j++) {
+    traces.push({
+      x: xData,
+      y: coefGrid.map(r => r[j]),
+      name: NAMES[j],
+      mode: 'lines',
+      line: { color: COLORS[j], width: 2.5 },
+    });
   }
 
-  // Stats
-  document.getElementById('statTV').textContent = curTV.toFixed(3);
-  document.getElementById('statActive').textContent =
-    getCoefs(sGrid[sEnd]).filter(b => Math.abs(b) > 1e-6).length;
-  document.getElementById('statS').textContent = sGrid[sEnd].toFixed(3);
-  document.getElementById('statMaxTV').textContent = maxTV.toFixed(3);
-  const pct = maxTV > 0 ? (curTV / maxTV * 100) : 0;
-  document.getElementById('tvFill').style.width = pct.toFixed(1) + '%';
+  // Direction arrows at a few points along each path
+  const arrowAnnotations = [];
+  const arrowPositions = [0.3, 0.6, 0.85]; // fraction of path
+  for (let j = 0; j < P; j++) {
+    for (const frac of arrowPositions) {
+      const idx = Math.floor(frac * (N-1));
+      const idx2 = Math.min(idx + 5, N-1);
+      const coefAtIdx = coefGrid[idx][j];
+      const coefAtIdx2 = coefGrid[idx2][j];
+      // Only add arrow if the coefficient is nonzero and changing
+      if (Math.abs(coefAtIdx) > 0.01 && Math.abs(coefAtIdx2 - coefAtIdx) > 0.001) {
+        arrowAnnotations.push({
+          x: xData[idx2], y: coefAtIdx2,
+          ax: xData[idx], ay: coefAtIdx,
+          xref: 'x', yref: 'y', axref: 'x', ayref: 'y',
+          showarrow: true,
+          arrowhead: 3, arrowsize: 1.2, arrowwidth: 1.8,
+          arrowcolor: COLORS[j],
+          opacity: 0.6,
+        });
+      }
+    }
+  }
+
+  // Annotations for onset points
+  const onsetAnnotations = stages.map((st, j) => {
+    const idx = Math.round(st.onset * (N-1));
+    return {
+      x: xData[idx], y: 0,
+      text: `${NAMES[j]} enters`,
+      font: { color: COLORS[j], size: 10 },
+      showarrow: true, arrowhead: 0, arrowcolor: COLORS[j],
+      ax: 0, ay: (j % 2 === 0 ? -28 : 28),
+      opacity: 0.8,
+    };
+  });
+
+  // Arc length shaded region annotation
+  const arcIdx80 = Math.floor(0.8 * (N-1));
+  const arcIdx95 = Math.floor(0.95 * (N-1));
+
+  traces.push({
+    x: xData.slice(arcIdx80, arcIdx95+1),
+    y: Array(arcIdx95 - arcIdx80 + 1).fill(-0.52),
+    mode: 'lines',
+    line: { color: '#d29922', width: 4 },
+    showlegend: false, hoverinfo: 'skip',
+  });
+
+  Plotly.newPlot('plot-main', traces, {
+    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
+    font: { color: '#8b949e' },
+    xaxis: {
+      title: { text: 'L1 Arc Length (Total Variation)', font: {size: 13} },
+      gridcolor: '#21262d', zerolinecolor: '#30363d',
+    },
+    yaxis: {
+      title: { text: 'Coefficient value', font: {size: 13} },
+      gridcolor: '#21262d', zerolinecolor: '#58a6ff', zerolinewidth: 1,
+    },
+    legend: { bgcolor: 'transparent', font: {size: 11}, x: 0.02, y: 0.98 },
+    margin: { t: 10, l: 55, r: 20, b: 55 },
+    annotations: [
+      ...onsetAnnotations,
+      ...arrowAnnotations,
+      {
+        x: (xData[arcIdx80] + xData[arcIdx95]) / 2, y: -0.58,
+        text: 'arc length segment',
+        font: { color: '#d29922', size: 10 },
+        showarrow: false,
+      },
+    ],
+  }, {responsive: true, displayModeBar: false});
 }
 
-function setS(v) {
-  currentS = v / 100;
-  document.getElementById('sVal').textContent = currentS.toFixed(2);
-  redraw();
-}
-
-redraw();
+buildPlot();
 </script>
 </body>
 </html>

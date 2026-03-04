@@ -1,177 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reduced-Rank Regression — ESL §3.7</title>
-  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #0d0d0d;
-      color: #e0e0e0;
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      line-height: 1.6;
-      padding: 24px;
-    }
-    header {
-      border-bottom: 1px solid #2a2a2a;
-      padding-bottom: 18px;
-      margin-bottom: 28px;
-    }
-    header h1 { font-size: 1.9rem; color: #f0f0f0; letter-spacing: -0.5px; }
-    header .meta { margin-top: 6px; color: #888; font-size: 0.9rem; }
-    header .formula {
-      margin-top: 12px;
-      background: #161616;
-      border-left: 3px solid #4ae3b5;
-      padding: 10px 16px;
-      border-radius: 4px;
-      font-size: 1rem;
-      color: #c0f5eb;
-    }
-    .layout { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
-    .viz-section { display: flex; flex-direction: column; gap: 18px; }
-    .viz-card { background: #111; border: 1px solid #222; border-radius: 8px; padding: 20px; }
-    .viz-card h2 { font-size: 1rem; color: #aaa; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .sidebar { display: flex; flex-direction: column; gap: 18px; }
-    .panel { background: #111; border: 1px solid #222; border-radius: 8px; padding: 18px; }
-    .panel h3 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 12px; }
-    blockquote { border-left: 3px solid #4ae3b5; padding-left: 12px; color: #b0ede2; font-style: italic; font-size: 0.92rem; }
-    .guarantee-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #1c1c1c; font-size: 0.88rem; }
-    .guarantee-row:last-child { border-bottom: none; }
-    .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; font-weight: 600; }
-    .yes  { background: #1a3a1a; color: #5de85d; }
-    .no   { background: #3a1a1a; color: #e85d5d; }
-    .cond { background: #2a2a1a; color: #e8c45d; }
-    .related-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-    .tag { background: #1a1a2e; border: 1px solid #2e2e5e; color: #8899cc; padding: 3px 10px; border-radius: 14px; font-size: 0.8rem; }
-    .controls { margin-top: 14px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-    label { font-size: 0.85rem; color: #aaa; }
-    input[type=range] { accent-color: #4ae3b5; cursor: pointer; }
-    .rank-display {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #4ae3b5;
-      text-align: center;
-      padding: 8px;
-      background: #0a1a15;
-      border-radius: 6px;
-      border: 1px solid #1a4035;
-      min-width: 60px;
-    }
-    .matrix-vis {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-    .matrix-box { flex: 1; min-width: 200px; }
-    .matrix-box h4 { font-size: 0.82rem; color: #888; margin-bottom: 8px; }
-    .error-bar-wrap { margin-top: 14px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reduced-Rank Regression — ESL §3.7</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surface2: #1c2129;
+    --border: #30363d; --text: #e6edf3; --text-dim: #8b949e;
+    --green: #3fb950; --yellow: #d29922; --orange: #db6d28;
+    --red: #f85149; --blue: #58a6ff; --purple: #bc8cff;
+    --teal: #39d353;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 24px 32px; }
+  .header-meta { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .header-meta span { color: var(--teal); }
+  h1 { font-size: 22px; font-weight: 600; color: #f0f0f8; margin-bottom: 4px; }
+
+  .main { display: grid; grid-template-columns: 1fr 320px; gap: 20px; padding: 24px 32px; max-width: 1400px; }
+  .viz-col { display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .panel-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); color: var(--text-dim); }
+  .side-panels { display: flex; flex-direction: column; gap: 16px; }
+
+  /* Benefits & Tradeoffs card */
+  .bt-card { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+  .bt-col { padding: 18px 20px; }
+  .bt-benefits { background: #0d1f0d; border-right: 1px solid var(--border); }
+  .bt-tradeoffs { background: #1f0d0d; }
+  .bt-col h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+  .bt-benefits h3 { color: var(--green); }
+  .bt-tradeoffs h3 { color: var(--red); }
+  .bt-col li { font-size: 13px; line-height: 1.65; color: #c9d1d9; margin-bottom: 8px; list-style: none; padding-left: 16px; position: relative; }
+  .bt-benefits li::before { content: '+'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+  .bt-tradeoffs li::before { content: '-'; position: absolute; left: 0; color: var(--red); font-weight: 700; }
+  .bt-col .quote { font-style: italic; color: var(--text-dim); font-size: 12px; border-left: 2px solid var(--border); padding-left: 10px; margin-top: 6px; }
+  .bt-col .cite { color: #6b7280; font-size: 11px; font-style: normal; }
+
+  .viz-title { font-size: 13px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+  .controls { display: flex; align-items: center; gap: 14px; margin-top: 12px; flex-wrap: wrap; }
+  label { font-size: 13px; color: var(--text-dim); }
+  input[type=range] { accent-color: var(--teal); cursor: pointer; }
+  .note { font-size: 12px; color: #6b7280; margin-top: 10px; line-height: 1.6; }
+
+  .rank-badge { display: inline-block; font-size: 22px; font-weight: 700; color: var(--teal); background: #0d2818; border: 1px solid #1a4030; border-radius: 6px; padding: 2px 14px; min-width: 50px; text-align: center; }
+
+  blockquote { font-style: italic; color: var(--text-dim); font-size: 13px; line-height: 1.6; border-left: 2px solid var(--teal); padding-left: 12px; margin: 0; }
+  .cite { font-style: normal; color: #6b7280; font-size: 11px; margin-top: 6px; display: block; }
+
+  .guarantee-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+  .badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px; }
+  .badge-yes { background: #064e3b; color: #34d399; }
+  .badge-no { background: #450a0a; color: #f87171; }
+  .badge-cond { background: #451a03; color: #fb923c; }
+  .related-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { background: #1a1a2e; border: 1px solid #2e2e5e; color: var(--blue); padding: 3px 10px; border-radius: 14px; font-size: 12px; }
+
+  .formula-ref { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-top: 4px; }
+  .formula-ref .formula-block { background: var(--bg); border-left: 3px solid var(--teal); padding: 12px 16px; border-radius: 4px; font-size: 14px; margin-bottom: 10px; }
+</style>
 </head>
 <body>
 
-<header>
+<div class="header">
+  <div class="header-meta">ESL <span>§3.7</span> · ID 161 · Category: <span>Model / Proxy</span></div>
   <h1>Reduced-Rank Regression</h1>
-  <div class="meta">ID 161 &nbsp;·&nbsp; ESL Section 3.7 &nbsp;·&nbsp; Category: model / proxy</div>
-  <div class="formula">
-    \(\hat{\mathbf{B}}^{RRR}(M) = \hat{\mathbf{B}}^{OLS}\mathbf{P}_M^Y\) where \(\mathbf{P}_M^Y\) projects onto the first M canonical variates of Y given X
-    <br><br>
-    \(\hat{\mathbf{B}}^{RRR}(M) = \mathbf{U}_M\mathbf{U}_M^T\hat{\mathbf{B}}^{OLS}\) &nbsp;&nbsp;&nbsp; rank(\(\hat{\mathbf{B}}\)) \(\leq M\)
-  </div>
-</header>
+</div>
 
-<div class="layout">
-  <div class="viz-section">
-    <div class="viz-card">
-      <h2>Coefficient matrix B under rank constraint — use slider to change M</h2>
-      <div id="plotMatrix" style="width:100%;height:380px;"></div>
+<div class="main">
+  <div class="viz-col">
+
+    <!-- 1. Benefits & Tradeoffs FIRST -->
+    <div class="bt-card">
+      <div class="bt-col bt-benefits">
+        <h3>Benefits</h3>
+        <ul>
+          <li><strong>Borrows strength across responses</strong> by forcing the coefficient matrix to be low-rank -- responses share a common regression subspace
+            <div class="quote">"Reduced-rank regression borrows strength among responses by truncating the CCA." <span class="cite">-- ESL §3.7</span></div>
+          </li>
+          <li>Reduces effective number of parameters from p*q to M*(p+q-M), which can dramatically reduce variance</li>
+          <li>At M = min(p,q), recovers the full OLS solution -- so it always nests the unrestricted model</li>
+          <li>Solution has a clean closed form via CCA: just project OLS onto the first M canonical directions</li>
+        </ul>
+      </div>
+      <div class="bt-col bt-tradeoffs">
+        <h3>Tradeoffs</h3>
+        <ul>
+          <li><strong>Hard truncation</strong>: canonical directions are either fully kept or fully zeroed. No middle ground.
+            <div class="quote">"The regression surface is constrained to have rank M in the response space." <span class="cite">-- ESL §3.7</span></div>
+          </li>
+          <li>Biased for any M &lt; min(p,q) -- you are zeroing out real (if weak) signal</li>
+          <li>Choosing M is a model selection problem with no free lunch -- wrong M can hurt more than OLS</li>
+          <li>Requires CCA, which itself needs n > p + q</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2. Visualization: coefficient heatmap, rank slider -->
+    <div class="panel">
+      <div class="viz-title">Coefficient Matrix B: Full OLS vs Rank-M Approximation</div>
+      <div id="plotMatrix" style="width:100%;height:340px;"></div>
       <div class="controls">
-        <div>
-          <label>Rank M:&nbsp;</label>
-          <div class="rank-display" id="rankDisplay">3</div>
-        </div>
-        <input type="range" id="rankSlider" min="1" max="6" value="3" style="width:160px">
-        <label style="margin-left:10px;">p (predictors):
-          <input type="range" id="pSlider" min="3" max="8" value="6" style="width:80px">
-          <span id="pLabel">6</span>
-        </label>
-        <label>q (responses):
-          <input type="range" id="qSlider" min="2" max="6" value="4" style="width:80px">
-          <span id="qLabel">4</span>
-        </label>
+        <label>Rank M:</label>
+        <span class="rank-badge" id="rankDisplay">3</span>
+        <input type="range" id="rankSlider" min="1" max="4" value="3" style="width:150px">
+        <label style="margin-left:12px;">p: <input type="range" id="pSlider" min="4" max="8" value="6" style="width:70px"> <span id="pLabel">6</span></label>
+        <label>q: <input type="range" id="qSlider" min="2" max="6" value="4" style="width:70px"> <span id="qLabel">4</span></label>
       </div>
+      <p class="note">Left: full OLS coefficient matrix (rank = min(p,q)). Right: RRR approximation at rank M. Rows below the rank cutoff are zeroed out. The Frobenius norm of the difference tells you how much signal you're discarding. Drag the rank slider to see the hard truncation in action.</p>
     </div>
 
-    <div class="viz-card">
-      <h2>Training error vs Test error by rank M</h2>
-      <div id="plotError" style="width:100%;height:280px;"></div>
-      <p style="font-size:0.82rem;color:#666;margin-top:8px;">Training error always decreases with M. Test error has a minimum at the true rank. Choosing M too large overfits; too small underfits.</p>
-    </div>
-  </div>
-
-  <div class="sidebar">
+    <!-- 2b. Bias-variance: train vs test error by rank -->
     <div class="panel">
-      <h3>Book Quote</h3>
-      <blockquote>
-        "Reduced-rank regression borrows strength among responses by truncating the CCA. The regression surface is constrained to have rank M in the response space."
-      </blockquote>
-      <p style="margin-top:10px;font-size:0.82rem;color:#666;">— ESL §3.7</p>
+      <div class="viz-title">Training vs Test Error by Rank M</div>
+      <div id="plotError" style="width:100%;height:260px;"></div>
+      <p class="note">Training error always decreases with M (more parameters = better fit). Test error has a minimum near the true rank. Choosing M too large overfits; too small underfits. This is the rank selection problem.</p>
     </div>
 
+    <!-- 3. Statistical Guarantees -->
     <div class="panel">
-      <h3>Guarantees</h3>
-      <div class="guarantee-row">
-        <span>Unbiased (any M)</span>
-        <span class="badge no">No</span>
-      </div>
+      <div class="panel-title" style="color: var(--yellow);">Statistical Guarantees</div>
       <div class="guarantee-row">
         <span>Unbiased at M = min(p,q)</span>
-        <span class="badge yes">Yes</span>
+        <span class="badge badge-yes">Yes</span>
+      </div>
+      <div class="guarantee-row">
+        <span>Unbiased for M &lt; min(p,q)</span>
+        <span class="badge badge-no">No</span>
       </div>
       <div class="guarantee-row">
         <span>Lower MSE than OLS</span>
-        <span class="badge cond">True rank M</span>
+        <span class="badge badge-cond">If M correct</span>
       </div>
       <div class="guarantee-row">
-        <span>Rank constraint hard</span>
-        <span class="badge yes">Yes</span>
+        <span>Borrows strength across responses</span>
+        <span class="badge badge-yes">Yes</span>
       </div>
       <div class="guarantee-row">
-        <span>Borrows strength across y</span>
-        <span class="badge yes">Yes</span>
+        <span>Rank constraint is hard</span>
+        <span class="badge badge-yes">Yes</span>
       </div>
       <div class="guarantee-row">
         <span>Consistent</span>
-        <span class="badge cond">If M correct</span>
+        <span class="badge badge-cond">If M correct</span>
       </div>
     </div>
 
+    <!-- 4. Formula DEAD LAST -->
+    <div class="formula-ref">
+      <div class="panel-title">Formula Reference</div>
+      <div class="formula-block">
+        \(\displaystyle \hat{\mathbf{B}}^{\text{RRR}}(M) = \hat{\mathbf{B}}^{\text{OLS}}\,\mathbf{P}_M^Y\)
+      </div>
+      <p class="note" style="margin-bottom:10px;">where \(\mathbf{P}_M^Y\) projects onto the first M canonical variates of Y given X.</p>
+      <div class="formula-block">
+        \(\displaystyle \min_B \|\mathbf{Y} - \mathbf{X}\mathbf{B}\|_F^2 \quad \text{s.t.}\quad \mathrm{rank}(\mathbf{B}) \leq M\)
+      </div>
+      <p class="note">M = 0: predict all responses at their mean. M = min(p,q): full OLS. The solution lives on a spectrum from total pooling to no pooling.</p>
+    </div>
+  </div>
+
+  <div class="side-panels">
     <div class="panel">
-      <h3>Key Facts</h3>
-      <ul style="font-size:0.86rem;color:#bbb;padding-left:18px;line-height:1.8;">
-        <li>Solves: \(\min_B \|Y-XB\|_F^2\) s.t. rank(B) ≤ M</li>
+      <div class="panel-title" style="color: var(--teal);">Book Quote</div>
+      <blockquote>
+        "Reduced-rank regression borrows strength among responses by truncating the CCA. The regression surface is constrained to have rank M in the response space."
+      </blockquote>
+      <span class="cite">-- ESL §3.7</span>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title" style="color: var(--green);">Key Facts</div>
+      <ul style="font-size:13px;color:#c9d1d9;padding-left:18px;line-height:1.8;">
         <li>Solution uses CCA between X and Y</li>
-        <li>M = 0: predict all responses at mean</li>
-        <li>M = min(p,q): full OLS solution</li>
-        <li>Hard truncation (vs curds &amp; whey smooth shrinkage)</li>
-        <li>Works best when true B is low-rank</li>
+        <li>Hard truncation: keep M directions, drop the rest</li>
+        <li>Contrast with Curds &amp; Whey: smooth shrinkage instead of hard cutoff</li>
+        <li>Works best when the true B is genuinely low-rank</li>
+        <li>Related to PCA regression but in the joint X-Y space</li>
       </ul>
     </div>
 
     <div class="panel">
-      <h3>Related Concepts</h3>
+      <div class="panel-title" style="color: var(--blue);">Related Concepts</div>
       <div class="related-tags">
         <span class="tag">CCA (§3.7)</span>
         <span class="tag">Curds &amp; Whey</span>
         <span class="tag">PLS (§3.5)</span>
         <span class="tag">SVD</span>
         <span class="tag">Multivariate OLS</span>
-        <span class="tag">Low-rank approximation</span>
+        <span class="tag">Low-rank Approximation</span>
       </div>
     </div>
   </div>
@@ -179,41 +200,26 @@
 
 <script>
 function randn() {
-  let u=0,v=0;
-  while(!u) u=Math.random();
-  while(!v) v=Math.random();
-  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+  let u = 0, v = 0;
+  while (!u) u = Math.random();
+  while (!v) v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
-// Generate a random matrix with given true rank by constructing U*V
 function makeRankMatrix(rows, cols, rank) {
-  // U: rows x rank, V: rank x cols
-  const U = Array.from({length:rows}, ()=> Array.from({length:rank}, ()=>randn()));
-  const V = Array.from({length:rank}, ()=> Array.from({length:cols}, ()=>randn()));
-  // M = U V
+  const U = Array.from({ length: rows }, () => Array.from({ length: rank }, () => randn()));
+  const V = Array.from({ length: rank }, () => Array.from({ length: cols }, () => randn()));
   const mat = [];
-  for(let i=0;i<rows;i++){
-    const row=[];
-    for(let j=0;j<cols;j++){
-      let s=0;
-      for(let k=0;k<rank;k++) s+=U[i][k]*V[k][j];
+  for (let i = 0; i < rows; i++) {
+    const row = [];
+    for (let j = 0; j < cols; j++) {
+      let s = 0;
+      for (let k = 0; k < rank; k++) s += U[i][k] * V[k][j];
       row.push(s);
     }
     mat.push(row);
   }
   return mat;
-}
-
-// Truncate matrix to rank M using "soft SVD" approximation
-// We'll simulate by setting some rows to zero (illustrative)
-function truncateMatrix(B, M, p, q) {
-  // Simulate rank truncation: keep only first M "direction combinations"
-  // For visualization: blend B with its rank-M approximation
-  // We'll create a smooth approximation by random rank-M factorization close to B
-  const scale = M / Math.min(p, q);
-  return B.map((row, i) =>
-    row.map((v, j) => i < M ? v : v * Math.max(0, 1 - (i - M + 1) / (p - M + 1)))
-  );
 }
 
 let B_true = null;
@@ -233,117 +239,102 @@ function buildMatrixPlot() {
   const M = +document.getElementById('rankSlider').value;
   document.getElementById('rankDisplay').textContent = M;
 
-  if(!B_true) generateB();
+  if (!B_true) generateB();
 
-  // Build rank-M approximation: keep first M rows at full strength, fade rest
-  const B_M = B_true.map((row, i) => {
-    const weight = i < M ? 1.0 : 0.0;
-    return row.map(v => v * weight);
-  });
+  // Hard rank-M truncation: zero out rows beyond M
+  const B_M = B_true.map((row, i) => row.map(v => i < M ? v : 0));
 
-  // Show OLS (full) vs RRR(M) side by side as heatmaps
-  const rowLabels = Array.from({length:p_val},(_,i)=>`x${i+1}`);
-  const colLabels = Array.from({length:q_val},(_,j)=>`y${j+1}`);
-
+  const rowLabels = Array.from({ length: p_val }, (_, i) => `x${i + 1}`);
+  const colLabels = Array.from({ length: q_val }, (_, j) => `y${j + 1}`);
   const maxVal = Math.max(...B_true.flat().map(Math.abs), 0.01);
-
-  const traces = [
-    {
-      z: B_true,
-      x: colLabels,
-      y: rowLabels,
-      type:'heatmap',
-      colorscale:[['0','#3a1a1a'],['0.25','#7a3a3a'],['0.5','#111'],['0.75','#1a4a3a'],['1','#1a6a5a']],
-      zmid:0, zmin:-maxVal, zmax:maxVal,
-      showscale:false,
-      xaxis:'x', yaxis:'y',
-      name:'Full OLS (rank=min(p,q))',
-      hovertemplate:'%{y}→%{x}: %{z:.2f}<extra>OLS</extra>'
-    },
-    {
-      z: B_M,
-      x: colLabels,
-      y: rowLabels,
-      type:'heatmap',
-      colorscale:[['0','#3a1a1a'],['0.25','#7a3a3a'],['0.5','#111'],['0.75','#1a3040'],['1','#1a5080']],
-      zmid:0, zmin:-maxVal, zmax:maxVal,
-      showscale:true,
-      colorbar:{title:{text:'coeff',side:'right'},thickness:12,len:0.5,x:1.02},
-      xaxis:'x2', yaxis:'y2',
-      name:`RRR rank=${M}`,
-      hovertemplate:'%{y}→%{x}: %{z:.2f}<extra>RRR M=' + M + '</extra>'
-    }
-  ];
 
   // Frobenius norm of difference
   let frobDiff = 0;
-  for(let i=0;i<p_val;i++)
-    for(let j=0;j<q_val;j++)
-      frobDiff += (B_true[i][j]-B_M[i][j])**2;
+  for (let i = 0; i < p_val; i++)
+    for (let j = 0; j < q_val; j++)
+      frobDiff += (B_true[i][j] - B_M[i][j]) ** 2;
   frobDiff = Math.sqrt(frobDiff).toFixed(3);
 
+  const traces = [
+    {
+      z: B_true, x: colLabels, y: rowLabels,
+      type: 'heatmap',
+      colorscale: [['0', '#450a0a'], ['0.5', '#161b22'], ['1', '#064e3b']],
+      zmid: 0, zmin: -maxVal, zmax: maxVal,
+      showscale: false,
+      xaxis: 'x', yaxis: 'y',
+      hovertemplate: '%{y}->%{x}: %{z:.2f}<extra>OLS</extra>'
+    },
+    {
+      z: B_M, x: colLabels, y: rowLabels,
+      type: 'heatmap',
+      colorscale: [['0', '#450a0a'], ['0.5', '#161b22'], ['1', '#0a3060']],
+      zmid: 0, zmin: -maxVal, zmax: maxVal,
+      showscale: true,
+      colorbar: { title: { text: 'coeff', side: 'right' }, thickness: 12, len: 0.5, x: 1.02, tickfont: { color: '#8b949e' }, titlefont: { color: '#8b949e' } },
+      xaxis: 'x2', yaxis: 'y2',
+      hovertemplate: '%{y}->%{x}: %{z:.2f}<extra>RRR M=' + M + '</extra>'
+    }
+  ];
+
   const layout = {
-    paper_bgcolor:'#111', plot_bgcolor:'#111',
-    font:{color:'#ccc',size:11},
-    grid:{rows:1,columns:2,pattern:'independent'},
-    xaxis:  {title:'Responses (y)', color:'#888', side:'bottom'},
-    yaxis:  {title:'Predictors (x)', color:'#888', autorange:'reversed'},
-    xaxis2: {title:'Responses (y)', color:'#888', side:'bottom'},
-    yaxis2: {title:'Predictors (x)', color:'#888', autorange:'reversed'},
-    margin:{t:40,b:50,l:60,r:70},
-    annotations:[
-      {x:0.22,y:1.05,xref:'paper',yref:'paper',text:'<b>OLS full rank</b>',showarrow:false,font:{color:'#888',size:12}},
-      {x:0.78,y:1.05,xref:'paper',yref:'paper',text:`<b>RRR rank = ${M}</b>  (‖B - B_M‖_F = ${frobDiff})`,showarrow:false,font:{color:'#4ae3b5',size:12}}
+    paper_bgcolor: '#161b22', plot_bgcolor: '#161b22',
+    font: { color: '#c9d1d9', size: 11 },
+    grid: { rows: 1, columns: 2, pattern: 'independent' },
+    xaxis: { title: '', color: '#8b949e', side: 'bottom' },
+    yaxis: { title: '', color: '#8b949e', autorange: 'reversed' },
+    xaxis2: { title: '', color: '#8b949e', side: 'bottom' },
+    yaxis2: { title: '', color: '#8b949e', autorange: 'reversed' },
+    margin: { t: 40, b: 40, l: 50, r: 70 },
+    annotations: [
+      { x: 0.22, y: 1.06, xref: 'paper', yref: 'paper', text: '<b>Full OLS</b>', showarrow: false, font: { color: '#8b949e', size: 12 } },
+      { x: 0.78, y: 1.06, xref: 'paper', yref: 'paper', text: `<b>RRR rank=${M}</b>  ||B-B_M||=${frobDiff}`, showarrow: false, font: { color: '#39d353', size: 12 } }
     ]
   };
-  Plotly.react('plotMatrix', traces, layout, {responsive:true,displayModeBar:false});
+  Plotly.react('plotMatrix', traces, layout, { responsive: true, displayModeBar: false });
 }
 
 function buildErrorPlot() {
   const maxM = Math.min(p_val, q_val);
-  const Ms = Array.from({length:maxM},(_,i)=>i+1);
+  const Ms = Array.from({ length: maxM }, (_, i) => i + 1);
 
-  // Simulate train/test error curves
-  // Train error monotonically decreasing
-  // Test error has minimum around trueRank
-  const trainErr = Ms.map(m => Math.max(0.05, 2.0 * Math.exp(-0.5*m) + 0.1));
-  const testErr  = Ms.map(m => {
-    const bias2 = 1.5 * Math.exp(-0.8*m);
+  const trainErr = Ms.map(m => Math.max(0.05, 2.0 * Math.exp(-0.5 * m) + 0.1));
+  const testErr = Ms.map(m => {
+    const bias2 = 1.5 * Math.exp(-0.8 * m);
     const variance = 0.08 * m;
     return bias2 + variance + 0.15;
   });
 
+  const minTest = Math.min(...testErr);
+  const bestM = Ms[testErr.indexOf(minTest)];
+
   const traces = [
-    { x:Ms, y:trainErr, mode:'lines+markers', name:'Training error', line:{color:'#4ae3b5',width:2}, marker:{size:6} },
-    { x:Ms, y:testErr,  mode:'lines+markers', name:'Test error',     line:{color:'#ff7b54',width:2}, marker:{size:6} },
+    { x: Ms, y: trainErr, mode: 'lines+markers', name: 'Training error', line: { color: '#39d353', width: 2 }, marker: { size: 6 } },
+    { x: Ms, y: testErr, mode: 'lines+markers', name: 'Test error', line: { color: '#f85149', width: 2 }, marker: { size: 6 } }
   ];
 
-  const minTest = Math.min(...testErr);
-  const bestM   = Ms[testErr.indexOf(minTest)];
-
   const layout = {
-    paper_bgcolor:'#111', plot_bgcolor:'#111',
-    font:{color:'#ccc',size:11},
-    xaxis:{title:'Rank M',gridcolor:'#222',zerolinecolor:'#333',color:'#888',tickvals:Ms},
-    yaxis:{title:'Error (MSE)',gridcolor:'#222',zerolinecolor:'#333',color:'#888'},
-    legend:{bgcolor:'#1a1a1a',bordercolor:'#333',borderwidth:1},
-    margin:{t:20,b:50,l:60,r:20},
-    shapes:[{
-      type:'line', x0:bestM, x1:bestM, y0:0, y1:1, yref:'paper',
-      line:{color:'#ff7b54',dash:'dot',width:1.5}
+    paper_bgcolor: '#161b22', plot_bgcolor: '#161b22',
+    font: { color: '#c9d1d9', size: 11 },
+    xaxis: { title: 'Rank M', gridcolor: '#30363d', zerolinecolor: '#484f58', color: '#8b949e', tickvals: Ms },
+    yaxis: { title: 'Error (MSE)', gridcolor: '#30363d', zerolinecolor: '#484f58', color: '#8b949e' },
+    legend: { bgcolor: '#161b22', bordercolor: '#30363d', borderwidth: 1, font: { size: 11 } },
+    margin: { t: 20, b: 50, l: 60, r: 20 },
+    shapes: [{
+      type: 'line', x0: bestM, x1: bestM, y0: 0, y1: 1, yref: 'paper',
+      line: { color: '#f85149', dash: 'dot', width: 1.5 }
     }],
-    annotations:[{
-      x:bestM, y:minTest, xref:'x', yref:'y',
-      text:`Best M = ${bestM}`, showarrow:true, arrowhead:2, arrowcolor:'#ff7b54',
-      font:{color:'#ff7b54',size:11}, ax:30, ay:-25
+    annotations: [{
+      x: bestM, y: minTest, text: `Best M=${bestM}`, showarrow: true, arrowhead: 2, arrowcolor: '#f85149',
+      font: { color: '#f85149', size: 11 }, ax: 30, ay: -25
     }]
   };
-  Plotly.react('plotError', traces, layout, {responsive:true,displayModeBar:false});
+  Plotly.react('plotError', traces, layout, { responsive: true, displayModeBar: false });
 }
 
 document.getElementById('rankSlider').addEventListener('input', buildMatrixPlot);
-document.getElementById('pSlider').addEventListener('input', () => { B_true=null; generateB(); buildMatrixPlot(); buildErrorPlot(); });
-document.getElementById('qSlider').addEventListener('input', () => { B_true=null; generateB(); buildMatrixPlot(); buildErrorPlot(); });
+document.getElementById('pSlider').addEventListener('input', () => { B_true = null; generateB(); buildMatrixPlot(); buildErrorPlot(); });
+document.getElementById('qSlider').addEventListener('input', () => { B_true = null; generateB(); buildMatrixPlot(); buildErrorPlot(); });
 
 generateB();
 buildMatrixPlot();

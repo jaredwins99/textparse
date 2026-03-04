@@ -3,295 +3,223 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adaptive Lasso — ESL Ch3</title>
+<title>Adaptive Lasso — ESL Ch. 3</title>
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: #0f1117;
-    color: #e2e8f0;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    min-height: 100vh;
-    padding: 0 0 40px 0;
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surface2: #1c2129;
+    --border: #30363d; --text: #e6edf3; --text-dim: #8b949e;
+    --green: #3fb950; --yellow: #d29922; --orange: #db6d28;
+    --red: #f85149; --blue: #58a6ff; --purple: #bc8cff;
   }
-  header {
-    background: linear-gradient(135deg, #1a1d2e 0%, #16213e 100%);
-    border-bottom: 2px solid #2d3561;
-    padding: 28px 40px;
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  header { padding: 1.5rem 2rem 1.2rem; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .header-meta { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; margin-bottom: .5rem; }
+  .badge {
+    font-size: .65rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+    padding: .2rem .55rem; border-radius: 2rem; background: var(--surface2);
+    border: 1px solid var(--border); color: var(--text-dim);
   }
-  header .breadcrumb { font-size: 12px; color: #64748b; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
-  header h1 { font-size: 2rem; font-weight: 700; color: #e879f9; letter-spacing: -0.02em; }
-  header .meta { display: flex; gap: 12px; margin-top: 8px; font-size: 13px; color: #64748b; flex-wrap: wrap; }
-  header .meta span { background: #1e2235; padding: 3px 10px; border-radius: 12px; border: 1px solid #2d3561; }
-  .formula-bar {
-    background: #13151f;
-    border-left: 4px solid #e879f9;
-    padding: 16px 40px;
-    font-size: 0.88rem;
-    color: #f0abfc;
-    border-bottom: 1px solid #1e2235;
-    line-height: 2.2;
+  .badge.id { color: var(--yellow); border-color: var(--yellow); }
+  h1 { font-size: 1.5rem; font-weight: 700; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 1.5rem 2rem 3rem; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: .5rem; padding: 1.25rem; margin-bottom: 1.25rem; }
+  .card h2 { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); margin-bottom: 1rem; }
+
+  .bt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .bt-grid { grid-template-columns: 1fr; } }
+  .bt-col h3 { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .6rem; }
+  .bt-col.benefits h3 { color: var(--green); }
+  .bt-col.tradeoffs h3 { color: var(--red); }
+  .bt-item { font-size: .82rem; line-height: 1.6; color: var(--text); margin-bottom: .6rem; padding-left: .9rem; position: relative; }
+  .bt-item::before { position: absolute; left: 0; }
+  .benefits .bt-item::before { content: '+'; color: var(--green); font-weight: 700; }
+  .tradeoffs .bt-item::before { content: '-'; color: var(--red); font-weight: 700; }
+
+  blockquote {
+    border-left: 3px solid var(--orange); background: var(--surface2);
+    padding: .6rem .9rem; border-radius: 0 .4rem .4rem 0;
+    font-style: italic; font-size: .82rem; color: var(--text); line-height: 1.6; margin-top: .75rem;
   }
-  main {
-    max-width: 1100px;
-    margin: 32px auto;
-    padding: 0 40px;
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 24px;
+  blockquote cite { display: block; margin-top: .4rem; font-style: normal; font-size: .7rem; color: var(--text-dim); }
+
+  #viz-plot { width: 100%; height: 400px; }
+  .ctrl-row { display: flex; align-items: center; gap: .75rem; margin-bottom: .5rem; flex-wrap: wrap; }
+  .ctrl-row label { font-size: .8rem; color: var(--text-dim); white-space: nowrap; }
+  input[type=range] { flex: 1; min-width: 80px; accent-color: var(--purple); }
+  .ctrl-val { font-size: .8rem; color: var(--purple); font-weight: 600; min-width: 2.5rem; text-align: right; }
+  .ctrl-row.nu input[type=range] { accent-color: var(--yellow); }
+  .ctrl-row.nu .ctrl-val { color: var(--yellow); }
+
+  .explain { font-size: .82rem; color: var(--text-dim); line-height: 1.6; margin-top: .75rem; }
+
+  /* Weight chips */
+  .weight-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: .4rem; margin-top: .75rem; }
+  .w-chip {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: .4rem;
+    padding: .4rem .5rem; text-align: center; font-size: .72rem;
   }
-  .card {
-    background: #13151f;
-    border: 1px solid #1e2235;
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 20px;
-  }
-  .card:last-child { margin-bottom: 0; }
-  .card h2 {
-    font-size: 14px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.08em; color: #64748b;
-    margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #1e2235;
-  }
-  .sidebar { display: flex; flex-direction: column; gap: 20px; }
-  #viz-main { width: 100%; height: 360px; }
-  #viz-weights { width: 100%; height: 220px; }
-  .slider-row {
-    display: flex; align-items: center; gap: 14px; margin: 10px 0 6px 0;
-    padding: 12px 16px; background: #0f1117; border-radius: 8px; border: 1px solid #1e2235;
-  }
-  .slider-row label { font-size: 0.88rem; color: #94a3b8; min-width: 60px; }
-  .slider-row input[type=range] {
-    flex: 1; -webkit-appearance: none; height: 4px; border-radius: 2px; background: #2d3561; outline: none;
-  }
-  .slider-row input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #e879f9; cursor: pointer;
-  }
-  .slider-row.nu input[type=range]::-webkit-slider-thumb { background: #fbbf24; }
-  .slider-row .val-display { font-size: 1rem; font-weight: 700; color: #e879f9; min-width: 40px; text-align: right; }
-  .slider-row.nu .val-display { color: #fbbf24; }
-  .quote-block {
-    background: #0f1117; border-left: 3px solid #e879f9; padding: 14px 16px;
-    border-radius: 0 8px 8px 0; font-style: italic; font-size: 0.92rem; line-height: 1.7; color: #94a3b8; margin-bottom: 14px;
-  }
-  .quote-block cite { display: block; margin-top: 8px; font-style: normal; font-size: 0.8rem; color: #475569; }
-  .guarantee-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .g-item { border-radius: 8px; padding: 10px 12px; font-size: 0.82rem; font-weight: 500; }
-  .g-yes  { background: #0d2b1a; border: 1px solid #166534; color: #4ade80; }
-  .g-no   { background: #2b0d0d; border: 1px solid #991b1b; color: #f87171; }
+  .w-chip .name { font-weight: 700; color: var(--text); font-size: .8rem; }
+  .w-chip .ols { color: var(--text-dim); }
+  .w-chip .wt { color: var(--purple); }
+
+  .g-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .g-item { border-radius: .4rem; padding: .5rem .7rem; font-size: .78rem; font-weight: 500; }
+  .g-yes { background: #0d2b1a; border: 1px solid #166534; color: #4ade80; }
+  .g-no  { background: #2b0d0d; border: 1px solid #991b1b; color: #f87171; }
   .g-cond { background: #1a1a0d; border: 1px solid #713f12; color: #fbbf24; }
-  .g-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.7; display: block; margin-bottom: 2px; }
-  .related-list { list-style: none; }
-  .related-list li { padding: 8px 0; border-bottom: 1px solid #1e2235; font-size: 0.88rem; color: #94a3b8; }
-  .related-list li:last-child { border-bottom: none; }
-  .related-list a { color: #e879f9; text-decoration: none; }
-  .related-list a:hover { text-decoration: underline; }
-  .weight-info {
-    margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px;
+  .g-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .04em; opacity: .7; display: block; margin-bottom: .15rem; }
+
+  .formula-ref {
+    background: var(--surface2); border-left: 3px solid var(--yellow);
+    padding: .6rem 1rem; border-radius: 0 .4rem .4rem 0;
+    font-size: .85rem; color: var(--yellow); line-height: 1.8;
   }
-  .weight-chip {
-    background: #0f1117; border: 1px solid #1e2235; border-radius: 8px;
-    padding: 8px 10px; font-size: 0.78rem; text-align: center;
-  }
-  .weight-chip .coef { font-weight: 700; color: #e2e8f0; font-size: 0.88rem; }
-  .weight-chip .label { color: #64748b; font-size: 0.72rem; margin-top: 2px; }
 </style>
 </head>
 <body>
+
 <header>
-  <div class="breadcrumb">ESL &rsaquo; Chapter 3 &rsaquo; Section 3.1 &rsaquo; comparison / selection</div>
-  <h1>Adaptive Lasso</h1>
-  <div class="meta">
-    <span>ID 170</span>
-    <span>Section 3.1</span>
-    <span>comparison / selection</span>
-    <span>Oracle Consistent + Convex</span>
+  <div class="header-meta">
+    <span class="badge id">ID 170</span>
+    <span class="badge">Section 3.8.5</span>
+    <span class="badge">Tier 4</span>
   </div>
+  <h1>Adaptive Lasso</h1>
 </header>
 
-<div class="formula-bar">
-  \( \min_\beta \left\{ \|\mathbf{y} - X\beta\|^2 + \lambda \sum_j w_j |\beta_j| \right\}, \quad w_j = \frac{1}{|\hat\beta_j^{\text{OLS}}|^\nu}, \quad \nu > 0 \)
-  &nbsp;&mdash;&nbsp; large OLS coef &Rightarrow; small weight &Rightarrow; less penalized
+<div class="container">
+
+  <!-- 1. Benefits & Tradeoffs -->
+  <div class="card">
+    <h2>What this fixes vs. vanilla Lasso</h2>
+    <div class="bt-grid">
+      <div class="bt-col benefits">
+        <h3>Benefits</h3>
+        <div class="bt-item">Oracle consistency while staying convex. Standard Lasso is convex but not oracle-consistent (it cannot simultaneously select the right variables and give unbiased estimates). SCAD achieves oracle consistency but is non-convex. Adaptive Lasso gets both: oracle consistency with a convex objective.</div>
+        <div class="bt-item">Simple idea: penalize each coefficient differently based on an initial estimate. Large OLS coefficients get small weights (lightly penalized, survive). Small OLS coefficients get large weights (heavily penalized, zeroed).</div>
+      </div>
+      <div class="bt-col tradeoffs">
+        <h3>Tradeoffs</h3>
+        <div class="bt-item">Depends on a good initial estimator. If OLS is unreliable (e.g., p > n where OLS does not exist), you need an alternative initial estimate (ridge, marginal regression).</div>
+        <div class="bt-item">Still biased in finite samples despite asymptotic oracle properties. The adaptive weights reduce but do not eliminate shrinkage bias.</div>
+        <div class="bt-item">Extra tuning parameter nu (weight exponent) on top of lambda.</div>
+      </div>
+    </div>
+    <blockquote>
+      "The adaptive lasso yields consistent estimates of the parameters while retaining the attractive convexity property."
+      <cite>-- ESL, Section 3.8.5</cite>
+    </blockquote>
+  </div>
+
+  <!-- 2. Visualization: per-coefficient weights + bars -->
+  <div class="card">
+    <h2>How adaptive weights change the penalty per coefficient</h2>
+    <p class="explain" style="margin-top:0; margin-bottom:.75rem;">
+      Standard Lasso penalizes every coefficient with the same weight. Adaptive Lasso sets \(w_j = 1/|\hat\beta_j^{OLS}|^\nu\): large OLS coefficients get tiny weights (barely penalized), small ones get huge weights (heavily penalized). Drag lambda and nu to see which coefficients survive.
+    </p>
+    <div class="ctrl-row">
+      <label>\(\lambda =\)</label>
+      <input type="range" id="lambda-slider" min="0" max="2.5" step="0.05" value="0.5">
+      <span class="ctrl-val" id="lambda-val">0.50</span>
+    </div>
+    <div class="ctrl-row nu">
+      <label>\(\nu =\)</label>
+      <input type="range" id="nu-slider" min="0.1" max="3" step="0.1" value="1.0">
+      <span class="ctrl-val" id="nu-val">1.0</span>
+    </div>
+    <div id="viz-plot"></div>
+    <div class="weight-row" id="weight-chips"></div>
+  </div>
+
+  <!-- 3. Guarantees -->
+  <div class="card">
+    <h2>Statistical guarantees</h2>
+    <div class="g-grid">
+      <div class="g-item g-yes"><span class="g-label">Oracle</span>Asymptotically identifies true support (Zou 2006).</div>
+      <div class="g-item g-yes"><span class="g-label">Convex</span>Weighted L1 is still convex.</div>
+      <div class="g-item g-yes"><span class="g-label">Sign-consistent</span>Under regularity conditions.</div>
+      <div class="g-item g-no"><span class="g-label">Unbiased</span>Still biased in finite samples.</div>
+    </div>
+  </div>
+
+  <!-- 4. Formula (DEAD LAST) -->
+  <div class="card">
+    <h2>Formula reference</h2>
+    <div class="formula-ref">
+      \( \min_\beta \left\{ \|y - X\beta\|^2 + \lambda \sum_j w_j |\beta_j| \right\}, \quad w_j = \frac{1}{|\hat\beta_j^{OLS}|^\nu}, \quad \nu > 0 \)
+    </div>
+    <p class="explain" style="margin-top:.6rem;">
+      Large OLS coefficient \(\Rightarrow\) small weight \(\Rightarrow\) less penalized (survives).
+      Small OLS coefficient \(\Rightarrow\) large weight \(\Rightarrow\) heavily penalized (zeroed).
+      This is the mechanism that gives oracle consistency while keeping the objective convex.
+    </p>
+  </div>
+
 </div>
 
-<main>
-  <div>
-    <div class="card">
-      <h2>Adaptive Weights &amp; Coefficient Paths</h2>
-      <div class="slider-row">
-        <label>\(\lambda =\)</label>
-        <input type="range" id="lambda-slider" min="0" max="2" step="0.05" value="0.5">
-        <span class="val-display" id="lambda-val">0.50</span>
-      </div>
-      <div class="slider-row nu">
-        <label>\(\nu =\)</label>
-        <input type="range" id="nu-slider" min="0.1" max="3" step="0.1" value="1.0">
-        <span class="val-display" id="nu-val">1.0</span>
-      </div>
-      <div id="viz-main"></div>
-    </div>
-
-    <div class="card">
-      <h2>Adaptive Weights Visualization</h2>
-      <div id="viz-weights"></div>
-      <div class="weight-info" id="weight-chips"></div>
-    </div>
-  </div>
-
-  <div class="sidebar">
-    <div class="card">
-      <h2>Book Quote</h2>
-      <div class="quote-block">
-        "The adaptive lasso yields consistent estimates of the parameters while retaining the attractive convexity property."
-        <cite>— ESL, Section 3.1</cite>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Guarantees</h2>
-      <div class="guarantee-grid">
-        <div class="g-item g-yes"><span class="g-label">Oracle</span>Yes — asymptotically identifies true support</div>
-        <div class="g-item g-yes"><span class="g-label">Convex</span>Yes — weighted L1 remains convex</div>
-        <div class="g-item g-yes"><span class="g-label">Sign-consistent</span>Yes — under regularity conditions</div>
-        <div class="g-item g-no"><span class="g-label">Unbiased</span>No — still biased in finite samples</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Key Insight</h2>
-      <div style="background:#0f1117; border-radius:8px; padding:14px; font-size:0.84rem; color:#94a3b8; line-height:1.7; border:1px solid #1e2235;">
-        Standard Lasso penalizes all coefficients equally. Adaptive Lasso gives <em>small penalties to large OLS coefficients</em> (they survive) and <em>large penalties to small OLS coefficients</em> (they are zeroed). This is the oracle property while maintaining a convex objective.
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Related Concepts</h2>
-      <ul class="related-list">
-        <li><a href="151-soft-thresholding.html">Soft Thresholding</a> — standard Lasso solution (ν=0)</li>
-        <li><a href="169-scad-penalty.html">SCAD Penalty</a> — non-convex oracle alternative</li>
-        <li><a href="168-relaxed-lasso.html">Relaxed Lasso</a> — two-stage oracle approach</li>
-        <li><a href="150-basis-pursuit.html">Basis Pursuit / Lasso</a> — uniform weight special case</li>
-      </ul>
-    </div>
-  </div>
-</main>
-
 <script>
-// Predictors: 6 variables with "true" OLS coefficients
+const dark = { paper_bgcolor:'#161b22', plot_bgcolor:'#0d1117', font:{color:'#e6edf3',size:11} };
+const ax = { color:'#8b949e', gridcolor:'#21262d', zerolinecolor:'#30363d' };
+const pcfg = { responsive:true, displayModeBar:false };
+
 const olsCoefs = [2.5, 0.15, -1.8, 0.08, 1.2, -0.05];
-const names = ['X1', 'X2', 'X3', 'X4', 'X5', 'X6'];
+const names = ['X1','X2','X3','X4','X5','X6'];
 
-function computeWeights(olsCoefs, nu) {
-  return olsCoefs.map(c => 1 / Math.pow(Math.abs(c) + 1e-8, nu));
-}
+function weights(nu) { return olsCoefs.map(c => 1/Math.pow(Math.abs(c)+1e-8, nu)); }
+function adaptLasso(c, w, lam) { return Math.sign(c)*Math.max(Math.abs(c)-lam*w, 0); }
+function stdLasso(c, lam) { return Math.sign(c)*Math.max(Math.abs(c)-lam, 0); }
 
-function adaptiveLasso(olsCoef, weight, lam) {
-  // Solution: sign(olsCoef) * max(|olsCoef| - lam*weight, 0)
-  return Math.sign(olsCoef) * Math.max(Math.abs(olsCoef) - lam * weight, 0);
-}
+let lam=0.5, nu=1.0;
 
-function standardLasso(olsCoef, lam) {
-  return Math.sign(olsCoef) * Math.max(Math.abs(olsCoef) - lam, 0);
-}
-
-function buildMainTraces(lam, nu) {
-  const weights = computeWeights(olsCoefs, nu);
-  const adaptive = olsCoefs.map((c, i) => adaptiveLasso(c, weights[i], lam));
-  const standard = olsCoefs.map(c => standardLasso(c, lam));
-
+function buildTraces() {
+  const w = weights(nu);
+  const adap = olsCoefs.map((c,i) => adaptLasso(c,w[i],lam));
+  const std = olsCoefs.map(c => stdLasso(c,lam));
   return [
     {
-      x: names, y: olsCoefs.map(Math.abs),
-      type: 'bar', name: 'OLS |coef|',
-      marker: { color: 'rgba(255,255,255,0.08)', line: { color: '#475569', width: 1 } }
+      x:names, y:olsCoefs.map(Math.abs), type:'bar', name:'OLS |coef|',
+      marker:{ color:'rgba(255,255,255,0.06)', line:{color:'#30363d',width:1} }
     },
     {
-      x: names, y: adaptive.map(Math.abs),
-      type: 'bar', name: 'Adaptive Lasso',
-      marker: {
-        color: adaptive.map(c => Math.abs(c) > 1e-9 ? '#e879f9' : '#2d3561'),
-        opacity: 0.85
-      }
+      x:names, y:adap.map(Math.abs), type:'bar', name:'Adaptive Lasso',
+      marker:{ color:adap.map(c => Math.abs(c)>1e-9?'#bc8cff':'#21262d'), opacity:0.85 }
     },
     {
-      x: names, y: standard.map(Math.abs),
-      type: 'bar', name: 'Standard Lasso',
-      marker: {
-        color: standard.map(c => Math.abs(c) > 1e-9 ? '#34d399' : '#2d3561'),
-        opacity: 0.7
-      }
+      x:names, y:std.map(Math.abs), type:'bar', name:'Standard Lasso',
+      marker:{ color:std.map(c => Math.abs(c)>1e-9?'#3fb950':'#21262d'), opacity:0.7 }
     }
   ];
 }
 
-function buildWeightTraces(nu) {
-  const weights = computeWeights(olsCoefs, nu);
-  const maxW = Math.max(...weights);
-  return [{
-    x: names, y: weights,
-    type: 'bar', name: `w_j = 1/|β̂_j|^${nu.toFixed(1)}`,
-    marker: {
-      color: weights.map(w => {
-        const t = w / maxW;
-        const r = Math.round(232 * t + 30 * (1-t));
-        const g = Math.round(121 * t + 150 * (1-t));
-        const b = Math.round(249 * t + 219 * (1-t));
-        return `rgb(${r},${g},${b})`;
-      }),
-      opacity: 0.85
-    },
-    text: weights.map(w => w.toFixed(2)),
-    textposition: 'outside',
-    textfont: { color: '#94a3b8', size: 10 }
-  }];
+function updateChips() {
+  const w = weights(nu);
+  document.getElementById('weight-chips').innerHTML = olsCoefs.map((c,i) =>
+    '<div class="w-chip"><div class="name">'+names[i]+'</div>' +
+    '<div class="ols">OLS: '+c.toFixed(2)+'</div>' +
+    '<div class="wt">w: '+w[i].toFixed(2)+'</div></div>'
+  ).join('');
 }
 
-function updateWeightChips(nu) {
-  const weights = computeWeights(olsCoefs, nu);
-  const el = document.getElementById('weight-chips');
-  el.innerHTML = olsCoefs.map((c, i) => `
-    <div class="weight-chip">
-      <div class="coef">${names[i]}</div>
-      <div style="color:#94a3b8; font-size:0.72rem;">β̂_OLS: ${c.toFixed(2)}</div>
-      <div style="color:#e879f9; font-size:0.72rem; margin-top:2px;">w: ${weights[i].toFixed(3)}</div>
-    </div>
-  `).join('');
-}
-
-const mainLayout = {
-  paper_bgcolor: '#0f1117', plot_bgcolor: '#0f1117',
-  font: { color: '#94a3b8', family: 'Segoe UI, system-ui, sans-serif', size: 12 },
-  margin: { t: 20, b: 50, l: 55, r: 20 },
-  barmode: 'group',
-  xaxis: { title: 'Predictor', gridcolor: '#1e2235', zerolinecolor: '#2d3561' },
-  yaxis: { title: '|Coefficient|', gridcolor: '#1e2235', zerolinecolor: '#2d3561' },
-  legend: { orientation: 'h', y: -0.25, font: { size: 11 } }
+const layout = {
+  ...dark, barmode:'group',
+  margin:{t:15,b:50,l:50,r:15},
+  xaxis:{...ax,title:{text:'Predictor',font:{size:11}}},
+  yaxis:{...ax,title:{text:'|Coefficient|',font:{size:11}}},
+  legend:{orientation:'h',y:-0.2,font:{size:10},bgcolor:'#161b22',bordercolor:'#30363d',borderwidth:1}
 };
 
-const weightLayout = {
-  paper_bgcolor: '#0f1117', plot_bgcolor: '#0f1117',
-  font: { color: '#94a3b8', family: 'Segoe UI, system-ui, sans-serif', size: 12 },
-  margin: { t: 20, b: 40, l: 55, r: 20 },
-  xaxis: { title: 'Predictor', gridcolor: '#1e2235', zerolinecolor: '#2d3561' },
-  yaxis: { title: 'Adaptive weight w_j', gridcolor: '#1e2235', zerolinecolor: '#2d3561' },
-  showlegend: false,
-  annotations: [{
-    text: 'Large w_j = heavy penalty (small OLS coef)',
-    x: 0.5, y: 1.05, xref: 'paper', yref: 'paper',
-    showarrow: false, font: { color: '#94a3b8', size: 10 }
-  }]
-};
-
-let lam = 0.5, nu = 1.0;
-Plotly.newPlot('viz-main', buildMainTraces(lam, nu), mainLayout, { responsive: true, displayModeBar: false });
-Plotly.newPlot('viz-weights', buildWeightTraces(nu), weightLayout, { responsive: true, displayModeBar: false });
-updateWeightChips(nu);
+Plotly.newPlot('viz-plot', buildTraces(), layout, pcfg);
+updateChips();
 
 function update() {
-  Plotly.react('viz-main', buildMainTraces(lam, nu), mainLayout);
-  Plotly.react('viz-weights', buildWeightTraces(nu), weightLayout);
-  updateWeightChips(nu);
+  Plotly.react('viz-plot', buildTraces(), layout);
+  updateChips();
 }
 
 document.getElementById('lambda-slider').addEventListener('input', function() {

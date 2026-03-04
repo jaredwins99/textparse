@@ -104,6 +104,7 @@ These were learned from user corrections and must not be violated:
 - **Formulas go DEAD LAST** as reference material. Starting with the formula is the wrong instinct. Kill it.
 - Order visuals by what builds intuition fastest, not by textbook section order or what's easiest to code
 - Don't build trendy-looking dashboards when a 3D rotatable surface is what actually explains it. Build the thing that teaches, not the thing that looks like other educational content.
+- **Animation vs Interactive**: Ask "what is this concept in English?" Process/transformation (projection = shadow falling, orthogonalization = straightening) → **animation**. Parameter exploration (drag λ, see what happens) → **interactive**. Comparison → **side-by-side static**. Don't default to interactive because it's trendy. See `plans/lessons-and-standards.md` §5 for the full decision tree.
 - Use the **textbook's own words** — direct quotes with section citations. Don't paraphrase when the original is clearer.
 
 **Citations — accuracy is non-negotiable:**

@@ -167,6 +167,48 @@ Ridge regression example (final ordering after user critique):
 ### Don't follow trends — build the thing that explains it
 The instinct is to make trendy-looking dashboards with fancy 2D charts because that's what most educational content looks like. But if a 3D rotatable loss surface is what actually makes the concept click, build that. The user specifically pushed for the 3D loss landscape approach because it was genuinely more intuitive than the abstract alternatives. Don't shy away from interactive 3D if it earns its complexity.
 
+### Animation vs Interactive vs Static — concept classification tree
+
+**Don't default to "interactive" for everything.** The format should match the nature of the concept. Think about what the concept IS in plain English, not in math. Forget what precedent exists for how these things are usually visualized — most educational content defaults to interactives because they're trendy, not because they teach better.
+
+**Decision tree:**
+
+**1. Is the concept a PROCESS or TRANSFORMATION?** → **Animation (manim)**
+- The concept is something *happening* — a verb, not a noun
+- The insight comes from watching it unfold in sequence
+- Examples:
+  - **Orthogonal projection** — "projection" in English means casting a shadow. A shadow falls. You watch y drop onto the column space. Animation.
+  - **Gram-Schmidt orthogonalization** — a step-by-step process of making vectors perpendicular. Each step is sequential. Animation.
+  - **Forward stagewise regression** — coefficients creep incrementally. The path IS the concept. Animation.
+  - **LAR tracing the solution path** — you watch the path being drawn. Animation.
+  - **Successive orthogonalization** — peeling off projections one by one. Animation.
+
+**2. Does the concept have a PARAMETER the student needs to explore?** → **Interactive (Plotly/sliders)**
+- There's a knob (λ, k, threshold) and the insight is in the *relationship* between that knob and the result
+- The student needs to ask "what if?" and see the answer immediately
+- Examples:
+  - **Ridge regression** — drag λ, see coefficients shrink, see the loss surface reshape. Interactive.
+  - **Lasso vs Ridge contour comparison** — expand contours over and over for both. Interactive with slider or animation with both running simultaneously.
+  - **Bias-variance tradeoff** — move model complexity, see bias go down and variance go up. Interactive.
+  - **Effective degrees of freedom** — slide λ, see df change. Interactive.
+
+**3. Is the concept a COMPARISON or STRUCTURAL RELATIONSHIP?** → **Side-by-side static or annotated diagram**
+- The insight is in seeing two things next to each other
+- Examples:
+  - **Solution path comparison** (ESL page 83) — just the two images with arrows showing direction of parameterization. Static.
+  - **Diamond vs circle constraint geometry** — ESL Fig 3.11. Could be static annotated diagram or very simple interactive.
+  - **Forward vs backward stepwise** — comparison table or side-by-side path traces.
+
+**4. Is the concept a DEFINITION or PROPERTY?** → **Annotated example or no viz at all**
+- Some concepts are best explained with words, a concrete example, and maybe a table
+- Don't force a visualization where a clear sentence does the job better
+- Examples:
+  - **Design matrix** — show an actual data table becoming the X matrix
+  - **Collinearity** — show a concrete example of redundant features
+  - **Gauss-Markov theorem** — the proof structure matters more than a picture
+
+**The key principle:** Ask "what is this concept in ENGLISH, to a human?" not "what does the math notation look like?" Projection = shadow falling. Shrinkage = squeezing. Orthogonalization = straightening. Path = tracing a route. The English word tells you the format.
+
 ### Benefits/tradeoffs are NOT optional
 Every concept page must lead with a Benefits & Tradeoffs card. This is the answer to "why should I care about this method?" Format:
 - **Benefits** (green dots): What this method gives you, with ESL quotes
