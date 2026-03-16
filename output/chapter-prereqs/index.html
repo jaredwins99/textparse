@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESL Chapter Prerequisites</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #toolbar {
+            height: 56px;
+            background: #16213e;
+            border-bottom: 1px solid #0f3460;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 0 16px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        #toolbar h1 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-right: auto;
+        }
+
+        #edge-filters {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        #edge-filters label {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        #edge-filters input[type="checkbox"] {
+            cursor: pointer;
+        }
+
+        #search-input {
+            padding: 6px 12px;
+            background: #0f3460;
+            border: 1px solid #1f4068;
+            border-radius: 4px;
+            color: #e0e0e0;
+            font-size: 13px;
+            width: 200px;
+        }
+
+        #search-input::placeholder {
+            color: #888;
+        }
+
+        #link-graph-view {
+            padding: 6px 12px;
+            background: #0f3460;
+            color: #64B5CD;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+            border: 1px solid #1f4068;
+            transition: background 0.2s;
+        }
+
+        #link-graph-view:hover {
+            background: #1f4068;
+        }
+
+        #main-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        #canvas-scroll {
+            flex: 1;
+            overflow: auto;
+            position: relative;
+            background: #1a1a2e;
+        }
+
+        #edge-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #chapters-row {
+            display: flex;
+            gap: 80px;
+            padding: 24px;
+            position: relative;
+            min-height: 100%;
+        }
+
+        .chapter-column {
+            width: 200px;
+            flex-shrink: 0;
+            background: rgba(15, 52, 96, 0.3);
+            border: 1px solid #0f3460;
+            border-radius: 8px;
+            padding: 8px;
+            transition: background 0.2s;
+        }
+
+        .chapter-column.has-prereqs {
+            background: rgba(100, 181, 205, 0.1);
+        }
+
+        .chapter-header {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px;
+            border-bottom: 1px solid #0f3460;
+            margin-bottom: 8px;
+            position: sticky;
+            top: 0;
+            background: rgba(22, 33, 62, 0.95);
+            z-index: 2;
+            border-radius: 4px;
+        }
+
+        .chapter-column.has-prereqs .chapter-header {
+            background: rgba(100, 181, 205, 0.2);
+        }
+
+        .section-header {
+            font-size: 11px;
+            color: #888;
+            padding: 4px 8px;
+            margin-top: 8px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .concept-node {
+            padding: 6px 8px;
+            margin: 2px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: opacity 0.2s, background 0.2s, border-left-color 0.2s;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .concept-node:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .concept-node.dimmed {
+            opacity: 0.15;
+        }
+
+        .concept-node.highlighted {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-left-width: 4px;
+            font-weight: 500;
+        }
+
+        .concept-node.selected {
+            border-left-color: #FFD700 !important;
+            border-left-width: 4px;
+            background: rgba(255, 215, 0, 0.15);
+            font-weight: 600;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+        }
+
+        .concept-node.search-match {
+            background: rgba(100, 181, 205, 0.2);
+            font-weight: 600;
+        }
+
+        #sidebar {
+            width: 360px;
+            flex-shrink: 0;
+            background: #16213e;
+            border-left: 1px solid #0f3460;
+            overflow-y: auto;
+            padding: 0;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        #sidebar.open {
+            transform: translateX(0);
+        }
+
+        #concept-detail {
+            padding: 20px;
+        }
+
+        #concept-detail h2 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .section-info {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 12px;
+        }
+
+        .description {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #ccc;
+            margin-bottom: 20px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .prereq-section {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #0f3460;
+        }
+
+        .prereq-section h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #64B5CD;
+        }
+
+        .chapter-group {
+            margin-bottom: 16px;
+        }
+
+        .chapter-group h4 {
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            margin-bottom: 6px;
+            padding-left: 4px;
+        }
+
+        .prereq-item {
+            padding: 6px 10px;
+            margin: 2px 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+            font-size: 12px;
+            border-left: 2px solid #0f3460;
+        }
+
+        .prereq-item.clickable {
+            cursor: pointer;
+            transition: background 0.2s, border-left-color 0.2s;
+        }
+
+        .prereq-item.clickable:hover {
+            background: rgba(100, 181, 205, 0.2);
+            border-left-color: #64B5CD;
+        }
+
+        .ch-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            background: rgba(100, 181, 205, 0.2);
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #64B5CD;
+            margin-right: 4px;
+        }
+
+        .no-prereqs {
+            font-size: 13px;
+            color: #888;
+            font-style: italic;
+            margin-top: 12px;
+        }
+
+        #close-sidebar {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #0f3460;
+            color: #e0e0e0;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        #close-sidebar:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="toolbar">
+        <h1>ESL Chapter Prerequisites</h1>
+        <div id="edge-filters"></div>
+        <input id="search-input" type="text" placeholder="Search concepts...">
+        <a href="../knowledge-graph/index.html" id="link-graph-view">Open Graph View</a>
+    </div>
+
+    <div id="main-container">
+        <div id="canvas-scroll">
+            <svg id="edge-layer"></svg>
+            <div id="chapters-row"></div>
+        </div>
+        <div id="sidebar">
+            <button id="close-sidebar">Close</button>
+            <div id="concept-detail"></div>
+        </div>
+    </div>
+
+    <script src="../knowledge-graph/graph-data.js"></script>
+    <script>
+        (function() {
+            "use strict";
+
+            // Guard against missing data
+            if (typeof GRAPH_DATA === 'undefined') {
+                document.getElementById('chapters-row').innerHTML =
+                    '<p style="color:#C44E52;padding:40px;font-size:14px;">Error: graph-data.js failed to load. ' +
+                    'Serve this page via a local HTTP server (e.g. python3 -m http.server).</p>';
+                return;
+            }
+
+            // Color constants
+            var CATEGORY_COLORS = {
+                model: '#4C72B0',
+                estimation: '#DD8452',
+                validation: '#55A868',
+                guarantees: '#C44E52',
+                multi_model: '#8172B2',
+                improvements: '#64B5CD',
+                other: '#999999'
+            };
+
+            var EDGE_COLORS = {
+                uses: '#666666',
+                prerequisite: '#C44E52',
+                generalizes: '#4C72B0',
+                special_case_of: '#55A868',
+                example_of: '#CCB974',
+                contrasts_with: '#8172B2'
+            };
+
+            // Data processing
+            var nodeById = {};
+            var nodesByChapter = {};
+            var edgeIndex = {
+                outgoing: {},
+                incoming: {}
+            };
+
+            GRAPH_DATA.nodes.forEach(function(n) {
+                var d = n.data;
+                nodeById[d.id] = d;
+                var ch = d.chapter || "?";
+                if (!nodesByChapter[ch]) nodesByChapter[ch] = [];
+                nodesByChapter[ch].push(d);
+            });
+
+            GRAPH_DATA.edges.forEach(function(e) {
+                var d = e.data;
+                if (!edgeIndex.outgoing[d.source]) edgeIndex.outgoing[d.source] = [];
+                edgeIndex.outgoing[d.source].push(d);
+                if (!edgeIndex.incoming[d.target]) edgeIndex.incoming[d.target] = [];
+                edgeIndex.incoming[d.target].push(d);
+            });
+
+            // Sort chapters numerically
+            var chapters = Object.keys(nodesByChapter).sort(function(a, b) {
+                if (a === "?") return 1;
+                if (b === "?") return -1;
+                return parseInt(a) - parseInt(b);
+            });
+
+            // Sort concepts within each chapter by section number
+            chapters.forEach(function(ch) {
+                nodesByChapter[ch].sort(function(a, b) {
+                    var secA = a.section || "";
+                    var secB = b.section || "";
+                    var cmp = secA.localeCompare(secB, undefined, {numeric: true});
+                    if (cmp !== 0) return cmp;
+                    return a.name.localeCompare(b.name);
+                });
+            });
+
+            // DOM generation
+            var chaptersRow = document.getElementById('chapters-row');
+            var nodeElements = {};
+
+            chapters.forEach(function(ch) {
+                var col = document.createElement('div');
+                col.className = 'chapter-column';
+                col.dataset.chapter = ch;
+
+                var header = document.createElement('div');
+                header.className = 'chapter-header';
+                header.textContent = 'Chapter ' + ch + ' (' + nodesByChapter[ch].length + ')';
+                col.appendChild(header);
+
+                // Group by section
+                var currentSection = null;
+                nodesByChapter[ch].forEach(function(concept) {
+                    var section = concept.section ? concept.section.split(/\s+/).slice(0, 2).join(' ') : '';
+                    if (section !== currentSection) {
+                        currentSection = section;
+                        if (section) {
+                            var sh = document.createElement('div');
+                            sh.className = 'section-header';
+                            sh.textContent = concept.section;
+                            sh.title = concept.section;
+                            col.appendChild(sh);
+                        }
+                    }
+
+                    var node = document.createElement('div');
+                    node.className = 'concept-node';
+                    node.dataset.id = concept.id;
+                    node.style.borderLeftColor = CATEGORY_COLORS[concept.category] || '#999';
+                    node.textContent = concept.name;
+                    node.title = concept.name + (concept.description ? '\n' + concept.description.substring(0, 200) : '');
+                    col.appendChild(node);
+
+                    nodeElements[concept.id] = node;
+                });
+
+                chaptersRow.appendChild(col);
+            });
+
+            // SVG edge layer
+            var svgLayer = document.getElementById('edge-layer');
+
+            function resizeSvg() {
+                var scrollWidth = chaptersRow.scrollWidth;
+                var scrollHeight = chaptersRow.scrollHeight;
+                svgLayer.setAttribute('width', scrollWidth);
+                svgLayer.setAttribute('height', scrollHeight);
+            }
+
+            function getNodeCenter(id) {
+                var el = nodeElements[id];
+                if (!el) return null;
+                // getBoundingClientRect gives viewport-relative coords.
+                // The SVG is absolutely positioned at (0,0) of chaptersRow,
+                // which itself is inside the scrollable #canvas-scroll.
+                // We need coordinates relative to the top-left of chaptersRow
+                // (i.e. the SVG coordinate space), so we add the scroll offset.
+                var canvasScroll = document.getElementById('canvas-scroll');
+                var scrollLeft = canvasScroll.scrollLeft;
+                var scrollTop = canvasScroll.scrollTop;
+                var rowRect = chaptersRow.getBoundingClientRect();
+                var elRect = el.getBoundingClientRect();
+                var relLeft  = elRect.left - rowRect.left + scrollLeft;
+                var relTop   = elRect.top  - rowRect.top  + scrollTop;
+                return {
+                    x:     relLeft + elRect.width / 2,
+                    y:     relTop  + elRect.height / 2,
+                    left:  relLeft,
+                    right: relLeft + elRect.width,
+                    width: elRect.width
+                };
+            }
+
+            function drawEdge(sourceId, targetId, relType, cssClass) {
+                var from = getNodeCenter(sourceId);
+                var to = getNodeCenter(targetId);
+                if (!from || !to) return null;
+
+                var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+                // Source exits from right, target enters from left
+                var x1 = from.right;
+                var y1 = from.y;
+                var x2 = to.left;
+                var y2 = to.y;
+
+                // Bezier control points: horizontal offset proportional to distance
+                var dx = Math.abs(x2 - x1);
+                var cpOffset = Math.max(40, dx * 0.3);
+
+                var d = 'M ' + x1 + ' ' + y1
+                      + ' C ' + (x1 + cpOffset) + ' ' + y1
+                      + ', ' + (x2 - cpOffset) + ' ' + y2
+                      + ', ' + x2 + ' ' + y2;
+
+                path.setAttribute('d', d);
+                path.setAttribute('fill', 'none');
+                path.setAttribute('stroke', EDGE_COLORS[relType] || '#666');
+                path.setAttribute('stroke-width', '1.5');
+                path.setAttribute('opacity', '0.6');
+                if (cssClass) path.setAttribute('class', cssClass);
+
+                // Dashed for certain types
+                if (relType === 'generalizes') path.setAttribute('stroke-dasharray', '6,3');
+                if (relType === 'contrasts_with') {
+                    path.setAttribute('stroke-dasharray', '3,3');
+                    path.setAttribute('opacity', '0.3');
+                }
+
+                svgLayer.appendChild(path);
+                return path;
+            }
+
+            function clearEdges() {
+                while (svgLayer.firstChild) svgLayer.removeChild(svgLayer.firstChild);
+            }
+
+            // Prerequisite trace (BFS)
+            function tracePrerequisites(conceptId, allowedTypes) {
+                var visited = {};
+                var queue = [conceptId];
+                visited[conceptId] = true;
+                var result = {
+                    nodes: [],
+                    edges: [],
+                    byChapter: {},
+                    frontier: []
+                };
+
+                var startChapter = nodeById[conceptId] ? nodeById[conceptId].chapter : null;
+
+                while (queue.length > 0) {
+                    var current = queue.shift();
+                    var incoming = edgeIndex.incoming[current] || [];
+
+                    incoming.forEach(function(edge) {
+                        if (!allowedTypes[edge.relationship_type]) return;
+                        var sourceId = edge.source;
+                        if (visited[sourceId]) return;
+
+                        visited[sourceId] = true;
+                        result.nodes.push(sourceId);
+                        result.edges.push({
+                            source: sourceId,
+                            target: current,
+                            type: edge.relationship_type
+                        });
+
+                        var sourceNode = nodeById[sourceId];
+                        if (sourceNode) {
+                            var ch = sourceNode.chapter;
+                            if (!result.byChapter[ch]) result.byChapter[ch] = [];
+                            result.byChapter[ch].push(sourceId);
+                        }
+
+                        queue.push(sourceId);
+                    });
+                }
+
+                // Compute frontier: nodes in result that have no incoming
+                // edges (within the result set) from the allowed types
+                var resultSet = {};
+                result.nodes.forEach(function(id) { resultSet[id] = true; });
+
+                result.nodes.forEach(function(id) {
+                    var incoming = edgeIndex.incoming[id] || [];
+                    var hasPrereqInSet = incoming.some(function(edge) {
+                        return allowedTypes[edge.relationship_type] && resultSet[edge.source];
+                    });
+                    if (!hasPrereqInSet) {
+                        result.frontier.push(id);
+                    }
+                });
+
+                return result;
+            }
+
+            // Click handler
+            chaptersRow.addEventListener('click', function(evt) {
+                var target = evt.target.closest('.concept-node');
+                if (!target) {
+                    clearSelection();
+                    return;
+                }
+                selectConcept(target.dataset.id);
+            });
+
+            function clearSelection() {
+                Object.values(nodeElements).forEach(function(el) {
+                    el.classList.remove('dimmed', 'highlighted', 'selected');
+                });
+                document.querySelectorAll('.chapter-column').forEach(function(col) {
+                    col.classList.remove('has-prereqs');
+                });
+                clearEdges();
+                document.getElementById('sidebar').classList.remove('open');
+            }
+
+            function selectConcept(conceptId) {
+                clearEdges();
+
+                // Get active relationship types from filter checkboxes
+                var allowedTypes = getActiveEdgeTypes();
+
+                var trace = tracePrerequisites(conceptId, allowedTypes);
+
+                // Dim everything, highlight trace
+                Object.values(nodeElements).forEach(function(el) {
+                    el.classList.add('dimmed');
+                    el.classList.remove('highlighted', 'selected');
+                });
+
+                // Highlight the selected node
+                if (nodeElements[conceptId]) {
+                    nodeElements[conceptId].classList.remove('dimmed');
+                    nodeElements[conceptId].classList.add('selected');
+                }
+
+                // Highlight all prereqs
+                trace.nodes.forEach(function(id) {
+                    if (nodeElements[id]) {
+                        nodeElements[id].classList.remove('dimmed');
+                        nodeElements[id].classList.add('highlighted');
+                    }
+                });
+
+                // Highlight chapter columns that have prereqs
+                Object.keys(trace.byChapter).forEach(function(ch) {
+                    var col = document.querySelector('.chapter-column[data-chapter="' + ch + '"]');
+                    if (col) col.classList.add('has-prereqs');
+                });
+
+                // Draw edges
+                resizeSvg();
+                trace.edges.forEach(function(edge) {
+                    drawEdge(edge.source, edge.target, edge.type, 'trace-edge');
+                });
+
+                // Populate sidebar
+                populateSidebar(conceptId, trace);
+                document.getElementById('sidebar').classList.add('open');
+
+                // Scroll the selected node into view
+                if (nodeElements[conceptId]) {
+                    nodeElements[conceptId].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+                }
+            }
+
+            // Sidebar
+            function populateSidebar(conceptId, trace) {
+                var concept = nodeById[conceptId];
+                var detail = document.getElementById('concept-detail');
+
+                var html = '<h2>' + escHtml(concept.name) + '</h2>';
+                html += '<span class="category-badge" style="background:'
+                     + (CATEGORY_COLORS[concept.category] || '#999') + '">'
+                     + escHtml(concept.category) + '</span>';
+                html += '<p class="section-info">' + escHtml(concept.section || '') + '</p>';
+                if (concept.description) {
+                    html += '<p class="description">' + escHtml(concept.description) + '</p>';
+                }
+                if (concept.quote) {
+                    html += '<blockquote style="border-left: 3px solid #64B5CD; padding: 8px 12px; margin: 12px 0; font-size: 13px; font-style: italic; color: #aaa;">"'
+                         + escHtml(concept.quote) + '"</blockquote>';
+                }
+                if (concept.formula) {
+                    html += '<div class="formula" id="formula-render" style="margin: 12px 0; padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 4px;"></div>';
+                }
+
+                // Core prerequisites (frontier)
+                if (trace.frontier.length > 0) {
+                    html += '<div class="prereq-section">';
+                    html += '<h3>Core prerequisites (start here)</h3>';
+                    trace.frontier.sort(function(a, b) {
+                        var chA = nodeById[a].chapter || '0';
+                        var chB = nodeById[b].chapter || '0';
+                        return chA.localeCompare(chB, undefined, {numeric: true});
+                    });
+                    trace.frontier.forEach(function(id) {
+                        var n = nodeById[id];
+                        html += '<div class="prereq-item clickable" data-id="' + id + '">'
+                             + '<span class="ch-badge">Ch ' + n.chapter + '</span> '
+                             + escHtml(n.name) + '</div>';
+                    });
+                    html += '</div>';
+                }
+
+                // Full chain by chapter
+                var chapKeys = Object.keys(trace.byChapter).sort(function(a, b) {
+                    if (a === "?") return 1;
+                    if (b === "?") return -1;
+                    return parseInt(a) - parseInt(b);
+                });
+
+                if (chapKeys.length > 0) {
+                    html += '<div class="prereq-section">';
+                    html += '<h3>Full dependency chain (' + trace.nodes.length
+                         + ' concepts across ' + chapKeys.length + ' chapter' + (chapKeys.length === 1 ? '' : 's') + ')</h3>';
+
+                    chapKeys.forEach(function(ch) {
+                        html += '<div class="chapter-group">';
+                        html += '<h4>Chapter ' + ch + ' (' + trace.byChapter[ch].length + ')</h4>';
+                        trace.byChapter[ch].forEach(function(id) {
+                            var n = nodeById[id];
+                            html += '<div class="prereq-item clickable" data-id="' + id + '">'
+                                 + escHtml(n.name) + '</div>';
+                        });
+                        html += '</div>';
+                    });
+                    html += '</div>';
+                } else {
+                    html += '<p class="no-prereqs">No prerequisites found with current filters.</p>';
+                }
+
+                detail.innerHTML = html;
+
+                if (concept.formula) {
+                    var formulaEl = document.getElementById('formula-render');
+                    if (formulaEl) {
+                        try { katex.render(concept.formula, formulaEl, { throwOnError: false, displayMode: true }); }
+                        catch(e) { formulaEl.textContent = concept.formula; }
+                    }
+                }
+
+                // Attach click handlers to prerequisite items
+                detail.querySelectorAll('.clickable').forEach(function(el) {
+                    el.addEventListener('click', function() {
+                        selectConcept(this.dataset.id);
+                    });
+                });
+            }
+
+            function escHtml(s) {
+                if (!s) return '';
+                var div = document.createElement('div');
+                div.textContent = s;
+                return div.innerHTML;
+            }
+
+            // Filter controls
+            var EDGE_TYPES = ['prerequisite', 'uses', 'special_case_of', 'generalizes', 'contrasts_with', 'example_of'];
+            var DEFAULT_ON = { prerequisite: true, uses: true, special_case_of: true, generalizes: true, contrasts_with: true, example_of: true };
+
+            function buildFilterControls() {
+                var container = document.getElementById('edge-filters');
+                EDGE_TYPES.forEach(function(type) {
+                    var label = document.createElement('label');
+                    var cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.value = type;
+                    cb.checked = !!DEFAULT_ON[type];
+                    cb.addEventListener('change', function() {
+                        // If a concept is selected, re-run the trace with new filters
+                        var selected = document.querySelector('.concept-node.selected');
+                        if (selected) {
+                            selectConcept(selected.dataset.id);
+                        }
+                    });
+                    label.appendChild(cb);
+                    label.appendChild(document.createTextNode(' ' + type.replace(/_/g, ' ')));
+                    container.appendChild(label);
+                });
+            }
+
+            function getActiveEdgeTypes() {
+                var types = {};
+                document.querySelectorAll('#edge-filters input:checked').forEach(function(cb) {
+                    types[cb.value] = true;
+                });
+                return types;
+            }
+
+            buildFilterControls();
+
+            // Search
+            var searchInput = document.getElementById('search-input');
+            var searchTimeout;
+
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function() {
+                    var query = searchInput.value.trim().toLowerCase();
+
+                    // Remove previous search highlights
+                    Object.values(nodeElements).forEach(function(el) {
+                        el.classList.remove('search-match', 'dimmed');
+                    });
+
+                    if (query.length < 2) return;
+
+                    var hasMatch = false;
+                    Object.keys(nodeElements).forEach(function(id) {
+                        var name = nodeById[id].name.toLowerCase();
+                        if (name.includes(query)) {
+                            nodeElements[id].classList.add('search-match');
+                            hasMatch = true;
+                        } else {
+                            nodeElements[id].classList.add('dimmed');
+                        }
+                    });
+
+                    // Scroll first match into view
+                    if (hasMatch) {
+                        var first = document.querySelector('.concept-node.search-match');
+                        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+                    }
+                }, 300);
+            });
+
+            // Close sidebar button
+            document.getElementById('close-sidebar').addEventListener('click', function() {
+                clearSelection();
+            });
+
+            // Initial render: resize SVG after layout paint
+            requestAnimationFrame(function() { resizeSvg(); });
+            window.addEventListener('resize', resizeSvg);
+
+        })();
+    </script>
+</body>
+</html>

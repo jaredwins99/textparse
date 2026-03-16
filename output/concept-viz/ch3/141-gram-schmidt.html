@@ -4,90 +4,124 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gram-Schmidt Orthogonalization — ESL Ch. 3.2.3</title>
-  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg:       #0d1117;
       --surface:  #161b22;
+      --surface2: #1c2129;
       --border:   #30363d;
       --accent:   #58a6ff;
       --accent2:  #f78166;
       --accent3:  #3fb950;
       --accent4:  #d2a8ff;
+      --gold:     #d29922;
       --text:     #e6edf3;
       --muted:    #8b949e;
       --quote-bg: #1c2128;
     }
     body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
 
-    header {
+    /* Header */
+    .page-header {
       padding: 2rem 2.5rem 1.5rem;
       border-bottom: 1px solid var(--border);
       background: var(--surface);
     }
-    .header-meta { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: .75rem; }
+    .breadcrumb { font-size: .78rem; color: var(--muted); margin-bottom: .5rem; }
+    .breadcrumb span { color: var(--accent); font-weight: 600; }
+    .concept-title { font-size: 1.75rem; font-weight: 700; color: var(--text); margin-bottom: .5rem; }
+    .header-meta { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; margin-bottom: .5rem; }
     .badge {
       font-size: .7rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
-      padding: .25rem .6rem; border-radius: 2rem; background: #1f2937; color: var(--accent);
-      border: 1px solid var(--accent);
+      padding: .25rem .6rem; border-radius: 2rem; background: #1f2937;
     }
-    .badge.cat  { color: var(--accent3); border-color: var(--accent3); }
-    .badge.sec  { color: var(--muted);   border-color: var(--border); }
-    h1 { font-size: 1.75rem; font-weight: 700; color: var(--text); margin-bottom: .4rem; }
-    .formula-line {
-      font-size: 1rem; color: var(--accent4); font-family: 'Courier New', monospace;
-      background: var(--quote-bg); display: inline-block; padding: .35rem .8rem; border-radius: .4rem;
-      border-left: 3px solid var(--accent4);
+    .badge.id   { color: var(--accent); border: 1px solid var(--accent); }
+    .badge.sec  { color: var(--muted);  border: 1px solid var(--border); }
+    .badge.cat  { color: var(--accent3); border: 1px solid var(--accent3); }
+    .header-desc { font-size: .88rem; color: var(--muted); line-height: 1.5; max-width: 700px; }
+
+    /* Animation container */
+    .animation-section { position: relative; background: #000; border-bottom: 1px solid var(--border); }
+    #three-canvas { width: 100%; height: 560px; display: block; cursor: grab; }
+    #three-canvas:active { cursor: grabbing; }
+
+    /* 3D labels overlay */
+    .vec-label {
+      position: absolute; pointer-events: none; font-size: .82rem; font-weight: 700;
+      padding: .15rem .45rem; border-radius: .25rem; white-space: nowrap;
+      text-shadow: 0 0 6px rgba(0,0,0,.9);
+      transition: opacity .3s;
     }
 
-    .main { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; padding: 1.5rem 2.5rem; }
-    @media (max-width: 960px) { .main { grid-template-columns: 1fr; } }
+    /* Phase indicator */
+    .phase-bar {
+      position: absolute; top: 1rem; left: 1rem; right: 1rem;
+      display: flex; align-items: center; gap: .75rem; z-index: 10;
+      background: rgba(22,27,34,.85); backdrop-filter: blur(6px);
+      border: 1px solid var(--border); border-radius: .5rem;
+      padding: .6rem 1rem;
+    }
+    .phase-text { font-size: .82rem; color: var(--text); flex: 1; }
+    .phase-num { font-size: .7rem; color: var(--accent4); font-weight: 700; background: rgba(188,140,255,.15); padding: .15rem .5rem; border-radius: 1rem; white-space: nowrap; }
+
+    /* Controls */
+    .controls-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: .75rem 2.5rem;
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .ctrl-btn {
+      padding: .4rem .9rem; border-radius: .35rem; border: 1px solid var(--border);
+      background: var(--surface2); color: var(--text); cursor: pointer;
+      font-size: .82rem; font-weight: 600; transition: all .15s;
+    }
+    .ctrl-btn:hover { border-color: var(--accent4); color: var(--accent4); }
+    .ctrl-btn.active { background: var(--accent4); color: #0d1117; border-color: var(--accent4); }
+    .ctrl-btn.restart { color: var(--accent2); border-color: var(--accent2); }
+    .ctrl-btn.restart:hover { background: var(--accent2); color: #0d1117; }
+
+    .scrubber-wrap { flex: 1; min-width: 200px; display: flex; align-items: center; gap: .5rem; }
+    .scrubber-wrap input[type=range] { flex: 1; accent-color: var(--accent4); height: 6px; }
+    .scrubber-time { font-size: .75rem; color: var(--muted); min-width: 3.5rem; text-align: center; font-variant-numeric: tabular-nums; }
+
+    .speed-wrap { display: flex; align-items: center; gap: .4rem; }
+    .speed-wrap label { font-size: .78rem; color: var(--muted); }
+    .speed-wrap input[type=range] { width: 80px; accent-color: var(--gold); }
+    .speed-val { font-size: .78rem; color: var(--gold); font-weight: 600; min-width: 2.2rem; }
+
+    /* Legend */
+    .legend-strip {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: .5rem 2.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap;
+    }
+    .leg-item { display: flex; align-items: center; gap: .35rem; font-size: .75rem; color: var(--muted); }
+    .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Main content */
+    .main { max-width: 960px; margin: 0 auto; padding: 1.5rem 2.5rem 3rem; }
 
     .card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: .6rem; padding: 1.25rem; margin-bottom: 1.25rem;
     }
-    .card h2 { font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 1rem; }
-
-    /* Stepper */
-    .stepper { display: flex; gap: .5rem; margin-bottom: 1rem; align-items: center; flex-wrap: wrap; }
-    .step-btn {
-      padding: .35rem .8rem; border-radius: .35rem; border: 1px solid var(--border);
-      background: var(--quote-bg); color: var(--muted); cursor: pointer; font-size: .82rem; transition: all .15s;
+    .card h2 {
+      font-size: .85rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--muted); margin-bottom: 1rem;
     }
-    .step-btn.active { background: var(--accent4); color: #0d1117; border-color: var(--accent4); font-weight: 700; }
-    .step-btn:hover:not(.active) { border-color: var(--accent4); color: var(--accent4); }
-    .auto-btn {
-      margin-left: auto; padding: .35rem 1rem; border-radius: .35rem;
-      background: #1f2937; border: 1px solid var(--accent3); color: var(--accent3);
-      cursor: pointer; font-size: .82rem; font-weight: 600; transition: all .15s;
-    }
-    .auto-btn:hover { background: var(--accent3); color: #0d1117; }
-    .auto-btn.running { background: var(--accent2); border-color: var(--accent2); color: #0d1117; }
-
-    #gs-plot { width: 100%; height: 400px; }
-
-    .step-info {
-      background: var(--quote-bg); border: 1px solid var(--border); border-radius: .5rem;
-      padding: 1rem; margin-top: .75rem;
-    }
-    .step-info .step-title { font-size: .85rem; font-weight: 700; color: var(--accent4); margin-bottom: .5rem; }
-    .step-info .step-desc  { font-size: .82rem; color: var(--text); line-height: 1.7; }
-    .step-info code { background: #1f2937; padding: .1rem .35rem; border-radius: .25rem; font-family: monospace; color: var(--accent3); }
-    .step-info .math-line { margin: .4rem 0; padding: .4rem .8rem; background: #0d1117; border-radius: .3rem; font-family: monospace; font-size: .82rem; color: var(--accent); }
-
-    /* Tabs */
-    .tab-bar { display: flex; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
-    .tab {
-      padding: .35rem .9rem; border-radius: .35rem; border: 1px solid var(--border);
-      background: transparent; color: var(--muted); cursor: pointer; font-size: .85rem; transition: all .15s;
-    }
-    .tab.active, .tab:hover { background: var(--accent); color: #0d1117; border-color: var(--accent); font-weight: 600; }
-
-    #angles-plot { width: 100%; height: 320px; }
-    #proj-plot   { width: 100%; height: 320px; }
 
     blockquote {
       border-left: 3px solid var(--accent2); background: var(--quote-bg);
@@ -97,11 +131,20 @@
     }
     blockquote cite { display: block; margin-top: .5rem; font-style: normal; font-size: .75rem; color: var(--muted); }
 
+    .benefit-item, .tradeoff-item {
+      display: flex; gap: .6rem; margin-bottom: .6rem; font-size: .85rem; line-height: 1.6;
+    }
+    .benefit-item::before { content: ''; flex-shrink: 0; width: 8px; height: 8px; border-radius: 50%; margin-top: .45rem; background: var(--accent3); }
+    .tradeoff-item::before { content: ''; flex-shrink: 0; width: 8px; height: 8px; border-radius: 50%; margin-top: .45rem; background: var(--accent2); }
+
     .guarantee-grid { display: grid; gap: .6rem; }
     .g-item { display: flex; align-items: flex-start; gap: .75rem; padding: .6rem; border-radius: .4rem; background: var(--quote-bg); }
     .g-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: .05rem; }
     .g-label { font-size: .8rem; font-weight: 700; color: var(--text); margin-bottom: .2rem; }
     .g-desc  { font-size: .75rem; color: var(--muted); line-height: 1.5; }
+
+    .formula-card { background: var(--quote-bg); border: 1px solid var(--border); border-radius: .5rem; padding: 1rem 1.25rem; }
+    .formula-card .mjx-container { font-size: 1rem !important; }
 
     .rel-list { display: flex; flex-wrap: wrap; gap: .5rem; }
     .rel-chip {
@@ -109,547 +152,733 @@
       font-size: .78rem; color: var(--muted); background: var(--quote-bg); cursor: default; transition: all .15s;
     }
     .rel-chip:hover { border-color: var(--accent4); color: var(--accent4); }
-
-    .ctrl-row { display: flex; align-items: center; gap: 1rem; margin-bottom: .75rem; }
-    .ctrl-row label { font-size: .82rem; color: var(--muted); white-space: nowrap; }
-    input[type=range] { flex: 1; accent-color: var(--accent4); }
-    .ctrl-val { font-size: .82rem; color: var(--accent4); font-weight: 600; min-width: 2rem; text-align: right; }
-
-    .legend-row { display: flex; gap: 1.5rem; margin-top: .75rem; flex-wrap: wrap; }
-    .leg-item { display: flex; align-items: center; gap: .4rem; font-size: .78rem; color: var(--muted); }
-    .leg-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
   </style>
 </head>
 <body>
 
-<header>
+<div class="page-header">
+  <div class="breadcrumb">Chapter 3 / Linear Methods / <span>3.2.3</span></div>
+  <h1 class="concept-title">Gram-Schmidt Orthogonalization</h1>
   <div class="header-meta">
-    <span class="badge">ID 141</span>
+    <span class="badge id">ID 141</span>
     <span class="badge sec">Section 3.2.3</span>
     <span class="badge cat">Implementation / Computation</span>
   </div>
-  <h1>Gram-Schmidt Orthogonalization</h1>
-  <div class="formula-line">zⱼ = xⱼ − Σₖ&lt;ⱼ ⟨xⱼ, qₖ⟩ qₖ ,  qⱼ = zⱼ / ‖zⱼ‖</div>
-</header>
+  <p class="header-desc">
+    Watch three non-orthogonal vectors get straightened into an orthonormal basis, one projection at a time.
+    This is the engine behind QR decomposition and reveals each predictor's marginal contribution in multiple regression.
+  </p>
+</div>
 
+<!-- 3D Animation -->
+<div class="animation-section" id="animation-section">
+  <canvas id="three-canvas"></canvas>
+  <div class="phase-bar">
+    <span class="phase-num" id="phase-num">Phase 0 / 6</span>
+    <span class="phase-text" id="phase-text">Three non-orthogonal vectors in 3D space</span>
+  </div>
+</div>
+
+<!-- Controls -->
+<div class="controls-bar">
+  <button class="ctrl-btn" id="btn-play" onclick="togglePlay()">Play</button>
+  <button class="ctrl-btn restart" onclick="restartAnim()">Restart</button>
+  <div class="scrubber-wrap">
+    <span class="scrubber-time" id="time-current">0.0s</span>
+    <input type="range" id="scrubber" min="0" max="1000" value="0" step="1" oninput="onScrub(this.value)">
+    <span class="scrubber-time" id="time-total">13.0s</span>
+  </div>
+  <div class="speed-wrap">
+    <label>Speed:</label>
+    <input type="range" id="speed-slider" min="5" max="30" value="10" step="1" oninput="onSpeedChange(this.value)">
+    <span class="speed-val" id="speed-val">1.0x</span>
+  </div>
+</div>
+
+<!-- Legend -->
+<div class="legend-strip">
+  <div class="leg-item"><div class="leg-dot" style="background:#58a6ff"></div>v1 / q1</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#f78166"></div>v2 / q2</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#3fb950"></div>v3 / q3</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#d29922"></div>Projection (shadow)</div>
+  <div class="leg-item"><div class="leg-dot" style="background:rgba(255,255,255,.15)"></div>Ghost (original position)</div>
+</div>
+
+<!-- Pedagogy content -->
 <div class="main">
-  <!-- Left column -->
-  <div>
-    <div class="card">
-      <h2>Visualization</h2>
-      <div class="tab-bar">
-        <button class="tab active" onclick="showMainTab('step')">Step-by-Step</button>
-        <button class="tab" onclick="showMainTab('angles')">Angle Evolution</button>
-        <button class="tab" onclick="showMainTab('proj')">Projection Residuals</button>
-      </div>
 
-      <!-- Step-by-step tab -->
-      <div id="tab-step">
-        <div class="stepper">
-          <button class="step-btn active" onclick="gotoStep(0)">0: Original</button>
-          <button class="step-btn" onclick="gotoStep(1)">1: q₁</button>
-          <button class="step-btn" onclick="gotoStep(2)">2: z₂</button>
-          <button class="step-btn" onclick="gotoStep(3)">3: q₂</button>
-          <button class="step-btn" onclick="gotoStep(4)">4: z₃</button>
-          <button class="step-btn" onclick="gotoStep(5)">5: q₃</button>
-          <button class="auto-btn" id="auto-btn" onclick="toggleAuto()">Auto Play</button>
-        </div>
-        <div class="ctrl-row">
-          <label>Spread:</label>
-          <input type="range" id="slider-spread" min="1" max="9" value="5" step="1" oninput="resetVectors()">
-          <span class="ctrl-val" id="val-spread">5</span>
-        </div>
-        <div id="gs-plot"></div>
-        <div class="step-info" id="step-info"></div>
-        <div class="legend-row">
-          <div class="leg-item"><div class="leg-dot" style="background:#f78166"></div>Original vectors x₁, x₂, x₃</div>
-          <div class="leg-item"><div class="leg-dot" style="background:#3fb950"></div>Orthonormal q vectors</div>
-          <div class="leg-item"><div class="leg-dot" style="background:#d2a8ff"></div>Projection component</div>
-          <div class="leg-item"><div class="leg-dot" style="background:#58a6ff"></div>Residual z (pre-normalization)</div>
+  <!-- Benefits & Tradeoffs — FIRST -->
+  <div class="card">
+    <h2>Benefits & Tradeoffs</h2>
+    <div class="benefit-item">
+      <div><strong>Isolates each predictor's unique contribution.</strong> After orthogonalizing, "the multiple regression coefficient \(\hat\beta_j\) represents the additional contribution of \(x_j\) on \(y\), after \(x_j\) has been adjusted for \(x_0, x_1, \ldots, x_{j-1}\)." <em>(ESL &sect;3.2.3)</em></div>
+    </div>
+    <div class="benefit-item">
+      <div><strong>Produces the QR decomposition.</strong> "Algorithm 3.1 is known as the Gram-Schmidt procedure for multiple regression, and is also a form of the QR decomposition for \(X\)." <em>(ESL &sect;3.2.3)</em></div>
+    </div>
+    <div class="benefit-item">
+      <div><strong>Reveals collinearity.</strong> If a residual \(\|z_j\|\) is near zero, that predictor is nearly a linear combination of earlier ones &mdash; the algorithm exposes this numerically.</div>
+    </div>
+    <div class="tradeoff-item">
+      <div><strong>Order-dependent.</strong> The intermediate residuals \(z_j\) change depending on the ordering of predictors. The final \(\hat\beta\) values are invariant, but the orthonormal basis \(\{q_j\}\) is not.</div>
+    </div>
+    <div class="tradeoff-item">
+      <div><strong>Numerically unstable (classical version).</strong> Classical Gram-Schmidt accumulates rounding errors for nearly-dependent vectors. Modified Gram-Schmidt (MGS) is preferred in practice.</div>
+    </div>
+    <blockquote>
+      "The result of this algorithm is \(\hat{\beta}_j = \langle \mathbf{z}_j, \mathbf{y} \rangle / \langle \mathbf{z}_j, \mathbf{z}_j \rangle\). Re-expressing, the multiple regression coefficient of \(x_j\) is the simple regression of \(y\) on \(z_j\)."
+      <cite>&mdash; ESL, Section 3.2.3</cite>
+    </blockquote>
+  </div>
+
+  <!-- Guarantees -->
+  <div class="card">
+    <h2>Statistical Guarantees</h2>
+    <div class="guarantee-grid">
+      <div class="g-item">
+        <div class="g-icon">&#10003;</div>
+        <div>
+          <div class="g-label">Produces Orthonormal Basis</div>
+          <div class="g-desc">Each q_j is unit length, and &lang;q_i, q_j&rang; = 0 for i &ne; j. Span is preserved at every step.</div>
         </div>
       </div>
-
-      <!-- Angle evolution tab -->
-      <div id="tab-angles" style="display:none;">
-        <p style="font-size:.82rem;color:var(--muted);margin-bottom:.75rem;">
-          Track the angle between each pair of vectors through the orthogonalization process.
-          By step 5, all pairs should be at exactly 90 degrees.
-        </p>
-        <div id="angles-plot"></div>
+      <div class="g-item">
+        <div class="g-icon">&#10003;</div>
+        <div>
+          <div class="g-label">Isolates Marginal Contribution</div>
+          <div class="g-desc">z_j captures the component of x_j orthogonal to all previous predictors &mdash; pure marginal information.</div>
+        </div>
       </div>
-
-      <!-- Projection residuals tab -->
-      <div id="tab-proj" style="display:none;">
-        <p style="font-size:.82rem;color:var(--muted);margin-bottom:.75rem;">
-          At each step, the projection magnitude (removed component) and residual magnitude (kept component) show how much information each new direction contributes.
-        </p>
-        <div id="proj-plot"></div>
+      <div class="g-item">
+        <div class="g-icon">&#10003;</div>
+        <div>
+          <div class="g-label">Coefficient Invariance</div>
+          <div class="g-desc">The last coefficient &beta;&#770;_p is identical whether computed by GS or by full OLS on all p predictors.</div>
+        </div>
+      </div>
+      <div class="g-item">
+        <div class="g-icon">&#10003;</div>
+        <div>
+          <div class="g-label">Reveals Collinearity</div>
+          <div class="g-desc">If &Vert;z_j&Vert; &approx; 0, predictor j is nearly a linear combination of earlier predictors &mdash; the algorithm exposes this.</div>
+        </div>
+      </div>
+      <div class="g-item">
+        <div class="g-icon">~</div>
+        <div>
+          <div class="g-label">Order-Dependent</div>
+          <div class="g-desc">The basis {q_1, &hellip;, q_p} depends on the ordering of predictors. The final &beta;&#770; values are the same, but intermediate z_j change.</div>
+        </div>
+      </div>
+      <div class="g-item">
+        <div class="g-icon">~</div>
+        <div>
+          <div class="g-label">Numerical Stability</div>
+          <div class="g-desc">Classical GS is unstable for nearly-dependent vectors; Modified GS (MGS) fixes this and is preferred in practice.</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Right column -->
-  <div>
-    <div class="card">
-      <h2>Book Quote</h2>
-      <blockquote>
-        "Algorithm 3.1 is known as the Gram-Schmidt procedure for multiple regression, and is also a form of the QR decomposition for X."
-        <cite>— ESL, Section 3.2.3</cite>
-      </blockquote>
-      <blockquote>
-        "The result of this algorithm is \(\hat{\beta}_j = \langle \mathbf{z}_j, \mathbf{y} \rangle / \langle \mathbf{z}_j, \mathbf{z}_j \rangle\). Re-expressing, the multiple regression coefficient of \(x_j\) is the simple regression of \(y\) on \(z_j\)."
-        <cite>— ESL, Section 3.2.3</cite>
-      </blockquote>
+  <!-- Formulas — LAST -->
+  <div class="card">
+    <h2>Formulas (Reference)</h2>
+    <div class="formula-card">
+      <p style="margin-bottom:.75rem; font-size:.85rem; color:var(--muted);">Gram-Schmidt procedure (Algorithm 3.1 in ESL):</p>
+      \[
+      z_0 = x_0 = \mathbf{1}
+      \]
+      \[
+      \text{For } j = 1, \ldots, p: \quad z_j = x_j - \sum_{k=0}^{j-1} \frac{\langle x_j, z_k \rangle}{\langle z_k, z_k \rangle} z_k, \quad q_j = \frac{z_j}{\|z_j\|}
+      \]
+      \[
+      \hat{\beta}_p = \frac{\langle z_p, \mathbf{y} \rangle}{\langle z_p, z_p \rangle}
+      \]
     </div>
+  </div>
 
-    <div class="card">
-      <h2>Guarantees</h2>
-      <div class="guarantee-grid">
-        <div class="g-item">
-          <div class="g-icon">✓</div>
-          <div>
-            <div class="g-label">Produces Orthonormal Basis</div>
-            <div class="g-desc">Each qⱼ is unit length, and ⟨qᵢ, qⱼ⟩ = 0 for i ≠ j. Span is preserved at every step.</div>
-          </div>
-        </div>
-        <div class="g-item">
-          <div class="g-icon">✓</div>
-          <div>
-            <div class="g-label">Isolates Marginal Contribution</div>
-            <div class="g-desc">zⱼ captures the component of xⱼ orthogonal to all previous predictors — pure marginal information.</div>
-          </div>
-        </div>
-        <div class="g-item">
-          <div class="g-icon">✓</div>
-          <div>
-            <div class="g-label">Coefficient Invariance</div>
-            <div class="g-desc">The last coefficient β̂ₚ is identical whether computed by GS or by full OLS on all p predictors.</div>
-          </div>
-        </div>
-        <div class="g-item">
-          <div class="g-icon">✓</div>
-          <div>
-            <div class="g-label">Reveals Collinearity</div>
-            <div class="g-desc">If ‖zⱼ‖ ≈ 0, predictor j is nearly a linear combination of earlier predictors — the algorithm exposes this.</div>
-          </div>
-        </div>
-        <div class="g-item">
-          <div class="g-icon">~</div>
-          <div>
-            <div class="g-label">Order-Dependent</div>
-            <div class="g-desc">The basis {q₁, …, qₚ} depends on the ordering of predictors. The final β̂ values are the same, but intermediate zⱼ change.</div>
-          </div>
-        </div>
-        <div class="g-item">
-          <div class="g-icon">~</div>
-          <div>
-            <div class="g-label">Numerical Stability</div>
-            <div class="g-desc">Classical GS is unstable for nearly-dependent vectors; Modified GS (MGS) fixes this and is preferred in practice.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Related Concepts</h2>
-      <div class="rel-list">
-        <span class="rel-chip">QR Decomposition (ID 140)</span>
-        <span class="rel-chip">OLS β̂ = (XᵀX)⁻¹Xᵀy</span>
-        <span class="rel-chip">Orthogonal projections</span>
-        <span class="rel-chip">Hat matrix H</span>
-        <span class="rel-chip">Variance inflation factor</span>
-        <span class="rel-chip">SVD</span>
-        <span class="rel-chip">Collinearity</span>
-        <span class="rel-chip">Modified Gram-Schmidt</span>
-      </div>
+  <!-- Related concepts -->
+  <div class="card">
+    <h2>Related Concepts</h2>
+    <div class="rel-list">
+      <span class="rel-chip">QR Decomposition (ID 140)</span>
+      <span class="rel-chip">OLS &beta;&#770; = (X&#7488;X)&#8315;&sup1;X&#7488;y</span>
+      <span class="rel-chip">Orthogonal projections</span>
+      <span class="rel-chip">Hat matrix H</span>
+      <span class="rel-chip">Variance inflation factor</span>
+      <span class="rel-chip">SVD</span>
+      <span class="rel-chip">Collinearity</span>
+      <span class="rel-chip">Modified Gram-Schmidt</span>
     </div>
   </div>
 </div>
 
-<script>
-// ─────────────────────────────────────────────────────────────
-// Vector math helpers (2D, for visualization)
-// ─────────────────────────────────────────────────────────────
-const dot2 = (a, b) => a[0]*b[0] + a[1]*b[1];
-const norm2 = v => Math.sqrt(dot2(v, v));
-const scale2 = (s, v) => [s*v[0], s*v[1]];
-const sub2 = (a, b) => [a[0]-b[0], a[1]-b[1]];
-const add2 = (a, b) => [a[0]+b[0], a[1]+b[1]];
-const unit2 = v => { const n = norm2(v); return n > 1e-9 ? [v[0]/n, v[1]/n] : [0, 0]; };
-const angleDeg = (a, b) => {
-  const c = dot2(unit2(a), unit2(b));
-  return Math.acos(Math.max(-1, Math.min(1, c))) * 180 / Math.PI;
-};
+<!-- Three.js animation -->
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-// ─────────────────────────────────────────────────────────────
-// Generate 3 random-ish vectors based on spread slider
-// ─────────────────────────────────────────────────────────────
-let vectors, gsSteps, currentStep = 0, autoTimer = null;
+// ─── Easing ───
+const easeInOutQuad = t => t < 0.5 ? 2*t*t : 1 - (-2*t+2)**2/2;
 
-function getSpread() { return +document.getElementById('slider-spread').value / 10; }
+// ─── Scene setup ───
+const canvas = document.getElementById('three-canvas');
+const section = document.getElementById('animation-section');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x0d1117, 1);
 
-function generateVectors() {
-  const s = getSpread();
-  // Base vectors pointing in different quadrants, modulated by spread
-  return [
-    [1.0,  0.3 + s * 0.4],
-    [0.4 + s * 0.3, 1.0],
-    [-0.2 + s * 0.5, 0.6 + s * 0.3]
-  ];
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+camera.position.set(3.5, 2.5, 4);
+camera.lookAt(0, 0, 0);
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.4;
+
+// Lights
+scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+dirLight.position.set(5, 8, 5);
+scene.add(dirLight);
+
+// ─── Grid ───
+const gridHelper = new THREE.GridHelper(4, 16, 0x21262d, 0x21262d);
+gridHelper.position.y = 0;
+scene.add(gridHelper);
+
+// Subtle axes
+const axisLen = 2.2;
+const axisColors = [0x30363d, 0x30363d, 0x30363d];
+['x','y','z'].forEach((a, i) => {
+  const pts = [new THREE.Vector3(), new THREE.Vector3()];
+  pts[1][a] = axisLen;
+  const geo = new THREE.BufferGeometry().setFromPoints(pts);
+  const mat = new THREE.LineBasicMaterial({ color: axisColors[i], transparent: true, opacity: 0.4 });
+  scene.add(new THREE.Line(geo, mat));
+});
+
+// ─── Vector data ───
+const v1 = new THREE.Vector3(1.6, 0.5, 0.3);
+const v2 = new THREE.Vector3(0.4, 1.5, 0.6);
+const v3 = new THREE.Vector3(0.3, 0.4, 1.4);
+
+// Precompute GS results
+const q1 = v1.clone().normalize();
+
+const proj_v2_q1_scalar = v2.dot(q1);
+const proj_v2_q1 = q1.clone().multiplyScalar(proj_v2_q1_scalar);
+const z2 = v2.clone().sub(proj_v2_q1);
+const q2 = z2.clone().normalize();
+
+const proj_v3_q1_scalar = v3.dot(q1);
+const proj_v3_q1 = q1.clone().multiplyScalar(proj_v3_q1_scalar);
+const proj_v3_q2_scalar = v3.dot(q2);
+const proj_v3_q2 = q2.clone().multiplyScalar(proj_v3_q2_scalar);
+const z3 = v3.clone().sub(proj_v3_q1).sub(proj_v3_q2);
+const q3 = z3.clone().normalize();
+
+// ─── Arrow builder ───
+function createArrow(color, lineWidth) {
+  const group = new THREE.Group();
+
+  // Shaft (cylinder)
+  const shaftGeo = new THREE.CylinderGeometry(0.02, 0.02, 1, 8);
+  shaftGeo.translate(0, 0.5, 0);
+  const shaftMat = new THREE.MeshPhongMaterial({ color, transparent: true });
+  const shaft = new THREE.Mesh(shaftGeo, shaftMat);
+  group.add(shaft);
+
+  // Head (cone)
+  const headGeo = new THREE.ConeGeometry(0.06, 0.15, 12);
+  headGeo.translate(0, 0.075, 0);
+  const headMat = new THREE.MeshPhongMaterial({ color, transparent: true });
+  const head = new THREE.Mesh(headGeo, headMat);
+  group.add(head);
+
+  group.userData = { shaft, head, shaftGeo, headGeo, shaftMat, headMat };
+  scene.add(group);
+  return group;
 }
 
-function computeGS(vecs) {
-  // Returns array of step snapshots
-  const [x1, x2, x3] = vecs;
-  const steps = [];
-
-  // Step 0: original
-  steps.push({ label: 'Original vectors', originals: [x1, x2, x3], qs: [], zs: [], proj: [] });
-
-  // Step 1: q1 = x1 / ||x1||
-  const q1 = unit2(x1);
-  steps.push({ label: 'Normalize x₁ → q₁', originals: [x1, x2, x3], qs: [q1], zs: [x1], proj: [], active: 0 });
-
-  // Step 2: z2 = x2 - <x2,q1>q1
-  const proj2 = scale2(dot2(x2, q1), q1);
-  const z2 = sub2(x2, proj2);
-  steps.push({ label: 'Remove q₁ component from x₂ → z₂', originals: [x1, x2, x3], qs: [q1], zs: [z2], proj: [proj2], projFrom: x2, active: 1 });
-
-  // Step 3: q2 = z2 / ||z2||
-  const q2 = unit2(z2);
-  steps.push({ label: 'Normalize z₂ → q₂', originals: [x1, x2, x3], qs: [q1, q2], zs: [z2], proj: [], active: 1 });
-
-  // Step 4: z3 = x3 - <x3,q1>q1 - <x3,q2>q2
-  const proj3a = scale2(dot2(x3, q1), q1);
-  const proj3b = scale2(dot2(x3, q2), q2);
-  const z3 = sub2(sub2(x3, proj3a), proj3b);
-  steps.push({ label: 'Remove q₁, q₂ components from x₃ → z₃', originals: [x1, x2, x3], qs: [q1, q2], zs: [z3], proj: [proj3a, proj3b], projFrom: x3, active: 2 });
-
-  // Step 5: q3 = z3 / ||z3||
-  const q3 = unit2(z3);
-  steps.push({ label: 'Normalize z₃ → q₃ — orthonormal basis complete', originals: [x1, x2, x3], qs: [q1, q2, q3], zs: [z3], proj: [], active: 2 });
-
-  return steps;
-}
-
-function resetVectors() {
-  document.getElementById('val-spread').textContent = document.getElementById('slider-spread').value;
-  vectors = generateVectors();
-  gsSteps = computeGS(vectors);
-  gotoStep(0);
-  renderAnglesPlot();
-  renderProjPlot();
-}
-
-// ─────────────────────────────────────────────────────────────
-// Step renderer
-// ─────────────────────────────────────────────────────────────
-const COLORS = {
-  orig: '#f78166',
-  q:    '#3fb950',
-  z:    '#58a6ff',
-  proj: '#d2a8ff'
-};
-
-const stepDescs = [
-  {
-    title: 'Step 0: Original vectors',
-    desc: 'We start with three vectors <code>x₁, x₂, x₃</code> that are generally not orthogonal. They span a subspace of ℝ². Our goal is to produce an orthonormal basis spanning the same subspace.'
-  },
-  {
-    title: 'Step 1: First orthonormal vector q₁',
-    desc: '<div class="math-line">q₁ = x₁ / ‖x₁‖</div>Simply normalize the first vector. There is no projection needed for the first step — all subsequent vectors will be orthogonalized against q₁.'
-  },
-  {
-    title: 'Step 2: Orthogonalize x₂ against q₁',
-    desc: '<div class="math-line">z₂ = x₂ − ⟨x₂, q₁⟩ q₁</div>Subtract the component of x₂ in the direction of q₁. The purple arrow is the removed projection; the blue arrow is the residual z₂, perpendicular to q₁.'
-  },
-  {
-    title: 'Step 3: Normalize residual → q₂',
-    desc: '<div class="math-line">q₂ = z₂ / ‖z₂‖</div>Normalize z₂ to unit length. Now q₁ ⊥ q₂ by construction. The angle between them is exactly 90°.'
-  },
-  {
-    title: 'Step 4: Orthogonalize x₃ against q₁ and q₂',
-    desc: '<div class="math-line">z₃ = x₃ − ⟨x₃, q₁⟩ q₁ − ⟨x₃, q₂⟩ q₂</div>Subtract both projection components. The residual z₃ is orthogonal to both q₁ and q₂.'
-  },
-  {
-    title: 'Step 5: Normalize → q₃, basis complete',
-    desc: '<div class="math-line">q₃ = z₃ / ‖z₃‖</div>All three vectors are now orthonormal: ⟨qᵢ, qⱼ⟩ = δᵢⱼ. This is the column-by-column QR factorization of X.'
+function updateArrow(arrow, from, to, opacity) {
+  const dir = to.clone().sub(from);
+  const len = dir.length();
+  if (len < 0.001) {
+    arrow.visible = false;
+    return;
   }
+  arrow.visible = true;
+  const { shaft, head, shaftMat, headMat } = arrow.userData;
+
+  const headLen = Math.min(0.15, len * 0.3);
+  const shaftLen = len - headLen;
+
+  shaft.scale.set(1, Math.max(shaftLen, 0.001), 1);
+  shaft.position.set(0, 0, 0);
+  head.position.set(0, shaftLen + headLen/2, 0);
+  head.scale.set(1, headLen / 0.15, 1);
+
+  arrow.position.copy(from);
+  const up = new THREE.Vector3(0, 1, 0);
+  const normalized = dir.clone().normalize();
+  const quat = new THREE.Quaternion().setFromUnitVectors(up, normalized);
+  arrow.quaternion.copy(quat);
+
+  shaftMat.opacity = opacity;
+  headMat.opacity = opacity;
+}
+
+// ─── Create arrows ───
+// Main vectors
+const arrow_v1 = createArrow(0x58a6ff);
+const arrow_v2 = createArrow(0xf78166);
+const arrow_v3 = createArrow(0x3fb950);
+
+// Ghost copies (originals that fade)
+const ghost_v1 = createArrow(0x58a6ff);
+const ghost_v2 = createArrow(0xf78166);
+const ghost_v3 = createArrow(0x3fb950);
+
+// Projection shadows
+const arrow_proj1 = createArrow(0xd29922); // proj of v2 onto q1
+const arrow_proj2a = createArrow(0xd29922); // proj of v3 onto q1
+const arrow_proj2b = createArrow(0xd29922); // proj of v3 onto q2
+
+// Dashed connection lines (projection connectors)
+function createDashedLine(color) {
+  const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+  const mat = new THREE.LineDashedMaterial({ color, dashSize: 0.05, gapSize: 0.03, transparent: true, opacity: 0 });
+  const line = new THREE.Line(geo, mat);
+  line.computeLineDistances();
+  scene.add(line);
+  return line;
+}
+
+const connector1 = createDashedLine(0xd29922);
+const connector2a = createDashedLine(0xd29922);
+const connector2b = createDashedLine(0xd29922);
+
+function updateDashedLine(line, p1, p2, opacity) {
+  const pos = line.geometry.attributes.position;
+  pos.setXYZ(0, p1.x, p1.y, p1.z);
+  pos.setXYZ(1, p2.x, p2.y, p2.z);
+  pos.needsUpdate = true;
+  line.computeLineDistances();
+  line.material.opacity = opacity;
+  line.visible = opacity > 0.01;
+}
+
+// Right-angle marker
+function createRightAngle(color) {
+  const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()]);
+  const mat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0 });
+  const line = new THREE.Line(geo, mat);
+  scene.add(line);
+  return line;
+}
+
+const rightAngle1 = createRightAngle(0xffffff);
+const rightAngle2 = createRightAngle(0xffffff);
+
+function updateRightAngle(line, corner, dir1, dir2, size, opacity) {
+  const p1 = corner.clone().add(dir1.clone().normalize().multiplyScalar(size));
+  const p2 = p1.clone().add(dir2.clone().normalize().multiplyScalar(size));
+  const p3 = corner.clone().add(dir2.clone().normalize().multiplyScalar(size));
+  const pos = line.geometry.attributes.position;
+  pos.setXYZ(0, p1.x, p1.y, p1.z);
+  pos.setXYZ(1, p2.x, p2.y, p2.z);
+  pos.setXYZ(2, p3.x, p3.y, p3.z);
+  pos.needsUpdate = true;
+  line.material.opacity = opacity;
+  line.visible = opacity > 0.01;
+}
+
+// Q1-Q2 plane (translucent)
+const planeGeo = new THREE.PlaneGeometry(3, 3);
+const planeMat = new THREE.MeshBasicMaterial({ color: 0x58a6ff, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false });
+const planeMesh = new THREE.Mesh(planeGeo, planeMat);
+scene.add(planeMesh);
+
+function updatePlane(q1Dir, q2Dir, opacity) {
+  planeMat.opacity = opacity * 0.08;
+  planeMesh.visible = opacity > 0.01;
+  if (opacity < 0.01) return;
+  // Orient plane to be spanned by q1, q2
+  const normal = new THREE.Vector3().crossVectors(q1Dir, q2Dir).normalize();
+  const up = new THREE.Vector3(0, 0, 1);
+  const quat = new THREE.Quaternion().setFromUnitVectors(up, normal);
+  planeMesh.quaternion.copy(quat);
+  planeMesh.position.set(0, 0, 0);
+}
+
+// ─── Labels ───
+const labelElements = {};
+function ensureLabel(id, text, color) {
+  if (!labelElements[id]) {
+    const el = document.createElement('div');
+    el.className = 'vec-label';
+    el.style.color = color;
+    section.appendChild(el);
+    labelElements[id] = el;
+  }
+  labelElements[id].textContent = text;
+  labelElements[id].style.color = color;
+  return labelElements[id];
+}
+
+function positionLabel(id, worldPos, text, color, opacity) {
+  const el = ensureLabel(id, text, color);
+  const v = worldPos.clone().project(camera);
+  const rect = canvas.getBoundingClientRect();
+  const x = (v.x * 0.5 + 0.5) * rect.width;
+  const y = (-v.y * 0.5 + 0.5) * rect.height;
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  el.style.opacity = opacity;
+  el.style.display = opacity > 0.01 ? '' : 'none';
+}
+
+function hideLabel(id) {
+  if (labelElements[id]) labelElements[id].style.display = 'none';
+}
+
+// ─── Animation phases ───
+const ORIGIN = new THREE.Vector3(0, 0, 0);
+
+const phases = [
+  { name: 'Three non-orthogonal vectors in 3D space', duration: 2.0 },
+  { name: 'Phase 1: Normalize v\u2081 to unit length \u2192 q\u2081', duration: 1.5 },
+  { name: 'Phase 2: Project v\u2082 onto q\u2081 (shadow grows)', duration: 2.0 },
+  { name: 'Phase 3: Subtract projection \u2192 z\u2082', duration: 2.0 },
+  { name: 'Phase 4: Normalize z\u2082 \u2192 q\u2082', duration: 1.5 },
+  { name: 'Phase 5: Project v\u2083 onto q\u2081 and q\u2082', duration: 2.0 },
+  { name: 'Phase 6: Subtract projections, normalize \u2192 q\u2083', duration: 2.0 },
 ];
 
-function arrowTrace(from, to, color, name, width, dash) {
-  return {
-    x: [from[0], to[0]],
-    y: [from[1], to[1]],
-    mode: 'lines+markers',
-    type: 'scatter',
-    name,
-    line: { color, width: width || 2, dash: dash || 'solid' },
-    marker: { symbol: 'arrow', size: 10, color, angleref: 'previous' },
-    hoverinfo: 'name'
-  };
-}
+const totalDuration = phases.reduce((s, p) => s + p.duration, 0);
+document.getElementById('time-total').textContent = totalDuration.toFixed(1) + 's';
 
-function originArrow(vec, color, name, width) {
-  return arrowTrace([0, 0], vec, color, name, width);
-}
+// ─── Animation state ───
+let animTime = 0; // current time in seconds
+let playing = false;
+let speed = 1.0;
+let userScrubbing = false;
 
-function gotoStep(n) {
-  currentStep = n;
-  document.querySelectorAll('.step-btn').forEach((b, i) => b.classList.toggle('active', i === n));
-  renderStep(n);
-  const info = document.getElementById('step-info');
-  info.innerHTML = `<div class="step-title">${stepDescs[n].title}</div><div class="step-desc">${stepDescs[n].desc}</div>`;
-  if (window.MathJax) MathJax.typesetPromise([info]);
-}
-
-function renderStep(n) {
-  const s = gsSteps[n];
-  const traces = [];
-  const origin = [0, 0];
-
-  // Original vectors (faded after we've processed them)
-  s.originals.forEach((v, i) => {
-    const processed = i < (s.qs ? s.qs.length : 0);
-    const a = s.active === i ? 1 : (processed ? 0.25 : 0.55);
-    traces.push({
-      x: [0, v[0]], y: [0, v[1]], mode: 'lines+markers', type: 'scatter',
-      name: `x${i+1}`, opacity: a,
-      line: { color: COLORS.orig, width: s.active === i ? 3 : 1.5, dash: processed ? 'dot' : 'solid' },
-      marker: { symbol: 'arrow', size: 9, color: COLORS.orig, angleref: 'previous' },
-      hoverinfo: 'name'
-    });
-  });
-
-  // Projection components
-  if (s.proj && s.proj.length > 0 && s.projFrom) {
-    s.proj.forEach((pv, pi) => {
-      const cumProj = pi === 0 ? pv : add2(s.proj[0], pv);
-      traces.push({
-        x: [s.projFrom[0], s.projFrom[0] - pv[0]],
-        y: [s.projFrom[1], s.projFrom[1] - pv[1]],
-        mode: 'lines', type: 'scatter', name: `proj${pi+1}`,
-        line: { color: COLORS.proj, width: 2, dash: 'dash' },
-        hoverinfo: 'name'
-      });
-      // projection vector from origin
-      traces.push({
-        x: [0, pv[0]], y: [0, pv[1]], mode: 'lines+markers', type: 'scatter',
-        name: `⟨x, q${pi+1}⟩q${pi+1}`,
-        line: { color: COLORS.proj, width: 2 },
-        marker: { symbol: 'arrow', size: 8, color: COLORS.proj, angleref: 'previous' },
-        hoverinfo: 'name', opacity: 0.7
-      });
-    });
-  }
-
-  // Residual z vectors
-  if (s.zs) {
-    s.zs.forEach((z, zi) => {
-      traces.push({
-        x: [0, z[0]], y: [0, z[1]], mode: 'lines+markers', type: 'scatter',
-        name: `z${zi + (s.qs ? s.qs.length : 0) + 1}`,
-        line: { color: COLORS.z, width: 2.5 },
-        marker: { symbol: 'arrow', size: 10, color: COLORS.z, angleref: 'previous' },
-        hoverinfo: 'name'
-      });
-    });
-  }
-
-  // Orthonormal q vectors
-  if (s.qs) {
-    s.qs.forEach((q, qi) => {
-      traces.push({
-        x: [0, q[0]], y: [0, q[1]], mode: 'lines+markers', type: 'scatter',
-        name: `q${qi+1}`,
-        line: { color: COLORS.q, width: 3 },
-        marker: { symbol: 'arrow', size: 11, color: COLORS.q, angleref: 'previous' },
-        hoverinfo: 'name'
-      });
-    });
-  }
-
-  // Unit circle reference
-  const theta = Array.from({length: 361}, (_, i) => i * Math.PI / 180);
-  traces.push({
-    x: theta.map(Math.cos), y: theta.map(Math.sin),
-    mode: 'lines', type: 'scatter', name: 'unit circle',
-    line: { color: '#21262d', width: 1, dash: 'dot' }, hoverinfo: 'none'
-  });
-
-  // Right-angle markers for orthogonality
-  if (s.qs && s.qs.length >= 2) {
-    const q1 = s.qs[0], q2 = s.qs[1];
-    const size = 0.08;
-    const pt = add2(scale2(size, q1), scale2(size, q2));
-    const pt1 = scale2(size, q1);
-    const pt2 = scale2(size, q2);
-    traces.push({
-      x: [pt1[0], pt[0], pt2[0]], y: [pt1[1], pt[1], pt2[1]],
-      mode: 'lines', type: 'scatter', name: '90°',
-      line: { color: '#3fb950', width: 1 }, hoverinfo: 'name'
-    });
-  }
-
-  const range = [-0.2, 1.8];
-  const layout = {
-    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
-    font: { color: '#e6edf3', size: 11 },
-    margin: { l: 40, r: 20, t: 20, b: 40 },
-    xaxis: { range, zeroline: true, zerolinecolor: '#30363d', zerolinewidth: 1, gridcolor: '#21262d', color: '#8b949e' },
-    yaxis: { range, zeroline: true, zerolinecolor: '#30363d', zerolinewidth: 1, gridcolor: '#21262d', color: '#8b949e', scaleanchor: 'x' },
-    showlegend: true,
-    legend: { x: 1.02, y: 1, bgcolor: '#161b22', bordercolor: '#30363d', borderwidth: 1, font: {size: 10} }
-  };
-
-  Plotly.react('gs-plot', traces, layout, { responsive: true, displayModeBar: false });
-}
-
-// ─────────────────────────────────────────────────────────────
-// Angles evolution plot
-// ─────────────────────────────────────────────────────────────
-function renderAnglesPlot() {
-  if (!vectors) return;
-  const [x1, x2, x3] = vectors;
-  const q1 = unit2(x1);
-  const proj2 = scale2(dot2(x2, q1), q1);
-  const z2 = sub2(x2, proj2);
-  const q2 = unit2(z2);
-  const proj3a = scale2(dot2(x3, q1), q1);
-  const proj3b = scale2(dot2(x3, q2), q2);
-  const z3 = sub2(sub2(x3, proj3a), proj3b);
-  const q3 = unit2(z3);
-
-  const stepLabels = ['Original x', 'After q₁', 'After q₂', 'After q₃'];
-
-  // Angle between pair (1,2), (1,3), (2,3)
-  const pairs = [
-    { label: 'x₁–x₂ → q₁–q₂', data: [
-      angleDeg(x1, x2), angleDeg(x1, x2), angleDeg(q1, q2), angleDeg(q1, q2)
-    ]},
-    { label: 'x₁–x₃ → q₁–q₃', data: [
-      angleDeg(x1, x3), angleDeg(x1, x3), angleDeg(q1, q3), angleDeg(q1, q3)
-    ]},
-    { label: 'x₂–x₃ → q₂–q₃', data: [
-      angleDeg(x2, x3), angleDeg(x2, x3), angleDeg(q2, q3), angleDeg(q2, q3)
-    ]}
-  ];
-
-  // For intermediate stages
-  const allPairs = [
-    [angleDeg(x1, x2), angleDeg(q1, z2), angleDeg(q1, q2), 90],
-    [angleDeg(x1, x3), angleDeg(q1, x3), angleDeg(q1, z3), 90],
-    [angleDeg(x2, x3), angleDeg(z2, x3), angleDeg(q2, z3), 90]
-  ];
-
-  const colors = ['#f78166', '#58a6ff', '#d2a8ff'];
-  const traces = pairs.map((p, i) => ({
-    x: stepLabels, y: allPairs[i],
-    mode: 'lines+markers', type: 'scatter', name: p.label,
-    line: { color: colors[i], width: 2 },
-    marker: { size: 8, color: colors[i] },
-    hovertemplate: '%{y:.1f}°<extra>%{fullData.name}</extra>'
-  }));
-
-  // 90-degree reference line
-  traces.push({
-    x: stepLabels, y: [90, 90, 90, 90],
-    mode: 'lines', type: 'scatter', name: '90° target',
-    line: { color: '#3fb950', width: 1.5, dash: 'dot' },
-    hoverinfo: 'none'
-  });
-
-  Plotly.react('angles-plot', traces, {
-    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
-    font: { color: '#e6edf3', size: 11 },
-    margin: { l: 50, r: 20, t: 20, b: 50 },
-    xaxis: { color: '#8b949e', gridcolor: '#21262d' },
-    yaxis: { title: 'Angle (degrees)', color: '#8b949e', gridcolor: '#21262d', range: [0, 180] },
-    legend: { bgcolor: '#161b22', bordercolor: '#30363d', borderwidth: 1 }
-  }, { responsive: true, displayModeBar: false });
-}
-
-// ─────────────────────────────────────────────────────────────
-// Projection residuals plot
-// ─────────────────────────────────────────────────────────────
-function renderProjPlot() {
-  if (!vectors) return;
-  const [x1, x2, x3] = vectors;
-  const q1 = unit2(x1);
-  const proj2 = scale2(dot2(x2, q1), q1);
-  const z2 = sub2(x2, proj2);
-  const q2 = unit2(z2);
-  const proj3a = scale2(dot2(x3, q1), q1);
-  const proj3b = scale2(dot2(x3, q2), q2);
-  const z3 = sub2(sub2(x3, proj3a), proj3b);
-
-  const labels = ['x₂ step', 'x₃ step (q₁)', 'x₃ step (q₂)'];
-  const projMags = [norm2(proj2), norm2(proj3a), norm2(proj3b)];
-  const residMags = [norm2(z2), undefined, norm2(z3)];
-
-  const traces = [
-    {
-      x: labels, y: projMags, name: 'Projection magnitude (removed)',
-      type: 'bar', marker: { color: '#d2a8ff', opacity: 0.85 }
-    },
-    {
-      x: ['x₂ step', 'x₃ step (final)'],
-      y: [norm2(z2), norm2(z3)],
-      name: 'Residual ‖z‖ (kept)',
-      type: 'bar', marker: { color: '#3fb950', opacity: 0.85 }
+function getPhaseAt(t) {
+  let acc = 0;
+  for (let i = 0; i < phases.length; i++) {
+    if (t < acc + phases[i].duration) {
+      return { index: i, local: (t - acc) / phases[i].duration };
     }
-  ];
-
-  Plotly.react('proj-plot', traces, {
-    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
-    font: { color: '#e6edf3', size: 11 },
-    margin: { l: 50, r: 20, t: 20, b: 50 },
-    xaxis: { color: '#8b949e', gridcolor: '#21262d' },
-    yaxis: { title: 'Vector magnitude', color: '#8b949e', gridcolor: '#21262d' },
-    barmode: 'group',
-    legend: { bgcolor: '#161b22', bordercolor: '#30363d', borderwidth: 1 }
-  }, { responsive: true, displayModeBar: false });
+    acc += phases[i].duration;
+  }
+  return { index: phases.length - 1, local: 1 };
 }
 
-// ─────────────────────────────────────────────────────────────
-// Auto-play
-// ─────────────────────────────────────────────────────────────
-function toggleAuto() {
-  const btn = document.getElementById('auto-btn');
-  if (autoTimer) {
-    clearInterval(autoTimer);
-    autoTimer = null;
-    btn.textContent = 'Auto Play';
-    btn.classList.remove('running');
-  } else {
-    btn.textContent = 'Stop';
-    btn.classList.add('running');
-    autoTimer = setInterval(() => {
-      const next = (currentStep + 1) % 6;
-      gotoStep(next);
-    }, 1800);
+// ─── Render frame based on animation time ───
+function renderAnimationState(t) {
+  t = Math.max(0, Math.min(t, totalDuration - 0.001));
+  const { index: pi, local: rawLocal } = getPhaseAt(t);
+  const lt = easeInOutQuad(Math.max(0, Math.min(1, rawLocal))); // eased local progress
+
+  // Update UI
+  document.getElementById('phase-num').textContent = `Phase ${pi} / ${phases.length - 1}`;
+  document.getElementById('phase-text').textContent = phases[pi].name;
+  document.getElementById('time-current').textContent = t.toFixed(1) + 's';
+  if (!userScrubbing) {
+    document.getElementById('scrubber').value = (t / totalDuration * 1000) | 0;
+  }
+
+  // --- Reset all to invisible ---
+  [arrow_proj1, arrow_proj2a, arrow_proj2b].forEach(a => { a.visible = false; });
+  [ghost_v1, ghost_v2, ghost_v3].forEach(a => { a.visible = false; });
+  [connector1, connector2a, connector2b].forEach(l => { l.visible = false; });
+  [rightAngle1, rightAngle2].forEach(l => { l.visible = false; });
+  planeMesh.visible = false;
+
+  // Helper: is a phase completed?
+  const done = i => pi > i || (pi === i && lt >= 1);
+  const active = i => pi === i;
+
+  // --- PHASE 0: Show original vectors ---
+  // v1 always visible as something
+  let v1Tip, v2Tip, v3Tip;
+
+  if (pi === 0) {
+    // All three original vectors, full opacity
+    v1Tip = v1;
+    v2Tip = v2;
+    v3Tip = v3;
+    updateArrow(arrow_v1, ORIGIN, v1, 1);
+    updateArrow(arrow_v2, ORIGIN, v2, 1);
+    updateArrow(arrow_v3, ORIGIN, v3, 1);
+    positionLabel('v1', v1, 'v\u2081', '#58a6ff', 1);
+    positionLabel('v2', v2, 'v\u2082', '#f78166', 1);
+    positionLabel('v3', v3, 'v\u2083', '#3fb950', 1);
+    hideLabel('q1'); hideLabel('q2'); hideLabel('q3');
+    hideLabel('z2'); hideLabel('z3');
+  }
+
+  // --- PHASE 1: v1 shrinks/grows to unit length ---
+  if (pi === 1) {
+    v1Tip = v1.clone().lerp(q1, lt);
+    updateArrow(arrow_v1, ORIGIN, v1Tip, 1);
+    updateArrow(arrow_v2, ORIGIN, v2, 1);
+    updateArrow(arrow_v3, ORIGIN, v3, 1);
+    // Ghost of original v1
+    updateArrow(ghost_v1, ORIGIN, v1, 0.15);
+    ghost_v1.visible = lt > 0.1;
+    const labelName = lt > 0.5 ? 'q\u2081' : 'v\u2081';
+    positionLabel('v1', v1Tip, labelName, '#58a6ff', 1);
+    positionLabel('q1', q1, '', '#58a6ff', 0);
+    positionLabel('v2', v2, 'v\u2082', '#f78166', 1);
+    positionLabel('v3', v3, 'v\u2083', '#3fb950', 1);
+    hideLabel('z2'); hideLabel('z3'); hideLabel('q2'); hideLabel('q3');
+  }
+
+  // --- PHASE 2: Shadow grows along q1 for v2's projection ---
+  if (pi === 2) {
+    updateArrow(arrow_v1, ORIGIN, q1, 1);
+    updateArrow(arrow_v2, ORIGIN, v2, 1);
+    updateArrow(arrow_v3, ORIGIN, v3, 0.6);
+    updateArrow(ghost_v1, ORIGIN, v1, 0.15);
+
+    // Projection shadow grows
+    const projTip = ORIGIN.clone().lerp(proj_v2_q1, lt);
+    updateArrow(arrow_proj1, ORIGIN, projTip, 0.7 * lt);
+    arrow_proj1.visible = lt > 0.02;
+
+    // Connector: dashed line from v2 tip down to projection point
+    updateDashedLine(connector1, v2, projTip, 0.5 * lt);
+
+    // Right angle marker
+    if (lt > 0.5) {
+      const residDir = v2.clone().sub(proj_v2_q1);
+      updateRightAngle(rightAngle1, proj_v2_q1, q1.clone().negate(), residDir, 0.1, (lt - 0.5) * 2);
+    }
+
+    positionLabel('v1', q1, 'q\u2081', '#58a6ff', 1);
+    positionLabel('v2', v2, 'v\u2082', '#f78166', 1);
+    positionLabel('v3', v3, 'v\u2083', '#3fb950', 0.6);
+    positionLabel('proj', projTip, 'proj', '#d29922', lt > 0.3 ? 0.7 : 0);
+    hideLabel('q1'); hideLabel('z2'); hideLabel('z3'); hideLabel('q2'); hideLabel('q3');
+  }
+
+  // --- PHASE 3: v2 slides to residual, projection fades ---
+  if (pi === 3) {
+    updateArrow(arrow_v1, ORIGIN, q1, 1);
+    updateArrow(arrow_v3, ORIGIN, v3, 0.6);
+    updateArrow(ghost_v1, ORIGIN, v1, 0.15);
+
+    // v2 tip slides from original to z2
+    const currentV2 = v2.clone().lerp(z2, lt);
+    updateArrow(arrow_v2, ORIGIN, currentV2, 1);
+
+    // Ghost of original v2
+    updateArrow(ghost_v2, ORIGIN, v2, 0.15 * lt);
+    ghost_v2.visible = lt > 0.05;
+
+    // Projection fades out
+    updateArrow(arrow_proj1, ORIGIN, proj_v2_q1, 0.7 * (1 - lt));
+    arrow_proj1.visible = lt < 0.95;
+    updateDashedLine(connector1, v2, proj_v2_q1, 0.5 * (1 - lt));
+    if (lt < 0.7) {
+      const residDir = v2.clone().sub(proj_v2_q1);
+      updateRightAngle(rightAngle1, proj_v2_q1, q1.clone().negate(), residDir, 0.1, (1 - lt));
+    } else {
+      rightAngle1.visible = false;
+    }
+
+    const labelName = lt > 0.6 ? 'z\u2082' : 'v\u2082';
+    positionLabel('v1', q1, 'q\u2081', '#58a6ff', 1);
+    positionLabel('v2', currentV2, labelName, '#f78166', 1);
+    positionLabel('v3', v3, 'v\u2083', '#3fb950', 0.6);
+    hideLabel('proj'); hideLabel('q1'); hideLabel('z2'); hideLabel('z3'); hideLabel('q2'); hideLabel('q3');
+  }
+
+  // --- PHASE 4: z2 normalizes to q2, plane appears ---
+  if (pi === 4) {
+    updateArrow(arrow_v1, ORIGIN, q1, 1);
+    updateArrow(arrow_v3, ORIGIN, v3, 0.6);
+    updateArrow(ghost_v1, ORIGIN, v1, 0.15);
+    updateArrow(ghost_v2, ORIGIN, v2, 0.15);
+
+    const currentV2 = z2.clone().lerp(q2, lt);
+    updateArrow(arrow_v2, ORIGIN, currentV2, 1);
+
+    // Ghost of z2
+    if (lt > 0.1) {
+      // keep ghost_v2 showing original v2
+    }
+
+    // Plane appears
+    updatePlane(q1, q2, lt);
+
+    const labelName = lt > 0.5 ? 'q\u2082' : 'z\u2082';
+    positionLabel('v1', q1, 'q\u2081', '#58a6ff', 1);
+    positionLabel('v2', currentV2, labelName, '#f78166', 1);
+    positionLabel('v3', v3, 'v\u2083', '#3fb950', 0.6);
+    hideLabel('proj'); hideLabel('z2'); hideLabel('z3'); hideLabel('q1'); hideLabel('q2'); hideLabel('q3');
+  }
+
+  // --- PHASE 5: Two projections grow simultaneously ---
+  if (pi === 5) {
+    updateArrow(arrow_v1, ORIGIN, q1, 1);
+    updateArrow(arrow_v2, ORIGIN, q2, 1);
+    updateArrow(arrow_v3, ORIGIN, v3, 1);
+    updateArrow(ghost_v1, ORIGIN, v1, 0.15);
+    updateArrow(ghost_v2, ORIGIN, v2, 0.15);
+    updatePlane(q1, q2, 1);
+
+    // Two projections grow
+    const p1Tip = ORIGIN.clone().lerp(proj_v3_q1, lt);
+    const p2Tip = ORIGIN.clone().lerp(proj_v3_q2, lt);
+    updateArrow(arrow_proj2a, ORIGIN, p1Tip, 0.7 * lt);
+    updateArrow(arrow_proj2b, ORIGIN, p2Tip, 0.7 * lt);
+    arrow_proj2a.visible = lt > 0.02;
+    arrow_proj2b.visible = lt > 0.02;
+
+    // Connectors from v3 to the combined projection
+    const combinedProj = proj_v3_q1.clone().add(proj_v3_q2);
+    const partialCombined = combinedProj.clone().multiplyScalar(lt);
+    updateDashedLine(connector2a, v3, p1Tip, 0.4 * lt);
+    updateDashedLine(connector2b, v3, p2Tip, 0.4 * lt);
+
+    // Right angle
+    if (lt > 0.5) {
+      const residDir = v3.clone().sub(combinedProj);
+      const normal = new THREE.Vector3().crossVectors(q1, q2).normalize();
+      // Show right angle between residual and the q1-q2 plane
+      updateRightAngle(rightAngle2, combinedProj, q1, residDir, 0.1, (lt - 0.5) * 2);
+    }
+
+    positionLabel('v1', q1, 'q\u2081', '#58a6ff', 1);
+    positionLabel('v2', q2, 'q\u2082', '#f78166', 1);
+    positionLabel('v3', v3, 'v\u2083', '#3fb950', 1);
+    hideLabel('proj'); hideLabel('z2'); hideLabel('z3'); hideLabel('q1'); hideLabel('q2'); hideLabel('q3');
+  }
+
+  // --- PHASE 6: v3 slides to residual, normalizes to q3 ---
+  if (pi === 6) {
+    updateArrow(arrow_v1, ORIGIN, q1, 1);
+    updateArrow(arrow_v2, ORIGIN, q2, 1);
+    updateArrow(ghost_v1, ORIGIN, v1, 0.15);
+    updateArrow(ghost_v2, ORIGIN, v2, 0.15);
+    updatePlane(q1, q2, 1);
+
+    // First half: v3 slides to z3. Second half: z3 normalizes to q3.
+    let currentV3;
+    if (lt < 0.5) {
+      const subT = lt * 2; // 0->1 over first half
+      currentV3 = v3.clone().lerp(z3, easeInOutQuad(subT));
+      // Ghost of original v3
+      updateArrow(ghost_v3, ORIGIN, v3, 0.15 * subT);
+      ghost_v3.visible = subT > 0.05;
+      // Fade projections
+      updateArrow(arrow_proj2a, ORIGIN, proj_v3_q1, 0.7 * (1 - subT));
+      updateArrow(arrow_proj2b, ORIGIN, proj_v3_q2, 0.7 * (1 - subT));
+      arrow_proj2a.visible = subT < 0.9;
+      arrow_proj2b.visible = subT < 0.9;
+    } else {
+      const subT = (lt - 0.5) * 2; // 0->1 over second half
+      currentV3 = z3.clone().lerp(q3, easeInOutQuad(subT));
+      updateArrow(ghost_v3, ORIGIN, v3, 0.15);
+      arrow_proj2a.visible = false;
+      arrow_proj2b.visible = false;
+    }
+    updateArrow(arrow_v3, ORIGIN, currentV3, 1);
+
+    const labelName = lt < 0.35 ? 'v\u2083' : (lt < 0.7 ? 'z\u2083' : 'q\u2083');
+    positionLabel('v1', q1, 'q\u2081', '#58a6ff', 1);
+    positionLabel('v2', q2, 'q\u2082', '#f78166', 1);
+    positionLabel('v3', currentV3, labelName, '#3fb950', 1);
+    hideLabel('proj'); hideLabel('z2'); hideLabel('z3'); hideLabel('q1'); hideLabel('q2'); hideLabel('q3');
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// Main tab switch
-// ─────────────────────────────────────────────────────────────
-function showMainTab(name) {
-  ['step','angles','proj'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t === name ? '' : 'none';
-  });
-  document.querySelectorAll('.tab').forEach((b, i) => {
-    b.classList.toggle('active', ['step','angles','proj'][i] === name);
-  });
+// ─── Animation loop ───
+let lastTime = null;
+
+function animate(timestamp) {
+  requestAnimationFrame(animate);
+
+  if (playing && lastTime !== null) {
+    const dt = (timestamp - lastTime) / 1000 * speed;
+    animTime += dt;
+    if (animTime >= totalDuration) {
+      animTime = totalDuration - 0.001;
+      playing = false;
+      document.getElementById('btn-play').textContent = 'Play';
+      document.getElementById('btn-play').classList.remove('active');
+    }
+  }
+  lastTime = timestamp;
+
+  // Pause auto-rotate when user is dragging
+  controls.autoRotate = playing;
+  controls.update();
+
+  renderAnimationState(animTime);
+
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
+  if (canvas.width !== w * renderer.getPixelRatio() || canvas.height !== h * renderer.getPixelRatio()) {
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+
+  renderer.render(scene, camera);
 }
 
-// ─────────────────────────────────────────────────────────────
-// Init
-// ─────────────────────────────────────────────────────────────
-resetVectors();
-renderAnglesPlot();
-renderProjPlot();
+requestAnimationFrame(animate);
+
+// ─── Controls ───
+window.togglePlay = function() {
+  playing = !playing;
+  const btn = document.getElementById('btn-play');
+  btn.textContent = playing ? 'Pause' : 'Play';
+  btn.classList.toggle('active', playing);
+  if (playing && animTime >= totalDuration - 0.01) {
+    animTime = 0;
+  }
+};
+
+window.restartAnim = function() {
+  animTime = 0;
+  playing = false;
+  document.getElementById('btn-play').textContent = 'Play';
+  document.getElementById('btn-play').classList.remove('active');
+  renderAnimationState(0);
+};
+
+window.onScrub = function(val) {
+  userScrubbing = true;
+  animTime = (val / 1000) * totalDuration;
+  playing = false;
+  document.getElementById('btn-play').textContent = 'Play';
+  document.getElementById('btn-play').classList.remove('active');
+  renderAnimationState(animTime);
+  setTimeout(() => { userScrubbing = false; }, 100);
+};
+
+window.onSpeedChange = function(val) {
+  speed = val / 10;
+  document.getElementById('speed-val').textContent = speed.toFixed(1) + 'x';
+};
+
+// ─── Resize ───
+window.addEventListener('resize', () => {
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+});
 </script>
 </body>
 </html>

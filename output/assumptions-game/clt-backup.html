@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLT Assumption Explorer</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0d1117;
+    color: #e6edf3;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* ── Top Bar ── */
+  .top-bar {
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .top-bar h1 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+  }
+  .top-bar h1 span { color: #8b949e; font-weight: 400; }
+
+  /* Toggle */
+  .mode-toggle {
+    display: flex;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .mode-toggle button {
+    padding: 8px 16px;
+    background: transparent;
+    color: #8b949e;
+    border: none;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .mode-toggle button.active {
+    background: #1f6feb;
+    color: #fff;
+  }
+  .mode-toggle button:hover:not(.active) { color: #e6edf3; }
+
+  /* ── Health Bar ── */
+  .health-section {
+    padding: 20px 24px 0;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .health-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .health-label {
+    font-size: 0.85rem;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .health-bar-track {
+    flex: 1;
+    min-width: 200px;
+    height: 28px;
+    background: #21262d;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #30363d;
+  }
+  .health-bar-fill {
+    height: 100%;
+    border-radius: 14px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.5s;
+    position: relative;
+  }
+  .health-bar-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+    border-radius: 14px;
+  }
+  .health-pct {
+    font-size: 1.1rem;
+    font-weight: 700;
+    min-width: 50px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .status-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid;
+    white-space: nowrap;
+    transition: all 0.3s;
+  }
+
+  /* ── Upgrade Grid ── */
+  .grid-container {
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .upgrade-grid {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  /* Path Column */
+  .path-col {
+    flex: 1;
+    min-width: 220px;
+    max-width: 340px;
+  }
+  .path-header {
+    text-align: center;
+    padding: 12px 8px;
+    border-radius: 10px 10px 0 0;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: -0.2px;
+    border: 1px solid;
+    border-bottom: none;
+  }
+  .path-body {
+    border: 1px solid #30363d;
+    border-radius: 0 0 10px 10px;
+    background: #161b22;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* Tier Button */
+  .tier-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background: #21262d;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .tier-btn:hover { background: #282e36; }
+  .tier-btn .tier-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    background: #30363d;
+    color: #8b949e;
+    transition: all 0.2s;
+  }
+  .tier-btn .tier-info { flex: 1; min-width: 0; }
+  .tier-btn .tier-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tier-btn .tier-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+  .tier-btn.below-active {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+  }
+  .tier-btn.active {
+    border-color: var(--path-color);
+    background: var(--path-bg);
+  }
+  .tier-btn.active .tier-num {
+    background: var(--path-color);
+    color: #fff;
+  }
+
+  /* Tier Detail (expanded) */
+  .tier-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    padding: 0 12px;
+    font-size: 0.82rem;
+    color: #8b949e;
+    line-height: 1.6;
+    background: #161b22;
+    border-radius: 0 0 8px 8px;
+    margin-top: -4px;
+  }
+  .tier-detail.open {
+    max-height: 300px;
+    padding: 10px 12px 12px;
+    opacity: 1;
+  }
+  .tier-detail strong { color: #e6edf3; }
+  .tier-detail .detail-label {
+    display: inline-block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #6e7681;
+    margin-right: 4px;
+  }
+
+  /* ── Status Panel ── */
+  .status-panel {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .status-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .status-item h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6e7681;
+    margin-bottom: 6px;
+  }
+  .status-item p {
+    font-size: 0.9rem;
+    color: #c9d1d9;
+  }
+
+  /* Cross-effect warnings */
+  .cross-effects {
+    max-width: 1400px;
+    margin: 16px auto 0;
+    padding: 0 24px;
+  }
+  .cross-warn {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border-left: 3px solid #d29922;
+    background: rgba(210, 153, 34, 0.08);
+    font-size: 0.85rem;
+    color: #d29922;
+    margin-bottom: 8px;
+    animation: fadeSlide 0.3s ease;
+  }
+  .cross-warn.visible { display: flex; }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Path color themes */
+  .path-col[data-color="blue"]   { --path-color: #58a6ff; --path-bg: rgba(88,166,255,0.1); --path-border: rgba(88,166,255,0.3); }
+  .path-col[data-color="orange"] { --path-color: #d29922; --path-bg: rgba(210,153,34,0.1);  --path-border: rgba(210,153,34,0.3); }
+  .path-col[data-color="green"]  { --path-color: #3fb950; --path-bg: rgba(63,185,80,0.1);   --path-border: rgba(63,185,80,0.3); }
+  .path-col[data-color="purple"] { --path-color: #bc8cff; --path-bg: rgba(188,140,255,0.1); --path-border: rgba(188,140,255,0.3); }
+
+  .path-col .path-header { border-color: var(--path-border); background: var(--path-bg); color: var(--path-color); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: #0d1117; }
+  ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <h1>Central Limit Theorem <span>— Assumption Explorer</span></h1>
+  <div class="mode-toggle">
+    <button class="active" onclick="setMode('per-assumption')">One Path Per Assumption</button>
+    <button onclick="setMode('themed')">Themed Paths</button>
+  </div>
+</div>
+
+<!-- Health Bar -->
+<div class="health-section">
+  <div class="health-row">
+    <span class="health-label">Theorem Strength</span>
+    <div class="health-bar-track">
+      <div class="health-bar-fill" id="healthFill" style="width:100%; background:#3fb950;"></div>
+    </div>
+    <span class="health-pct" id="healthPct">100%</span>
+    <span class="status-badge" id="statusBadge" style="border-color:#3fb950; color:#3fb950;">Classical CLT &#10003;</span>
+  </div>
+</div>
+
+<!-- Cross-effect warnings -->
+<div class="cross-effects" id="crossEffects"></div>
+
+<!-- Upgrade Grid -->
+<div class="grid-container">
+  <div class="upgrade-grid" id="upgradeGrid"></div>
+</div>
+
+<!-- Status Panel -->
+<div class="status-panel">
+  <div class="status-card" id="statusCard">
+    <div class="status-item"><h3>Active CLT Variant</h3><p id="sVariant">Classical CLT (iid, finite variance)</p></div>
+    <div class="status-item"><h3>What Breaks</h3><p id="sBreaks">Nothing — all assumptions hold.</p></div>
+    <div class="status-item"><h3>What Survives</h3><p id="sSurvives">Convergence to normal at rate 1/&#8730;n. Confidence intervals, hypothesis tests, all standard inference.</p></div>
+    <div class="status-item"><h3>Example</h3><p id="sExample">Sample mean of iid coin flips. Even though each flip is Bernoulli, the average is approximately normal for large n.</p></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+
+const MODE_PER_ASSUMPTION = {
+  paths: [
+    {
+      id: 'independence', label: 'Independence', color: 'blue',
+      tiers: [
+        { name: 'iid', icon: '\u2713', health: 100,
+          effect: 'Classical CLT applies in full.',
+          variant: 'Classical CLT', breaks: 'Nothing.', survives: 'Full normal convergence at rate 1/\u221An.',
+          example: 'Rolling dice and averaging: each roll is independent and identical.' },
+        { name: 'Independent, not identical', icon: '\u2713', health: 90,
+          effect: 'Lindeberg CLT applies if the Lindeberg condition holds. Identical distribution is not required.',
+          variant: 'Lindeberg CLT', breaks: 'Cannot assume identical distributions.', survives: 'Normal convergence if no single variable dominates the sum.',
+          example: 'Survey responses from different demographics, each with different variance but all independent.' },
+        { name: 'm-dependent', icon: '\u26A0', health: 75,
+          effect: 'CLT holds for m-dependent sequences. Each variable depends only on its m nearest neighbors.',
+          variant: 'CLT for m-dependent sequences', breaks: 'Full independence. Effective sample size is reduced.', survives: 'Normal convergence, but variance estimation must account for dependence.',
+          example: 'Moving average of iid noise: MA(q) process has q-dependence.' },
+        { name: 'Weakly dependent (mixing)', icon: '\u26A1', health: 50,
+          effect: 'CLT holds under mixing conditions (\u03B1-mixing, \u03B2-mixing), but convergence can be slower.',
+          variant: 'CLT for mixing sequences', breaks: 'Standard variance formulas. Rate of convergence degrades.', survives: 'Asymptotic normality under sufficient mixing rate decay.',
+          example: 'Stationary GARCH models in finance: observations are dependent but mixing.' },
+        { name: 'Strong dependence', icon: '\u2717', health: 15,
+          effect: 'CLT may FAIL. Long-range dependence (e.g., fractional Gaussian noise with H > 0.5) can break normality entirely.',
+          variant: 'CLT likely fails', breaks: 'Normal limit. Sum may converge to Rosenblatt distribution or other non-Gaussian limits.', survives: 'Very little \u2014 problem-specific analysis required.',
+          example: 'Nile river water levels exhibit long-range dependence (Hurst phenomenon). Standard CLT does not apply.' },
+      ]
+    },
+    {
+      id: 'moments', label: 'Moment Conditions', color: 'orange',
+      tiers: [
+        { name: 'Gaussian', icon: '\u2713', health: 100,
+          effect: 'Sum is exactly normal for any n. No approximation needed.',
+          variant: 'Exact normality', breaks: 'Nothing.', survives: 'Exact Gaussian distribution of sum/mean for every finite n.',
+          example: 'Measurement errors modeled as Gaussian: sample mean is exactly normal regardless of sample size.' },
+        { name: 'Finite variance \u03C3\u00B2 < \u221E', icon: '\u2713', health: 95,
+          effect: 'Classical CLT: \u221An(\u0304X \u2212 \u03BC)/\u03C3 \u2192 N(0,1). Berry-Esseen gives O(1/\u221An) rate.',
+          variant: 'Classical CLT', breaks: 'Exact normality for finite n.', survives: 'Convergence to normal. All standard inference is justified asymptotically.',
+          example: 'Exponential waiting times: variance is finite, CLT applies even though the distribution is right-skewed.' },
+        { name: 'Finite variance, heavy tails', icon: '\u26A0', health: 70,
+          effect: 'CLT still holds but convergence is SLOW. Berry-Esseen bound depends on E|X|\u00B3/\u03C3\u00B3, which is large for heavy tails.',
+          variant: 'Classical CLT (slow convergence)', breaks: 'Fast convergence. Normal approximation may be poor for moderate n.', survives: 'Asymptotic normality. Just need much larger n.',
+          example: 'Log-normal incomes: finite variance but very heavy right tail. Need n in the thousands for good normal approximation.' },
+        { name: 'Infinite variance, finite mean', icon: '\u26A1', health: 25,
+          effect: 'Standard CLT fails. Generalized CLT: sum converges to a stable distribution with index \u03B1 \u2208 (1,2).',
+          variant: 'Generalized CLT (\u03B1-stable limit)', breaks: 'Normal limit entirely. Variance of sample mean does not shrink at 1/n rate.', survives: 'Convergence exists \u2014 just to a stable law, not Gaussian.',
+          example: 'Pareto-distributed insurance claims with tail index between 1 and 2: mean exists but variance is infinite.' },
+        { name: 'No finite mean (Cauchy-like)', icon: '\u2717', health: 0,
+          effect: 'CLT completely breaks. Sample mean does not converge. For Cauchy, the sample mean has the SAME distribution as a single observation.',
+          variant: 'CLT does NOT apply', breaks: 'Everything. No law of large numbers, no CLT, no consistent estimation of location.', survives: 'Nothing in the classical sense. Median-based methods may still work.',
+          example: 'Cauchy distribution (ratio of two standard normals). Averaging does not help: mean of 1000 Cauchy r.v.s is still Cauchy.' },
+      ]
+    },
+    {
+      id: 'sample-size', label: 'Sample Size', color: 'green',
+      tiers: [
+        { name: 'n \u2192 \u221E (asymptotic)', icon: '\u2713', health: 100,
+          effect: 'Guaranteed by theory. The CLT is a statement about the limit.',
+          variant: 'Asymptotic guarantee', breaks: 'Nothing.', survives: 'Full theoretical guarantee.',
+          example: 'Theoretical statistics: we prove the CLT as n \u2192 \u221E.' },
+        { name: 'n > 100', icon: '\u2713', health: 95,
+          effect: 'Excellent normal approximation for virtually all distributions with finite variance.',
+          variant: 'Strong finite-sample approximation', breaks: 'Exact asymptotic guarantee, but negligible practical difference.', survives: 'Normal approximation error is very small (Berry-Esseen).',
+          example: 'Clinical trial with 200 patients per arm: normal-based confidence intervals are excellent.' },
+        { name: '30 < n < 100', icon: '\u26A0', health: 80,
+          effect: 'Good for symmetric distributions. Skewed distributions may need larger n.',
+          variant: 'Moderate approximation', breaks: 'Reliability for skewed or heavy-tailed distributions.', survives: 'Reasonable for symmetric, light-tailed data. t-distribution helps.',
+          example: 'Classroom experiment with n=50 reaction times: probably fine if distribution is not too skewed.' },
+        { name: '10 < n < 30', icon: '\u26A1', health: 55,
+          effect: 'Rough approximation. Quality depends heavily on the underlying distribution shape.',
+          variant: 'Weak approximation', breaks: 'Reliability for non-symmetric data. Confidence interval coverage may be poor.', survives: 'Still useful for near-symmetric distributions. Bootstrap may be better.',
+          example: 'Pilot study with n=20: normal approximation is rough. Consider exact tests or bootstrap.' },
+        { name: 'n < 10', icon: '\u2717', health: 30,
+          effect: 'CLT approximation is poor for non-Gaussian distributions. Exact or permutation methods preferred.',
+          variant: 'Poor approximation', breaks: 'Most normal-based inference is unreliable.', survives: 'If data is actually Gaussian, t-tests still exact. Otherwise, use nonparametric methods.',
+          example: 'Case study with n=5: do not use z-tests. Use exact binomial, Wilcoxon, or bootstrap.' },
+      ]
+    },
+    {
+      id: 'identical', label: 'Identical Distribution', color: 'purple',
+      tiers: [
+        { name: 'Identically distributed', icon: '\u2713', health: 100,
+          effect: 'Classical CLT. All variables come from the same distribution.',
+          variant: 'Classical CLT', breaks: 'Nothing.', survives: 'Standard formulation with \u03C3/\u221An rate.',
+          example: 'Repeated measurements with the same instrument under identical conditions.' },
+        { name: 'Same mean and variance, different shape', icon: '\u2713', health: 90,
+          effect: 'Lindeberg CLT works. The shapes do not matter if the Lindeberg condition is satisfied.',
+          variant: 'Lindeberg CLT', breaks: 'Identical distribution assumption, but this is fine.', survives: 'Normal convergence. Variance is still well-defined.',
+          example: 'Test scores from different schools with the same mean and variance but different distributions (some bimodal, some skewed).' },
+        { name: 'Different variances (bounded)', icon: '\u26A0', health: 75,
+          effect: 'Lyapunov CLT applies if the Lyapunov condition is met. Need to normalize by total variance.',
+          variant: 'Lyapunov CLT', breaks: 'Simple \u03C3/\u221An normalization. Must use s\u00B2_n = \u03A3\u03C3\u00B2_i.', survives: 'Normal convergence with correct normalization.',
+          example: 'Combining measurements from instruments of different precision: each has different variance.' },
+        { name: 'Variances growing', icon: '\u26A1', health: 45,
+          effect: 'Needs careful normalization. If one variable\u2019s variance dominates, it overwhelms the sum.',
+          variant: 'Conditional \u2014 may require truncation', breaks: 'Standard normalization. Lindeberg condition may fail.', survives: 'Can sometimes be rescued by careful truncation arguments.',
+          example: 'Summing variables where the k-th has variance k\u00B2: later terms dominate and CLT may fail without adjustment.' },
+        { name: 'Arbitrarily different distributions', icon: '\u2717', health: 20,
+          effect: 'Need to verify Lindeberg condition case-by-case. No general guarantee.',
+          variant: 'Must verify Lindeberg condition', breaks: 'All default guarantees. Nothing is automatic.', survives: 'CLT is possible but must be proved for the specific sequence.',
+          example: 'Meta-analysis combining studies with wildly different designs, scales, and populations. Must verify conditions carefully.' },
+      ]
+    },
+  ]
+};
+
+const MODE_THEMED = {
+  paths: [
+    {
+      id: 'distribution-quality', label: 'Distribution Quality', color: 'orange',
+      tiers: [
+        { name: 'iid Gaussian', icon: '\u2713', health: 100,
+          effect: 'Best case. Sum is exactly normal, all assumptions satisfied trivially.',
+          variant: 'Exact normality', breaks: 'Nothing.', survives: 'Everything.',
+          example: 'Averaging Gaussian measurement errors: exact normal for any sample size.' },
+        { name: 'iid, finite variance', icon: '\u2713', health: 95,
+          effect: 'Classical CLT in its standard form. The workhorse of applied statistics.',
+          variant: 'Classical CLT', breaks: 'Exact finite-sample normality.', survives: 'Asymptotic normality at \u221An rate.',
+          example: 'Averaging Bernoulli coin flips: variance is p(1\u2212p), CLT applies.' },
+        { name: 'Independent, same moments, non-identical', icon: '\u26A0', health: 85,
+          effect: 'Lindeberg CLT. Different distribution shapes are fine if moments match and Lindeberg condition holds.',
+          variant: 'Lindeberg CLT', breaks: 'Identical distribution assumption.', survives: 'Normal convergence with correct variance.',
+          example: 'Pooling data from different labs, same protocol but slightly different populations.' },
+        { name: 'Heavy tails but finite variance', icon: '\u26A1', health: 65,
+          effect: 'CLT holds but convergence is slow. Berry-Esseen constant is large. Need big n.',
+          variant: 'CLT (slow convergence)', breaks: 'Fast convergence. Moderate-n approximations are poor.', survives: 'Asymptotic normality. Just need patience (large n).',
+          example: 'Income data: log-normal with finite but large variance. n = 30 is not enough.' },
+        { name: 'Infinite variance', icon: '\u2717', health: 15,
+          effect: 'Classical CLT fails. If mean exists, sum converges to stable law. If mean is infinite, all bets are off.',
+          variant: 'Stable limit or NONE', breaks: 'Normal limit. Cannot use z-tests, t-tests, standard CI.', survives: 'Generalized CLT may give stable limit if mean exists.',
+          example: 'Network traffic with Pareto tails (\u03B1 < 2): self-similar, non-Gaussian scaling.' },
+      ]
+    },
+    {
+      id: 'dependence-structure', label: 'Dependence Structure', color: 'blue',
+      tiers: [
+        { name: 'Independent', icon: '\u2713', health: 100,
+          effect: 'No dependence. Classical theory applies directly.',
+          variant: 'Classical CLT', breaks: 'Nothing.', survives: 'Full independence simplifies everything.',
+          example: 'Independent random samples drawn with replacement.' },
+        { name: 'm-dependent (finite range)', icon: '\u26A0', health: 85,
+          effect: 'Each observation depends only on its m nearest neighbors. CLT holds with adjusted variance.',
+          variant: 'CLT for m-dependent sequences', breaks: 'Simple variance formula. Must estimate long-run variance.', survives: 'Normal convergence. Variance involves autocovariances up to lag m.',
+          example: 'Quarterly GDP growth: each quarter is influenced by the previous 1\u20132 quarters.' },
+        { name: '\u03B1-mixing (weak dependence)', icon: '\u26A1', health: 65,
+          effect: 'Dependence decays with distance. CLT holds if mixing coefficients decay fast enough.',
+          variant: 'CLT for \u03B1-mixing', breaks: 'Standard error formulas. Need HAC estimators (Newey-West).', survives: 'Asymptotic normality under mixing rate conditions.',
+          example: 'Stationary time series like AR(1): geometrically mixing, CLT applies with adjusted variance.' },
+        { name: 'Long-range dependent', icon: '\u26A1', health: 30,
+          effect: 'Autocovariances are not summable. Sum may converge to Gaussian but at non-standard rate, or to non-Gaussian limit.',
+          variant: 'Non-standard CLT or failure', breaks: 'Standard \u221An rate. Variance of mean shrinks slower than 1/n.', survives: 'Gaussian limit sometimes, but with rate n^(1\u2212H) instead of n^(1/2).',
+          example: 'Fractional Brownian motion with H=0.8: strong persistence, variance of mean decays as n^(\u22120.4) not n^(\u22121).' },
+        { name: 'Adversarial dependence', icon: '\u2717', health: 5,
+          effect: 'No structural assumption on dependence. CLT almost certainly fails.',
+          variant: 'CLT does NOT apply', breaks: 'All limit theorems. Sum can have any distribution.', survives: 'Essentially nothing without additional assumptions.',
+          example: 'Perfectly correlated copies: sum of n identical copies is just n\u00D7X, never Gaussian.' },
+      ]
+    },
+    {
+      id: 'sample-regime', label: 'Sample Regime', color: 'green',
+      tiers: [
+        { name: 'Asymptotic (n \u2192 \u221E)', icon: '\u2713', health: 100,
+          effect: 'The theoretical regime. CLT is a statement about limits.',
+          variant: 'Full asymptotic guarantee', breaks: 'Nothing.', survives: 'Complete theoretical guarantee.',
+          example: 'All textbook CLT proofs live in this regime.' },
+        { name: 'Large sample (n > 100)', icon: '\u2713', health: 95,
+          effect: 'Normal approximation is excellent for nearly all finite-variance distributions.',
+          variant: 'Excellent approximation', breaks: 'Exact limit, but difference is negligible.', survives: 'All standard inference procedures work well.',
+          example: 'Opinion poll with n=1000: margin of error formula is highly accurate.' },
+        { name: 'Moderate (30\u2013100)', icon: '\u26A0', health: 80,
+          effect: 'The classic "n \u2265 30" rule of thumb. Works for symmetric distributions, sketchy for skewed ones.',
+          variant: 'Rule-of-thumb regime', breaks: 'Reliability for skewed distributions.', survives: 'Reasonable for symmetric data; t-distribution corrections help.',
+          example: 'A/B test with 50 users per variant: fine for conversion rates near 50%, poor for rare events.' },
+        { name: 'Small (10\u201330)', icon: '\u26A1', health: 50,
+          effect: 'Normal approximation is rough. Quality depends on how symmetric and light-tailed the data is.',
+          variant: 'Marginal approximation', breaks: 'Confidence interval coverage is unreliable for skewed data.', survives: 'Exact methods for Gaussian data. Bootstrap for others.',
+          example: 'Startup with 15 customers: do not trust z-based confidence intervals on revenue.' },
+        { name: 'Tiny (n < 10)', icon: '\u2717', health: 25,
+          effect: 'Normal approximation is poor unless data is actually Gaussian. Use exact or nonparametric methods.',
+          variant: 'Poor \u2014 use exact methods', breaks: 'All asymptotic approximations.', survives: 'Exact tests (t-test if Gaussian, permutation tests, bootstrap).',
+          example: 'Rare disease study with n=6: use Fisher exact test or Wilcoxon, not z-tests.' },
+      ]
+    },
+  ]
+};
+
+// ── STATE ──
+let currentMode = 'per-assumption';
+let activeTiers = {}; // pathId -> tierIndex
+
+function getData() {
+  return currentMode === 'per-assumption' ? MODE_PER_ASSUMPTION : MODE_THEMED;
+}
+
+function initTiers() {
+  activeTiers = {};
+  getData().paths.forEach(p => { activeTiers[p.id] = 0; });
+}
+
+// ── HEALTH CALCULATION ──
+function computeHealth() {
+  const data = getData();
+  // Get raw health from each path (active tier)
+  const healths = data.paths.map(p => p.tiers[activeTiers[p.id]].health);
+  let base = Math.min(...healths);
+
+  // Cross-effect penalties
+  const crossWarnings = [];
+
+  if (currentMode === 'per-assumption') {
+    const indTier = activeTiers['independence'];
+    const momTier = activeTiers['moments'];
+    const sizTier = activeTiers['sample-size'];
+    const idnTier = activeTiers['identical'];
+
+    // Heavy tails + small n
+    if (momTier >= 2 && sizTier >= 3) {
+      const penalty = 15;
+      base = Math.max(0, base - penalty);
+      crossWarnings.push({ text: 'Heavy tails + small sample: convergence is extremely slow. Normal approximation is unreliable.', penalty });
+    }
+    // Dependence + non-identical
+    if (indTier >= 2 && idnTier >= 2) {
+      const penalty = 10;
+      base = Math.max(0, base - penalty);
+      crossWarnings.push({ text: 'Dependence + non-identical distributions: verifying CLT conditions becomes very difficult.', penalty });
+    }
+    // Strong dependence + infinite variance
+    if (indTier >= 4 && momTier >= 3) {
+      base = 0;
+      crossWarnings.push({ text: 'Strong dependence + infinite variance: guaranteed failure. No known CLT variant applies.', penalty: 'total' });
+    }
+  } else {
+    const distTier = activeTiers['distribution-quality'];
+    const depTier = activeTiers['dependence-structure'];
+    const samTier = activeTiers['sample-regime'];
+
+    // Heavy tails + small n
+    if (distTier >= 3 && samTier >= 3) {
+      const penalty = 15;
+      base = Math.max(0, base - penalty);
+      crossWarnings.push({ text: 'Poor distribution quality + small sample: the slow convergence from heavy tails is devastating with few observations.', penalty });
+    }
+    // Dependence + bad distribution
+    if (depTier >= 2 && distTier >= 3) {
+      const penalty = 12;
+      base = Math.max(0, base - penalty);
+      crossWarnings.push({ text: 'Dependence + heavy/infinite-variance tails: conditions become nearly impossible to verify.', penalty });
+    }
+    // Strong dependence + infinite variance
+    if (depTier >= 3 && distTier >= 4) {
+      base = 0;
+      crossWarnings.push({ text: 'Long-range dependence + infinite variance: guaranteed failure.', penalty: 'total' });
+    }
+  }
+
+  return { health: Math.max(0, Math.min(100, base)), warnings: crossWarnings };
+}
+
+function healthColor(h) {
+  if (h > 75) return '#3fb950';
+  if (h > 50) return '#a5d63f';
+  if (h > 30) return '#d29922';
+  if (h > 10) return '#db6d28';
+  return '#f85149';
+}
+
+function cltStatus(h) {
+  if (h >= 95) return { text: 'Classical CLT \u2713', color: '#3fb950' };
+  if (h >= 75) return { text: 'Extended CLT \u2713', color: '#a5d63f' };
+  if (h >= 50) return { text: 'Conditional CLT \u26A0', color: '#d29922' };
+  if (h >= 20) return { text: 'CLT Fragile \u26A1', color: '#db6d28' };
+  if (h > 0)  return { text: 'CLT Nearly Broken \u2717', color: '#f85149' };
+  return { text: 'CLT Does NOT Apply \u2717', color: '#f85149' };
+}
+
+// ── RENDER ──
+function render() {
+  const data = getData();
+  const grid = document.getElementById('upgradeGrid');
+  grid.innerHTML = '';
+
+  data.paths.forEach(path => {
+    const col = document.createElement('div');
+    col.className = 'path-col';
+    col.dataset.color = path.color;
+
+    const header = document.createElement('div');
+    header.className = 'path-header';
+    header.textContent = path.label;
+    col.appendChild(header);
+
+    const body = document.createElement('div');
+    body.className = 'path-body';
+
+    const active = activeTiers[path.id];
+
+    path.tiers.forEach((tier, i) => {
+      const btn = document.createElement('div');
+      btn.className = 'tier-btn';
+      if (i === active) btn.classList.add('active');
+      if (i > active) {} // available
+      if (i < active) btn.classList.add('below-active');
+
+      btn.innerHTML = `
+        <div class="tier-num">${i}</div>
+        <div class="tier-info"><div class="tier-name">${tier.name}</div></div>
+        <div class="tier-icon">${tier.icon}</div>
+      `;
+
+      if (i >= active) {
+        btn.addEventListener('click', () => {
+          activeTiers[path.id] = i;
+          render();
+        });
+        btn.style.cursor = 'pointer';
+      }
+
+      body.appendChild(btn);
+
+      // Detail panel (always present, toggled on active)
+      const detail = document.createElement('div');
+      detail.className = 'tier-detail' + (i === active ? ' open' : '');
+      detail.innerHTML = `
+        <div><span class="detail-label">Effect:</span> ${tier.effect}</div>
+      `;
+      body.appendChild(detail);
+    });
+
+    col.appendChild(body);
+    grid.appendChild(col);
+  });
+
+  updateHealth();
+  updateStatusPanel();
+}
+
+function updateHealth() {
+  const { health, warnings } = computeHealth();
+  const fill = document.getElementById('healthFill');
+  const pct = document.getElementById('healthPct');
+  const badge = document.getElementById('statusBadge');
+  const col = healthColor(health);
+  const status = cltStatus(health);
+
+  fill.style.width = health + '%';
+  fill.style.background = col;
+  pct.textContent = health + '%';
+  pct.style.color = col;
+  badge.textContent = status.text;
+  badge.style.color = status.color;
+  badge.style.borderColor = status.color;
+
+  // Cross-effect warnings
+  const container = document.getElementById('crossEffects');
+  container.innerHTML = '';
+  warnings.forEach(w => {
+    const div = document.createElement('div');
+    div.className = 'cross-warn visible';
+    const penaltyText = w.penalty === 'total' ? 'FATAL' : '\u2212' + w.penalty + '%';
+    div.innerHTML = `<strong>\u26A0 Cross-effect (${penaltyText}):</strong> ${w.text}`;
+    container.appendChild(div);
+  });
+}
+
+function updateStatusPanel() {
+  const data = getData();
+  // Find the "worst" path (the one with highest tier selected)
+  let worstPath = null;
+  let worstTier = -1;
+  data.paths.forEach(p => {
+    const t = activeTiers[p.id];
+    if (t > worstTier) { worstTier = t; worstPath = p; }
+  });
+  const tier = worstPath.tiers[worstTier];
+
+  // Also collect info from all paths
+  const allActive = data.paths.map(p => {
+    const t = activeTiers[p.id];
+    return p.tiers[t];
+  });
+
+  // Use the worst path's detail for variant, but combine breaks/survives
+  const { health } = computeHealth();
+
+  document.getElementById('sVariant').textContent = health > 0
+    ? allActive.map(t => t.variant).filter((v, i, a) => a.indexOf(v) === i).join(' + ')
+    : 'CLT does NOT apply';
+
+  const breaks = allActive.filter(t => t.health < 100).map(t => t.breaks).filter(Boolean);
+  document.getElementById('sBreaks').textContent = breaks.length > 0
+    ? breaks.join(' ')
+    : 'Nothing \u2014 all assumptions hold.';
+
+  const survives = health > 0
+    ? allActive.reduce((worst, t) => t.health < worst.health ? t : worst, allActive[0])
+    : { survives: 'Nothing in the classical sense.' };
+  document.getElementById('sSurvives').textContent = survives.survives;
+
+  document.getElementById('sExample').textContent = worstTier > 0
+    ? tier.example
+    : 'Sample mean of iid observations with finite variance: the most standard CLT scenario.';
+}
+
+// ── MODE SWITCH ──
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-toggle button').forEach(b => b.classList.remove('active'));
+  if (mode === 'per-assumption') {
+    document.querySelectorAll('.mode-toggle button')[0].classList.add('active');
+  } else {
+    document.querySelectorAll('.mode-toggle button')[1].classList.add('active');
+  }
+  initTiers();
+  render();
+}
+
+// ── INIT ──
+initTiers();
+render();
+</script>
+</body>
+</html>

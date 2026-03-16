@@ -12,6 +12,14 @@
   };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -79,16 +87,6 @@
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } }
 
-  .step-card { background: var(--surf2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; transition: border-color 0.2s, background 0.15s; cursor: pointer; }
-  .step-card:hover { border-color: var(--accent); }
-  .step-card.active { border-color: var(--accent); background: rgba(88,166,255,0.06); }
-  .step-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-  .step-num { background: var(--border); color: var(--text); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; transition: background 0.2s; }
-  .step-card.active .step-num { background: var(--accent); }
-  .step-card.done .step-num { background: var(--green); }
-  .step-title { font-size: 13px; font-weight: 600; }
-  .step-detail { font-size: 12px; color: var(--muted); line-height: 1.5; }
-
   .guar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 16px; }
   .guar-card { background: var(--surf2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; }
   .guar-head { display: flex; align-items: center; margin-bottom: 8px; }
@@ -106,8 +104,63 @@
 
   .note { font-size: 12px; color: var(--muted); line-height: 1.6; margin-top: 10px; }
   .info-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; font-size: 13px; color: var(--accent); margin-top: 14px; line-height: 1.6; }
-
   .warn-box { background: rgba(248,81,73,0.06); border: 1px solid rgba(248,81,73,0.3); border-radius: 6px; padding: 12px 16px; font-size: 13px; color: var(--red); margin-top: 14px; line-height: 1.6; }
+
+  /* ── Three.js animation card ── */
+  #anim-card { overflow: visible; }
+  #anim-container {
+    position: relative;
+    width: 100%;
+    height: 560px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #0d1117;
+  }
+  #anim-container canvas { display: block; width: 100% !important; height: 100% !important; }
+
+  .anim-label {
+    position: absolute;
+    pointer-events: none;
+    font-size: 13px;
+    font-weight: 600;
+    text-shadow: 0 0 8px rgba(0,0,0,0.9), 0 0 3px rgba(0,0,0,0.7);
+    white-space: nowrap;
+    transition: opacity 0.3s;
+  }
+  #phase-text {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    text-shadow: 0 0 12px rgba(0,0,0,0.9);
+    pointer-events: none;
+    max-width: 90%;
+    transition: opacity 0.4s;
+  }
+  #beta-display {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-family: monospace;
+    font-size: 14px;
+    color: var(--accent2);
+    text-shadow: 0 0 8px rgba(0,0,0,0.9);
+    pointer-events: none;
+    text-align: right;
+    transition: opacity 0.3s;
+  }
+
+  .anim-controls {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px;
+  }
+  .anim-controls .sep { width: 1px; height: 22px; background: var(--border); }
+  #progress-bar {
+    flex: 1; min-width: 150px;
+  }
 
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
@@ -130,7 +183,7 @@
 
 <div class="content">
 
-  <!-- ════════ 1. BENEFITS & TRADEOFFS ════════ -->
+  <!-- 1. BENEFITS & TRADEOFFS -->
   <div class="card">
     <div class="card-title">Benefits & Tradeoffs</div>
     <div class="card-sub">What does this decomposition buy you?</div>
@@ -159,60 +212,36 @@
     </div>
   </div>
 
-  <!-- ════════ 2. ANIMATION: STEP-BY-STEP ORTHOGONALIZATION ════════ -->
-  <div class="card">
-    <div class="card-title">Watch the Orthogonalization: Peeling Off Projections</div>
-    <div class="card-sub">Multiple regression with 3 predictors. Each step projects a variable onto the previous ones and keeps only the residual — the part that's genuinely new information.</div>
+  <!-- 2. THREE.JS 3D ANIMATION -->
+  <div class="card" id="anim-card">
+    <div class="card-title">Watch the Orthogonalization in 3D</div>
+    <div class="card-sub">Multiple regression with 2 predictors. x₂ casts its shadow onto x₁, the residual z₂ is the new information, and regressing y on z₂ gives the multiple regression coefficient β̂₂.</div>
 
-    <div class="ctrl-row">
-      <button class="btn active" id="btnStep0" onclick="goStep(0)">Setup</button>
-      <button class="btn" id="btnStep1" onclick="goStep(1)">Step 1: z₁ = x₁</button>
-      <button class="btn" id="btnStep2" onclick="goStep(2)">Step 2: Orthogonalize x₂</button>
-      <button class="btn" id="btnStep3" onclick="goStep(3)">Step 3: Regress y on z₂</button>
-      <span style="flex:1"></span>
-      <button class="btn" id="btnAutoPlay" onclick="autoPlay()">Auto-play</button>
+    <div id="anim-container">
+      <div id="phase-text"></div>
+      <div id="beta-display"></div>
     </div>
 
-    <div class="two-col">
-      <div>
-        <div class="plot-wrap" id="plotMain" style="height:400px"></div>
-      </div>
-      <div>
-        <div id="stepCards">
-          <div class="step-card active" id="sc0" onclick="goStep(0)">
-            <div class="step-header"><span class="step-num">0</span><span class="step-title">Setup: Raw Data</span></div>
-            <div class="step-detail">Two predictors x<sub>1</sub> and x<sub>2</sub>, correlated at r = <span id="corrDisplay">0.80</span>. Response y depends on both. We want to find multiple regression coefficients β̂<sub>1</sub> and β̂<sub>2</sub>.</div>
-          </div>
-          <div class="step-card" id="sc1" onclick="goStep(1)">
-            <div class="step-header"><span class="step-num">1</span><span class="step-title">z₁ = x₁ (first predictor stays)</span></div>
-            <div class="step-detail">The first predictor needs no adjustment — it defines the starting direction. z<sub>1</sub> = x<sub>1</sub>.</div>
-          </div>
-          <div class="step-card" id="sc2" onclick="goStep(2)">
-            <div class="step-header"><span class="step-num">2</span><span class="step-title">Project x₂ onto x₁, keep the residual z₂</span></div>
-            <div class="step-detail">Remove from x<sub>2</sub> everything that x<sub>1</sub> already explains. z<sub>2</sub> = x<sub>2</sub> − (x₁ᵀx₂/x₁ᵀx₁)x<sub>1</sub>. This is the "new information" in x<sub>2</sub>. When correlation is high, z<sub>2</sub> is tiny.</div>
-          </div>
-          <div class="step-card" id="sc3" onclick="goStep(3)">
-            <div class="step-header"><span class="step-num">3</span><span class="step-title">Regress y on z₂ → this IS β̂₂</span></div>
-            <div class="step-detail">The coefficient from regressing y on the residual z<sub>2</sub> is exactly the multiple regression coefficient β̂<sub>2</sub>. No matrix inversion needed — just simple regressions and subtraction.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="ctrl-row" style="margin-top:14px">
-      <span class="ctrl-lbl">Correlation r(x₁, x₂):</span>
-      <input type="range" id="corrSlider" min="0" max="99" value="80" step="1">
-      <span class="vbadge" id="corrBadge">0.80</span>
-    </div>
-    <div id="corrWarning" class="warn-box" style="display:none">
-      At high correlation, z₂ is nearly zero — dividing by it amplifies noise. This is why collinearity makes coefficients unstable: the "new information" in each predictor is vanishingly small.
+    <div class="anim-controls">
+      <button class="btn" id="btn-play" title="Play / Pause">▶ Play</button>
+      <button class="btn" id="btn-restart" title="Restart">⟲ Restart</button>
+      <div class="sep"></div>
+      <span class="ctrl-lbl">Speed:</span>
+      <input type="range" id="speed-slider" min="25" max="300" value="100" style="width:100px">
+      <span class="vbadge" id="speed-display">1.0x</span>
+      <div class="sep"></div>
+      <input type="range" id="progress-bar" min="0" max="1000" value="0">
+      <div class="sep"></div>
+      <span class="ctrl-lbl">Correlation:</span>
+      <input type="range" id="corr-slider" min="0" max="95" value="60" style="width:120px">
+      <span class="vbadge" id="corr-display">0.60</span>
     </div>
   </div>
 
-  <!-- ════════ 3. CORRELATION EXPLORER ════════ -->
+  <!-- 3. CORRELATION EXPLORER -->
   <div class="card">
     <div class="card-title">Correlation Drives Instability</div>
-    <div class="card-sub">As corr(x₁, x₂) increases, the orthogonal residual z₂ shrinks. The coefficient β̂₂ has to divide by ||z₂||², so noise gets amplified. Drag the slider and watch the variance explode.</div>
+    <div class="card-sub">As corr(x₁, x₂) increases, the orthogonal residual z₂ shrinks. The coefficient β̂₂ has to divide by ||z₂||², so noise gets amplified.</div>
 
     <div class="two-col">
       <div>
@@ -229,7 +258,7 @@
     </div>
   </div>
 
-  <!-- ════════ 4. BRIDGE TO RIDGE ════════ -->
+  <!-- 4. BRIDGE TO RIDGE -->
   <div class="card">
     <div class="card-title">Bridge to Ridge: Shrinking After Orthogonalization</div>
     <div class="card-sub">Ridge regression applies shrinkage in the orthogonalized directions. Directions with tiny ||z<sub>j</sub>|| get shrunk the most — exactly the noisy ones.</div>
@@ -255,7 +284,7 @@
     </div>
   </div>
 
-  <!-- ════════ 5. STATISTICAL GUARANTEES ════════ -->
+  <!-- 5. STATISTICAL GUARANTEES -->
   <div class="card">
     <div class="slbl">Statistical Guarantees</div>
     <div class="guar-grid">
@@ -302,7 +331,7 @@
     </div>
   </div>
 
-  <!-- ════════ 6. FORMULAS (DEAD LAST) ════════ -->
+  <!-- 6. FORMULAS (DEAD LAST) -->
   <div class="card">
     <div class="slbl">Formulas — Reference</div>
     <div class="formula-block">
@@ -325,13 +354,624 @@
 
 </div>
 
+<!-- ═══════════════════════════════════════════════ -->
+<!-- THREE.JS 3D ANIMATION MODULE                    -->
+<!-- ═══════════════════════════════════════════════ -->
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ── COLORS ──
+const C = {
+  x1: 0x58a6ff, x2: 0xf78166, y: 0xbc8cff, z2: 0x3fb950,
+  proj: 0xd29922, bg: 0x0d1117, grid: 0x21262d,
+  x1Hex: '#58a6ff', x2Hex: '#f78166', yHex: '#bc8cff',
+  z2Hex: '#3fb950', projHex: '#d29922',
+};
+
+// ── EASING ──
+function easeInOut(t) {
+  t = Math.max(0, Math.min(1, t));
+  return t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+}
+function lerp(a, b, t) { return a + (b - a) * t; }
+function lerpV3(out, a, b, t) {
+  out.x = lerp(a.x, b.x, t);
+  out.y = lerp(a.y, b.y, t);
+  out.z = lerp(a.z, b.z, t);
+  return out;
+}
+
+// ── ARROW BUILDER ──
+function createArrow(color, lineWidth = 3) {
+  const group = new THREE.Group();
+  // Shaft: use cylinder for thickness
+  const shaftGeo = new THREE.CylinderGeometry(0.025 * lineWidth, 0.025 * lineWidth, 1, 8);
+  const mat = new THREE.MeshPhongMaterial({ color, transparent: true, opacity: 1 });
+  const shaft = new THREE.Mesh(shaftGeo, mat);
+  // Cone head
+  const coneGeo = new THREE.ConeGeometry(0.06 * lineWidth, 0.18, 12);
+  const cone = new THREE.Mesh(coneGeo, mat);
+  group.add(shaft);
+  group.add(cone);
+  group.userData = { shaft, cone, mat };
+  return group;
+}
+
+function setArrow(group, from, to) {
+  const dir = new THREE.Vector3().subVectors(to, from);
+  const len = dir.length();
+  if (len < 0.001) { group.visible = false; return; }
+  group.visible = true;
+  const { shaft, cone } = group.userData;
+
+  const headLen = 0.18;
+  const shaftLen = Math.max(0.001, len - headLen);
+
+  // Position shaft
+  shaft.scale.set(1, shaftLen, 1);
+  shaft.position.set(0, shaftLen / 2, 0);
+
+  // Position cone
+  cone.position.set(0, shaftLen + headLen / 2, 0);
+
+  // Orient group
+  const mid = new THREE.Vector3().addVectors(from, new THREE.Vector3());
+  group.position.copy(from);
+  const up = new THREE.Vector3(0, 1, 0);
+  const quat = new THREE.Quaternion().setFromUnitVectors(up, dir.normalize());
+  group.quaternion.copy(quat);
+}
+
+function setArrowOpacity(group, opacity) {
+  group.userData.mat.opacity = opacity;
+  group.userData.mat.transparent = opacity < 1;
+}
+
+// ── DASHED LINE ──
+function createDashedLine(color) {
+  const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+  const mat = new THREE.LineDashedMaterial({ color, dashSize: 0.08, gapSize: 0.05, transparent: true, opacity: 1 });
+  const line = new THREE.Line(geo, mat);
+  line.computeLineDistances();
+  return line;
+}
+
+function setDashedLine(line, from, to) {
+  const positions = line.geometry.attributes.position.array;
+  positions[0] = from.x; positions[1] = from.y; positions[2] = from.z;
+  positions[3] = to.x; positions[4] = to.y; positions[5] = to.z;
+  line.geometry.attributes.position.needsUpdate = true;
+  line.computeLineDistances();
+}
+
+// ── RIGHT ANGLE MARKER ──
+function createRightAngle(color) {
+  const geo = new THREE.BufferGeometry();
+  const positions = new Float32Array(9); // 3 points
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setIndex([0, 1, 1, 2]);
+  const mat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0 });
+  return new THREE.LineSegments(geo, mat);
+}
+
+function setRightAngle(marker, origin, dir1, dir2, size) {
+  const p1 = new THREE.Vector3().copy(origin).addScaledVector(dir1, size);
+  const p2 = new THREE.Vector3().copy(p1).addScaledVector(dir2, size);
+  const p3 = new THREE.Vector3().copy(origin).addScaledVector(dir2, size);
+  const positions = marker.geometry.attributes.position.array;
+  positions[0] = p1.x; positions[1] = p1.y; positions[2] = p1.z;
+  positions[3] = p2.x; positions[4] = p2.y; positions[5] = p2.z;
+  positions[6] = p3.x; positions[7] = p3.y; positions[8] = p3.z;
+  marker.geometry.attributes.position.needsUpdate = true;
+}
+
+// ── SCENE SETUP ──
+const container = document.getElementById('anim-container');
+const rect = container.getBoundingClientRect();
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(C.bg);
+
+const camera = new THREE.PerspectiveCamera(45, rect.width / rect.height, 0.1, 100);
+camera.position.set(4, 3, 4);
+camera.lookAt(0, 0.5, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(rect.width, rect.height);
+container.insertBefore(renderer.domElement, container.firstChild);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.target.set(0, 0.5, 0);
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.4;
+controls.update();
+
+// Lights
+scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+dirLight.position.set(5, 8, 5);
+scene.add(dirLight);
+
+// Grid
+const gridHelper = new THREE.GridHelper(6, 12, C.grid, C.grid);
+gridHelper.material.opacity = 0.3;
+gridHelper.material.transparent = true;
+scene.add(gridHelper);
+
+// Origin sphere
+const originSphere = new THREE.Mesh(
+  new THREE.SphereGeometry(0.04, 16, 16),
+  new THREE.MeshPhongMaterial({ color: 0x8b949e })
+);
+scene.add(originSphere);
+
+// ── VECTORS (defined by correlation) ──
+const ORIGIN = new THREE.Vector3(0, 0, 0);
+let corrVal = 0.60;
+
+// x1 along +X axis, x2 in XZ plane at angle, y has a Y component
+const VEC_LEN = 2.0;
+
+function computeVectors(corr) {
+  const angle = Math.acos(corr); // angle between x1 and x2
+  const x1End = new THREE.Vector3(VEC_LEN, 0, 0);
+  const x2End = new THREE.Vector3(VEC_LEN * Math.cos(angle), 0, VEC_LEN * Math.sin(angle));
+  const yEnd = new THREE.Vector3(0.6, VEC_LEN * 0.7, 0.8);
+
+  // Projection of x2 onto x1: proj = (x2.dot(x1)/x1.dot(x1)) * x1
+  const projScalar = x2End.dot(x1End) / x1End.dot(x1End);
+  const projPoint = x1End.clone().multiplyScalar(projScalar);
+
+  // z2 = x2 - proj
+  const z2End = new THREE.Vector3().subVectors(x2End, projPoint);
+
+  // Projection of y onto z2: beta2 = y.dot(z2)/z2.dot(z2)
+  const beta2 = yEnd.dot(z2End) / (z2End.dot(z2End) + 1e-10);
+  const yProjOnZ2 = z2End.clone().multiplyScalar(beta2);
+
+  return { x1End, x2End, yEnd, projPoint, projScalar, z2End, beta2, yProjOnZ2 };
+}
+
+// ── CREATE SCENE OBJECTS ──
+const arrowX1 = createArrow(C.x1);
+const arrowX2 = createArrow(C.x2);
+const arrowX2Ghost = createArrow(C.x2, 2); // ghost of original x2
+const arrowY = createArrow(C.y);
+const arrowZ2 = createArrow(C.z2);
+const arrowProj = createArrow(C.proj, 2); // projection shadow on x1
+
+const dashX2ToProj = createDashedLine(C.proj);
+const dashYToZ2Proj = createDashedLine(C.proj);
+
+const rightAngle = createRightAngle(C.z2);
+
+// Projection shadow sphere
+const shadowSphere = new THREE.Mesh(
+  new THREE.SphereGeometry(0.06, 16, 16),
+  new THREE.MeshPhongMaterial({ color: C.proj, emissive: C.proj, emissiveIntensity: 0.3 })
+);
+const yShadowSphere = new THREE.Mesh(
+  new THREE.SphereGeometry(0.06, 16, 16),
+  new THREE.MeshPhongMaterial({ color: C.proj, emissive: C.proj, emissiveIntensity: 0.3 })
+);
+
+// X1 extended line (to show the axis)
+const x1LineGeo = new THREE.BufferGeometry().setFromPoints([
+  new THREE.Vector3(-0.5, 0, 0), new THREE.Vector3(3, 0, 0)
+]);
+const x1Line = new THREE.Line(x1LineGeo, new THREE.LineBasicMaterial({ color: C.x1, transparent: true, opacity: 0.2 }));
+
+// Ridge dampener visual: a translucent sphere around z2 tip
+const ridgeSphere = new THREE.Mesh(
+  new THREE.SphereGeometry(0.15, 16, 16),
+  new THREE.MeshPhongMaterial({ color: C.proj, transparent: true, opacity: 0 })
+);
+
+scene.add(arrowX1, arrowX2, arrowX2Ghost, arrowY, arrowZ2, arrowProj);
+scene.add(dashX2ToProj, dashYToZ2Proj);
+scene.add(rightAngle, shadowSphere, yShadowSphere, x1Line, ridgeSphere);
+
+// Initially hide everything
+[arrowX1, arrowX2, arrowX2Ghost, arrowY, arrowZ2, arrowProj,
+ dashX2ToProj, dashYToZ2Proj, shadowSphere, yShadowSphere, ridgeSphere].forEach(o => o.visible = false);
+rightAngle.material.opacity = 0;
+x1Line.material.opacity = 0;
+
+// ── HTML LABELS ──
+const labels = {};
+function createLabel(id, text, color) {
+  const el = document.createElement('div');
+  el.className = 'anim-label';
+  el.style.color = color;
+  el.style.opacity = '0';
+  el.textContent = text;
+  container.appendChild(el);
+  labels[id] = el;
+  return el;
+}
+createLabel('x1', 'x₁', C.x1Hex);
+createLabel('x2', 'x₂', C.x2Hex);
+createLabel('y', 'y', C.yHex);
+createLabel('z2', 'z₂', C.z2Hex);
+createLabel('proj', 'proj', C.projHex);
+createLabel('yproj', 'ŷ on z₂', C.projHex);
+
+function updateLabel(id, worldPos, visible) {
+  const el = labels[id];
+  if (!visible) { el.style.opacity = '0'; return; }
+  const v = worldPos.clone().project(camera);
+  const hw = container.clientWidth / 2;
+  const hh = container.clientHeight / 2;
+  const x = v.x * hw + hw + 10;
+  const y = -v.y * hh + hh - 10;
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  el.style.opacity = '1';
+}
+
+// ── PHASE DEFINITIONS ──
+// Phase timing in seconds (at 1x speed)
+const PHASES = [
+  { name: 'setup', duration: 2 },         // 0: vectors appear
+  { name: 'shadow', duration: 3 },        // 1: project x2 onto x1
+  { name: 'residual', duration: 2.5 },    // 2: z2 appears, x2 ghosts
+  { name: 'yproject', duration: 3 },      // 3: project y onto z2
+  { name: 'correlate', duration: 4 },     // 4: x2 rotates toward x1
+  { name: 'ridge', duration: 2.5 },       // 5: ridge dampener
+];
+const TOTAL_DURATION = PHASES.reduce((s, p) => s + p.duration, 0);
+
+const PHASE_TEXTS = [
+  '',
+  'x₂ casts its shadow onto x₁ — the part x₁ already explains',
+  'z₂ = the "new information" in x₂, perpendicular to x₁',
+  'Project y onto z₂ — this coefficient IS the multiple regression β̂₂',
+  'High correlation → tiny z₂ → unstable coefficient',
+  'Ridge adds λ to ||z₂||² — stabilizes the division',
+];
+
+// ── ANIMATION STATE ──
+let playing = false;
+let globalTime = 0; // seconds
+let speed = 1.0;
+let lastTimestamp = null;
+let userCorr = 0.60;
+let animCorr = 0.60; // used during phase 4
+
+const phaseTextEl = document.getElementById('phase-text');
+const betaDisplayEl = document.getElementById('beta-display');
+
+function getPhaseAt(t) {
+  let acc = 0;
+  for (let i = 0; i < PHASES.length; i++) {
+    if (t < acc + PHASES[i].duration) {
+      return { index: i, local: (t - acc) / PHASES[i].duration };
+    }
+    acc += PHASES[i].duration;
+  }
+  return { index: PHASES.length - 1, local: 1 };
+}
+
+function resetScene() {
+  globalTime = 0;
+  animCorr = userCorr;
+  [arrowX1, arrowX2, arrowX2Ghost, arrowY, arrowZ2, arrowProj,
+   dashX2ToProj, dashYToZ2Proj, shadowSphere, yShadowSphere, ridgeSphere].forEach(o => o.visible = false);
+  rightAngle.material.opacity = 0;
+  x1Line.material.opacity = 0;
+  Object.values(labels).forEach(l => l.style.opacity = '0');
+  phaseTextEl.textContent = '';
+  betaDisplayEl.textContent = '';
+  betaDisplayEl.style.opacity = '0';
+}
+
+// ── RENDER FRAME ──
+function renderAnimation() {
+  const { index: phase, local: t } = getPhaseAt(globalTime);
+  const et = easeInOut(t);
+
+  // Effective correlation: changes in phase 4
+  let corr = userCorr;
+  if (phase === 4) {
+    // Smoothly increase correlation from userCorr toward 0.98
+    corr = lerp(userCorr, 0.98, et);
+  } else if (phase === 5) {
+    corr = 0.98;
+  }
+  animCorr = corr;
+
+  const vecs = computeVectors(corr);
+  const vecsUser = computeVectors(userCorr);
+
+  // Show phase text
+  phaseTextEl.textContent = PHASE_TEXTS[phase] || '';
+  phaseTextEl.style.opacity = phase === 0 ? '0' : '1';
+
+  // ── PHASE 0: Setup — vectors fade in ──
+  if (phase >= 0) {
+    const fadeIn = phase === 0 ? et : 1;
+    arrowX1.visible = true;
+    setArrow(arrowX1, ORIGIN, vecs.x1End);
+    setArrowOpacity(arrowX1, fadeIn);
+
+    arrowX2.visible = true;
+    setArrow(arrowX2, ORIGIN, vecs.x2End);
+    setArrowOpacity(arrowX2, fadeIn);
+
+    arrowY.visible = true;
+    setArrow(arrowY, ORIGIN, vecs.yEnd);
+    setArrowOpacity(arrowY, fadeIn);
+
+    x1Line.material.opacity = phase === 0 ? fadeIn * 0.2 : 0.25;
+
+    updateLabel('x1', vecs.x1End, fadeIn > 0.3);
+    updateLabel('x2', vecs.x2End, fadeIn > 0.3 && phase < 3);
+    updateLabel('y', vecs.yEnd, fadeIn > 0.3);
+  }
+
+  // ── PHASE 1: Shadow slides down ──
+  if (phase >= 1) {
+    const st = phase === 1 ? et : 1;
+
+    // Shadow sphere slides along x1 from origin to projPoint
+    const shadowTarget = vecs.projPoint.clone();
+    const shadowPos = new THREE.Vector3();
+    lerpV3(shadowPos, ORIGIN, shadowTarget, st);
+    shadowSphere.visible = true;
+    shadowSphere.position.copy(shadowPos);
+
+    // Projection arrow on x1 axis grows
+    arrowProj.visible = st > 0.05;
+    if (st > 0.05) {
+      setArrow(arrowProj, ORIGIN, shadowPos);
+      setArrowOpacity(arrowProj, st * 0.7);
+    }
+
+    // Dashed connector from x2 tip to shadow point (grows)
+    dashX2ToProj.visible = st > 0.1;
+    if (st > 0.1) {
+      const dashStart = new THREE.Vector3();
+      lerpV3(dashStart, vecs.x2End, vecs.x2End, 1);
+      const dashEnd = new THREE.Vector3();
+      lerpV3(dashEnd, vecs.x2End, shadowTarget, st);
+      setDashedLine(dashX2ToProj, vecs.x2End, dashEnd);
+      dashX2ToProj.material.opacity = st;
+    }
+
+    updateLabel('proj', shadowPos, st > 0.3);
+  } else {
+    shadowSphere.visible = false;
+    arrowProj.visible = false;
+    dashX2ToProj.visible = false;
+  }
+
+  // ── PHASE 2: x2 morphs into z2 ──
+  if (phase >= 2) {
+    const rt = phase === 2 ? et : 1;
+
+    // Ghost of original x2
+    arrowX2Ghost.visible = true;
+    setArrow(arrowX2Ghost, ORIGIN, vecs.x2End);
+    setArrowOpacity(arrowX2Ghost, 0.15);
+
+    // x2 arrow tip slides from x2End to z2End
+    const currentTip = new THREE.Vector3();
+    lerpV3(currentTip, vecs.x2End, vecs.z2End, rt);
+    setArrow(arrowX2, ORIGIN, currentTip);
+    // Change color to z2 color via blending
+    const x2Color = new THREE.Color(C.x2);
+    const z2Color = new THREE.Color(C.z2);
+    x2Color.lerp(z2Color, rt);
+    arrowX2.userData.mat.color.copy(x2Color);
+
+    // z2 arrow (shown once morphing is done enough)
+    if (rt > 0.8) {
+      arrowZ2.visible = true;
+      setArrow(arrowZ2, ORIGIN, vecs.z2End);
+      setArrowOpacity(arrowZ2, (rt - 0.8) * 5);
+      // Hide the morphing x2 once z2 is fully shown
+      if (rt >= 1) arrowX2.visible = false;
+    }
+
+    // Right angle marker
+    if (rt > 0.5) {
+      const raOpacity = Math.min(1, (rt - 0.5) * 2);
+      rightAngle.material.opacity = raOpacity;
+      const x1Dir = vecs.x1End.clone().normalize();
+      const z2Dir = vecs.z2End.clone().normalize();
+      setRightAngle(rightAngle, ORIGIN, x1Dir, z2Dir, 0.2);
+    }
+
+    updateLabel('z2', vecs.z2End, rt > 0.5);
+    updateLabel('x2', vecs.x2End, rt < 0.5);
+  } else {
+    arrowX2Ghost.visible = false;
+    arrowZ2.visible = false;
+  }
+
+  // ── PHASE 3: Project y onto z2 ──
+  if (phase >= 3) {
+    const pt = phase === 3 ? et : 1;
+
+    // y projection shadow slides onto z2
+    const yProjTarget = vecs.yProjOnZ2;
+    const yProjPos = new THREE.Vector3();
+    lerpV3(yProjPos, ORIGIN, yProjTarget, pt);
+
+    yShadowSphere.visible = true;
+    yShadowSphere.position.copy(yProjPos);
+
+    // Dashed line from y tip to projection on z2
+    dashYToZ2Proj.visible = pt > 0.1;
+    if (pt > 0.1) {
+      const dashEnd = new THREE.Vector3();
+      lerpV3(dashEnd, vecs.yEnd, yProjTarget, pt);
+      setDashedLine(dashYToZ2Proj, vecs.yEnd, dashEnd);
+      dashYToZ2Proj.material.opacity = pt;
+    }
+
+    // Show beta2
+    betaDisplayEl.style.opacity = pt > 0.3 ? '1' : '0';
+    betaDisplayEl.textContent = `β̂₂ = ${vecs.beta2.toFixed(3)}`;
+
+    updateLabel('yproj', yProjPos, pt > 0.4);
+  } else {
+    yShadowSphere.visible = false;
+    dashYToZ2Proj.visible = false;
+  }
+
+  // ── PHASE 4: Correlation changes ──
+  if (phase === 4) {
+    // Vectors are already recomputed with changing corr above
+    // Update beta display with current value
+    betaDisplayEl.textContent = `β̂₂ = ${vecs.beta2.toFixed(3)}\ncorr = ${corr.toFixed(2)}`;
+    betaDisplayEl.style.whiteSpace = 'pre';
+
+    // z2 shrinks visually as correlation increases (already handled by vecs)
+    arrowZ2.visible = true;
+    setArrow(arrowZ2, ORIGIN, vecs.z2End);
+    setArrowOpacity(arrowZ2, 1);
+
+    // Update shadow sphere, proj, etc.
+    shadowSphere.position.copy(vecs.projPoint);
+    setArrow(arrowProj, ORIGIN, vecs.projPoint);
+    arrowX2Ghost.visible = true;
+    setArrow(arrowX2Ghost, ORIGIN, vecs.x2End);
+    setArrowOpacity(arrowX2Ghost, 0.15);
+
+    updateLabel('z2', vecs.z2End, true);
+    // Update right angle
+    const x1Dir = vecs.x1End.clone().normalize();
+    const z2Dir = vecs.z2End.clone().normalize();
+    setRightAngle(rightAngle, ORIGIN, x1Dir, z2Dir, 0.2);
+
+    // Update y projection
+    yShadowSphere.position.copy(vecs.yProjOnZ2);
+    setDashedLine(dashYToZ2Proj, vecs.yEnd, vecs.yProjOnZ2);
+    updateLabel('yproj', vecs.yProjOnZ2, true);
+  }
+
+  // ── PHASE 5: Ridge dampener ──
+  if (phase === 5) {
+    const rt = et;
+    // Show ridge sphere around beta display
+    ridgeSphere.visible = true;
+    ridgeSphere.position.copy(vecs.yProjOnZ2);
+    ridgeSphere.material.opacity = rt * 0.3;
+    ridgeSphere.scale.setScalar(1 + rt * 0.5);
+
+    // Beta shrinks toward zero
+    const ridgeLambda = rt * 2.0;
+    const z2Norm2 = vecs.z2End.dot(vecs.z2End);
+    const shrinkFactor = z2Norm2 / (z2Norm2 + ridgeLambda);
+    const ridgeBeta = vecs.beta2 * shrinkFactor;
+
+    betaDisplayEl.textContent = `OLS β̂₂ = ${vecs.beta2.toFixed(3)}\nRidge β̂₂ = ${ridgeBeta.toFixed(3)}\nλ = ${ridgeLambda.toFixed(2)}`;
+    betaDisplayEl.style.whiteSpace = 'pre';
+
+    // Visually shrink the y projection
+    const shrunkProj = vecs.z2End.clone().normalize().multiplyScalar(
+      vecs.z2End.length() * ridgeBeta / (vecs.beta2 || 1)
+    );
+    yShadowSphere.position.copy(shrunkProj);
+    updateLabel('yproj', shrunkProj, true);
+  } else {
+    ridgeSphere.visible = false;
+  }
+
+  // Auto-orbit only during playback
+  controls.autoRotate = playing;
+  controls.update();
+
+  renderer.render(scene, camera);
+}
+
+// ── ANIMATION LOOP ──
+function tick(timestamp) {
+  requestAnimationFrame(tick);
+
+  if (playing && lastTimestamp !== null) {
+    const dt = (timestamp - lastTimestamp) / 1000 * speed;
+    globalTime += dt;
+    if (globalTime > TOTAL_DURATION) {
+      globalTime = TOTAL_DURATION;
+      playing = false;
+      document.getElementById('btn-play').textContent = '▶ Play';
+    }
+  }
+  lastTimestamp = timestamp;
+
+  // Update progress bar
+  const progressBar = document.getElementById('progress-bar');
+  progressBar.value = (globalTime / TOTAL_DURATION) * 1000;
+
+  renderAnimation();
+}
+requestAnimationFrame(tick);
+
+// ── CONTROLS ──
+document.getElementById('btn-play').addEventListener('click', () => {
+  if (globalTime >= TOTAL_DURATION) {
+    resetScene();
+  }
+  playing = !playing;
+  document.getElementById('btn-play').textContent = playing ? '⏸ Pause' : '▶ Play';
+});
+
+document.getElementById('btn-restart').addEventListener('click', () => {
+  resetScene();
+  playing = false;
+  document.getElementById('btn-play').textContent = '▶ Play';
+  renderAnimation();
+});
+
+document.getElementById('speed-slider').addEventListener('input', function() {
+  speed = this.value / 100;
+  document.getElementById('speed-display').textContent = speed.toFixed(1) + 'x';
+});
+
+document.getElementById('progress-bar').addEventListener('input', function() {
+  globalTime = (this.value / 1000) * TOTAL_DURATION;
+  renderAnimation();
+});
+
+document.getElementById('corr-slider').addEventListener('input', function() {
+  userCorr = this.value / 100;
+  document.getElementById('corr-display').textContent = userCorr.toFixed(2);
+  // If paused, re-render with new correlation
+  if (!playing) {
+    animCorr = userCorr;
+    renderAnimation();
+  }
+});
+
+// ── RESIZE ──
+window.addEventListener('resize', () => {
+  const r = container.getBoundingClientRect();
+  camera.aspect = r.width / r.height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(r.width, r.height);
+});
+
+// Initial render
+resetScene();
+renderAnimation();
+
+</script>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- PLOTLY SECTIONS (correlation explorer + ridge)  -->
+<!-- ═══════════════════════════════════════════════ -->
 <script>
 // ── DATA GENERATION ──
 const N = 80;
 const TRUE_B1 = 0.6, TRUE_B2 = 0.8;
 const SIGMA = 0.3;
 
-// Fixed random seed via simple LCG
 function lcg(seed) {
   let s = seed;
   return function() {
@@ -340,7 +980,6 @@ function lcg(seed) {
   };
 }
 
-// Box-Muller
 function randn(rng) {
   const u1 = rng(), u2 = rng();
   return Math.sqrt(-2 * Math.log(u1 + 1e-10)) * Math.cos(2 * Math.PI * u2);
@@ -355,9 +994,7 @@ function generateData(corr) {
     const xi1 = u;
     const xi2 = corr * u + Math.sqrt(1 - corr * corr) * v;
     const yi = TRUE_B1 * xi1 + TRUE_B2 * xi2 + SIGMA * randn(rng);
-    x1.push(xi1);
-    x2.push(xi2);
-    y.push(yi);
+    x1.push(xi1); x2.push(xi2); y.push(yi);
   }
   return { x1, x2, y };
 }
@@ -369,22 +1006,16 @@ function sub(a, b) { return a.map((v, i) => v - b[i]); }
 
 function orthogonalize(data) {
   const { x1, x2, y } = data;
-  // z1 = x1
   const z1 = [...x1];
-  // project x2 onto z1: gamma = <z1, x2> / <z1, z1>
   const gamma = dot(z1, x2) / dot(z1, z1);
   const proj = scale(z1, gamma);
   const z2 = sub(x2, proj);
-  // beta2_hat = <z2, y> / <z2, z2>
   const beta2 = dot(z2, y) / dot(z2, z2);
-  // beta1 via full OLS
   const z1norm2 = dot(z1, z1);
   const beta1 = dot(z1, y) / z1norm2 - gamma * beta2;
-
   return { z1, z2, proj, gamma, beta1, beta2, z2norm: norm(z2) };
 }
 
-// ── PLOT COLORS ──
 const COL = {
   x1: '#58a6ff', x2: '#f78166', z2: '#3fb950', proj: '#d29922',
   y: '#bc8cff', resid: '#f85149', bg: '#0d1117', grid: '#21262d',
@@ -395,157 +1026,9 @@ const LAYOUT_BASE = {
   font: { color: COL.text, size: 11 },
 };
 
-// ── VIZ 1: STEP-THROUGH ANIMATION ──
-let currentStep = 0;
-let currentCorr = 0.80;
-
-function getCorr() { return parseInt(document.getElementById('corrSlider').value) / 100; }
-
-function drawStep(step) {
-  currentStep = step;
-  const corr = getCorr();
-  currentCorr = corr;
-  const data = generateData(corr);
-  const orth = orthogonalize(data);
-
-  // Update step card highlights
-  for (let i = 0; i <= 3; i++) {
-    const el = document.getElementById('sc' + i);
-    el.classList.toggle('active', i === step);
-    el.classList.toggle('done', i < step);
-  }
-  for (let i = 0; i <= 3; i++) {
-    document.getElementById('btnStep' + i).classList.toggle('active', i === step);
-  }
-
-  // Warning for high correlation
-  const warn = document.getElementById('corrWarning');
-  warn.style.display = corr > 0.9 ? 'block' : 'none';
-
-  // Build traces
-  const traces = [];
-
-  if (step >= 0) {
-    // Always show x1 and x2 scatter
-    traces.push({
-      x: data.x1, y: data.x2,
-      mode: 'markers', type: 'scatter',
-      marker: { color: COL.x2, size: 5, opacity: step >= 2 ? 0.3 : 0.7 },
-      name: 'x₂ vs x₁',
-    });
-  }
-
-  if (step >= 1) {
-    // Show x1 direction line
-    const ext = 3;
-    traces.push({
-      x: [-ext, ext], y: [0, 0],
-      mode: 'lines', line: { color: COL.x1, width: 2.5 },
-      name: 'z₁ = x₁ direction',
-    });
-  }
-
-  if (step >= 2) {
-    // Show projection lines from x2 onto x1 direction
-    const projY = data.x2.map((_, i) => orth.gamma * data.x1[i]);
-    // Vertical drop lines (projection)
-    for (let i = 0; i < N; i += 3) { // every 3rd point to avoid clutter
-      traces.push({
-        x: [data.x1[i], data.x1[i]],
-        y: [data.x2[i], projY[i]],
-        mode: 'lines', line: { color: COL.proj, width: 0.8 },
-        showlegend: i === 0, name: i === 0 ? 'Projection onto x₁' : '',
-        legendgroup: 'proj',
-      });
-    }
-    // Residual z2 as points at the projected location
-    traces.push({
-      x: data.x1, y: orth.z2,
-      mode: 'markers',
-      marker: { color: COL.z2, size: 5, opacity: 0.7, symbol: 'diamond' },
-      name: 'z₂ (residual)',
-    });
-    // Regression line of x2 on x1
-    traces.push({
-      x: [-3, 3], y: [-3 * orth.gamma, 3 * orth.gamma],
-      mode: 'lines', line: { color: COL.proj, width: 2, dash: 'dash' },
-      name: `Regression line (γ = ${orth.gamma.toFixed(2)})`,
-    });
-  }
-
-  if (step >= 3) {
-    // Highlight z2 with y correlation
-    // Show the regression of y on z2 as a separate annotation
-    traces.push({
-      x: orth.z2, y: data.y,
-      mode: 'markers',
-      marker: { color: COL.y, size: 5, opacity: 0.7 },
-      name: 'y vs z₂',
-      xaxis: 'x', yaxis: 'y',
-      visible: false, // We'll show in annotation
-    });
-  }
-
-  const xRange = [-3.5, 3.5];
-  const yRange = step >= 2 ? [-3.5, 3.5] : [-3.5, 3.5];
-
-  const annotations = [];
-  if (step >= 2) {
-    annotations.push({
-      x: 0.02, y: 0.98, xref: 'paper', yref: 'paper',
-      text: `||z₂|| = ${orth.z2norm.toFixed(2)}`,
-      font: { color: COL.z2, size: 14, weight: 'bold' },
-      showarrow: false, bgcolor: 'rgba(13,17,23,0.8)', borderpad: 4,
-    });
-  }
-  if (step >= 3) {
-    annotations.push({
-      x: 0.02, y: 0.88, xref: 'paper', yref: 'paper',
-      text: `β̂₂ = <z₂,y>/||z₂||² = ${orth.beta2.toFixed(3)}`,
-      font: { color: COL.y, size: 13 },
-      showarrow: false, bgcolor: 'rgba(13,17,23,0.8)', borderpad: 4,
-    });
-  }
-
-  Plotly.react('plotMain', traces, {
-    ...LAYOUT_BASE,
-    xaxis: { title: 'x₁', gridcolor: COL.grid, zerolinecolor: COL.zero, range: xRange },
-    yaxis: { title: step < 2 ? 'x₂' : 'x₂ / z₂', gridcolor: COL.grid, zerolinecolor: COL.zero, range: yRange },
-    legend: { bgcolor: 'transparent', font: { size: 10 }, x: 1, xanchor: 'right', y: 1 },
-    margin: { t: 10, l: 55, r: 10, b: 48 },
-    height: 400,
-    annotations,
-  }, { responsive: true, displayModeBar: false });
-}
-
-function goStep(s) { drawStep(s); }
-
-let autoTimer = null;
-function autoPlay() {
-  if (autoTimer) { clearInterval(autoTimer); autoTimer = null; document.getElementById('btnAutoPlay').classList.remove('active'); return; }
-  document.getElementById('btnAutoPlay').classList.add('active');
-  let s = 0;
-  drawStep(s);
-  autoTimer = setInterval(() => {
-    s++;
-    if (s > 3) { clearInterval(autoTimer); autoTimer = null; document.getElementById('btnAutoPlay').classList.remove('active'); return; }
-    drawStep(s);
-  }, 1500);
-}
-
-document.getElementById('corrSlider').addEventListener('input', function() {
-  const v = getCorr();
-  document.getElementById('corrBadge').textContent = v.toFixed(2);
-  document.getElementById('corrDisplay').textContent = v.toFixed(2);
-  drawStep(currentStep);
-});
-
-// ── VIZ 2: CORRELATION EXPLORER (static curves) ──
+// ── CORRELATION EXPLORER ──
 function drawCorrExplorer() {
-  const rs = [];
-  const z2norms = [];
-  const varBetas = [];
-
+  const rs = [], z2norms = [], varBetas = [];
   for (let ri = 0; ri <= 99; ri++) {
     const r = ri / 100;
     rs.push(r);
@@ -553,21 +1036,14 @@ function drawCorrExplorer() {
     const o = orthogonalize(d);
     z2norms.push(o.z2norm);
     const vb = (SIGMA * SIGMA) / (o.z2norm * o.z2norm + 1e-10);
-    varBetas.push(Math.min(vb, 20)); // cap for display
+    varBetas.push(Math.min(vb, 20));
   }
-
-  // Highlight current correlation
-  const ci = Math.round(currentCorr * 100);
 
   Plotly.react('plotZ2norm', [{
     x: rs, y: z2norms,
     mode: 'lines', line: { color: COL.z2, width: 2.5 },
     fill: 'tozeroy', fillcolor: 'rgba(63,185,80,0.08)',
     name: '||z₂||',
-  }, {
-    x: [currentCorr], y: [z2norms[ci] || 0],
-    mode: 'markers', marker: { color: COL.z2, size: 10, symbol: 'circle' },
-    showlegend: false,
   }], {
     ...LAYOUT_BASE,
     xaxis: { title: 'Correlation r(x₁, x₂)', gridcolor: COL.grid, range: [-0.02, 1.02] },
@@ -581,10 +1057,6 @@ function drawCorrExplorer() {
     mode: 'lines', line: { color: COL.resid, width: 2.5 },
     fill: 'tozeroy', fillcolor: 'rgba(248,81,73,0.08)',
     name: 'Var(β̂₂)',
-  }, {
-    x: [currentCorr], y: [varBetas[ci] || 0],
-    mode: 'markers', marker: { color: COL.resid, size: 10, symbol: 'circle' },
-    showlegend: false,
   }], {
     ...LAYOUT_BASE,
     xaxis: { title: 'Correlation r(x₁, x₂)', gridcolor: COL.grid, range: [-0.02, 1.02] },
@@ -594,21 +1066,18 @@ function drawCorrExplorer() {
   }, { responsive: true, displayModeBar: false });
 }
 
-// ── VIZ 3: BRIDGE TO RIDGE ──
+// ── BRIDGE TO RIDGE ──
 function drawRidge() {
   const lambda = parseInt(document.getElementById('lambdaSlider').value) / 10;
   document.getElementById('lambdaDisplay').textContent = lambda.toFixed(1);
 
-  // Use SVD-like analysis with 5 "directions"
-  // Simulate eigenvalues (singular values squared)
-  const ds = [4.0, 1.5, 0.6, 0.15, 0.03]; // large to small
-  const olsCoefs = [0.3, -0.7, 0.5, 1.2, -0.9]; // in SVD basis
+  const ds = [4.0, 1.5, 0.6, 0.15, 0.03];
+  const olsCoefs = [0.3, -0.7, 0.5, 1.2, -0.9];
   const names = ['d₁=4.0', 'd₂=1.5', 'd₃=0.6', 'd₄=0.15', 'd₅=0.03'];
 
   const shrinkFactors = ds.map(d => d / (d + lambda));
   const ridgeCoefs = olsCoefs.map((b, i) => b * shrinkFactors[i]);
 
-  // Coefficients bar chart
   Plotly.react('plotRidgeCoef', [{
     x: names, y: olsCoefs, type: 'bar', name: 'OLS',
     marker: { color: COL.x1, opacity: 0.5 },
@@ -625,7 +1094,6 @@ function drawRidge() {
     height: 300,
   }, { responsive: true, displayModeBar: false });
 
-  // Shrinkage factors
   const colors = shrinkFactors.map(s => s < 0.3 ? COL.resid : s < 0.7 ? COL.proj : COL.z2);
   Plotly.react('plotShrinkage', [{
     x: names, y: shrinkFactors, type: 'bar',
@@ -644,15 +1112,8 @@ function drawRidge() {
 document.getElementById('lambdaSlider').addEventListener('input', drawRidge);
 
 // ── INIT ──
-drawStep(0);
 drawCorrExplorer();
 drawRidge();
-
-// Update explorer when correlation changes
-const origCorrHandler = document.getElementById('corrSlider').oninput;
-document.getElementById('corrSlider').addEventListener('input', () => {
-  setTimeout(drawCorrExplorer, 50);
-});
 </script>
 </body>
 </html>

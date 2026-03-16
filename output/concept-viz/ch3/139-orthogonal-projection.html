@@ -4,23 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Orthogonal Projection — ESL Ch 3.1</title>
-<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
 <style>
   :root {
     --bg: #0d1117;
     --surface: #161b22;
     --surface2: #21262d;
-    --accent: #6c63ff;
-    --accent2: #ff6584;
-    --accent3: #43e97b;
-    --accent4: #fbbf24;
-    --accent5: #38bdf8;
+    --border: #30363d;
     --text: #e6edf3;
     --text-muted: #8b949e;
-    --border: #30363d;
-    --badge-bg: #1c2d3f;
-    --badge-text: #58a6ff;
+    --blue: #58a6ff;
+    --orange: #f78166;
+    --purple: #bc8cff;
+    --green: #3fb950;
+    --red: #f85149;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -52,8 +57,8 @@
     text-transform: uppercase;
     padding: 0.2rem 0.6rem;
     border-radius: 4px;
-    background: var(--badge-bg);
-    color: var(--badge-text);
+    background: #1c2d3f;
+    color: var(--blue);
     border: 1px solid #1f6feb44;
   }
   .section-tag {
@@ -63,17 +68,8 @@
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
   }
-  h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 0.5rem;
-  }
-  .tagline {
-    font-size: 1rem;
-    color: var(--text-muted);
-    font-style: italic;
-  }
+  h1 { font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+  .tagline { font-size: 1rem; color: var(--text-muted); font-style: italic; }
 
   /* ── CARDS ── */
   .card {
@@ -93,27 +89,11 @@
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--border);
   }
+  .benefit-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .benefit-list li { display: flex; gap: 0.75rem; align-items: flex-start; font-size: 0.95rem; }
+  .benefit-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
 
-  /* ── PLAIN ENGLISH ── */
-  .benefit-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-  .benefit-list li {
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
-    font-size: 0.95rem;
-  }
-  .benefit-icon {
-    font-size: 1rem;
-    flex-shrink: 0;
-    margin-top: 0.1rem;
-  }
-
-  /* ── VIZ SECTIONS ── */
+  /* ── VIZ CONTAINER ── */
   .viz-section {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -138,14 +118,49 @@
     text-transform: uppercase;
     color: var(--text-muted);
   }
-  .viz-desc {
-    font-size: 0.82rem;
-    color: var(--text-muted);
+  .viz-desc { font-size: 0.82rem; color: var(--text-muted); }
+
+  #three-canvas-wrap {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    cursor: grab;
   }
-  .btn-row {
+  #three-canvas-wrap:active { cursor: grabbing; }
+  #three-canvas-wrap canvas { display: block; width: 100%; height: 100%; }
+
+  /* ── OVERLAY LABELS ── */
+  .label-3d {
+    position: absolute;
+    pointer-events: none;
+    font-size: 13px;
+    font-weight: 700;
+    text-shadow: 0 0 6px rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.6);
+    white-space: nowrap;
+    transition: opacity 0.3s;
+  }
+  .phase-text {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.9rem;
+    color: var(--blue);
+    text-align: center;
+    text-shadow: 0 0 8px rgba(0,0,0,0.8);
+    pointer-events: none;
+    transition: opacity 0.4s;
+    max-width: 90%;
+  }
+
+  /* ── CONTROLS ── */
+  .controls-bar {
+    padding: 0.6rem 1.25rem;
+    border-top: 1px solid var(--border);
     display: flex;
-    gap: 0.5rem;
     align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
   }
   button {
     background: var(--surface);
@@ -158,8 +173,30 @@
     transition: background 0.15s, border-color 0.15s;
     white-space: nowrap;
   }
-  button:hover { background: var(--surface2); border-color: #6c63ff88; }
-  button.active { background: #1e1b4b; border-color: var(--accent); color: #a5b4fc; }
+  button:hover { background: var(--surface2); border-color: #58a6ff88; }
+  button.active { background: #1c2d3f; border-color: var(--blue); color: #a5b4fc; }
+  .speed-control { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text-muted); }
+  .speed-control input[type="range"] { width: 80px; accent-color: var(--blue); }
+  .progress-wrap { flex: 1; min-width: 100px; display: flex; align-items: center; gap: 0.5rem; }
+  .progress-wrap input[type="range"] { flex: 1; accent-color: var(--blue); }
+  .progress-label { font-size: 0.75rem; color: var(--text-muted); min-width: 36px; }
+
+  .toggle-row {
+    padding: 0.5rem 1.25rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .toggle-row label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .toggle-row input[type="checkbox"] { accent-color: var(--blue); }
 
   /* ── LEGEND ── */
   .legend {
@@ -169,49 +206,12 @@
     gap: 1.25rem;
     flex-wrap: wrap;
   }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-  }
-  .legend-swatch {
-    width: 14px;
-    height: 4px;
-    border-radius: 2px;
-    flex-shrink: 0;
-  }
-  .legend-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text-muted); }
+  .legend-swatch { width: 14px; height: 4px; border-radius: 2px; flex-shrink: 0; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
-  /* ── ANIMATION STEP DISPLAY ── */
-  .anim-status {
-    font-size: 0.82rem;
-    color: var(--accent5);
-    padding: 0 1.25rem 0.75rem;
-    min-height: 1.4rem;
-  }
-
-  /* ── 2x2 GRID ── */
-  .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  @media (max-width: 860px) { .grid-2 { grid-template-columns: 1fr; } }
-
-  /* ── KEY PROPERTIES ── */
-  .prop-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-  }
+  /* ── PROPERTY GRID ── */
+  .prop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
   @media (max-width: 600px) { .prop-grid { grid-template-columns: 1fr; } }
   .prop-card {
     background: var(--surface2);
@@ -219,29 +219,15 @@
     border-radius: 8px;
     padding: 0.85rem 1rem;
   }
-  .prop-name {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    margin-bottom: 0.3rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  .prop-formula {
-    font-size: 0.95rem;
-    color: var(--text);
-    font-weight: 500;
-  }
-  .prop-note {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-top: 0.3rem;
-  }
+  .prop-name { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .prop-formula { font-size: 0.95rem; color: var(--text); font-weight: 500; }
+  .prop-note { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem; }
 
   /* ── FORMULA BLOCK ── */
   .formula-block {
     background: var(--surface2);
     border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
+    border-left: 3px solid #6c63ff;
     border-radius: 6px;
     padding: 1rem 1.5rem;
     margin-bottom: 1rem;
@@ -251,12 +237,11 @@
   .quote {
     font-style: italic;
     color: var(--text-muted);
-    border-left: 2px solid var(--accent);
+    border-left: 2px solid #6c63ff;
     padding: 0.5rem 0.75rem;
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 6px 6px 0;
     font-size: 0.88rem;
     background: var(--surface2);
-    border-radius: 0 6px 6px 0;
   }
 </style>
 </head>
@@ -275,98 +260,87 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 2: PLAIN ENGLISH
+     BENEFITS & TRADEOFFS
 ═══════════════════════════════════════════════════════ -->
 <div class="card">
   <div class="card-title">What This Means</div>
   <ul class="benefit-list">
     <li>
-      <span class="benefit-icon" style="color:#6c63ff;">&#9632;</span>
+      <span class="benefit-icon" style="color:#58a6ff;">&#9632;</span>
       <span><strong>X defines a subspace</strong> — the column space col(X) is a plane (or higher-dimensional flat) sitting inside the full data space R<sup>n</sup>.</span>
     </li>
     <li>
-      <span class="benefit-icon" style="color:#ff6584;">&#9679;</span>
+      <span class="benefit-icon" style="color:#f85149;">&#9679;</span>
       <span><strong>y lives outside this plane</strong> — the observed response vector generally cannot be expressed as a linear combination of the columns of X.</span>
     </li>
     <li>
-      <span class="benefit-icon" style="color:#43e97b;">&#9679;</span>
-      <span><strong>&#375; is the closest point in the plane to y</strong> — "closest" in the Euclidean sense, minimizing RSS = ||y − X&beta;||&sup2;.</span>
+      <span class="benefit-icon" style="color:#3fb950;">&#9679;</span>
+      <span><strong>&#375; is the closest point in the plane to y</strong> — "closest" in the Euclidean sense, minimizing RSS = ||y &minus; X&beta;||&sup2;.</span>
     </li>
     <li>
-      <span class="benefit-icon" style="color:#fbbf24;">&#9135;</span>
-      <span><strong>The residual (y − &#375;) is perpendicular to the plane</strong> — it points straight "up" from the plane, at a right angle to every column of X.</span>
+      <span class="benefit-icon" style="color:#d29922;">&#9135;</span>
+      <span><strong>The residual (y &minus; &#375;) is perpendicular to the plane</strong> — it points straight "up" from the plane, at a right angle to every column of X.</span>
     </li>
     <li>
-      <span class="benefit-icon" style="color:#38bdf8;">&#9733;</span>
+      <span class="benefit-icon" style="color:#bc8cff;">&#9733;</span>
       <span><strong>Geometric view makes OLS properties intuitive</strong> — idempotency, the normal equations, and why more predictors always reduce RSS all follow immediately from the geometry.</span>
     </li>
   </ul>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 3: ANIMATED 3D PROJECTION
+     3D THREE.JS ANIMATION
 ═══════════════════════════════════════════════════════ -->
 <div class="viz-section">
   <div class="viz-header">
     <div>
-      <div class="viz-label">Viz 1 — Animated 3D Projection</div>
-      <div class="viz-desc">Watch y drop straight down onto the column space plane — like dropping a ball</div>
-    </div>
-    <div class="btn-row">
-      <button id="btn-play" onclick="togglePlay()">&#9654; Play</button>
-      <button id="btn-pause" onclick="togglePlay()" style="display:none;">&#9646;&#9646; Pause</button>
-      <button onclick="resetAnim()">&#8635; Reset</button>
+      <div class="viz-label">The Shadow Falls — 3D Animated Projection</div>
+      <div class="viz-desc">Watch y's shadow fall onto the column space. Then drag y around.</div>
     </div>
   </div>
-  <div id="anim-status" class="anim-status">Press Play to watch y drop perpendicular onto the column space.</div>
-  <div id="plot3d" style="height:520px;"></div>
+
+  <div id="three-canvas-wrap">
+    <!-- Three.js canvas inserted here -->
+    <div id="label-x1" class="label-3d" style="color:#58a6ff;">x&#8321;</div>
+    <div id="label-x2" class="label-3d" style="color:#f78166;">x&#8322;</div>
+    <div id="label-y" class="label-3d" style="color:#bc8cff;">y</div>
+    <div id="label-yhat" class="label-3d" style="color:#3fb950; opacity:0;">&#375; = Hy</div>
+    <div id="label-residual" class="label-3d" style="color:#f85149; opacity:0;">e = y &minus; &#375;</div>
+    <div id="phase-text" class="phase-text"></div>
+  </div>
+
+  <div class="controls-bar">
+    <button id="btn-play" onclick="anim.togglePlay()">&#9654; Play</button>
+    <button onclick="anim.restart()">&#8635; Restart</button>
+    <div class="speed-control">
+      <span>Speed</span>
+      <input type="range" id="speed-slider" min="0.25" max="3" step="0.25" value="1">
+      <span id="speed-val">1x</span>
+    </div>
+    <div class="progress-wrap">
+      <input type="range" id="progress-scrubber" min="0" max="100" step="1" value="0">
+      <span class="progress-label" id="progress-label">0%</span>
+    </div>
+  </div>
+
+  <div class="toggle-row">
+    <label><input type="checkbox" id="tog-residual" checked> Show residual</label>
+    <label><input type="checkbox" id="tog-angle" checked> Show right-angle</label>
+    <label><input type="checkbox" id="tog-candidates" checked> Show closest-point demo</label>
+  </div>
+
   <div class="legend">
-    <div class="legend-item"><div class="legend-swatch" style="background:#6c63ff; height:10px; width:20px; border-radius:3px;"></div> col(X) plane</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#ff6584;"></div> y (response)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#43e97b;"></div> &#375; = Hy (projection)</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#fbbf24;"></div> residual r = y − &#375;</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#38bdf8;"></div> basis vectors x&#8321;, x&#8322;</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#ffffff; opacity:0.6;"></div> right-angle marker</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#e040fb;"></div> dropping dot</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#58a6ff; height:10px; width:20px; border-radius:3px;"></div> col(X) plane</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#58a6ff; height:3px;"></div> x&#8321;</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#f78166; height:3px;"></div> x&#8322;</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#bc8cff;"></div> y</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#3fb950;"></div> &#375; = Hy</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#f85149;"></div> residual e</div>
   </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 4: 2D CROSS-SECTION (INTERACTIVE)
-═══════════════════════════════════════════════════════ -->
-<div class="viz-section">
-  <div class="viz-header">
-    <div>
-      <div class="viz-label">Viz 2 — 2D Cross-Section (Interactive)</div>
-      <div class="viz-desc">Click anywhere on the plot to move y and see the projection update</div>
-    </div>
-    <button onclick="reset2D()">&#8635; Reset y</button>
-  </div>
-  <div id="plot2d" style="height:380px;"></div>
-  <div class="legend">
-    <div class="legend-item"><div class="legend-swatch" style="background:#6c63ff;"></div> Column space (line)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#ff6584;"></div> y (drag via click)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#43e97b;"></div> &#375; on line</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#fbbf24;"></div> residual r &#8869; line</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#ffffff; opacity:0.5;"></div> right angle at &#375;</div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════
-     SECTION 5: MORE PREDICTORS → LOWER RSS
-═══════════════════════════════════════════════════════ -->
-<div class="viz-section">
-  <div class="viz-header">
-    <div>
-      <div class="viz-label">Viz 3 — Effect of Adding Predictors</div>
-      <div class="viz-desc">As p grows, col(X) expands and &#375; gets closer to y (RSS falls)</div>
-    </div>
-  </div>
-  <div id="plot-rss" style="height:300px;"></div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════
-     SECTION 6: KEY PROPERTIES
+     KEY PROPERTIES
 ═══════════════════════════════════════════════════════ -->
 <div class="card">
   <div class="card-title">Key Properties of the Hat Matrix H = X(X&#7488;X)&#8315;&#185;X&#7488;</div>
@@ -395,7 +369,7 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SECTION 7: FORMULA + QUOTE
+     FORMULAS
 ═══════════════════════════════════════════════════════ -->
 <div class="card">
   <div class="card-title">Formulas</div>
@@ -407,674 +381,748 @@
   </div>
   <div style="margin-top:1rem;">
     <div class="quote">
-      "We minimize RSS(&beta;) = ||y − X&beta;||&sup2; by choosing &beta;&#770; so that the residual vector y − &#375; is orthogonal to this subspace."
+      "We minimize RSS(&beta;) = ||y &minus; X&beta;||&sup2; by choosing &beta;&#770; so that the residual vector y &minus; &#375; is orthogonal to this subspace."
       <div style="margin-top:0.3rem; font-style:normal; font-size:0.78rem;">— ESL, Chapter 3</div>
     </div>
   </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     JAVASCRIPT
+     THREE.JS MODULE
 ═══════════════════════════════════════════════════════ -->
-<script>
-/* ─────────────────────────────────────────────────────────
-   SHARED HELPERS
-───────────────────────────────────────────────────────── */
-const BG   = '#0d1117';
-const SURF = '#161b22';
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-function linspace(a, b, n) {
-  const out = [];
-  for (let i = 0; i < n; i++) out.push(a + (b - a) * i / (n - 1));
-  return out;
+/* ─── COLORS ─── */
+const C = {
+  x1: 0x58a6ff, x2: 0xf78166, y: 0xbc8cff, yhat: 0x3fb950,
+  residual: 0xf85149, plane: 0x58a6ff, bg: 0x0d1117, white: 0xffffff,
+  candidate: 0x8b949e, candidateLine: 0x8b949e
+};
+
+/* ─── SCENE SETUP ─── */
+const wrap = document.getElementById('three-canvas-wrap');
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+renderer.setClearColor(C.bg);
+wrap.insertBefore(renderer.domElement, wrap.firstChild);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
+camera.position.set(4, 3, 4);
+camera.lookAt(0, 1, 0);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.target.set(0, 1, 0);
+controls.minDistance = 2;
+controls.maxDistance = 12;
+controls.autoRotate = false;
+controls.autoRotateSpeed = 1.2;
+controls.update();
+
+/* ─── GEOMETRY CONSTANTS ─── */
+const PLANE_SIZE = 3.0;
+// Basis vectors in the xz-plane
+const X1_DIR = new THREE.Vector3(1, 0, 0).normalize();
+const X2_DIR = new THREE.Vector3(0, 0, 1).normalize();
+const X1_LEN = 2.0;
+const X2_LEN = 2.0;
+
+// y is above the plane
+let yPos = new THREE.Vector3(1.0, 2.5, 0.8);
+let yHatPos = new THREE.Vector3(yPos.x, 0, yPos.z); // projection onto y=0
+
+function computeYHat(yp) {
+  return new THREE.Vector3(yp.x, 0, yp.z);
 }
 
-/* ─────────────────────────────────────────────────────────
-   VIZ 1: ANIMATED 3D PROJECTION — "DROPPING BALL" STYLE
-   ──────────────────────────────────────────────────────
-   The plane is the xz-plane (y=0). y sits above it.
-   The animation shows a bright dot literally falling from
-   y straight down (along the perpendicular) to land on
-   the plane at yhat, leaving a dashed trail.
+/* ─── HELPERS: arrow (cylinder + cone) ─── */
+function makeArrow(from, to, color, radius = 0.03, coneRadius = 0.07, coneLen = 0.16) {
+  const group = new THREE.Group();
+  const dir = new THREE.Vector3().subVectors(to, from);
+  const len = dir.length();
+  if (len < 0.01) return group;
+  const shaftLen = Math.max(0, len - coneLen);
 
-   Animation phases:
-     Phase 0: Scene setup — plane, basis vectors, y point
-     Phase 1: Dot appears at y, begins dropping (smooth
-              interpolation from y to yhat, ~60 frames)
-     Phase 2: Dot lands — flash/pulse yhat, show right-angle marker
-     Phase 3: Residual vector highlighted, labels complete
-     Phase 4: Camera slowly rotates for full 3D understanding
-───────────────────────────────────────────────────────── */
+  // shaft
+  const shaftGeo = new THREE.CylinderGeometry(radius, radius, shaftLen, 8);
+  const mat = new THREE.MeshBasicMaterial({ color });
+  const shaft = new THREE.Mesh(shaftGeo, mat);
+  shaft.position.set(0, shaftLen / 2, 0);
+  group.add(shaft);
 
-// Geometry — y is above the xz-plane, yhat is its projection onto y=0
-const Y_POS  = { x: 0.7, y: 2.4, z: 0.5 };
-const YH_POS = { x: 0.7, y: 0,   z: 0.5 };
+  // cone
+  const coneGeo = new THREE.ConeGeometry(coneRadius, coneLen, 12);
+  const cone = new THREE.Mesh(coneGeo, mat);
+  cone.position.set(0, shaftLen + coneLen / 2, 0);
+  group.add(cone);
 
-// Camera positioned to clearly see the vertical drop: looking from the side
-// (not top-down). Slight elevation so the plane reads as a surface.
-const SIDE_CAMERA = { eye: { x: 2.0, y: 1.0, z: 2.0 }, up: { x: 0, y: 1, z: 0 } };
+  // orient
+  const up = new THREE.Vector3(0, 1, 0);
+  const quat = new THREE.Quaternion().setFromUnitVectors(up, dir.clone().normalize());
+  group.quaternion.copy(quat);
+  group.position.copy(from);
 
-function makePlane() {
-  // Larger, more visible plane
-  const S = 2.5;
+  return group;
+}
+
+function makeDashedLine(from, to, color, dashSize = 0.12, gapSize = 0.08) {
+  const geo = new THREE.BufferGeometry().setFromPoints([from, to]);
+  const mat = new THREE.LineDashedMaterial({ color, dashSize, gapSize, linewidth: 1 });
+  const line = new THREE.Line(geo, mat);
+  line.computeLineDistances();
+  return line;
+}
+
+function makeSolidLine(from, to, color, linewidth = 1) {
+  const geo = new THREE.BufferGeometry().setFromPoints([from, to]);
+  const mat = new THREE.LineBasicMaterial({ color, linewidth });
+  return new THREE.Line(geo, mat);
+}
+
+function makeSphere(pos, color, radius = 0.08) {
+  const geo = new THREE.SphereGeometry(radius, 16, 16);
+  const mat = new THREE.MeshBasicMaterial({ color });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.copy(pos);
+  return mesh;
+}
+
+/* ─── BUILD STATIC SCENE ELEMENTS ─── */
+// Column space plane
+const planeGeo = new THREE.PlaneGeometry(PLANE_SIZE * 2, PLANE_SIZE * 2);
+const planeMat = new THREE.MeshBasicMaterial({
+  color: C.plane, transparent: true, opacity: 0.12,
+  side: THREE.DoubleSide, depthWrite: false
+});
+const planeMesh = new THREE.Mesh(planeGeo, planeMat);
+planeMesh.rotation.x = -Math.PI / 2;
+planeMesh.position.y = 0;
+planeMesh.visible = false;
+scene.add(planeMesh);
+
+// Grid on plane
+const gridHelper = new THREE.GridHelper(PLANE_SIZE * 2, 12, 0x58a6ff, 0x58a6ff);
+gridHelper.material.opacity = 0.08;
+gridHelper.material.transparent = true;
+gridHelper.visible = false;
+scene.add(gridHelper);
+
+// Basis vectors
+const arrowX1 = makeArrow(new THREE.Vector3(0, 0, 0), X1_DIR.clone().multiplyScalar(X1_LEN), C.x1);
+arrowX1.visible = false;
+scene.add(arrowX1);
+
+const arrowX2 = makeArrow(new THREE.Vector3(0, 0, 0), X2_DIR.clone().multiplyScalar(X2_LEN), C.x2);
+arrowX2.visible = false;
+scene.add(arrowX2);
+
+// y vector (arrow from origin to yPos)
+let arrowY = makeArrow(new THREE.Vector3(0, 0, 0), yPos, C.y, 0.035, 0.08, 0.18);
+arrowY.visible = false;
+scene.add(arrowY);
+
+// y sphere (draggable later)
+const ySphere = makeSphere(yPos, C.y, 0.12);
+ySphere.visible = false;
+scene.add(ySphere);
+
+// yhat sphere
+const yHatSphere = makeSphere(yHatPos, C.yhat, 0.1);
+yHatSphere.visible = false;
+scene.add(yHatSphere);
+
+// yhat glow
+const yHatGlowGeo = new THREE.SphereGeometry(0.2, 16, 16);
+const yHatGlowMat = new THREE.MeshBasicMaterial({ color: C.yhat, transparent: true, opacity: 0 });
+const yHatGlow = new THREE.Mesh(yHatGlowGeo, yHatGlowMat);
+yHatGlow.position.copy(yHatPos);
+yHatGlow.visible = false;
+scene.add(yHatGlow);
+
+// Residual dashed line (y -> yhat)
+let residualLine = makeDashedLine(yPos, yHatPos, C.residual);
+residualLine.visible = false;
+scene.add(residualLine);
+
+// Right-angle marker
+const RA_SIZE = 0.18;
+function makeRightAngleMarker(base) {
+  const group = new THREE.Group();
+  // Two segments forming an L at base
+  // Along x then up
+  const p1 = new THREE.Vector3(base.x + RA_SIZE, 0, base.z);
+  const p2 = new THREE.Vector3(base.x + RA_SIZE, RA_SIZE, base.z);
+  const p3 = new THREE.Vector3(base.x, RA_SIZE, base.z);
+  group.add(makeSolidLine(p1, p2, C.white));
+  group.add(makeSolidLine(p2, p3, C.white));
+  return group;
+}
+let raMarker = makeRightAngleMarker(yHatPos);
+raMarker.visible = false;
+scene.add(raMarker);
+
+// Candidate points (Phase 4) — wrong guesses on the plane
+const CANDIDATES = [
+  new THREE.Vector3(-0.8, 0, 1.5),
+  new THREE.Vector3(2.0, 0, -0.3),
+  new THREE.Vector3(0.0, 0, -1.2),
+  new THREE.Vector3(1.8, 0, 1.6),
+];
+const candidateGroup = new THREE.Group();
+candidateGroup.visible = false;
+const candidateSpheres = [];
+const candidateLines = [];
+const candidateDistLabels = []; // we'll use HTML overlays for these
+
+for (const cp of CANDIDATES) {
+  const s = makeSphere(cp, C.candidate, 0.07);
+  candidateSpheres.push(s);
+  candidateGroup.add(s);
+  const l = makeDashedLine(yPos, cp, C.candidateLine, 0.08, 0.06);
+  candidateLines.push(l);
+  candidateGroup.add(l);
+}
+scene.add(candidateGroup);
+
+// Light beam / shadow cone effect
+const coneHeight = yPos.y;
+const coneGeo = new THREE.CylinderGeometry(0.02, 0.35, coneHeight, 16, 1, true);
+const coneMat = new THREE.MeshBasicMaterial({
+  color: 0xffffff, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false
+});
+const lightCone = new THREE.Mesh(coneGeo, coneMat);
+lightCone.position.set(yPos.x, yPos.y / 2, yPos.z);
+lightCone.visible = false;
+scene.add(lightCone);
+
+// Ambient light
+scene.add(new THREE.AmbientLight(0xffffff, 1));
+
+/* ─── LABEL PROJECTION HELPER ─── */
+const labelEls = {
+  x1: document.getElementById('label-x1'),
+  x2: document.getElementById('label-x2'),
+  y: document.getElementById('label-y'),
+  yhat: document.getElementById('label-yhat'),
+  residual: document.getElementById('label-residual'),
+};
+const labelPositions = {
+  x1: X1_DIR.clone().multiplyScalar(X1_LEN + 0.2),
+  x2: X2_DIR.clone().multiplyScalar(X2_LEN + 0.2),
+  y: yPos.clone().add(new THREE.Vector3(0, 0.25, 0)),
+  yhat: yHatPos.clone().add(new THREE.Vector3(0, -0.3, 0)),
+  residual: new THREE.Vector3(yPos.x + 0.3, yPos.y * 0.5, yPos.z),
+};
+
+function projectToScreen(pos3d) {
+  const v = pos3d.clone().project(camera);
   return {
-    type: 'mesh3d',
-    x: [-S, S, S, -S],
-    y: [0, 0, 0, 0],
-    z: [-S, -S, S, S],
-    i: [0, 0], j: [1, 2], k: [2, 3],
-    color: '#6c63ff',
-    opacity: 0.22,
-    showlegend: false,
-    hoverinfo: 'skip'
+    x: (v.x * 0.5 + 0.5) * wrap.clientWidth,
+    y: (-v.y * 0.5 + 0.5) * wrap.clientHeight,
+    behind: v.z > 1
   };
 }
 
-function makePlaneGrid() {
-  // Draw grid lines on the plane to make it feel solid
-  const S = 2.5;
-  const xs = [], ys = [], zs = [];
-  for (let v = -S; v <= S; v += 1.0) {
-    // lines parallel to x-axis
-    xs.push(-S, S, null);
-    ys.push(0, 0, null);
-    zs.push(v, v, null);
-    // lines parallel to z-axis
-    xs.push(v, v, null);
-    ys.push(0, 0, null);
-    zs.push(-S, S, null);
-  }
-  return {
-    type: 'scatter3d', mode: 'lines',
-    x: xs, y: ys, z: zs,
-    line: { color: 'rgba(108,99,255,0.18)', width: 1 },
-    showlegend: false, hoverinfo: 'skip'
-  };
-}
-
-function makePlaneEdge() {
-  const S = 2.5;
-  return {
-    type: 'scatter3d', mode: 'lines',
-    x: [-S, S, S, -S, -S],
-    y: [0, 0, 0, 0, 0],
-    z: [-S, -S, S, S, -S],
-    line: { color: '#6c63ff', width: 2 },
-    showlegend: false, hoverinfo: 'skip'
-  };
-}
-
-function makePoint(x, y, z, color, size) {
-  return {
-    type: 'scatter3d', mode: 'markers',
-    x: [x], y: [y], z: [z],
-    marker: { color, size, symbol: 'circle' },
-    showlegend: false, hoverinfo: 'skip'
-  };
-}
-
-function makeLine(x0,y0,z0,x1,y1,z1,color,width,dash) {
-  return {
-    type: 'scatter3d', mode: 'lines',
-    x: [x0, x1], y: [y0, y1], z: [z0, z1],
-    line: { color, width, dash: dash || 'solid' },
-    showlegend: false, hoverinfo: 'skip'
-  };
-}
-
-function makeCone(x, y, z, u, v, w, color) {
-  const L = Math.sqrt(u*u + v*v + w*w) || 1;
-  const s = 0.15 / L;
-  return {
-    type: 'cone',
-    x: [x], y: [y], z: [z],
-    u: [u * s], v: [v * s], w: [w * s],
-    sizemode: 'absolute', sizeref: 0.15,
-    colorscale: [[0, color], [1, color]],
-    showscale: false, showlegend: false,
-    opacity: 0.92, hoverinfo: 'skip'
-  };
-}
-
-// Right-angle marker at yhat: two short segments forming an L
-// One segment along the plane (x-direction), one along the perpendicular (y-direction)
-function makeRightAngle(alpha) {
-  const eps = 0.18;
-  const bx = YH_POS.x, bz = YH_POS.z;
-  return {
-    type: 'scatter3d', mode: 'lines',
-    x: [bx + eps, bx + eps, bx],
-    y: [0,         eps,      eps],
-    z: [bz,        bz,       bz],
-    line: { color: 'rgba(255,255,255,' + alpha + ')', width: 3 },
-    showlegend: false, hoverinfo: 'skip'
-  };
-}
-
-// Annotation helper
-function ann(x,y,z,text,color,size) {
-  return { x, y, z, text, showarrow: false, font: { color, size: size||13 } };
-}
-
-function make3DLayout(camera, annotations) {
-  return {
-    paper_bgcolor: BG,
-    margin: { l:0, r:0, t:0, b:0 },
-    scene: {
-      bgcolor: BG,
-      xaxis: { showgrid: true, gridcolor: '#21262d', zeroline: true, zerolinecolor: '#30363d', title: '', color: '#8b949e', range: [-2.8, 2.8], showticklabels: false },
-      yaxis: { showgrid: true, gridcolor: '#21262d', zeroline: true, zerolinecolor: '#30363d', title: '', color: '#8b949e', range: [-0.5, 3.5], showticklabels: false },
-      zaxis: { showgrid: true, gridcolor: '#21262d', zeroline: true, zerolinecolor: '#30363d', title: '', color: '#8b949e', range: [-2.8, 2.8], showticklabels: false },
-      annotations: annotations || [],
-      camera: camera || SIDE_CAMERA,
-      aspectratio: { x: 1, y: 0.7, z: 1 }
-    },
-    showlegend: false
-  };
-}
-
-/* ── Animation state ── */
-let animPhase = -1;       // -1=idle, 0=setup, 1=dropping, 2=landed, 3=residual, 4=rotate
-let isPlaying = false;
-let stepTimer = null;
-let rotateTimer = null;
-let rotateAngle = 0;
-let dropFrame = 0;
-let dropTimer = null;
-const DROP_FRAMES = 60;   // total frames for the drop
-const DROP_INTERVAL = 25; // ms per frame (~40fps)
-const PHASE_PAUSE = 1200; // ms pause between phases
-let flashCount = 0;
-let flashTimer = null;
-
-function getRotatedCamera(angle) {
-  const r = 2.6;
-  return {
-    eye: { x: r * Math.cos(angle), y: 0.9, z: r * Math.sin(angle) },
-    up: { x: 0, y: 1, z: 0 }
-  };
-}
-
-/* Easing: slow start, accelerate (like gravity) */
-function easeInQuad(t) { return t * t; }
-
-/* Build the full scene for a given drop progress (0..1) and phase */
-function buildScene(phase, dropT) {
-  const traces = [];
-
-  // Always: plane + grid + edge
-  traces.push(makePlane());
-  traces.push(makePlaneGrid());
-  traces.push(makePlaneEdge());
-
-  // Basis vectors (always visible for context)
-  traces.push(makeLine(0,0,0, 1.8,0,0, '#38bdf8', 3));
-  traces.push(makeCone(1.8,0,0, 1,0,0, '#38bdf8'));
-  traces.push(makeLine(0,0,0, 0,0,1.8, '#38bdf8', 3));
-  traces.push(makeCone(0,0,1.8, 0,0,1, '#38bdf8'));
-
-  // Origin
-  traces.push(makePoint(0,0,0, '#8b949e', 5));
-
-  // Vector from origin to y (always shown)
-  traces.push(makeLine(0,0,0, Y_POS.x, Y_POS.y, Y_POS.z, '#ff6584', 3));
-  traces.push(makeCone(Y_POS.x, Y_POS.y, Y_POS.z, Y_POS.x, Y_POS.y, Y_POS.z, '#ff6584'));
-  traces.push(makePoint(Y_POS.x, Y_POS.y, Y_POS.z, '#ff6584', 10));
-
-  if (phase >= 1) {
-    // The dropping dot + dashed trail
-    // dropT goes from 0 (at y) to 1 (at yhat)
-    var t = (dropT !== undefined) ? dropT : 1;
-    var easedT = easeInQuad(Math.min(t, 1));
-    var dotX = Y_POS.x;
-    var dotY = Y_POS.y + (YH_POS.y - Y_POS.y) * easedT;
-    var dotZ = Y_POS.z;
-
-    // Dashed trail from y down to current dot position
-    traces.push(makeLine(Y_POS.x, Y_POS.y, Y_POS.z, dotX, dotY, dotZ, '#fbbf24', 4, 'dash'));
-
-    // The dropping dot — bright magenta/pink, large
-    traces.push(makePoint(dotX, dotY, dotZ, '#e040fb', 14));
-
-    // Faint "shadow" on the plane showing where the dot will land
-    traces.push(makePoint(YH_POS.x, YH_POS.y, YH_POS.z, 'rgba(67,233,123,0.3)', 10));
-  }
-
-  if (phase >= 2) {
-    // yhat point (solid green) + vector from origin
-    traces.push(makeLine(0,0,0, YH_POS.x, YH_POS.y, YH_POS.z, '#43e97b', 3));
-    traces.push(makeCone(YH_POS.x, YH_POS.y, YH_POS.z, YH_POS.x, 0.01, YH_POS.z, '#43e97b'));
-    traces.push(makePoint(YH_POS.x, YH_POS.y, YH_POS.z, '#43e97b', 14));
-
-    // Full dashed perpendicular line y -> yhat
-    traces.push(makeLine(Y_POS.x, Y_POS.y, Y_POS.z, YH_POS.x, YH_POS.y, YH_POS.z, '#fbbf24', 4, 'dash'));
-
-    // Right-angle marker (prominent)
-    traces.push(makeRightAngle(0.95));
-
-    // Flash effect: pulsing ring around yhat
-    if (flashCount > 0 && flashCount % 2 === 1) {
-      traces.push(makePoint(YH_POS.x, YH_POS.y, YH_POS.z, 'rgba(67,233,123,0.5)', 28));
+function updateLabels() {
+  for (const [key, el] of Object.entries(labelEls)) {
+    const pos = labelPositions[key];
+    const screen = projectToScreen(pos);
+    if (screen.behind) {
+      el.style.display = 'none';
+    } else {
+      el.style.display = '';
+      el.style.left = screen.x + 'px';
+      el.style.top = screen.y + 'px';
     }
   }
-
-  if (phase >= 3) {
-    // Residual vector: thick, bright
-    traces.push(makeLine(YH_POS.x, YH_POS.y, YH_POS.z, Y_POS.x, Y_POS.y, Y_POS.z, '#fbbf24', 6));
-    traces.push(makeCone(Y_POS.x, Y_POS.y, Y_POS.z, 0, 1, 0, '#fbbf24'));
-  }
-
-  return traces;
 }
 
-/* Annotation sets for each phase */
-function getAnnotations(phase) {
-  var anns = [
-    ann(0, -0.35, 0, '<b>col(X)</b>', '#6c63ff', 13),
-    ann(1.95, 0.1, 0, 'x&#8321;', '#38bdf8', 11),
-    ann(0, 0.1, 1.95, 'x&#8322;', '#38bdf8', 11),
-    ann(Y_POS.x, Y_POS.y + 0.22, Y_POS.z, '<b>y</b>', '#ff6584', 15)
-  ];
+/* ─── ANIMATION STATE ─── */
+const PHASES = {
+  IDLE: -1,
+  SETUP: 0,       // 0-2s: plane fades in, vectors appear
+  SHADOW: 1,      // 2-5s: residual line grows down, yhat lights up, light cone
+  PERP: 2,        // 5-7s: right angle marker, camera rotates to side view
+  CLOSEST: 3,     // 7-10s: candidate points appear, distances shown, fade out
+  INTERACTIVE: 4, // 10s+: user can drag y
+};
 
-  if (phase === 1) {
-    anns.push(ann(Y_POS.x + 0.2, Y_POS.y * 0.5, Y_POS.z, '<b>&#8595; dropping &#8869;</b>', '#fbbf24', 13));
-  }
+const PHASE_TIMES = [2, 3, 2, 3]; // durations in seconds for phases 0-3
+const TOTAL_ANIM_TIME = PHASE_TIMES.reduce((a, b) => a + b, 0); // 10s
 
-  if (phase >= 2) {
-    anns.push(ann(YH_POS.x, YH_POS.y - 0.3, YH_POS.z, '<b>&#375; = Hy</b>', '#43e97b', 14));
-    anns.push(ann(Y_POS.x + 0.22, Y_POS.y * 0.5, Y_POS.z, '&#8869;', '#fbbf24', 14));
-  }
+let animState = {
+  phase: PHASES.IDLE,
+  playing: false,
+  time: 0,         // current time in seconds
+  speed: 1,
+  interactive: false,
+  dragging: false,
+};
 
-  if (phase >= 3) {
-    anns.push(ann(Y_POS.x + 0.28, Y_POS.y * 0.5, Y_POS.z, '<b>r = y &#8722; &#375;</b>', '#fbbf24', 14));
-    // Remove the simpler perp label if residual label is shown
-    anns = anns.filter(function(a) { return a.text !== '&#8869;'; });
-  }
-
-  return anns;
-}
-
-const phaseMessages = [
-  'Step 1/4 &#8212; The column space col(X) is a plane. The response y floats above it.',
-  'Step 2/4 &#8212; Dropping y straight down perpendicular to the plane...',
-  'Step 3/4 &#8212; It lands! &#375; = Hy is the closest point on the plane. Note the right angle.',
-  'Step 4/4 &#8212; The residual r = y &#8722; &#375; is the perpendicular distance. RSS = ||r||&#178;.',
-  'Rotating &#8212; Observe from all angles: the residual is always perpendicular to col(X).'
+const phaseTexts = [
+  '',
+  '\u0177 is the shadow of y on the column space',
+  'e \u22A5 column space \u2014 this is why it\'s called orthogonal projection',
+  '\u0177 minimizes ||y \u2212 X\u03B2||\u00B2 \u2014 it\'s the closest point in the column space',
+  'Drag y around and watch the shadow follow',
 ];
 
-function setStatus(msg) {
-  document.getElementById('anim-status').innerHTML = msg;
+const phaseTextEl = document.getElementById('phase-text');
+
+/* ─── TOGGLES ─── */
+const togResidual = document.getElementById('tog-residual');
+const togAngle = document.getElementById('tog-angle');
+const togCandidates = document.getElementById('tog-candidates');
+
+/* ─── EASING ─── */
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
+function easeOutQuad(t) { return 1 - (1 - t) * (1 - t); }
+function easeInQuad(t) { return t * t; }
 
-function renderScene(phase, dropT, camera) {
-  var traces = buildScene(phase, dropT);
-  var anns = getAnnotations(phase);
-  var cam = camera || SIDE_CAMERA;
-  var layout = make3DLayout(cam, anns);
-  Plotly.react('plot3d', traces, layout, { responsive: true, displayModeBar: false });
-}
-
-/* ── Phase transitions ── */
-
-function runPhase0() {
-  animPhase = 0;
-  setStatus(phaseMessages[0]);
-  renderScene(0);
-  stepTimer = setTimeout(runPhase1, PHASE_PAUSE);
-}
-
-function runPhase1() {
-  animPhase = 1;
-  dropFrame = 0;
-  setStatus(phaseMessages[1]);
-  dropTimer = setInterval(function() {
-    if (!isPlaying) return;
-    dropFrame++;
-    var t = dropFrame / DROP_FRAMES;
-    renderScene(1, t);
-    if (dropFrame >= DROP_FRAMES) {
-      clearInterval(dropTimer);
-      dropTimer = null;
-      // Brief pause then phase 2
-      stepTimer = setTimeout(runPhase2, 300);
+/* ─── UPDATE SCENE BASED ON TIME ─── */
+function getPhaseAndLocalT(globalTime) {
+  let t = globalTime;
+  for (let i = 0; i < PHASE_TIMES.length; i++) {
+    if (t <= PHASE_TIMES[i]) {
+      return { phase: i, localT: t / PHASE_TIMES[i] };
     }
-  }, DROP_INTERVAL);
+    t -= PHASE_TIMES[i];
+  }
+  return { phase: PHASES.INTERACTIVE, localT: 1 };
 }
 
-function runPhase2() {
-  animPhase = 2;
-  setStatus(phaseMessages[2]);
-  // Flash the yhat point
-  flashCount = 0;
-  flashTimer = setInterval(function() {
-    flashCount++;
-    renderScene(2, 1);
-    if (flashCount >= 6) {
-      clearInterval(flashTimer);
-      flashTimer = null;
-      flashCount = 0;
-      renderScene(2, 1);
-      stepTimer = setTimeout(runPhase3, PHASE_PAUSE);
+function rebuildResidualLine() {
+  scene.remove(residualLine);
+  residualLine.geometry.dispose();
+  residualLine.material.dispose();
+  residualLine = makeDashedLine(yPos, yHatPos, C.residual);
+  residualLine.visible = true;
+  scene.add(residualLine);
+}
+
+function rebuildDynamicGeometry() {
+  yHatPos = computeYHat(yPos);
+
+  // Update y sphere
+  ySphere.position.copy(yPos);
+
+  // Rebuild y arrow
+  scene.remove(arrowY);
+  arrowY = makeArrow(new THREE.Vector3(0, 0, 0), yPos, C.y, 0.035, 0.08, 0.18);
+  arrowY.visible = true;
+  scene.add(arrowY);
+
+  // Update yhat sphere
+  yHatSphere.position.copy(yHatPos);
+  yHatGlow.position.copy(yHatPos);
+
+  // Update residual line
+  rebuildResidualLine();
+
+  // Update right angle
+  scene.remove(raMarker);
+  raMarker = makeRightAngleMarker(yHatPos);
+  raMarker.visible = togAngle.checked && (animState.time >= PHASE_TIMES[0] + PHASE_TIMES[1]);
+  scene.add(raMarker);
+
+  // Update label positions
+  labelPositions.y = yPos.clone().add(new THREE.Vector3(0, 0.25, 0));
+  labelPositions.yhat = yHatPos.clone().add(new THREE.Vector3(0, -0.3, 0));
+  labelPositions.residual = new THREE.Vector3(
+    yPos.x + 0.3, (yPos.y + yHatPos.y) * 0.5, yPos.z
+  );
+
+  // Update candidate lines
+  for (let i = 0; i < CANDIDATES.length; i++) {
+    candidateGroup.remove(candidateLines[i]);
+    candidateLines[i].geometry.dispose();
+    candidateLines[i].material.dispose();
+    candidateLines[i] = makeDashedLine(yPos, CANDIDATES[i], C.candidateLine, 0.08, 0.06);
+    candidateGroup.add(candidateLines[i]);
+  }
+
+  // Update light cone
+  const h = yPos.y;
+  lightCone.position.set(yPos.x, h / 2, yPos.z);
+  lightCone.scale.set(1, h / coneHeight, 1);
+}
+
+// Partial residual line for phase 1 animation
+let partialResidualLine = null;
+
+function updateAnimation(globalTime) {
+  const { phase, localT } = getPhaseAndLocalT(globalTime);
+  const smoothT = easeInOutCubic(localT);
+
+  // Phase 0: Setup — fade in plane, grid, basis vectors, y
+  const p0End = PHASE_TIMES[0];
+  if (globalTime <= p0End) {
+    const t = smoothT;
+    planeMesh.visible = true;
+    planeMat.opacity = 0.12 * t;
+    gridHelper.visible = true;
+    gridHelper.material.opacity = 0.08 * t;
+    arrowX1.visible = true;
+    arrowX2.visible = true;
+    arrowY.visible = t > 0.3;
+    ySphere.visible = t > 0.3;
+
+    // Fade in vectors
+    arrowX1.traverse(c => { if (c.material) c.material.opacity = Math.min(1, t * 2); });
+    arrowX2.traverse(c => { if (c.material) c.material.opacity = Math.min(1, t * 2); });
+
+    labelEls.x1.style.opacity = t > 0.2 ? 1 : 0;
+    labelEls.x2.style.opacity = t > 0.2 ? 1 : 0;
+    labelEls.y.style.opacity = t > 0.4 ? 1 : 0;
+    labelEls.yhat.style.opacity = 0;
+    labelEls.residual.style.opacity = 0;
+    yHatSphere.visible = false;
+    residualLine.visible = false;
+    raMarker.visible = false;
+    candidateGroup.visible = false;
+    lightCone.visible = false;
+    phaseTextEl.textContent = '';
+  }
+
+  // Phase 1: Shadow falls — dashed line grows from y to yhat
+  const p1Start = p0End;
+  const p1End = p1Start + PHASE_TIMES[1];
+  if (globalTime > p1Start && globalTime <= p1End) {
+    // Everything from phase 0 is fully visible
+    planeMat.opacity = 0.12;
+    gridHelper.material.opacity = 0.08;
+    arrowX1.visible = true; arrowX2.visible = true;
+    arrowY.visible = true; ySphere.visible = true;
+    labelEls.x1.style.opacity = 1;
+    labelEls.x2.style.opacity = 1;
+    labelEls.y.style.opacity = 1;
+
+    const t = smoothT;
+    const dropT = easeInQuad(t); // accelerating like gravity
+
+    // Growing dashed line from y down to current position
+    const currentBottom = new THREE.Vector3(
+      yPos.x, yPos.y + (yHatPos.y - yPos.y) * dropT, yPos.z
+    );
+
+    // Remove old partial line
+    if (partialResidualLine) {
+      scene.remove(partialResidualLine);
+      partialResidualLine.geometry.dispose();
+      partialResidualLine.material.dispose();
     }
-  }, 150);
-}
+    partialResidualLine = makeDashedLine(yPos, currentBottom, C.residual);
+    partialResidualLine.visible = togResidual.checked;
+    scene.add(partialResidualLine);
 
-function runPhase3() {
-  animPhase = 3;
-  setStatus(phaseMessages[3]);
-  renderScene(3, 1);
-  stepTimer = setTimeout(runPhase4, PHASE_PAUSE * 1.5);
-}
+    // Light cone effect
+    lightCone.visible = true;
+    coneMat.opacity = 0.04 * Math.sin(t * Math.PI);
 
-function runPhase4() {
-  animPhase = 4;
-  setStatus(phaseMessages[4]);
-  rotateAngle = Math.atan2(SIDE_CAMERA.eye.z, SIDE_CAMERA.eye.x);
-  startRotation();
-  // Mark animation done
-  isPlaying = false;
-  showPlayBtn();
-}
+    // Faint shadow on plane
+    yHatSphere.visible = true;
+    yHatSphere.material.opacity = 0.3 + 0.7 * dropT;
+    yHatSphere.material.transparent = true;
 
-function startRotation() {
-  if (rotateTimer) return;
-  rotateTimer = setInterval(function() {
-    rotateAngle += 0.008;
-    var cam = getRotatedCamera(rotateAngle);
-    Plotly.relayout('plot3d', { 'scene.camera': cam });
-  }, 50);
-}
-function stopRotation() {
-  if (rotateTimer) { clearInterval(rotateTimer); rotateTimer = null; }
-}
-
-function showPlayBtn() {
-  document.getElementById('btn-play').style.display = '';
-  document.getElementById('btn-pause').style.display = 'none';
-  document.getElementById('btn-play').classList.remove('active');
-}
-function showPauseBtn() {
-  document.getElementById('btn-play').style.display = 'none';
-  document.getElementById('btn-pause').style.display = '';
-  document.getElementById('btn-pause').classList.add('active');
-}
-
-function clearAllTimers() {
-  if (stepTimer) { clearTimeout(stepTimer); stepTimer = null; }
-  if (dropTimer) { clearInterval(dropTimer); dropTimer = null; }
-  if (flashTimer) { clearInterval(flashTimer); flashTimer = null; }
-  stopRotation();
-}
-
-function togglePlay() {
-  if (isPlaying) {
-    // Pause
-    isPlaying = false;
-    clearAllTimers();
-    showPlayBtn();
-  } else {
-    // Play
-    isPlaying = true;
-    showPauseBtn();
-    if (animPhase >= 4) {
-      // Restart rotation
-      startRotation();
-    } else if (animPhase < 0) {
-      // Start from beginning
-      runPhase0();
+    // When dot reaches bottom, show yhat label
+    if (dropT > 0.9) {
+      labelEls.yhat.style.opacity = (dropT - 0.9) / 0.1;
+      // Glow pulse
+      yHatGlow.visible = true;
+      yHatGlowMat.opacity = 0.4 * (1 - (dropT - 0.9) / 0.1);
     } else {
-      // Resume current phase
-      if (animPhase === 0) {
-        stepTimer = setTimeout(runPhase1, PHASE_PAUSE);
-      } else if (animPhase === 1) {
-        // Resume drop
-        dropTimer = setInterval(function() {
-          if (!isPlaying) return;
-          dropFrame++;
-          var t = dropFrame / DROP_FRAMES;
-          renderScene(1, t);
-          if (dropFrame >= DROP_FRAMES) {
-            clearInterval(dropTimer);
-            dropTimer = null;
-            stepTimer = setTimeout(runPhase2, 300);
-          }
-        }, DROP_INTERVAL);
-      } else if (animPhase === 2) {
-        stepTimer = setTimeout(runPhase3, PHASE_PAUSE);
-      } else if (animPhase === 3) {
-        stepTimer = setTimeout(runPhase4, PHASE_PAUSE);
-      }
+      labelEls.yhat.style.opacity = 0;
+      yHatGlow.visible = false;
     }
+
+    residualLine.visible = false;
+    labelEls.residual.style.opacity = 0;
+    raMarker.visible = false;
+    candidateGroup.visible = false;
+    phaseTextEl.textContent = phaseTexts[1];
+  }
+
+  // Phase 2: Perpendicular — right angle marker, residual pulses, camera rotates to side
+  const p2Start = p1End;
+  const p2End = p2Start + PHASE_TIMES[2];
+  if (globalTime > p2Start && globalTime <= p2End) {
+    // Clean up partial line
+    if (partialResidualLine) {
+      scene.remove(partialResidualLine);
+      partialResidualLine.geometry.dispose();
+      partialResidualLine.material.dispose();
+      partialResidualLine = null;
+    }
+
+    const t = smoothT;
+
+    // Full residual line visible
+    residualLine.visible = togResidual.checked;
+    yHatSphere.visible = true;
+    yHatSphere.material.opacity = 1;
+    yHatSphere.material.transparent = false;
+    labelEls.yhat.style.opacity = 1;
+    yHatGlow.visible = false;
+    lightCone.visible = false;
+
+    // Right angle marker fades in
+    raMarker.visible = togAngle.checked;
+
+    // Residual label
+    labelEls.residual.style.opacity = t > 0.2 ? 1 : 0;
+
+    // Residual pulse glow
+    const pulse = Math.sin(t * Math.PI * 4) * 0.5 + 0.5;
+    residualLine.material.color.setHex(C.residual);
+
+    // Camera smoothly rotates to show right angle from the side
+    if (!animState.dragging) {
+      const startAngle = Math.atan2(4, 4); // initial camera angle
+      const endAngle = startAngle + Math.PI * 0.35; // rotate ~63 degrees
+      const angle = startAngle + (endAngle - startAngle) * easeInOutCubic(t);
+      const r = 5.5;
+      camera.position.set(r * Math.cos(angle), 2 + t * 0.5, r * Math.sin(angle));
+      controls.update();
+    }
+
+    candidateGroup.visible = false;
+    phaseTextEl.textContent = phaseTexts[2];
+  }
+
+  // Phase 3: Closest point demo
+  const p3Start = p2End;
+  const p3End = p3Start + PHASE_TIMES[3];
+  if (globalTime > p3Start && globalTime <= p3End) {
+    const t = smoothT;
+
+    residualLine.visible = togResidual.checked;
+    raMarker.visible = togAngle.checked;
+    labelEls.yhat.style.opacity = 1;
+    labelEls.residual.style.opacity = togResidual.checked ? 1 : 0;
+
+    if (togCandidates.checked) {
+      candidateGroup.visible = true;
+
+      // Candidates fade in for first 40%, hold, then fade out last 30%
+      let candOpacity;
+      if (t < 0.4) {
+        candOpacity = t / 0.4;
+      } else if (t < 0.7) {
+        candOpacity = 1;
+      } else {
+        candOpacity = 1 - (t - 0.7) / 0.3;
+      }
+
+      for (const s of candidateSpheres) {
+        s.material.opacity = candOpacity;
+        s.material.transparent = true;
+      }
+      for (const l of candidateLines) {
+        l.material.opacity = candOpacity;
+        l.material.transparent = true;
+      }
+    } else {
+      candidateGroup.visible = false;
+    }
+
+    phaseTextEl.textContent = phaseTexts[3];
+  }
+
+  // Phase 4: Interactive
+  if (globalTime > p3End) {
+    if (partialResidualLine) {
+      scene.remove(partialResidualLine);
+      partialResidualLine.geometry.dispose();
+      partialResidualLine.material.dispose();
+      partialResidualLine = null;
+    }
+
+    animState.interactive = true;
+    residualLine.visible = togResidual.checked;
+    raMarker.visible = togAngle.checked;
+    yHatSphere.visible = true;
+    yHatSphere.material.opacity = 1;
+    yHatSphere.material.transparent = false;
+    labelEls.yhat.style.opacity = 1;
+    labelEls.residual.style.opacity = togResidual.checked ? 1 : 0;
+    candidateGroup.visible = false;
+    lightCone.visible = false;
+    yHatGlow.visible = false;
+    phaseTextEl.textContent = phaseTexts[4];
+
+    controls.autoRotate = true;
   }
 }
 
-function resetAnim() {
-  isPlaying = false;
-  clearAllTimers();
-  animPhase = -1;
-  dropFrame = 0;
-  rotateAngle = 0;
-  flashCount = 0;
-  showPlayBtn();
-  setStatus('Press Play to watch y drop perpendicular onto the column space.');
-  renderScene(0);
-}
+/* ─── DRAGGING Y IN INTERACTIVE MODE ─── */
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+const dragPlane = new THREE.Plane(); // we'll cast onto a plane parallel to camera
 
-/* ─────────────────────────────────────────────────────────
-   VIZ 2: 2D CROSS-SECTION (INTERACTIVE)
-   Click to move y; projection onto line
-───────────────────────────────────────────────────────── */
-const DIR = [1, 0.5];
-const DIRLEN = Math.sqrt(DIR[0]*DIR[0] + DIR[1]*DIR[1]);
-const DIRN = [DIR[0]/DIRLEN, DIR[1]/DIRLEN];
+let isDragging = false;
 
-var pt2D = { x: 1.0, y: 2.5 };
+function onPointerDown(e) {
+  if (!animState.interactive) return;
+  const rect = wrap.getBoundingClientRect();
+  mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
-function project2D(px, py) {
-  var dot = px * DIRN[0] + py * DIRN[1];
-  return { x: dot * DIRN[0], y: dot * DIRN[1] };
-}
-
-function rightAngle2D(px, py, phx, phy) {
-  var eps = 0.12;
-  var tx = DIRN[0] * eps, ty = DIRN[1] * eps;
-  var rx = px - phx, ry = py - phy;
-  var rlen = Math.sqrt(rx*rx + ry*ry) || 1;
-  var rnx = rx/rlen * eps, rny = ry/rlen * eps;
-  return {
-    x: [phx + tx, phx + tx + rnx, phx + rnx],
-    y: [phy + ty, phy + ty + rny, phy + rny]
-  };
-}
-
-function build2D(px, py) {
-  var ph = project2D(px, py);
-  var phx = ph.x, phy = ph.y;
-  var ra = rightAngle2D(px, py, phx, phy);
-  var rx = px - phx, ry = py - phy;
-  var rss = (rx*rx + ry*ry).toFixed(3);
-  var LINE_RANGE = 3.5;
-
-  var traces = [
-    {
-      type: 'scatter', mode: 'lines',
-      x: [-LINE_RANGE * DIRN[0], LINE_RANGE * DIRN[0]],
-      y: [-LINE_RANGE * DIRN[1], LINE_RANGE * DIRN[1]],
-      line: { color: '#6c63ff', width: 3 },
-      hoverinfo: 'skip', showlegend: false
-    },
-    {
-      type: 'scatter', mode: 'lines',
-      x: [0, phx], y: [0, phy],
-      line: { color: '#43e97b', width: 3 },
-      hoverinfo: 'skip', showlegend: false
-    },
-    {
-      type: 'scatter', mode: 'lines',
-      x: [phx, px], y: [phy, py],
-      line: { color: '#fbbf24', width: 3, dash: 'dash' },
-      hoverinfo: 'skip', showlegend: false
-    },
-    {
-      type: 'scatter', mode: 'lines',
-      x: ra.x, y: ra.y,
-      line: { color: 'rgba(255,255,255,0.7)', width: 2 },
-      hoverinfo: 'skip', showlegend: false
-    },
-    {
-      type: 'scatter', mode: 'markers+text',
-      x: [px], y: [py],
-      marker: { color: '#ff6584', size: 14, symbol: 'circle' },
-      text: ['  y'], textposition: 'middle right',
-      textfont: { color: '#ff6584', size: 14 },
-      hoverinfo: 'skip', showlegend: false
-    },
-    {
-      type: 'scatter', mode: 'markers+text',
-      x: [phx], y: [phy],
-      marker: { color: '#43e97b', size: 12, symbol: 'circle' },
-      text: ['  &#375;'], textposition: 'middle right',
-      textfont: { color: '#43e97b', size: 13 },
-      hoverinfo: 'skip', showlegend: false
-    },
-    {
-      type: 'scatter', mode: 'markers+text',
-      x: [0], y: [0],
-      marker: { color: '#8b949e', size: 8 },
-      text: ['  O'], textposition: 'middle right',
-      textfont: { color: '#8b949e', size: 12 },
-      hoverinfo: 'skip', showlegend: false
-    }
-  ];
-
-  var layout2d = {
-    paper_bgcolor: BG,
-    plot_bgcolor: SURF,
-    margin: { l: 50, r: 40, t: 20, b: 50 },
-    xaxis: {
-      range: [-3.5, 3.5], zeroline: true, zerolinecolor: '#30363d',
-      gridcolor: '#21262d', color: '#8b949e', title: '',
-      scaleanchor: 'y', scaleratio: 1
-    },
-    yaxis: {
-      range: [-1.5, 3.5], zeroline: true, zerolinecolor: '#30363d',
-      gridcolor: '#21262d', color: '#8b949e', title: ''
-    },
-    showlegend: false,
-    annotations: [
-      {
-        x: LINE_RANGE * DIRN[0] * 0.85, y: LINE_RANGE * DIRN[1] * 0.85,
-        text: 'col(X)', showarrow: false,
-        font: { color: '#6c63ff', size: 12 }
-      },
-      {
-        x: (px + phx) / 2 - 0.25, y: (py + phy) / 2,
-        text: 'r (RSS=' + rss + ')', showarrow: false,
-        font: { color: '#fbbf24', size: 11 }
-      }
-    ]
-  };
-
-  return { traces: traces, layout: layout2d };
-}
-
-function render2D() {
-  var d = build2D(pt2D.x, pt2D.y);
-  Plotly.react('plot2d', d.traces, d.layout, { responsive: true, displayModeBar: false });
-}
-
-function reset2D() {
-  pt2D = { x: 1.0, y: 2.5 };
-  render2D();
-}
-
-document.getElementById('plot2d').addEventListener('plotly_click', function(data) {
-  if (data && data.points && data.points.length > 0) {
-    pt2D.x = data.points[0].x;
-    pt2D.y = data.points[0].y;
-    render2D();
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObject(ySphere);
+  if (hits.length > 0) {
+    isDragging = true;
+    animState.dragging = true;
+    controls.enabled = false;
+    controls.autoRotate = false;
+    // Set up drag plane perpendicular to camera through y
+    const camDir = new THREE.Vector3();
+    camera.getWorldDirection(camDir);
+    dragPlane.setFromNormalAndCoplanarPoint(camDir, yPos);
   }
-});
-
-/* ─────────────────────────────────────────────────────────
-   VIZ 3: RSS vs NUMBER OF PREDICTORS
-───────────────────────────────────────────────────────── */
-function buildRSSPlot() {
-  var n = 10;
-  var ps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  var rss = ps.map(function(p) { return Math.max(0, 1 - p / n); });
-  var colors = ps.map(function(p) {
-    if (p === n) return '#ff6584';
-    var t = p / n;
-    return 'rgba(108, 99, 255, ' + (0.4 + 0.6 * (1 - t)) + ')';
-  });
-
-  var barTrace = {
-    type: 'bar',
-    x: ps.map(String),
-    y: rss,
-    marker: { color: colors, line: { color: '#30363d', width: 1 } },
-    hovertemplate: 'p=%{x} predictors<br>RSS=%{y:.3f}<extra></extra>',
-    showlegend: false
-  };
-
-  var annotations = [
-    {
-      x: '1', y: rss[0] + 0.04, text: 'Line<br>in R\u00b9\u2070', showarrow: false,
-      font: { color: '#8b949e', size: 10 }
-    },
-    {
-      x: '2', y: rss[1] + 0.04, text: 'Plane<br>in R\u00b9\u2070', showarrow: false,
-      font: { color: '#8b949e', size: 10 }
-    },
-    {
-      x: '10', y: 0.08, text: '\u0177 = y<br>RSS = 0', showarrow: false,
-      font: { color: '#ff6584', size: 11 }
-    }
-  ];
-
-  var layoutRSS = {
-    paper_bgcolor: BG,
-    plot_bgcolor: SURF,
-    margin: { l: 55, r: 20, t: 20, b: 65 },
-    xaxis: {
-      title: { text: 'Number of predictors (p)', font: { color: '#8b949e', size: 12 } },
-      color: '#8b949e', gridcolor: '#21262d',
-      tickfont: { color: '#8b949e' }
-    },
-    yaxis: {
-      title: { text: 'Residual Sum of Squares (RSS)', font: { color: '#8b949e', size: 12 } },
-      range: [0, 1.1],
-      color: '#8b949e', gridcolor: '#21262d',
-      tickfont: { color: '#8b949e' }
-    },
-    annotations: annotations,
-    shapes: [
-      {
-        type: 'line', xref: 'paper', x0: 0, x1: 1,
-        y0: 0, y1: 0,
-        line: { color: '#ff6584', width: 1, dash: 'dot' }
-      }
-    ],
-    showlegend: false
-  };
-
-  Plotly.react('plot-rss', [barTrace], layoutRSS, { responsive: true, displayModeBar: false });
 }
 
-/* ─────────────────────────────────────────────────────────
-   INIT
-───────────────────────────────────────────────────────── */
-window.addEventListener('load', function() {
-  // Init 3D with phase 0 (static scene)
-  renderScene(0);
+function onPointerMove(e) {
+  if (!isDragging) return;
+  const rect = wrap.getBoundingClientRect();
+  mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
-  // Init 2D
-  render2D();
+  raycaster.setFromCamera(mouse, camera);
+  const intersection = new THREE.Vector3();
+  raycaster.ray.intersectPlane(dragPlane, intersection);
+  if (intersection) {
+    // Clamp
+    intersection.x = Math.max(-2.5, Math.min(2.5, intersection.x));
+    intersection.y = Math.max(0.3, Math.min(4, intersection.y));
+    intersection.z = Math.max(-2.5, Math.min(2.5, intersection.z));
+    yPos.copy(intersection);
+    rebuildDynamicGeometry();
+  }
+}
 
-  // Init RSS bar chart
-  buildRSSPlot();
+function onPointerUp() {
+  if (isDragging) {
+    isDragging = false;
+    animState.dragging = false;
+    controls.enabled = true;
+    controls.autoRotate = true;
+  }
+}
+
+wrap.addEventListener('pointerdown', onPointerDown);
+wrap.addEventListener('pointermove', onPointerMove);
+wrap.addEventListener('pointerup', onPointerUp);
+wrap.addEventListener('pointerleave', onPointerUp);
+
+/* ─── CONTROLS ─── */
+const btnPlay = document.getElementById('btn-play');
+const speedSlider = document.getElementById('speed-slider');
+const speedVal = document.getElementById('speed-val');
+const progressScrubber = document.getElementById('progress-scrubber');
+const progressLabel = document.getElementById('progress-label');
+
+speedSlider.addEventListener('input', () => {
+  animState.speed = parseFloat(speedSlider.value);
+  speedVal.textContent = animState.speed + 'x';
 });
+
+let scrubbing = false;
+progressScrubber.addEventListener('input', () => {
+  scrubbing = true;
+  const pct = parseFloat(progressScrubber.value);
+  animState.time = (pct / 100) * TOTAL_ANIM_TIME;
+  progressLabel.textContent = Math.round(pct) + '%';
+});
+progressScrubber.addEventListener('change', () => { scrubbing = false; });
+
+window.anim = {
+  togglePlay() {
+    animState.playing = !animState.playing;
+    if (animState.playing) {
+      if (animState.time >= TOTAL_ANIM_TIME) {
+        animState.time = 0;
+        animState.interactive = false;
+        controls.autoRotate = false;
+      }
+      btnPlay.innerHTML = '&#9646;&#9646; Pause';
+      btnPlay.classList.add('active');
+    } else {
+      btnPlay.innerHTML = '&#9654; Play';
+      btnPlay.classList.remove('active');
+    }
+  },
+  restart() {
+    animState.time = 0;
+    animState.playing = true;
+    animState.interactive = false;
+    controls.autoRotate = false;
+    // Reset camera
+    camera.position.set(4, 3, 4);
+    controls.target.set(0, 1, 0);
+    controls.update();
+    // Reset y position
+    yPos.set(1.0, 2.5, 0.8);
+    yHatPos = computeYHat(yPos);
+    rebuildDynamicGeometry();
+    btnPlay.innerHTML = '&#9646;&#9646; Pause';
+    btnPlay.classList.add('active');
+  }
+};
+
+/* ─── RENDER LOOP ─── */
+let lastTime = performance.now();
+
+function animate(now) {
+  requestAnimationFrame(animate);
+  const dt = (now - lastTime) / 1000;
+  lastTime = now;
+
+  // Advance time
+  if (animState.playing && !scrubbing) {
+    animState.time += dt * animState.speed;
+    if (animState.time > TOTAL_ANIM_TIME) {
+      animState.time = TOTAL_ANIM_TIME;
+      animState.playing = false;
+      btnPlay.innerHTML = '&#9654; Play';
+      btnPlay.classList.remove('active');
+    }
+    // Update scrubber
+    const pct = (animState.time / TOTAL_ANIM_TIME) * 100;
+    progressScrubber.value = pct;
+    progressLabel.textContent = Math.round(pct) + '%';
+  }
+
+  updateAnimation(animState.time);
+  updateLabels();
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+requestAnimationFrame(animate);
+
+/* ─── RESIZE ─── */
+function onResize() {
+  const w = wrap.clientWidth;
+  const h = wrap.clientHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+}
+window.addEventListener('resize', onResize);
+
+/* ─── INIT: show static scene ─── */
+planeMesh.visible = true;
+planeMat.opacity = 0;
+gridHelper.visible = true;
+gridHelper.material.opacity = 0;
+
 </script>
 </body>
 </html>
