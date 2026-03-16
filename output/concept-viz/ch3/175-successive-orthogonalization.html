@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Successive Orthogonalization — ESL §3.2.3</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surf2: #1f2937;
+    --border: #30363d; --text: #e6edf3; --muted: #8b949e;
+    --accent: #58a6ff; --accent2: #bc8cff; --green: #3fb950;
+    --red: #f85149; --yellow: #d29922; --orange: #db6d28;
+    --radius: 10px;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.6; }
+
+  .page-header {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 60%, #1a1f2e 100%);
+    border-bottom: 1px solid var(--border); padding: 28px 40px 22px;
+  }
+  .breadcrumb { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .breadcrumb span { color: var(--accent); }
+  .concept-title {
+    font-size: 34px; font-weight: 700; letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #58a6ff, #bc8cff);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .badges { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 8px; }
+  .badge { background: var(--surf2); border: 1px solid var(--border); border-radius: 20px; padding: 3px 12px; font-size: 12px; color: var(--muted); }
+  .badge.cat { border-color: var(--accent); color: var(--accent); }
+  .concept-desc { font-size: 14px; color: var(--muted); max-width: 750px; }
+
+  .content { max-width: 1280px; margin: 0 auto; padding: 30px 40px 60px; display: flex; flex-direction: column; gap: 32px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px 30px; position: relative; overflow: hidden; }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .card-title { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+  .card-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+
+  .bt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .bt-grid { grid-template-columns: 1fr; } }
+  .bt-col-title { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+  .bt-col-title.ben { color: var(--green); }
+  .bt-col-title.tra { color: var(--red); }
+  .bt-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .bt-list li { display: flex; gap: 10px; font-size: 13px; color: var(--muted); align-items: flex-start; }
+  .bt-list li .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .bt-list li .dot.g { background: var(--green); }
+  .bt-list li .dot.r { background: var(--red); }
+  .book-quote { margin-top: 20px; padding: 14px 18px; background: var(--surf2); border-left: 3px solid var(--accent2); border-radius: 6px; font-style: italic; font-size: 13px; color: var(--muted); }
+  .book-quote cite { display: block; margin-top: 6px; font-style: normal; font-size: 12px; color: var(--accent2); }
+
+  .slbl { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+  .slbl::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .ctrl-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+  .ctrl-lbl { font-size: 13px; color: var(--muted); }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 200px; height: 4px; border-radius: 2px; background: var(--border); outline: none; cursor: pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 15px; height: 15px; border-radius: 50%; background: var(--accent); cursor: pointer; box-shadow: 0 0 6px rgba(88,166,255,0.5); }
+  input[type=range]::-moz-range-thumb { width: 15px; height: 15px; border-radius: 50%; background: var(--accent); cursor: pointer; border: none; }
+  .vbadge { background: var(--surf2); border: 1px solid var(--accent); border-radius: 6px; padding: 3px 12px; font-size: 13px; font-family: monospace; color: var(--accent); min-width: 70px; text-align: center; }
+
+  .btn { background: var(--surf2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); cursor: pointer; font-size: 13px; padding: 6px 14px; transition: border-color 0.15s, background 0.15s; }
+  .btn:hover { border-color: var(--accent); background: rgba(88,166,255,0.08); }
+  .btn.active { border-color: var(--accent); background: rgba(88,166,255,0.14); color: var(--accent); }
+
+  .plot-wrap { border-radius: 7px; overflow: hidden; background: var(--bg); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } }
+
+  .step-card { background: var(--surf2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; transition: border-color 0.2s, background 0.15s; cursor: pointer; }
+  .step-card:hover { border-color: var(--accent); }
+  .step-card.active { border-color: var(--accent); background: rgba(88,166,255,0.06); }
+  .step-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .step-num { background: var(--border); color: var(--text); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; transition: background 0.2s; }
+  .step-card.active .step-num { background: var(--accent); }
+  .step-card.done .step-num { background: var(--green); }
+  .step-title { font-size: 13px; font-weight: 600; }
+  .step-detail { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .guar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 16px; }
+  .guar-card { background: var(--surf2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; }
+  .guar-head { display: flex; align-items: center; margin-bottom: 8px; }
+  .guar-dot { width: 9px; height: 9px; border-radius: 50%; margin-right: 9px; flex-shrink: 0; }
+  .guar-dot.g { background: var(--green); box-shadow: 0 0 5px var(--green); }
+  .guar-dot.y { background: var(--yellow); box-shadow: 0 0 5px var(--yellow); }
+  .guar-name { font-weight: 600; font-size: 14px; }
+  .guar-verdict { margin-left: auto; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  .guar-verdict.g { color: var(--green); }
+  .guar-verdict.y { color: var(--yellow); }
+  .guar-body { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  .formula-block { background: var(--surf2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius); padding: 20px 24px; overflow-x: auto; }
+  .formula-block p { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.7; }
+
+  .note { font-size: 12px; color: var(--muted); line-height: 1.6; margin-top: 10px; }
+  .info-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; font-size: 13px; color: var(--accent); margin-top: 14px; line-height: 1.6; }
+
+  .warn-box { background: rgba(248,81,73,0.06); border: 1px solid rgba(248,81,73,0.3); border-radius: 6px; padding: 12px 16px; font-size: 13px; color: var(--red); margin-top: 14px; line-height: 1.6; }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="breadcrumb">Chapter 3 &nbsp;/&nbsp; Linear Methods for Regression &nbsp;/&nbsp; <span>3.2.3 Multiple Regression from Simple Regressions</span></div>
+  <h1 class="concept-title">Successive Orthogonalization</h1>
+  <div class="badges">
+    <span class="badge cat">Concept 175</span>
+    <span class="badge">ESL §3.2.3</span>
+    <span class="badge">Algorithm 3.1</span>
+    <span class="badge">Gram-Schmidt for Regression</span>
+  </div>
+  <p class="concept-desc">Multiple regression is just a sequence of simple regressions. Orthogonalize each predictor against all previous ones, then regress y on the residuals. The coefficients are the same as OLS — this procedure reveals <em>why</em>.</p>
+</div>
+
+<div class="content">
+
+  <!-- ════════ 1. BENEFITS & TRADEOFFS ════════ -->
+  <div class="card">
+    <div class="card-title">Benefits & Tradeoffs</div>
+    <div class="card-sub">What does this decomposition buy you?</div>
+    <div class="bt-grid">
+      <div>
+        <div class="bt-col-title ben">Benefits</div>
+        <ul class="bt-list">
+          <li><span class="dot g"></span><strong>Reveals what multiple regression actually does.</strong> "When the inputs are orthogonal, [multiple regression coefficients] are the same as univariate estimates. Otherwise, they must be adjusted for correlated inputs" (ESL §3.2.3, p. 54). This procedure shows exactly how that adjustment works.</li>
+          <li><span class="dot g"></span><strong>Connects to the QR decomposition.</strong> Algorithm 3.1 IS Gram-Schmidt. "The result of this algorithm is... the QR decomposition of X" (ESL §3.2.3, p. 55). The conceptual story and the computational tool are the same thing.</li>
+          <li><span class="dot g"></span><strong>Explains collinearity instability.</strong> When predictors are highly correlated, the residual z<sub>j</sub> after orthogonalization is tiny. Dividing by a tiny residual amplifies noise — you can <em>see</em> why correlated features produce wild coefficients.</li>
+          <li><span class="dot g"></span><strong>Foundation for many Ch3 algorithms.</strong> Ridge, LAR, forward stagewise, boosting, and PLS are all variations on this theme: project, shrink, repeat. Understanding this procedure is the key to the rest of the chapter.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="bt-col-title tra">Tradeoffs</div>
+        <ul class="bt-list">
+          <li><span class="dot r"></span><strong>Sensitive to predictor ordering.</strong> The intermediate residuals z<sub>j</sub> depend on which variables were orthogonalized first. Different orderings produce different z's (though the final regression gives the same β̂).</li>
+          <li><span class="dot r"></span><strong>Not how OLS is actually computed.</strong> In practice, the QR decomposition uses Householder reflections (numerically stable), not classical Gram-Schmidt (which can lose orthogonality). This is a pedagogical tool, not a computational recipe.</li>
+          <li><span class="dot r"></span><strong>The last coefficient is special.</strong> "The multiple regression coefficient β̂<sub>p</sub> ... is the univariate regression coefficient of y on z<sub>p</sub>" (ESL §3.2.3, p. 54) — only the last variable's coefficient has the simple interpretation.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="book-quote">
+      "This recipe shows that the multiple regression coefficient β̂<sub>j</sub> represents the additional contribution of x<sub>j</sub> on y, after x<sub>j</sub> has been adjusted for x<sub>0</sub>, x<sub>1</sub>, ..., x<sub>j-1</sub>."
+      <cite>— ESL §3.2.3, p. 54</cite>
+    </div>
+  </div>
+
+  <!-- ════════ 2. ANIMATION: STEP-BY-STEP ORTHOGONALIZATION ════════ -->
+  <div class="card">
+    <div class="card-title">Watch the Orthogonalization: Peeling Off Projections</div>
+    <div class="card-sub">Multiple regression with 3 predictors. Each step projects a variable onto the previous ones and keeps only the residual — the part that's genuinely new information.</div>
+
+    <div class="ctrl-row">
+      <button class="btn active" id="btnStep0" onclick="goStep(0)">Setup</button>
+      <button class="btn" id="btnStep1" onclick="goStep(1)">Step 1: z₁ = x₁</button>
+      <button class="btn" id="btnStep2" onclick="goStep(2)">Step 2: Orthogonalize x₂</button>
+      <button class="btn" id="btnStep3" onclick="goStep(3)">Step 3: Regress y on z₂</button>
+      <span style="flex:1"></span>
+      <button class="btn" id="btnAutoPlay" onclick="autoPlay()">Auto-play</button>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="plot-wrap" id="plotMain" style="height:400px"></div>
+      </div>
+      <div>
+        <div id="stepCards">
+          <div class="step-card active" id="sc0" onclick="goStep(0)">
+            <div class="step-header"><span class="step-num">0</span><span class="step-title">Setup: Raw Data</span></div>
+            <div class="step-detail">Two predictors x<sub>1</sub> and x<sub>2</sub>, correlated at r = <span id="corrDisplay">0.80</span>. Response y depends on both. We want to find multiple regression coefficients β̂<sub>1</sub> and β̂<sub>2</sub>.</div>
+          </div>
+          <div class="step-card" id="sc1" onclick="goStep(1)">
+            <div class="step-header"><span class="step-num">1</span><span class="step-title">z₁ = x₁ (first predictor stays)</span></div>
+            <div class="step-detail">The first predictor needs no adjustment — it defines the starting direction. z<sub>1</sub> = x<sub>1</sub>.</div>
+          </div>
+          <div class="step-card" id="sc2" onclick="goStep(2)">
+            <div class="step-header"><span class="step-num">2</span><span class="step-title">Project x₂ onto x₁, keep the residual z₂</span></div>
+            <div class="step-detail">Remove from x<sub>2</sub> everything that x<sub>1</sub> already explains. z<sub>2</sub> = x<sub>2</sub> − (x₁ᵀx₂/x₁ᵀx₁)x<sub>1</sub>. This is the "new information" in x<sub>2</sub>. When correlation is high, z<sub>2</sub> is tiny.</div>
+          </div>
+          <div class="step-card" id="sc3" onclick="goStep(3)">
+            <div class="step-header"><span class="step-num">3</span><span class="step-title">Regress y on z₂ → this IS β̂₂</span></div>
+            <div class="step-detail">The coefficient from regressing y on the residual z<sub>2</sub> is exactly the multiple regression coefficient β̂<sub>2</sub>. No matrix inversion needed — just simple regressions and subtraction.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ctrl-row" style="margin-top:14px">
+      <span class="ctrl-lbl">Correlation r(x₁, x₂):</span>
+      <input type="range" id="corrSlider" min="0" max="99" value="80" step="1">
+      <span class="vbadge" id="corrBadge">0.80</span>
+    </div>
+    <div id="corrWarning" class="warn-box" style="display:none">
+      At high correlation, z₂ is nearly zero — dividing by it amplifies noise. This is why collinearity makes coefficients unstable: the "new information" in each predictor is vanishingly small.
+    </div>
+  </div>
+
+  <!-- ════════ 3. CORRELATION EXPLORER ════════ -->
+  <div class="card">
+    <div class="card-title">Correlation Drives Instability</div>
+    <div class="card-sub">As corr(x₁, x₂) increases, the orthogonal residual z₂ shrinks. The coefficient β̂₂ has to divide by ||z₂||², so noise gets amplified. Drag the slider and watch the variance explode.</div>
+
+    <div class="two-col">
+      <div>
+        <div class="plot-wrap" id="plotZ2norm" style="height:300px"></div>
+        <p class="note" style="text-align:center">||z₂|| — how much "new information" x₂ adds</p>
+      </div>
+      <div>
+        <div class="plot-wrap" id="plotVarBeta" style="height:300px"></div>
+        <p class="note" style="text-align:center">Var(β̂₂) — coefficient variance via orthogonalization</p>
+      </div>
+    </div>
+    <div class="info-box">
+      The variance of β̂<sub>j</sub> is σ²/||z<sub>j</sub>||². When predictors are orthogonal, ||z<sub>j</sub>|| = ||x<sub>j</sub>|| and variance is minimal. As correlation → 1, ||z<sub>j</sub>|| → 0 and variance → ∞. This is the geometric explanation of collinearity: there's no independent direction left to estimate.
+    </div>
+  </div>
+
+  <!-- ════════ 4. BRIDGE TO RIDGE ════════ -->
+  <div class="card">
+    <div class="card-title">Bridge to Ridge: Shrinking After Orthogonalization</div>
+    <div class="card-sub">Ridge regression applies shrinkage in the orthogonalized directions. Directions with tiny ||z<sub>j</sub>|| get shrunk the most — exactly the noisy ones.</div>
+
+    <div class="ctrl-row">
+      <span class="ctrl-lbl">Ridge λ:</span>
+      <input type="range" id="lambdaSlider" min="0" max="100" value="0" step="1">
+      <span class="vbadge" id="lambdaDisplay">0.00</span>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="plot-wrap" id="plotRidgeCoef" style="height:300px"></div>
+        <p class="note" style="text-align:center">OLS vs Ridge coefficients</p>
+      </div>
+      <div>
+        <div class="plot-wrap" id="plotShrinkage" style="height:300px"></div>
+        <p class="note" style="text-align:center">Shrinkage factor d²/(d² + λ) per SVD direction</p>
+      </div>
+    </div>
+    <div class="info-box">
+      In the SVD basis, ridge multiplies each direction's coefficient by d<sub>j</sub>²/(d<sub>j</sub>² + λ). Directions where the data has little variance (small d<sub>j</sub>) — the ones that make collinearity dangerous — get shrunk toward zero. Ridge tames exactly the instability that successive orthogonalization reveals.
+    </div>
+  </div>
+
+  <!-- ════════ 5. STATISTICAL GUARANTEES ════════ -->
+  <div class="card">
+    <div class="slbl">Statistical Guarantees</div>
+    <div class="guar-grid">
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Exact equivalence to OLS</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">Algorithm 3.1 produces exactly the same β̂ as (XᵀX)⁻¹Xᵀy. It's a different path to the same destination — useful for understanding, not for computation.</div>
+      </div>
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">QR decomposition connection</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">The z<sub>j</sub> residuals form the columns of Q (after normalization), and the projection coefficients form R. This IS Gram-Schmidt, which IS the QR factorization. (ESL §3.2.3, p. 55)</div>
+      </div>
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Variance = σ²/||z<sub>j</sub>||²</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">The variance of the j-th multiple regression coefficient depends only on how much independent information z<sub>j</sub> carries. This gives the geometric explanation of standard errors. (ESL §3.2.3, p. 55)</div>
+      </div>
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot y"></span>
+          <span class="guar-name">Order dependence</span>
+          <span class="guar-verdict y">PARTIAL</span>
+        </div>
+        <div class="guar-body">Intermediate residuals z<sub>j</sub> change with predictor ordering. But the final β̂ is order-invariant — every ordering produces the same OLS solution. Only the interpretive decomposition changes.</div>
+      </div>
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot y"></span>
+          <span class="guar-name">Numerical stability</span>
+          <span class="guar-verdict y">CAUTION</span>
+        </div>
+        <div class="guar-body">Classical Gram-Schmidt can lose orthogonality in finite precision. Modified Gram-Schmidt is better; Householder reflections (used in practice) are best. This procedure is for understanding, not production code.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ 6. FORMULAS (DEAD LAST) ════════ -->
+  <div class="card">
+    <div class="slbl">Formulas — Reference</div>
+    <div class="formula-block">
+      <div><strong>Algorithm 3.1</strong> — Regression by Successive Orthogonalization</div>
+      <p>
+        1. Initialize: $\mathbf{z}_0 = \mathbf{x}_0 = \mathbf{1}$ (intercept)<br>
+        2. For $j = 1, 2, \ldots, p$: regress $\mathbf{x}_j$ on $\mathbf{z}_0, \mathbf{z}_1, \ldots, \mathbf{z}_{j-1}$ to get residual $\mathbf{z}_j$<br>
+        3. Regress $\mathbf{y}$ on the residual $\mathbf{z}_p$ to give $\hat\beta_p$
+      </p>
+    </div>
+    <div class="formula-block" style="margin-top:14px">
+      <div>$$\hat\beta_p = \frac{\langle \mathbf{z}_p, \mathbf{y} \rangle}{\langle \mathbf{z}_p, \mathbf{z}_p \rangle}$$</div>
+      <p>The multiple regression coefficient of the last variable is just a simple regression of y on the orthogonalized residual.</p>
+    </div>
+    <div class="formula-block" style="margin-top:14px">
+      <div>$$\text{Var}(\hat\beta_p) = \frac{\sigma^2}{\langle \mathbf{z}_p, \mathbf{z}_p \rangle} = \frac{\sigma^2}{\|\mathbf{z}_p\|^2}$$</div>
+      <p>Variance depends on how much independent information z<sub>p</sub> carries. High correlation → small ||z<sub>p</sub>|| → large variance. This is the VIF in geometric form: VIF<sub>j</sub> = 1/(1 − R²<sub>j</sub>) = ||x<sub>j</sub>||²/||z<sub>j</sub>||².</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── DATA GENERATION ──
+const N = 80;
+const TRUE_B1 = 0.6, TRUE_B2 = 0.8;
+const SIGMA = 0.3;
+
+// Fixed random seed via simple LCG
+function lcg(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 1664525 + 1013904223) & 0xFFFFFFFF;
+    return (s >>> 0) / 0xFFFFFFFF;
+  };
+}
+
+// Box-Muller
+function randn(rng) {
+  const u1 = rng(), u2 = rng();
+  return Math.sqrt(-2 * Math.log(u1 + 1e-10)) * Math.cos(2 * Math.PI * u2);
+}
+
+function generateData(corr) {
+  const rng = lcg(42);
+  const x1 = [], x2 = [], y = [];
+  for (let i = 0; i < N; i++) {
+    const u = randn(rng);
+    const v = randn(rng);
+    const xi1 = u;
+    const xi2 = corr * u + Math.sqrt(1 - corr * corr) * v;
+    const yi = TRUE_B1 * xi1 + TRUE_B2 * xi2 + SIGMA * randn(rng);
+    x1.push(xi1);
+    x2.push(xi2);
+    y.push(yi);
+  }
+  return { x1, x2, y };
+}
+
+function dot(a, b) { return a.reduce((s, v, i) => s + v * b[i], 0); }
+function norm(a) { return Math.sqrt(dot(a, a)); }
+function scale(a, s) { return a.map(v => v * s); }
+function sub(a, b) { return a.map((v, i) => v - b[i]); }
+
+function orthogonalize(data) {
+  const { x1, x2, y } = data;
+  // z1 = x1
+  const z1 = [...x1];
+  // project x2 onto z1: gamma = <z1, x2> / <z1, z1>
+  const gamma = dot(z1, x2) / dot(z1, z1);
+  const proj = scale(z1, gamma);
+  const z2 = sub(x2, proj);
+  // beta2_hat = <z2, y> / <z2, z2>
+  const beta2 = dot(z2, y) / dot(z2, z2);
+  // beta1 via full OLS
+  const z1norm2 = dot(z1, z1);
+  const beta1 = dot(z1, y) / z1norm2 - gamma * beta2;
+
+  return { z1, z2, proj, gamma, beta1, beta2, z2norm: norm(z2) };
+}
+
+// ── PLOT COLORS ──
+const COL = {
+  x1: '#58a6ff', x2: '#f78166', z2: '#3fb950', proj: '#d29922',
+  y: '#bc8cff', resid: '#f85149', bg: '#0d1117', grid: '#21262d',
+  zero: '#30363d', text: '#8b949e'
+};
+const LAYOUT_BASE = {
+  paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: COL.bg,
+  font: { color: COL.text, size: 11 },
+};
+
+// ── VIZ 1: STEP-THROUGH ANIMATION ──
+let currentStep = 0;
+let currentCorr = 0.80;
+
+function getCorr() { return parseInt(document.getElementById('corrSlider').value) / 100; }
+
+function drawStep(step) {
+  currentStep = step;
+  const corr = getCorr();
+  currentCorr = corr;
+  const data = generateData(corr);
+  const orth = orthogonalize(data);
+
+  // Update step card highlights
+  for (let i = 0; i <= 3; i++) {
+    const el = document.getElementById('sc' + i);
+    el.classList.toggle('active', i === step);
+    el.classList.toggle('done', i < step);
+  }
+  for (let i = 0; i <= 3; i++) {
+    document.getElementById('btnStep' + i).classList.toggle('active', i === step);
+  }
+
+  // Warning for high correlation
+  const warn = document.getElementById('corrWarning');
+  warn.style.display = corr > 0.9 ? 'block' : 'none';
+
+  // Build traces
+  const traces = [];
+
+  if (step >= 0) {
+    // Always show x1 and x2 scatter
+    traces.push({
+      x: data.x1, y: data.x2,
+      mode: 'markers', type: 'scatter',
+      marker: { color: COL.x2, size: 5, opacity: step >= 2 ? 0.3 : 0.7 },
+      name: 'x₂ vs x₁',
+    });
+  }
+
+  if (step >= 1) {
+    // Show x1 direction line
+    const ext = 3;
+    traces.push({
+      x: [-ext, ext], y: [0, 0],
+      mode: 'lines', line: { color: COL.x1, width: 2.5 },
+      name: 'z₁ = x₁ direction',
+    });
+  }
+
+  if (step >= 2) {
+    // Show projection lines from x2 onto x1 direction
+    const projY = data.x2.map((_, i) => orth.gamma * data.x1[i]);
+    // Vertical drop lines (projection)
+    for (let i = 0; i < N; i += 3) { // every 3rd point to avoid clutter
+      traces.push({
+        x: [data.x1[i], data.x1[i]],
+        y: [data.x2[i], projY[i]],
+        mode: 'lines', line: { color: COL.proj, width: 0.8 },
+        showlegend: i === 0, name: i === 0 ? 'Projection onto x₁' : '',
+        legendgroup: 'proj',
+      });
+    }
+    // Residual z2 as points at the projected location
+    traces.push({
+      x: data.x1, y: orth.z2,
+      mode: 'markers',
+      marker: { color: COL.z2, size: 5, opacity: 0.7, symbol: 'diamond' },
+      name: 'z₂ (residual)',
+    });
+    // Regression line of x2 on x1
+    traces.push({
+      x: [-3, 3], y: [-3 * orth.gamma, 3 * orth.gamma],
+      mode: 'lines', line: { color: COL.proj, width: 2, dash: 'dash' },
+      name: `Regression line (γ = ${orth.gamma.toFixed(2)})`,
+    });
+  }
+
+  if (step >= 3) {
+    // Highlight z2 with y correlation
+    // Show the regression of y on z2 as a separate annotation
+    traces.push({
+      x: orth.z2, y: data.y,
+      mode: 'markers',
+      marker: { color: COL.y, size: 5, opacity: 0.7 },
+      name: 'y vs z₂',
+      xaxis: 'x', yaxis: 'y',
+      visible: false, // We'll show in annotation
+    });
+  }
+
+  const xRange = [-3.5, 3.5];
+  const yRange = step >= 2 ? [-3.5, 3.5] : [-3.5, 3.5];
+
+  const annotations = [];
+  if (step >= 2) {
+    annotations.push({
+      x: 0.02, y: 0.98, xref: 'paper', yref: 'paper',
+      text: `||z₂|| = ${orth.z2norm.toFixed(2)}`,
+      font: { color: COL.z2, size: 14, weight: 'bold' },
+      showarrow: false, bgcolor: 'rgba(13,17,23,0.8)', borderpad: 4,
+    });
+  }
+  if (step >= 3) {
+    annotations.push({
+      x: 0.02, y: 0.88, xref: 'paper', yref: 'paper',
+      text: `β̂₂ = <z₂,y>/||z₂||² = ${orth.beta2.toFixed(3)}`,
+      font: { color: COL.y, size: 13 },
+      showarrow: false, bgcolor: 'rgba(13,17,23,0.8)', borderpad: 4,
+    });
+  }
+
+  Plotly.react('plotMain', traces, {
+    ...LAYOUT_BASE,
+    xaxis: { title: 'x₁', gridcolor: COL.grid, zerolinecolor: COL.zero, range: xRange },
+    yaxis: { title: step < 2 ? 'x₂' : 'x₂ / z₂', gridcolor: COL.grid, zerolinecolor: COL.zero, range: yRange },
+    legend: { bgcolor: 'transparent', font: { size: 10 }, x: 1, xanchor: 'right', y: 1 },
+    margin: { t: 10, l: 55, r: 10, b: 48 },
+    height: 400,
+    annotations,
+  }, { responsive: true, displayModeBar: false });
+}
+
+function goStep(s) { drawStep(s); }
+
+let autoTimer = null;
+function autoPlay() {
+  if (autoTimer) { clearInterval(autoTimer); autoTimer = null; document.getElementById('btnAutoPlay').classList.remove('active'); return; }
+  document.getElementById('btnAutoPlay').classList.add('active');
+  let s = 0;
+  drawStep(s);
+  autoTimer = setInterval(() => {
+    s++;
+    if (s > 3) { clearInterval(autoTimer); autoTimer = null; document.getElementById('btnAutoPlay').classList.remove('active'); return; }
+    drawStep(s);
+  }, 1500);
+}
+
+document.getElementById('corrSlider').addEventListener('input', function() {
+  const v = getCorr();
+  document.getElementById('corrBadge').textContent = v.toFixed(2);
+  document.getElementById('corrDisplay').textContent = v.toFixed(2);
+  drawStep(currentStep);
+});
+
+// ── VIZ 2: CORRELATION EXPLORER (static curves) ──
+function drawCorrExplorer() {
+  const rs = [];
+  const z2norms = [];
+  const varBetas = [];
+
+  for (let ri = 0; ri <= 99; ri++) {
+    const r = ri / 100;
+    rs.push(r);
+    const d = generateData(r);
+    const o = orthogonalize(d);
+    z2norms.push(o.z2norm);
+    const vb = (SIGMA * SIGMA) / (o.z2norm * o.z2norm + 1e-10);
+    varBetas.push(Math.min(vb, 20)); // cap for display
+  }
+
+  // Highlight current correlation
+  const ci = Math.round(currentCorr * 100);
+
+  Plotly.react('plotZ2norm', [{
+    x: rs, y: z2norms,
+    mode: 'lines', line: { color: COL.z2, width: 2.5 },
+    fill: 'tozeroy', fillcolor: 'rgba(63,185,80,0.08)',
+    name: '||z₂||',
+  }, {
+    x: [currentCorr], y: [z2norms[ci] || 0],
+    mode: 'markers', marker: { color: COL.z2, size: 10, symbol: 'circle' },
+    showlegend: false,
+  }], {
+    ...LAYOUT_BASE,
+    xaxis: { title: 'Correlation r(x₁, x₂)', gridcolor: COL.grid, range: [-0.02, 1.02] },
+    yaxis: { title: '||z₂||', gridcolor: COL.grid },
+    margin: { t: 10, l: 55, r: 10, b: 48 },
+    height: 300, showlegend: false,
+  }, { responsive: true, displayModeBar: false });
+
+  Plotly.react('plotVarBeta', [{
+    x: rs, y: varBetas,
+    mode: 'lines', line: { color: COL.resid, width: 2.5 },
+    fill: 'tozeroy', fillcolor: 'rgba(248,81,73,0.08)',
+    name: 'Var(β̂₂)',
+  }, {
+    x: [currentCorr], y: [varBetas[ci] || 0],
+    mode: 'markers', marker: { color: COL.resid, size: 10, symbol: 'circle' },
+    showlegend: false,
+  }], {
+    ...LAYOUT_BASE,
+    xaxis: { title: 'Correlation r(x₁, x₂)', gridcolor: COL.grid, range: [-0.02, 1.02] },
+    yaxis: { title: 'Var(β̂₂) = σ²/||z₂||²', gridcolor: COL.grid },
+    margin: { t: 10, l: 55, r: 10, b: 48 },
+    height: 300, showlegend: false,
+  }, { responsive: true, displayModeBar: false });
+}
+
+// ── VIZ 3: BRIDGE TO RIDGE ──
+function drawRidge() {
+  const lambda = parseInt(document.getElementById('lambdaSlider').value) / 10;
+  document.getElementById('lambdaDisplay').textContent = lambda.toFixed(1);
+
+  // Use SVD-like analysis with 5 "directions"
+  // Simulate eigenvalues (singular values squared)
+  const ds = [4.0, 1.5, 0.6, 0.15, 0.03]; // large to small
+  const olsCoefs = [0.3, -0.7, 0.5, 1.2, -0.9]; // in SVD basis
+  const names = ['d₁=4.0', 'd₂=1.5', 'd₃=0.6', 'd₄=0.15', 'd₅=0.03'];
+
+  const shrinkFactors = ds.map(d => d / (d + lambda));
+  const ridgeCoefs = olsCoefs.map((b, i) => b * shrinkFactors[i]);
+
+  // Coefficients bar chart
+  Plotly.react('plotRidgeCoef', [{
+    x: names, y: olsCoefs, type: 'bar', name: 'OLS',
+    marker: { color: COL.x1, opacity: 0.5 },
+  }, {
+    x: names, y: ridgeCoefs, type: 'bar', name: 'Ridge',
+    marker: { color: COL.z2 },
+  }], {
+    ...LAYOUT_BASE,
+    xaxis: { gridcolor: COL.grid },
+    yaxis: { title: 'Coefficient', gridcolor: COL.grid, range: [-1.5, 1.5] },
+    barmode: 'group',
+    legend: { bgcolor: 'transparent', font: { size: 10 }, x: 0, y: 1 },
+    margin: { t: 10, l: 55, r: 10, b: 48 },
+    height: 300,
+  }, { responsive: true, displayModeBar: false });
+
+  // Shrinkage factors
+  const colors = shrinkFactors.map(s => s < 0.3 ? COL.resid : s < 0.7 ? COL.proj : COL.z2);
+  Plotly.react('plotShrinkage', [{
+    x: names, y: shrinkFactors, type: 'bar',
+    marker: { color: colors },
+    text: shrinkFactors.map(s => s.toFixed(2)),
+    textposition: 'outside', textfont: { color: COL.text, size: 11 },
+  }], {
+    ...LAYOUT_BASE,
+    xaxis: { gridcolor: COL.grid },
+    yaxis: { title: 'd²/(d²+λ)', gridcolor: COL.grid, range: [0, 1.15] },
+    margin: { t: 10, l: 55, r: 10, b: 48 },
+    height: 300, showlegend: false,
+  }, { responsive: true, displayModeBar: false });
+}
+
+document.getElementById('lambdaSlider').addEventListener('input', drawRidge);
+
+// ── INIT ──
+drawStep(0);
+drawCorrExplorer();
+drawRidge();
+
+// Update explorer when correlation changes
+const origCorrHandler = document.getElementById('corrSlider').oninput;
+document.getElementById('corrSlider').addEventListener('input', () => {
+  setTimeout(drawCorrExplorer, 50);
+});
+</script>
+</body>
+</html>

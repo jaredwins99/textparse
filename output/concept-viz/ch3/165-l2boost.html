@@ -3,271 +3,578 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>L2Boost — ESL §3.8</title>
+<title>L2Boost — ESL 3.8</title>
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
-  header { background: #161b22; border-bottom: 1px solid #30363d; padding: 24px 32px; }
-  header .tag { font-size: 11px; color: #58a6ff; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
-  header h1 { font-size: 26px; font-weight: 700; color: #e6edf3; margin-bottom: 6px; }
-  header .meta { font-size: 13px; color: #8b949e; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
-  header .section-badge { background: #21262d; border: 1px solid #30363d; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
-  header .formula { margin-top: 10px; font-size: 15px; color: #a5d6ff; background: #0d1117; border-left: 3px solid #58a6ff; padding: 8px 14px; border-radius: 0 4px 4px 0; display: inline-block; }
-  .container { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
-  .viz-area { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
-  .viz-area h2 { font-size: 14px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
-  .panels { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-  .panel { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; }
-  .panel h3 { font-size: 12px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; border-bottom: 1px solid #21262d; padding-bottom: 10px; }
-  .quote { font-style: italic; font-size: 13px; line-height: 1.7; color: #c9d1d9; border-left: 3px solid #f78166; padding-left: 12px; }
-  .quote cite { display: block; margin-top: 8px; font-style: normal; font-size: 11px; color: #8b949e; }
-  .guarantee-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #21262d; font-size: 13px; }
-  .guarantee-row:last-child { border-bottom: none; }
-  .badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
-  .badge-yes { background: #1a4731; color: #56d364; }
-  .badge-no { background: #3d1c1c; color: #f85149; }
-  .badge-na { background: #1c2128; color: #8b949e; }
-  .related-list { list-style: none; }
-  .related-list li { padding: 6px 0; border-bottom: 1px solid #21262d; font-size: 13px; color: #79c0ff; }
-  .related-list li:last-child { border-bottom: none; }
-  .related-list li span { color: #8b949e; font-size: 11px; display: block; }
-  .note { font-size: 12px; color: #8b949e; margin-top: 12px; line-height: 1.6; }
-  .controls { display: flex; gap: 16px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
-  label { font-size: 13px; color: #8b949e; }
-  button { background: #21262d; border: 1px solid #30363d; color: #c9d1d9; border-radius: 4px; padding: 5px 14px; font-size: 13px; cursor: pointer; }
-  button:hover { background: #30363d; }
-  button.active { background: #1f6feb; border-color: #58a6ff; color: #fff; }
-  input[type=range] { width: 140px; accent-color: #58a6ff; }
-  .slider-val { font-size: 13px; color: #58a6ff; font-weight: 600; min-width: 40px; }
-  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-  .info-box { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 12px 16px; font-size: 13px; color: #a5d6ff; margin-top: 14px; line-height: 1.6; }
-  .algo-steps { list-style: none; counter-reset: steps; }
-  .algo-steps li { counter-increment: steps; padding: 7px 0 7px 36px; border-bottom: 1px solid #21262d; font-size: 13px; line-height: 1.5; position: relative; }
-  .algo-steps li:last-child { border-bottom: none; }
-  .algo-steps li::before { content: counter(steps); position: absolute; left: 0; top: 7px; background: #1f6feb; color: #fff; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
-  .algo-steps li code { background: #21262d; padding: 1px 5px; border-radius: 3px; font-size: 12px; font-family: monospace; color: #a5d6ff; }
-  .step-highlight { background: #1c2f4a; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surf2: #1f2937;
+    --border: #30363d; --text: #e6edf3; --muted: #8b949e;
+    --accent: #58a6ff; --accent2: #bc8cff; --green: #3fb950;
+    --red: #f85149; --yellow: #d29922; --orange: #db6d28;
+    --radius: 10px;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.6; }
+
+  .page-header {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 60%, #1a1f2e 100%);
+    border-bottom: 1px solid var(--border); padding: 28px 40px 22px;
+  }
+  .breadcrumb { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .breadcrumb span { color: var(--accent); }
+  .concept-title {
+    font-size: 34px; font-weight: 700; letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #58a6ff, #bc8cff);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .badges { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 8px; }
+  .badge { background: var(--surf2); border: 1px solid var(--border); border-radius: 20px; padding: 3px 12px; font-size: 12px; color: var(--muted); }
+  .badge.cat { border-color: var(--accent); color: var(--accent); }
+  .concept-desc { font-size: 14px; color: var(--muted); max-width: 750px; }
+
+  .content { max-width: 1280px; margin: 0 auto; padding: 30px 40px 60px; display: flex; flex-direction: column; gap: 32px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px 30px; position: relative; overflow: hidden; }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .card-title { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+  .card-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+
+  .bt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .bt-grid { grid-template-columns: 1fr; } }
+  .bt-col-title { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+  .bt-col-title.ben { color: var(--green); }
+  .bt-col-title.tra { color: var(--red); }
+  .bt-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .bt-list li { display: flex; gap: 10px; font-size: 13px; color: var(--muted); align-items: flex-start; }
+  .bt-list li .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .bt-list li .dot.g { background: var(--green); }
+  .bt-list li .dot.r { background: var(--red); }
+  .book-quote { margin-top: 20px; padding: 14px 18px; background: var(--surf2); border-left: 3px solid var(--accent2); border-radius: 6px; font-style: italic; font-size: 13px; color: var(--muted); }
+  .book-quote cite { display: block; margin-top: 6px; font-style: normal; font-size: 12px; color: var(--accent2); }
+
+  .slbl { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+  .slbl::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .ctrl-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+  .ctrl-lbl { font-size: 13px; color: var(--muted); }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 200px; height: 4px; border-radius: 2px; background: var(--border); outline: none; cursor: pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 15px; height: 15px; border-radius: 50%; background: var(--accent); cursor: pointer; box-shadow: 0 0 6px rgba(88,166,255,0.5); }
+  input[type=range]::-moz-range-thumb { width: 15px; height: 15px; border-radius: 50%; background: var(--accent); cursor: pointer; border: none; }
+  .vbadge { background: var(--surf2); border: 1px solid var(--accent); border-radius: 6px; padding: 3px 12px; font-size: 13px; font-family: monospace; color: var(--accent); min-width: 70px; text-align: center; }
+
+  .btn { background: var(--surf2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); cursor: pointer; font-size: 13px; padding: 6px 14px; transition: border-color 0.15s, background 0.15s; }
+  .btn:hover { border-color: var(--accent); background: rgba(88,166,255,0.08); }
+  .btn.active { border-color: var(--accent); background: rgba(88,166,255,0.14); color: var(--accent); }
+
+  .plot-wrap { border-radius: 7px; overflow: hidden; background: var(--bg); }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 960px) { .three-col { grid-template-columns: 1fr; } }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } }
+
+  .stats-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+  .stat-chip { background: var(--surf2); border: 1px solid var(--border); border-radius: 7px; padding: 6px 14px; font-size: 13px; color: var(--muted); }
+  .stat-chip strong { color: var(--text); font-family: monospace; }
+
+  .step-indicator { font-size: 13px; color: var(--accent); font-weight: 600; }
+  .step-indicator .iter-num { font-size: 18px; }
+
+  .round-card { background: var(--surf2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; transition: border-color 0.2s; }
+  .round-card.active { border-color: var(--accent); }
+  .round-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .round-num { background: var(--accent); color: #fff; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .round-title { font-size: 13px; font-weight: 600; }
+  .round-detail { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .round-detail code { background: var(--bg); padding: 1px 5px; border-radius: 3px; font-size: 11px; color: var(--accent); }
+
+  .guar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 16px; }
+  .guar-card { background: var(--surf2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; }
+  .guar-head { display: flex; align-items: center; margin-bottom: 8px; }
+  .guar-dot { width: 9px; height: 9px; border-radius: 50%; margin-right: 9px; flex-shrink: 0; }
+  .guar-dot.g { background: var(--green); box-shadow: 0 0 5px var(--green); }
+  .guar-dot.y { background: var(--yellow); box-shadow: 0 0 5px var(--yellow); }
+  .guar-dot.r { background: var(--red); box-shadow: 0 0 5px var(--red); }
+  .guar-name { font-weight: 600; font-size: 14px; }
+  .guar-verdict { margin-left: auto; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  .guar-verdict.g { color: var(--green); }
+  .guar-verdict.y { color: var(--yellow); }
+  .guar-verdict.r { color: var(--red); }
+  .guar-body { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  .formula-block { background: var(--surf2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius); padding: 20px 24px; overflow-x: auto; }
+  .formula-block p { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.7; }
+
+  .note { font-size: 12px; color: var(--muted); line-height: 1.6; margin-top: 10px; }
+  .info-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; font-size: 13px; color: var(--accent); margin-top: 14px; line-height: 1.6; }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 </style>
 </head>
 <body>
-<header>
-  <div class="tag">Concept ID 165 &nbsp;·&nbsp; Estimation / Optimization</div>
-  <h1>L2Boost</h1>
-  <div class="meta">
-    <span class="section-badge">ESL §3.8</span>
-    <span>Bühlmann &amp; Hothorn 2008</span>
-    <span>Gradient boosting view of FS<sub>ε</sub></span>
+
+<div class="page-header">
+  <div class="breadcrumb">Chapter 3 &nbsp;/&nbsp; Linear Methods for Regression &nbsp;/&nbsp; <span>3.8 More on the Lasso and Related Path Algorithms</span></div>
+  <h1 class="concept-title">L2Boost</h1>
+  <div class="badges">
+    <span class="badge cat">Concept 165</span>
+    <span class="badge">ESL 3.8</span>
+    <span class="badge">Estimation / Boosting</span>
+    <span class="badge">Buhlmann & Hothorn 2008</span>
   </div>
-  <div class="formula">\(r^{(m)} \leftarrow r^{(m-1)} - \varepsilon\,\langle x_{j^*}, r^{(m-1)}\rangle\, x_{j^*}, \quad j^* = \arg\max_j |\langle x_j, r\rangle|\)</div>
-</header>
-<div class="container">
-  <div class="viz-area">
-    <h2>Iterative Residual Fitting — Boosting View</h2>
-    <div class="controls">
-      <label>Iterations M:</label>
-      <input type="range" id="iterSlider" min="1" max="40" value="15" oninput="setIter(this.value)">
-      <span class="slider-val" id="iterVal">15</span>
-      <label style="margin-left:12px">Step size ε:</label>
-      <input type="range" id="epsSlider" min="1" max="5" value="3" oninput="setEps(this.value)">
-      <span class="slider-val" id="epsVal">0.1</span>
-      <button id="btnAnim" onclick="toggleAnim()">&#9654; Step-by-step</button>
+  <p class="concept-desc">Forward stagewise regression seen through the lens of gradient boosting: each round fits the residual with the best single predictor and adds a small fraction of it. The residual shrinks incrementally, round by round.</p>
+</div>
+
+<div class="content">
+
+  <!-- ════════ 1. BENEFITS & TRADEOFFS ════════ -->
+  <div class="card">
+    <div class="card-title">Benefits & Tradeoffs</div>
+    <div class="card-sub">What does the boosting perspective buy you?</div>
+    <div class="bt-grid">
+      <div>
+        <div class="bt-col-title ben">Benefits</div>
+        <ul class="bt-list">
+          <li><span class="dot g"></span><strong>Connects regression to boosting.</strong> "Buhlmann and Hothorn (2008) refer to the same procedure as 'L2boost', since it can be viewed as a form of boosting using squared-error loss and linear base learners" (ESL 3.8, p. 88). This reframes forward stagewise as functional gradient descent.</li>
+          <li><span class="dot g"></span><strong>Stopping iteration M acts as regularization.</strong> Early stopping prevents overfitting without needing an explicit penalty parameter. M is the analog of 1/&lambda; in lasso -- small M = strong regularization.</li>
+          <li><span class="dot g"></span><strong>Naturally selects variables.</strong> Each round picks only the most useful predictor. Irrelevant variables are rarely or never selected, producing implicit sparsity.</li>
+          <li><span class="dot g"></span><strong>Generalizes to nonlinear learners.</strong> Replace "best single predictor" with a regression tree and you get gradient boosting machines (Friedman 2001). L2Boost is the simplest instance of a hugely successful family.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="bt-col-title tra">Tradeoffs</div>
+        <ul class="bt-list">
+          <li><span class="dot r"></span><strong>Biased unless M &rarr; &infin;.</strong> Stopping early means coefficients have not converged to their OLS values. This bias is intentional (it reduces variance), but you must cross-validate M.</li>
+          <li><span class="dot r"></span><strong>Slow convergence.</strong> Like FS<sub>&epsilon;</sub>, L2Boost needs many rounds to reach the OLS solution. The small step size &epsilon; is what makes it regularize, but also what makes it slow.</li>
+          <li><span class="dot r"></span><strong>Step size &epsilon; and stopping M are coupled hyperparameters.</strong> Smaller &epsilon; needs more iterations for the same fit. In practice, fix &epsilon; small and cross-validate M.</li>
+          <li><span class="dot r"></span><strong>Can overfit if M is too large.</strong> Given enough rounds, L2Boost will eventually interpolate the training data. The regularization benefit only holds when stopped early.</li>
+        </ul>
+      </div>
     </div>
+    <div class="book-quote">
+      "Buhlmann and Hothorn (2008) refer to the same procedure as 'L2boost', since it can be viewed as a form of boosting using squared-error loss and linear base learners."
+      <cite>-- ESL 3.8, p. 88</cite>
+    </div>
+  </div>
+
+  <!-- ════════ 2. ANIMATION: RESIDUAL SHRINKING ════════ -->
+  <div class="card">
+    <div class="card-title">Watch the Residual Shrink: Boosting Round by Round</div>
+    <div class="card-sub">Each round, L2Boost picks the predictor most correlated with the current residual and shaves off a piece. Hit Play and watch the residual melt away.</div>
+
+    <div class="ctrl-row">
+      <span class="ctrl-lbl">Step size &epsilon;:</span>
+      <input type="range" id="epsSlider" min="0" max="4" value="2" step="1">
+      <span class="vbadge" id="epsDisplay">0.10</span>
+      <button class="btn" id="btnPlay" onclick="togglePlay()">Play</button>
+      <button class="btn" onclick="resetAnim()">Reset</button>
+      <span class="step-indicator">Round: <strong class="iter-num" id="roundDisplay">0</strong> / <span id="totalRounds">--</span></span>
+    </div>
+
     <div class="three-col">
-      <div id="plot-coef"></div>
-      <div id="plot-resid"></div>
-      <div id="plot-contrib"></div>
+      <div>
+        <div class="plot-wrap" id="plotCoef" style="height:300px"></div>
+        <p class="note" style="text-align:center">Coefficient paths</p>
+      </div>
+      <div>
+        <div class="plot-wrap" id="plotResid" style="height:300px"></div>
+        <p class="note" style="text-align:center">Residual norm ||r||</p>
+      </div>
+      <div>
+        <div class="plot-wrap" id="plotBar" style="height:300px"></div>
+        <p class="note" style="text-align:center">Selection frequency</p>
+      </div>
     </div>
-    <div class="info-box" id="infoBox">
-      L2Boost = gradient descent in function space where "weak learners" are coordinate projections. Each iteration fits the residuals by the best single predictor and adds a fraction ε of it. This is exactly forward stagewise regression viewed as functional gradient descent.
+
+    <div class="two-col" style="margin-top:16px">
+      <div id="roundLog" style="max-height:240px; overflow-y:auto; padding-right:8px;">
+        <p class="note">Round-by-round log will appear here during animation...</p>
+      </div>
+      <div>
+        <div class="stats-row">
+          <div class="stat-chip">Active vars: <strong id="statActive">--</strong></div>
+          <div class="stat-chip">||r||: <strong id="statResid">--</strong></div>
+          <div class="stat-chip">% variance explained: <strong id="statR2">--</strong></div>
+        </div>
+        <div class="info-box" id="infoBox">Press Play to watch L2Boost iterate. Each round, the log shows which predictor was selected and how the residual changed. The bar chart tracks how often each predictor is picked -- relevant variables dominate.</div>
+      </div>
     </div>
   </div>
 
-  <div class="panels">
-    <div class="panel">
-      <h3>Algorithm</h3>
-      <ol class="algo-steps">
-        <li>Initialize <code>β = 0</code>, residuals <code>r = y</code></li>
-        <li>Find best predictor: <code>j* = argmax |⟨xⱼ, r⟩|</code></li>
-        <li>Update: <code>βⱼ* += ε · sign(⟨xⱼ*, r⟩)</code></li>
-        <li>Update residuals: <code>r -= ε · ⟨xⱼ*, r⟩ · xⱼ*</code></li>
-        <li>Repeat steps 2–4 for M iterations</li>
-      </ol>
-      <p class="note" style="margin-top:8px">Stopping at M controls regularization: small M = more shrinkage. Cross-validate M.</p>
-    </div>
+  <!-- ════════ 3. COMPARISON: DIFFERENT STEP SIZES ════════ -->
+  <div class="card">
+    <div class="card-title">Step Size Matters: How &epsilon; Shapes the Path</div>
+    <div class="card-sub">Side-by-side comparison of L2Boost at different step sizes. Smaller &epsilon; produces smoother, more regularized paths.</div>
 
-    <div class="panel">
-      <h3>Guarantees</h3>
-      <div class="guarantee-row"><span>Unbiased</span><span class="badge badge-no">No (M &lt; ∞)</span></div>
-      <div class="guarantee-row"><span>Consistent (M → ∞, n → ∞)</span><span class="badge badge-yes">Yes</span></div>
-      <div class="guarantee-row"><span>Prediction consistent</span><span class="badge badge-yes">Yes</span></div>
-      <div class="guarantee-row"><span>Low variance</span><span class="badge badge-yes">Yes</span></div>
-      <div class="guarantee-row"><span>Sparse solutions</span><span class="badge badge-yes">Yes</span></div>
-      <div class="guarantee-row"><span>= FS₀ path (ε→0)</span><span class="badge badge-yes">Yes</span></div>
+    <div class="ctrl-row">
+      <button class="btn active" id="btnCmpAll" onclick="setCmpMode('all')">All overlaid</button>
+      <button class="btn" id="btnCmpSmall" onclick="setCmpMode('small')">Small &epsilon; = 0.02</button>
+      <button class="btn" id="btnCmpMed" onclick="setCmpMode('med')">Medium &epsilon; = 0.10</button>
+      <button class="btn" id="btnCmpLarge" onclick="setCmpMode('large')">Large &epsilon; = 0.50</button>
     </div>
-
-    <div class="panel">
-      <h3>Related Concepts</h3>
-      <ul class="related-list">
-        <li>Incremental Forward Stagewise (FSε) <span>ID 163 — §3.8 — same algorithm</span></li>
-        <li>Infinitesimal Forward Stagewise (FS₀) <span>ID 164 — §3.8 — ε→0 limit</span></li>
-        <li>Lasso <span>ID 143 — §3.4.2 — path equivalence</span></li>
-        <li>Gradient Boosting <span>Friedman 2001 — generalization to trees</span></li>
-        <li>Matching Pursuit <span>Mallat &amp; Zhang 1993 — greedy analog</span></li>
-      </ul>
+    <div class="plot-wrap" id="plotCompare" style="height:360px"></div>
+    <div class="info-box">
+      At &epsilon; = 0.02 (thin solid), paths are smooth and track the lasso. At &epsilon; = 0.50 (thick dashed), paths are jagged -- each step is a large jump. The number of iterations to reach a given residual level scales as O(1/&epsilon;). Smaller &epsilon; gives better regularization at higher computational cost.
     </div>
   </div>
 
-  <div class="viz-area">
-    <h2>Book Quote</h2>
-    <p class="quote" style="font-size:14px">
-      "Bühlmann and Hothorn (2008) refer to the same procedure as 'L2boost', since it can be viewed as a form of boosting using squared-error loss and linear base learners."
-      <cite style="font-size:12px">— ESL §3.8, p. 88</cite>
+  <!-- ════════ 4. STATISTICAL GUARANTEES ════════ -->
+  <div class="card">
+    <div class="slbl">Statistical Guarantees</div>
+    <div class="guar-grid">
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Prediction consistency</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">With appropriate early stopping (M chosen by CV), L2Boost achieves prediction error that converges to the best linear approximation. Buhlmann & Yu (2003) establish consistency for boosting with componentwise learners.</div>
+      </div>
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Implicit sparsity</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">Irrelevant variables (true coefficient = 0) are rarely selected. At early stopping points, the effective model is sparse without an explicit L1 penalty.</div>
+      </div>
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Low variance</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">The small step size means each iteration adds only a tiny perturbation to the fit. This makes the procedure resistant to noise -- high variance in the data is absorbed slowly.</div>
+      </div>
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Path = FS<sub>0</sub> as &epsilon; &rarr; 0</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">L2Boost with coordinate projections as base learners IS forward stagewise regression. In the limit &epsilon; &rarr; 0, it traces the FS<sub>0</sub> = lasso path.</div>
+      </div>
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot g"></span>
+          <span class="guar-name">Consistent (M &rarr; &infin;, n &rarr; &infin;)</span>
+          <span class="guar-verdict g">YES</span>
+        </div>
+        <div class="guar-body">When both the number of boosting rounds and sample size grow, L2Boost converges to the true regression function.</div>
+      </div>
+      <div class="guar-card">
+        <div class="guar-head">
+          <span class="guar-dot r"></span>
+          <span class="guar-name">Unbiased</span>
+          <span class="guar-verdict r">NO (M < inf)</span>
+        </div>
+        <div class="guar-body">Early stopping introduces bias -- coefficients have not reached their OLS values. This is the bias-variance tradeoff in action: you accept bias to buy variance reduction.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ 5. FORMULAS (DEAD LAST) ════════ -->
+  <div class="card">
+    <div class="slbl">Formulas -- Reference</div>
+    <div class="formula-block">
+      <div>$$j^* = \arg\max_j \bigl|\langle \mathbf{x}_j,\, \mathbf{r}^{(m-1)} \rangle\bigr|$$</div>
+      <p>Find the "weak learner" (predictor) most correlated with the current residual.</p>
+    </div>
+    <div class="formula-block" style="margin-top:14px">
+      <div>$$\hat\beta_{j^*}^{(m)} = \hat\beta_{j^*}^{(m-1)} + \varepsilon \cdot \frac{\langle \mathbf{x}_{j^*},\, \mathbf{r}^{(m-1)} \rangle}{\langle \mathbf{x}_{j^*},\, \mathbf{x}_{j^*} \rangle}$$</div>
+      <p>Update that coefficient by &epsilon; times the univariate OLS coefficient of the residual on x<sub>j*</sub>. This is gradient descent in function space with squared-error loss.</p>
+    </div>
+    <div class="formula-block" style="margin-top:14px">
+      <div>$$\mathbf{r}^{(m)} = \mathbf{r}^{(m-1)} - \varepsilon \, \frac{\langle \mathbf{x}_{j^*},\, \mathbf{r}^{(m-1)} \rangle}{\langle \mathbf{x}_{j^*},\, \mathbf{x}_{j^*} \rangle} \, \mathbf{x}_{j^*}$$</div>
+      <p>Update residuals by subtracting &epsilon; of the projection onto the selected predictor. With &epsilon; = 1 this is exactly OLS on one variable; with &epsilon; small, it's a fractional step.</p>
+    </div>
+    <p class="note" style="margin-top:14px">
+      This is Algorithm 3.4 in ESL (p. 86) viewed through the boosting lens. The "base learner" at each round is a single-variable linear fit to the residual. With &epsilon; small and early stopping at M, the procedure regularizes by limiting the total number of greedy steps. Cross-validate M for optimal prediction.
     </p>
   </div>
+
 </div>
 
 <script>
-const COLORS = ['#58a6ff','#f78166','#56d364','#e3b341','#bc8cff'];
+const COLORS = ['#58a6ff','#f78166','#3fb950','#d29922','#bc8cff'];
+const NAMES = ['X1','X2','X3','X4','X5'];
 const P = 5;
-const trueBeta = [0.7, -0.45, 0.55, 0, 0.3];
+const TRUE_BETA = [0.7, -0.45, 0.55, 0, 0.3];  // X4 has zero coefficient (irrelevant)
+const EPS_LEVELS = [0.02, 0.05, 0.10, 0.20, 0.50];
 
-// Simulate L2Boost
+let animTimer = null;
+let animRound = 0;
+
+// --- Simulation ---
 function simulate(eps, maxIter) {
-  let beta = new Array(P).fill(0);
+  const beta = new Array(P).fill(0);
   const coefHistory = [[...beta]];
-  const residHistory = [];
-  const contribHistory = [new Array(P).fill(0)];
-
-  function corr(b) {
-    return trueBeta.map((tb, j) => tb - b[j]);
-  }
-
+  const residNorms = [];
+  const selections = [];  // which var picked each round
   const contribCount = new Array(P).fill(0);
+  const contribHistory = [[...contribCount]];
+  const roundInfo = [];
+
+  const initNorm = Math.sqrt(TRUE_BETA.reduce((s, b) => s + b * b, 0));
 
   for (let m = 0; m < maxIter; m++) {
-    const c = corr(beta);
-    const absC = c.map(Math.abs);
-    const jStar = absC.indexOf(Math.max(...absC));
-    const rNorm = Math.sqrt(c.reduce((s, x) => s + x * x, 0));
-    residHistory.push(rNorm);
-    if (rNorm < 0.005) { break; }
-    beta = beta.map((b, j) => j === jStar ? b + eps * Math.sign(c[j]) : b);
+    const corr = TRUE_BETA.map((tb, j) => tb - beta[j]);
+    const rNorm = Math.sqrt(corr.reduce((s, c) => s + c * c, 0));
+    residNorms.push(rNorm);
+    if (rNorm < 0.005) break;
+
+    const absCorr = corr.map(Math.abs);
+    const jStar = absCorr.indexOf(Math.max(...absCorr));
+
+    // L2Boost: step = eps * (univariate OLS coefficient of residual on x_j*)
+    // With orthonormal predictors, <x_j, x_j> = 1, so step = eps * corr[jStar]
+    beta[jStar] += eps * corr[jStar];
     contribCount[jStar]++;
+    selections.push(jStar);
+
     coefHistory.push([...beta]);
     contribHistory.push([...contribCount]);
+
+    roundInfo.push({
+      round: m + 1,
+      picked: NAMES[jStar],
+      pickedIdx: jStar,
+      corrVal: corr[jStar].toFixed(4),
+      rNorm: rNorm.toFixed(4),
+      rNormAfter: Math.sqrt(TRUE_BETA.map((tb, j) => tb - beta[j]).reduce((s, c) => s + c * c, 0)).toFixed(4),
+    });
   }
-  return {coefHistory, residHistory, contribHistory};
+  return { coefHistory, residNorms, selections, contribHistory, roundInfo, initNorm };
 }
 
-const EPS_LEVELS = [0.02, 0.05, 0.1, 0.2, 0.5];
-let currentIter = 15;
-let currentEps = 0.1;
-let animTimer = null;
-let animStep = 0;
+function getEpsIdx() { return parseInt(document.getElementById('epsSlider').value); }
+function getEps() { return EPS_LEVELS[getEpsIdx()]; }
 
-function draw(iter) {
-  const {coefHistory, residHistory, contribHistory} = simulate(currentEps, 200);
-  const end = Math.min(iter, coefHistory.length - 1);
-  const steps = Array.from({length: end + 1}, (_, i) => i);
+// --- Main animation plots ---
+function drawMain(upTo) {
+  const eps = getEps();
+  const sim = simulate(eps, 300);
+  const nTotal = sim.coefHistory.length;
+  const end = upTo === undefined ? nTotal : Math.min(upTo + 1, nTotal);
+  const steps = Array.from({length: end}, (_, i) => i);
 
   // Coefficient paths
-  const coefTraces = Array.from({length: P}, (_, j) => ({
-    x: steps,
-    y: coefHistory.slice(0, end + 1).map(r => r[j]),
-    name: `X${j+1}`,
-    mode: 'lines',
-    line: {color: COLORS[j], width: 2},
-    showlegend: true,
-  }));
+  const coefTraces = [];
+  for (let j = 0; j < P; j++) {
+    coefTraces.push({
+      x: steps,
+      y: sim.coefHistory.slice(0, end).map(r => r[j]),
+      name: NAMES[j] + (j === 3 ? ' (irrelevant)' : ''),
+      mode: 'lines',
+      line: { color: COLORS[j], width: j === 3 ? 1.5 : 2.5, dash: j === 3 ? 'dot' : 'solid' },
+    });
+  }
 
-  Plotly.react('plot-coef', coefTraces, {
-    title: {text: 'Coefficient Paths', font: {color:'#8b949e', size:13}},
-    paper_bgcolor: '#161b22', plot_bgcolor: '#0d1117',
-    font: {color:'#8b949e'},
-    xaxis: {title:'Iteration M', gridcolor:'#21262d'},
-    yaxis: {title:'βⱼ', gridcolor:'#21262d', zerolinecolor:'#58a6ff', zerolinewidth:1},
-    legend: {bgcolor:'transparent', font:{size:10}},
-    margin: {t:35,l:55,r:10,b:50},
-    height: 280,
-  }, {responsive:true, displayModeBar:false});
+  // True beta reference lines
+  for (let j = 0; j < P; j++) {
+    coefTraces.push({
+      x: [0, nTotal - 1],
+      y: [TRUE_BETA[j], TRUE_BETA[j]],
+      mode: 'lines',
+      line: { color: COLORS[j], width: 1, dash: 'dot' },
+      opacity: 0.25,
+      showlegend: false,
+    });
+  }
 
-  // Residual
-  Plotly.react('plot-resid', [{
-    x: Array.from({length: Math.min(end+1, residHistory.length)}, (_, i) => i+1),
-    y: residHistory.slice(0, end+1),
-    mode:'lines', line:{color:'#e3b341', width:2},
-    fill:'tozeroy', fillcolor:'rgba(227,179,65,0.09)',
-    showlegend:false,
+  Plotly.react('plotCoef', coefTraces, {
+    paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: '#0d1117',
+    font: { color: '#8b949e', size: 11 },
+    xaxis: { title: 'Boosting round M', gridcolor: '#21262d', zerolinecolor: '#30363d' },
+    yaxis: { title: 'Coefficient', gridcolor: '#21262d', zerolinecolor: '#58a6ff', zerolinewidth: 1 },
+    legend: { bgcolor: 'transparent', font: { size: 10 }, x: 1, xanchor: 'right', y: 1 },
+    margin: { t: 10, l: 55, r: 10, b: 48 },
+    height: 300,
+  }, { responsive: true, displayModeBar: false });
+
+  // Residual norm
+  const rEnd = Math.min(end, sim.residNorms.length);
+  Plotly.react('plotResid', [{
+    x: Array.from({length: rEnd}, (_, i) => i + 1),
+    y: sim.residNorms.slice(0, rEnd),
+    mode: 'lines+markers',
+    line: { color: '#d29922', width: 2 },
+    marker: { color: '#d29922', size: 4 },
+    fill: 'tozeroy', fillcolor: 'rgba(210,153,34,0.08)',
+    showlegend: false,
   }], {
-    title: {text:'Residual Norm ‖r‖', font:{color:'#8b949e', size:13}},
-    paper_bgcolor:'#161b22', plot_bgcolor:'#0d1117',
-    font:{color:'#8b949e'},
-    xaxis:{title:'Iteration', gridcolor:'#21262d'},
-    yaxis:{title:'‖r‖', gridcolor:'#21262d'},
-    margin:{t:35,l:55,r:10,b:50},
-    height:280,
-  }, {responsive:true, displayModeBar:false});
+    paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: '#0d1117',
+    font: { color: '#8b949e', size: 11 },
+    xaxis: { title: 'Boosting round', gridcolor: '#21262d' },
+    yaxis: { title: '||r||', gridcolor: '#21262d' },
+    margin: { t: 10, l: 55, r: 10, b: 48 },
+    height: 300,
+  }, { responsive: true, displayModeBar: false });
 
-  // Contribution (bar chart: how many times each predictor was selected)
-  const contrib = contribHistory[end];
-  Plotly.react('plot-contrib', [{
-    x: Array.from({length:P}, (_, j) => `X${j+1}`),
+  // Selection bar chart
+  const contrib = sim.contribHistory[Math.min(end - 1, sim.contribHistory.length - 1)];
+  Plotly.react('plotBar', [{
+    x: NAMES,
     y: contrib,
-    type:'bar',
-    marker: {color: COLORS},
-    showlegend:false,
+    type: 'bar',
+    marker: { color: COLORS },
   }], {
-    title: {text:`Selection frequency (M=${end})`, font:{color:'#8b949e', size:13}},
-    paper_bgcolor:'#161b22', plot_bgcolor:'#0d1117',
-    font:{color:'#8b949e'},
-    xaxis:{gridcolor:'#21262d'},
-    yaxis:{title:'# selected', gridcolor:'#21262d'},
-    margin:{t:35,l:55,r:10,b:50},
-    height:280,
-  }, {responsive:true, displayModeBar:false});
+    paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: '#0d1117',
+    font: { color: '#8b949e', size: 11 },
+    xaxis: { gridcolor: '#21262d' },
+    yaxis: { title: '# times selected', gridcolor: '#21262d' },
+    margin: { t: 10, l: 55, r: 10, b: 48 },
+    height: 300,
+  }, { responsive: true, displayModeBar: false });
+
+  // Stats
+  const active = sim.coefHistory[end - 1].filter(b => Math.abs(b) > 1e-6).length;
+  const rn = sim.residNorms[Math.min(end - 1, sim.residNorms.length - 1)] || 0;
+  const r2 = ((1 - (rn * rn) / (sim.initNorm * sim.initNorm)) * 100).toFixed(1);
+  document.getElementById('statActive').textContent = active;
+  document.getElementById('statResid').textContent = rn.toFixed(3);
+  document.getElementById('statR2').textContent = r2 + '%';
+  document.getElementById('roundDisplay').textContent = Math.max(0, end - 1);
+  document.getElementById('totalRounds').textContent = nTotal - 1;
+
+  // Round log
+  if (upTo !== undefined) {
+    const logEl = document.getElementById('roundLog');
+    let html = '';
+    const showRounds = sim.roundInfo.slice(0, end - 1);
+    for (let i = showRounds.length - 1; i >= Math.max(0, showRounds.length - 8); i--) {
+      const r = showRounds[i];
+      const isLatest = i === showRounds.length - 1;
+      html += `<div class="round-card ${isLatest ? 'active' : ''}">
+        <div class="round-header">
+          <span class="round-num" style="background:${COLORS[r.pickedIdx]}">${r.round}</span>
+          <span class="round-title">Selected <strong>${r.picked}</strong></span>
+        </div>
+        <div class="round-detail">
+          Correlation with residual: <code>${r.corrVal}</code><br>
+          ||r||: ${r.rNorm} &rarr; ${r.rNormAfter}
+        </div>
+      </div>`;
+    }
+    if (showRounds.length > 8) {
+      html += `<p class="note">${showRounds.length - 8} earlier rounds hidden...</p>`;
+    }
+    logEl.innerHTML = html || '<p class="note">Waiting for rounds...</p>';
+  }
 }
 
-function setIter(v) {
-  currentIter = parseInt(v);
-  document.getElementById('iterVal').textContent = v;
-  draw(currentIter);
-}
-
-function setEps(v) {
-  currentEps = EPS_LEVELS[parseInt(v)-1];
-  document.getElementById('epsVal').textContent = currentEps;
-  draw(currentIter);
-}
-
-function toggleAnim() {
-  const btn = document.getElementById('btnAnim');
+function togglePlay() {
+  const btn = document.getElementById('btnPlay');
   if (animTimer) {
     clearInterval(animTimer);
     animTimer = null;
-    btn.innerHTML = '&#9654; Step-by-step';
-    btn.className = '';
+    btn.textContent = 'Play';
+    btn.classList.remove('active');
     return;
   }
-  animStep = 0;
-  btn.innerHTML = '&#9646;&#9646; Pause';
-  btn.className = 'active';
+  const eps = getEps();
+  const sim = simulate(eps, 300);
+  const totalFrames = sim.coefHistory.length;
+  animRound = 0;
+  btn.textContent = 'Pause';
+  btn.classList.add('active');
+
   animTimer = setInterval(() => {
-    animStep++;
-    draw(animStep);
-    document.getElementById('iterSlider').value = Math.min(animStep, 40);
-    document.getElementById('iterVal').textContent = animStep;
-    if (animStep >= 40) {
+    animRound++;
+    drawMain(animRound);
+    if (animRound >= totalFrames) {
       clearInterval(animTimer);
       animTimer = null;
-      btn.innerHTML = '&#9654; Step-by-step';
-      btn.className = '';
+      btn.textContent = 'Play';
+      btn.classList.remove('active');
     }
-  }, 150);
+  }, 120);
 }
 
-draw(currentIter);
+function resetAnim() {
+  if (animTimer) { clearInterval(animTimer); animTimer = null; }
+  animRound = 0;
+  document.getElementById('btnPlay').textContent = 'Play';
+  document.getElementById('btnPlay').classList.remove('active');
+  document.getElementById('roundLog').innerHTML = '<p class="note">Round-by-round log will appear here during animation...</p>';
+  drawMain(0);
+  document.getElementById('roundDisplay').textContent = '0';
+}
+
+document.getElementById('epsSlider').addEventListener('input', function() {
+  document.getElementById('epsDisplay').textContent = getEps().toFixed(2);
+  if (!animTimer) drawMain();
+});
+
+// --- Comparison plot ---
+let cmpMode = 'all';
+
+function drawCompare() {
+  const configs = [
+    { eps: 0.02, label: 'small', dash: 'solid', width: 1.5 },
+    { eps: 0.10, label: 'med',   dash: 'solid', width: 2.5 },
+    { eps: 0.50, label: 'large', dash: 'dash',  width: 2.5 },
+  ];
+  const traces = [];
+
+  for (const cfg of configs) {
+    if (cmpMode !== 'all' && cmpMode !== cfg.label) continue;
+    const sim = simulate(cfg.eps, 400);
+    // Normalize x to [0,1]
+    const n = sim.coefHistory.length;
+    for (let j = 0; j < P; j++) {
+      traces.push({
+        x: sim.coefHistory.map((_, i) => i / (n - 1)),
+        y: sim.coefHistory.map(r => r[j]),
+        name: NAMES[j] + ' (eps=' + cfg.eps + ')',
+        mode: 'lines',
+        line: { color: COLORS[j], width: cfg.width, dash: cfg.dash },
+        opacity: cmpMode === 'all' ? (cfg.label === 'med' ? 1.0 : 0.6) : 1.0,
+        showlegend: cmpMode !== 'all' || j === 0,
+        legendgroup: cfg.label,
+      });
+    }
+  }
+
+  const ann = cmpMode === 'all' ? [{
+    x: 0.5, y: 0.97, xref: 'paper', yref: 'paper',
+    text: 'Thin = eps=0.02  |  Medium = eps=0.10  |  Thick dashed = eps=0.50',
+    font: { color: '#8b949e', size: 11 }, showarrow: false,
+  }] : [];
+
+  Plotly.react('plotCompare', traces, {
+    paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: '#0d1117',
+    font: { color: '#8b949e', size: 11 },
+    xaxis: { title: 'Normalized progress', gridcolor: '#21262d', zerolinecolor: '#30363d', range: [-0.02, 1.02] },
+    yaxis: { title: 'Coefficient', gridcolor: '#21262d', zerolinecolor: '#58a6ff', zerolinewidth: 1, range: [-0.6, 0.85] },
+    legend: { bgcolor: 'transparent', font: { size: 10 } },
+    margin: { t: 10, l: 55, r: 20, b: 48 },
+    height: 360,
+    annotations: ann,
+  }, { responsive: true, displayModeBar: false });
+}
+
+function setCmpMode(m) {
+  cmpMode = m;
+  ['btnCmpAll','btnCmpSmall','btnCmpMed','btnCmpLarge'].forEach(id => document.getElementById(id).classList.remove('active'));
+  const map = { all: 'btnCmpAll', small: 'btnCmpSmall', med: 'btnCmpMed', large: 'btnCmpLarge' };
+  document.getElementById(map[m]).classList.add('active');
+  drawCompare();
+}
+
+// --- Init ---
+document.getElementById('epsDisplay').textContent = getEps().toFixed(2);
+drawMain();
+drawCompare();
 </script>
 </body>
 </html>
