@@ -10,10 +10,12 @@ the system is meant to generalize to any technical textbook.
 ### Knowledge graph
 
 A typed dependency graph of every concept in the book, plus a parent-child
-chapter/section tree. Search a concept, see its prerequisites, jump straight
-into its visualization.
+chapter/section tree. Click any node to see its definition, prerequisites,
+and a button straight into its visualization.
 
-![Knowledge graph demo](assets/gifs/kg.gif)
+| Chapter 3 cluster | Ridge Regression and its neighborhood |
+|---|---|
+| ![Chapter 3 nodes](assets/gifs/kg-chapter3.png) | ![Ridge focus](assets/gifs/kg-ridge-focus.png) |
 
 ### Concept visualizations
 
@@ -22,8 +24,9 @@ tradeoffs** (with textbook citations), then build intuition through visuals,
 then state the formal guarantees, then dump the formulas as reference. The
 formulas come last on purpose.
 
-Below: the Bayesian view of ridge regression — likelihood + Gaussian prior =
-posterior. Drag λ and watch the prior pull the flat likelihood into a bowl.
+Below: the Bayesian view of ridge regression. First the data signal slider
+sharpens the likelihood; then the λ slider deepens the prior bowl, pulling
+the posterior toward the origin.
 
 ![Ridge regression — prior reshapes landscape](assets/gifs/ridge.gif)
 
