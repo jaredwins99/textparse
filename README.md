@@ -10,13 +10,13 @@
 Each chapter forms a cluster; edges are typed (prerequisite, generalizes,
 proves, illustrates).
 
-![Chapter 3 cluster](assets/gifs/kg-chapter3.png)
+<img src="assets/gifs/kg-chapter3.png" alt="Chapter 3 cluster" width="480">
 
 ### Knowledge graph, concept focus
 
 Click any node to see its definition, formula, key facts, and connections, as well as a button straight into its visualization page.
 
-![Ridge Regression and its neighborhood](assets/gifs/kg-ridge-focus.png)
+<img src="assets/gifs/kg-ridge-focus.png" alt="Ridge Regression and its neighborhood" width="480">
 
 ### Concept visualization
 
@@ -24,14 +24,14 @@ One interactive page per concept.
 Here, ridge regression is shown as a Bayesian MAP.
 Sharpen the likelihood with the data-signal slider, then deepen the prior bowl with λ and watch the posterior get pulled to zero.
 
-![Ridge regression — prior reshapes landscape](assets/gifs/ridge.gif)
+<img src="assets/gifs/ridge.gif" alt="Ridge regression — prior reshapes landscape" width="480">
 
 ### Assumption explorer
 
 For OLS, every assumption is a column with tiers from fully upheld to mostly broken. 
 Tighten or break assumptions to get a rough sense of how results change.
 
-![Linear regression assumption explorer](assets/gifs/assumptions.gif)
+<img src="assets/gifs/assumptions.gif" alt="Linear regression assumption explorer" width="480">
 
 ## Architecture
 
