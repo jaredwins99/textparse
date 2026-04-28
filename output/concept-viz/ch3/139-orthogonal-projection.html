@@ -125,6 +125,7 @@
     width: 100%;
     height: 600px;
     cursor: grab;
+    overflow: hidden;
   }
   #three-canvas-wrap:active { cursor: grabbing; }
   #three-canvas-wrap canvas { display: block; width: 100%; height: 100%; }
@@ -152,6 +153,74 @@
     transition: opacity 0.4s;
     max-width: 90%;
   }
+
+  /* ── ANNOTATION CALLOUT CARDS ── */
+  .annotation-card {
+    position: absolute;
+    left: 20px;
+    bottom: 60px;
+    max-width: 380px;
+    background: rgba(22, 27, 34, 0.92);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: 8px;
+    padding: 14px 18px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s, transform 0.5s;
+    z-index: 10;
+  }
+  .annotation-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .annotation-card .ann-step {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 6px;
+  }
+  .annotation-card .ann-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .annotation-card .ann-body {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .annotation-card .ann-body em {
+    color: var(--blue);
+    font-style: normal;
+    font-weight: 600;
+  }
+  .annotation-card .ann-key {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 10px;
+    color: var(--text-muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 8px;
+  }
+
+  /* ── Leader line (CSS-only, from card to a scene point) ── */
+  .leader-line {
+    position: absolute;
+    pointer-events: none;
+    z-index: 9;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .leader-line.visible { opacity: 1; }
+  .leader-line svg { overflow: visible; }
 
   /* ── CONTROLS ── */
   .controls-bar {
@@ -307,6 +376,57 @@
     <div id="label-yhat" class="label-3d" style="color:#3fb950; opacity:0;">&#375; = Hy</div>
     <div id="label-residual" class="label-3d" style="color:#f85149; opacity:0;">e = y &minus; &#375;</div>
     <div id="phase-text" class="phase-text"></div>
+
+    <!-- Annotation callout cards — one per teaching moment -->
+    <div class="annotation-card" id="ann-setup">
+      <div class="ann-step">The Stage</div>
+      <div class="ann-title">The column space is a surface — y floats above it</div>
+      <div class="ann-body">
+        The blue surface is the column space — all possible linear combinations of x&#8321; and x&#8322;.
+        Vector y (purple) sits above it. The question: <em>what's the closest point on the surface to y?</em>
+      </div>
+    </div>
+
+    <div class="annotation-card" id="ann-shadow">
+      <div class="ann-step">The Shadow Falls</div>
+      <div class="ann-title">&#375; is y's shadow on the column space</div>
+      <div class="ann-body">
+        &#375; (green) is y's shadow on the column space — literally the point on the plane directly below y.
+        The red dashed line is the residual: <em>everything the model can't explain</em>.
+      </div>
+    </div>
+
+    <div class="annotation-card" id="ann-perp">
+      <div class="ann-step">The Right Angle</div>
+      <div class="ann-title">The residual is perpendicular — and that's the whole point</div>
+      <div class="ann-body">
+        The residual e is perpendicular to the column space. This isn't a coincidence — <em>it's the defining property of projection</em>.
+        Any tilt away from perpendicular would give a closer point.
+      </div>
+      <span class="ann-key">X&#7488;(y - X&#946;&#770;) = 0</span>
+    </div>
+
+    <div class="annotation-card" id="ann-closest">
+      <div class="ann-step">Why Closest?</div>
+      <div class="ann-title">Every other point on the plane is farther from y</div>
+      <div class="ann-body">
+        Every other point on the plane is farther from y.
+        Least squares finds the <em>closest point in the column space</em> — that's what "minimize ||y - X&#946;||&#178;" means geometrically.
+      </div>
+    </div>
+
+    <div class="annotation-card" id="ann-interactive">
+      <div class="ann-step">Your Turn</div>
+      <div class="ann-title">Drag y and watch the shadow follow</div>
+      <div class="ann-body">
+        Drag y around and watch &#375; follow. The shadow always stays on the plane.
+        The residual is always perpendicular. <em>This is the geometry behind every linear regression.</em>
+      </div>
+    </div>
+
+    <div class="leader-line" id="leader-line">
+      <svg width="200" height="200"><line id="leader-svg-line" x1="0" y1="0" x2="100" y2="100" stroke="#58a6ff" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/></svg>
+    </div>
   </div>
 
   <div class="controls-bar">
@@ -577,7 +697,6 @@ const candidateGroup = new THREE.Group();
 candidateGroup.visible = false;
 const candidateSpheres = [];
 const candidateLines = [];
-const candidateDistLabels = []; // we'll use HTML overlays for these
 
 for (const cp of CANDIDATES) {
   const s = makeSphere(cp, C.candidate, 0.07);
@@ -591,11 +710,11 @@ scene.add(candidateGroup);
 
 // Light beam / shadow cone effect
 const coneHeight = yPos.y;
-const coneGeo = new THREE.CylinderGeometry(0.02, 0.35, coneHeight, 16, 1, true);
+const coneGeo2 = new THREE.CylinderGeometry(0.02, 0.35, coneHeight, 16, 1, true);
 const coneMat = new THREE.MeshBasicMaterial({
   color: 0xffffff, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false
 });
-const lightCone = new THREE.Mesh(coneGeo, coneMat);
+const lightCone = new THREE.Mesh(coneGeo2, coneMat);
 lightCone.position.set(yPos.x, yPos.y / 2, yPos.z);
 lightCone.visible = false;
 scene.add(lightCone);
@@ -642,35 +761,85 @@ function updateLabels() {
   }
 }
 
-/* ─── ANIMATION STATE ─── */
-const PHASES = {
-  IDLE: -1,
-  SETUP: 0,       // 0-2s: plane fades in, vectors appear
-  SHADOW: 1,      // 2-5s: residual line grows down, yhat lights up, light cone
-  PERP: 2,        // 5-7s: right angle marker, camera rotates to side view
-  CLOSEST: 3,     // 7-10s: candidate points appear, distances shown, fade out
-  INTERACTIVE: 4, // 10s+: user can drag y
+/* ─── PHASE DEFINITIONS ─── */
+// Phases alternate between animation and annotation holds.
+// 'hold' phases freeze the scene at the end state of the preceding animation phase,
+// and an annotation card fades in with an explanation.
+const PHASES = [
+  { name: 'setup',          duration: 2,   type: 'anim' },   // 0
+  { name: 'hold-setup',     duration: 3.5, type: 'hold', ann: 'ann-setup' },   // 1
+  { name: 'shadow',         duration: 3,   type: 'anim' },   // 2
+  { name: 'hold-shadow',    duration: 3.5, type: 'hold', ann: 'ann-shadow' },  // 3
+  { name: 'perp',           duration: 2,   type: 'anim' },   // 4
+  { name: 'hold-perp',      duration: 3.5, type: 'hold', ann: 'ann-perp' },    // 5
+  { name: 'closest',        duration: 3,   type: 'anim' },   // 6
+  { name: 'hold-closest',   duration: 3.5, type: 'hold', ann: 'ann-closest' }, // 7
+  { name: 'interactive',    duration: 0.5, type: 'anim' },   // 8
+  { name: 'hold-interactive',duration: 3,  type: 'hold', ann: 'ann-interactive' }, // 9
+];
+const TOTAL_ANIM_TIME = PHASES.reduce((s, p) => s + p.duration, 0);
+
+// Map from phase index to the corresponding "completed animation phase" for holds
+function getAnimStateForHold(phaseIndex) {
+  for (let i = phaseIndex; i >= 0; i--) {
+    if (PHASES[i].type === 'anim') return { animName: PHASES[i].name, local: 1.0 };
+  }
+  return { animName: 'setup', local: 0 };
+}
+
+/* ─── ANNOTATION CARDS ─── */
+const annCards = {
+  'ann-setup': document.getElementById('ann-setup'),
+  'ann-shadow': document.getElementById('ann-shadow'),
+  'ann-perp': document.getElementById('ann-perp'),
+  'ann-closest': document.getElementById('ann-closest'),
+  'ann-interactive': document.getElementById('ann-interactive'),
 };
 
-const PHASE_TIMES = [2, 3, 2, 3]; // durations in seconds for phases 0-3
-const TOTAL_ANIM_TIME = PHASE_TIMES.reduce((a, b) => a + b, 0); // 10s
+function hideAllAnnotations() {
+  Object.values(annCards).forEach(el => el.classList.remove('visible'));
+  document.getElementById('leader-line').classList.remove('visible');
+}
 
+function showAnnotation(annId, leaderTarget) {
+  hideAllAnnotations();
+  if (annId && annCards[annId]) {
+    annCards[annId].classList.add('visible');
+  }
+  // Leader line from card to a 3D point
+  if (leaderTarget) {
+    const ll = document.getElementById('leader-line');
+    const svgLine = document.getElementById('leader-svg-line');
+    const v = leaderTarget.clone().project(camera);
+    const hw = wrap.clientWidth / 2;
+    const hh = wrap.clientHeight / 2;
+    const tx = v.x * hw + hw;
+    const ty = -v.y * hh + hh;
+    // Card is at left:20, bottom:60 — approximate card center
+    const cx = 200;
+    const cy = wrap.clientHeight - 100;
+    ll.style.left = '0px';
+    ll.style.top = '0px';
+    ll.style.width = wrap.clientWidth + 'px';
+    ll.style.height = wrap.clientHeight + 'px';
+    svgLine.setAttribute('x1', cx);
+    svgLine.setAttribute('y1', cy);
+    svgLine.setAttribute('x2', tx);
+    svgLine.setAttribute('y2', ty);
+    ll.querySelector('svg').setAttribute('width', wrap.clientWidth);
+    ll.querySelector('svg').setAttribute('height', wrap.clientHeight);
+    ll.classList.add('visible');
+  }
+}
+
+/* ─── ANIMATION STATE ─── */
 let animState = {
-  phase: PHASES.IDLE,
   playing: false,
   time: 0,         // current time in seconds
   speed: 1,
   interactive: false,
   dragging: false,
 };
-
-const phaseTexts = [
-  '',
-  '\u0177 is the shadow of y on the column space',
-  'e \u22A5 column space \u2014 this is why it\'s called orthogonal projection',
-  '\u0177 minimizes ||y \u2212 X\u03B2||\u00B2 \u2014 it\'s the closest point in the column space',
-  'Drag y around and watch the shadow follow',
-];
 
 const phaseTextEl = document.getElementById('phase-text');
 
@@ -686,18 +855,19 @@ function easeInOutCubic(t) {
 function easeOutQuad(t) { return 1 - (1 - t) * (1 - t); }
 function easeInQuad(t) { return t * t; }
 
-/* ─── UPDATE SCENE BASED ON TIME ─── */
-function getPhaseAndLocalT(globalTime) {
-  let t = globalTime;
-  for (let i = 0; i < PHASE_TIMES.length; i++) {
-    if (t <= PHASE_TIMES[i]) {
-      return { phase: i, localT: t / PHASE_TIMES[i] };
+/* ─── GET CURRENT PHASE FROM GLOBAL TIME ─── */
+function getPhaseAt(t) {
+  let acc = 0;
+  for (let i = 0; i < PHASES.length; i++) {
+    if (t < acc + PHASES[i].duration) {
+      return { index: i, local: (t - acc) / PHASES[i].duration, phase: PHASES[i] };
     }
-    t -= PHASE_TIMES[i];
+    acc += PHASES[i].duration;
   }
-  return { phase: PHASES.INTERACTIVE, localT: 1 };
+  return { index: PHASES.length - 1, local: 1, phase: PHASES[PHASES.length - 1] };
 }
 
+/* ─── REBUILD HELPERS ─── */
 function rebuildResidualLine() {
   scene.remove(residualLine);
   residualLine.geometry.dispose();
@@ -729,7 +899,7 @@ function rebuildDynamicGeometry() {
   // Update right angle
   scene.remove(raMarker);
   raMarker = makeRightAngleMarker(yHatPos);
-  raMarker.visible = togAngle.checked && (animState.time >= PHASE_TIMES[0] + PHASE_TIMES[1]);
+  raMarker.visible = togAngle.checked && animState.interactive;
   scene.add(raMarker);
 
   // Update label positions
@@ -754,16 +924,24 @@ function rebuildDynamicGeometry() {
   lightCone.scale.set(1, h / coneHeight, 1);
 }
 
-// Partial residual line for phase 1 animation
+// Partial residual line for shadow animation
 let partialResidualLine = null;
 
-function updateAnimation(globalTime) {
-  const { phase, localT } = getPhaseAndLocalT(globalTime);
+/* ─── RENDER SCENE FOR A GIVEN ANIMATION PHASE ─── */
+function renderScene(animName, localT) {
   const smoothT = easeInOutCubic(localT);
 
-  // Phase 0: Setup — fade in plane, grid, basis vectors, y
-  const p0End = PHASE_TIMES[0];
-  if (globalTime <= p0End) {
+  // Animation phase ordering for >= comparisons
+  const ANIM_ORDER = ['setup', 'shadow', 'perp', 'closest', 'interactive'];
+  const animIdx = ANIM_ORDER.indexOf(animName);
+  function atOrPast(name) { return animIdx >= ANIM_ORDER.indexOf(name); }
+  function isExactly(name) { return animName === name; }
+
+  // Hide phase text during annotations (cards replace it)
+  phaseTextEl.style.opacity = '0';
+
+  // ── Setup — fade in plane, grid, basis vectors, y ──
+  if (isExactly('setup')) {
     const t = smoothT;
     planeMesh.visible = true;
     planeMat.opacity = 0.12 * t;
@@ -774,7 +952,6 @@ function updateAnimation(globalTime) {
     arrowY.visible = t > 0.3;
     ySphere.visible = t > 0.3;
 
-    // Fade in vectors
     arrowX1.traverse(c => { if (c.material) c.material.opacity = Math.min(1, t * 2); });
     arrowX2.traverse(c => { if (c.material) c.material.opacity = Math.min(1, t * 2); });
 
@@ -788,24 +965,26 @@ function updateAnimation(globalTime) {
     raMarker.visible = false;
     candidateGroup.visible = false;
     lightCone.visible = false;
-    phaseTextEl.textContent = '';
+    return;
   }
 
-  // Phase 1: Shadow falls — dashed line grows from y to yhat
-  const p1Start = p0End;
-  const p1End = p1Start + PHASE_TIMES[1];
-  if (globalTime > p1Start && globalTime <= p1End) {
-    // Everything from phase 0 is fully visible
-    planeMat.opacity = 0.12;
-    gridHelper.material.opacity = 0.08;
-    arrowX1.visible = true; arrowX2.visible = true;
-    arrowY.visible = true; ySphere.visible = true;
-    labelEls.x1.style.opacity = 1;
-    labelEls.x2.style.opacity = 1;
-    labelEls.y.style.opacity = 1;
+  // Everything from setup is fully visible for all subsequent phases
+  planeMesh.visible = true;
+  planeMat.opacity = 0.12;
+  gridHelper.visible = true;
+  gridHelper.material.opacity = 0.08;
+  arrowX1.visible = true;
+  arrowX2.visible = true;
+  arrowY.visible = true;
+  ySphere.visible = true;
+  labelEls.x1.style.opacity = 1;
+  labelEls.x2.style.opacity = 1;
+  labelEls.y.style.opacity = 1;
 
+  // ── Shadow — dashed line grows from y to yhat ──
+  if (isExactly('shadow')) {
     const t = smoothT;
-    const dropT = easeInQuad(t); // accelerating like gravity
+    const dropT = easeInQuad(t);
 
     // Growing dashed line from y down to current position
     const currentBottom = new THREE.Vector3(
@@ -834,7 +1013,6 @@ function updateAnimation(globalTime) {
     // When dot reaches bottom, show yhat label
     if (dropT > 0.9) {
       labelEls.yhat.style.opacity = (dropT - 0.9) / 0.1;
-      // Glow pulse
       yHatGlow.visible = true;
       yHatGlowMat.opacity = 0.4 * (1 - (dropT - 0.9) / 0.1);
     } else {
@@ -846,31 +1024,29 @@ function updateAnimation(globalTime) {
     labelEls.residual.style.opacity = 0;
     raMarker.visible = false;
     candidateGroup.visible = false;
-    phaseTextEl.textContent = phaseTexts[1];
+    return;
   }
 
-  // Phase 2: Perpendicular — right angle marker, residual pulses, camera rotates to side
-  const p2Start = p1End;
-  const p2End = p2Start + PHASE_TIMES[2];
-  if (globalTime > p2Start && globalTime <= p2End) {
-    // Clean up partial line
-    if (partialResidualLine) {
-      scene.remove(partialResidualLine);
-      partialResidualLine.geometry.dispose();
-      partialResidualLine.material.dispose();
-      partialResidualLine = null;
-    }
+  // Shadow is complete for all subsequent phases — clean up partial line
+  if (partialResidualLine) {
+    scene.remove(partialResidualLine);
+    partialResidualLine.geometry.dispose();
+    partialResidualLine.material.dispose();
+    partialResidualLine = null;
+  }
+  yHatSphere.visible = true;
+  yHatSphere.material.opacity = 1;
+  yHatSphere.material.transparent = false;
+  labelEls.yhat.style.opacity = 1;
+  yHatGlow.visible = false;
+  lightCone.visible = false;
 
+  // Full residual line visible from perp onwards
+  residualLine.visible = togResidual.checked;
+
+  // ── Perp — right angle marker, residual label, camera rotates to side view ──
+  if (isExactly('perp')) {
     const t = smoothT;
-
-    // Full residual line visible
-    residualLine.visible = togResidual.checked;
-    yHatSphere.visible = true;
-    yHatSphere.material.opacity = 1;
-    yHatSphere.material.transparent = false;
-    labelEls.yhat.style.opacity = 1;
-    yHatGlow.visible = false;
-    lightCone.visible = false;
 
     // Right angle marker fades in
     raMarker.visible = togAngle.checked;
@@ -878,14 +1054,10 @@ function updateAnimation(globalTime) {
     // Residual label
     labelEls.residual.style.opacity = t > 0.2 ? 1 : 0;
 
-    // Residual pulse glow
-    const pulse = Math.sin(t * Math.PI * 4) * 0.5 + 0.5;
-    residualLine.material.color.setHex(C.residual);
-
     // Camera smoothly rotates to show right angle from the side
     if (!animState.dragging) {
-      const startAngle = Math.atan2(4, 4); // initial camera angle
-      const endAngle = startAngle + Math.PI * 0.35; // rotate ~63 degrees
+      const startAngle = Math.atan2(4, 4);
+      const endAngle = startAngle + Math.PI * 0.35;
       const angle = startAngle + (endAngle - startAngle) * easeInOutCubic(t);
       const r = 5.5;
       camera.position.set(r * Math.cos(angle), 2 + t * 0.5, r * Math.sin(angle));
@@ -893,19 +1065,16 @@ function updateAnimation(globalTime) {
     }
 
     candidateGroup.visible = false;
-    phaseTextEl.textContent = phaseTexts[2];
+    return;
   }
 
-  // Phase 3: Closest point demo
-  const p3Start = p2End;
-  const p3End = p3Start + PHASE_TIMES[3];
-  if (globalTime > p3Start && globalTime <= p3End) {
-    const t = smoothT;
+  // Perp complete for subsequent phases
+  raMarker.visible = togAngle.checked;
+  labelEls.residual.style.opacity = togResidual.checked ? 1 : 0;
 
-    residualLine.visible = togResidual.checked;
-    raMarker.visible = togAngle.checked;
-    labelEls.yhat.style.opacity = 1;
-    labelEls.residual.style.opacity = togResidual.checked ? 1 : 0;
+  // ── Closest — candidate points appear, distances shown, fade out ──
+  if (isExactly('closest')) {
+    const t = smoothT;
 
     if (togCandidates.checked) {
       candidateGroup.visible = true;
@@ -931,40 +1100,60 @@ function updateAnimation(globalTime) {
     } else {
       candidateGroup.visible = false;
     }
-
-    phaseTextEl.textContent = phaseTexts[3];
+    return;
   }
 
-  // Phase 4: Interactive
-  if (globalTime > p3End) {
-    if (partialResidualLine) {
-      scene.remove(partialResidualLine);
-      partialResidualLine.geometry.dispose();
-      partialResidualLine.material.dispose();
-      partialResidualLine = null;
-    }
-
+  // ── Interactive — everything visible, user can drag y ──
+  if (isExactly('interactive') || atOrPast('interactive')) {
     animState.interactive = true;
-    residualLine.visible = togResidual.checked;
-    raMarker.visible = togAngle.checked;
-    yHatSphere.visible = true;
-    yHatSphere.material.opacity = 1;
-    yHatSphere.material.transparent = false;
-    labelEls.yhat.style.opacity = 1;
-    labelEls.residual.style.opacity = togResidual.checked ? 1 : 0;
     candidateGroup.visible = false;
-    lightCone.visible = false;
-    yHatGlow.visible = false;
-    phaseTextEl.textContent = phaseTexts[4];
-
     controls.autoRotate = true;
+    return;
   }
+}
+
+/* ─── RENDER ANIMATION FRAME (dispatches to hold or anim) ─── */
+function renderAnimation() {
+  const { index: phaseIdx, local: t, phase: phaseObj } = getPhaseAt(animState.time);
+
+  // For hold phases, show the annotation and render the frozen scene
+  if (phaseObj.type === 'hold') {
+    // Get the completed animation state
+    const as = getAnimStateForHold(phaseIdx);
+    // Render as if the preceding anim phase is at local=1
+    renderScene(as.animName, 1.0);
+    // Show annotation
+    const annId = phaseObj.ann;
+    // Leader line target depends on which annotation
+    let leaderTarget = null;
+    if (annId === 'ann-setup') leaderTarget = yPos.clone();
+    else if (annId === 'ann-shadow') leaderTarget = yHatPos.clone();
+    else if (annId === 'ann-perp') leaderTarget = new THREE.Vector3(yHatPos.x + RA_SIZE, RA_SIZE / 2, yHatPos.z);
+    else if (annId === 'ann-closest') leaderTarget = yHatPos.clone();
+    showAnnotation(annId, leaderTarget);
+    // Don't auto-orbit during holds
+    controls.autoRotate = false;
+    controls.update();
+    renderer.render(scene, camera);
+    return;
+  }
+
+  // Animation phase — hide annotations
+  hideAllAnnotations();
+
+  const animName = phaseObj.name;
+  const et = easeInOutCubic(t);
+  renderScene(animName, t); // renderScene does its own easing internally
+
+  controls.autoRotate = animState.playing && animState.interactive;
+  controls.update();
+  renderer.render(scene, camera);
 }
 
 /* ─── DRAGGING Y IN INTERACTIVE MODE ─── */
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-const dragPlane = new THREE.Plane(); // we'll cast onto a plane parallel to camera
+const dragPlane = new THREE.Plane();
 
 let isDragging = false;
 
@@ -1063,6 +1252,7 @@ window.anim = {
     animState.playing = true;
     animState.interactive = false;
     controls.autoRotate = false;
+    hideAllAnnotations();
     // Reset camera
     camera.position.set(4, 3, 4);
     controls.target.set(0, 1, 0);
@@ -1099,10 +1289,8 @@ function animate(now) {
     progressLabel.textContent = Math.round(pct) + '%';
   }
 
-  updateAnimation(animState.time);
+  renderAnimation();
   updateLabels();
-  controls.update();
-  renderer.render(scene, camera);
 }
 
 requestAnimationFrame(animate);

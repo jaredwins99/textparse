@@ -152,6 +152,74 @@
       font-size: .78rem; color: var(--muted); background: var(--quote-bg); cursor: default; transition: all .15s;
     }
     .rel-chip:hover { border-color: var(--accent4); color: var(--accent4); }
+
+    /* Annotation callout cards */
+    .annotation-card {
+      position: absolute;
+      left: 20px;
+      bottom: 60px;
+      max-width: 380px;
+      background: rgba(22, 27, 34, 0.92);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 14px 18px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s, transform 0.5s;
+      z-index: 10;
+    }
+    .annotation-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .annotation-card .ann-step {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .annotation-card .ann-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .annotation-card .ann-body {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .annotation-card .ann-body em {
+      color: var(--accent);
+      font-style: normal;
+      font-weight: 600;
+    }
+    .annotation-card .ann-key {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 10px;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 8px;
+    }
+
+    /* Leader line */
+    .leader-line {
+      position: absolute;
+      pointer-events: none;
+      z-index: 9;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    .leader-line.visible { opacity: 1; }
+    .leader-line svg { overflow: visible; }
   </style>
 </head>
 <body>
@@ -176,6 +244,70 @@
   <div class="phase-bar">
     <span class="phase-num" id="phase-num">Phase 0 / 6</span>
     <span class="phase-text" id="phase-text">Three non-orthogonal vectors in 3D space</span>
+  </div>
+
+  <!-- Annotation callout cards — one per teaching moment -->
+  <div class="annotation-card" id="ann-setup">
+    <div class="ann-step">Setup</div>
+    <div class="ann-title">Three non-orthogonal vectors</div>
+    <div class="ann-body">
+      Three non-orthogonal vectors. We want to turn them into an <em>orthonormal basis</em> — same span, perpendicular directions, unit length.
+    </div>
+  </div>
+
+  <div class="annotation-card" id="ann-normalize1">
+    <div class="ann-step">Step 1 — Normalize</div>
+    <div class="ann-title">q&#8321; is just v&#8321; scaled to length 1</div>
+    <div class="ann-body">
+      q&#8321; is just v&#8321; scaled to length 1. This is our <em>first basis vector</em> — it defines the first direction.
+    </div>
+  </div>
+
+  <div class="annotation-card" id="ann-project2">
+    <div class="ann-step">Step 2 — Project</div>
+    <div class="ann-title">v&#8322;'s shadow along q&#8321;</div>
+    <div class="ann-body">
+      The gold shadow is v&#8322;'s component along q&#8321;. The dashed line shows how far v&#8322; reaches in the <em>q&#8321; direction</em>.
+    </div>
+  </div>
+
+  <div class="annotation-card" id="ann-subtract2">
+    <div class="ann-step">Step 3 — Subtract</div>
+    <div class="ann-title">z&#8322; is what's left after removing q&#8321;'s contribution</div>
+    <div class="ann-body">
+      z&#8322; is what's left after removing q&#8321;'s contribution. It's <em>perpendicular to q&#8321;</em> — genuinely new information.
+      Notice how the ghost of v&#8322; stays for reference.
+    </div>
+  </div>
+
+  <div class="annotation-card" id="ann-normalize2">
+    <div class="ann-step">Step 4 — Normalize</div>
+    <div class="ann-title">q&#8322; is z&#8322; scaled to unit length</div>
+    <div class="ann-body">
+      q&#8322; is z&#8322; scaled to unit length. The blue plane shows the space spanned by q&#8321; and q&#8322; — <em>same as v&#8321; and v&#8322;</em>, but now orthogonal.
+    </div>
+  </div>
+
+  <div class="annotation-card" id="ann-project3">
+    <div class="ann-step">Step 5 — Project</div>
+    <div class="ann-title">Two shadows: v&#8323;'s components along q&#8321; and q&#8322;</div>
+    <div class="ann-body">
+      Two shadows: v&#8323;'s components along q&#8321; AND q&#8322;. <em>Both must be removed</em> — v&#8323; might correlate with either.
+    </div>
+  </div>
+
+  <div class="annotation-card" id="ann-final">
+    <div class="ann-step">Step 6 — Complete</div>
+    <div class="ann-title">q&#8323; sticks straight out of the q&#8321;-q&#8322; plane</div>
+    <div class="ann-body">
+      q&#8323; sticks straight out of the q&#8321;-q&#8322; plane. Three <em>orthonormal vectors</em> spanning the same space as the originals.
+      This is the <em>QR decomposition</em>.
+    </div>
+    <span class="ann-key">ESL Algorithm 3.1, §3.2.3</span>
+  </div>
+
+  <div class="leader-line" id="leader-line">
+    <svg width="200" height="200"><line id="leader-svg-line" x1="0" y1="0" x2="100" y2="100" stroke="#58a6ff" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/></svg>
   </div>
 </div>
 
@@ -547,20 +679,94 @@ function hideLabel(id) {
 }
 
 // ─── Animation phases ───
+// Phases alternate between animation and annotation holds.
+// 'hold' phases freeze the scene and show an annotation card.
 const ORIGIN = new THREE.Vector3(0, 0, 0);
 
 const phases = [
-  { name: 'Three non-orthogonal vectors in 3D space', duration: 2.0 },
-  { name: 'Phase 1: Normalize v\u2081 to unit length \u2192 q\u2081', duration: 1.5 },
-  { name: 'Phase 2: Project v\u2082 onto q\u2081 (shadow grows)', duration: 2.0 },
-  { name: 'Phase 3: Subtract projection \u2192 z\u2082', duration: 2.0 },
-  { name: 'Phase 4: Normalize z\u2082 \u2192 q\u2082', duration: 1.5 },
-  { name: 'Phase 5: Project v\u2083 onto q\u2081 and q\u2082', duration: 2.0 },
-  { name: 'Phase 6: Subtract projections, normalize \u2192 q\u2083', duration: 2.0 },
+  { name: 'Three non-orthogonal vectors in 3D space',              duration: 2.0, type: 'anim' },   // 0
+  { name: 'hold-setup',                                             duration: 3.0, type: 'hold', ann: 'ann-setup' },   // 1
+  { name: 'Phase 1: Normalize v\u2081 to unit length \u2192 q\u2081', duration: 1.5, type: 'anim' },   // 2
+  { name: 'hold-normalize1',                                        duration: 3.0, type: 'hold', ann: 'ann-normalize1' }, // 3
+  { name: 'Phase 2: Project v\u2082 onto q\u2081 (shadow grows)',     duration: 2.0, type: 'anim' },   // 4
+  { name: 'hold-project2',                                          duration: 3.5, type: 'hold', ann: 'ann-project2' },  // 5
+  { name: 'Phase 3: Subtract projection \u2192 z\u2082',              duration: 2.0, type: 'anim' },   // 6
+  { name: 'hold-subtract2',                                         duration: 3.5, type: 'hold', ann: 'ann-subtract2' }, // 7
+  { name: 'Phase 4: Normalize z\u2082 \u2192 q\u2082',                duration: 1.5, type: 'anim' },   // 8
+  { name: 'hold-normalize2',                                        duration: 3.0, type: 'hold', ann: 'ann-normalize2' }, // 9
+  { name: 'Phase 5: Project v\u2083 onto q\u2081 and q\u2082',        duration: 2.0, type: 'anim' },   // 10
+  { name: 'hold-project3',                                          duration: 3.5, type: 'hold', ann: 'ann-project3' },  // 11
+  { name: 'Phase 6: Subtract projections, normalize \u2192 q\u2083',  duration: 2.0, type: 'anim' },   // 12
+  { name: 'hold-final',                                             duration: 3.5, type: 'hold', ann: 'ann-final' },     // 13
 ];
+
+// Map from phase array index to the original animation phase number (0-6)
+const ANIM_INDICES = [0, 2, 4, 6, 8, 10, 12]; // indices of anim phases in the array
 
 const totalDuration = phases.reduce((s, p) => s + p.duration, 0);
 document.getElementById('time-total').textContent = totalDuration.toFixed(1) + 's';
+
+// ─── Annotation card management ───
+const annCards = {
+  'ann-setup': document.getElementById('ann-setup'),
+  'ann-normalize1': document.getElementById('ann-normalize1'),
+  'ann-project2': document.getElementById('ann-project2'),
+  'ann-subtract2': document.getElementById('ann-subtract2'),
+  'ann-normalize2': document.getElementById('ann-normalize2'),
+  'ann-project3': document.getElementById('ann-project3'),
+  'ann-final': document.getElementById('ann-final'),
+};
+
+function hideAllAnnotations() {
+  Object.values(annCards).forEach(el => el.classList.remove('visible'));
+  document.getElementById('leader-line').classList.remove('visible');
+}
+
+function showAnnotation(annId, leaderTarget) {
+  hideAllAnnotations();
+  if (annId && annCards[annId]) {
+    annCards[annId].classList.add('visible');
+  }
+  // Leader line from card to a 3D point
+  if (leaderTarget) {
+    const ll = document.getElementById('leader-line');
+    const svgLine = document.getElementById('leader-svg-line');
+    const v = leaderTarget.clone().project(camera);
+    const rect = canvas.getBoundingClientRect();
+    const hw = rect.width / 2;
+    const hh = rect.height / 2;
+    const tx = v.x * hw + hw;
+    const ty = -v.y * hh + hh;
+    // Card is at left:20, bottom:60 — approximate card center
+    const cx = 200;
+    const cy = rect.height - 100;
+    ll.style.left = '0px';
+    ll.style.top = '0px';
+    ll.style.width = rect.width + 'px';
+    ll.style.height = rect.height + 'px';
+    svgLine.setAttribute('x1', cx);
+    svgLine.setAttribute('y1', cy);
+    svgLine.setAttribute('x2', tx);
+    svgLine.setAttribute('y2', ty);
+    ll.querySelector('svg').setAttribute('width', rect.width);
+    ll.querySelector('svg').setAttribute('height', rect.height);
+    ll.classList.add('visible');
+  }
+}
+
+// During a hold, the scene should look like the end of the preceding anim phase
+function getAnimState(phaseIndex) {
+  for (let i = phaseIndex; i >= 0; i--) {
+    if (phases[i].type === 'anim') return i;
+  }
+  return 0;
+}
+
+// Convert a phases-array index to original anim phase number (0-6)
+function getAnimPhaseNumber(phaseIndex) {
+  const animIdx = getAnimState(phaseIndex);
+  return ANIM_INDICES.indexOf(animIdx);
+}
 
 // ─── Animation state ───
 let animTime = 0; // current time in seconds
@@ -572,27 +778,15 @@ function getPhaseAt(t) {
   let acc = 0;
   for (let i = 0; i < phases.length; i++) {
     if (t < acc + phases[i].duration) {
-      return { index: i, local: (t - acc) / phases[i].duration };
+      return { index: i, local: (t - acc) / phases[i].duration, phase: phases[i] };
     }
     acc += phases[i].duration;
   }
-  return { index: phases.length - 1, local: 1 };
+  return { index: phases.length - 1, local: 1, phase: phases[phases.length - 1] };
 }
 
-// ─── Render frame based on animation time ───
-function renderAnimationState(t) {
-  t = Math.max(0, Math.min(t, totalDuration - 0.001));
-  const { index: pi, local: rawLocal } = getPhaseAt(t);
-  const lt = easeInOutQuad(Math.max(0, Math.min(1, rawLocal))); // eased local progress
-
-  // Update UI
-  document.getElementById('phase-num').textContent = `Phase ${pi} / ${phases.length - 1}`;
-  document.getElementById('phase-text').textContent = phases[pi].name;
-  document.getElementById('time-current').textContent = t.toFixed(1) + 's';
-  if (!userScrubbing) {
-    document.getElementById('scrubber').value = (t / totalDuration * 1000) | 0;
-  }
-
+// ─── Render scene for a given animation phase number (0-6) and local progress ───
+function renderScene(animPhaseNum, lt) {
   // --- Reset all to invisible ---
   [arrow_proj1, arrow_proj2a, arrow_proj2b].forEach(a => { a.visible = false; });
   [ghost_v1, ghost_v2, ghost_v3].forEach(a => { a.visible = false; });
@@ -600,19 +794,10 @@ function renderAnimationState(t) {
   [rightAngle1, rightAngle2].forEach(l => { l.visible = false; });
   planeMesh.visible = false;
 
-  // Helper: is a phase completed?
-  const done = i => pi > i || (pi === i && lt >= 1);
-  const active = i => pi === i;
+  const pi = animPhaseNum;
 
   // --- PHASE 0: Show original vectors ---
-  // v1 always visible as something
-  let v1Tip, v2Tip, v3Tip;
-
   if (pi === 0) {
-    // All three original vectors, full opacity
-    v1Tip = v1;
-    v2Tip = v2;
-    v3Tip = v3;
     updateArrow(arrow_v1, ORIGIN, v1, 1);
     updateArrow(arrow_v2, ORIGIN, v2, 1);
     updateArrow(arrow_v3, ORIGIN, v3, 1);
@@ -625,11 +810,10 @@ function renderAnimationState(t) {
 
   // --- PHASE 1: v1 shrinks/grows to unit length ---
   if (pi === 1) {
-    v1Tip = v1.clone().lerp(q1, lt);
+    const v1Tip = v1.clone().lerp(q1, lt);
     updateArrow(arrow_v1, ORIGIN, v1Tip, 1);
     updateArrow(arrow_v2, ORIGIN, v2, 1);
     updateArrow(arrow_v3, ORIGIN, v3, 1);
-    // Ghost of original v1
     updateArrow(ghost_v1, ORIGIN, v1, 0.15);
     ghost_v1.visible = lt > 0.1;
     const labelName = lt > 0.5 ? 'q\u2081' : 'v\u2081';
@@ -647,15 +831,12 @@ function renderAnimationState(t) {
     updateArrow(arrow_v3, ORIGIN, v3, 0.6);
     updateArrow(ghost_v1, ORIGIN, v1, 0.15);
 
-    // Projection shadow grows
     const projTip = ORIGIN.clone().lerp(proj_v2_q1, lt);
     updateArrow(arrow_proj1, ORIGIN, projTip, 0.7 * lt);
     arrow_proj1.visible = lt > 0.02;
 
-    // Connector: dashed line from v2 tip down to projection point
     updateDashedLine(connector1, v2, projTip, 0.5 * lt);
 
-    // Right angle marker
     if (lt > 0.5) {
       const residDir = v2.clone().sub(proj_v2_q1);
       updateRightAngle(rightAngle1, proj_v2_q1, q1.clone().negate(), residDir, 0.1, (lt - 0.5) * 2);
@@ -674,15 +855,12 @@ function renderAnimationState(t) {
     updateArrow(arrow_v3, ORIGIN, v3, 0.6);
     updateArrow(ghost_v1, ORIGIN, v1, 0.15);
 
-    // v2 tip slides from original to z2
     const currentV2 = v2.clone().lerp(z2, lt);
     updateArrow(arrow_v2, ORIGIN, currentV2, 1);
 
-    // Ghost of original v2
     updateArrow(ghost_v2, ORIGIN, v2, 0.15 * lt);
     ghost_v2.visible = lt > 0.05;
 
-    // Projection fades out
     updateArrow(arrow_proj1, ORIGIN, proj_v2_q1, 0.7 * (1 - lt));
     arrow_proj1.visible = lt < 0.95;
     updateDashedLine(connector1, v2, proj_v2_q1, 0.5 * (1 - lt));
@@ -710,12 +888,6 @@ function renderAnimationState(t) {
     const currentV2 = z2.clone().lerp(q2, lt);
     updateArrow(arrow_v2, ORIGIN, currentV2, 1);
 
-    // Ghost of z2
-    if (lt > 0.1) {
-      // keep ghost_v2 showing original v2
-    }
-
-    // Plane appears
     updatePlane(q1, q2, lt);
 
     const labelName = lt > 0.5 ? 'q\u2082' : 'z\u2082';
@@ -734,7 +906,6 @@ function renderAnimationState(t) {
     updateArrow(ghost_v2, ORIGIN, v2, 0.15);
     updatePlane(q1, q2, 1);
 
-    // Two projections grow
     const p1Tip = ORIGIN.clone().lerp(proj_v3_q1, lt);
     const p2Tip = ORIGIN.clone().lerp(proj_v3_q2, lt);
     updateArrow(arrow_proj2a, ORIGIN, p1Tip, 0.7 * lt);
@@ -742,17 +913,12 @@ function renderAnimationState(t) {
     arrow_proj2a.visible = lt > 0.02;
     arrow_proj2b.visible = lt > 0.02;
 
-    // Connectors from v3 to the combined projection
     const combinedProj = proj_v3_q1.clone().add(proj_v3_q2);
-    const partialCombined = combinedProj.clone().multiplyScalar(lt);
     updateDashedLine(connector2a, v3, p1Tip, 0.4 * lt);
     updateDashedLine(connector2b, v3, p2Tip, 0.4 * lt);
 
-    // Right angle
     if (lt > 0.5) {
       const residDir = v3.clone().sub(combinedProj);
-      const normal = new THREE.Vector3().crossVectors(q1, q2).normalize();
-      // Show right angle between residual and the q1-q2 plane
       updateRightAngle(rightAngle2, combinedProj, q1, residDir, 0.1, (lt - 0.5) * 2);
     }
 
@@ -770,21 +936,18 @@ function renderAnimationState(t) {
     updateArrow(ghost_v2, ORIGIN, v2, 0.15);
     updatePlane(q1, q2, 1);
 
-    // First half: v3 slides to z3. Second half: z3 normalizes to q3.
     let currentV3;
     if (lt < 0.5) {
-      const subT = lt * 2; // 0->1 over first half
+      const subT = lt * 2;
       currentV3 = v3.clone().lerp(z3, easeInOutQuad(subT));
-      // Ghost of original v3
       updateArrow(ghost_v3, ORIGIN, v3, 0.15 * subT);
       ghost_v3.visible = subT > 0.05;
-      // Fade projections
       updateArrow(arrow_proj2a, ORIGIN, proj_v3_q1, 0.7 * (1 - subT));
       updateArrow(arrow_proj2b, ORIGIN, proj_v3_q2, 0.7 * (1 - subT));
       arrow_proj2a.visible = subT < 0.9;
       arrow_proj2b.visible = subT < 0.9;
     } else {
-      const subT = (lt - 0.5) * 2; // 0->1 over second half
+      const subT = (lt - 0.5) * 2;
       currentV3 = z3.clone().lerp(q3, easeInOutQuad(subT));
       updateArrow(ghost_v3, ORIGIN, v3, 0.15);
       arrow_proj2a.visible = false;
@@ -798,6 +961,55 @@ function renderAnimationState(t) {
     positionLabel('v3', currentV3, labelName, '#3fb950', 1);
     hideLabel('proj'); hideLabel('z2'); hideLabel('z3'); hideLabel('q1'); hideLabel('q2'); hideLabel('q3');
   }
+}
+
+// ─── Render frame based on animation time ───
+function renderAnimationState(t) {
+  t = Math.max(0, Math.min(t, totalDuration - 0.001));
+  const { index: phaseIdx, local: rawLocal, phase: phaseObj } = getPhaseAt(t);
+
+  // Update scrubber/time UI
+  document.getElementById('time-current').textContent = t.toFixed(1) + 's';
+  if (!userScrubbing) {
+    document.getElementById('scrubber').value = (t / totalDuration * 1000) | 0;
+  }
+
+  // For hold phases, show the annotation and render the frozen scene
+  if (phaseObj.type === 'hold') {
+    const animPhaseNum = getAnimPhaseNumber(phaseIdx);
+    document.getElementById('phase-num').textContent = `Phase ${animPhaseNum} / 6`;
+    document.getElementById('phase-text').textContent = phases[getAnimState(phaseIdx)].name;
+
+    // Render the scene frozen at end of preceding anim phase
+    renderScene(animPhaseNum, 1.0);
+
+    // Show annotation
+    const annId = phaseObj.ann;
+    let leaderTarget = null;
+    // Choose leader line target based on annotation
+    if (annId === 'ann-setup') leaderTarget = v1;
+    else if (annId === 'ann-normalize1') leaderTarget = q1;
+    else if (annId === 'ann-project2') leaderTarget = proj_v2_q1;
+    else if (annId === 'ann-subtract2') leaderTarget = z2;
+    else if (annId === 'ann-normalize2') leaderTarget = q2;
+    else if (annId === 'ann-project3') leaderTarget = v3;
+    else if (annId === 'ann-final') leaderTarget = q3;
+    showAnnotation(annId, leaderTarget);
+
+    controls.autoRotate = false; // don't orbit during holds
+    return;
+  }
+
+  // Animation phase — hide annotations
+  hideAllAnnotations();
+
+  const animPhaseNum = getAnimPhaseNumber(phaseIdx);
+  const lt = easeInOutQuad(Math.max(0, Math.min(1, rawLocal)));
+
+  document.getElementById('phase-num').textContent = `Phase ${animPhaseNum} / 6`;
+  document.getElementById('phase-text').textContent = phaseObj.name;
+
+  renderScene(animPhaseNum, lt);
 }
 
 // ─── Animation loop ───
@@ -818,11 +1030,14 @@ function animate(timestamp) {
   }
   lastTime = timestamp;
 
-  // Pause auto-rotate when user is dragging
-  controls.autoRotate = playing;
-  controls.update();
-
   renderAnimationState(animTime);
+
+  // Auto-rotate only when playing and not in a hold phase
+  const { phase: currentPhase } = getPhaseAt(Math.max(0, Math.min(animTime, totalDuration - 0.001)));
+  if (currentPhase.type !== 'hold') {
+    controls.autoRotate = playing;
+  }
+  controls.update();
 
   const w = canvas.clientWidth;
   const h = canvas.clientHeight;

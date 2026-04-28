@@ -154,6 +154,74 @@
     transition: opacity 0.3s;
   }
 
+  /* ── Annotation callout cards ── */
+  .annotation-card {
+    position: absolute;
+    left: 20px;
+    bottom: 60px;
+    max-width: 380px;
+    background: rgba(22, 27, 34, 0.92);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 14px 18px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s, transform 0.5s;
+    z-index: 10;
+  }
+  .annotation-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .annotation-card .ann-step {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .annotation-card .ann-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .annotation-card .ann-body {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .annotation-card .ann-body em {
+    color: var(--accent);
+    font-style: normal;
+    font-weight: 600;
+  }
+  .annotation-card .ann-key {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 10px;
+    color: var(--muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 8px;
+  }
+
+  /* ── Leader line (CSS-only, from card to a scene point) ── */
+  .leader-line {
+    position: absolute;
+    pointer-events: none;
+    z-index: 9;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .leader-line.visible { opacity: 1; }
+  .leader-line svg { overflow: visible; }
+
   .anim-controls {
     display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px;
   }
@@ -220,6 +288,71 @@
     <div id="anim-container">
       <div id="phase-text"></div>
       <div id="beta-display"></div>
+
+      <!-- Annotation callout cards — one per teaching moment -->
+      <div class="annotation-card" id="ann-setup">
+        <div class="ann-step">Setup</div>
+        <div class="ann-title">Two correlated predictors and a response</div>
+        <div class="ann-body">
+          x₁ (blue) and x₂ (orange) are correlated — they point in similar directions.
+          y (purple) depends on both. The question: <em>how much does each predictor contribute, after accounting for the other?</em>
+        </div>
+      </div>
+
+      <div class="annotation-card" id="ann-shadow">
+        <div class="ann-step">Step 1 — Project</div>
+        <div class="ann-title">x₂ casts its shadow onto x₁</div>
+        <div class="ann-body">
+          The gold shadow is the part of x₂ that x₁ <em>already explains</em>.
+          If x₁ and x₂ were uncorrelated, this shadow would be zero — there'd be nothing to remove.
+          The dashed line shows the distance from x₂ to its shadow.
+        </div>
+      </div>
+
+      <div class="annotation-card" id="ann-residual">
+        <div class="ann-step">Step 2 — Subtract</div>
+        <div class="ann-title">z₂ is the "new information" in x₂</div>
+        <div class="ann-body">
+          After removing x₁'s contribution, only z₂ (green) remains — <em>perpendicular</em> to x₁.
+          This is what x₂ brings to the table that x₁ doesn't. Notice the right angle at the origin.
+          The ghost of the original x₂ stays for reference.
+        </div>
+      </div>
+
+      <div class="annotation-card" id="ann-yproject">
+        <div class="ann-step">Step 3 — Regress</div>
+        <div class="ann-title">This simple regression IS the multiple regression coefficient</div>
+        <div class="ann-body">
+          Regressing y on z₂ gives β̂₂ — <em>exactly</em> the same coefficient you'd get from the full multiple regression (X'X)⁻¹X'y.
+          No matrix inversion needed. Just project, subtract, regress.
+        </div>
+        <span class="ann-key">ESL §3.2.3, p. 54</span>
+      </div>
+
+      <div class="annotation-card" id="ann-correlate">
+        <div class="ann-step">What happens with high correlation?</div>
+        <div class="ann-title">As x₂ aligns with x₁, z₂ shrinks to nearly nothing</div>
+        <div class="ann-body">
+          High correlation means x₂ adds little new information → z₂ is tiny.
+          β̂₂ = ⟨y, z₂⟩ / ||z₂||² — dividing by a tiny number amplifies noise.
+          <em>This is why collinearity makes coefficients unstable.</em>
+        </div>
+      </div>
+
+      <div class="annotation-card" id="ann-ridge">
+        <div class="ann-step">The fix: Ridge regression</div>
+        <div class="ann-title">Ridge adds λ to ||z₂||² — stabilizing the division</div>
+        <div class="ann-body">
+          Instead of β̂₂ = ⟨y, z₂⟩ / ||z₂||², ridge computes ⟨y, z₂⟩ / (||z₂||² + λ).
+          Directions with tiny variance (small ||z₂||) get <em>shrunk toward zero</em> — exactly the unstable ones.
+          The coefficient drops from explosive to reasonable.
+        </div>
+        <span class="ann-key">Watch the OLS vs Ridge values</span>
+      </div>
+
+      <div class="leader-line" id="leader-line">
+        <svg width="200" height="200"><line id="leader-svg-line" x1="0" y1="0" x2="100" y2="100" stroke="#58a6ff" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/></svg>
+      </div>
     </div>
 
     <div class="anim-controls">
@@ -614,25 +747,93 @@ function updateLabel(id, worldPos, visible) {
 }
 
 // ── PHASE DEFINITIONS ──
-// Phase timing in seconds (at 1x speed)
+// Phases alternate between animation and annotation holds.
+// 'hold' phases freeze the scene and show an annotation card.
 const PHASES = [
-  { name: 'setup', duration: 2 },         // 0: vectors appear
-  { name: 'shadow', duration: 3 },        // 1: project x2 onto x1
-  { name: 'residual', duration: 2.5 },    // 2: z2 appears, x2 ghosts
-  { name: 'yproject', duration: 3 },      // 3: project y onto z2
-  { name: 'correlate', duration: 4 },     // 4: x2 rotates toward x1
-  { name: 'ridge', duration: 2.5 },       // 5: ridge dampener
+  { name: 'setup',         duration: 2,   type: 'anim' },   // 0
+  { name: 'hold-setup',    duration: 3,   type: 'hold', ann: 'ann-setup' },  // 1
+  { name: 'shadow',        duration: 3,   type: 'anim' },   // 2
+  { name: 'hold-shadow',   duration: 3.5, type: 'hold', ann: 'ann-shadow' }, // 3
+  { name: 'residual',      duration: 2.5, type: 'anim' },   // 4
+  { name: 'hold-residual', duration: 3.5, type: 'hold', ann: 'ann-residual' }, // 5
+  { name: 'yproject',      duration: 3,   type: 'anim' },   // 6
+  { name: 'hold-yproject', duration: 3.5, type: 'hold', ann: 'ann-yproject' }, // 7
+  { name: 'correlate',     duration: 4,   type: 'anim' },   // 8
+  { name: 'hold-correlate',duration: 3.5, type: 'hold', ann: 'ann-correlate' }, // 9
+  { name: 'ridge',         duration: 2.5, type: 'anim' },   // 10
+  { name: 'hold-ridge',    duration: 3,   type: 'hold', ann: 'ann-ridge' }, // 11
 ];
 const TOTAL_DURATION = PHASES.reduce((s, p) => s + p.duration, 0);
 
+// Map animation-phase names to their index (for rendering logic)
+const ANIM_PHASE = {
+  setup: 0, shadow: 2, residual: 4, yproject: 6, correlate: 8, ridge: 10
+};
+
+// Map from phase index to the corresponding "completed animation phase" index
+// During a hold, the scene should look like the end of the preceding anim phase
+function getAnimState(phaseIndex) {
+  // Find the most recent anim phase at or before this index
+  for (let i = phaseIndex; i >= 0; i--) {
+    if (PHASES[i].type === 'anim') return { animName: PHASES[i].name, local: 1.0 };
+  }
+  return { animName: 'setup', local: 0 };
+}
+
 const PHASE_TEXTS = [
-  '',
-  'x₂ casts its shadow onto x₁ — the part x₁ already explains',
-  'z₂ = the "new information" in x₂, perpendicular to x₁',
-  'Project y onto z₂ — this coefficient IS the multiple regression β̂₂',
-  'High correlation → tiny z₂ → unstable coefficient',
-  'Ridge adds λ to ||z₂||² — stabilizes the division',
+  '', '', // setup + hold
+  '', '', // shadow + hold
+  '', '', // residual + hold
+  '', '', // yproject + hold
+  '', '', // correlate + hold
+  '', '', // ridge + hold
 ];
+
+// Annotation card elements
+const annCards = {
+  'ann-setup': document.getElementById('ann-setup'),
+  'ann-shadow': document.getElementById('ann-shadow'),
+  'ann-residual': document.getElementById('ann-residual'),
+  'ann-yproject': document.getElementById('ann-yproject'),
+  'ann-correlate': document.getElementById('ann-correlate'),
+  'ann-ridge': document.getElementById('ann-ridge'),
+};
+
+function hideAllAnnotations() {
+  Object.values(annCards).forEach(el => el.classList.remove('visible'));
+  document.getElementById('leader-line').classList.remove('visible');
+}
+
+function showAnnotation(annId, leaderTarget) {
+  hideAllAnnotations();
+  if (annId && annCards[annId]) {
+    annCards[annId].classList.add('visible');
+  }
+  // Leader line from card to a 3D point
+  if (leaderTarget) {
+    const ll = document.getElementById('leader-line');
+    const svgLine = document.getElementById('leader-svg-line');
+    const v = leaderTarget.clone().project(camera);
+    const hw = container.clientWidth / 2;
+    const hh = container.clientHeight / 2;
+    const tx = v.x * hw + hw;
+    const ty = -v.y * hh + hh;
+    // Card is at left:20, bottom:60 — approximate card center
+    const cx = 200;
+    const cy = container.clientHeight - 100;
+    ll.style.left = '0px';
+    ll.style.top = '0px';
+    ll.style.width = container.clientWidth + 'px';
+    ll.style.height = container.clientHeight + 'px';
+    svgLine.setAttribute('x1', cx);
+    svgLine.setAttribute('y1', cy);
+    svgLine.setAttribute('x2', tx);
+    svgLine.setAttribute('y2', ty);
+    ll.querySelector('svg').setAttribute('width', container.clientWidth);
+    ll.querySelector('svg').setAttribute('height', container.clientHeight);
+    ll.classList.add('visible');
+  }
+}
 
 // ── ANIMATION STATE ──
 let playing = false;
@@ -649,11 +850,11 @@ function getPhaseAt(t) {
   let acc = 0;
   for (let i = 0; i < PHASES.length; i++) {
     if (t < acc + PHASES[i].duration) {
-      return { index: i, local: (t - acc) / PHASES[i].duration };
+      return { index: i, local: (t - acc) / PHASES[i].duration, phase: PHASES[i] };
     }
     acc += PHASES[i].duration;
   }
-  return { index: PHASES.length - 1, local: 1 };
+  return { index: PHASES.length - 1, local: 1, phase: PHASES[PHASES.length - 1] };
 }
 
 function resetScene() {
@@ -667,33 +868,72 @@ function resetScene() {
   phaseTextEl.textContent = '';
   betaDisplayEl.textContent = '';
   betaDisplayEl.style.opacity = '0';
+  hideAllAnnotations();
 }
 
 // ── RENDER FRAME ──
 function renderAnimation() {
-  const { index: phase, local: t } = getPhaseAt(globalTime);
-  const et = easeInOut(t);
+  const { index: phaseIdx, local: t, phase: phaseObj } = getPhaseAt(globalTime);
 
-  // Effective correlation: changes in phase 4
+  // For hold phases, show the annotation and render the frozen scene
+  if (phaseObj.type === 'hold') {
+    // Get the completed animation state
+    const animState = getAnimState(phaseIdx);
+    // Render as if the preceding anim phase is at local=1
+    renderScene(animState.animName, 1.0);
+    // Show annotation with fade-in
+    const annId = phaseObj.ann;
+    // Leader line target depends on which annotation
+    let leaderTarget = null;
+    const vecs = computeVectors(phaseIdx >= ANIM_PHASE.correlate ? 0.98 : userCorr);
+    if (annId === 'ann-shadow') leaderTarget = vecs.projPoint;
+    else if (annId === 'ann-residual') leaderTarget = vecs.z2End;
+    else if (annId === 'ann-yproject') leaderTarget = vecs.yProjOnZ2;
+    else if (annId === 'ann-correlate') leaderTarget = vecs.z2End;
+    showAnnotation(annId, leaderTarget);
+    // Still update controls for orbit
+    controls.autoRotate = false; // don't orbit during holds
+    controls.update();
+    renderer.render(scene, camera);
+    return;
+  }
+
+  // Animation phase — hide annotations
+  hideAllAnnotations();
+
+  const animName = phaseObj.name;
+  const et = easeInOut(t);
+  renderScene(animName, et);
+
+  controls.autoRotate = playing;
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+function renderScene(animName, et) {
+  // Effective correlation: changes in 'correlate' phase
   let corr = userCorr;
-  if (phase === 4) {
-    // Smoothly increase correlation from userCorr toward 0.98
+  if (animName === 'correlate') {
     corr = lerp(userCorr, 0.98, et);
-  } else if (phase === 5) {
+  } else if (animName === 'ridge') {
     corr = 0.98;
   }
   animCorr = corr;
 
   const vecs = computeVectors(corr);
-  const vecsUser = computeVectors(userCorr);
 
-  // Show phase text
-  phaseTextEl.textContent = PHASE_TEXTS[phase] || '';
-  phaseTextEl.style.opacity = phase === 0 ? '0' : '1';
+  // Animation phase ordering for >= comparisons
+  const ANIM_ORDER = ['setup', 'shadow', 'residual', 'yproject', 'correlate', 'ridge'];
+  const animIdx = ANIM_ORDER.indexOf(animName);
+  function atOrPast(name) { return animIdx >= ANIM_ORDER.indexOf(name); }
+  function isExactly(name) { return animName === name; }
 
-  // ── PHASE 0: Setup — vectors fade in ──
-  if (phase >= 0) {
-    const fadeIn = phase === 0 ? et : 1;
+  // Hide phase text (annotations replace it)
+  phaseTextEl.style.opacity = '0';
+
+  // ── Setup — vectors fade in ──
+  {
+    const fadeIn = isExactly('setup') ? et : 1;
     arrowX1.visible = true;
     setArrow(arrowX1, ORIGIN, vecs.x1End);
     setArrowOpacity(arrowX1, fadeIn);
@@ -706,36 +946,31 @@ function renderAnimation() {
     setArrow(arrowY, ORIGIN, vecs.yEnd);
     setArrowOpacity(arrowY, fadeIn);
 
-    x1Line.material.opacity = phase === 0 ? fadeIn * 0.2 : 0.25;
+    x1Line.material.opacity = isExactly('setup') ? fadeIn * 0.2 : 0.25;
 
     updateLabel('x1', vecs.x1End, fadeIn > 0.3);
-    updateLabel('x2', vecs.x2End, fadeIn > 0.3 && phase < 3);
+    updateLabel('x2', vecs.x2End, fadeIn > 0.3 && !atOrPast('yproject'));
     updateLabel('y', vecs.yEnd, fadeIn > 0.3);
   }
 
-  // ── PHASE 1: Shadow slides down ──
-  if (phase >= 1) {
-    const st = phase === 1 ? et : 1;
+  // ── Shadow slides down ──
+  if (atOrPast('shadow')) {
+    const st = isExactly('shadow') ? et : 1;
 
-    // Shadow sphere slides along x1 from origin to projPoint
     const shadowTarget = vecs.projPoint.clone();
     const shadowPos = new THREE.Vector3();
     lerpV3(shadowPos, ORIGIN, shadowTarget, st);
     shadowSphere.visible = true;
     shadowSphere.position.copy(shadowPos);
 
-    // Projection arrow on x1 axis grows
     arrowProj.visible = st > 0.05;
     if (st > 0.05) {
       setArrow(arrowProj, ORIGIN, shadowPos);
       setArrowOpacity(arrowProj, st * 0.7);
     }
 
-    // Dashed connector from x2 tip to shadow point (grows)
     dashX2ToProj.visible = st > 0.1;
     if (st > 0.1) {
-      const dashStart = new THREE.Vector3();
-      lerpV3(dashStart, vecs.x2End, vecs.x2End, 1);
       const dashEnd = new THREE.Vector3();
       lerpV3(dashEnd, vecs.x2End, shadowTarget, st);
       setDashedLine(dashX2ToProj, vecs.x2End, dashEnd);
@@ -749,9 +984,9 @@ function renderAnimation() {
     dashX2ToProj.visible = false;
   }
 
-  // ── PHASE 2: x2 morphs into z2 ──
-  if (phase >= 2) {
-    const rt = phase === 2 ? et : 1;
+  // ── x2 morphs into z2 ──
+  if (atOrPast('residual')) {
+    const rt = isExactly('residual') ? et : 1;
 
     // Ghost of original x2
     arrowX2Ghost.visible = true;
@@ -793,11 +1028,10 @@ function renderAnimation() {
     arrowZ2.visible = false;
   }
 
-  // ── PHASE 3: Project y onto z2 ──
-  if (phase >= 3) {
-    const pt = phase === 3 ? et : 1;
+  // ── Project y onto z2 ──
+  if (atOrPast('yproject')) {
+    const pt = isExactly('yproject') ? et : 1;
 
-    // y projection shadow slides onto z2
     const yProjTarget = vecs.yProjOnZ2;
     const yProjPos = new THREE.Vector3();
     lerpV3(yProjPos, ORIGIN, yProjTarget, pt);
@@ -805,7 +1039,6 @@ function renderAnimation() {
     yShadowSphere.visible = true;
     yShadowSphere.position.copy(yProjPos);
 
-    // Dashed line from y tip to projection on z2
     dashYToZ2Proj.visible = pt > 0.1;
     if (pt > 0.1) {
       const dashEnd = new THREE.Vector3();
@@ -814,7 +1047,6 @@ function renderAnimation() {
       dashYToZ2Proj.material.opacity = pt;
     }
 
-    // Show beta2
     betaDisplayEl.style.opacity = pt > 0.3 ? '1' : '0';
     betaDisplayEl.textContent = `β̂₂ = ${vecs.beta2.toFixed(3)}`;
 
@@ -824,19 +1056,15 @@ function renderAnimation() {
     dashYToZ2Proj.visible = false;
   }
 
-  // ── PHASE 4: Correlation changes ──
-  if (phase === 4) {
-    // Vectors are already recomputed with changing corr above
-    // Update beta display with current value
+  // ── Correlation changes ──
+  if (isExactly('correlate')) {
     betaDisplayEl.textContent = `β̂₂ = ${vecs.beta2.toFixed(3)}\ncorr = ${corr.toFixed(2)}`;
     betaDisplayEl.style.whiteSpace = 'pre';
 
-    // z2 shrinks visually as correlation increases (already handled by vecs)
     arrowZ2.visible = true;
     setArrow(arrowZ2, ORIGIN, vecs.z2End);
     setArrowOpacity(arrowZ2, 1);
 
-    // Update shadow sphere, proj, etc.
     shadowSphere.position.copy(vecs.projPoint);
     setArrow(arrowProj, ORIGIN, vecs.projPoint);
     arrowX2Ghost.visible = true;
@@ -844,19 +1072,17 @@ function renderAnimation() {
     setArrowOpacity(arrowX2Ghost, 0.15);
 
     updateLabel('z2', vecs.z2End, true);
-    // Update right angle
     const x1Dir = vecs.x1End.clone().normalize();
     const z2Dir = vecs.z2End.clone().normalize();
     setRightAngle(rightAngle, ORIGIN, x1Dir, z2Dir, 0.2);
 
-    // Update y projection
     yShadowSphere.position.copy(vecs.yProjOnZ2);
     setDashedLine(dashYToZ2Proj, vecs.yEnd, vecs.yProjOnZ2);
     updateLabel('yproj', vecs.yProjOnZ2, true);
   }
 
-  // ── PHASE 5: Ridge dampener ──
-  if (phase === 5) {
+  // ── Ridge dampener ──
+  if (isExactly('ridge')) {
     const rt = et;
     // Show ridge sphere around beta display
     ridgeSphere.visible = true;
@@ -882,12 +1108,6 @@ function renderAnimation() {
   } else {
     ridgeSphere.visible = false;
   }
-
-  // Auto-orbit only during playback
-  controls.autoRotate = playing;
-  controls.update();
-
-  renderer.render(scene, camera);
 }
 
 // ── ANIMATION LOOP ──
