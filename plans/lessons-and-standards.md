@@ -209,6 +209,15 @@ The instinct is to make trendy-looking dashboards with fancy 2D charts because t
 
 **The key principle:** Ask "what is this concept in ENGLISH, to a human?" not "what does the math notation look like?" Projection = shadow falling. Shrinkage = squeezing. Orthogonalization = straightening. Path = tracing a route. The English word tells you the format.
 
+### What counts as an animation — refinements (from the LAR page rebuild, user feedback)
+
+1. **An animation must show a transformation you cannot get from the final frame.** Tracing a static curve left-to-right is a *progress bar*, not an animation — the last frame contains everything. Test: pause at the end; if nothing was lost, it should have been a picture. What earns animation: things that *move through* a space — a residual vector rotating, a fit point walking, a surface deforming.
+2. **Show the process in the space where it happens.** LAR's coefficient path (coefficient space) is the *log* of the algorithm; the algorithm itself happens in response space — the fit vector walking toward the projection. Lead with the true space (3D response-space walk), show the coordinates view after, as the "log of the game you just watched."
+3. **Draw quantities as what they geometrically are.** Correlation with the residual = cosine of an angle between vectors. Don't only plot |c_j| as declining magnitudes — show the angles at the walker, gauge them toward 90°, and let "tied correlation" literally look like equal angles.
+4. **Counter-examples teach what positive examples can't.** "Why equiangular?" is answered by walking any *other* direction and watching the tie break (Ex. 3.23 made visible). Showing what is NOT happening — and what would go wrong — turns a definition into a necessity. Offer the wrong choices as buttons.
+5. **3D honesty rule:** when a scene's spans are unequal, `aspectmode:'cube'` distorts angles — use `'data'` whenever the viz makes geometric claims (equal angles, orthogonality). Cube remains the default for loss surfaces where axes are unrelated quantities.
+6. **Unify methods as walkers when they share a destination.** Stepwise / stagewise / LAR / lasso / ridge all travel from 0 toward the OLS projection; racing them in one scene ("same destination, different manner of walking") is worth more than five separate path plots. Ridge reinterpreted as a path (λ: ∞→0) belongs in this family picture.
+
 ### Benefits/tradeoffs are NOT optional
 Every concept page must lead with a Benefits & Tradeoffs card. This is the answer to "why should I care about this method?" Format:
 - **Benefits** (green dots): What this method gives you, with ESL quotes
