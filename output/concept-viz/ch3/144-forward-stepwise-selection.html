@@ -1,353 +1,582 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Forward Stepwise Selection — ESL §3.3.2</title>
-<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
-  header {
-    background: linear-gradient(135deg, #161b22 0%, #1c2128 100%);
-    border-bottom: 1px solid #30363d; padding: 28px 40px 24px;
-  }
-  .header-meta { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
-  .badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase; }
-  .badge-id { background: #1f6feb33; color: #58a6ff; border: 1px solid #1f6feb; }
-  .badge-section { background: #388bfd22; color: #79c0ff; border: 1px solid #388bfd44; }
-  .badge-cat { background: #2ea04326; color: #56d364; border: 1px solid #2ea04344; }
-  h1 { font-size: 28px; font-weight: 700; color: #f0f6fc; margin-bottom: 8px; }
-  .formula { font-size: 14px; color: #8b949e; padding: 6px 0; }
-  .main { display: grid; grid-template-columns: 1fr 360px; gap: 24px; padding: 28px 40px; max-width: 1400px; }
-  .viz-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; overflow: hidden; }
-  .viz-title { padding: 16px 20px 12px; border-bottom: 1px solid #30363d; font-size: 13px; font-weight: 600; color: #8b949e; text-transform: uppercase; letter-spacing: 0.6px; }
-  .controls { padding: 16px 20px; border-top: 1px solid #30363d; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-  button { background: #1f6feb; color: #fff; border: none; border-radius: 6px; padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
-  button:hover { background: #388bfd; }
-  button.secondary { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; }
-  button.secondary:hover { background: #30363d; }
-  button.active { background: #388bfd; }
-  .sidebar { display: flex; flex-direction: column; gap: 16px; }
-  .panel { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 20px; }
-  .panel-title { font-size: 11px; font-weight: 700; color: #8b949e; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 14px; display: flex; align-items: center; }
-  .panel-title::before { content: ''; display: inline-block; width: 3px; height: 14px; border-radius: 2px; margin-right: 8px; }
-  .panel-title.blue::before { background: #58a6ff; }
-  .panel-title.green::before { background: #56d364; }
-  .panel-title.orange::before { background: #f0883e; }
-  blockquote { border-left: 3px solid #1f6feb; padding-left: 14px; color: #c9d1d9; font-size: 13px; line-height: 1.7; font-style: italic; }
-  blockquote cite { display: block; margin-top: 8px; font-size: 11px; color: #58a6ff; font-style: normal; font-weight: 600; }
-  .guarantee-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
-  .g-icon { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin-top: 1px; }
-  .g-yes { background: #1e3a2f; color: #56d364; }
-  .g-no { background: #3d1a1a; color: #f85149; }
-  .g-na { background: #2d2a1e; color: #f0883e; }
-  .g-label { font-size: 13px; font-weight: 600; color: #c9d1d9; }
-  .g-desc { font-size: 12px; color: #8b949e; margin-top: 2px; }
-  .related-tag { display: inline-block; background: #21262d; border: 1px solid #30363d; border-radius: 6px; padding: 5px 12px; font-size: 12px; color: #79c0ff; margin: 4px; }
-  .related-tag:hover { border-color: #58a6ff; }
-  .step-info { padding: 12px 20px; border-top: 1px solid #30363d; font-size: 13px; color: #8b949e; min-height: 44px; }
-  .step-info span { color: #79c0ff; font-weight: 600; }
-  #chart-rss { height: 280px; }
-  #chart-coef { height: 260px; }
-  .step-vars {
-    display: flex; gap: 8px; padding: 12px 20px; border-top: 1px solid #30363d; flex-wrap: wrap;
-  }
-  .var-chip {
-    padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
-    transition: all 0.3s;
-  }
-  .var-in  { background: #0d2d1a; color: #56d364; border: 1px solid #2ea043; }
-  .var-out { background: #21262d; color: #8b949e; border: 1px solid #30363d; }
-  .var-new { background: #1f6feb; color: #fff; border: 1px solid #388bfd; animation: pulse 0.6s ease; }
-  @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.15)} 100%{transform:scale(1)} }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forward Stepwise Selection — ESL 3.3.2</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #0d1117;
+      --surface: #161b22;
+      --surf2:   #1f2937;
+      --border:  #30363d;
+      --text:    #e6edf3;
+      --muted:   #8b949e;
+      --accent:  #58a6ff;
+      --accent2: #bc8cff;
+      --green:   #3fb950;
+      --red:     #f85149;
+      --yellow:  #d29922;
+      --orange:  #db6d28;
+      --radius:  10px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    /* ── Header ── */
+    .page-header {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 60%, #1a1f2e 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 40px 22px;
+    }
+    .breadcrumb { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .breadcrumb span { color: var(--accent); }
+    .concept-title {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #58a6ff, #bc8cff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .badges { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 8px; }
+    .badge {
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .badge.cat { border-color: var(--accent); color: var(--accent); }
+    .concept-desc { font-size: 14px; color: var(--muted); max-width: 700px; }
+    /* ── Layout ── */
+    .content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 30px 40px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+    .card-title { font-size: 17px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+    .card-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+    /* ── Benefits / Tradeoffs ── */
+    .bt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 700px) { .bt-grid { grid-template-columns: 1fr; } }
+    .bt-col-title {
+      font-size: 13px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .bt-col-title.ben { color: var(--green); }
+    .bt-col-title.tra { color: var(--red); }
+    .bt-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .bt-list li { display: flex; gap: 10px; font-size: 13px; color: var(--muted); align-items: flex-start; }
+    .bt-list li .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .bt-list li .dot.g { background: var(--green); }
+    .bt-list li .dot.r { background: var(--red); }
+    .book-quote {
+      margin-top: 20px;
+      padding: 14px 18px;
+      background: var(--surf2);
+      border-left: 3px solid var(--accent2);
+      border-radius: 6px;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .book-quote cite { display: block; margin-top: 6px; font-style: normal; font-size: 12px; color: var(--accent2); }
+    /* ── Controls ── */
+    .ctrl-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+    .ctrl-lbl { font-size: 13px; color: var(--muted); min-width: 100px; }
+    input[type=range] {
+      -webkit-appearance: none; appearance: none;
+      width: 240px; height: 4px; border-radius: 2px;
+      background: var(--border); outline: none; cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 15px; height: 15px; border-radius: 50%;
+      background: var(--accent); cursor: pointer;
+      box-shadow: 0 0 6px rgba(88,166,255,0.5);
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 15px; height: 15px; border-radius: 50%;
+      background: var(--accent); cursor: pointer; border: none;
+    }
+    .vbadge {
+      background: var(--surf2); border: 1px solid var(--accent);
+      border-radius: 6px; padding: 3px 12px;
+      font-size: 13px; font-family: monospace; color: var(--accent);
+      min-width: 70px; text-align: center;
+    }
+    /* ── Stats row ── */
+    .stats-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+    .stat-chip {
+      background: var(--surf2); border: 1px solid var(--border);
+      border-radius: 7px; padding: 6px 14px; font-size: 13px; color: var(--muted);
+    }
+    .stat-chip strong { color: var(--text); font-family: monospace; }
+    /* ── Two-col ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } }
+    /* ── Plot ── */
+    .plot-wrap { border-radius: 7px; overflow: hidden; background: var(--bg); }
+    /* ── Toggle buttons ── */
+    .btn {
+      background: var(--surf2); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); cursor: pointer;
+      font-size: 13px; padding: 6px 14px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .btn:hover { border-color: var(--accent); background: rgba(88,166,255,0.08); }
+    .btn.active { border-color: var(--accent); background: rgba(88,166,255,0.14); color: var(--accent); }
+    /* ── Guarantees panel ── */
+    .guar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 16px; }
+    .guar-card { background: var(--surf2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; }
+    .guar-head { display: flex; align-items: center; margin-bottom: 8px; }
+    .guar-dot { width: 9px; height: 9px; border-radius: 50%; margin-right: 9px; flex-shrink: 0; }
+    .guar-dot.g { background: var(--green); box-shadow: 0 0 5px var(--green); }
+    .guar-dot.y { background: var(--yellow); box-shadow: 0 0 5px var(--yellow); }
+    .guar-dot.r { background: var(--red);   box-shadow: 0 0 5px var(--red); }
+    .guar-name { font-weight: 600; font-size: 14px; }
+    .guar-verdict { margin-left: auto; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+    .guar-verdict.g { color: var(--green); }
+    .guar-verdict.y { color: var(--yellow); }
+    .guar-verdict.r { color: var(--red); }
+    .guar-body { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    /* ── Formula section ── */
+    .formula-block {
+      background: var(--surf2); border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius); padding: 20px 24px;
+      overflow-x: auto;
+      margin-bottom: 16px;
+    }
+    .formula-block p { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.7; }
+    .formula-block ol { font-size: 13px; color: var(--muted); margin: 8px 0 0 22px; line-height: 1.9; }
+    /* ── Section label ── */
+    .slbl {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
+    }
+    .slbl::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    /* ── Animation extras ── */
+    .step-indicator { font-size: 13px; color: var(--accent); font-weight: 600; min-width: 200px; }
+    .step-indicator .iter-num { font-size: 18px; }
+    .note { font-size: 12px; color: var(--muted); line-height: 1.6; margin-top: 10px; }
+    .info-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; font-size: 13px; color: var(--accent); margin-top: 14px; line-height: 1.6; }
+    /* ── Citations ── */
+    .cite-num { display: inline; font-size: 0.58rem; font-weight: 700; color: var(--accent); vertical-align: super; margin-left: 2px; }
+    .cite-num a { color: var(--accent); text-decoration: none; }
+    .cite-num a:hover { text-decoration: underline; }
+    .ref-list { list-style: none; counter-reset: refc; display: flex; flex-direction: column; gap: 8px; }
+    .ref-list li { counter-increment: refc; font-size: 13px; color: var(--muted); display: flex; gap: 10px; }
+    .ref-list li::before { content: counter(refc) '.'; color: var(--accent); font-weight: 700; min-width: 18px; }
+    a.xref { color: var(--accent); text-decoration: none; }
+    a.xref:hover { text-decoration: underline; }
+    /* ── Active-set roster (Viz 1) ── */
+    .roster { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px; font-size: 13px; color: var(--muted); }
+    .vchip {
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 2px 10px; font-family: monospace; font-size: 13px;
+      background: var(--surf2); color: var(--text);
+    }
+    .vchip.pulse { animation: chipPulse 0.9s ease-out 1; }
+    @keyframes chipPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(88,166,255,0.75); }
+      100% { box-shadow: 0 0 0 12px rgba(88,166,255,0); }
+    }
+    /* ── Legend chips ── */
+    .leg-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; font-size: 12px; color: var(--muted); }
+    .leg-row .sw { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 5px; }
+    /* ── Viz 2 correlation bars ── */
+    .cbar-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; font-size: 13px; color: var(--muted); }
+    .cbar-lbl { min-width: 130px; font-family: monospace; }
+    .cbar-track { flex: 1; max-width: 340px; height: 10px; background: var(--surf2); border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
+    .cbar-fill { height: 100%; border-radius: 4px; transition: width 0.05s linear, background 0.2s; }
+    .cbar-fill.c1 { background: var(--accent); }
+    .cbar-fill.c2 { background: var(--accent2); }
+    .cbar-fill.tied { background: var(--green) !important; }
+    .cbar-val { font-family: monospace; min-width: 60px; color: var(--text); }
+    /* ── Viz 3 sign monitor ── */
+    .sign-chip {
+      display: inline-block; border-radius: 6px; padding: 5px 12px;
+      font-size: 12.5px; margin: 3px 6px 3px 0;
+      border: 1px solid var(--border); background: var(--surf2); color: var(--muted);
+    }
+    .sign-chip.ok  { border-color: var(--green); color: var(--green); }
+    .sign-chip.bad { border-color: var(--red); color: var(--red); }
+    .sign-chip.off { border-color: var(--border); color: var(--muted); }
+    .sign-chip strong { font-family: monospace; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
 </head>
 <body>
-
-<header>
-  <div class="header-meta">
-    <span class="badge badge-id">ID 144</span>
-    <span class="badge badge-section">§ 3.3.2 — Subset Selection</span>
-    <span class="badge badge-cat">Comparison / Selection</span>
+  <style>
+    /* additions for the 3D walk vizzes */
+    .gauge-wrap { flex: 0 0 360px; min-width: 300px; }
+    .gauge-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 13px; }
+    .gauge-lbl { min-width: 130px; font-family: monospace; color: var(--muted); }
+    .gauge-track { flex: 1; height: 12px; background: var(--surf2); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; position: relative; }
+    .gauge-fill { height: 100%; border-radius: 5px; transition: width 0.06s linear, background 0.2s; }
+    .gauge-val { font-family: monospace; min-width: 92px; color: var(--text); }
+    .gauge-90 { font-size: 11px; color: var(--muted); text-align: right; margin-top: 2px; }
+    .sync-row { display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-start; margin-top: 10px; }
+    .sync-row .plot-wrap { flex: 1; min-width: 320px; }
+    .knot-chip { display: none; margin-top: 10px; padding: 10px 14px; border: 1px solid var(--accent); border-radius: 8px; background: rgba(88,166,255,0.08); font-size: 13.5px; color: var(--text); }
+    .knot-chip.show { display: block; }
+    .knot-chip.done { border-color: var(--green); background: rgba(63,185,80,0.08); }
+    .dir-btn { border: 1px solid var(--border); background: var(--surf2); color: var(--text); padding: 7px 14px; border-radius: 7px; cursor: pointer; font-size: 13px; }
+    .dir-btn:hover { border-color: var(--accent); }
+    .dir-btn.sel { border-color: var(--accent); background: rgba(88,166,255,0.12); }
+    .walker-chip { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--border); border-radius: 16px; padding: 4px 12px; margin: 3px 4px 3px 0; cursor: pointer; font-size: 12.5px; color: var(--text); background: var(--surf2); user-select: none; }
+    .walker-chip .dotc { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .walker-chip.off { opacity: 0.35; }
+    .ce-verdict { display: none; margin-top: 10px; padding: 9px 13px; border-radius: 8px; font-size: 13.5px; }
+    .ce-verdict.show { display: block; }
+    .ce-verdict.bad { border: 1px solid var(--red); background: rgba(248,81,73,0.08); color: var(--text); }
+    .ce-verdict.good { border: 1px solid var(--green); background: rgba(63,185,80,0.08); color: var(--text); }
+  </style>
+<header class="page-header">
+  <div class="breadcrumb">ESL &nbsp;/&nbsp; <span>Chapter 3</span> &nbsp;/&nbsp; Section 3.3.2 &nbsp;&nbsp;|&nbsp;&nbsp; Concept 144</div>
+  <h1 class="concept-title">Forward Stepwise Selection</h1>
+  <div class="badges">
+    <span class="badge cat">estimation / selection</span>
+    <span class="badge">Section 3.3.2</span>
+    <span class="badge">Greedy Algorithm</span>
   </div>
-  <h1>Forward Stepwise Selection</h1>
-  <div class="formula">
-    At each step: add \(\hat{j} = \arg\min_{j \notin S} \text{RSS}(S \cup \{j\})\) &nbsp;|&nbsp; Start from intercept, greedily grow the model
-  </div>
+  <p class="concept-desc">Add the single most useful predictor, refit everything, repeat. Geometrically: leap through a
+  sequence of complete projections — each variable taken all the way in, every time.</p>
 </header>
 
-<div class="main">
-  <div>
-    <div class="viz-card">
-      <div class="viz-title">Step-by-Step: Variables Added &amp; RSS Decreasing</div>
-      <div class="step-vars" id="step-vars">
-        <!-- chips rendered by JS -->
-      </div>
-      <div id="chart-rss"></div>
-      <div id="chart-coef"></div>
-      <div class="step-info" id="step-info">
-        Press <strong>Play</strong> to watch variables enter the model one at a time, and see RSS drop at each step.
-      </div>
-      <div class="controls">
-        <button id="btn-play" onclick="playAnimation()">&#9654; Play</button>
-        <button class="secondary" onclick="resetAnimation()">&#8635; Reset</button>
-        <button class="secondary" id="btn-step" onclick="stepOnce()">&#9658; Step</button>
-      </div>
-    </div>
-  </div>
+<main class="content">
 
-  <div class="sidebar">
-    <div class="panel">
-      <div class="panel-title blue">Book Quote</div>
-      <blockquote>
-        "Forward-stepwise selection starts with the intercept, and then sequentially adds into the model the predictor that most improves the fit."
-        <cite>— ESL §3.3.2, Hastie, Tibshirani &amp; Friedman</cite>
-      </blockquote>
-      <p style="margin-top:12px;font-size:12px;color:#8b949e;line-height:1.6;">
-        Computationally cheaper than best-subset: only \(1 + p + (p-1) + \cdots = O(p^2)\) models fit, vs \(2^p\). Greedy — may miss the globally optimal subset, but in practice performs comparably.
-      </p>
-    </div>
-
-    <div class="panel">
-      <div class="panel-title green">Guarantees</div>
-      <div class="guarantee-row">
-        <div class="g-icon g-no">✗</div>
-        <div>
-          <div class="g-label">Globally Optimal</div>
-          <div class="g-desc">Not guaranteed — greedy. May miss the best subset for a given size.</div>
-        </div>
-      </div>
-      <div class="guarantee-row">
-        <div class="g-icon g-na">~</div>
-        <div>
-          <div class="g-label">Unbiased</div>
-          <div class="g-desc">OLS within chosen subset is unbiased conditional on selection, but selection itself is adaptive.</div>
-        </div>
-      </div>
-      <div class="guarantee-row">
-        <div class="g-icon g-no">✗</div>
-        <div>
-          <div class="g-label">Low Variance</div>
-          <div class="g-desc">Discrete nature causes high variance — small data perturbations can change which variables enter.</div>
-        </div>
-      </div>
-      <div class="guarantee-row">
-        <div class="g-icon g-yes">✓</div>
-        <div>
-          <div class="g-label">Monotone Fit Improvement</div>
-          <div class="g-desc">Training RSS cannot increase — each added variable can only help (or not change) the fit.</div>
-        </div>
-      </div>
-      <div class="guarantee-row">
-        <div class="g-icon g-yes">✓</div>
-        <div>
-          <div class="g-label">Scales to Large p</div>
-          <div class="g-desc">Works for p &gt; 40 where best-subset and leaps-and-bounds are infeasible.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-title orange">Related Concepts</div>
+  <!-- ═══ 1. BENEFITS & TRADEOFFS ═══ -->
+  <div class="card">
+    <div class="card-title">Benefits &amp; Tradeoffs</div>
+    <div class="bt-grid">
       <div>
-        <span class="related-tag">Best Subset Selection</span>
-        <span class="related-tag">Leaps &amp; Bounds (ID 143)</span>
-        <span class="related-tag">Backward Stepwise (ID 145)</span>
-        <span class="related-tag">Forward Stagewise (ID 146)</span>
-        <span class="related-tag">AIC / BIC (ID 179)</span>
-        <span class="related-tag">Cross-Validation</span>
-        <span class="related-tag">F-statistic / Z-score</span>
+        <div class="bt-col-title ben">Benefits</div>
+        <ul class="bt-list">
+          <li><span class="dot g"></span><span>Always computable: "for large p we cannot compute the best subset sequence, but we can always compute the forward stepwise sequence (even when p &#8811; N)" <em>(ESL &#167;3.3.2)</em></span></li>
+          <li><span class="dot g"></span><span>Lower variance than best subset: "forward stepwise is a more constrained search, and will have lower variance, but perhaps more bias" <em>(ESL &#167;3.3.2)</em></span></li>
+          <li><span class="dot g"></span><span>Cheap in practice: "clever updating algorithms can exploit the QR decomposition for the current fit to rapidly establish the next candidate" <em>(ESL &#167;3.3.2, Ex. 3.9)</em> — see <a class="xref" href="140-qr-decomposition.html">QR decomposition</a></span></li>
+          <li><span class="dot g"></span><span>In practice it often matches the expensive search: "On the prostate cancer example, best-subset, forward and backward selection all gave exactly the same sequence of terms" <em>(ESL &#167;3.3.2)</em></span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="bt-col-title tra">Tradeoffs</div>
+        <ul class="bt-list">
+          <li><span class="dot r"></span><span>"A greedy algorithm, producing a nested sequence of models&#8230; sub-optimal compared to best-subset selection" <em>(ESL &#167;3.3.2)</em> — an early commitment is never revisited</span></li>
+          <li><span class="dot r"></span><span>Discrete: variables are all-in or all-out, so like all subset selection "it often exhibits high variance, and so doesn't reduce the prediction error of the full model" <em>(ESL &#167;3.4 intro)</em></span></li>
+          <li><span class="dot r"></span><span>Post-selection inference is broken: "the standard errors are not valid, since they do not account for the search process" <em>(ESL &#167;3.3.2)</em></span></li>
+          <li><span class="dot r"></span><span>Overfits early in hard problems: "the more aggressive forward stepwise starts to overfit quite early&#8230; and ultimately performs worse than the slower forward stagewise regression" <em>(ESL &#167;3.4.4, Fig. 3.16)</em></span></li>
+        </ul>
       </div>
     </div>
+    <div class="book-quote">
+      <p>"Forward-stepwise selection starts with the intercept, and then sequentially adds into the model the predictor that most improves the fit."</p>
+      <cite>— The Elements of Statistical Learning, &#167;3.3.2, Hastie, Tibshirani &amp; Friedman</cite>
+    </div>
   </div>
-</div>
+
+  <!-- ═══ 2. VIZ 1 — GREEDY HOPS (3D) ═══ -->
+  <div class="card">
+    <div class="card-title">Viz 1 — Greedy Hops Through Complete Projections</div>
+    <div class="card-sub">
+      The span of three correlated predictors (<b style="color:#58a6ff">x&#8321;</b>,
+      <b style="color:#bc8cff">x&#8322;</b>, <b style="color:#f85149">x&#8323;</b>), with the OLS projection &#375;
+      as the gold diamond. Stepwise walks by <em>leaps</em>: pick the predictor with the smallest angle to the
+      residual, then jump to the full least-squares fit on the active set — a complete projection, every variable
+      refit. Watch the angle gauges: after every hop, each entered predictor's angle snaps to <b>90&#176;</b>
+      (the residual is made exactly orthogonal to the whole active set), and the next variable is chosen by
+      whichever angle is now smallest. Drag to rotate.
+    </div>
+    <div class="ctrl-row">
+      <button class="btn" id="hPlay">&#9654; Play</button>
+      <button class="btn" id="hReset">Reset</button>
+      <button class="btn" id="hNext">Next hop &#8594;</button>
+      <span class="vbadge" id="hStep">step 0 / 3</span>
+    </div>
+    <div class="plot-wrap" id="h3d" style="height:480px;"></div>
+    <div class="knot-chip" id="hChip"></div>
+    <div class="gauge-wrap" style="max-width:560px; margin-top:10px;">
+      <div class="gauge-row">
+        <span class="gauge-lbl">&#952;&#8321; = &#8737;(r, x&#8321;)</span>
+        <div class="gauge-track"><div class="gauge-fill" id="hg1" style="background:#58a6ff;width:0%"></div></div>
+        <span class="gauge-val" id="hgv1">—</span>
+      </div>
+      <div class="gauge-row">
+        <span class="gauge-lbl">&#952;&#8322; = &#8737;(r, x&#8322;)</span>
+        <div class="gauge-track"><div class="gauge-fill" id="hg2" style="background:#bc8cff;width:0%"></div></div>
+        <span class="gauge-val" id="hgv2">—</span>
+      </div>
+      <div class="gauge-row">
+        <span class="gauge-lbl">&#952;&#8323; = &#8737;(r, x&#8323;)</span>
+        <div class="gauge-track"><div class="gauge-fill" id="hg3" style="background:#f85149;width:0%"></div></div>
+        <span class="gauge-val" id="hgv3">—</span>
+      </div>
+      <div class="gauge-90">bar full = 90&#176; = orthogonal — after each hop, every <em>entered</em> variable sits at exactly 90&#176;</div>
+    </div>
+    <p class="note">
+      The dotted teal route is <a class="xref" href="154-least-angle-regression.html">LAR</a> on the same data —
+      the "democratic" alternative that moves each coefficient only until a competitor catches up. Greed is visible:
+      stepwise's second hop grabs <b style="color:#f85149">x&#8323;</b> (entry order x&#8321;, x&#8323;, x&#8322;)
+      while LAR admits <b style="color:#bc8cff">x&#8322;</b> first (x&#8321;, x&#8322;, x&#8323;) — committing fully
+      to x&#8321; changed who looks best next. Both end at the same &#375;; what differs is every intermediate model.
+      Honest footnote: the residual drawn is the component of r inside span(x&#8321;,x&#8322;,x&#8323;) — y's
+      out-of-span part is orthogonal to every predictor, so all angles and correlations shown are exact.
+    </p>
+  </div>
+
+  <!-- ═══ 3. STATISTICAL GUARANTEES ═══ -->
+  <div class="card">
+    <div class="card-title">Statistical Guarantees</div>
+    <ul class="bt-list" style="margin-top:8px;">
+      <li><span class="dot g"></span><span><b>Nested model sequence</b>: each model contains the previous — coherent for k-indexed comparison and cheap QR updates <em>(ESL &#167;3.3.2)</em>.</span></li>
+      <li><span class="dot g"></span><span><b>Feasible for p &#8811; N</b>, unlike backward stepwise which "can only be used when N &gt; p" <em>(ESL &#167;3.3.2)</em>.</span></li>
+      <li><span class="dot r"></span><span><b>No global optimality</b>: greedy choices are never revisited; the selected subset of size k can miss the best subset of size k.</span></li>
+      <li><span class="dot r"></span><span><b>No valid naive inference</b>: printed standard errors ignore the search; use the bootstrap <em>(ESL &#167;3.3.2, &#167;8.2)</em>. This is the general "not accounting for the search process" problem — effective degrees of freedom exceed k (see <a class="xref" href="157-degrees-of-freedom-adaptive.html">Concept 157</a>, and the df comparison on the <a class="xref" href="154-least-angle-regression.html">LAR page</a>).</span></li>
+      <li><span class="dot r"></span><span><b>Groups</b>: dummy-coded categorical predictors should enter/leave as whole groups "taking proper account of their degrees-of-freedom" <em>(ESL &#167;3.3.2)</em>.</span></li>
+    </ul>
+  </div>
+
+  <!-- ═══ 4. FORMULAS ═══ -->
+  <div class="card">
+    <div class="card-title">Formulas</div>
+    <div class="card-sub">Reference material — watch the hops first.</div>
+    <div class="formula-block">
+      <div class="slbl">Greedy selection at step k (active set A, residual r)</div>
+      <p>$$ j^\*=\arg\max_{j \notin A}\; \left|\operatorname{corr}(x_j, r)\right|
+         \qquad\text{then}\qquad
+         \hat\beta_{A\cup\{j^\*\}} = \left(X_{A\cup\{j^\*\}}^T X_{A\cup\{j^\*\}}\right)^{-1} X_{A\cup\{j^\*\}}^T y $$</p>
+      <p style="font-size:13px; color:var(--muted);">The refit is a complete orthogonal projection: afterwards
+      $X_A^T(y - \hat y_A) = 0$ — the residual is orthogonal to every entered predictor (all gauges at 90&#176;).
+      "Most improves the fit" and "most correlated with the residual" pick the same variable at entry
+      (largest squared univariate correlation with r &#8594; largest RSS drop).</p>
+    </div>
+  </div>
+
+  <!-- ═══ 5. REFERENCES ═══ -->
+  <div class="card">
+    <div class="card-title">References</div>
+    <div class="slbl">Forward stepwise (Benefits &amp; Tradeoffs, Viz 1, Guarantees)</div>
+    <ol class="ref-list">
+      <li>Hastie, T., Tibshirani, R. &amp; Friedman, J. (2009). <em>The Elements of Statistical Learning</em>, 2nd ed., &#167;3.3.2, &#167;3.4, &#167;3.4.4 (Figs. 3.6, 3.16). Springer.</li>
+      <li>Efron, B., Hastie, T., Johnstone, I. &amp; Tibshirani, R. (2004). Least angle regression (with discussion). <em>The Annals of Statistics</em>, 32(2), 407&#8211;499. (LAR as the democratic alternative to forward stepwise.)</li>
+    </ol>
+  </div>
+
+</main>
 
 <script>
-// ─── Data ────────────────────────────────────────────────────────────────────
-const variables = ['X₁ (Age)', 'X₂ (Income)', 'X₃ (Education)', 'X₄ (Region)', 'X₅ (Occupation)', 'X₆ (Experience)'];
-const varShort  = ['X₁', 'X₂', 'X₃', 'X₄', 'X₅', 'X₆'];
-
-// Simulated RSS values after each step, and RSS contribution of each candidate
-// Step 0 = intercept only
-const steps = [
-  { added: null,  rss: 1.000, addedIdx: -1,   candidates: [0.68, 0.55, 0.72, 0.81, 0.89, 0.77],
-    coefs: [0, 0, 0, 0, 0, 0], msg: 'Step 0: Intercept-only model. RSS = 1.000 (normalized).' },
-  { added: 'X₃',  rss: 0.550, addedIdx: 2,   candidates: [0.38, null, 0.51, 0.63, 0.71, 0.60],
-    coefs: [0, 0, 0.48, 0, 0, 0], msg: 'Step 1: X₃ (Education) enters — biggest RSS drop. Δ = −0.450.' },
-  { added: 'X₂',  rss: 0.380, addedIdx: 1,   candidates: [0.29, null, null, 0.37, 0.45, 0.40],
-    coefs: [0, 0.31, 0.41, 0, 0, 0], msg: 'Step 2: X₂ (Income) enters — next best improvement. Δ = −0.170.' },
-  { added: 'X₁',  rss: 0.290, addedIdx: 0,   candidates: [null, null, null, 0.26, 0.31, 0.28],
-    coefs: [0.19, 0.27, 0.35, 0, 0, 0], msg: 'Step 3: X₁ (Age) enters. Δ = −0.090.' },
-  { added: 'X₄',  rss: 0.260, addedIdx: 3,   candidates: [null, null, null, null, 0.24, 0.24],
-    coefs: [0.17, 0.24, 0.32, 0.12, 0, 0], msg: 'Step 4: X₄ (Region) enters. Δ = −0.030. Smaller gains now.' },
-  { added: 'X₅',  rss: 0.240, addedIdx: 4,   candidates: [null, null, null, null, null, 0.235],
-    coefs: [0.16, 0.22, 0.30, 0.11, 0.08, 0], msg: 'Step 5: X₅ (Occupation). Δ = −0.020. Diminishing returns.' },
-  { added: 'X₆',  rss: 0.235, addedIdx: 5,   candidates: [null, null, null, null, null, null],
-    coefs: [0.15, 0.21, 0.29, 0.10, 0.07, 0.04], msg: 'Step 6: X₆ (Experience) enters last. Δ = −0.005. Nearly flat — may overfit.' },
-];
-
-let currentStep = 0;
-let animTimer = null;
-
-function renderChips(step) {
-  const el = document.getElementById('step-vars');
-  el.innerHTML = '';
-  const inSet = new Set();
-  for (let i = 1; i <= step; i++) inSet.add(steps[i].addedIdx);
-
-  variables.forEach((v, i) => {
-    const chip = document.createElement('span');
-    chip.className = 'var-chip';
-    chip.textContent = varShort[i];
-
-    if (step > 0 && steps[step].addedIdx === i) {
-      chip.className = 'var-chip var-new';
-      chip.textContent = varShort[i] + ' ← added';
-    } else if (inSet.has(i)) {
-      chip.className = 'var-chip var-in';
-    } else {
-      chip.className = 'var-chip var-out';
+const PW = {"scene":{"x":[[0.1693795,0.9855509,0.0],[0.6757555,0.5260535,0.5163548],[1.0,0.0,0.0]],"yhat":[1.643664,2.358706,-0.07808],"beta_ols":[2.474,-0.1512139,1.326803],"corr":{"r12":0.6329116,"r13":0.1693795,"r23":0.6757555}},"lar_ghost":[[0.0,0.0,0.0],[0.006732586,0.0391742,0.0],[0.01346517,0.07834841,0.0],[0.02019776,0.1175226,0.0],[0.02693034,0.1566968,0.0],[0.03366293,0.195871,0.0],[0.04039551,0.2350452,0.0],[0.0471281,0.2742194,0.0],[0.05386069,0.3133936,0.0],[0.06059327,0.3525678,0.0],[0.06732586,0.391742,0.0],[0.07405844,0.4309162,0.0],[0.08079103,0.4700904,0.0],[0.08752361,0.5092646,0.0],[0.0942562,0.5484388,0.0],[0.1009888,0.587613,0.0],[0.1077214,0.6267872,0.0],[0.114454,0.6659614,0.0],[0.1211865,0.7051357,0.0],[0.1279191,0.7443099,0.0],[0.1346517,0.7834841,0.0],[0.1506927,0.8121748,0.009800582],[0.1667336,0.8408655,0.01960116],[0.1827745,0.8695563,0.02940175],[0.1988155,0.898247,0.03920233],[0.2148564,0.9269378,0.04900291],[0.2308973,0.9556285,0.05880349],[0.2469383,0.9843193,0.06860408],[0.2629792,1.01301,0.07840466],[0.2790201,1.041701,0.08820524],[0.2950611,1.070391,0.09800582],[0.311102,1.099082,0.1078064],[0.327143,1.127773,0.117607],[0.3431839,1.156464,0.1274076],[0.3592248,1.185154,0.1372082],[0.3752658,1.213845,0.1470087],[0.3913067,1.242536,0.1568093],[0.4073476,1.271227,0.1666099],[0.4233886,1.299917,0.1764105],[0.4394295,1.328608,0.1862111],[0.4554705,1.357299,0.1960116],[0.5158871,1.408218,0.1820748],[0.5763037,1.459137,0.1681379],[0.6367203,1.510056,0.1542011],[0.6971369,1.560975,0.1402642],[0.7575535,1.611894,0.1263273],[0.8179701,1.662813,0.1123905],[0.8783867,1.713732,0.0984536],[0.9388033,1.764651,0.08451674],[0.9992199,1.81557,0.07057988],[1.059637,1.866489,0.05664301],[1.120053,1.917408,0.04270615],[1.18047,1.968327,0.02876929],[1.240886,2.019246,0.01483242],[1.301303,2.070165,0.0008955585],[1.36172,2.121084,-0.01304131],[1.422136,2.172003,-0.02697817],[1.482553,2.222922,-0.04091503],[1.542969,2.273841,-0.0548519],[1.603386,2.32476,-0.06878876]],"stepwise":{"pts":[[0.0,0.0,0.0],[0.4408995,2.565416,0.0],[1.643664,2.358706,0.0],[1.643664,2.358706,-0.07808]],"order":[0,2,1]},"fs_classic":{"pts":[[0.0,0.0,0.0],[0.4408995,2.565416,0.0],[1.643664,2.565416,0.0],[1.609157,2.364636,0.0],[1.643664,2.364636,0.0],[1.614311,2.341786,-0.02242874],[1.643664,2.341786,-0.02242874],[1.63026,2.331352,-0.03267073],[1.635211,2.360159,-0.03267073],[1.62271,2.350427,-0.04222299],[1.643664,2.350427,-0.04222299],[1.634095,2.342978,-0.04953446],[1.636995,2.359852,-0.04953446],[1.629673,2.354152,-0.05512978],[1.643664,2.354152,-0.05512978],[1.637275,2.349178,-0.06001173],[1.639049,2.359499,-0.06001173],[1.63457,2.356013,-0.06343421],[1.643664,2.356013,-0.06343421],[1.639511,2.35278,-0.06660744],[1.640619,2.359229,-0.06660744],[1.63782,2.35705,-0.06874613],[1.643664,2.35705,-0.06874613],[1.640995,2.354973,-0.07078503],[1.641695,2.359044,-0.07078503],[1.639928,2.357669,-0.07213502],[1.643664,2.357669,-0.07213502],[1.641958,2.356341,-0.0734384],[1.642402,2.358923,-0.0734384],[1.641281,2.358051,-0.07429451],[1.643664,2.358051,-0.07429451],[1.642576,2.357204,-0.07512581],[1.642858,2.358845,-0.07512581],[1.642146,2.35829,-0.07566987],[1.643664,2.35829,-0.07566987],[1.642971,2.357751,-0.07619953],[1.64315,2.358794,-0.07619953]]},"fs_eps":{"pts":[[0.0,0.0,0.0],[0.009742616,0.05668836,0.0],[0.01948523,0.1133767,0.0],[0.02922785,0.1700651,0.0],[0.03897047,0.2267534,0.0],[0.04871308,0.2834418,0.0],[0.0584557,0.3401302,0.0],[0.06819832,0.3968185,0.0],[0.07794093,0.4535069,0.0],[0.08768355,0.5101952,0.0],[0.09742616,0.5668836,0.0],[0.1071688,0.6235719,0.0],[0.1169114,0.6802603,0.0],[0.126654,0.7369487,0.0],[0.1363966,0.793637,0.0],[0.1752657,0.8238953,0.02970045],[0.1850083,0.8805837,0.02970045],[0.2238774,0.910842,0.0594009],[0.23362,0.9675304,0.0594009],[0.2724891,0.9977887,0.08910135],[0.2822318,1.054477,0.08910135],[0.3211009,1.084735,0.1188018],[0.3308435,1.141424,0.1188018],[0.3697126,1.171682,0.1485023],[0.3794552,1.22837,0.1485023],[0.4183243,1.258629,0.1782027],[0.4280669,1.315317,0.1782027],[0.466936,1.345575,0.2079032],[0.4766786,1.402264,0.2079032],[0.5341981,1.402264,0.2079032],[0.5439407,1.458952,0.2079032],[0.6014601,1.458952,0.2079032],[0.6112028,1.51564,0.2079032],[0.6687222,1.51564,0.2079032],[0.6784648,1.572329,0.2079032],[0.7359843,1.572329,0.2079032],[0.7457269,1.629017,0.2079032],[0.8032464,1.629017,0.2079032],[0.812989,1.685706,0.2079032],[0.8705085,1.685706,0.2079032],[0.8802511,1.742394,0.2079032],[0.9377705,1.742394,0.2079032],[0.9475131,1.799082,0.2079032],[1.005033,1.799082,0.2079032],[1.014775,1.855771,0.2079032],[1.072295,1.855771,0.2079032],[1.082037,1.912459,0.2079032],[1.139557,1.912459,0.2079032],[1.149299,1.969147,0.2079032],[1.206819,1.969147,0.2079032],[1.216561,2.025836,0.2079032],[1.274081,2.025836,0.2079032],[1.283824,2.082524,0.2079032],[1.341343,2.082524,0.2079032],[1.351086,2.139212,0.2079032],[1.408605,2.139212,0.2079032],[1.418348,2.195901,0.2079032],[1.475867,2.195901,0.2079032],[1.48561,2.252589,0.2079032],[1.543129,2.252589,0.2079032],[1.552872,2.309277,0.2079032],[1.610391,2.309277,0.2079032],[1.571522,2.279019,0.1782027],[1.581265,2.335708,0.1782027],[1.542396,2.305449,0.1485023],[1.599915,2.305449,0.1485023],[1.609658,2.362138,0.1485023],[1.570789,2.331879,0.1188018],[1.628308,2.331879,0.1188018],[1.589439,2.301621,0.08910135],[1.599182,2.358309,0.08910135],[1.560313,2.328051,0.0594009],[1.617832,2.328051,0.0594009],[1.578963,2.297793,0.02970045],[1.588706,2.354481,0.02970045],[1.646225,2.354481,0.02970045],[1.607356,2.324223,0.0],[1.617099,2.380911,0.0],[1.57823,2.350653,-0.02970045],[1.635749,2.350653,-0.02970045]],"eps":0.05751946},"fs_eps_small":{"pts":[[0.0,0.0,0.0],[0.003409916,0.01984093,0.0],[0.006819832,0.03968185,0.0],[0.01022975,0.05952278,0.0],[0.01363966,0.0793637,0.0],[0.01704958,0.09920463,0.0],[0.02045949,0.1190456,0.0],[0.02386941,0.1388865,0.0],[0.02727933,0.1587274,0.0],[0.03068924,0.1785683,0.0],[0.03409916,0.1984093,0.0],[0.03750907,0.2182502,0.0],[0.04091899,0.2380911,0.0],[0.0443289,0.257932,0.0],[0.04773882,0.277773,0.0],[0.05114874,0.2976139,0.0],[0.05455865,0.3174548,0.0],[0.05796857,0.3372957,0.0],[0.06137848,0.3571367,0.0],[0.0647884,0.3769776,0.0],[0.06819832,0.3968185,0.0],[0.07160823,0.4166594,0.0],[0.07501815,0.4365004,0.0],[0.07842806,0.4563413,0.0],[0.08183798,0.4761822,0.0],[0.08524789,0.4960231,0.0],[0.08865781,0.5158641,0.0],[0.09206773,0.535705,0.0],[0.09547764,0.5555459,0.0],[0.09888756,0.5753868,0.0],[0.1022975,0.5952278,0.0],[0.1057074,0.6150687,0.0],[0.1091173,0.6349096,0.0],[0.1125272,0.6547505,0.0],[0.1159371,0.6745915,0.0],[0.1193471,0.6944324,0.0],[0.122757,0.7142733,0.0],[0.1261669,0.7341142,0.0],[0.1295768,0.7539552,0.0],[0.1329867,0.7737961,0.0],[0.1363966,0.793637,0.0],[0.1500008,0.8042274,0.01039516],[0.1534107,0.8240684,0.01039516],[0.1670149,0.8346588,0.02079032],[0.1704248,0.8544997,0.02079032],[0.184029,0.8650901,0.03118547],[0.1874389,0.884931,0.03118547],[0.2010431,0.8955214,0.04158063],[0.204453,0.9153624,0.04158063],[0.2180572,0.9259528,0.05197579],[0.2214671,0.9457937,0.05197579],[0.2350713,0.9563841,0.06237095],[0.2384812,0.976225,0.06237095],[0.2520854,0.9868154,0.0727661],[0.2554953,1.006656,0.0727661],[0.2690995,1.017247,0.08316126],[0.2725094,1.037088,0.08316126],[0.2861136,1.047678,0.09355642],[0.2895235,1.067519,0.09355642],[0.3031277,1.078109,0.1039516],[0.3065376,1.09795,0.1039516],[0.3201418,1.108541,0.1143467],[0.3235517,1.128382,0.1143467],[0.3371559,1.138972,0.1247419],[0.3405658,1.158813,0.1247419],[0.35417,1.169403,0.1351371],[0.3575799,1.189244,0.1351371],[0.3711841,1.199835,0.1455322],[0.374594,1.219676,0.1455322],[0.3881982,1.230266,0.1559274],[0.3916081,1.250107,0.1559274],[0.4052123,1.260697,0.1663225],[0.4086222,1.280538,0.1663225],[0.4222264,1.291129,0.1767177],[0.4256363,1.31097,0.1767177],[0.4392405,1.32156,0.1871128],[0.4426504,1.341401,0.1871128],[0.4562546,1.351991,0.197508],[0.4596645,1.371832,0.197508],[0.4797963,1.371832,0.197508],[0.4832062,1.391673,0.197508],[0.503338,1.391673,0.197508],[0.506748,1.411514,0.197508],[0.5268798,1.411514,0.197508],[0.5302897,1.431355,0.197508],[0.5504215,1.431355,0.197508],[0.5538314,1.451196,0.197508],[0.5739632,1.451196,0.197508],[0.5773731,1.471037,0.197508],[0.5975049,1.471037,0.197508],[0.6009149,1.490878,0.197508],[0.6210467,1.490878,0.197508],[0.6244566,1.510719,0.197508],[0.6445884,1.510719,0.197508],[0.6479983,1.53056,0.197508],[0.6681301,1.53056,0.197508],[0.67154,1.550401,0.197508],[0.6916719,1.550401,0.197508],[0.6950818,1.570242,0.197508],[0.7152136,1.570242,0.197508],[0.7186235,1.590083,0.197508],[0.7387553,1.590083,0.197508],[0.7421652,1.609923,0.197508],[0.762297,1.609923,0.197508],[0.765707,1.629764,0.197508],[0.7858388,1.629764,0.197508],[0.7892487,1.649605,0.197508],[0.8093805,1.649605,0.197508],[0.8127904,1.669446,0.197508],[0.8329222,1.669446,0.197508],[0.8363321,1.689287,0.197508],[0.856464,1.689287,0.197508],[0.8598739,1.709128,0.197508],[0.8800057,1.709128,0.197508],[0.8834156,1.728969,0.197508],[0.9035474,1.728969,0.197508],[0.9069573,1.74881,0.197508],[0.9270891,1.74881,0.197508],[0.9304991,1.768651,0.197508],[0.9506309,1.768651,0.197508],[0.9540408,1.788492,0.197508],[0.9741726,1.788492,0.197508],[0.9775825,1.808333,0.197508],[0.9977143,1.808333,0.197508],[1.001124,1.828174,0.197508],[1.021256,1.828174,0.197508],[1.024666,1.848015,0.197508],[1.044798,1.848015,0.197508],[1.048208,1.867856,0.197508],[1.06834,1.867856,0.197508],[1.071749,1.887696,0.197508],[1.091881,1.887696,0.197508],[1.095291,1.907537,0.197508],[1.115423,1.907537,0.197508],[1.118833,1.927378,0.197508],[1.138965,1.927378,0.197508],[1.142375,1.947219,0.197508],[1.162506,1.947219,0.197508],[1.165916,1.96706,0.197508],[1.186048,1.96706,0.197508],[1.189458,1.986901,0.197508],[1.20959,1.986901,0.197508],[1.213,2.006742,0.197508],[1.233132,2.006742,0.197508],[1.236542,2.026583,0.197508],[1.256673,2.026583,0.197508],[1.260083,2.046424,0.197508],[1.280215,2.046424,0.197508],[1.283625,2.066265,0.197508],[1.303757,2.066265,0.197508],[1.307167,2.086106,0.197508],[1.327299,2.086106,0.197508],[1.330708,2.105947,0.197508],[1.35084,2.105947,0.197508],[1.35425,2.125788,0.197508],[1.374382,2.125788,0.197508],[1.377792,2.145628,0.197508],[1.397924,2.145628,0.197508],[1.401334,2.165469,0.197508],[1.421465,2.165469,0.197508],[1.424875,2.18531,0.197508],[1.445007,2.18531,0.197508],[1.448417,2.205151,0.197508],[1.468549,2.205151,0.197508],[1.471959,2.224992,0.197508],[1.492091,2.224992,0.197508],[1.495501,2.244833,0.197508],[1.515632,2.244833,0.197508],[1.519042,2.264674,0.197508],[1.539174,2.264674,0.197508],[1.542584,2.284515,0.197508],[1.562716,2.284515,0.197508],[1.566126,2.304356,0.197508],[1.586258,2.304356,0.197508],[1.572653,2.293765,0.1871128],[1.576063,2.313606,0.1871128],[1.596195,2.313606,0.1871128],[1.582591,2.303016,0.1767177],[1.586001,2.322857,0.1767177],[1.572397,2.312267,0.1663225],[1.592528,2.312267,0.1663225],[1.578924,2.301676,0.1559274],[1.582334,2.321517,0.1559274],[1.602466,2.321517,0.1559274],[1.588862,2.310927,0.1455322],[1.592272,2.330768,0.1455322],[1.578668,2.320177,0.1351371],[1.598799,2.320177,0.1351371],[1.585195,2.309587,0.1247419],[1.605327,2.309587,0.1247419],[1.608737,2.329428,0.1247419],[1.595133,2.318837,0.1143467],[1.615265,2.318837,0.1143467],[1.60166,2.308247,0.1039516],[1.60507,2.328088,0.1039516],[1.591466,2.317497,0.09355642],[1.611598,2.317497,0.09355642],[1.615008,2.337338,0.09355642],[1.601404,2.326748,0.08316126],[1.621535,2.326748,0.08316126],[1.607931,2.316157,0.0727661],[1.611341,2.335998,0.0727661],[1.597737,2.325408,0.06237095],[1.617869,2.325408,0.06237095],[1.604265,2.314818,0.05197579],[1.607675,2.334658,0.05197579],[1.627806,2.334658,0.05197579],[1.614202,2.324068,0.04158063],[1.617612,2.343909,0.04158063],[1.604008,2.333319,0.03118547],[1.62414,2.333319,0.03118547],[1.610535,2.322728,0.02079032],[1.613945,2.342569,0.02079032],[1.634077,2.342569,0.02079032],[1.620473,2.331979,0.01039516],[1.623883,2.35182,0.01039516],[1.610279,2.341229,1.387779e-17],[1.630411,2.341229,1.387779e-17],[1.616806,2.330639,-0.01039516],[1.620216,2.35048,-0.01039516],[1.640348,2.35048,-0.01039516],[1.626744,2.339889,-0.02079032],[1.630154,2.35973,-0.02079032],[1.61655,2.34914,-0.03118547],[1.636681,2.34914,-0.03118547],[1.623077,2.338549,-0.04158063],[1.626487,2.35839,-0.04158063],[1.646619,2.35839,-0.04158063],[1.633015,2.3478,-0.05197579],[1.636425,2.367641,-0.05197579],[1.622821,2.35705,-0.06237095],[1.642952,2.35705,-0.06237095]],"eps":0.02013181},"ridge":{"pts":[[0.01145327,0.01188825,0.003747856],[0.01286513,0.01335531,0.004209771],[0.01444954,0.01500209,0.004728117],[0.0162272,0.01685025,0.005309658],[0.0182212,0.018924,0.005961933],[0.02045725,0.0212503,0.006693338],[0.02296394,0.02385923,0.007513215],[0.02577308,0.02678426,0.008431937],[0.02891993,0.03006261,0.00946101],[0.03244355,0.03373557,0.01061317],[0.03638714,0.03784894,0.01190251],[0.04079833,0.04245337,0.01334453],[0.04572957,0.04760481,0.01495631],[0.05123839,0.05336487,0.01675656],[0.05738776,0.05980127,0.01876574],[0.06424629,0.06698819,0.02100613],[0.0718885,0.07500665,0.02350187],[0.08039489,0.08394478,0.02627903],[0.08985198,0.09389803,0.02936555],[0.1003522,0.1049693,0.03279121],[0.1119936,0.1172689,0.03658751],[0.1248791,0.1309144,0.04078743],[0.1391161,0.1460298,0.04542518],[0.1548151,0.1627456,0.05053575],[0.1720879,0.1811966,0.05615433],[0.1910464,0.2015217,0.06231569],[0.2117994,0.2238609,0.06905321],[0.2344502,0.2483536,0.07639791],[0.2590932,0.2751356,0.08437713],[0.2858096,0.3043356,0.09301319],[0.3146636,0.3360712,0.1023217],[0.3456975,0.3704451,0.1123099],[0.378927,0.4075398,0.1229749],[0.4143366,0.4474132,0.1343017],[0.4518753,0.4900936,0.1462615],[0.4914526,0.535575,0.1588101],[0.5329362,0.5838134,0.1718867],[0.5761508,0.634723,0.1854128],[0.6208782,0.6881745,0.1992921],[0.6668597,0.743994,0.2134107],[0.7138006,0.8019639,0.2276379],[0.7613767,0.8618252,0.241828],[0.8092425,0.9232818,0.2558227],[0.857041,0.9860056,0.2694543],[0.9044146,1.049644,0.2825489],[0.9510161,1.113828,0.2949303],[0.9965195,1.178181,0.3064246],[1.04063,1.242324,0.3168635],[1.083092,1.305891,0.3260887],[1.123696,1.368532,0.3339552],[1.162278,1.429919,0.3403347],[1.198728,1.489757,0.345118],[1.232983,1.547784,0.3482174],[1.265024,1.603775,0.3495683],[1.294874,1.657547,0.3491303],[1.322589,1.708955,0.3468885],[1.348255,1.757891,0.3428533],[1.371976,1.804287,0.3370609],[1.39387,1.848108,0.3295725],[1.414063,1.88935,0.3204736],[1.432683,1.928036,0.3098726],[1.449856,1.964212,0.2978988],[1.465703,1.997945,0.2847001],[1.480335,2.029314,0.2704394],[1.493856,2.058411,0.2552916],[1.506359,2.085338,0.2394393],[1.517927,2.110202,0.2230681],[1.528633,2.133111,0.2063632],[1.538542,2.154177,0.189504],[1.547711,2.17351,0.172661],[1.55619,2.191221,0.1559916],[1.564024,2.207416,0.1396382],[1.571255,2.222198,0.123725],[1.577918,2.235669,0.1083577],[1.58405,2.247925,0.09362233],[1.589683,2.259056,0.07958587],[1.594848,2.269152,0.06629678],[1.599575,2.278295,0.05378647],[1.603893,2.286563,0.04207089],[1.60783,2.294031,0.03115248],[1.611413,2.300766,0.02102213],[1.614668,2.306834,0.01166119],[1.617619,2.312295,0.003043436],[1.620291,2.317204,-0.004863174],[1.622707,2.321613,-0.01209487],[1.624887,2.325569,-0.01869065],[1.626852,2.329115,-0.02469109],[1.628621,2.332293,-0.03013731],[1.630212,2.335137,-0.03507018],[1.631642,2.337682,-0.03952967],[1.632924,2.339958,-0.04355435],[1.634074,2.341992,-0.04718107],[1.635104,2.343808,-0.05044469],[1.636027,2.34543,-0.05337795],[1.636852,2.346878,-0.05601135],[1.637589,2.34817,-0.05837322],[1.638249,2.349322,-0.06048967],[1.638837,2.350349,-0.0623847],[1.639363,2.351265,-0.06408025],[1.639832,2.352081,-0.06559637],[1.640251,2.352808,-0.06695128],[1.640624,2.353456,-0.06816149],[1.640957,2.354033,-0.06924199],[1.641254,2.354547,-0.07020627],[1.641518,2.355004,-0.07106653],[1.641754,2.355412,-0.07183375],[1.641964,2.355775,-0.07251779],[1.64215,2.356098,-0.07312751],[1.642317,2.356385,-0.07367087],[1.642465,2.356641,-0.07415499],[1.642597,2.356869,-0.07458625],[1.642715,2.357071,-0.07497036],[1.642819,2.357252,-0.07531243],[1.642912,2.357412,-0.07561701],[1.642995,2.357555,-0.07588819],[1.643069,2.357682,-0.07612961],[1.643134,2.357795,-0.07634451],[1.643193,2.357895,-0.07653579],[1.643245,2.357985,-0.07670603],[1.643664,2.358706,-0.07808]],"lambda":[316.2278,281.2889,250.2102,222.5654,197.9749,176.1014,156.6445,139.3374,123.9425,110.2485,98.06757,87.23243,77.59442,69.02129,61.39537,54.61201,48.57812,43.21089,38.43667,34.18994,30.41241,27.05225,24.06334,21.40467,19.03974,16.93611,15.06489,13.40043,11.91986,10.60288,9.431402,8.38936,7.462449,6.637949,5.904545,5.252173,4.671878,4.155699,3.69655,3.288131,2.924837,2.601682,2.314231,2.05854,1.831099,1.628787,1.448828,1.288752,1.146363,1.019705,0.9070414,0.8068256,0.7176822,0.638388,0.5678548,0.5051145,0.4493062,0.3996639,0.3555064,0.3162278,0.2812889,0.2502102,0.2225654,0.1979749,0.1761014,0.1566445,0.1393374,0.1239425,0.1102485,0.09806757,0.08723243,0.07759442,0.06902129,0.06139537,0.05461201,0.04857812,0.04321089,0.03843667,0.03418994,0.03041241,0.02705225,0.02406334,0.02140467,0.01903974,0.01693611,0.01506489,0.01340043,0.01191986,0.01060288,0.009431402,0.00838936,0.007462449,0.006637949,0.005904545,0.005252173,0.004671878,0.004155699,0.00369655,0.003288131,0.002924837,0.002601682,0.002314231,0.00205854,0.001831099,0.001628787,0.001448828,0.001288752,0.001146363,0.001019705,0.0009070414,0.0008068256,0.0007176822,0.000638388,0.0005678548,0.0005051145,0.0004493062,0.0003996639,0.0003555064,0.0003162278,0.0]}};
+</script>
+<script>
+'use strict';
+const PLOPT = { responsive: true, displayModeBar: false };
+// Shared 3D response-space scene helpers (mirrors 154-least-angle-regression).
+// aspectmode 'data', not 'cube': unequal spans under cube would distort the
+// angle geometry these scenes exist to show.
+const SC3D = (function () {
+  function v3scale(v, s) { return [v[0] * s, v[1] * s, v[2] * s]; }
+  function v3add(a, b) { return [a[0] + b[0], a[1] + b[1], a[2] + b[2]]; }
+  function bbox(ptSets) {
+    const lo = [1e9, 1e9, 1e9], hi = [-1e9, -1e9, -1e9];
+    ptSets.forEach(pts => pts.forEach(p => {
+      for (let d = 0; d < 3; d++) { lo[d] = Math.min(lo[d], p[d]); hi[d] = Math.max(hi[d], p[d]); }
+    }));
+    for (let d = 0; d < 3; d++) { const pad = 0.14 * (hi[d] - lo[d] + 0.3); lo[d] -= pad; hi[d] += pad; }
+    return { lo, hi };
+  }
+  function layout(bb) {
+    const ax = i => ({
+      range: [bb.lo[i], bb.hi[i]], autorange: false, showspikes: false,
+      gridcolor: '#30363d', zerolinecolor: '#484f58', color: '#8b949e',
+      backgroundcolor: '#161b22', showbackground: true, title: { text: '' }, tickfont: { size: 9 }
+    });
+    return {
+      paper_bgcolor: '#0d1117', margin: { l: 0, r: 0, t: 4, b: 0 }, showlegend: false,
+      scene: { xaxis: ax(0), yaxis: ax(1), zaxis: ax(2), aspectmode: 'data',
+               camera: { eye: { x: 1.45, y: -1.2, z: 0.62 }, up: { x: 0, y: 0, z: 1 } },
+               bgcolor: '#0d1117' }
+    };
+  }
+  const ALEN = 1.7;
+  function arrows(X, cols, alpha) {
+    const t = [];
+    for (let j = 0; j < 3; j++) {
+      const tip = v3scale(X[j], ALEN);
+      t.push({ type: 'scatter3d', mode: 'lines', x: [0, tip[0]], y: [0, tip[1]], z: [0, tip[2]],
+               line: { color: cols[j], width: 5 }, opacity: alpha, hoverinfo: 'skip' });
     }
-    el.appendChild(chip);
-  });
-}
-
-function renderRSSChart(step) {
-  const xs = steps.slice(0, step + 1).map((_, i) => i);
-  const ys = steps.slice(0, step + 1).map(s => s.rss);
-  const labels = steps.slice(0, step + 1).map((s, i) => i === 0 ? 'Intercept' : s.added);
-
-  // Future steps dimmed
-  const xsFuture = steps.slice(step + 1).map((_, i) => step + 1 + i);
-  const ysFuture = steps.slice(step + 1).map(s => s.rss);
-
-  const data = [
-    {
-      x: xs, y: ys, mode: 'lines+markers+text', type: 'scatter',
-      line: { color: '#58a6ff', width: 2.5 },
-      marker: { color: ys.map((_, i) => i === step ? '#56d364' : '#58a6ff'), size: 9 },
-      text: labels, textposition: 'top center',
-      textfont: { color: '#79c0ff', size: 11 },
-      hovertemplate: 'Step %{x}<br>RSS = %{y:.3f}<extra></extra>',
-      name: 'RSS (so far)',
-    },
-    {
-      x: xsFuture, y: ysFuture, mode: 'lines+markers', type: 'scatter',
-      line: { color: '#30363d', width: 1.5, dash: 'dot' },
-      marker: { color: '#30363d', size: 6 },
-      hoverinfo: 'skip',
-      name: 'Future steps',
-      showlegend: false,
+    for (let j = 0; j < 3; j++) {
+      const d = X[j], base = v3scale(d, ALEN);
+      t.push({ type: 'cone', x: [base[0]], y: [base[1]], z: [base[2]],
+               u: [d[0]], v: [d[1]], w: [d[2]], sizemode: 'absolute', sizeref: 0.16, anchor: 'tip',
+               colorscale: [[0, cols[j]], [1, cols[j]]], showscale: false, opacity: alpha, hoverinfo: 'skip' });
     }
+    return t;
+  }
+  function labels(X, yhat, cols) {
+    const tips = X.map(v => v3scale(v, ALEN * 1.13));
+    return { type: 'scatter3d', mode: 'text',
+      x: [tips[0][0], tips[1][0], tips[2][0], yhat[0], 0],
+      y: [tips[0][1], tips[1][1], tips[2][1], yhat[1] + 0.16, -0.14],
+      z: [tips[0][2], tips[1][2], tips[2][2], yhat[2] + 0.16, 0],
+      text: ['x₁', 'x₂', 'x₃', 'ŷ', '0'],
+      textfont: { color: [cols[0], cols[1], cols[2], '#d29922', '#8b949e'], size: 13 },
+      hoverinfo: 'skip' };
+  }
+  function yhatMarker(yhat) {
+    return { type: 'scatter3d', mode: 'markers', x: [yhat[0]], y: [yhat[1]], z: [yhat[2]],
+      marker: { symbol: 'diamond', size: 7, color: '#d29922' }, hoverinfo: 'skip' };
+  }
+  function ghost(pts) {
+    return { type: 'scatter3d', mode: 'lines',
+      x: pts.map(p => p[0]), y: pts.map(p => p[1]), z: pts.map(p => p[2]),
+      line: { color: '#39d2c0', width: 3, dash: 'dot' }, opacity: 0.4, hoverinfo: 'skip' };
+  }
+  function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+  function norm(a) { return Math.sqrt(dot(a, a)); }
+  function thetaDeg(X, yhat, mu) {          // angle of in-span residual to each predictor
+    const r = [yhat[0] - mu[0], yhat[1] - mu[1], yhat[2] - mu[2]];
+    const nr = norm(r);
+    return X.map(x => nr < 1e-9 ? 90 :
+      Math.acos(Math.min(1, Math.abs(dot(x, r)) / nr)) * 180 / Math.PI);
+  }
+  return { v3scale, v3add, bbox, layout, arrows, labels, yhatMarker, ghost, dot, norm, thetaDeg, ALEN };
+})();
+
+// VIZ 1 — greedy hops through complete projections
+(function buildHops() {
+  const X = PW.scene.x, YH = PW.scene.yhat;
+  const COLS = ['#58a6ff', '#bc8cff', '#f85149'];
+  const HOPS = PW.stepwise.pts;                 // [0, P1, P13, yhat]
+  const FR = 34;                                // frames per hop segment
+  const bb = SC3D.bbox([[[0,0,0], YH], X.map(v => SC3D.v3scale(v, SC3D.ALEN * 1.2)), HOPS, PW.lar_ghost]);
+
+  const traces = [
+    ...SC3D.arrows(X, COLS, 0.95),                                  // 0-5
+    SC3D.labels(X, YH, COLS),                                       // 6
+    SC3D.yhatMarker(YH),                                            // 7
+    SC3D.ghost(PW.lar_ghost),                                       // 8 LAR route (dotted teal)
+    { type: 'scatter3d', mode: 'markers',                           // 9 hop targets
+      x: HOPS.slice(1, 3).map(p => p[0]), y: HOPS.slice(1, 3).map(p => p[1]), z: HOPS.slice(1, 3).map(p => p[2]),
+      marker: { symbol: 'diamond-open', size: 6, color: '#d29922' }, hoverinfo: 'skip' },
+    { type: 'scatter3d', mode: 'lines',                             // 10 trail
+      x: [0], y: [0], z: [0], line: { color: '#d29922', width: 7 }, hoverinfo: 'skip' },
+    { type: 'scatter3d', mode: 'markers',                           // 11 head
+      x: [0], y: [0], z: [0], marker: { size: 7, color: '#d29922' }, hoverinfo: 'skip' },
+    { type: 'scatter3d', mode: 'lines',                             // 12 residual
+      x: [0, YH[0]], y: [0, YH[1]], z: [0, YH[2]],
+      line: { color: '#e6edf3', width: 4, dash: 'dash' }, opacity: 0.85, hoverinfo: 'skip' },
+  ];
+  Plotly.newPlot('h3d', traces, SC3D.layout(bb), PLOPT);
+
+  const chip = document.getElementById('hChip');
+  const CAP = [
+    'Start: &theta;&#8321; is smallest — x&#8321; is most correlated. Stepwise will not nudge it: the whole least-squares fit on {x&#8321;} comes next, in one hop.',
+    '<b>Hop 1</b>: full LS fit on {x&#8321;}. &theta;&#8321; snaps to 90&deg; — the residual is orthogonal to x&#8321; by construction. Now look: the smallest remaining angle belongs to <b style="color:#f85149">x&#8323;</b>, not x&#8322;. Committing fully to x&#8321; changed who looks best.',
+    '<b>Hop 2</b>: full refit on {x&#8321;, x&#8323;} — both gauges at 90&deg;. The corner in the amber path is the refit adjusting &beta;&#8321;; stepwise revisits <em>coefficients</em> but never <em>choices</em>.',
+    '<b>Hop 3</b>: everyone is in — &mu; = &#375;, all angles 90&deg;. Same destination as LAR (teal dots), but every intermediate model was different, and each was an all-in commitment.'
   ];
 
-  // Shade the drop at current step
-  const shapes = [];
-  if (step > 0) {
-    shapes.push({
-      type: 'rect', x0: step - 1, x1: step,
-      y0: steps[step].rss, y1: steps[step - 1].rss,
-      fillcolor: '#56d36418', line: { width: 0 },
-      layer: 'below',
-    });
+  function hopAt(t) {                            // t in [0, 3], piecewise linear over hops
+    const k = Math.min(2, Math.floor(t)), f = t - k;
+    const a = HOPS[k], b = HOPS[k + 1];
+    return [0, 1, 2].map(d => a[d] + f * (b[d] - a[d]));
   }
-
-  const layout = {
-    paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
-    margin: { l: 52, r: 20, t: 18, b: 50 },
-    xaxis: {
-      tickvals: steps.map((_, i) => i),
-      ticktext: steps.map((s, i) => i === 0 ? 'k=0' : `k=${i}`),
-      color: '#8b949e', gridcolor: '#21262d', zeroline: false,
-      title: { text: 'Model size (variables in model)', font: { color: '#8b949e', size: 12 } },
-    },
-    yaxis: {
-      range: [0.18, 1.08],
-      color: '#8b949e', gridcolor: '#21262d', zeroline: false,
-      title: { text: 'RSS (normalized)', font: { color: '#8b949e', size: 12 } },
-    },
-    shapes,
-    legend: { font: { color: '#8b949e', size: 11 }, bgcolor: 'transparent' },
-    annotations: step > 0 ? [{
-      x: step - 0.5, y: (steps[step - 1].rss + steps[step].rss) / 2,
-      text: `Δ = ${(steps[step].rss - steps[step - 1].rss).toFixed(3)}`,
-      showarrow: false, font: { color: '#56d364', size: 11 },
-      bgcolor: '#0d2d1a', bordercolor: '#2ea043', borderwidth: 1, borderpad: 3,
-    }] : [],
-  };
-
-  Plotly.react('chart-rss', data, layout, { responsive: true, displayModeBar: false });
-}
-
-function renderCoefChart(step) {
-  const coefs = steps[step].coefs;
-
-  const colors = variables.map((_, i) => {
-    if (step > 0 && steps[step].addedIdx === i) return '#56d364';
-    if (coefs[i] > 0) return '#58a6ff';
-    return '#30363d';
-  });
-
-  const data = [{
-    x: coefs, y: varShort, type: 'bar', orientation: 'h',
-    marker: { color: colors },
-    hovertemplate: '%{y}: β = %{x:.2f}<extra></extra>',
-  }];
-
-  const layout = {
-    paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
-    margin: { l: 50, r: 20, t: 14, b: 40 },
-    xaxis: {
-      range: [0, 0.55], color: '#8b949e', gridcolor: '#21262d', zeroline: true, zerolinecolor: '#30363d',
-      title: { text: 'Coefficient magnitude', font: { color: '#8b949e', size: 12 } },
-    },
-    yaxis: { color: '#8b949e', gridcolor: 'transparent', autorange: 'reversed' },
-    bargap: 0.3,
-  };
-
-  Plotly.react('chart-coef', data, layout, { responsive: true, displayModeBar: false });
-}
-
-function update(step) {
-  currentStep = step;
-  renderChips(step);
-  renderRSSChart(step);
-  renderCoefChart(step);
-  document.getElementById('step-info').innerHTML =
-    `<span>Step ${step}/${steps.length - 1}</span> — ${steps[step].msg}`;
-}
-
-function stepOnce() {
-  if (currentStep < steps.length - 1) update(currentStep + 1);
-}
-
-function playAnimation() {
-  if (animTimer) {
-    clearInterval(animTimer);
-    animTimer = null;
-    document.getElementById('btn-play').textContent = '▶ Play';
-    return;
+  function trailPts(t) {
+    const pts = [HOPS[0]];
+    for (let k = 1; k <= Math.floor(t) && k < 4; k++) pts.push(HOPS[k]);
+    if (t < 3 && t > Math.floor(t)) pts.push(hopAt(t));
+    return pts;
   }
-  document.getElementById('btn-play').textContent = '⏸ Pause';
-  animTimer = setInterval(() => {
-    if (currentStep >= steps.length - 1) {
-      clearInterval(animTimer); animTimer = null;
-      document.getElementById('btn-play').textContent = '▶ Play';
-      return;
+  function setH(t) {
+    t = Math.max(0, Math.min(3, t));
+    const mu = hopAt(t), tr = trailPts(t);
+    Plotly.restyle('h3d', {
+      x: [tr.map(p => p[0]), [mu[0]], [mu[0], YH[0]]],
+      y: [tr.map(p => p[1]), [mu[1]], [mu[1], YH[1]]],
+      z: [tr.map(p => p[2]), [mu[2]], [mu[2], YH[2]]]
+    }, [10, 11, 12]);
+    const th = SC3D.thetaDeg(X, YH, mu);
+    for (let j = 0; j < 3; j++) {
+      document.getElementById('hg' + (j + 1)).style.width = (th[j] / 90 * 100).toFixed(1) + '%';
+      document.getElementById('hgv' + (j + 1)).textContent = th[j].toFixed(1) + '°';
     }
-    update(currentStep + 1);
-  }, 900);
-}
+    const step = Math.floor(t + 1e-9);
+    document.getElementById('hStep').textContent = 'step ' + step + ' / 3';
+    if (Math.abs(t - Math.round(t)) < 1e-9) {
+      chip.innerHTML = CAP[Math.round(t)];
+      chip.classList.add('show');
+      chip.classList.toggle('done', Math.round(t) === 3);
+    } else { chip.classList.remove('show'); }
+  }
 
-function resetAnimation() {
-  clearInterval(animTimer); animTimer = null;
-  document.getElementById('btn-play').textContent = '▶ Play';
-  update(0);
-}
+  let hT = 0, hRaf = null, hLast = 0;
+  function hStop() { if (hRaf) cancelAnimationFrame(hRaf); hRaf = null;
+    document.getElementById('hPlay').innerHTML = '▶ Play'; }
+  function hTick(ts) {
+    if (!hLast) hLast = ts;
+    const prev = hT;
+    hT = Math.min(3, hT + (ts - hLast) / 1000 * 1.4);
+    hLast = ts;
+    if (Math.floor(prev) < Math.floor(hT) || hT >= 3) {   // pause at each completed hop
+      hT = Math.min(3, Math.floor(hT));
+      setH(hT); hStop(); return;
+    }
+    setH(hT);
+    hRaf = requestAnimationFrame(hTick);
+  }
+  document.getElementById('hPlay').addEventListener('click', () => {
+    if (hRaf) { hStop(); return; }
+    if (hT >= 3) hT = 0;
+    hLast = 0;
+    document.getElementById('hPlay').innerHTML = '‖ Pause';
+    hRaf = requestAnimationFrame(hTick);
+  });
+  document.getElementById('hReset').addEventListener('click', () => { hStop(); hT = 0; setH(0); });
+  document.getElementById('hNext').addEventListener('click', () => {
+    hStop(); hT = hT >= 3 ? 0 : Math.min(3, Math.floor(hT) + 1); setH(hT);
+  });
+  setH(0);
+})();
 
-update(0);
 </script>
 </body>
 </html>

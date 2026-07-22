@@ -366,3 +366,42 @@ with open(OUT, "w") as f:
     json.dump(data, f, separators=(",", ":"))
 import os
 print("wrote", OUT, os.path.getsize(OUT), "bytes")
+
+
+# ---------------------------------------------------- per-page export (144/146/147)
+
+def classic_stagewise(X, yhat, tol=1e-3, cap=500):
+    """ESL 3.3.3 forward stagewise: each step adds the FULL simple-regression
+    coefficient of the residual on the most-correlated variable — a complete
+    1D projection per step; no other coefficient is adjusted."""
+    mu = np.zeros(3)
+    pts = [mu.copy()]
+    for _ in range(cap):
+        c = X.T @ (yhat - mu)
+        j = int(np.argmax(np.abs(c)))
+        if abs(c[j]) < tol:
+            break
+        mu = mu + c[j] * X[:, j]        # unit-norm column: c_j IS the simple LS coefficient
+        pts.append(mu.copy())
+    return np.array(pts)
+
+fs_classic = classic_stagewise(X, yhat)
+assert np.linalg.norm(fs_classic[-1] - yhat) < 5e-3, np.linalg.norm(fs_classic[-1] - yhat)
+eps_small = 0.007 * float(np.linalg.norm(yhat))
+fs_eps_small = stagewise_path(X, yhat, eps_small)
+print(f"classic FS steps: {len(fs_classic)-1}; FS_eps small steps: {len(fs_eps_small)-1} (eps={eps_small:.4f})")
+
+page_data = {
+    "scene": {"x": rnd(X.T), "yhat": rnd(yhat), "beta_ols": rnd(scene["beta_ols"]),
+              "corr": {"r12": rnd(float(G[0,1])), "r13": rnd(float(G[0,2])), "r23": rnd(float(G[1,2]))}},
+    "lar_ghost": rnd(mu_lar[::3]),
+    "stepwise": {"pts": rnd(step_pts), "order": step_order},
+    "fs_classic": {"pts": rnd(fs_classic)},
+    "fs_eps": {"pts": rnd(stage_pts), "eps": rnd(eps)},
+    "fs_eps_small": {"pts": rnd(fs_eps_small), "eps": rnd(eps_small)},
+    "ridge": {"pts": rnd(ridge_pts), "lambda": rnd(lams)},
+}
+OUT2 = OUT.replace("lar-walk-data.json", "page-walk-data.json")
+with open(OUT2, "w") as f:
+    json.dump(page_data, f, separators=(",", ":"))
+print("wrote", OUT2, os.path.getsize(OUT2), "bytes")
